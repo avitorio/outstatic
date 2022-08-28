@@ -1,0 +1,287 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.react-datepicker__input-container input {
+  @apply block w-full cursor-pointer rounded border border-gray-300 bg-white text-base shadow-sm md:text-sm;
+}
+
+.react-datepicker-popper {
+  @apply z-40 w-72 rounded border-2 border-gray-200 bg-white px-3 py-2 text-sm shadow;
+}
+
+.react-datepicker-left {
+  @apply absolute left-0 right-auto top-11 transform-none !important;
+}
+
+.react-datepicker-right {
+  @apply absolute right-0 left-auto top-11 transform-none !important;
+}
+
+.react-datepicker__portal {
+  @apply absolute top-12 right-0 z-10 w-72 transform-none rounded border-2 border-gray-200 bg-white px-3 py-2 text-sm shadow;
+}
+
+.react-datepicker__month-container {
+  @apply flex flex-col;
+}
+
+.react-datepicker__month {
+  @apply flex flex-col;
+}
+
+.react-datepicker__current-month {
+  @apply ml-2.5 text-lg font-semibold text-gray-800;
+}
+
+.react-datepicker__week {
+  @apply flex justify-around;
+}
+
+.react-datepicker__day-names {
+  @apply flex justify-around text-center text-xs font-medium text-gray-400;
+}
+
+.react-datepicker__day-name {
+  @apply flex h-8 w-8 items-center justify-center rounded-full py-1;
+}
+
+.react-datepicker__navigation {
+  @apply absolute top-2;
+  align-items: center;
+  background: none;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  cursor: pointer;
+  position: absolute;
+  top: 2px;
+  padding: 0;
+  border: none;
+  z-index: 1;
+  height: 32px;
+  width: 32px;
+  text-indent: -999em;
+  overflow: hidden;
+}
+
+.react-datepicker__navigation--previous {
+  @apply right-12 flex h-8 w-8 items-center justify-center rounded transition hover:bg-gray-200;
+}
+
+.react-datepicker__navigation-icon:before {
+  border-color: #ccc;
+  border-style: solid;
+  border-width: 4px 4px 0 0;
+  content: '';
+  display: block;
+  height: 12px;
+  position: absolute;
+  top: 10px;
+  width: 12px;
+}
+
+.react-datepicker__navigation-icon--previous:before {
+  transform: rotate(225deg);
+  right: 10px;
+}
+
+.react-datepicker__navigation-icon--next:before {
+  transform: rotate(45deg);
+  left: 8px;
+}
+
+.react-datepicker__navigation--next {
+  @apply right-4 flex h-8 w-8 items-center justify-center rounded transition hover:bg-gray-200;
+}
+
+.react-datepicker__day {
+  @apply mb-1 flex h-8 w-8 cursor-pointer items-center justify-center rounded py-1 text-sm leading-loose text-gray-700 transition hover:border;
+}
+
+.react-datepicker__day--disabled {
+  @apply cursor-not-allowed opacity-40 hover:bg-transparent;
+}
+
+.react-datepicker__day--outside-month {
+  @apply text-gray-300;
+}
+
+.react-datepicker__day--in-range {
+  @apply bg-gray-200;
+}
+
+.react-datepicker__day--in-selecting-range {
+  @apply bg-blue-200;
+}
+
+.react-datepicker__day--selecting-range-start {
+  @apply border-2 border-blue-500 bg-white;
+}
+
+.react-datepicker__day--selecting-range-end {
+  @apply border-2 border-blue-500 bg-white;
+}
+
+.react-datepicker__day--selected {
+  @apply bg-blue-500 text-white;
+}
+
+.react-datepicker__day--range-start {
+  @apply bg-blue-500 text-white hover:bg-white hover:text-gray-700;
+}
+
+.react-datepicker__day--range-end {
+  @apply bg-blue-500 text-white hover:bg-white hover:text-gray-700;
+}
+/* Basic editor styles */
+.ProseMirror {
+  outline: none;
+}
+
+.ProseMirror > * + * {
+  margin-top: 0.75em;
+}
+.ProseMirror ul,
+.ProseMirror ol {
+  padding: 0 1rem;
+}
+
+.ProseMirror h1 {
+  font-size: 48px;
+  text-align: left;
+  margin-bottom: 8px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.25;
+  letter-spacing: 0;
+}
+
+.ProseMirror h1,
+.ProseMirror h2,
+.ProseMirror h3,
+.ProseMirror h4,
+.ProseMirror h5,
+.ProseMirror h6 {
+  line-height: 1.1;
+}
+
+.ProseMirror h2 {
+  letter-spacing: -0.02em;
+  font-weight: 700;
+  font-style: normal;
+  letter-spacing: 0;
+  font-size: 34px;
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+}
+
+.ProseMirror h3 {
+  letter-spacing: -0.02em;
+  font-weight: 700;
+  font-style: normal;
+  font-size: 26px;
+  line-height: 1.22;
+  letter-spacing: -0.012em;
+}
+
+.ProseMirror p {
+  font-family: 'PT Serif', Arial, Cambria, 'Times New Roman', Times,
+    serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 21px;
+  line-height: 1.58;
+  letter-spacing: -0.003em;
+}
+
+.ProseMirror p:first-child:before {
+  color: #adb5bd;
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+}
+
+.ProseMirror img {
+  max-width: 100%;
+  height: auto;
+}
+.ProseMirror blockquote {
+  padding-left: 1rem;
+  border-left: 2px solid rgba(13, 13, 13, 0.1);
+}
+.ProseMirror hr {
+  border: none;
+  border-top: 2px solid rgba(13, 13, 13, 0.1);
+  margin: 2rem 0;
+}
+
+.ProseMirror a {
+  text-decoration: underline;
+  color: blue;
+  cursor: pointer;
+}
+
+.ProseMirror pre {
+  font-family: "JetBrainsMono", monospace;
+}
+
+.ProseMirror code {
+  color: inherit;
+  padding: 0;
+  background: none;
+  font-size: 0.8rem;
+}
+
+.ProseMirror .hljs-comment,
+.ProseMirror .hljs-quote {
+  color: #616161;
+}
+
+.ProseMirror .hljs-variable,
+.ProseMirror .hljs-template-variable,
+.ProseMirror .hljs-attribute,
+.ProseMirror .hljs-tag,
+.ProseMirror .hljs-name,
+.ProseMirror .hljs-regexp,
+.ProseMirror .hljs-link,
+.ProseMirror .hljs-name,
+.ProseMirror .hljs-selector-id,
+.ProseMirror .hljs-selector-class {
+  color: #f98181;
+}
+
+.ProseMirror .hljs-number,
+.ProseMirror .hljs-meta,
+.ProseMirror .hljs-built_in,
+.ProseMirror .hljs-builtin-name,
+.ProseMirror .hljs-literal,
+.ProseMirror .hljs-type,
+.ProseMirror .hljs-params {
+  color: #fbbc88;
+}
+
+.ProseMirror .hljs-string,
+.ProseMirror .hljs-symbol,
+.ProseMirror .hljs-bullet {
+  color: #b9f18d;
+}
+
+.ProseMirror .hljs-title,
+.ProseMirror .hljs-section {
+  color: #faf594;
+}
+
+.ProseMirror .hljs-keyword,
+.ProseMirror .hljs-selector-tag {
+  color: #70cff8;
+}
+
+.ProseMirror .hljs-emphasis {
+  font-style: italic;
+}
+
+.ProseMirror .hljs-strong {
+  font-weight: 700;
+}

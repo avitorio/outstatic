@@ -1,0 +1,61 @@
+import { ApolloError } from '@apollo/client'
+import { useRouter } from 'next/router'
+import { useState } from 'react'
+import { useOstSession } from '../../utils/auth/hooks'
+import AdminHeader from '../AdminHeader'
+import Sidebar from '../Sidebar'
+
+export type AdminLayoutProps = {
+  error?: string | ApolloError
+  children: React.ReactNode
+  settings?: React.ReactNode
+}
+
+export default function AdminLayout({
+  children,
+  error,
+  settings
+}: AdminLayoutProps) {
+  const { session, status } = useOstSession()
+  const { push, asPath } = useRouter()
+  const [openSidebar, setOpenSidebar] = useState(false)
+  const toggleSidebar = () => {
+    setOpenSidebar(!openSidebar)
+  }
+
+  if (status === 'unauthenticated') {
+    if (typeof window !== 'undefined') {
+      push(`/outstatic/?callbackUrl=${asPath}`)
+    }
+    return null
+  }
+
+  return (
+    <>
+      {status === 'loading' ? null : (
+        <div className="flex h-screen flex-col bg-white text-black">
+          <AdminHeader
+            {...session?.user}
+            status={status}
+            toggleSidebar={toggleSidebar}
+          />
+          <div className="flex grow flex-col-reverse justify-between md:flex-row">
+            <Sidebar isOpen={openSidebar} />
+            <main className="w-auto flex-auto p-5 md:p-10 bg-white">
+              {error && (
+                <div className="mb-6 border border-red-500 p-2">
+                  Something went wrong{' '}
+                  <span role="img" aria-label="sad face">
+                    😓
+                  </span>
+                </div>
+              )}
+              {children}
+            </main>
+            {settings && settings}
+          </div>
+        </div>
+      )}
+    </>
+  )
+}
