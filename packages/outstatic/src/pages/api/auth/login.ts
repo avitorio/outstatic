@@ -4,7 +4,7 @@ const router = createRouter<NextApiRequest, NextApiResponse>()
 
 router.get(async (_, res) => {
   res.redirect(
-    `https://github.com/login/oauth/authorize?client_id=${process.env.OST_GITHUB_ID}&redirect_uri%3Dhttp%253A%252F%252Flocalhost%253A3000%252Fapi%252Fauth%252Fcallback%26response_type%3Dcode%26scope%3Drepo%252Cuser`
+    `https://github.com/login/oauth/authorize?client_id=${process.env.OST_GITHUB_ID}&scope=repo%2C%20user&response_type=code`
   )
 })
 
