@@ -5,7 +5,7 @@ import { PostType } from "../types";
 
 export const CONTENT_PATH = path.join(
   process.cwd(),
-  "outstatic/content"
+  process.env.OST_CONTENT_PATH || "outstatic/content"
 );
 
 export function getContentType(contentType: string) {

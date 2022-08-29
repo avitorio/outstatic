@@ -12,7 +12,7 @@ type WelcomeProps = {
 export default function Welcome({ variables }: WelcomeProps) {
   return (
     <main className="flex flex-col h-screen items-center justify-center bg-slate-900">
-      <h1 className="mb-5 text-center text-xl font-semibold">
+      <h1 className="mb-5 text-center text-xl font-semibold text-white">
         Welcome to Outstatic!
       </h1>
       <div className="mb-20 max-w-2xl border bg-white p-8 text-black">
@@ -23,7 +23,7 @@ export default function Welcome({ variables }: WelcomeProps) {
         <ul className="mb-5">
           {envVars.map(
             (variable, index) =>
-              (
+              variable !== 'OST_CONTENT_PATH' && (
                 <li key={variable} className="mb-1">
                   {`${variables[index] ? '✅' : '❌'} Variable`}{' '}
                   <span className="font-semibold">{variable}</span>{' '}
@@ -32,6 +32,15 @@ export default function Welcome({ variables }: WelcomeProps) {
               )
           )}
         </ul>
+        {!variables[envVars.indexOf('OST_CONTENT_PATH')] && (
+          <p className="mb-5 p-2 bg-blue-100 rounded">
+            Optional variable{' '}
+            <span className="font-semibold">OST_CONTENT_PATH</span> defines
+            where your content is saved.
+            <br />
+            Defaulting to <code>outstatic/content</code>
+          </p>
+        )}
         <p>Note that you need to restart Next.js to apply the changes.</p>
       </div>
     </main>

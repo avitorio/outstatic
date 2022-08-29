@@ -3,7 +3,8 @@ export const envVars = [
   'OST_GITHUB_ID',
   'OST_GITHUB_SECRET',
   'OST_TOKEN_SECRET',
-  'OST_REPO_SLUG'
+  'OST_REPO_SLUG',
+  'OST_CONTENT_PATH'
 ]
 
 export const hasMissingEnvVar =

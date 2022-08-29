@@ -109,7 +109,7 @@ export const OstSSP: GetServerSideProps = async ({ req }) => {
       query: ContentTypesDocument,
       variables: {
         name: process.env.OST_REPO_SLUG,
-        contentPath: `HEAD:outstatic/content`,
+        contentPath: `HEAD:${process.env.OST_CONTENT_PATH || 'outstatic/content'}`,
         owner: session?.user?.name
       }
     })
