@@ -8,6 +8,6 @@ export const envVars = [
 ]
 
 export const hasMissingEnvVar =
-  envVars.filter(variable => !process.env[variable]).length > 0
+  envVars.filter(variable => variable === 'OST_CONTENT_PATH' ? false : !process.env[variable]).length > 0
 
 export const missingEnvVars = envVars.map(variable => !!process.env[variable])
