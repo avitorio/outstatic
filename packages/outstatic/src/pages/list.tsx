@@ -21,7 +21,7 @@ export default function List({ contentType }: ListProps) {
     variables: {
       owner: session?.user?.name || '',
       name: repoSlug || '',
-      contentPath: `HEAD:${contentPath}/${contentType}` || ''
+      contentPath: `HEAD:${process.env.OST_MONOREPO_PATH || ''}${contentPath}/${contentType}` || ''
     },
     fetchPolicy: 'network-only',
     onError: ({ graphQLErrors }) => {
