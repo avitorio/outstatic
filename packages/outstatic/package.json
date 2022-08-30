@@ -37,7 +37,6 @@
     "highlight.js": "^11.6.0",
     "js-base64": "^3.7.2",
     "lowlight": "^1.0",
-    "matter": "^0.2.0",
     "next": "latest",
     "next-connect": "^1.0.0-next.2",
     "next-remove-imports": "^1.0.6",

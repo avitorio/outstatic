@@ -134,7 +134,6 @@ importers:
       highlight.js: ^11.6.0
       js-base64: ^3.7.2
       lowlight: ^1.0
-      matter: ^0.2.0
       next: latest
       next-connect: ^1.0.0-next.2
       next-remove-imports: ^1.0.6
@@ -173,7 +172,6 @@ importers:
       highlight.js: 11.6.0
       js-base64: 3.7.2
       lowlight: 1.20.0
-      matter: 0.2.0
       next: 12.2.5_react@17.0.2
       next-connect: 1.0.0-next.3
       next-remove-imports: 1.0.6
@@ -2338,13 +2336,6 @@ packages:
     resolution: {integrity: sha512-PYjyFOLKQ9y57JvQ6QLo8dAgNqswh8M1RMJYdQduT6xbWSgK36P/Z/v+p888pM69jMMfS8Xd8F6I1kQ/I9HUGg==}
     dev: true
 
-  /argparse/0.1.16:
-    resolution: {integrity: sha512-LjmC2dNpdn2L4UzyoaIr11ELYoLn37ZFy9zObrQFHsSuOepeUEMKnM8w5KL4Tnrp2gy88rRuQt6Ky8Bjml+Baw==}
-    dependencies:
-      underscore: 1.7.0
-      underscore.string: 2.4.0
-    dev: false
-
   /argparse/1.0.10:
     resolution: {integrity: sha512-o5Roy6tNG4SL/FOkCAN6RzjiakZS25RLYFrcMttJqbdd8BWrnA+fGz57iN5Pb06pvBGvl5gQ0B48dJlslXvoTg==}
     dependencies:
@@ -3741,12 +3732,6 @@ packages:
       eslint-visitor-keys: 1.3.0
     dev: true
 
-  /esprima/1.0.4:
-    resolution: {integrity: sha512-rp5dMKN8zEs9dfi9g0X1ClLmV//WRyk/R15mppFNICIFRG5P92VP7Z04p8pk++gABo9W2tY+kHyu6P1mEHgmTA==}
-    engines: {node: '>=0.4.0'}
-    hasBin: true
-    dev: false
-
   /esprima/4.0.1:
     resolution: {integrity: sha512-eGuFFw7Upda+g4p+QHvnW0RyTX/SVeJBDM/gCtMARO0cLuT2HcEKnTPvhjV6aGeqrCB/sbNop0Kszm0jsaWU4A==}
     engines: {node: '>=4'}
@@ -4727,15 +4712,6 @@ packages:
   /js-tokens/4.0.0:
     resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}
 
-  /js-yaml/2.1.3:
-    resolution: {integrity: sha512-2ElQ5tUBsI5GIjddfYGdudelD5+9JM9FfJXlrn+Mj3k72t4XrqBr3vf3+1sky0WKC3dSVhF0ZqIUpX9QFBmmfQ==}
-    engines: {node: '>= 0.6.0'}
-    hasBin: true
-    dependencies:
-      argparse: 0.1.16
-      esprima: 1.0.4
-    dev: false
-
   /js-yaml/3.14.1:
     resolution: {integrity: sha512-okMH7OXXJ7YrN9Ok3/SXrnu4iX9yOk+25nqX4imS2npuvTYDmo/QEZoqwZkYaIDk3jVvBOTOIEgEhaLOynBS9g==}
     hasBin: true
@@ -5041,14 +5017,6 @@ packages:
 
   /markdown-table/3.0.2:
     resolution: {integrity: sha512-y8j3a5/DkJCmS5x4dMCQL+OR0+2EAq3DOtio1COSHsmW2BGXnNCK3v12hJt1LrUz5iZH5g0LmuYOjDdI+czghA==}
-    dev: false
-
-  /matter/0.2.0:
-    resolution: {integrity: sha512-0U1pi3ysBdf8iDpIY0eOi80e0xo1mvYTEm5CzRnJNve/hIZLEPT/9823FJj4UKM6gmYQ1vSOQukVTEICYxSsSg==}
-    deprecated: 'For now, this project is deprecated. I no longer use or work on it, and doubt others are using it. If by any chance you were using this, and would like to see more of it in some form, let me know: justnvdm@gmail.com'
-    dependencies:
-      js-yaml: 2.1.3
-      underscore: 1.5.2
     dev: false
 
   /mdast-util-definitions/5.1.1:
@@ -7329,18 +7297,6 @@ packages:
     resolution: {integrity: sha512-eXL4nmJT7oCpkZsHZUOJo8hcX3GbsiDOa0Qu9F646fi8dT3XuSVopVqAcEiVzSKKH7UoDti23wNX3qGFxcW5Qg==}
     engines: {node: '>=0.10.0'}
     dev: true
-
-  /underscore.string/2.4.0:
-    resolution: {integrity: sha512-yxkabuCaIBnzfIvX3kBxQqCs0ar/bfJwDnFEHJUm/ZrRVhT3IItdRF5cZjARLzEnyQYtIUhsZ2LG2j3HidFOFQ==}
-    dev: false
-
-  /underscore/1.5.2:
-    resolution: {integrity: sha512-yejOFsRnTJs0N9CK5Apzf6maDO2djxGoLLrlZlvGs2o9ZQuhIhDL18rtFyy4FBIbOkzA6+4hDgXbgz5EvDQCXQ==}
-    dev: false
-
-  /underscore/1.7.0:
-    resolution: {integrity: sha512-cp0oQQyZhUM1kpJDLdGO1jPZHgS/MpzoWYfe9+CM2h/QGDZlqwT2T3YGukuBdaNJ/CAPoeyAZRRHz8JFo176vA==}
-    dev: false
 
   /undici/5.8.2:
     resolution: {integrity: sha512-3KLq3pXMS0Y4IELV045fTxqz04Nk9Ms7yfBBHum3yxsTR4XNn+ZCaUbf/mWitgYDAhsplQ0B1G4S5D345lMO3A==}
