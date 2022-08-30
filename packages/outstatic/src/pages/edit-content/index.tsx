@@ -61,7 +61,7 @@ export default function EditContent({ contentType }: EditContentProps) {
     setLoading(true)
     try {
       const post = methods.getValues()
-      const content = mergeMdMeta({ ...data })
+      const content = await mergeMdMeta({ ...data })
       const oid = await fetchOid()
       const owner = session?.user?.name || ''
       const newSlug = post.slug

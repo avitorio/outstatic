@@ -8,7 +8,7 @@ const convertDateToYYYYMMDD = (date: Date) => {
   return `${yyyy}-${mm}-${dd}`
 }
 
-export const mergeMdMeta = (data: PostType): string => {
+export const mergeMdMeta = async (data: PostType): Promise<string> => {
   const { content } = data
   const meta = Object.entries(
     (({ content, publishedAt, ...meta }) => meta)(data)
