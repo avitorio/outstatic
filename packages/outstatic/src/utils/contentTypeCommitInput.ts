@@ -25,12 +25,12 @@ export const contentTypeCommitInput = ({
 
   if (remove) {
     deletions.push({
-      path: `${monorepoPath}/${contentPath}/${contentType}`
+      path: `${monorepoPath ? monorepoPath + '/' : ''}${contentPath}/${contentType}`
     })
     fileChanges = { ...fileChanges, deletions }
   } else {
     additions.push({
-      path: `${monorepoPath}/${contentPath}/${contentType}/.gitkeep`,
+      path: `${monorepoPath ? monorepoPath + '/' : ''}${contentPath}/${contentType}/.gitkeep`,
       contents: encode('')
     })
     fileChanges = { additions }

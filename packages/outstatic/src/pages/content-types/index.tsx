@@ -14,7 +14,7 @@ import useNavigationLock from '../../utils/useNavigationLock'
 import useOid from '../../utils/useOid'
 
 export default function ContentTypes() {
-  const { pages, contentPath, session, repoSlug, addPage } = useContext(
+  const { pages, contentPath, monorepoPath, session, repoSlug, addPage } = useContext(
     OutstaticContext
   )
   const router = useRouter()
@@ -50,6 +50,7 @@ export default function ContentTypes() {
         oid,
         repoSlug,
         contentPath,
+        monorepoPath,
         contentType
       })
 
