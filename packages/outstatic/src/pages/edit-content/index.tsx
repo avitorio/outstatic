@@ -30,7 +30,7 @@ type EditContentProps = {
 export default function EditContent({ contentType }: EditContentProps) {
   const router = useRouter()
   const slug = router.query?.ost?.[1] as string
-  const { repoSlug, contentPath } = useContext(OutstaticContext)
+  const { repoSlug, contentPath, monorepoPath } = useContext(OutstaticContext)
   const { session } = useOstSession()
   const [loading, setLoading] = useState(false)
   const [hasChanges, setHasChanges] = useState(false)
@@ -51,7 +51,7 @@ export default function EditContent({ contentType }: EditContentProps) {
     variables: {
       owner: session?.user?.name || '',
       name: repoSlug,
-      filePath: `HEAD:${process.env.OST_MONOREPO_PATH || ''}${contentPath}/${contentType}/${slug}.md`
+      filePath: `HEAD:${monorepoPath ? monorepoPath + '/' : ''}${contentPath}/${contentType}/${slug}.md`
     },
     fetchPolicy: 'network-only',
     skip: slug === 'new' || !slug
@@ -77,7 +77,7 @@ export default function EditContent({ contentType }: EditContentProps) {
         oid,
         files,
         repoSlug,
-        contentPath: contentPath + '/' + contentType
+        contentPath: `${monorepoPath ? monorepoPath + '/' : ''}` + contentPath + '/' + contentType
       })
 
       await createCommit({ variables: commitInput })

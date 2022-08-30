@@ -6,6 +6,7 @@ type contentTypeCommitInputType = {
   remove?: boolean
   repoSlug: string
   contentPath: string
+  monorepoPath: string
   contentType: string
 }
 
@@ -15,6 +16,7 @@ export const contentTypeCommitInput = ({
   remove = false,
   repoSlug,
   contentPath,
+  monorepoPath,
   contentType
 }: contentTypeCommitInputType) => {
   let fileChanges = {}
@@ -23,12 +25,12 @@ export const contentTypeCommitInput = ({
 
   if (remove) {
     deletions.push({
-      path: `${contentPath}/${contentType}`
+      path: `${monorepoPath}/${contentPath}/${contentType}`
     })
     fileChanges = { ...fileChanges, deletions }
   } else {
     additions.push({
-      path: `${contentPath}/${contentType}/.gitkeep`,
+      path: `${monorepoPath}/${contentPath}/${contentType}/.gitkeep`,
       contents: encode('')
     })
     fileChanges = { additions }

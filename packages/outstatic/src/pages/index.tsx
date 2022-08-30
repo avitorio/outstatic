@@ -23,6 +23,7 @@ type OutstaticProps = {
     client: ApolloClient<any>
     repoSlug: string
     contentPath: string
+    monorepoPath: string
     session: Session | null
     initialApolloState?: null
     contentTypes: string[]
@@ -109,7 +110,7 @@ export const OstSSP: GetServerSideProps = async ({ req }) => {
       query: ContentTypesDocument,
       variables: {
         name: process.env.OST_REPO_SLUG,
-        contentPath: `HEAD:${process.env.OST_MONOREPO_PATH || ''}${process.env.OST_CONTENT_PATH || 'outstatic/content'}`,
+        contentPath: `HEAD:${process.env.OST_MONOREPO_PATH ? process.env.OST_MONOREPO_PATH + '/' : ''}${process.env.OST_CONTENT_PATH || 'outstatic/content'}`,
         owner: session?.user?.name
       }
     })
@@ -128,7 +129,8 @@ export const OstSSP: GetServerSideProps = async ({ req }) => {
       missingEnvVars: [],
       providerData: {
         repoSlug: process.env.OST_REPO_SLUG,
-        contentPath: 'outstatic/content',
+        contentPath: process.env.OST_CONTENT_PATH || 'outstatic/content',
+        monorepoPath: process.env.OST_MONOREPO_PATH || '',
         session: session || null,
         initialApolloState: apolloClient?.cache.extract() || null,
         contentTypes,

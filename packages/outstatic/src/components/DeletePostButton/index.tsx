@@ -23,7 +23,7 @@ const DeletePostButton = ({
   const [deleting, setDeleting] = useState(false)
   const { session } = useOstSession()
   const [createCommit] = useCreateCommitMutation()
-  const { repoSlug, contentPath } = useContext(OutstaticContext)
+  const { repoSlug, contentPath, monorepoPath } = useContext(OutstaticContext)
   const fetchOid = useOid()
 
   const deletePost = async (slug: string) => {
@@ -36,7 +36,7 @@ const DeletePostButton = ({
         oldSlug: slug,
         oid,
         repoSlug,
-        contentPath: contentPath + '/' + contentType
+        contentPath: `${monorepoPath ? monorepoPath + '/' : ''}` + contentPath + '/' + contentType
       })
 
       await createCommit({ variables: commitInput })

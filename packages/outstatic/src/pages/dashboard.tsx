@@ -13,6 +13,7 @@ export default function Dashboard() {
     session,
     repoSlug,
     contentPath,
+    monorepoPath,
     removePage
   } = useContext(OutstaticContext)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
@@ -32,6 +33,7 @@ export default function Dashboard() {
         repoSlug,
         remove: true,
         contentPath,
+        monorepoPath,
         contentType
       })
 

@@ -16,12 +16,12 @@ type ListProps = {
 }
 
 export default function List({ contentType }: ListProps) {
-  const { repoSlug, contentPath, session } = useContext(OutstaticContext)
+  const { repoSlug, contentPath, monorepoPath, session } = useContext(OutstaticContext)
   const { data, error } = usePostsQuery({
     variables: {
       owner: session?.user?.name || '',
       name: repoSlug || '',
-      contentPath: `HEAD:${process.env.OST_MONOREPO_PATH || ''}${contentPath}/${contentType}` || ''
+      contentPath: `HEAD:${monorepoPath ? monorepoPath + '/' : ''}${contentPath}/${contentType}` || ''
     },
     fetchPolicy: 'network-only',
     onError: ({ graphQLErrors }) => {
