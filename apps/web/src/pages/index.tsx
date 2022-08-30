@@ -36,7 +36,7 @@ export default function Home({ allPostsData }: HomeProps) {
           <Button />
         </div>
 
-        <div className="grid mt-10">
+        <div className="grid grid-cols-2 gap-10 mt-10">
           {allPostsData.map(({ slug, publishedAt, title, description }) => (
             <Link key={slug} href={`/posts/${slug}`}>
               <a className="block p-6 max-w-sm bg-white rounded-lg border border-gray-200 shadow-md hover:bg-gray-100">
