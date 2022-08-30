@@ -77,7 +77,8 @@ export default function EditContent({ contentType }: EditContentProps) {
         oid,
         files,
         repoSlug,
-        contentPath: `${monorepoPath ? monorepoPath + '/' : ''}` + contentPath + '/' + contentType
+        contentPath: contentPath + '/' + contentType,
+        monorepoPath
       })
 
       await createCommit({ variables: commitInput })

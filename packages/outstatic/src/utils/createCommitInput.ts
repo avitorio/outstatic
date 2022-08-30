@@ -10,6 +10,7 @@ type createCommitInputType = {
   files?: FileType[]
   repoSlug: string
   contentPath: string
+  monorepoPath: string
 }
 
 export const createCommitInput = ({
@@ -20,7 +21,8 @@ export const createCommitInput = ({
   oid,
   files = [],
   repoSlug,
-  contentPath
+  contentPath,
+  monorepoPath
 }: createCommitInputType) => {
   let fileChanges = {}
   const additions = []
@@ -37,7 +39,7 @@ export const createCommitInput = ({
         const newFilename = filename.replace(/(\.[^\.]*)?$/, `-${randString}$1`)
 
         additions.push({
-          path: `public/${type}/${newFilename}`,
+          path: `${monorepoPath ? monorepoPath + '/' : ''}public/${type}/${newFilename}`,
           contents: fileContents
         })
 
@@ -48,7 +50,7 @@ export const createCommitInput = ({
     }
 
     additions.push({
-      path: `${contentPath}/${slug}.md`,
+      path: `${monorepoPath ? monorepoPath + '/' : ''}${contentPath}/${slug}.md`,
       contents: encode(newContent)
     })
     fileChanges = { additions }
@@ -57,7 +59,7 @@ export const createCommitInput = ({
   // Remove old file if slug has changed
   if (oldSlug) {
     deletions.push({
-      path: `${contentPath}/${oldSlug}.md`
+      path: `${monorepoPath ? monorepoPath + '/' : ''}${contentPath}/${oldSlug}.md`
     })
     fileChanges = { ...fileChanges, deletions }
   }
