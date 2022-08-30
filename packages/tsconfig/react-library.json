@@ -3,7 +3,7 @@
   "display": "React Library",
   "extends": "./base.json",
   "compilerOptions": {
-    "lib": ["ES2015"],
+    "lib": ["ES2021"],
     "module": "ESNext",
     "target": "ES6",
     "jsx": "react-jsx"
