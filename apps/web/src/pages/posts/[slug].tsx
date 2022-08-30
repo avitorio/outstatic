@@ -26,11 +26,11 @@ export default function Post({ title, content, publishedAt }: PostProps) {
           <a className="hover:text-blue-600">← Home</a>
         </Link>
       </nav>
-      <main className="text-white max-w-5xl mx-auto">
+      <main className="text-white max-w-[65ch] mx-auto pb-16">
         <h1 className="text-4xl mb-4 font-semibold">{title}</h1>
         <p className="mb-10">Written on {date}</p>
         <div
-          className="prose prose-invert"
+          className="prose prose-invert prose-lg"
           dangerouslySetInnerHTML={{ __html: content }}
         />
       </main>
