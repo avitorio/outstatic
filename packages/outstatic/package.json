@@ -55,6 +55,7 @@
     "@graphql-codegen/typescript": "^2.4.11",
     "@graphql-codegen/typescript-operations": "^2.4.0",
     "@graphql-codegen/typescript-react-apollo": "^3.2.14",
+    "@tailwindcss/typography": "^0.5.4",
     "@types/cookie": "^0.5.1",
     "@types/dompurify": "^2.3.3",
     "@types/lowlight": "^0.0.3",

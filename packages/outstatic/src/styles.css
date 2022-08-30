@@ -139,24 +139,6 @@
   outline: none;
 }
 
-.ProseMirror > * + * {
-  margin-top: 0.75em;
-}
-.ProseMirror ul,
-.ProseMirror ol {
-  padding: 0 1rem;
-}
-
-.ProseMirror h1 {
-  font-size: 48px;
-  text-align: left;
-  margin-bottom: 8px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 1.25;
-  letter-spacing: 0;
-}
-
 .ProseMirror h1,
 .ProseMirror h2,
 .ProseMirror h3,
@@ -231,7 +213,7 @@
   color: inherit;
   padding: 0;
   background: none;
-  font-size: 0.8rem;
+  font-size: 1rem;
 }
 
 .ProseMirror .hljs-comment,

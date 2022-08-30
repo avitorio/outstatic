@@ -106,6 +106,7 @@ importers:
       '@graphql-codegen/typescript-react-apollo': ^3.2.14
       '@hapi/iron': ^7.0.0
       '@hookform/resolvers': ^2.9.0
+      '@tailwindcss/typography': ^0.5.4
       '@tiptap/extension-bubble-menu': ^2.0.0-beta.60
       '@tiptap/extension-code-block-lowlight': ^2.0.0-beta.73
       '@tiptap/extension-floating-menu': ^2.0.0-beta.56
@@ -189,6 +190,7 @@ importers:
       '@graphql-codegen/typescript': 2.7.3_tguxomqdchinjc7y46blh4q5oy
       '@graphql-codegen/typescript-operations': 2.5.3_tguxomqdchinjc7y46blh4q5oy
       '@graphql-codegen/typescript-react-apollo': 3.3.3_tguxomqdchinjc7y46blh4q5oy
+      '@tailwindcss/typography': 0.5.4_tailwindcss@3.1.8
       '@types/cookie': 0.5.1
       '@types/dompurify': 2.3.3
       '@types/lowlight': 0.0.3

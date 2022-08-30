@@ -186,7 +186,7 @@ export default function EditContent({ contentType }: EditContentProps) {
                 className="w-full resize-none outline-none bg-white text-5xl"
                 placeholder={`Your ${singular(contentType)} title`}
               />
-              <div className="min-h-full">
+              <div className="min-h-full prose prose-xl">
                 <MDEditor editor={editor} id="content" />
               </div>
             </form>
