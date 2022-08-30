@@ -1,5 +1,4 @@
 import Head from "next/head";
-import { Button } from "ui";
 
 type HomeProps = {
   allPostsData: {
@@ -32,8 +31,15 @@ export default function Home({ allPostsData }: HomeProps) {
             Outstatic Example
           </span>{" "}
         </h1>
-        <div className="mx-auto mt-5 max-w-xl sm:flex sm:justify-center md:mt-8">
-          <Button />
+        <div className="mx-auto mt-5 max-w-xl sm:flex sm:justify-center md:mt-8">     
+          <a href="https://outstatic.com/docs">
+            <div className="flex w-full items-center justify-center rounded-md border border-transparent bg-black px-8 py-3 text-base font-medium text-white no-underline hover:bg-gray-700 dark:bg-white dark:text-black dark:hover:bg-gray-300 md:py-3 md:px-10 md:text-lg md:leading-6">
+              Read the docs
+              <span className="ml-2 bg-gradient-to-r from-brandred to-brandblue bg-clip-text text-transparent">
+                →
+              </span>
+            </div>
+          </a>
         </div>
 
         <div className="grid grid-cols-2 gap-10 mt-10">
