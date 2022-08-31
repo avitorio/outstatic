@@ -1,11 +1,11 @@
-import { defineConfig } from "tsup";
+import { defineConfig } from 'tsup'
 
 export default defineConfig((options) => {
   return {
-    entry: ["./src/index.tsx", "./src/utils/server.ts"],
-    external: ["react", "react-dom", "next", "tsup"],
-    format: ["cjs", "esm"],
+    entry: ['./src/index.tsx', './src/utils/server.ts'],
+    external: ['react', 'react-dom', 'next', 'tsup'],
+    format: ['cjs', 'esm'],
     dts: true,
-    minify: !options.watch,
-  };
-});
+    minify: !options.watch
+  }
+})

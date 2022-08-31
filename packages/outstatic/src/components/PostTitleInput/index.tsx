@@ -38,7 +38,7 @@ export default function PostTitle({
       <div className="relative">
         <TextareaAutosize
           {...register(id, {
-            onChange: e => {
+            onChange: (e) => {
               const segments = new URL(document.location.href).pathname.split(
                 '/'
               )
@@ -58,7 +58,7 @@ export default function PostTitle({
           placeholder={placeholder}
           aria-describedby={id}
           autoFocus
-          onKeyDown={e => {
+          onKeyDown={(e) => {
             if (e.key.toLowerCase() === 'enter') {
               e.preventDefault()
               editor.commands.focus('start')

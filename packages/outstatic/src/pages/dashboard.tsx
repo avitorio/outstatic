@@ -54,7 +54,7 @@ export default function Dashboard() {
         </Link>
       </div>
       <div className="max-w-5xl w-full grid grid-cols-3 gap-6">
-        {contentTypes.map(contentType => (
+        {contentTypes.map((contentType) => (
           <div
             key={contentType}
             className="flex p-6 justify-between items-center max-w-sm bg-white rounded-lg border border-gray-200 shadow-md"

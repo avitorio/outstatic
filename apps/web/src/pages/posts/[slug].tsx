@@ -1,21 +1,21 @@
-import { GetStaticProps } from "next";
-import Head from "next/head";
-import Link from "next/link";
+import { GetStaticProps } from 'next'
+import Head from 'next/head'
+import Link from 'next/link'
 
 type PostProps = {
-  id: string;
-  date: string;
-  title: string;
-  content: string;
-  publishedAt: string;
-};
+  id: string
+  date: string
+  title: string
+  content: string
+  publishedAt: string
+}
 
 export default function Post({ title, content, publishedAt }: PostProps) {
-  const date = new Date(publishedAt).toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
+  const date = new Date(publishedAt).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  })
   return (
     <>
       <Head>
@@ -35,23 +35,23 @@ export default function Post({ title, content, publishedAt }: PostProps) {
         />
       </main>
     </>
-  );
+  )
 }
 
-import { getPaths, getContent } from "outstatic/server";
+import { getPaths, getContent } from 'outstatic/server'
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const post = await getContent("posts", params?.slug as string);
+  const post = await getContent('posts', params?.slug as string)
   return {
     props: {
-      ...post,
-    },
-  };
-};
+      ...post
+    }
+  }
+}
 
 export const getStaticPaths = async () => {
   return {
-    paths: getPaths("posts"),
-    fallback: false,
-  };
-};
+    paths: getPaths('posts'),
+    fallback: false
+  }
+}

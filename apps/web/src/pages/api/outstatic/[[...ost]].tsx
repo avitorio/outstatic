@@ -1,3 +1,3 @@
-import { OutstaticApi } from "outstatic";
+import { OutstaticApi } from 'outstatic'
 
-export default OutstaticApi;
+export default OutstaticApi

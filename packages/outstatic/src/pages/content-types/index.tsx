@@ -14,9 +14,8 @@ import useNavigationLock from '../../utils/useNavigationLock'
 import useOid from '../../utils/useOid'
 
 export default function ContentTypes() {
-  const { pages, contentPath, monorepoPath, session, repoSlug, addPage } = useContext(
-    OutstaticContext
-  )
+  const { pages, contentPath, monorepoPath, session, repoSlug, addPage } =
+    useContext(OutstaticContext)
   const router = useRouter()
   const [createCommit] = useCreateCommitMutation()
   const fetchOid = useOid()
@@ -96,10 +95,10 @@ export default function ContentTypes() {
             type="text"
             helperText="Use the plural form of the content type name, ex: Docs"
             validation={{
-              onChange: e => {
+              onChange: (e) => {
                 setPlural(plural(e.target.value))
               },
-              onBlur: e => {
+              onBlur: (e) => {
                 methods.setValue('name', plural(e.target.value))
               }
             }}

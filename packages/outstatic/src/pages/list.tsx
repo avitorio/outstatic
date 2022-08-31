@@ -16,12 +16,16 @@ type ListProps = {
 }
 
 export default function List({ contentType }: ListProps) {
-  const { repoSlug, contentPath, monorepoPath, session } = useContext(OutstaticContext)
+  const { repoSlug, contentPath, monorepoPath, session } =
+    useContext(OutstaticContext)
   const { data, error } = usePostsQuery({
     variables: {
       owner: session?.user?.name || '',
       name: repoSlug || '',
-      contentPath: `HEAD:${monorepoPath ? monorepoPath + '/' : ''}${contentPath}/${contentType}` || ''
+      contentPath:
+        `HEAD:${
+          monorepoPath ? monorepoPath + '/' : ''
+        }${contentPath}/${contentType}` || ''
     },
     fetchPolicy: 'network-only',
     onError: ({ graphQLErrors }) => {
@@ -43,7 +47,7 @@ export default function List({ contentType }: ListProps) {
     data?.repository?.object?.entries
 
   if (entries) {
-    entries.forEach(post => {
+    entries.forEach((post) => {
       if (post.name.slice(-3) === '.md') {
         const {
           data: { title, publishedAt, status }

@@ -58,7 +58,7 @@ const PostsTable = (props: PostTableProps) => {
                   slug={slug}
                   disabled={false}
                   onComplete={() =>
-                    setPosts(posts.filter(p => p.slug !== slug))
+                    setPosts(posts.filter((p) => p.slug !== slug))
                   }
                   contentType={props.contentType}
                 />

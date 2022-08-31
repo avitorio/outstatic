@@ -24,11 +24,7 @@ const MDEFloatingMenu = ({ editor }: MDEFloatingMenuProps) => {
           <div className="rounded-sm border border-black">
             <MDEMenuButton
               onClick={() =>
-                editor
-                  .chain()
-                  .focus()
-                  .toggleHeading({ level: 2 })
-                  .run()
+                editor.chain().focus().toggleHeading({ level: 2 }).run()
               }
               editor={editor}
               name="heading"
@@ -46,11 +42,7 @@ const MDEFloatingMenu = ({ editor }: MDEFloatingMenuProps) => {
             </MDEMenuButton>
             <MDEMenuButton
               onClick={() =>
-                editor
-                  .chain()
-                  .focus()
-                  .toggleHeading({ level: 3 })
-                  .run()
+                editor.chain().focus().toggleHeading({ level: 3 }).run()
               }
               editor={editor}
               name="heading"
@@ -105,13 +97,7 @@ const MDEFloatingMenu = ({ editor }: MDEFloatingMenuProps) => {
               </svg>
             </MDEMenuButton>
             <MDEMenuButton
-              onClick={() =>
-                editor
-                  .chain()
-                  .focus()
-                  .toggleBlockquote()
-                  .run()
-              }
+              onClick={() => editor.chain().focus().toggleBlockquote().run()}
               editor={editor}
               name="blockquote"
             >

@@ -3,26 +3,26 @@ import { NodeViewContent, NodeViewWrapper } from '@tiptap/react'
 type CodeBlockProps = {
   node: {
     attrs: {
-      language: string;
-    };
-  };
-  updateAttributes: (attrs: { language: string }) => void;
+      language: string
+    }
+  }
+  updateAttributes: (attrs: { language: string }) => void
   extension: {
-    languages: { [key: string]: string };
+    languages: { [key: string]: string }
     options: {
       lowlight: {
-        listLanguages: () => string[];
-      };
-    };
-  };
-};
+        listLanguages: () => string[]
+      }
+    }
+  }
+}
 
 const CodeBlock = ({
   node: {
-    attrs: { language: defaultLanguage },
+    attrs: { language: defaultLanguage }
   },
   updateAttributes,
-  extension,
+  extension
 }: CodeBlockProps) => {
   return (
     <NodeViewWrapper className="relative">
@@ -44,7 +44,7 @@ const CodeBlock = ({
         <NodeViewContent as="code" />
       </pre>
     </NodeViewWrapper>
-  );
-};
+  )
+}
 
-export default CodeBlock;
+export default CodeBlock

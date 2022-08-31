@@ -15,10 +15,10 @@ type useOstSessionReturn = {
 
 const fetcher = (url: string) =>
   fetch(url)
-    .then(r => {
+    .then((r) => {
       return r.json()
     })
-    .then(data => {
+    .then((data) => {
       return data || null
     })
 

@@ -39,7 +39,9 @@ export const createCommitInput = ({
         const newFilename = filename.replace(/(\.[^\.]*)?$/, `-${randString}$1`)
 
         additions.push({
-          path: `${monorepoPath ? monorepoPath + '/' : ''}public/${type}/${newFilename}`,
+          path: `${
+            monorepoPath ? monorepoPath + '/' : ''
+          }public/${type}/${newFilename}`,
           contents: fileContents
         })
 
@@ -55,17 +57,21 @@ export const createCommitInput = ({
     )
 
     additions.push({
-      path: `${monorepoPath ? monorepoPath + '/' : ''}${contentPath}/${slug}.md`,
+      path: `${
+        monorepoPath ? monorepoPath + '/' : ''
+      }${contentPath}/${slug}.md`,
       contents: encode(newContent)
     })
-    
+
     fileChanges = { additions }
   }
 
   // Remove old file if slug has changed
   if (oldSlug) {
     deletions.push({
-      path: `${monorepoPath ? monorepoPath + '/' : ''}${contentPath}/${oldSlug}.md`
+      path: `${
+        monorepoPath ? monorepoPath + '/' : ''
+      }${contentPath}/${oldSlug}.md`
     })
     fileChanges = { ...fileChanges, deletions }
   }

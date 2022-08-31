@@ -32,7 +32,7 @@ const PostSettings = ({
           id="publishedAt"
           label="Date"
           date={post.publishedAt}
-          setDate={publishedAt => editPost('publishedAt', publishedAt)}
+          setDate={(publishedAt) => editPost('publishedAt', publishedAt)}
         />
       </div>
       <div className="relative hidden w-full items-center justify-between md:mb-4 md:flex">
@@ -61,7 +61,7 @@ const PostSettings = ({
           defaultValue={post.slug}
           inputSize="small"
           validation={{
-            onChange: e => {
+            onChange: (e) => {
               editPost(
                 'slug',
                 convert(e.target.value, { dictionary: { "'": '' } })

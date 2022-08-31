@@ -37,7 +37,7 @@ const DeletePostButton = ({
         oid,
         repoSlug,
         contentPath: contentPath + '/' + contentType,
-        monorepoPath,
+        monorepoPath
       })
 
       await createCommit({ variables: commitInput })

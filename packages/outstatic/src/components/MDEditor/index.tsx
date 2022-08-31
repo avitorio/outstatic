@@ -1,20 +1,20 @@
-import { Editor, EditorContent } from "@tiptap/react";
-import { useFormContext } from "react-hook-form";
-import MDEFloatingMenu from "../MDEFloatingMenu";
-import MDEMenu from "../MDEMenu";
+import { Editor, EditorContent } from '@tiptap/react'
+import { useFormContext } from 'react-hook-form'
+import MDEFloatingMenu from '../MDEFloatingMenu'
+import MDEMenu from '../MDEMenu'
 
 interface MDEditorProps {
-  editor: Editor;
-  id: string;
+  editor: Editor
+  id: string
 }
 
 const MDEditor = ({ id, editor }: MDEditorProps) => {
   const {
     watch,
-    formState: { errors },
-  } = useFormContext();
+    formState: { errors }
+  } = useFormContext()
 
-  const watchContent = watch("content");
+  const watchContent = watch('content')
 
   return (
     <>
@@ -29,7 +29,7 @@ const MDEditor = ({ id, editor }: MDEditorProps) => {
         )}
       </div>
     </>
-  );
-};
+  )
+}
 
-export default MDEditor;
+export default MDEditor

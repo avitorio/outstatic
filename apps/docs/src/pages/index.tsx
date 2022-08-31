@@ -1,4 +1,4 @@
-import Head from "next/head";
+import Head from 'next/head'
 
 export default function Home() {
   return (
@@ -13,9 +13,9 @@ export default function Home() {
           Docs <br className="hidden lg:block" />
           <span className="inline-block bg-gradient-to-r from-red-500 to-blue-500 bg-clip-text text-transparent ">
             Outstatic Example
-          </span>{" "}
+          </span>{' '}
         </h1>
-        <div className="mx-auto mt-5 max-w-xl sm:flex sm:justify-center md:mt-8">    
+        <div className="mx-auto mt-5 max-w-xl sm:flex sm:justify-center md:mt-8">
           <a href="https://outstatic.com/docs">
             <div className="flex w-full items-center justify-center rounded-md border border-transparent bg-black px-8 py-3 text-base font-medium text-white no-underline hover:bg-gray-700 dark:bg-white dark:text-black dark:hover:bg-gray-300 md:py-3 md:px-10 md:text-lg md:leading-6">
               Read the docs
@@ -27,5 +27,5 @@ export default function Home() {
         </div>
       </main>
     </div>
-  );
+  )
 }

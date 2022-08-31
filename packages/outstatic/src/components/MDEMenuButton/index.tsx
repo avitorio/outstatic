@@ -18,7 +18,7 @@ const MDEMenuButton = ({
   attributes = {}
 }: MDEMenuButtonProps) => (
   <button
-    onClick={e => {
+    onClick={(e) => {
       e.preventDefault()
       onClick()
     }}

@@ -51,7 +51,9 @@ export default function EditContent({ contentType }: EditContentProps) {
     variables: {
       owner: session?.user?.name || '',
       name: repoSlug,
-      filePath: `HEAD:${monorepoPath ? monorepoPath + '/' : ''}${contentPath}/${contentType}/${slug}.md`
+      filePath: `HEAD:${
+        monorepoPath ? monorepoPath + '/' : ''
+      }${contentPath}/${contentType}/${slug}.md`
     },
     fetchPolicy: 'network-only',
     skip: slug === 'new' || !slug

@@ -1,33 +1,32 @@
-import { BubbleMenu, Editor, isTextSelection } from "@tiptap/react";
-import { useCallback, useEffect, useState } from "react";
-import MDEMenuButton from "../MDEMenuButton";
+import { BubbleMenu, Editor, isTextSelection } from '@tiptap/react'
+import { useCallback, useEffect, useState } from 'react'
+import MDEMenuButton from '../MDEMenuButton'
 
 type MDEMenuProps = {
-  editor: Editor;
-};
+  editor: Editor
+}
 const MDEMenu = ({ editor }: MDEMenuProps) => {
-  const [imageSelected, setImageSelected] = useState(false);
-  const [showLink, setShowLink] = useState(false);
-  const [url, setUrl] = useState("");
+  const [imageSelected, setImageSelected] = useState(false)
+  const [showLink, setShowLink] = useState(false)
+  const [url, setUrl] = useState('')
 
   const setLink = useCallback(() => {
-    editor.chain().focus().extendMarkRange("link").setLink({ href: url }).run();
+    editor.chain().focus().extendMarkRange('link').setLink({ href: url }).run()
 
     // empty
-    if (url === "" || url === undefined) {
-      editor.chain().focus().extendMarkRange("link").unsetLink().run();
+    if (url === '' || url === undefined) {
+      editor.chain().focus().extendMarkRange('link').unsetLink().run()
     }
-    setShowLink(false);
-    editor.chain().blur().run();
-    setUrl("");
-  }, [editor, url]);
+    setShowLink(false)
+    editor.chain().blur().run()
+    setUrl('')
+  }, [editor, url])
 
   useEffect(() => {
-    const activeImage = () =>
-      editor.isActive("image") && setImageSelected(true);
-    editor.on("selectionUpdate", activeImage);
-    editor.on("focus", activeImage);
-  }, [editor]);
+    const activeImage = () => editor.isActive('image') && setImageSelected(true)
+    editor.on('selectionUpdate', activeImage)
+    editor.on('focus', activeImage)
+  }, [editor])
 
   return (
     <BubbleMenu
@@ -36,27 +35,27 @@ const MDEMenu = ({ editor }: MDEMenuProps) => {
         duration: 100,
         maxWidth: 500,
         onHidden: () => {
-          setImageSelected(false);
-          setShowLink(false);
-        },
+          setImageSelected(false)
+          setShowLink(false)
+        }
       }}
       shouldShow={({ editor, view, state, from, to }) => {
         // extended from @tiptap/extension-bubble-menu/src/bubble-menu-plugin.ts
-        const { doc, selection } = state;
-        const { empty } = selection;
+        const { doc, selection } = state
+        const { empty } = selection
         const isEmptyTextBlock =
-          !doc.textBetween(from, to).length && isTextSelection(state.selection);
+          !doc.textBetween(from, to).length && isTextSelection(state.selection)
 
         if (
           !view.hasFocus() ||
           empty ||
           isEmptyTextBlock ||
-          editor.isActive("codeBlock")
+          editor.isActive('codeBlock')
         ) {
-          return false;
+          return false
         }
 
-        return true;
+        return true
       }}
     >
       <div className="flex rounded-sm border border-black">
@@ -86,14 +85,14 @@ const MDEMenu = ({ editor }: MDEMenuProps) => {
               className="w-[500px] border-r border-black py-2 px-3 outline-none"
               placeholder="Insert link here"
               onChange={(e) => {
-                setUrl(e.target.value.trim());
+                setUrl(e.target.value.trim())
               }}
               onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  setLink();
+                if (e.key === 'Enter') {
+                  setLink()
                 }
-                if (e.key === "Escape") {
-                  setShowLink(false);
+                if (e.key === 'Escape') {
+                  setShowLink(false)
                 }
               }}
               autoFocus
@@ -156,8 +155,8 @@ const MDEMenu = ({ editor }: MDEMenuProps) => {
             </MDEMenuButton>
             <MDEMenuButton
               onClick={() => {
-                setUrl(editor.getAttributes("link").href);
-                setShowLink(true);
+                setUrl(editor.getAttributes('link').href)
+                setShowLink(true)
               }}
               editor={editor}
               name="link"
@@ -231,7 +230,7 @@ const MDEMenu = ({ editor }: MDEMenuProps) => {
                 editor
                   .chain()
                   .focus()
-                  .toggleCodeBlock({ language: "javascript" })
+                  .toggleCodeBlock({ language: 'javascript' })
                   .run()
               }
               editor={editor}
@@ -284,7 +283,7 @@ const MDEMenu = ({ editor }: MDEMenuProps) => {
         )}
       </div>
     </BubbleMenu>
-  );
-};
+  )
+}
 
-export default MDEMenu;
+export default MDEMenu
