@@ -104,10 +104,10 @@ export default function EditContent({ contentType }: EditContentProps) {
       } = matter(mdContent)
 
       const parseContent = () => {
-        const blogUrl = process.env.VERCEL_URL ? '' : '/api/outstatic'
+        // fetch images from Github in case deploy is not done yet
         const newContent = content?.replace(
           'src="/images/',
-          `src="${blogUrl}/images/`
+          `src="/api/outstatic/images/`
         )
         return newContent
       }

@@ -49,10 +49,16 @@ export const createCommitInput = ({
       })
     }
 
+    newContent = newContent?.replace(
+      'src="/api/outstatic/images/',
+      `src="/images/`
+    )
+
     additions.push({
       path: `${monorepoPath ? monorepoPath + '/' : ''}${contentPath}/${slug}.md`,
       contents: encode(newContent)
     })
+    
     fileChanges = { additions }
   }
 
