@@ -16,37 +16,6 @@ importers:
       prettier-plugin-tailwindcss: 0.1.13_prettier@2.7.1
       turbo: 1.4.3
 
-  apps/docs:
-    specifiers:
-      '@types/node': ^17.0.12
-      '@types/react': ^17.0.37
-      '@types/react-dom': ^17.0.11
-      autoprefixer: ^10.4.0
-      eslint-config-custom: workspace:*
-      next: latest
-      postcss: ^8.4.4
-      react: ^17.0.2
-      react-dom: ^17.0.2
-      tailwind-config: workspace:*
-      tailwindcss: ^3.0.0
-      tsconfig: workspace:*
-      typescript: ^4.5.3
-    dependencies:
-      next: 12.2.5_sfoxds7t5ydpegc3knd667wn6m
-      react: 17.0.2
-      react-dom: 17.0.2_react@17.0.2
-    devDependencies:
-      '@types/node': 17.0.45
-      '@types/react': 17.0.48
-      '@types/react-dom': 17.0.17
-      autoprefixer: 10.4.8_postcss@8.4.16
-      eslint-config-custom: link:../../packages/eslint-config-custom
-      postcss: 8.4.16
-      tailwind-config: link:../../packages/tailwind-config
-      tailwindcss: 3.1.8
-      tsconfig: link:../../packages/tsconfig
-      typescript: 4.7.4
-
   apps/web:
     specifiers:
       '@tailwindcss/typography': ^0.5.4
