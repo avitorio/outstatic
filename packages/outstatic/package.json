@@ -1,12 +1,12 @@
 {
   "name": "outstatic",
-  "version": "0.0.1",
+  "version": "0.0.1-rc",
   "description": "Static site CMS for Next.js",
   "author": "Andre Vitorio <andre@vitorio.net>",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
-    ".": "./dist",
+    ".": "./dist/index.js",
     "./server": "./dist/utils/server.js",
     "./outstatic.css": "./dist/outstatic.css"
   },
