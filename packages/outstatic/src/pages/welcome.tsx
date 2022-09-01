@@ -23,7 +23,7 @@ export default function Welcome({ variables }: WelcomeProps) {
         <ul className="mb-5">
           {envVars.map(
             (variable, index) =>
-              variable !== 'OST_CONTENT_PATH' && (
+              !['OST_CONTENT_PATH', 'OST_REPO_OWNER'].includes(variable) && (
                 <li key={variable} className="mb-1">
                   {`${variables[index] ? '✅' : '❌'} Variable`}{' '}
                   <span className="font-semibold">{variable}</span>{' '}
@@ -39,6 +39,15 @@ export default function Welcome({ variables }: WelcomeProps) {
             where your content is saved.
             <br />
             Defaulting to <code>outstatic/content</code>
+          </p>
+        )}
+
+        {!variables[envVars.indexOf('OST_REPO_OWNER')] && (
+          <p className="mb-5 p-2 bg-blue-100 rounded">
+            Optional variable{' '}
+            <span className="font-semibold">OST_REPO_OWNER</span> is not set.
+            <br />
+            Defaulting to your Github user.
           </p>
         )}
         <p>Note that you need to restart Next.js to apply the changes.</p>

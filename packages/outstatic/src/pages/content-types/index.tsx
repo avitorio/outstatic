@@ -14,8 +14,15 @@ import useNavigationLock from '../../utils/useNavigationLock'
 import useOid from '../../utils/useOid'
 
 export default function ContentTypes() {
-  const { pages, contentPath, monorepoPath, session, repoSlug, addPage } =
-    useContext(OutstaticContext)
+  const {
+    pages,
+    contentPath,
+    monorepoPath,
+    session,
+    repoSlug,
+    repoOwner,
+    addPage
+  } = useContext(OutstaticContext)
   const router = useRouter()
   const [createCommit] = useCreateCommitMutation()
   const fetchOid = useOid()
@@ -42,7 +49,7 @@ export default function ContentTypes() {
 
     try {
       const oid = await fetchOid()
-      const owner = session?.user?.name || ''
+      const owner = repoOwner || session?.user?.name || ''
       const contentType = convert(name, { dictionary: { "'": '' } })
       const commitInput = contentTypeCommitInput({
         owner,

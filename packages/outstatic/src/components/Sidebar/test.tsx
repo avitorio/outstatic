@@ -1,15 +1,18 @@
 import { render, screen } from '@testing-library/react'
-
-import React from 'react'
 import { OutstaticProvider } from '../../context'
 import Sidebar from '.'
 
 const providerData = {
+  repoOwner: 'anything',
   repoSlug: 'anything',
   contentPath: 'anything',
+  monorepoPath: 'anything',
   session: null,
   initialApolloState: null,
-  contentTypes: ['posts', 'docs']
+  contentTypes: ['posts', 'docs'],
+  pages: [],
+  addPage: (page: string) => {},
+  removePage: (page: string) => {}
 }
 
 describe('<Sidebar />', () => {

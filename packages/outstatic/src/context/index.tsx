@@ -3,6 +3,7 @@ import { PostContextType, Session } from '../types'
 
 type OutstaticProviderProps = {
   children?: React.ReactNode
+  repoOwner: string
   repoSlug: string
   contentPath: string
   monorepoPath: string
@@ -15,6 +16,7 @@ type OutstaticProviderProps = {
 }
 
 export const OutstaticContext = createContext({
+  repoOwner: '',
   repoSlug: '',
   contentPath: '',
   monorepoPath: '',
@@ -23,6 +25,7 @@ export const OutstaticContext = createContext({
 
 export const OutstaticProvider = ({
   children,
+  repoOwner,
   repoSlug,
   contentPath,
   monorepoPath,
@@ -35,6 +38,7 @@ export const OutstaticProvider = ({
   return (
     <OutstaticContext.Provider
       value={{
+        repoOwner: repoOwner || '',
         repoSlug: repoSlug || '',
         contentPath: contentPath || 'outstatic/content',
         monorepoPath: monorepoPath || '',

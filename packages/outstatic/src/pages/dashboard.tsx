@@ -11,6 +11,7 @@ export default function Dashboard() {
   const {
     contentTypes,
     session,
+    // repoOwner,
     repoSlug,
     contentPath,
     monorepoPath,
@@ -88,7 +89,7 @@ export default function Dashboard() {
       </div>
       {showDeleteModal && (
         <Modal
-          title="Delete Post"
+          title="Delete Content Type"
           close={() => {
             setShowDeleteModal(false)
             setSelectedContentType('')

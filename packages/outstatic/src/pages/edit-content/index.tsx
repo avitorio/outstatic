@@ -30,7 +30,8 @@ type EditContentProps = {
 export default function EditContent({ contentType }: EditContentProps) {
   const router = useRouter()
   const slug = router.query?.ost?.[1] as string
-  const { repoSlug, contentPath, monorepoPath } = useContext(OutstaticContext)
+  const { repoOwner, repoSlug, contentPath, monorepoPath } =
+    useContext(OutstaticContext)
   const { session } = useOstSession()
   const [loading, setLoading] = useState(false)
   const [hasChanges, setHasChanges] = useState(false)
@@ -49,7 +50,7 @@ export default function EditContent({ contentType }: EditContentProps) {
 
   const { data: postQueryData } = usePostQuery({
     variables: {
-      owner: session?.user?.name || '',
+      owner: repoOwner || session?.user?.name || '',
       name: repoSlug,
       filePath: `HEAD:${
         monorepoPath ? monorepoPath + '/' : ''
@@ -65,7 +66,7 @@ export default function EditContent({ contentType }: EditContentProps) {
       const post = methods.getValues()
       const content = mergeMdMeta({ ...data })
       const oid = await fetchOid()
-      const owner = session?.user?.name || ''
+      const owner = repoOwner || session?.user?.name || ''
       const newSlug = post.slug
 
       // If the slug has changed, commit should delete old file

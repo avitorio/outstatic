@@ -4,12 +4,15 @@ export const envVars = [
   'OST_GITHUB_SECRET',
   'OST_TOKEN_SECRET',
   'OST_REPO_SLUG',
-  'OST_CONTENT_PATH'
+  'OST_CONTENT_PATH',
+  'OST_REPO_OWNER'
 ]
 
 export const hasMissingEnvVar =
   envVars.filter((variable) =>
-    variable === 'OST_CONTENT_PATH' ? false : !process.env[variable]
+    variable === 'OST_CONTENT_PATH' || variable === 'OST_REPO_OWNER'
+      ? false
+      : !process.env[variable]
   ).length > 0
 
 export const missingEnvVars = envVars.map((variable) => !!process.env[variable])

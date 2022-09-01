@@ -21,6 +21,7 @@ type OutstaticProps = {
   missingEnvVars: boolean[]
   providerData: {
     client: ApolloClient<any>
+    repoOwner: string
     repoSlug: string
     contentPath: string
     monorepoPath: string
@@ -106,25 +107,29 @@ export const OstSSP: GetServerSideProps = async ({ req }) => {
   let contentTypes: String[] = []
 
   if (apolloClient) {
-    const { data: postQueryData } = await apolloClient.query({
-      query: ContentTypesDocument,
-      variables: {
-        name: process.env.OST_REPO_SLUG,
-        contentPath: `HEAD:${
-          process.env.OST_MONOREPO_PATH
-            ? process.env.OST_MONOREPO_PATH + '/'
-            : ''
-        }${process.env.OST_CONTENT_PATH || 'outstatic/content'}`,
-        owner: session?.user?.name
+    try {
+      const { data: postQueryData } = await apolloClient.query({
+        query: ContentTypesDocument,
+        variables: {
+          name: process.env.OST_REPO_SLUG,
+          contentPath: `HEAD:${
+            process.env.OST_MONOREPO_PATH
+              ? process.env.OST_MONOREPO_PATH + '/'
+              : ''
+          }${process.env.OST_CONTENT_PATH || 'outstatic/content'}`,
+          owner: process.env.OST_REPO_OWNER || session?.user?.name || ''
+        }
+      })
+
+      const postQueryObject = postQueryData?.repository?.object
+
+      if (postQueryObject?.__typename === 'Tree') {
+        contentTypes = postQueryObject?.entries?.map(
+          (entry: { name: any }) => entry.name
+        ) as String[]
       }
-    })
-
-    const postQueryObject = postQueryData?.repository?.object
-
-    if (postQueryObject?.__typename === 'Tree') {
-      contentTypes = postQueryObject?.entries?.map(
-        (entry: { name: any }) => entry.name
-      ) as String[]
+    } catch (error) {
+      console.log({ error })
     }
   }
 
@@ -132,6 +137,7 @@ export const OstSSP: GetServerSideProps = async ({ req }) => {
     props: {
       missingEnvVars: [],
       providerData: {
+        repoOwner: process.env.OST_REPO_OWNER || session?.user?.name || '',
         repoSlug: process.env.OST_REPO_SLUG,
         contentPath: process.env.OST_CONTENT_PATH || 'outstatic/content',
         monorepoPath: process.env.OST_MONOREPO_PATH || '',

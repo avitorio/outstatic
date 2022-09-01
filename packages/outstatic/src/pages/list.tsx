@@ -16,11 +16,11 @@ type ListProps = {
 }
 
 export default function List({ contentType }: ListProps) {
-  const { repoSlug, contentPath, monorepoPath, session } =
+  const { repoOwner, repoSlug, contentPath, monorepoPath, session } =
     useContext(OutstaticContext)
   const { data, error } = usePostsQuery({
     variables: {
-      owner: session?.user?.name || '',
+      owner: repoOwner || session?.user?.name || '',
       name: repoSlug || '',
       contentPath:
         `HEAD:${
