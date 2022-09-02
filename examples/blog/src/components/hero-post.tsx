@@ -7,8 +7,8 @@ import type Author from '../interfaces/author'
 type Props = {
   title: string
   coverImage: string
-  date: string
-  excerpt: string
+  publishedAt: string
+  description: string
   author: Author
   slug: string
 }
@@ -16,10 +16,10 @@ type Props = {
 const HeroPost = ({
   title,
   coverImage,
-  date,
-  excerpt,
+  publishedAt,
+  description,
   author,
-  slug,
+  slug
 }: Props) => {
   return (
     <section>
@@ -34,11 +34,11 @@ const HeroPost = ({
             </Link>
           </h3>
           <div className="mb-4 md:mb-0 text-lg">
-            <DateFormatter dateString={date} />
+            <DateFormatter dateString={publishedAt} />
           </div>
         </div>
         <div>
-          <p className="text-lg leading-relaxed mb-4">{excerpt}</p>
+          <p className="text-lg leading-relaxed mb-4">{description}</p>
           <Avatar name={author.name} picture={author.picture} />
         </div>
       </div>

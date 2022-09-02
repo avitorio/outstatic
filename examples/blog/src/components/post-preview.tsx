@@ -8,7 +8,7 @@ type Props = {
   title: string
   coverImage: string
   date: string
-  excerpt: string
+  description: string
   author: Author
   slug: string
 }
@@ -17,9 +17,9 @@ const PostPreview = ({
   title,
   coverImage,
   date,
-  excerpt,
+  description,
   author,
-  slug,
+  slug
 }: Props) => {
   return (
     <div>
@@ -34,7 +34,7 @@ const PostPreview = ({
       <div className="text-lg mb-4">
         <DateFormatter dateString={date} />
       </div>
-      <p className="text-lg leading-relaxed mb-4">{excerpt}</p>
+      <p className="text-lg leading-relaxed mb-4">{description}</p>
       <Avatar name={author.name} picture={author.picture} />
     </div>
   )
