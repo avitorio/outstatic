@@ -13,7 +13,7 @@ import {
 } from '../../components'
 import { OutstaticContext, PostContext } from '../../context'
 import { useCreateCommitMutation, usePostQuery } from '../../graphql/generated'
-import { PostType, FileType } from '../../types'
+import { Content, FileType } from '../../types'
 import { useOstSession } from '../../utils/auth/hooks'
 import { createCommitInput } from '../../utils/createCommitInput'
 import { getLocalDate } from '../../utils/getLocalDate'
@@ -39,7 +39,7 @@ export default function EditContent({ contentType }: EditContentProps) {
   const [createCommit] = useCreateCommitMutation()
   const fetchOid = useOid()
   const [showDelete, setShowDelete] = useState(false)
-  const methods = useForm<PostType>({ resolver: yupResolver(editPostSchema) })
+  const methods = useForm<Content>({ resolver: yupResolver(editPostSchema) })
   const { editor } = useTipTap({ ...methods })
 
   const editPost = (property: string, value: any) => {
@@ -60,7 +60,7 @@ export default function EditContent({ contentType }: EditContentProps) {
     skip: slug === 'new' || !slug
   })
 
-  const onSubmit = async (data: PostType) => {
+  const onSubmit = async (data: Content) => {
     setLoading(true)
     try {
       const post = methods.getValues()

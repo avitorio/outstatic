@@ -1,7 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 import matter from 'gray-matter'
-import { PostType } from '../types'
+import { Content } from '../types'
 
 export const CONTENT_PATH = path.join(
   process.cwd(),
@@ -13,7 +13,7 @@ export function getContentType(contentType: string) {
   // Get file names under /posts
   const fileNames = fs.readdirSync(contentTypesPath)
 
-  const allPostsData: PostType[] = []
+  const allPostsData: Content[] = []
 
   fileNames.forEach((fileName) => {
     // Remove ".md" from file name to get id
@@ -54,7 +54,7 @@ export function getContentType(contentType: string) {
 export async function getContent(
   contentType: string,
   slug: string
-): Promise<PostType | {}> {
+): Promise<Content | {}> {
   // Get file names under /posts
   const postFilePath = path.join(CONTENT_PATH + '/' + contentType, `${slug}.md`)
   const fileContents = fs.readFileSync(postFilePath, 'utf8')

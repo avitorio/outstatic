@@ -5,9 +5,9 @@ import { ReactNode } from 'react'
 import { useForm, FormProvider } from 'react-hook-form'
 import { PostContext } from '../context'
 import { OidDocument } from '../graphql/generated'
-import { PostType } from '../types'
+import { Content } from '../types'
 
-const postExample: PostType = {
+const postExample: Content = {
   publishedAt: new Date('2022-07-14'),
   title: 'Example Post',
   content: 'Example Content',

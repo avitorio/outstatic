@@ -1,4 +1,6 @@
 import Head from 'next/head'
+import Link from 'next/link'
+import { getContentType } from 'outstatic/server'
 
 type HomeProps = {
   allPostsData: {
@@ -76,9 +78,6 @@ export default function Home({ allPostsData }: HomeProps) {
     </div>
   )
 }
-
-import { getContentType } from 'outstatic/server'
-import Link from 'next/link'
 
 export async function getStaticProps() {
   const allPostsData = getContentType('posts')

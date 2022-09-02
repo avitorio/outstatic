@@ -1,5 +1,5 @@
 import DOMPurify from 'dompurify'
-import { PostType } from '../types'
+import { Content } from '../types'
 
 const convertDateToYYYYMMDD = (date: Date) => {
   const yyyy = date.getFullYear()
@@ -8,7 +8,7 @@ const convertDateToYYYYMMDD = (date: Date) => {
   return `${yyyy}-${mm}-${dd}`
 }
 
-export const mergeMdMeta = (data: PostType): string => {
+export const mergeMdMeta = (data: Content): string => {
   const meta = Object.entries(
     (({ content, publishedAt, ...meta }) => meta)(data)
   )

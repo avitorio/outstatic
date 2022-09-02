@@ -1,10 +1,10 @@
 import Link from 'next/link'
 import { useState } from 'react'
-import { PostType } from '../../types'
+import { Content } from '../../types'
 import DeletePostButton from '../DeletePostButton'
 
 type PostTableProps = {
-  posts: Omit<PostType, 'content'>[]
+  posts: Omit<Content, 'content'>[]
   contentType: string
 }
 const options = {
