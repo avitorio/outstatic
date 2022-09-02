@@ -3,16 +3,15 @@ import Link from 'next/link'
 import { getContentType } from 'outstatic/server'
 
 type HomeProps = {
-  allPostsData: {
+  allPosts: {
     slug: string
     publishedAt: string
     title: string
-    content: string
     description?: string
   }[]
 }
 
-export default function Home({ allPostsData }: HomeProps) {
+export default function Home({ allPosts }: HomeProps) {
   const formatDate = (date: string) => {
     return new Date(date).toLocaleDateString('en-US', {
       year: 'numeric',
@@ -61,7 +60,7 @@ export default function Home({ allPostsData }: HomeProps) {
             Our blog
           </h3>
           <div className="grid grid-cols-2 gap-10 mt-10">
-            {allPostsData.map(({ slug, publishedAt, title, description }) => (
+            {allPosts.map(({ slug, publishedAt, title, description }) => (
               <Link key={slug} href={`/posts/${slug}`}>
                 <a className="block p-6 max-w-sm bg-white rounded-lg border border-gray-200 shadow-md hover:bg-gray-100">
                   <small>{formatDate(publishedAt)}</small>
@@ -80,10 +79,15 @@ export default function Home({ allPostsData }: HomeProps) {
 }
 
 export async function getStaticProps() {
-  const allPostsData = getContentType('posts')
+  const allPosts = getContentType('posts', [
+    'slug',
+    'publishedAt',
+    'title',
+    'description'
+  ])
   return {
     props: {
-      allPostsData: allPostsData || []
+      allPosts: allPosts || []
     }
   }
 }

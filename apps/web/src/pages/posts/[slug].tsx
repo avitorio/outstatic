@@ -3,8 +3,6 @@ import Head from 'next/head'
 import Link from 'next/link'
 
 type PostProps = {
-  id: string
-  date: string
   title: string
   content: string
   publishedAt: string
@@ -38,10 +36,14 @@ export default function Post({ title, content, publishedAt }: PostProps) {
   )
 }
 
-import { getPaths, getContent } from 'outstatic/server'
+import { getContentPaths, getContentBySlug } from 'outstatic/server'
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const post = await getContent('posts', params?.slug as string)
+  const post = getContentBySlug('posts', params?.slug as string, [
+    'title',
+    'content',
+    'publishedAt'
+  ])
   return {
     props: {
       ...post
@@ -51,7 +53,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 
 export const getStaticPaths = async () => {
   return {
-    paths: getPaths('posts'),
+    paths: getContentPaths('posts'),
     fallback: false
   }
 }
