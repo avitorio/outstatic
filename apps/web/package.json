@@ -12,14 +12,14 @@
     "next": "latest",
     "next-transpile-modules": "^9.0.0",
     "outstatic": "workspace:*",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2"
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.4",
-    "@types/node": "^17.0.12",
-    "@types/react": "^17.0.37",
-    "@types/react-dom": "^17.0.11",
+    "@types/node": "^18.0.3",
+    "@types/react": "^18.0.15",
+    "@types/react-dom": "^18.0.6",
     "autoprefixer": "^10.4.0",
     "eslint-config-custom": "workspace:*",
     "postcss": "^8.4.4",
