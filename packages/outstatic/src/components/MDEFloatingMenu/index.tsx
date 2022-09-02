@@ -19,6 +19,7 @@ const MDEFloatingMenu = ({ editor }: MDEFloatingMenuProps) => {
           onHidden: () => setImageMenu(false),
           offset: () => (editor.isEmpty ? [0, 180] : [0, 10])
         }}
+        className="leading-none"
       >
         {!imageMenu ? (
           <div className="rounded-sm border border-black">
