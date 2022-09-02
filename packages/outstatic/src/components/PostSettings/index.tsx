@@ -3,6 +3,7 @@ import { useContext } from 'react'
 import { RegisterOptions, useFormContext } from 'react-hook-form'
 import { convert } from 'url-slug'
 import { PostContext } from '../../context'
+import Accordion from '../Accordion'
 import DateTimePicker from '../DateTimePicker'
 import DeletePostButton from '../DeletePostButton'
 import Input from '../Input'
@@ -26,8 +27,8 @@ const PostSettings = ({
   const { post, editPost, hasChanges, contentType } = useContext(PostContext)
 
   return (
-    <aside className="relative flex w-full items-center justify-between border-b border-gray-300 bg-white p-4 md:w-64 md:flex-none md:flex-col md:flex-wrap md:items-start md:justify-start md:border-b-0 md:border-l md:py-6">
-      <div className="relative hidden w-full items-center justify-between md:mb-4 md:flex">
+    <aside className="relative flex w-full items-center justify-between border-b border-gray-300 bg-white md:w-64 md:flex-none md:flex-col md:flex-wrap md:items-start md:justify-start md:border-b-0 md:border-l md:py-6">
+      <div className="relative hidden w-full items-center justify-between md:mb-4 md:flex px-4">
         <DateTimePicker
           id="publishedAt"
           label="Date"
@@ -35,7 +36,7 @@ const PostSettings = ({
           setDate={(publishedAt) => editPost('publishedAt', publishedAt)}
         />
       </div>
-      <div className="relative hidden w-full items-center justify-between md:mb-4 md:flex">
+      <div className="relative hidden w-full items-center justify-between md:mb-4 md:flex px-4">
         <label
           htmlFor="status"
           className="block text-sm font-medium text-gray-900"
@@ -53,25 +54,8 @@ const PostSettings = ({
           <option value="published">Published</option>
         </select>
       </div>
-      <div className="hidden w-full md:mb-4 md:block">
-        <Input
-          label="URL Slug"
-          name="slug"
-          id="slug"
-          defaultValue={post.slug}
-          inputSize="small"
-          validation={{
-            onChange: (e) => {
-              editPost(
-                'slug',
-                convert(e.target.value, { dictionary: { "'": '' } })
-              )
-            }
-          }}
-        />
-      </div>
       <div
-        className={`flex w-full pb-4 ${
+        className={`flex w-full pb-4 px-4 ${
           showDelete ? 'justify-between' : 'justify-end'
         }`}
       >
@@ -121,16 +105,37 @@ const PostSettings = ({
           )}
         </button>
       </div>
-      <div className="border-t-2 py-4 hidden w-full md:mb-4 md:block">
-        <TextArea
-          name="description"
-          type="textarea"
-          label="Description"
-          id="description"
-          // defaultValue={post.description}
-          rows={5}
-          className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2 text-sm text-gray-900 outline-none focus:border-blue-500 focus:ring-blue-500"
-        />
+      <div className="w-full">
+        <Accordion title="URL Slug">
+          <Input
+            label="Write a slug (optional)"
+            name="slug"
+            id="slug"
+            defaultValue={post.slug}
+            inputSize="small"
+            validation={{
+              onChange: (e) => {
+                editPost(
+                  'slug',
+                  convert(e.target.value, { dictionary: { "'": '' } })
+                )
+              }
+            }}
+          />
+        </Accordion>
+        <Accordion title="Description">
+          <TextArea
+            name="description"
+            type="textarea"
+            label="Write a description (optional)"
+            id="description"
+            rows={5}
+            className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2 text-sm text-gray-900 outline-none focus:border-blue-500 focus:ring-blue-500"
+          />
+        </Accordion>
+        <Accordion title="Cover Image">
+          <p>Upload Image</p>
+        </Accordion>
       </div>
     </aside>
   )
