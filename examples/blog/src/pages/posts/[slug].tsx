@@ -5,7 +5,6 @@ import PostBody from '../../components/post-body'
 import Header from '../../components/header'
 import PostHeader from '../../components/post-header'
 import Layout from '../../components/layout'
-import { getPostBySlug, getAllPosts } from '../../lib/api'
 import PostTitle from '../../components/post-title'
 import Head from 'next/head'
 import { CMS_NAME } from '../../lib/constants'
@@ -42,7 +41,7 @@ export default function Post({ post, morePosts, preview }: Props) {
               <PostHeader
                 title={post.title}
                 coverImage={post.coverImage}
-                date={post.date}
+                date={post.publishedAt}
                 author={post.author}
               />
               <PostBody content={post.content} />
@@ -63,7 +62,7 @@ type Params = {
 export async function getStaticProps({ params }: Params) {
   const post = getContentBySlug('posts', params.slug, [
     'title',
-    'date',
+    'publishedAt',
     'slug',
     'author',
     'content',
