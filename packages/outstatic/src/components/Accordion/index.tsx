@@ -2,18 +2,27 @@ import { useState } from 'react'
 
 type AccordionProps = {
   title: string
+  callback?: () => void
   children: React.ReactNode
 }
 
-const Accordion = ({ title, children }: AccordionProps) => {
-  const [show, setShow] = useState(false)
+const Accordion = ({ title, callback, children }: AccordionProps) => {
+  const [show, setShow] = useState(true)
+
+  const handleShow = () => {
+    setShow(!show)
+    if (callback) {
+      callback()
+    }
+  }
+
   return (
     <div className="w-full border-y last:border-t-0 first:border-b-0">
       <h2 id="accordion-collapse-heading-1">
         <button
           type="button"
           className="flex items-center justify-between w-full text-sm font-medium text-gray-900 p-4 hover:bg-gray-50 focus:outline-none focus:outline-blue-300 focus:outline-offset-[-1px]"
-          onClick={() => setShow(!show)}
+          onClick={handleShow}
         >
           <span>{title}</span>
           <svg
