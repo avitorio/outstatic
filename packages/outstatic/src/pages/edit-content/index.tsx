@@ -102,7 +102,7 @@ export default function EditContent({ contentType }: EditContentProps) {
     if (postQueryObject?.__typename === 'Blob') {
       let mdContent = postQueryObject.text as string
       const {
-        data: { title, publishedAt, status, description },
+        data: { title, publishedAt, status, description, coverImage },
         content
       } = matter(mdContent)
 
@@ -122,7 +122,8 @@ export default function EditContent({ contentType }: EditContentProps) {
         content: parseContent(),
         status,
         slug,
-        description
+        description,
+        coverImage
       }
       methods.reset(post)
       editor.commands.insertContent(parseContent())

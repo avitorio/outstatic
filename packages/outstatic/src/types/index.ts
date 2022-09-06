@@ -8,6 +8,7 @@ export type Content = {
   status: 'published' | 'draft'
   slug: string
   description?: string
+  coverImage?: string
 }
 
 export type FileType = {

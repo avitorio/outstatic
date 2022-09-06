@@ -13,5 +13,6 @@ export const editPostSchema: yup.SchemaOf<Content> = yup.object().shape({
     .string()
     .matches(/^(?!new$)/, 'The word "new" is not a valid slug')
     .required(),
-  description: yup.string()
+  description: yup.string(),
+  coverImage: yup.string()
 })
