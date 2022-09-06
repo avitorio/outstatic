@@ -53,7 +53,7 @@ const DeletePostButton = ({
         onClick={() => setShowDeleteModal(true)}
         type="button"
         disabled={disabled}
-        className="mr-2 mb-2 rounded-lg border border-red-700 bg-red-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-red-800 focus:outline-none"
+        className="rounded-lg border border-red-700 bg-red-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-red-800 focus:outline-none"
       >
         Delete
       </button>
