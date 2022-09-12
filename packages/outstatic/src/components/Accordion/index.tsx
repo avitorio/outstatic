@@ -17,7 +17,7 @@ const Accordion = ({ title, callback, children }: AccordionProps) => {
   }
 
   return (
-    <div className="w-full border-y last:border-t-0 first:border-b-0">
+    <div className="w-full border-b first:border-t">
       <h2 id="accordion-collapse-heading-1">
         <button
           type="button"
