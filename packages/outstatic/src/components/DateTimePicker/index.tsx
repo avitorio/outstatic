@@ -48,6 +48,8 @@ const DateTimePicker = ({ date, setDate, id, label }: DateTimePickerProps) => {
             setDate(date)
           }}
           customInput={createElement(forwardRef(DatePickerButton))}
+          showTimeInput
+          timeInputLabel="Time:"
         />
       </div>
     </>

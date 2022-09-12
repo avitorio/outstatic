@@ -13,7 +13,7 @@ export const mergeMdMeta = (data: Content): string => {
     (({ content, publishedAt, ...meta }) => meta)(data)
   )
   if (data.publishedAt) {
-    meta.push(['publishedAt', convertDateToYYYYMMDD(data.publishedAt)])
+    meta.push(['publishedAt', data.publishedAt.toISOString()])
   }
 
   let merged = '---\n'

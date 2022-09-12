@@ -23,7 +23,7 @@
 }
 
 .react-datepicker__month-container {
-  @apply flex flex-col;
+  @apply flex flex-col mb-2;
 }
 
 .react-datepicker__month {
@@ -32,6 +32,18 @@
 
 .react-datepicker__current-month {
   @apply ml-2.5 text-lg font-semibold text-gray-800;
+}
+
+.react-datepicker__input-time-container {
+  @apply flex items-center ml-2.5 font-semibold text-gray-800;
+}
+
+input.react-datepicker-time__input {
+  @apply block cursor-pointer appearance-none rounded-lg border border-gray-300 bg-gray-50 p-2 text-sm font-normal leading-loose text-gray-700 focus:border-blue-500 focus:ring-blue-500 outline-none;
+}
+
+.react-datepicker-time__caption {
+  @apply mr-2;
 }
 
 .react-datepicker__week {
