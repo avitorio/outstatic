@@ -44,6 +44,7 @@ const PostSettingsImageSelection = ({
     if (currentTarget.files?.length && currentTarget.files?.[0] !== null) {
       const file = currentTarget.files[0]
       const blob = URL.createObjectURL(file)
+      console.log({ name, blob })
       editPost(name, blob)
       setShowImage(true)
       const reader = new FileReader()
@@ -111,6 +112,7 @@ const PostSettingsImageSelection = ({
             <button
               onClick={() => {
                 editPost(name, '')
+                setShowImage(false)
                 setShowLink(false)
               }}
               className="rounded-lg border border-red-700 bg-red-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-red-800 focus:outline-none"
@@ -171,7 +173,7 @@ const PostSettingsImageSelection = ({
             </button>
 
             <label
-              htmlFor="upload-button"
+              htmlFor={`${name}-upload`}
               className="flex cursor-pointer rounded-lg border border-gray-600 bg-gray-800 px-5 py-2.5 text-sm font-medium text-white hover:border-gray-600 hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-700 disabled:cursor-not-allowed disabled:bg-gray-600 md:mb-2"
             >
               From file
@@ -179,7 +181,7 @@ const PostSettingsImageSelection = ({
             <input
               type="file"
               accept="image/*"
-              id="upload-button"
+              id={`${name}-upload`}
               onChange={addImageFile}
               className="hidden"
             />

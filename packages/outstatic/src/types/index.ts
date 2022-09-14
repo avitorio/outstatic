@@ -2,6 +2,10 @@ import { Editor } from '@tiptap/react'
 import { Dispatch, SetStateAction } from 'react'
 
 export type Content = {
+  author: {
+    name: string
+    picture: string
+  }
   title: string
   publishedAt: Date
   content: string
@@ -31,8 +35,9 @@ export type PostContextType = {
 export type Session = {
   user: {
     name: string
+    login: string
     email: string
-    avatar_url: string
+    image: string
   }
   access_token: string
   expires: Date

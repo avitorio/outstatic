@@ -16,6 +16,7 @@ import { useCreateCommitMutation, usePostQuery } from '../../graphql/generated'
 import { Content, FileType } from '../../types'
 import { useOstSession } from '../../utils/auth/hooks'
 import { createCommitInput } from '../../utils/createCommitInput'
+import { deepReplace } from '../../utils/deepReplace'
 import { getLocalDate } from '../../utils/getLocalDate'
 import { mergeMdMeta } from '../../utils/mergeMdMeta'
 import useNavigationLock from '../../utils/useNavigationLock'
@@ -44,13 +45,13 @@ export default function EditContent({ contentType }: EditContentProps) {
 
   const editPost = (property: string, value: any) => {
     const formValues = methods.getValues()
-    const newValue = { ...formValues, [property]: value }
+    const newValue = deepReplace(formValues, property, value)
     methods.reset(newValue)
   }
 
   const { data: postQueryData } = usePostQuery({
     variables: {
-      owner: repoOwner || session?.user?.name || '',
+      owner: repoOwner || session?.user?.login || '',
       name: repoSlug,
       filePath: `HEAD:${
         monorepoPath ? monorepoPath + '/' : ''
@@ -66,7 +67,7 @@ export default function EditContent({ contentType }: EditContentProps) {
       const post = methods.getValues()
       const content = mergeMdMeta({ ...data })
       const oid = await fetchOid()
-      const owner = repoOwner || session?.user?.name || ''
+      const owner = repoOwner || session?.user?.login || ''
       const newSlug = post.slug
 
       // If the slug has changed, commit should delete old file
@@ -102,7 +103,7 @@ export default function EditContent({ contentType }: EditContentProps) {
     if (postQueryObject?.__typename === 'Blob') {
       let mdContent = postQueryObject.text as string
       const {
-        data: { title, publishedAt, status, description, coverImage },
+        data: { title, publishedAt, status, description, coverImage, author },
         content
       } = matter(mdContent)
 
@@ -121,6 +122,10 @@ export default function EditContent({ contentType }: EditContentProps) {
         publishedAt: newDate,
         content: parseContent(),
         status,
+        author: {
+          name: author?.name,
+          picture: author?.picture || ''
+        },
         slug,
         description,
         coverImage
@@ -133,8 +138,14 @@ export default function EditContent({ contentType }: EditContentProps) {
       // Set publishedAt value on slug update to avoid undefined on first render
       if (slug) {
         const formData = methods.getValues()
+
         methods.reset({
           ...formData,
+          author: {
+            name: session?.user.name,
+            picture: session?.user.image ?? ''
+          },
+          coverImage: '',
           publishedAt: slug === 'new' ? getLocalDate() : formData.publishedAt
         })
       }
@@ -143,7 +154,7 @@ export default function EditContent({ contentType }: EditContentProps) {
     const subscription = methods.watch(() => setHasChanges(true))
 
     return () => subscription.unsubscribe()
-  }, [postQueryData, methods, slug, editor])
+  }, [postQueryData, methods, slug, editor, session])
 
   // Ask for confirmation before leaving page if changes were made.
   useNavigationLock(hasChanges)

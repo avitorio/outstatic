@@ -26,7 +26,7 @@ export default function Dashboard() {
   const deletePost = async (contentType: string) => {
     try {
       const oid = await fetchOid()
-      const owner = session?.user?.name || ''
+      const owner = session?.user?.login || ''
 
       const commitInput = contentTypeCommitInput({
         owner,

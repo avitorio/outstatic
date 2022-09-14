@@ -13,7 +13,7 @@ export default async function handler(
   if (session?.access_token) {
     const response = await fetch(
       `https://raw.githubusercontent.com/${
-        session?.user?.name
+        session?.user?.login
       }/${REPO_SLUG}/main/${
         MONOREPO_PATH ? MONOREPO_PATH + '/' : ''
       }public/images/${req.query?.ost?.[1]}`,

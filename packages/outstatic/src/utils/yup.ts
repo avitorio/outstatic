@@ -9,6 +9,10 @@ export const editPostSchema: yup.SchemaOf<Content> = yup.object().shape({
     .string()
     .equals(['published', 'draft'])
     .required('Status is missing'),
+  author: yup.object().shape({
+    name: yup.string().required('Author name is required'),
+    picture: yup.string().required('Author picture is required')
+  }),
   slug: yup
     .string()
     .matches(/^(?!new$)/, 'The word "new" is not a valid slug')

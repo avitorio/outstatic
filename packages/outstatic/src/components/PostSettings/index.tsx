@@ -8,7 +8,7 @@ import DateTimePicker from '../DateTimePicker'
 import DeletePostButton from '../DeletePostButton'
 import Input from '../Input'
 import TextArea from '../TextArea'
-import PostSettingsCoverImage from '../PostSettingsCoverImage'
+import PostSettingsImageSelection from '../PostSettingsImageSelection'
 
 type PostSettingsProps = {
   saveFunc: () => void
@@ -107,6 +107,21 @@ const PostSettings = ({
         </button>
       </div>
       <div className="w-full">
+        <Accordion title="Author">
+          <Input
+            label="Name"
+            name="author.name"
+            id="author.name"
+            defaultValue={post.author?.name}
+            inputSize="small"
+            wrapperClass="mb-4"
+          />
+          <PostSettingsImageSelection
+            label="Add an avatar"
+            name="author.picture"
+            description="Author Avatar"
+          />
+        </Accordion>
         <Accordion title="URL Slug">
           <Input
             label="Write a slug (optional)"
@@ -134,7 +149,13 @@ const PostSettings = ({
             className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2 text-sm text-gray-900 outline-none focus:border-blue-500 focus:ring-blue-500"
           />
         </Accordion>
-        <PostSettingsCoverImage />
+
+        <Accordion title="Cover Image">
+          <PostSettingsImageSelection
+            name="coverImage"
+            description="Cover Image"
+          />
+        </Accordion>
       </div>
     </aside>
   )

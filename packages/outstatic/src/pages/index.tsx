@@ -117,7 +117,7 @@ export const OstSSP: GetServerSideProps = async ({ req }) => {
               ? process.env.OST_MONOREPO_PATH + '/'
               : ''
           }${process.env.OST_CONTENT_PATH || 'outstatic/content'}`,
-          owner: process.env.OST_REPO_OWNER || session?.user?.name || ''
+          owner: process.env.OST_REPO_OWNER || session?.user?.login || ''
         }
       })
 
@@ -137,7 +137,7 @@ export const OstSSP: GetServerSideProps = async ({ req }) => {
     props: {
       missingEnvVars: [],
       providerData: {
-        repoOwner: process.env.OST_REPO_OWNER || session?.user?.name || '',
+        repoOwner: process.env.OST_REPO_OWNER || session?.user?.login || '',
         repoSlug: process.env.OST_REPO_SLUG,
         contentPath: process.env.OST_CONTENT_PATH || 'outstatic/content',
         monorepoPath: process.env.OST_MONOREPO_PATH || '',

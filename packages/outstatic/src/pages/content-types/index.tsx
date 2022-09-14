@@ -49,7 +49,7 @@ export default function ContentTypes() {
 
     try {
       const oid = await fetchOid()
-      const owner = repoOwner || session?.user?.name || ''
+      const owner = repoOwner || session?.user?.login || ''
       const contentType = convert(name, { dictionary: { "'": '' } })
       const commitInput = contentTypeCommitInput({
         owner,

@@ -5,7 +5,12 @@ import { Session } from '../../types'
 import { MAX_AGE, setTokenCookie, getTokenCookie } from './auth-cookies'
 
 type LoginSession = {
-  user: { name: string; email: string; image: string }
+  user: {
+    name: string
+    login: string
+    email: string
+    image: string
+  }
   access_token: string
   expires: Date
 }

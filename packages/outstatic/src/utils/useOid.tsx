@@ -8,7 +8,7 @@ const useOid = () => {
   const { session } = useOstSession()
   const [oidQuery] = useOidLazyQuery({
     variables: {
-      owner: repoOwner || session?.user?.name || '',
+      owner: repoOwner || session?.user?.login || '',
       name: repoSlug
     },
     fetchPolicy: 'no-cache'

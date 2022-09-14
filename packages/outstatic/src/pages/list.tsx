@@ -20,7 +20,7 @@ export default function List({ contentType }: ListProps) {
     useContext(OutstaticContext)
   const { data, error } = usePostsQuery({
     variables: {
-      owner: repoOwner || session?.user?.name || '',
+      owner: repoOwner || session?.user?.login || '',
       name: repoSlug || '',
       contentPath:
         `HEAD:${

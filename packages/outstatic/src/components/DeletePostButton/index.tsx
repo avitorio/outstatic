@@ -30,7 +30,7 @@ const DeletePostButton = ({
   const deletePost = async (slug: string) => {
     try {
       const oid = await fetchOid()
-      const owner = repoOwner || session?.user?.name || ''
+      const owner = repoOwner || session?.user?.login || ''
 
       const commitInput = createCommitInput({
         owner,
