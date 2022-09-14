@@ -44,7 +44,6 @@ const PostSettingsImageSelection = ({
     if (currentTarget.files?.length && currentTarget.files?.[0] !== null) {
       const file = currentTarget.files[0]
       const blob = URL.createObjectURL(file)
-      console.log({ name, blob })
       editPost(name, blob)
       setShowImage(true)
       const reader = new FileReader()
