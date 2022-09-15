@@ -1,6 +1,6 @@
 ---
-title: 'Learn How to Pre-render Pages Using Static Generation with Next.js'
-description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Praesent elementum facilisis leo vel fringilla est ullamcorper eget. At imperdiet dui accumsan sit amet nulla facilities morbi tempus.'
+title: 'Learn how to create your blog with Outstatic'
+description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.'
 coverImage: '/assets/blog/hello-world/cover.jpg'
 publishedAt: '2020-03-17T05:35:07.322Z'
 author:

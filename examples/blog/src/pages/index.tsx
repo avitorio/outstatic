@@ -1,39 +1,45 @@
-import Container from '../components/container'
-import MoreStories from '../components/more-stories'
-import HeroPost from '../components/hero-post'
-import Intro from '../components/intro'
 import Layout from '../components/layout'
 import Head from 'next/head'
-import Post from '../interfaces/post'
+import Content from '../interfaces/post'
 import { getContentType } from 'outstatic/server'
+import ContentGrid from '../components/contentGrid'
 
 type Props = {
-  allPosts: Post[]
+  allPosts: Content[]
+  allProjects: Content[]
 }
 
-export default function Index({ allPosts }: Props) {
-  const heroPost = allPosts[0]
-  const morePosts = allPosts.slice(1)
+export default function Index({ allPosts, allProjects }: Props) {
   return (
     <>
       <Layout>
         <Head>
           <title>Next.js Blog Example with Outstatic</title>
         </Head>
-        <Container>
-          <Intro />
-          {heroPost && (
-            <HeroPost
-              title={heroPost.title}
-              coverImage={heroPost.coverImage}
-              publishedAt={heroPost.publishedAt}
-              author={heroPost.author}
-              slug={heroPost.slug}
-              description={heroPost.description}
+        <div className="max-w-6xl mx-auto px-5">
+          <section className="mt-16 mb-16 md:mb-12">
+            <span className="text-center md:text-left text-3xl md:text-4xl font-bold">
+              Hello!
+            </span>
+            <h1 className="text-6xl md:text-7xl font-bold tracking-tighter leading-tight md:pr-8">
+              I&apos;m Andre, nice to meet you.
+            </h1>
+            <h4 className="max-w-3xl text-2xl mt-4">
+              I am a surfer + musician + software developer + designer + online
+              marketer and whatever else I can cram into this existence.
+            </h4>
+          </section>
+          {allPosts.length > 0 && (
+            <ContentGrid title="Blog" posts={allPosts} contentType="posts" />
+          )}
+          {allProjects.length > 0 && (
+            <ContentGrid
+              title="Projects"
+              posts={allProjects}
+              contentType="projects"
             />
           )}
-          {morePosts.length > 0 && <MoreStories posts={morePosts} />}
-        </Container>
+        </div>
       </Layout>
     </>
   )
@@ -44,12 +50,17 @@ export const getStaticProps = async () => {
     'title',
     'publishedAt',
     'slug',
-    'author',
     'coverImage',
     'description'
   ])
 
+  const allProjects = getContentType('projects', [
+    'title',
+    'slug',
+    'coverImage'
+  ])
+
   return {
-    props: { allPosts }
+    props: { allPosts, allProjects }
   }
 }

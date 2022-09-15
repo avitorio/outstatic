@@ -73,7 +73,7 @@ type Params = {
 }
 
 export async function getStaticProps({ params }: Params) {
-  const post = getContentBySlug('posts', params.slug, [
+  const post = getContentBySlug('projects', params.slug, [
     'title',
     'publishedAt',
     'slug',
@@ -95,7 +95,7 @@ export async function getStaticProps({ params }: Params) {
 
 export async function getStaticPaths() {
   return {
-    paths: getContentPaths('posts'),
+    paths: getContentPaths('projects'),
     fallback: false
   }
 }
