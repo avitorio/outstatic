@@ -46,6 +46,7 @@
     "react-datepicker": "^4.8.0",
     "react-hook-form": "^7.31.3",
     "react-textarea-autosize": "^8.3.4",
+    "showdown": "^2.1.0",
     "swr": "^1.3.0",
     "url-slug": "^3.0.4",
     "yup": "^0.32.11"
@@ -68,6 +69,7 @@
     "@types/react": "^18.0.15",
     "@types/react-datepicker": "^4.4.2",
     "@types/react-dom": "^18.0.6",
+    "@types/showdown": "^2.0.0",
     "@types/testing-library__jest-dom": "^5.14.5",
     "concurrently": "^7.2.2",
     "encoding": "^0.1.13",

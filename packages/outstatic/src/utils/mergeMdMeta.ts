@@ -1,3 +1,4 @@
+import showdown from 'showdown'
 import DOMPurify from 'dompurify'
 import { Content } from '../types'
 
@@ -28,7 +29,10 @@ export const mergeMdMeta = (data: Content): string => {
     }
   })
   merged += '---\n'
-  merged += data.content
+
+  const converter = new showdown.Converter()
+
+  merged += converter.makeMarkdown(data.content)
 
   return merged
 }
