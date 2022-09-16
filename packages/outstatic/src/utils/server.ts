@@ -72,6 +72,5 @@ export const getContentPaths = (contentType: string) => {
 
 export const getContentTypes = () => {
   const contentTypes = fs.readdirSync(CONTENT_PATH)
-
   return contentTypes
 }
