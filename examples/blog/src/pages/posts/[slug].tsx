@@ -1,16 +1,16 @@
 import { useRouter } from 'next/router'
 import ErrorPage from 'next/error'
-import Header from '../../components/header'
-import Layout from '../../components/layout'
+import Header from '../../components/Header'
+import Layout from '../../components/Layout'
 import Head from 'next/head'
 import markdownToHtml from '../../lib/markdownToHtml'
-import type PostType from '../../interfaces/post'
+import type Content from '../../interfaces/content'
 import { getContentPaths, getContentBySlug } from 'outstatic/server'
-import DateFormatter from '../../components/date-formatter'
+import DateFormatter from '../../components/DateFormatter'
 import Image from 'next/image'
 
 type Props = {
-  post: PostType
+  post: Content
 }
 
 export default function Post({ post }: Props) {
@@ -30,7 +30,7 @@ export default function Post({ post }: Props) {
           <>
             <article className="mb-32">
               <Head>
-                <title>{post.title} | Next.js + Outstatic</title>
+                <title>{`${post.title} | Next.js + Outstatic`}</title>
                 <meta property="og:image" content={post.coverImage} />
               </Head>
               <div className="mb-2 md:mb-4 sm:mx-0">

@@ -1,6 +1,6 @@
-import type Content from '../interfaces/post'
+import type Content from '../interfaces/content'
 import Link from 'next/link'
-import DateFormatter from './date-formatter'
+import DateFormatter from './DateFormatter'
 import Image from 'next/image'
 
 type Props = {
@@ -11,7 +11,7 @@ type Props = {
 
 const ContentGrid = ({ title = 'More', items, contentType }: Props) => {
   return (
-    <section>
+    <section id={contentType}>
       <h2 className="mb-8 text-5xl md:text-6xl font-bold tracking-tighter leading-tight">
         {title}
       </h2>
@@ -33,7 +33,7 @@ const ContentGrid = ({ title = 'More', items, contentType }: Props) => {
                     objectFit="cover"
                   />
                   {contentType === 'projects' && (
-                    <h4 className="p-2 bg-opacity-80 bg-white text-center whitespace-nowrap font-bold text-3xl absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2">
+                    <h4 className="p-2 bg-opacity-80 bg-white text-center whitespace-nowrap font-bold text-3xl absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 shadow-lg rounded-lg">
                       {item.title}
                     </h4>
                   )}

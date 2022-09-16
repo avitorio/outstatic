@@ -1,8 +1,8 @@
-import Layout from '../components/layout'
+import Layout from '../components/Layout'
 import Head from 'next/head'
-import Content from '../interfaces/post'
+import Content from '../interfaces/content'
 import { getContentType } from 'outstatic/server'
-import ContentGrid from '../components/contentGrid'
+import ContentGrid from '../components/ContentGrid'
 
 type Props = {
   allPosts: Content[]
@@ -30,7 +30,7 @@ export default function Index({ allPosts, allProjects }: Props) {
             </h4>
           </section>
           {allPosts.length > 0 && (
-            <ContentGrid title="Blog" items={allPosts} contentType="posts" />
+            <ContentGrid title="Posts" items={allPosts} contentType="posts" />
           )}
           {allProjects.length > 0 && (
             <ContentGrid

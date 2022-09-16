@@ -10,8 +10,13 @@ const Header = () => {
           </Link>
         </li>
         <li>
-          <Link href="/">
-            <a className="hover:underline">Blog</a>
+          <Link href="/#posts">
+            <a className="hover:underline">Posts</a>
+          </Link>
+        </li>
+        <li>
+          <Link href="/#projects">
+            <a className="hover:underline">Projects</a>
           </Link>
         </li>
       </ul>

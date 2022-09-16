@@ -56,16 +56,22 @@ export function getContentType(contentType: string, fields: string[] = []) {
 }
 
 export const getContentPaths = (contentType: string) => {
-  const postFilePaths = fs
+  const contentFilePaths = fs
     .readdirSync(CONTENT_PATH + '/' + contentType)
     // Only include md(x) files
     .filter((path) => /\.mdx?$/.test(path))
 
-  const paths = postFilePaths
+  const paths = contentFilePaths
     // Remove file extensions for page paths
     .map((path) => path.replace(/\.mdx?$/, ''))
     // Map the path into the static paths object required by Next.js
     .map((slug: string) => ({ params: { slug } }))
 
   return paths
+}
+
+export const getContentTypes = () => {
+  const contentTypes = fs.readdirSync(CONTENT_PATH)
+
+  return contentTypes
 }

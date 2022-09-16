@@ -14,9 +14,4 @@ Everything's good with me, my fam and my dreams are coming true. One at a time, 
 
 ## I love it!
 
-Nothing feels unachievable, when I see you smile and look to the horizon. We can take it, life's short but it's enough time to be happy. Love it.
-
-```javascript
-const life = 'is great'
-let love = 'is essential'
-```
+Nothing feels unachievable, when I see you smile and look to the horizon. We can make it, life's short but it's enough time to be happy. Love it.
