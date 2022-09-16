@@ -44,8 +44,8 @@ export default function Project({ project, moreProjects }: Props) {
                   <Image
                     alt={project.title}
                     src={project.coverImage}
-                    width={1200}
-                    height={1200}
+                    width={540}
+                    height={540}
                     layout="responsive"
                     objectFit="cover"
                     objectPosition={'center center'}
