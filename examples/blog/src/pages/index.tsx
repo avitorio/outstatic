@@ -30,12 +30,12 @@ export default function Index({ allPosts, allProjects }: Props) {
             </h4>
           </section>
           {allPosts.length > 0 && (
-            <ContentGrid title="Blog" posts={allPosts} contentType="posts" />
+            <ContentGrid title="Blog" items={allPosts} contentType="posts" />
           )}
           {allProjects.length > 0 && (
             <ContentGrid
               title="Projects"
-              posts={allProjects}
+              items={allProjects}
               contentType="projects"
             />
           )}
