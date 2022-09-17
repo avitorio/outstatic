@@ -3,8 +3,8 @@ import { Dispatch, SetStateAction } from 'react'
 
 export type Content = {
   author: {
-    name: string
-    picture: string
+    name?: string
+    picture?: string
   }
   title: string
   publishedAt: Date

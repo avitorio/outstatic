@@ -10,8 +10,8 @@ export const editPostSchema: yup.SchemaOf<Content> = yup.object().shape({
     .equals(['published', 'draft'])
     .required('Status is missing'),
   author: yup.object().shape({
-    name: yup.string().required('Author name is required'),
-    picture: yup.string().required('Author picture is required')
+    name: yup.string(),
+    picture: yup.string()
   }),
   slug: yup
     .string()
