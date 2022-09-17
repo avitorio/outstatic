@@ -5,6 +5,7 @@ import { useRouter } from 'next/router'
 import { singular } from 'pluralize'
 import { useContext, useEffect, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
+import showdown from 'showdown'
 import {
   AdminLayout,
   MDEditor,
@@ -108,12 +109,15 @@ export default function EditContent({ contentType }: EditContentProps) {
       } = matter(mdContent)
 
       const parseContent = () => {
+        const converter = new showdown.Converter({ noHeaderId: true })
+        let newContent = converter.makeHtml(content)
+
         // fetch images from Github in case deploy is not done yet
-        const newContent = content?.replace(
+        newContent = newContent.replace(
           'src="/images/',
           `src="/api/outstatic/images/`
         )
-        return newContent
+        return newContent.replace('\n<', '<')
       }
 
       const newDate = publishedAt ? new Date(publishedAt) : getLocalDate()
@@ -131,7 +135,7 @@ export default function EditContent({ contentType }: EditContentProps) {
         coverImage
       }
       methods.reset(post)
-      editor.commands.insertContent(parseContent())
+      editor.commands.setContent(parseContent())
       editor.commands.focus('start')
       setShowDelete(slug !== 'new')
     } else {
