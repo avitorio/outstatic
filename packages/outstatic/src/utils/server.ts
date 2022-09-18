@@ -29,6 +29,10 @@ export function getContentBySlug(
 
   const items: Items = {}
 
+  if (data['status'] === 'draft') {
+    return {}
+  }
+
   // Ensure only the minimal needed data is exposed
   fields.forEach((field) => {
     if (field === 'slug') {
@@ -49,7 +53,10 @@ export function getContentBySlug(
 export function getContentType(contentType: string, fields: string[] = []) {
   const slugs = getContentSlugs(contentType)
   const posts = slugs
-    .map((slug) => getContentBySlug(contentType, slug, fields))
+    .map((slug) =>
+      getContentBySlug(contentType, slug, [...fields, 'publishedAt', 'status'])
+    )
+    .filter((post) => post.status === 'published')
     // sort posts by date in descending order
     .sort((post1, post2) => (post1.publishedAt > post2.publishedAt ? -1 : 1))
   return posts
