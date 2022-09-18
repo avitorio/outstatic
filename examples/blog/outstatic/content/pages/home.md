@@ -1,6 +1,6 @@
 ---
 title: 'Home'
-status: 'draft'
+status: 'published'
 author:
   name: 'Andre Vitorio'
   picture: ''

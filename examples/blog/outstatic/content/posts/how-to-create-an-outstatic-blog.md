@@ -1,5 +1,6 @@
 ---
 title: 'Learn how to create your blog with Outstatic'
+status: 'published'
 description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.'
 coverImage: '/images/jupiter-spaceship.png'
 publishedAt: '2022-07-14T02:34:02.322Z'
