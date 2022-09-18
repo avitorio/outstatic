@@ -1,7 +1,17 @@
 ---
 title: 'Home'
+status: 'draft'
+author:
+  name: 'Andre Vitorio'
+  picture: ''
+slug: 'home'
 description: 'This is my blog.'
+coverImage: ''
 publishedAt: '2022-03-17T05:35:07.322Z'
 ---
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Praesent elementum facilisis leo vel fringilla est ullamcorper eget. At imperdiet dui accumsan sit amet nulla facilities morbi tempus. Praesent elementum facilisis leo vel fringilla. Congue mauris rhoncus aenean vel. Egestas sed tempus urna et pharetra pharetra massa massa ultricies.
+## Hello!
+
+# I'm Andre, nice to meet you.
+
+#### I am a surfer + musician + software developer + designer + online marketer and whatever else I can cram into this existence.

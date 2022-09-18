@@ -1,15 +1,17 @@
 import Layout from '../components/Layout'
 import Head from 'next/head'
 import Content from '../interfaces/content'
-import { getContentType } from 'outstatic/server'
+import { getContentBySlug, getContentType } from 'outstatic/server'
 import ContentGrid from '../components/ContentGrid'
+import markdownToHtml from '../lib/markdownToHtml'
 
 type Props = {
+  page: Content
   allPosts: Content[]
   allProjects: Content[]
 }
 
-export default function Index({ allPosts, allProjects }: Props) {
+export default function Index({ page, allPosts, allProjects }: Props) {
   return (
     <>
       <Layout>
@@ -18,16 +20,10 @@ export default function Index({ allPosts, allProjects }: Props) {
         </Head>
         <div className="max-w-6xl mx-auto px-5">
           <section className="mt-16 mb-16 md:mb-12">
-            <span className="text-center md:text-left text-3xl md:text-4xl font-bold">
-              Hello!
-            </span>
-            <h1 className="text-6xl md:text-7xl font-bold tracking-tighter leading-tight md:pr-8">
-              I&apos;m Andre, nice to meet you.
-            </h1>
-            <h4 className="max-w-3xl text-2xl mt-4">
-              I am a surfer + musician + software developer + designer + online
-              marketer and whatever else I can cram into this existence.
-            </h4>
+            <div
+              className="prose lg:prose-2xl"
+              dangerouslySetInnerHTML={{ __html: page.content }}
+            />
           </section>
           {allPosts.length > 0 && (
             <ContentGrid title="Posts" items={allPosts} contentType="posts" />
@@ -46,6 +42,8 @@ export default function Index({ allPosts, allProjects }: Props) {
 }
 
 export const getStaticProps = async () => {
+  const page = getContentBySlug('pages', 'home', ['content'])
+
   const allPosts = getContentType('posts', [
     'title',
     'publishedAt',
@@ -60,7 +58,9 @@ export const getStaticProps = async () => {
     'coverImage'
   ])
 
+  const content = await markdownToHtml(page.content || '')
+
   return {
-    props: { allPosts, allProjects }
+    props: { page: { content }, allPosts, allProjects }
   }
 }

@@ -104,6 +104,7 @@ export async function getStaticProps({ params }: Params) {
     'content',
     'coverImage'
   ])
+
   const content = await markdownToHtml(project.content || '')
 
   const moreProjects = getContentType('projects', [
