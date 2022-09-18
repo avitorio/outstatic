@@ -111,7 +111,7 @@ export const OstSSP: GetServerSideProps = async ({ req }) => {
       const { data: postQueryData } = await apolloClient.query({
         query: ContentTypesDocument,
         variables: {
-          name: process.env.OST_REPO_SLUG,
+          name: process.env.VERCEL_GIT_REPO_SLUG || process.env.OST_REPO_SLUG,
           contentPath: `HEAD:${
             process.env.OST_MONOREPO_PATH
               ? process.env.OST_MONOREPO_PATH + '/'
@@ -138,7 +138,7 @@ export const OstSSP: GetServerSideProps = async ({ req }) => {
       missingEnvVars: [],
       providerData: {
         repoOwner: process.env.OST_REPO_OWNER || session?.user?.login || '',
-        repoSlug: process.env.OST_REPO_SLUG,
+        repoSlug: process.env.VERCEL_GIT_REPO_SLUG || process.env.OST_REPO_SLUG,
         contentPath: process.env.OST_CONTENT_PATH || 'outstatic/content',
         monorepoPath: process.env.OST_MONOREPO_PATH || '',
         session: session || null,

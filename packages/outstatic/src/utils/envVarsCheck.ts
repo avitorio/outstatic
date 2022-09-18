@@ -8,11 +8,18 @@ export const envVars = [
   'OST_REPO_OWNER'
 ]
 
-export const hasMissingEnvVar =
-  envVars.filter((variable) =>
-    variable === 'OST_CONTENT_PATH' || variable === 'OST_REPO_OWNER'
-      ? false
-      : !process.env[variable]
-  ).length > 0
+export const hasMissingEnvVar = (function () {
+  let filteredEnvVars = envVars
+  if (process.env.VERCEL_GIT_REPO_SLUG) {
+    filteredEnvVars = envVars.filter((envVar) => envVar !== 'OST_REPO_SLUG')
+  }
+  return (
+    filteredEnvVars.filter((variable) =>
+      variable === 'OST_CONTENT_PATH' || variable === 'OST_REPO_OWNER'
+        ? false
+        : !process.env[variable]
+    ).length > 0
+  )
+})()
 
 export const missingEnvVars = envVars.map((variable) => !!process.env[variable])
