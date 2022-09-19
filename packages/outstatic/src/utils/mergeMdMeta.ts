@@ -28,11 +28,23 @@ export const mergeMdMeta = (data: Content): string => {
       )}'\n`
     }
   })
-  merged += '---\n'
+
+  merged += '---\n\n'
 
   const converter = new showdown.Converter()
 
-  merged += converter.makeMarkdown(data.content)
+  converter.setFlavor('github')
+  converter.setOption('simpleLineBreaks', false)
+
+  // remove weird <p> tags
+  const cleanContent = data.content
+    .replaceAll('<p><br></p>', '')
+    .replaceAll('<br></p>', '</p>')
+
+  const markdown = converter.makeMarkdown(cleanContent)
+
+  // replace leftover html comment with empty line
+  merged += markdown.replaceAll('\n\n\n<!-- -->\n\n', '\n\n')
 
   return merged
 }
