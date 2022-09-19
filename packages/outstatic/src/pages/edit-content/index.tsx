@@ -89,7 +89,11 @@ export default function EditContent({ contentType }: EditContentProps) {
       await createCommit({ variables: commitInput })
       setLoading(false)
       setHasChanges(false)
-      window.history.replaceState('', '', `/outstatic/posts/${newSlug}`)
+      window.history.replaceState(
+        '',
+        '',
+        `/outstatic/${contentType}/${newSlug}`
+      )
       setShowDelete(true)
     } catch (error) {
       // TODO: Better error treatment
