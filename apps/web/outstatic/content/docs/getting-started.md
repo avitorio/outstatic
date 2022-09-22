@@ -1,6 +1,6 @@
 ---
 title: 'Getting started'
-status: 'draft'
+status: 'published'
 author:
   name: 'Andre Vitorio'
   picture: 'https://avatars.githubusercontent.com/u/1417109?v=4'
@@ -34,15 +34,17 @@ Click on Register application. You'll be redirected to a page with your Github O
 
 To deploy with Vercel, start by clicking the button below and follow the setup steps:
 
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Favitorio%2Foutstatic-beta%2Ftree%2Fmain%2Fexamples%2Fblog&env=OST_GITHUB_ID,OST_GITHUB_SECRET,OST_TOKEN_SECRET&project-name=outstatic-blog&repo-name=outstatic-blog&demo-title=Outstatic%20Blog%20Demo&demo-description=A%20statically%20generated%20blog%20example%20using%20Outstatic&demo-url=https%3A%2F%2Foutstatic-blog-example.vercel.app%2F&demo-image=https%3A%2F%2Foutstatic-blog-example.vercel.app%2Fassets%2Foutstatic-demo.png)
+
 First pick a name for your repository (ex: outstatic-blog) and click **create**.
 
 Then fill in the following environment variables:
 
-- OST_GITHUB_ID with your Github Client ID.
+- **OST_GITHUB_ID** with your Github Client ID.
 
-- OST_GITHUB_SECRET with your Github Client secret.
+- **OST_GITHUB_SECRET** with your Github Client secret.
 
-- OST_TOKEN_SECRET with a random string with at least 32 characters. You can generate a random string using [this service](https://onlinehashtools.com/generate-random-sha256-hash?&count=1).
+- **OST_TOKEN_SECRET** with a random string with at least 32 characters. You can generate a random string using [this service](https://onlinehashtools.com/generate-random-sha256-hash?&count=1).
 
 Deploy will start. Once concluded you will be taken to your Vercel dashboard. There you'll see your new website URL.
 

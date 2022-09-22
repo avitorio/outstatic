@@ -1,7 +1,7 @@
 import type Content from '../interfaces/content'
 import Link from 'next/link'
-import DateFormatter from './DateFormatter'
 import Image from 'next/image'
+import formatDate from '../lib/formatDate'
 
 type Props = {
   contentType: 'posts' | 'projects'
@@ -22,7 +22,7 @@ const ContentGrid = ({ title = 'More', items, contentType }: Props) => {
             as={`/${contentType}/${item.slug}`}
             href={`/${contentType}/[slug]`}
           >
-            <div className="cursor-pointer border project-card rounded-md md:w-full scale-100 hover:scale-[1.02] active:scale-[0.97] motion-safe:transform-gpu transition duration-100 motion-reduce:hover:scale-100 hover:shadow overflow-hidden">
+            <div className="bg-white cursor-pointer border project-card rounded-md md:w-full scale-100 hover:scale-[1.02] active:scale-[0.97] motion-safe:transform-gpu transition duration-100 motion-reduce:hover:scale-100 hover:shadow overflow-hidden">
               <div className="sm:mx-0 relative">
                 <Image
                   src={item.coverImage}
@@ -46,7 +46,11 @@ const ContentGrid = ({ title = 'More', items, contentType }: Props) => {
                     </Link>
                   </h3>
                   <div className="text-md mb-4 text-slate-700">
-                    <DateFormatter dateString={item.publishedAt} />
+                    Written on{' '}
+                    <time dateTime={item.publishedAt}>
+                      {formatDate(item.publishedAt)}
+                    </time>{' '}
+                    by {item.author.name}.
                   </div>
                   <p className="text-lg leading-relaxed mb-4">
                     {item.description}

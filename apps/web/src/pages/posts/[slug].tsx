@@ -1,57 +1,102 @@
-import { GetStaticProps } from 'next'
+import { useRouter } from 'next/router'
+import ErrorPage from 'next/error'
+import Header from '../../components/Header'
+import Layout from '../../components/Layout'
 import Head from 'next/head'
-import Link from 'next/link'
+import markdownToHtml from '../../lib/markdownToHtml'
+import type Content from '../../interfaces/content'
+import { getContentPaths, getContentBySlug } from 'outstatic/server'
+import Image from 'next/image'
+import formatDate from '../../lib/formatDate'
 
-type PostProps = {
-  title: string
-  content: string
-  publishedAt: string
+type Props = {
+  post: Content
 }
 
-export default function Post({ title, content, publishedAt }: PostProps) {
-  const date = new Date(publishedAt).toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  })
+export default function Post({ post }: Props) {
+  const router = useRouter()
+  if (!router.isFallback && !post?.slug) {
+    return <ErrorPage statusCode={404} />
+  }
   return (
-    <>
-      <Head>
-        <title>{title}</title>
-      </Head>
-      <nav className="p-8 text-white sticky top-0 z-50 ">
-        <Link href="/">
-          <a className="hover:text-blue-600">← Home</a>
-        </Link>
-      </nav>
-      <main className="text-white max-w-[65ch] mx-auto pb-16">
-        <h1 className="text-4xl mb-4 font-semibold">{title}</h1>
-        <p className="mb-10">Written on {date}</p>
-        <div
-          className="prose prose-invert prose-lg"
-          dangerouslySetInnerHTML={{ __html: content }}
-        />
-      </main>
-    </>
+    <Layout>
+      <div className="max-w-6xl mx-auto px-5">
+        <Header />
+        {router.isFallback ? (
+          <h1 className="font-primary text-2xl font-bold md:text-4xl mb-2">
+            Loading…
+          </h1>
+        ) : (
+          <>
+            <article className="mb-32">
+              <Head>
+                <title>{`${post.title} | Next.js + Outstatic`}</title>
+                <meta property="og:image" content={post.coverImage} />
+              </Head>
+              <div className="mb-2 md:mb-4 sm:mx-0">
+                <Image
+                  alt={post.title}
+                  src={post.coverImage}
+                  width={1200}
+                  height={(1200 * 2) / 5}
+                  layout="responsive"
+                  objectFit="cover"
+                  objectPosition={'center center'}
+                />
+              </div>
+              <h1 className="font-primary text-2xl font-bold md:text-4xl mb-2">
+                {post.title}
+              </h1>
+              <div className="hidden md:block md:mb-12 text-slate-600">
+                Written on{' '}
+                <time dateTime={post.publishedAt}>
+                  {formatDate(post.publishedAt)}
+                </time>{' '}
+                by {post.author.name}.
+              </div>
+              <hr className="border-neutral-200 mt-10 mb-10" />
+              <div className="max-w-2xl mx-auto">
+                <div
+                  className="prose lg:prose-xl"
+                  dangerouslySetInnerHTML={{ __html: post.content }}
+                />
+              </div>
+            </article>
+          </>
+        )}
+      </div>
+    </Layout>
   )
 }
 
-import { getContentPaths, getContentBySlug } from 'outstatic/server'
+type Params = {
+  params: {
+    slug: string
+  }
+}
 
-export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const post = getContentBySlug('posts', params?.slug as string, [
+export async function getStaticProps({ params }: Params) {
+  const post = getContentBySlug('posts', params.slug, [
     'title',
+    'publishedAt',
+    'slug',
+    'author',
     'content',
-    'publishedAt'
+    'coverImage'
   ])
+  const content = await markdownToHtml(post.content || '')
+
   return {
     props: {
-      ...post
+      post: {
+        ...post,
+        content
+      }
     }
   }
 }
 
-export const getStaticPaths = async () => {
+export async function getStaticPaths() {
   return {
     paths: getContentPaths('posts'),
     fallback: false
