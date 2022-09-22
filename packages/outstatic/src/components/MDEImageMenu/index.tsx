@@ -1,61 +1,58 @@
 import { Editor } from '@tiptap/react'
-import { ChangeEvent, useCallback, useContext, useState } from 'react'
-import { PostContext } from '../../context'
-import { FileType } from '../../types'
+import { useCallback, useState } from 'react'
 import MDEMenuButton from '../MDEMenuButton'
 
-type MDEImageMenuProps = {
+type MDEUImageMenuProps = {
   editor: Editor
-  setImageMenu: (value: boolean) => void
+  setImageSelected: (value: boolean) => void
 }
 
-const MDEImageMenu = ({ editor, setImageMenu }: MDEImageMenuProps) => {
-  const context = useContext(PostContext)
+const MDEUImageMenu = ({ editor, setImageSelected }: MDEUImageMenuProps) => {
   const [showLink, setShowLink] = useState(false)
-  const [imageUrl, setImageUrl] = useState('')
+  const [url, setUrl] = useState('')
+  const [showAltText, setShowAltText] = useState(false)
+  const [altText, setAltText] = useState('')
 
-  const addImageFile = async ({
-    currentTarget
-  }: ChangeEvent<HTMLInputElement>) => {
-    if (currentTarget.files?.length && currentTarget.files?.[0] !== null) {
-      const file = currentTarget.files[0]
-      const blob = URL.createObjectURL(file)
-      editor.chain().focus().setImage({ src: blob }).run()
-      const reader = new FileReader()
-      reader.readAsArrayBuffer(file)
-      reader.onloadend = () => {
-        const bytes = reader.result as string
-        const buffer = Buffer.from(bytes, 'binary')
-        context?.setFiles((files: FileType[]) => [
-          ...files,
-          {
-            type: 'images',
-            blob,
-            filename: file.name,
-            content: buffer.toString('base64')
-          }
-        ])
-      }
+  const setLink = useCallback(() => {
+    editor.chain().focus().extendMarkRange('link').setLink({ href: url }).run()
+
+    // empty
+    if (url === '' || url === undefined) {
+      editor.chain().focus().extendMarkRange('link').unsetLink().run()
     }
-  }
+    setShowLink(false)
+    editor.chain().blur().run()
+    setUrl('')
+  }, [editor, url])
 
-  const handleImageInput = (e: ChangeEvent<HTMLInputElement>) => {
-    setImageUrl(e.target.value)
-  }
+  const addAltText = useCallback(() => {
+    editor
+      .chain()
+      .focus()
+      .extendMarkRange('link')
+      .unsetLink()
+      .updateAttributes('image', {
+        alt: altText
+      })
+      .setLink({ href: editor.getAttributes('link').href })
+      .run()
 
-  const addImageUrl = useCallback(() => {
-    if (imageUrl) {
-      // TODO: Jump to new paragraph after adding image
-      editor.chain().focus().setImage({ src: imageUrl }).run()
-    }
-  }, [editor, imageUrl])
+    setShowAltText(false)
+    setImageSelected(true)
+    editor.chain().blur().run()
+    setUrl('')
+    setAltText('')
+  }, [editor, altText, setImageSelected])
 
   return (
     <>
-      {showLink ? (
-        <div className="flex w-[500px] rounded-sm border border-black">
+      {showAltText && (
+        <>
           <MDEMenuButton
-            onClick={() => setShowLink(false)}
+            onClick={() => {
+              setShowAltText(false)
+              setImageSelected(true)
+            }}
             editor={editor}
             name="back"
           >
@@ -71,21 +68,40 @@ const MDEImageMenu = ({ editor, setImageMenu }: MDEImageMenuProps) => {
             </svg>
           </MDEMenuButton>
           <input
-            type="text"
+            id="alt-text"
+            name="alt-text"
+            required
             className="w-[500px] border-r border-black py-2 px-3 outline-none"
-            placeholder="Insert link here"
-            onChange={handleImageInput}
-            value={imageUrl}
+            placeholder="Insert alt text here"
+            onChange={(e) => {
+              setAltText(e.target.value.trim())
+            }}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                addAltText()
+              }
+              if (e.key === 'Escape') {
+                setShowAltText(false)
+                setImageSelected(true)
+              }
+            }}
+            defaultValue={altText}
+            autoFocus
           />
-
-          <MDEMenuButton onClick={addImageUrl} editor={editor} name="back">
+          <MDEMenuButton onClick={addAltText} editor={editor} name="addAltText">
             Done
           </MDEMenuButton>
-        </div>
-      ) : (
-        <div className="flex rounded-sm border border-black">
+        </>
+      )}
+      {showLink && (
+        <>
           <MDEMenuButton
-            onClick={() => setImageMenu(false)}
+            onClick={() => {
+              if (editor.isActive('image')) {
+                setImageSelected(true)
+              }
+              setShowLink(false)
+            }}
             editor={editor}
             name="back"
           >
@@ -100,31 +116,79 @@ const MDEImageMenu = ({ editor, setImageMenu }: MDEImageMenuProps) => {
               <path d="M7.828 11H20v2H7.828l5.364 5.364-1.414 1.414L4 12l7.778-7.778 1.414 1.414z" />
             </svg>
           </MDEMenuButton>
-          <MDEMenuButton
-            onClick={() => setShowLink(true)}
-            editor={editor}
-            name="imageFromLink"
-          >
-            From link
-          </MDEMenuButton>
-
-          <label
-            htmlFor="upload-button"
-            className="group cursor-pointer border-l border-black py-2 px-3 last-of-type:border-r-0 hover:bg-black hover:text-white"
-          >
-            From file
-          </label>
           <input
-            type="file"
-            accept="image/*"
-            id="upload-button"
-            onChange={addImageFile}
-            className="hidden"
+            id="link"
+            name="link"
+            type="url"
+            required
+            className="w-[500px] border-r border-black py-2 px-3 outline-none"
+            placeholder="Insert link here"
+            onChange={(e) => {
+              setUrl(e.target.value.trim())
+            }}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                setLink()
+              }
+              if (e.key === 'Escape') {
+                setShowLink(false)
+              }
+            }}
+            autoFocus
+            defaultValue={url}
           />
-        </div>
+          <MDEMenuButton onClick={setLink} editor={editor} name="submitLink">
+            Done
+          </MDEMenuButton>
+        </>
+      )}
+      {!showAltText && !showLink && (
+        <>
+          <MDEMenuButton
+            onClick={() => {
+              setUrl(editor.getAttributes('link').href)
+              setShowLink(true)
+            }}
+            editor={editor}
+            name="link"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              width="24"
+              height="24"
+              className="group-hover:fill-white"
+            >
+              <path fill="none" d="M0 0h24v24H0z" />
+              <path d="M18.364 15.536L16.95 14.12l1.414-1.414a5 5 0 1 0-7.071-7.071L9.879 7.05 8.464 5.636 9.88 4.222a7 7 0 0 1 9.9 9.9l-1.415 1.414zm-2.828 2.828l-1.415 1.414a7 7 0 0 1-9.9-9.9l1.415-1.414L7.05 9.88l-1.414 1.414a5 5 0 1 0 7.071 7.071l1.414-1.414 1.415 1.414zm-.708-10.607l1.415 1.415-7.071 7.07-1.415-1.414 7.071-7.07z" />
+            </svg>
+          </MDEMenuButton>
+          <MDEMenuButton
+            onClick={() => {
+              setAltText(editor.getAttributes('image').alt)
+              setShowAltText(true)
+            }}
+            editor={editor}
+            name="image"
+            attributes={
+              editor.getAttributes('image').alt
+                ? { alt: editor.getAttributes('image').alt }
+                : { alt: false }
+            }
+          >
+            Alt Text
+          </MDEMenuButton>
+          <MDEMenuButton
+            onClick={() => editor.commands.deleteSelection()}
+            editor={editor}
+            name="remove-image"
+          >
+            Remove Image
+          </MDEMenuButton>
+        </>
       )}
     </>
   )
 }
 
-export default MDEImageMenu
+export default MDEUImageMenu

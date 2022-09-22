@@ -121,14 +121,16 @@ export default function EditContent({ contentType }: EditContentProps) {
           'src="/images/',
           `src="/api/outstatic/images/`
         )
-        return newContent.replace('\n<', '<')
+        return newContent
       }
+
+      const parsedContent = parseContent()
 
       const newDate = publishedAt ? new Date(publishedAt) : getLocalDate()
       const post = {
         title,
         publishedAt: newDate,
-        content: parseContent(),
+        content: parsedContent,
         status,
         author: {
           name: author?.name,
@@ -139,7 +141,7 @@ export default function EditContent({ contentType }: EditContentProps) {
         coverImage
       }
       methods.reset(post)
-      editor.commands.setContent(parseContent())
+      editor.commands.setContent(parsedContent)
       editor.commands.focus('start')
       setShowDelete(slug !== 'new')
     } else {

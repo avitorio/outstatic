@@ -1,5 +1,6 @@
 import { BubbleMenu, Editor, isTextSelection } from '@tiptap/react'
 import { useCallback, useEffect, useState } from 'react'
+import { MDEImageMenu } from '..'
 import MDEMenuButton from '../MDEMenuButton'
 
 type MDEMenuProps = {
@@ -23,7 +24,11 @@ const MDEMenu = ({ editor }: MDEMenuProps) => {
   }, [editor, url])
 
   useEffect(() => {
-    const activeImage = () => editor.isActive('image') && setImageSelected(true)
+    const activeImage = () => {
+      if (editor.isActive('image')) {
+        setImageSelected(true)
+      }
+    }
     editor.on('selectionUpdate', activeImage)
     editor.on('focus', activeImage)
   }, [editor])
@@ -58,11 +63,13 @@ const MDEMenu = ({ editor }: MDEMenuProps) => {
         return true
       }}
     >
-      <div className="flex rounded-sm border border-black">
+      <div className="flex rounded-sm border border-black prose-sm">
         {showLink && (
           <>
             <MDEMenuButton
-              onClick={() => setShowLink(false)}
+              onClick={() => {
+                setShowLink(false)
+              }}
               editor={editor}
               name="back"
             >
@@ -98,27 +105,14 @@ const MDEMenu = ({ editor }: MDEMenuProps) => {
               autoFocus
               defaultValue={url}
             />
-            <MDEMenuButton
-              onClick={setLink}
-              editor={editor}
-              disabled={!url || url.trim().length === 0}
-              name="submitLink"
-            >
+            <MDEMenuButton onClick={setLink} editor={editor} name="submitLink">
               Done
             </MDEMenuButton>
           </>
         )}
-        {
-          imageSelected && (
-            <MDEMenuButton
-              onClick={() => editor.commands.deleteSelection()}
-              editor={editor}
-              name="remove-image"
-            >
-              Remove Image
-            </MDEMenuButton>
-          ) // TODO: Insert Alt Text
-        }
+        {imageSelected && (
+          <MDEImageMenu editor={editor} setImageSelected={setImageSelected} />
+        )}
         {!imageSelected && !showLink && (
           <>
             <MDEMenuButton

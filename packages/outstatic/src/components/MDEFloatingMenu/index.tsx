@@ -1,6 +1,6 @@
 import { Editor, FloatingMenu } from '@tiptap/react'
 import { useState } from 'react'
-import MDEImageMenu from '../MDEImageMenu'
+import MDEUploadImageMenu from '../MDEUploadImageMenu'
 import MDEMenuButton from '../MDEMenuButton'
 
 type MDEFloatingMenuProps = {
@@ -19,7 +19,7 @@ const MDEFloatingMenu = ({ editor }: MDEFloatingMenuProps) => {
           onHidden: () => setImageMenu(false),
           offset: () => (editor.isEmpty ? [0, 180] : [0, 10])
         }}
-        className="leading-none"
+        className="prose-sm"
       >
         {!imageMenu ? (
           <div className="rounded-sm border border-black">
@@ -115,7 +115,7 @@ const MDEFloatingMenu = ({ editor }: MDEFloatingMenuProps) => {
             </MDEMenuButton>
           </div>
         ) : (
-          <MDEImageMenu editor={editor} setImageMenu={setImageMenu} />
+          <MDEUploadImageMenu editor={editor} setImageMenu={setImageMenu} />
         )}
       </FloatingMenu>
     </>

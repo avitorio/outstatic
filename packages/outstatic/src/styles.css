@@ -200,11 +200,15 @@ input.react-datepicker-time__input {
 .ProseMirror img {
   max-width: 100%;
   height: auto;
+  margin: 0;
+  display: inline-block;
 }
+
 .ProseMirror blockquote {
   padding-left: 1rem;
   border-left: 2px solid rgba(13, 13, 13, 0.1);
 }
+
 .ProseMirror hr {
   border: none;
   border-top: 2px solid rgba(13, 13, 13, 0.1);
@@ -215,6 +219,7 @@ input.react-datepicker-time__input {
   text-decoration: underline;
   color: blue;
   cursor: pointer;
+  display: inline-block !important;
 }
 
 .ProseMirror pre {

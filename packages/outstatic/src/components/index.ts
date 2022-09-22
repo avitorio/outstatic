@@ -3,6 +3,7 @@ import AdminLayout from './AdminLayout'
 import Input from './Input'
 import MDEFloatingMenu from './MDEFloatingMenu'
 import MDEImageMenu from './MDEImageMenu'
+import MDEUploadImageMenu from './MDEUploadImageMenu'
 import MDEMenu from './MDEMenu'
 import MDEMenuButton from './MDEMenuButton'
 import MDEditor from './MDEditor'
@@ -18,6 +19,7 @@ export {
   MDEditor,
   MDEFloatingMenu,
   MDEImageMenu,
+  MDEUploadImageMenu,
   MDEMenu,
   MDEMenuButton,
   PostSettings,

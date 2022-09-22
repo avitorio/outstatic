@@ -33,9 +33,6 @@ export const mergeMdMeta = (data: Content): string => {
 
   const converter = new showdown.Converter()
 
-  converter.setFlavor('github')
-  converter.setOption('simpleLineBreaks', false)
-
   // remove weird <p> tags
   const cleanContent = data.content
     .replaceAll('<p><br></p>', '')
@@ -44,7 +41,11 @@ export const mergeMdMeta = (data: Content): string => {
   const markdown = converter.makeMarkdown(cleanContent)
 
   // replace leftover html comment with empty line
-  merged += markdown.replaceAll('\n\n\n<!-- -->\n\n', '\n\n')
+  const cleanMarkdown = markdown
+    .replaceAll('\n\n\n<!-- -->\n\n', '\n\n')
+    .replaceAll('](<', '](')
+    .replaceAll('>)', ')')
 
+  merged += cleanMarkdown
   return merged
 }

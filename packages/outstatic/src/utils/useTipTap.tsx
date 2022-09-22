@@ -15,12 +15,12 @@ const useTipTap = ({ ...rhfMethods }) => {
       StarterKit.configure({
         codeBlock: false
       }),
-      Image,
+      Image.configure({ inline: true }),
       Placeholder.configure({
         placeholder: "What's your story?",
         showOnlyWhenEditable: false
       }),
-      Link,
+      Link.configure({ openOnClick: false }),
       CodeBlockLowlight.extend({
         addNodeView() {
           return ReactNodeViewRenderer(CodeBlock)
