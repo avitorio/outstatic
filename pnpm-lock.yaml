@@ -23,7 +23,6 @@ importers:
       '@types/react': ^18.0.15
       '@types/react-dom': ^18.0.6
       autoprefixer: ^10.4.7
-      classnames: ^2.3.1
       date-fns: ^2.28.0
       gray-matter: ^4.0.3
       next: latest
@@ -36,10 +35,9 @@ importers:
       tailwindcss: ^3.1.4
       typescript: ^4.7.4
     dependencies:
-      classnames: 2.3.1
       date-fns: 2.29.1
       gray-matter: 4.0.3
-      next: 12.3.0_biqbaboplfbrettd7655fr4n2y
+      next: 12.3.1_biqbaboplfbrettd7655fr4n2y
       outstatic: link:../../packages/outstatic
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
@@ -64,6 +62,7 @@ importers:
       autoprefixer: ^10.4.0
       date-fns: ^2.28.0
       eslint-config-custom: workspace:*
+      gray-matter: ^4.0.3
       next: latest
       next-transpile-modules: ^9.0.0
       outstatic: workspace:*
@@ -78,6 +77,7 @@ importers:
       typescript: ^4.5.3
     dependencies:
       date-fns: 2.29.1
+      gray-matter: 4.0.3
       next: 12.3.1_biqbaboplfbrettd7655fr4n2y
       next-transpile-modules: 9.0.0
       outstatic: link:../../packages/outstatic
@@ -2256,7 +2256,7 @@ packages:
       lodash.castarray: 4.4.0
       lodash.isplainobject: 4.0.6
       lodash.merge: 4.6.2
-      tailwindcss: 3.1.8
+      tailwindcss: 3.1.8_postcss@8.4.16
     dev: true
 
   /@testing-library/dom/8.17.1:
