@@ -20,15 +20,15 @@ export default function Post({ post }: Props) {
   }
   return (
     <Layout>
+      <Header />
       <div className="max-w-6xl mx-auto px-5">
-        <Header />
         {router.isFallback ? (
           <h1 className="font-primary text-2xl font-bold md:text-4xl mb-2">
             Loading…
           </h1>
         ) : (
           <>
-            <article className="mb-32">
+            <article className="mb-32 pt-8">
               <Head>
                 <title>{`${post.title} | Next.js + Outstatic`}</title>
                 <meta property="og:image" content={post.coverImage} />

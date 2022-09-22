@@ -18,23 +18,23 @@ export default function Post({ doc, menu }: Props) {
     return <ErrorPage statusCode={404} />
   }
   return (
-    <div className="h-screen overflow-hidden">
+    <>
       <Header />
-      <div className="bg-white relative flex w-full">
-        <aside className="border-r px-4 py-12 w-80">
+      <div className="bg-white flex w-full">
+        <aside className="border-r px-4 py- w-full max-w-xs sticky top-16 h-[calc(100vh-4rem)] overflow-y-scroll no-scrollbar">
           <div
-            className="prose lg:prose-xl"
+            className="prose prose-base"
             dangerouslySetInnerHTML={{ __html: menu.content }}
           />
         </aside>
-        <div className="w-full ml-10 sm:px-2 lg:px-8 xl:px-12 py-12 h-screen sticky top-0 overflow-y-scroll">
+        <div className="w-full ml-10 sm:px-2 lg:px-8 xl:px-12 py-12">
           {router.isFallback ? (
             <h1 className="font-primary text-2xl font-bold md:text-4xl mb-2">
               Loading…
             </h1>
           ) : (
             <>
-              <article className="mb-32">
+              <article className="mb-32 w-full">
                 <Head>
                   <title>{`${doc.title} | Next.js + Outstatic`}</title>
                   <meta property="og:image" content={doc.coverImage} />
@@ -50,18 +50,16 @@ export default function Post({ doc, menu }: Props) {
                   .
                 </div>
                 <hr className="border-neutral-200 mt-10 mb-10" />
-                <div className="max-w-2xl">
-                  <div
-                    className="prose lg:prose-xl"
-                    dangerouslySetInnerHTML={{ __html: doc.content }}
-                  />
-                </div>
+                <div
+                  className="w-full max-w-3xl prose prose-base"
+                  dangerouslySetInnerHTML={{ __html: doc.content }}
+                />
               </article>
             </>
           )}
         </div>
       </div>
-    </div>
+    </>
   )
 }
 

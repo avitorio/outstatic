@@ -30,12 +30,15 @@ export default function Home({ allPosts }: HomeProps) {
             </div>
           </a>
         </div>
-        <div className="grid grid-cols-3 mt-20">
+        <div className="grid grid-cols-4 mt-20">
           <h3 className="mx-auto max-w-5xl text-center text-3xl font-extrabold leading-[1.1] tracking-tighter text-black sm:text-3xl lg:text-4xl xl:text-4xl">
             Open Source.
           </h3>
           <h3 className="mx-auto max-w-5xl text-center text-3xl font-extrabold leading-[1.1] tracking-tighter text-black sm:text-3xl lg:text-4xl xl:text-4xl">
             Host for Free.
+          </h3>
+          <h3 className="mx-auto max-w-5xl text-center text-3xl font-extrabold leading-[1.1] tracking-tighter text-black sm:text-3xl lg:text-4xl xl:text-4xl">
+            Own your data.
           </h3>
           <h3 className="mx-auto max-w-5xl text-center text-3xl font-extrabold leading-[1.1] tracking-tighter text-black sm:text-3xl lg:text-4xl xl:text-4xl">
             5-minute setup.
