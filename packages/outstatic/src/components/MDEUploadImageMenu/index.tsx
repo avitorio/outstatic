@@ -23,7 +23,7 @@ const MDEUploadImageMenu = ({
     if (currentTarget.files?.length && currentTarget.files?.[0] !== null) {
       const file = currentTarget.files[0]
       const blob = URL.createObjectURL(file)
-      editor.chain().focus().setImage({ src: blob }).run()
+      editor.chain().focus().setImage({ src: blob, alt: '' }).run()
       const reader = new FileReader()
       reader.readAsArrayBuffer(file)
       reader.onloadend = () => {
