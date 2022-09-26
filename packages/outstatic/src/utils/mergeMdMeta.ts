@@ -1,6 +1,7 @@
 import showdown from 'showdown'
 import DOMPurify from 'dompurify'
 import { Content } from '../types'
+import { replaceImageSrcRoot } from './replaceImageSrc'
 
 export const mergeMdMeta = (data: Content): string => {
   const meta = Object.entries(
@@ -33,12 +34,20 @@ export const mergeMdMeta = (data: Content): string => {
 
   const converter = new showdown.Converter()
 
-  // remove weird <p> tags
-  const cleanContent = data.content
-    .replaceAll('<p><br></p>', '')
-    .replaceAll('<br></p>', '</p>')
+  // replace /api/outstatic/images/ references
+  let newContent = replaceImageSrcRoot(
+    data.content,
+    '/api/outstatic/images/',
+    '/images/'
+  )
 
-  const markdown = converter.makeMarkdown(cleanContent)
+  const imgFolderRegex = new RegExp(/(^\/api\/outstatic\/images\/)/gi)
+  newContent = replaceImageSrcRoot(newContent, imgFolderRegex, `/images/`)
+
+  // remove weird <p> tags
+  newContent.replaceAll('<p><br></p>', '').replaceAll('<br></p>', '</p>')
+
+  const markdown = converter.makeMarkdown(newContent)
 
   // replace leftover html comment with empty line
   const cleanMarkdown = markdown

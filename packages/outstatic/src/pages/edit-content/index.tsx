@@ -20,6 +20,7 @@ import { createCommitInput } from '../../utils/createCommitInput'
 import { deepReplace } from '../../utils/deepReplace'
 import { getLocalDate } from '../../utils/getLocalDate'
 import { mergeMdMeta } from '../../utils/mergeMdMeta'
+import { replaceImageSrcRoot } from '../../utils/replaceImageSrc'
 import useNavigationLock from '../../utils/useNavigationLock'
 import useOid from '../../utils/useOid'
 import useTipTap from '../../utils/useTipTap'
@@ -117,9 +118,11 @@ export default function EditContent({ contentType }: EditContentProps) {
         let newContent = converter.makeHtml(content)
 
         // fetch images from Github in case deploy is not done yet
-        newContent = newContent.replace(
-          'src="/images/',
-          `src="/api/outstatic/images/`
+        const regex = new RegExp(/(^\/images\/)/gi)
+        newContent = replaceImageSrcRoot(
+          newContent,
+          regex,
+          '/api/outstatic/images/'
         )
         return newContent
       }

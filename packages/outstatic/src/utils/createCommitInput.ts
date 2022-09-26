@@ -51,11 +51,6 @@ export const createCommitInput = ({
       })
     }
 
-    newContent = newContent?.replace(
-      'src="/api/outstatic/images/',
-      `src="/images/`
-    )
-
     additions.push({
       path: `${
         monorepoPath ? monorepoPath + '/' : ''
