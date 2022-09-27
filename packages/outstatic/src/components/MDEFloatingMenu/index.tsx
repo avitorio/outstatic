@@ -1,6 +1,6 @@
 import { Editor, FloatingMenu } from '@tiptap/react'
 import { useState } from 'react'
-import MDEUploadImageMenu from '../MDEUploadImageMenu'
+import MDEInsertImage from '../MDEInsertImage'
 import MDEMenuButton from '../MDEMenuButton'
 
 type MDEFloatingMenuProps = {
@@ -115,7 +115,7 @@ const MDEFloatingMenu = ({ editor }: MDEFloatingMenuProps) => {
             </MDEMenuButton>
           </div>
         ) : (
-          <MDEUploadImageMenu editor={editor} setImageMenu={setImageMenu} />
+          <MDEInsertImage editor={editor} setImageMenu={setImageMenu} />
         )}
       </FloatingMenu>
     </>

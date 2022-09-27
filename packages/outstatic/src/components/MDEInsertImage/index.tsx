@@ -4,15 +4,12 @@ import { PostContext } from '../../context'
 import { FileType } from '../../types'
 import MDEMenuButton from '../MDEMenuButton'
 
-type MDEUploadImageMenuProps = {
+type MDEInsertImageProps = {
   editor: Editor
   setImageMenu: (value: boolean) => void
 }
 
-const MDEUploadImageMenu = ({
-  editor,
-  setImageMenu
-}: MDEUploadImageMenuProps) => {
+const MDEInsertImage = ({ editor, setImageMenu }: MDEInsertImageProps) => {
   const context = useContext(PostContext)
   const [showLink, setShowLink] = useState(false)
   const [imageUrl, setImageUrl] = useState('')
@@ -147,4 +144,4 @@ const MDEUploadImageMenu = ({
   )
 }
 
-export default MDEUploadImageMenu
+export default MDEInsertImage

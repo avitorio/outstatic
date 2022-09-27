@@ -2,10 +2,10 @@ import { render, renderHook, screen } from '@testing-library/react'
 import { useEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 
-import MDEUploadImageMenu from '.'
+import MDEInsertImage from '.'
 
-describe('<MDEUploadImageMenu />', () => {
-  it('should render the MDEUploadImageMenu', () => {
+describe('<MDEInsertImage />', () => {
+  it('should render the MDEInsertImage', () => {
     const { result } = renderHook(() =>
       useEditor({
         extensions: [StarterKit],
@@ -15,7 +15,7 @@ describe('<MDEUploadImageMenu />', () => {
     render(
       <div>
         {result.current && (
-          <MDEUploadImageMenu editor={result.current} setImageMenu={() => {}} />
+          <MDEInsertImage editor={result.current} setImageMenu={() => {}} />
         )}
       </div>
     )
