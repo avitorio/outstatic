@@ -72,7 +72,6 @@ const MDEInsertImage = ({ editor, setImageMenu }: MDEInsertImageProps) => {
               viewBox="0 0 24 24"
               width="24"
               height="24"
-              className="group-hover:fill-white"
             >
               <path fill="none" d="M0 0h24v24H0z" />
               <path d="M7.828 11H20v2H7.828l5.364 5.364-1.414 1.414L4 12l7.778-7.778 1.414 1.414z" />
@@ -94,7 +93,6 @@ const MDEInsertImage = ({ editor, setImageMenu }: MDEInsertImageProps) => {
             }}
             autoFocus
           />
-
           <MDEMenuButton onClick={addImageUrl} editor={editor} name="back">
             Done
           </MDEMenuButton>
@@ -111,7 +109,6 @@ const MDEInsertImage = ({ editor, setImageMenu }: MDEInsertImageProps) => {
               viewBox="0 0 24 24"
               width="24"
               height="24"
-              className="group-hover:fill-white"
             >
               <path fill="none" d="M0 0h24v24H0z" />
               <path d="M7.828 11H20v2H7.828l5.364 5.364-1.414 1.414L4 12l7.778-7.778 1.414 1.414z" />
@@ -127,7 +124,7 @@ const MDEInsertImage = ({ editor, setImageMenu }: MDEInsertImageProps) => {
 
           <label
             htmlFor="upload-button"
-            className="group cursor-pointer border-l border-black py-2 px-3 last-of-type:border-r-0 text-black hover:bg-black hover:text-white"
+            className="group cursor-pointer border-l border-black py-2 px-3 last-of-type:border-r-0 disabled:cursor-not-allowed disabled:hover:bg-gray-600 hover:bg-slate-100"
           >
             From file
           </label>
