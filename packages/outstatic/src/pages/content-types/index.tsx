@@ -32,9 +32,9 @@ export default function ContentTypes() {
   const createContentType: yup.SchemaOf<ContentType> = yup.object().shape({
     name: yup
       .string()
-      .matches(pagesRegex, `The word ${pluralized} is reserved`)
-      .matches(/^[aA-zZ\s]+$/, 'Only alphabets are allowed for this field ')
-      .required('Content name is required')
+      .matches(pagesRegex, `${pluralized} is already taken.`)
+      .matches(/^[aA-zZ\s]+$/, 'Only alphabets are allowed for this field.')
+      .required('Content name is required.')
   })
   const [loading, setLoading] = useState(false)
   const methods = useForm<ContentType>({
@@ -146,10 +146,10 @@ export default function ContentTypes() {
         </form>
         {pluralized && (
           <div
-            className="p-4 mb-4 text-sm max-w-xl text-blue-700 bg-blue-100 rounded-lg dark:bg-blue-200 dark:text-blue-800"
+            className="p-4 mb-4 text-sm max-w-xl text-blue-700 bg-blue-100 rounded-lg"
             role="alert"
           >
-            The content will appear as{' '}
+            The content type will appear as{' '}
             <span className="font-semibold capitalize">{pluralized}</span> on
             the sidebar.
           </div>
