@@ -50,7 +50,7 @@ export default function List({ contentType }: ListProps) {
     entries.forEach((post) => {
       if (post.name.slice(-3) === '.md') {
         const {
-          data: { title, publishedAt, status }
+          data: { title, publishedAt, status, author }
         } = matter(
           post?.object?.__typename === 'Blob' && post?.object?.text
             ? post?.object?.text
@@ -60,7 +60,8 @@ export default function List({ contentType }: ListProps) {
           title,
           status,
           publishedAt: publishedAt ? new Date(publishedAt) : new Date(),
-          slug: post.name.replace('.md', '')
+          slug: post.name.replace('.md', ''),
+          author
         })
       }
     })
@@ -73,7 +74,7 @@ export default function List({ contentType }: ListProps) {
       <div className="mb-8 flex h-12 items-center">
         <h1 className="mr-12 text-2xl capitalize">{contentType}</h1>
         <Link href={`/outstatic/${contentType}/new`}>
-          <a className="rounded-lg border border-gray-300 bg-white px-5 py-2.5 text-sm font-medium text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:hover:border-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-700 capitalize">
+          <a className="rounded-lg border px-5 py-2.5 text-sm font-medium focus:outline-none focus:ring-4 border-gray-600 bg-gray-800 text-white hover:border-gray-600 hover:bg-gray-700 focus:ring-gray-700 capitalize">
             New {singular(contentType)}
           </a>
         </Link>

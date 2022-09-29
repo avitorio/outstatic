@@ -16,13 +16,13 @@ const Sidebar = ({ isOpen = false }: SidebarProps) => {
       }`}
       aria-label="Sidebar"
     >
-      <div className="h-full overflow-y-auto bg-gray-50 py-4 px-3 dark:bg-gray-800">
+      <div className="h-full overflow-y-auto bg-gray-50 py-4 px-3">
         <ul className="space-y-2">
           <li>
             <Link href="/outstatic">
-              <a className="flex items-center rounded-lg p-2 text-base font-normal text-gray-900 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
+              <a className="flex items-center rounded-lg p-2 text-base font-normal text-gray-900 hover:bg-gray-100">
                 <svg
-                  className="h-6 w-6 shrink-0 text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white"
+                  className="h-6 w-6 shrink-0 text-gray-500 transition duration-75 group-hover:text-gray-900"
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   width="24"
@@ -42,9 +42,9 @@ const Sidebar = ({ isOpen = false }: SidebarProps) => {
             {contentTypes.map((contentType) => (
               <li key={contentType}>
                 <Link href={`/outstatic/${contentType}`}>
-                  <a className="flex items-center rounded-lg p-2 text-base font-normal text-gray-900 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
+                  <a className="flex items-center rounded-lg p-2 text-base font-normal text-gray-900 hover:bg-gray-100">
                     <svg
-                      className="h-6 w-6 shrink-0 text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white"
+                      className="h-6 w-6 shrink-0 text-gray-500 transition duration-75 group-hover:text-gray-900"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -65,9 +65,9 @@ const Sidebar = ({ isOpen = false }: SidebarProps) => {
           </>
           <li>
             <Link href="/outstatic/settings">
-              <a className="flex items-center rounded-lg p-2 text-base font-normal text-gray-900 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
+              <a className="flex items-center rounded-lg p-2 text-base font-normal text-gray-900 hover:bg-gray-100">
                 <svg
-                  className="h-6 w-6 shrink-0 text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white"
+                  className="h-6 w-6 shrink-0 text-gray-500 transition duration-75 group-hover:text-gray-900"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
