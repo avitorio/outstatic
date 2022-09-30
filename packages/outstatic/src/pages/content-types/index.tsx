@@ -85,7 +85,7 @@ export default function Collections() {
     <FormProvider {...methods}>
       <AdminLayout>
         <div className="mb-8 flex h-12 items-center">
-          <h1 className="mr-12 text-2xl">Create Collection</h1>
+          <h1 className="mr-12 text-2xl">Create a Collection</h1>
         </div>
         <form
           className="max-w-5xl w-full flex mb-4 items-start"
