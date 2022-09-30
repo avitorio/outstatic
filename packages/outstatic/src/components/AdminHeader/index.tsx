@@ -21,7 +21,7 @@ const AdminHeader = ({
 
   return (
     <>
-      <nav className="relative border-b border-gray-200 bg-white px-2 py-2.5 sm:px-4">
+      <nav className="relative border-b border-gray-200 bg-white px-2 py-2.5 sm:px-4 h-full h-14">
         <div className="mx-auto flex flex-wrap items-center justify-between">
           <button
             data-collapse-toggle="mobile-menu-2"
