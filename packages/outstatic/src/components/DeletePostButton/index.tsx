@@ -10,7 +10,7 @@ type DeletePostButtonProps = {
   slug: string
   disabled?: boolean
   onComplete?: () => void
-  contentType: string
+  collection: string
   className?: string
 }
 
@@ -18,7 +18,7 @@ const DeletePostButton = ({
   slug,
   disabled = false,
   onComplete = () => {},
-  contentType,
+  collection,
   className
 }: DeletePostButtonProps) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false)
@@ -39,7 +39,7 @@ const DeletePostButton = ({
         oldSlug: slug,
         oid,
         repoSlug,
-        contentPath: contentPath + '/' + contentType,
+        contentPath: contentPath + '/' + collection,
         monorepoPath
       })
 

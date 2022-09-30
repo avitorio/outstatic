@@ -8,12 +8,12 @@ import * as yup from 'yup'
 import { AdminLayout, Input } from '../../components'
 import { OutstaticContext } from '../../context'
 import { useCreateCommitMutation } from '../../graphql/generated'
-import { ContentType } from '../../types'
-import { contentTypeCommitInput } from '../../utils/contentTypeCommitInput'
+import { Collection } from '../../types'
+import { collectionCommitInput } from '../../utils/collectionCommitInput'
 import useNavigationLock from '../../utils/useNavigationLock'
 import useOid from '../../utils/useOid'
 
-export default function ContentTypes() {
+export default function Collections() {
   const {
     pages,
     contentPath,
@@ -29,7 +29,7 @@ export default function ContentTypes() {
   const [hasChanges, setHasChanges] = useState(false)
   const [pluralized, setPlural] = useState('')
   const pagesRegex = new RegExp(`^(?!${pages.join('$|')}$)`, 'i')
-  const createContentType: yup.SchemaOf<ContentType> = yup.object().shape({
+  const createCollection: yup.SchemaOf<Collection> = yup.object().shape({
     name: yup
       .string()
       .matches(pagesRegex, `${pluralized} is already taken.`)
@@ -37,34 +37,32 @@ export default function ContentTypes() {
       .required('Content name is required.')
   })
   const [loading, setLoading] = useState(false)
-  const methods = useForm<ContentType>({
-    resolver: yupResolver(createContentType)
+  const methods = useForm<Collection>({
+    resolver: yupResolver(createCollection)
   })
 
-  const onSubmit: SubmitHandler<ContentType> = async ({
-    name
-  }: ContentType) => {
+  const onSubmit: SubmitHandler<Collection> = async ({ name }: Collection) => {
     setLoading(true)
     setHasChanges(false)
 
     try {
       const oid = await fetchOid()
       const owner = repoOwner || session?.user?.login || ''
-      const contentType = convert(name, { dictionary: { "'": '' } })
-      const commitInput = contentTypeCommitInput({
+      const collection = convert(name, { dictionary: { "'": '' } })
+      const commitInput = collectionCommitInput({
         owner,
         oid,
         repoSlug,
         contentPath,
         monorepoPath,
-        contentType
+        collection
       })
 
       const created = await createCommit({ variables: commitInput })
       if (created) {
-        addPage(contentType)
+        addPage(collection)
         setLoading(false)
-        router.push(`/outstatic/${contentType}`)
+        router.push(`/outstatic/${collection}`)
       }
     } catch (error) {
       // TODO: Better error treatment
@@ -87,20 +85,20 @@ export default function ContentTypes() {
     <FormProvider {...methods}>
       <AdminLayout>
         <div className="mb-8 flex h-12 items-center">
-          <h1 className="mr-12 text-2xl">Create Content Type</h1>
+          <h1 className="mr-12 text-2xl">Create Collection</h1>
         </div>
         <form
           className="max-w-5xl w-full flex mb-4 items-start"
           onSubmit={methods.handleSubmit(onSubmit)}
         >
           <Input
-            label="Content Type Name"
+            label="Collection Name"
             id="name"
             inputSize="medium"
             className="w-full max-w-sm md:w-80"
             placeholder="Ex: Posts"
             type="text"
-            helperText="Use the plural form of the content type name, ex: Docs"
+            helperText="Use the plural form of the collection name, ex: Docs"
             validation={{
               onChange: (e) => {
                 setPlural(plural(e.target.value))
@@ -149,7 +147,7 @@ export default function ContentTypes() {
             className="p-4 mb-4 text-sm max-w-xl text-blue-700 bg-blue-100 rounded-lg"
             role="alert"
           >
-            The content type will appear as{' '}
+            The collection will appear as{' '}
             <span className="font-semibold capitalize">{pluralized}</span> on
             the sidebar.
           </div>

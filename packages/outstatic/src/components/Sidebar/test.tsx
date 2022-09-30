@@ -9,7 +9,7 @@ const providerData = {
   monorepoPath: 'anything',
   session: null,
   initialApolloState: null,
-  contentTypes: ['posts', 'docs'],
+  collections: ['posts', 'docs'],
   pages: [],
   addPage: (page: string) => {},
   removePage: (page: string) => {}

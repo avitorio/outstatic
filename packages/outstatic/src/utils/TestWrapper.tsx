@@ -12,7 +12,11 @@ const postExample: Content = {
   title: 'Example Post',
   content: 'Example Content',
   status: 'published',
-  slug: 'post-example'
+  slug: 'post-example',
+  author: {
+    name: 'John Doe',
+    picture: 'https://jdoe.com/picture.jpg'
+  }
 }
 
 const mocks = [
@@ -60,7 +64,7 @@ export const TestWrapper = (props: { children: ReactNode }) => {
           files: [],
           setFiles: () => {},
           hasChanges: false,
-          contentType: 'posts'
+          collection: 'posts'
         }}
       >
         <FormProvider {...formMethods}>{props.children}</FormProvider>

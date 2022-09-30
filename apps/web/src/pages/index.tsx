@@ -1,5 +1,5 @@
 import Head from 'next/head'
-import { getContentType } from 'outstatic/server'
+import { getCollection } from 'outstatic/server'
 import ContentGrid from '../components/ContentGrid'
 import Content from '../interfaces/content'
 
@@ -46,7 +46,7 @@ export default function Home({ allPosts }: HomeProps) {
         </div>
 
         <div className="px-4 py-16 mx-auto sm:pt-20 sm:pb-24 lg:max-w-7xl lg:pt-24">
-          <ContentGrid items={allPosts} contentType="posts" title="Our blog" />
+          <ContentGrid items={allPosts} collection="posts" title="Our blog" />
         </div>
       </main>
     </div>
@@ -54,7 +54,7 @@ export default function Home({ allPosts }: HomeProps) {
 }
 
 export const getStaticProps = async () => {
-  const allPosts = getContentType('posts', [
+  const allPosts = getCollection('posts', [
     'title',
     'publishedAt',
     'slug',

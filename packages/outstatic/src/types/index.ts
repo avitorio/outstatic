@@ -29,7 +29,7 @@ export type PostContextType = {
   files: FileType[]
   setFiles: Dispatch<SetStateAction<FileType[]>>
   hasChanges: boolean
-  contentType: string
+  collection: string
 }
 
 export type Session = {
@@ -43,6 +43,6 @@ export type Session = {
   expires: Date
 }
 
-export type ContentType = {
+export type Collection = {
   name: string
 }

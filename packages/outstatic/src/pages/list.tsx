@@ -12,10 +12,10 @@ import { ostSignOut } from '../utils/auth/hooks'
 type GQLErrorExtended = GraphQLError & { type: string }
 
 type ListProps = {
-  contentType: string
+  collection: string
 }
 
-export default function List({ contentType }: ListProps) {
+export default function List({ collection }: ListProps) {
   const { repoOwner, repoSlug, contentPath, monorepoPath, session } =
     useContext(OutstaticContext)
   const { data, error } = usePostsQuery({
@@ -25,7 +25,7 @@ export default function List({ contentType }: ListProps) {
       contentPath:
         `HEAD:${
           monorepoPath ? monorepoPath + '/' : ''
-        }${contentPath}/${contentType}` || ''
+        }${contentPath}/${collection}` || ''
     },
     fetchPolicy: 'network-only',
     onError: ({ graphQLErrors }) => {
@@ -72,16 +72,16 @@ export default function List({ contentType }: ListProps) {
   return (
     <AdminLayout error={error}>
       <div className="mb-8 flex h-12 items-center">
-        <h1 className="mr-12 text-2xl capitalize">{contentType}</h1>
-        <Link href={`/outstatic/${contentType}/new`}>
+        <h1 className="mr-12 text-2xl capitalize">{collection}</h1>
+        <Link href={`/outstatic/${collection}/new`}>
           <a className="rounded-lg border px-5 py-2.5 text-sm font-medium focus:outline-none focus:ring-4 border-gray-600 bg-gray-800 text-white hover:border-gray-600 hover:bg-gray-700 focus:ring-gray-700 capitalize">
-            New {singular(contentType)}
+            New {singular(collection)}
           </a>
         </Link>
       </div>
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
         {posts.length > 0 && (
-          <PostsTable posts={posts} contentType={contentType} />
+          <PostsTable posts={posts} collection={collection} />
         )}
       </div>
     </AdminLayout>

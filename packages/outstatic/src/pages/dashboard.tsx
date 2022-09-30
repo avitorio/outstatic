@@ -4,12 +4,12 @@ import { AdminLayout } from '../components'
 import Modal from '../components/Modal'
 import { OutstaticContext } from '../context'
 import { useCreateCommitMutation } from '../graphql/generated'
-import { contentTypeCommitInput } from '../utils/contentTypeCommitInput'
+import { collectionCommitInput } from '../utils/collectionCommitInput'
 import useOid from '../utils/useOid'
 
 export default function Dashboard() {
   const {
-    contentTypes,
+    collections,
     session,
     repoSlug,
     contentPath,
@@ -17,51 +17,51 @@ export default function Dashboard() {
     removePage
   } = useContext(OutstaticContext)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
-  const [selectedContentType, setSelectedContentType] = useState('')
+  const [selectedCollection, setSelectedCollection] = useState('')
   const [deleting, setDeleting] = useState(false)
   const [createCommit] = useCreateCommitMutation()
   const fetchOid = useOid()
 
-  const deletePost = async (contentType: string) => {
+  const deletePost = async (collection: string) => {
     try {
       const oid = await fetchOid()
       const owner = session?.user?.login || ''
 
-      const commitInput = contentTypeCommitInput({
+      const commitInput = collectionCommitInput({
         owner,
         oid,
         repoSlug,
         remove: true,
         contentPath,
         monorepoPath,
-        contentType
+        collection
       })
 
       await createCommit({ variables: commitInput })
       setShowDeleteModal(false)
-      removePage(contentType)
+      removePage(collection)
     } catch (error) {}
   }
 
   return (
     <AdminLayout>
-      {contentTypes.length === 0 ? (
+      {collections.length === 0 ? (
         <div className="max-w-2xl prose prose-base">
           <h1>Welcome to Outstatic!</h1>
-          <p>To get started you will need to create a new Content Type.</p>
+          <p>To get started you will need to create a new Collection.</p>
           <p>
-            Content Types are the building blocks of your Outstatic website.
+            Collections are the building blocks of your Outstatic website.
             <br />
-            Create your first Content Type by clicking the button below.
+            Create your first Collection by clicking the button below.
           </p>
 
           <Link href="/outstatic/content-types/new">
             <a className="rounded-lg border px-5 py-2.5 text-sm font-medium focus:outline-none focus:ring-4 border-gray-600 bg-gray-800 text-white hover:border-gray-600 hover:bg-gray-700 focus:ring-gray-700 no-underline">
-              New Content Type
+              New Collection
             </a>
           </Link>
           <p>
-            To learn more about how Content Types work{' '}
+            To learn more about how Collections work{' '}
             <a
               href="https://outstatic.com/docs/content-types"
               target="_blank"
@@ -78,19 +78,19 @@ export default function Dashboard() {
             <h1 className="mr-12 text-2xl">Dashboard</h1>
             <Link href="/outstatic/content-types/new">
               <a className="rounded-lg border px-5 py-2.5 text-sm font-medium focus:outline-none focus:ring-4 border-gray-600 bg-gray-800 text-white hover:border-gray-600 hover:bg-gray-700 focus:ring-gray-700">
-                New Content Type
+                New Collection
               </a>
             </Link>
           </div>
           <div className="max-w-5xl w-full grid grid-cols-3 gap-6">
-            {contentTypes.map((contentType) => (
+            {collections.map((collection) => (
               <div
-                key={contentType}
+                key={collection}
                 className="relative flex p-6 justify-between items-center max-w-sm bg-white rounded-lg border border-gray-200 shadow-md hover:bg-slate-100"
               >
-                <Link href={`/outstatic/${contentType}`}>
+                <Link href={`/outstatic/${collection}`}>
                   <h5 className="text-2xl cursor-pointer font-bold tracking-tight text-gray-900 capitalize">
-                    {contentType}
+                    {collection}
                     <span className="absolute top-0 bottom-0 left-0 right-16"></span>
                   </h5>
                 </Link>
@@ -99,7 +99,7 @@ export default function Dashboard() {
                   type="button"
                   onClick={() => {
                     setShowDeleteModal(true)
-                    setSelectedContentType(contentType)
+                    setSelectedCollection(collection)
                   }}
                 >
                   <span className="sr-only">Delete content</span>
@@ -120,15 +120,15 @@ export default function Dashboard() {
       )}
       {showDeleteModal && (
         <Modal
-          title="Delete Content Type"
+          title="Delete Collection"
           close={() => {
             setShowDeleteModal(false)
-            setSelectedContentType('')
+            setSelectedCollection('')
           }}
         >
           <div className="space-y-6 p-6 text-left">
             <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-              Are you sure you want to delete this content type?
+              Are you sure you want to delete this collection?
             </p>
             <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
               This action cannot be undone.
@@ -141,7 +141,7 @@ export default function Dashboard() {
               className="flex rounded-lg bg-red-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-red-800 focus:outline-none"
               onClick={() => {
                 setDeleting(true)
-                deletePost(selectedContentType)
+                deletePost(selectedCollection)
               }}
             >
               {deleting ? (
@@ -177,7 +177,7 @@ export default function Dashboard() {
               className="rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-900 focus:z-10 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:border-gray-500 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-600"
               onClick={() => {
                 setShowDeleteModal(false)
-                setSelectedContentType('')
+                setSelectedCollection('')
               }}
             >
               Cancel

@@ -27,10 +27,10 @@ import useTipTap from '../../utils/useTipTap'
 import { editPostSchema } from '../../utils/yup'
 
 type EditContentProps = {
-  contentType: string
+  collection: string
 }
 
-export default function EditContent({ contentType }: EditContentProps) {
+export default function EditContent({ collection }: EditContentProps) {
   const router = useRouter()
   const slug = router.query?.ost?.[1] as string
   const { repoOwner, repoSlug, contentPath, monorepoPath } =
@@ -57,7 +57,7 @@ export default function EditContent({ contentType }: EditContentProps) {
       name: repoSlug,
       filePath: `HEAD:${
         monorepoPath ? monorepoPath + '/' : ''
-      }${contentPath}/${contentType}/${slug}.md`
+      }${contentPath}/${collection}/${slug}.md`
     },
     fetchPolicy: 'network-only',
     skip: slug === 'new' || !slug
@@ -83,18 +83,14 @@ export default function EditContent({ contentType }: EditContentProps) {
         oid,
         files,
         repoSlug,
-        contentPath: contentPath + '/' + contentType,
+        contentPath: contentPath + '/' + collection,
         monorepoPath
       })
 
       await createCommit({ variables: commitInput })
       setLoading(false)
       setHasChanges(false)
-      window.history.replaceState(
-        '',
-        '',
-        `/outstatic/${contentType}/${newSlug}`
-      )
+      window.history.replaceState('', '', `/outstatic/${collection}/${newSlug}`)
       setShowDelete(true)
     } catch (error) {
       // TODO: Better error treatment
@@ -195,7 +191,7 @@ export default function EditContent({ contentType }: EditContentProps) {
           files,
           setFiles,
           hasChanges,
-          contentType
+          collection
         }}
       >
         <FormProvider {...methods}>
@@ -212,7 +208,7 @@ export default function EditContent({ contentType }: EditContentProps) {
               <PostTitleInput
                 id="title"
                 className="w-full resize-none outline-none bg-white text-5xl"
-                placeholder={`Your ${singular(contentType)} title`}
+                placeholder={`Your ${singular(collection)} title`}
               />
               <div className="min-h-full prose prose-xl">
                 <MDEditor editor={editor} id="content" />

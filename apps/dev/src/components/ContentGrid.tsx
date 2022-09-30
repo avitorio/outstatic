@@ -4,14 +4,14 @@ import DateFormatter from './DateFormatter'
 import Image from 'next/image'
 
 type Props = {
-  contentType: 'posts' | 'projects'
+  collection: 'posts' | 'projects'
   title?: string
   items: Content[]
 }
 
-const ContentGrid = ({ title = 'More', items, contentType }: Props) => {
+const ContentGrid = ({ title = 'More', items, collection }: Props) => {
   return (
-    <section id={contentType}>
+    <section id={collection}>
       <h2 className="mb-8 text-5xl md:text-6xl font-bold tracking-tighter leading-tight">
         {title}
       </h2>
@@ -19,8 +19,8 @@ const ContentGrid = ({ title = 'More', items, contentType }: Props) => {
         {items.map((item) => (
           <Link
             key={item.slug}
-            as={`/${contentType}/${item.slug}`}
-            href={`/${contentType}/[slug]`}
+            as={`/${collection}/${item.slug}`}
+            href={`/${collection}/[slug]`}
           >
             <div className="cursor-pointer border project-card rounded-md md:w-full scale-100 hover:scale-[1.02] active:scale-[0.97] motion-safe:transform-gpu transition duration-100 motion-reduce:hover:scale-100 hover:shadow overflow-hidden">
               <div className="sm:mx-0 relative">
@@ -32,13 +32,13 @@ const ContentGrid = ({ title = 'More', items, contentType }: Props) => {
                   layout="responsive"
                   objectFit="cover"
                 />
-                {contentType === 'projects' && (
+                {collection === 'projects' && (
                   <h4 className="p-2 bg-opacity-80 bg-white text-center whitespace-nowrap font-bold text-3xl absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 shadow-lg rounded-lg">
                     {item.title}
                   </h4>
                 )}
               </div>
-              {contentType === 'posts' && (
+              {collection === 'posts' && (
                 <div className="p-4">
                   <h3 className="text-xl mb-2 leading-snug font-bold">
                     <Link as={`/posts/${item.slug}`} href="/posts/[slug]">

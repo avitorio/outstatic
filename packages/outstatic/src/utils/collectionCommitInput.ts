@@ -1,24 +1,24 @@
 import { encode } from 'js-base64'
 
-type contentTypeCommitInputType = {
+type collectionCommitInputType = {
   owner: string
   oid: string
   remove?: boolean
   repoSlug: string
   contentPath: string
   monorepoPath: string
-  contentType: string
+  collection: string
 }
 
-export const contentTypeCommitInput = ({
+export const collectionCommitInput = ({
   owner,
   oid,
   remove = false,
   repoSlug,
   contentPath,
   monorepoPath,
-  contentType
-}: contentTypeCommitInputType) => {
+  collection
+}: collectionCommitInputType) => {
   let fileChanges = {}
   const additions = []
   const deletions = []
@@ -27,22 +27,22 @@ export const contentTypeCommitInput = ({
     deletions.push({
       path: `${
         monorepoPath ? monorepoPath + '/' : ''
-      }${contentPath}/${contentType}`
+      }${contentPath}/${collection}`
     })
     fileChanges = { ...fileChanges, deletions }
   } else {
     additions.push({
       path: `${
         monorepoPath ? monorepoPath + '/' : ''
-      }${contentPath}/${contentType}/.gitkeep`,
+      }${contentPath}/${collection}/.gitkeep`,
       contents: encode('')
     })
     fileChanges = { additions }
   }
 
   const headline = !remove
-    ? `feat(content): create ${contentType}`
-    : `feat(content): remove ${contentType}`
+    ? `feat(content): create ${collection}`
+    : `feat(content): remove ${collection}`
 
   return {
     input: {

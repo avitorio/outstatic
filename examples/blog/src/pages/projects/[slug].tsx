@@ -8,7 +8,7 @@ import type Content from '../../interfaces/content'
 import {
   getContentPaths,
   getContentBySlug,
-  getContentType
+  getCollection
 } from 'outstatic/server'
 import DateFormatter from '../../components/DateFormatter'
 import Image from 'next/image'
@@ -79,7 +79,7 @@ export default function Project({ project, moreProjects }: Props) {
             <ContentGrid
               title="Other Projects"
               items={moreProjects}
-              contentType="projects"
+              collection="projects"
             />
           )}
         </div>
@@ -107,7 +107,7 @@ export async function getStaticProps({ params }: Params) {
 
   const content = await markdownToHtml(project.content || '')
 
-  const moreProjects = getContentType('projects', [
+  const moreProjects = getCollection('projects', [
     'title',
     'slug',
     'coverImage'

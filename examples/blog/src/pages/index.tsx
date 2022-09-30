@@ -1,7 +1,7 @@
 import Layout from '../components/Layout'
 import Head from 'next/head'
 import Content from '../interfaces/content'
-import { getContentBySlug, getContentType } from 'outstatic/server'
+import { getContentBySlug, getCollection } from 'outstatic/server'
 import ContentGrid from '../components/ContentGrid'
 import markdownToHtml from '../lib/markdownToHtml'
 
@@ -26,13 +26,13 @@ export default function Index({ page, allPosts, allProjects }: Props) {
             />
           </section>
           {allPosts.length > 0 && (
-            <ContentGrid title="Posts" items={allPosts} contentType="posts" />
+            <ContentGrid title="Posts" items={allPosts} collection="posts" />
           )}
           {allProjects.length > 0 && (
             <ContentGrid
               title="Projects"
               items={allProjects}
-              contentType="projects"
+              collection="projects"
             />
           )}
         </div>
@@ -44,7 +44,7 @@ export default function Index({ page, allPosts, allProjects }: Props) {
 export const getStaticProps = async () => {
   const page = getContentBySlug('pages', 'home', ['content'])
 
-  const allPosts = getContentType('posts', [
+  const allPosts = getCollection('posts', [
     'title',
     'publishedAt',
     'slug',
@@ -52,11 +52,7 @@ export const getStaticProps = async () => {
     'description'
   ])
 
-  const allProjects = getContentType('projects', [
-    'title',
-    'slug',
-    'coverImage'
-  ])
+  const allProjects = getCollection('projects', ['title', 'slug', 'coverImage'])
 
   const content = await markdownToHtml(page.content || '')
 

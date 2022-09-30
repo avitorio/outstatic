@@ -9,7 +9,7 @@ type OutstaticProviderProps = {
   monorepoPath: string
   session: Session | null
   initialApolloState?: null
-  contentTypes: string[]
+  collections: string[]
   pages: string[]
   addPage: (page: string) => void
   removePage: (page: string) => void
@@ -30,7 +30,7 @@ export const OutstaticProvider = ({
   contentPath,
   monorepoPath,
   session,
-  contentTypes,
+  collections,
   pages,
   addPage,
   removePage
@@ -43,7 +43,7 @@ export const OutstaticProvider = ({
         contentPath: contentPath || 'outstatic/content',
         monorepoPath: monorepoPath || '',
         session,
-        contentTypes,
+        collections,
         pages,
         addPage,
         removePage

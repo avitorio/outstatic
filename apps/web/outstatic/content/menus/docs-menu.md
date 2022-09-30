@@ -20,7 +20,7 @@ publishedAt: '2022-09-22T14:18:37.951Z'
 
 - How Outstatic works
 
-  - Content Types
+  - Collections
 
   - Fetching data
 

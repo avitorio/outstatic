@@ -25,7 +25,7 @@ const PostSettings = ({
 }: PostSettingsProps) => {
   const { register } = useFormContext()
   const router = useRouter()
-  const { post, editPost, hasChanges, contentType } = useContext(PostContext)
+  const { post, editPost, hasChanges, collection } = useContext(PostContext)
 
   return (
     <aside className="relative flex w-full items-center justify-between border-b border-gray-300 bg-white md:w-64 md:flex-none md:flex-col md:flex-wrap md:items-start md:justify-start md:border-b-0 md:border-l md:py-6">
@@ -65,9 +65,9 @@ const PostSettings = ({
             disabled={loading}
             slug={post.slug}
             onComplete={() => {
-              router.push(`/outstatic/${contentType}`)
+              router.push(`/outstatic/${collection}`)
             }}
-            contentType={contentType}
+            collection={collection}
             className="hover:bg-slate-200 max-h-[2.25rem]"
           />
         )}

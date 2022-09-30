@@ -7,19 +7,19 @@ const CONTENT_PATH = join(
   process.env.OST_CONTENT_PATH || 'outstatic/content'
 )
 
-export function getContentSlugs(contentType: string) {
-  const contentTypesPath = join(CONTENT_PATH, contentType)
-  return fs.readdirSync(contentTypesPath)
+export function getContentSlugs(collection: string) {
+  const collectionsPath = join(CONTENT_PATH, collection)
+  return fs.readdirSync(collectionsPath)
 }
 
 export function getContentBySlug(
-  contentType: string,
+  collection: string,
   slug: string,
   fields: string[] = []
 ) {
   const realSlug = slug.replace(/\.mdx?$/, '')
-  const contentTypesPath = join(CONTENT_PATH, contentType)
-  const fullPath = join(contentTypesPath, `${realSlug}.md`)
+  const collectionsPath = join(CONTENT_PATH, collection)
+  const fullPath = join(collectionsPath, `${realSlug}.md`)
   const fileContents = fs.readFileSync(fullPath, 'utf8')
   const { data, content } = matter(fileContents)
 
@@ -50,11 +50,11 @@ export function getContentBySlug(
   return items
 }
 
-export function getContentType(contentType: string, fields: string[] = []) {
-  const slugs = getContentSlugs(contentType)
+export function getCollection(collection: string, fields: string[] = []) {
+  const slugs = getContentSlugs(collection)
   const posts = slugs
     .map((slug) =>
-      getContentBySlug(contentType, slug, [...fields, 'publishedAt', 'status'])
+      getContentBySlug(collection, slug, [...fields, 'publishedAt', 'status'])
     )
     .filter((post) => post.status === 'published')
     // sort posts by date in descending order
@@ -62,9 +62,9 @@ export function getContentType(contentType: string, fields: string[] = []) {
   return posts
 }
 
-export const getContentPaths = (contentType: string) => {
+export const getContentPaths = (collection: string) => {
   const contentFilePaths = fs
-    .readdirSync(CONTENT_PATH + '/' + contentType)
+    .readdirSync(CONTENT_PATH + '/' + collection)
     // Only include md(x) files
     .filter((path) => /\.mdx?$/.test(path))
 
@@ -77,7 +77,7 @@ export const getContentPaths = (contentType: string) => {
   return paths
 }
 
-export const getContentTypes = () => {
-  const contentTypes = fs.readdirSync(CONTENT_PATH)
-  return contentTypes
+export const getCollections = () => {
+  const collections = fs.readdirSync(CONTENT_PATH)
+  return collections
 }

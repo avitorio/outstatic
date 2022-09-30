@@ -3,13 +3,13 @@ import { GetServerSideProps } from 'next'
 import { useRouter } from 'next/router'
 import { ReactElement, useState } from 'react'
 import { OutstaticProvider } from '../context'
-import { ContentTypesDocument } from '../graphql/generated'
+import { CollectionsDocument } from '../graphql/generated'
 import { Session } from '../types'
 import { initializeApollo, useApollo } from '../utils/apollo'
 import { getLoginSession } from '../utils/auth/auth'
 import { hasMissingEnvVar, missingEnvVars } from '../utils/envVarsCheck'
 import FourOhFour from './404'
-import ContentTypes from './content-types'
+import Collections from './content-types'
 import Dashboard from './dashboard'
 import EditContent from './edit-content'
 import List from './list'
@@ -27,7 +27,7 @@ type OutstaticProps = {
     monorepoPath: string
     session: Session | null
     initialApolloState?: null
-    contentTypes: string[]
+    collections: string[]
     pages: string[]
   }
 }
@@ -39,20 +39,20 @@ const defaultPages: { [key: string]: ReactElement | undefined } = {
 
 export const Outstatic = ({ missingEnvVars, providerData }: OutstaticProps) => {
   const [pages, setPages] = useState(providerData?.pages)
-  const [contentTypes, setContentTypes] = useState(providerData?.contentTypes)
+  const [collections, setCollections] = useState(providerData?.collections)
   const router = useRouter()
   const client = useApollo(providerData?.initialApolloState)
 
   const addPage = (page: string) => {
     if (pages.includes(page)) return
-    if (contentTypes.includes(page)) return
+    if (collections.includes(page)) return
     setPages([...pages, page])
-    setContentTypes([...contentTypes, page])
+    setCollections([...collections, page])
   }
 
   const removePage = (page: string) => {
     setPages(pages.filter((p) => p !== page))
-    setContentTypes(contentTypes.filter((p) => p !== page))
+    setCollections(collections.filter((p) => p !== page))
     console.log('removePage', page)
   }
 
@@ -71,21 +71,21 @@ export const Outstatic = ({ missingEnvVars, providerData }: OutstaticProps) => {
     return <FourOhFour />
   }
 
-  const isContent = slug && contentTypes.includes(slug)
+  const isContent = slug && collections.includes(slug)
 
   return (
     <OutstaticProvider
       {...providerData}
       pages={pages}
-      contentTypes={contentTypes}
+      collections={collections}
       addPage={addPage}
       removePage={removePage}
     >
       <ApolloProvider client={client}>
         {!slug && <Dashboard />}
-        {slug2 && isContent && <EditContent contentType={slug} />}
-        {!slug2 && isContent ? <List contentType={slug} /> : defaultPages[slug]}
-        {!!slug2 && !isContent && <ContentTypes />}
+        {slug2 && isContent && <EditContent collection={slug} />}
+        {!slug2 && isContent ? <List collection={slug} /> : defaultPages[slug]}
+        {!!slug2 && !isContent && <Collections />}
       </ApolloProvider>
     </OutstaticProvider>
   )
@@ -104,12 +104,12 @@ export const OstSSP: GetServerSideProps = async ({ req }) => {
 
   const apolloClient = session ? initializeApollo(null, session) : null
 
-  let contentTypes: String[] = []
+  let collections: String[] = []
 
   if (apolloClient) {
     try {
       const { data: postQueryData } = await apolloClient.query({
-        query: ContentTypesDocument,
+        query: CollectionsDocument,
         variables: {
           name: process.env.VERCEL_GIT_REPO_SLUG || process.env.OST_REPO_SLUG,
           contentPath: `HEAD:${
@@ -124,7 +124,7 @@ export const OstSSP: GetServerSideProps = async ({ req }) => {
       const postQueryObject = postQueryData?.repository?.object
 
       if (postQueryObject?.__typename === 'Tree') {
-        contentTypes = postQueryObject?.entries?.map(
+        collections = postQueryObject?.entries?.map(
           (entry: { name: any }) => entry.name
         ) as String[]
       }
@@ -143,8 +143,8 @@ export const OstSSP: GetServerSideProps = async ({ req }) => {
         monorepoPath: process.env.OST_MONOREPO_PATH || '',
         session: session || null,
         initialApolloState: apolloClient?.cache.extract() || null,
-        contentTypes,
-        pages: [...Object.keys(defaultPages), ...contentTypes]
+        collections,
+        pages: [...Object.keys(defaultPages), ...collections]
       }
     }
   }
