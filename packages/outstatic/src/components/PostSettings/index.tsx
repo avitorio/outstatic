@@ -57,7 +57,7 @@ const PostSettings = ({
       </div>
       <div
         className={`flex w-full pb-4 px-4 ${
-          showDelete ? 'justify-between' : 'justify-end'
+          showDelete ? 'justify-between items-center' : 'justify-end'
         }`}
       >
         {showDelete && (
@@ -68,6 +68,7 @@ const PostSettings = ({
               router.push(`/outstatic/${contentType}`)
             }}
             contentType={contentType}
+            className="hover:bg-slate-200 max-h-[2.25rem]"
           />
         )}
 

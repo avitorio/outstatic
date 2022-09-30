@@ -11,13 +11,15 @@ type DeletePostButtonProps = {
   disabled?: boolean
   onComplete?: () => void
   contentType: string
+  className?: string
 }
 
 const DeletePostButton = ({
   slug,
   disabled = false,
   onComplete = () => {},
-  contentType
+  contentType,
+  className
 }: DeletePostButtonProps) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [deleting, setDeleting] = useState(false)
@@ -53,9 +55,19 @@ const DeletePostButton = ({
         onClick={() => setShowDeleteModal(true)}
         type="button"
         disabled={disabled}
-        className="rounded-lg border border-red-700 bg-red-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-red-800 focus:outline-none"
+        className={`z-10 inline-block text-gray-500 hover:bg-white focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg text-sm p-1.5 ${className}`}
+        title="Delete post"
       >
-        Delete
+        <span className="sr-only">Delete post</span>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          width="24"
+          height="24"
+        >
+          <path fill="none" d="M0 0h24v24H0z" />
+          <path d="M17 6h5v2h-2v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V8H2V6h5V3a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v3zm1 2H6v12h12V8zm-9 3h2v6H9v-6zm4 0h2v6h-2v-6zM9 4v2h6V4H9z" />
+        </svg>
       </button>
       {showDeleteModal && (
         <Modal title="Delete Post" close={() => setShowDeleteModal(false)}>
