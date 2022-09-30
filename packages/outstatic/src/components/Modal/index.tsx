@@ -7,11 +7,9 @@ type ModalProps = {
 const Modal = ({ children, title, close }: ModalProps) => (
   <div className="fixed inset-x-0 z-50 flex w-full  items-center justify-center overflow-y-auto overflow-x-hidden bg-[rgba(0,0,0,0.5)] md:inset-0 md:h-full">
     <div className="relative h-full w-full max-w-2xl p-4 md:h-auto">
-      <div className="relative rounded-lg bg-white shadow dark:bg-gray-700">
-        <div className="flex items-start justify-between rounded-t border-b p-4 dark:border-gray-600">
-          <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
-            {title}
-          </h3>
+      <div className="relative rounded-lg bg-white shadow">
+        <div className="flex items-start justify-between rounded-t border-b p-4">
+          <h3 className="text-xl font-semibold text-gray-900">{title}</h3>
           <button
             type="button"
             className="ml-auto inline-flex items-center rounded-lg bg-transparent p-1.5 text-sm text-gray-400 hover:bg-gray-200 hover:text-gray-900 dark:hover:bg-gray-600 dark:hover:text-white"

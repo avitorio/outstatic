@@ -60,15 +60,15 @@ const DeletePostButton = ({
       {showDeleteModal && (
         <Modal title="Delete Post" close={() => setShowDeleteModal(false)}>
           <div className="space-y-6 p-6 text-left">
-            <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+            <p className="text-base leading-relaxed text-gray-500">
               Are you sure you want to delete this post?
             </p>
-            <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+            <p className="text-base leading-relaxed text-gray-500">
               This action cannot be undone.
             </p>
           </div>
 
-          <div className="flex items-center space-x-2 rounded-b border-t border-gray-200 p-6 dark:border-gray-600">
+          <div className="flex items-center space-x-2 rounded-b border-t border-gray-200 p-6">
             <button
               type="button"
               className="flex rounded-lg bg-red-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-red-800 focus:outline-none"
@@ -107,7 +107,7 @@ const DeletePostButton = ({
             </button>
             <button
               type="button"
-              className="rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-900 focus:z-10 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:border-gray-500 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-600"
+              className="rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-900 focus:z-10 focus:outline-none focus:ring-4 focus:ring-blue-300"
               onClick={() => setShowDeleteModal(false)}
             >
               Cancel
