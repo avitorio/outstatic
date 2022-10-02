@@ -238,8 +238,9 @@ input.react-datepicker-time__input {
 }
 
 .ProseMirror .hljs-comment,
-.ProseMirror .hljs-quote {
-  color: #616161;
+.ProseMirror .hljs-quote,
+.ProseMirror code > div {
+  color: #ccc;
 }
 
 .ProseMirror .hljs-variable,
