@@ -227,10 +227,14 @@ input.react-datepicker-time__input {
 }
 
 .ProseMirror code {
-  color: inherit;
-  padding: 0;
-  background: none;
-  font-size: 1rem;
+  background-color: #6161611a;
+  color: #616161;
+  font-family: monospace;
+  font-weight: 500;
+}
+
+.ProseMirror code:before, .ProseMirror code:after {
+  display: none;
 }
 
 .ProseMirror .hljs-comment,
