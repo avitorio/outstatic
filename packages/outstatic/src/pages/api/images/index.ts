@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { getLoginSession } from '../../../utils/auth/auth'
 
-const REPO_SLUG = process.env.OST_REPO_SLUG
+const REPO_SLUG = process.env.OST_REPO_SLUG || process.env.VERCEL_GIT_REPO_SLUG
 const MONOREPO_PATH = process.env.OST_MONOREPO_PATH
 
 export default async function handler(

@@ -10,7 +10,7 @@ export const envVars = [
 
 export const hasMissingEnvVar = (function () {
   let filteredEnvVars = envVars
-  if (process.env.VERCEL_GIT_REPO_SLUG) {
+  if (!process.env.OST_REPO_SLUG && process.env.VERCEL_GIT_REPO_SLUG) {
     filteredEnvVars = envVars.filter((envVar) => envVar !== 'OST_REPO_SLUG')
   }
   return (
