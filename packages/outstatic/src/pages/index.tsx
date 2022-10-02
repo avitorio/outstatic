@@ -34,7 +34,7 @@ type OutstaticProps = {
 
 const defaultPages: { [key: string]: ReactElement | undefined } = {
   settings: <Settings />,
-  'content-types': undefined
+  collections: undefined
 }
 
 export const Outstatic = ({ missingEnvVars, providerData }: OutstaticProps) => {
