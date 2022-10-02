@@ -1,9 +1,9 @@
 import showdown from 'showdown'
 import DOMPurify from 'dompurify'
-import { Content } from '../types'
+import { Document } from '../types'
 import { replaceImageSrcRoot } from './replaceImageSrc'
 
-export const mergeMdMeta = (data: Content): string => {
+export const mergeMdMeta = (data: Document): string => {
   const meta = Object.entries(
     (({ content, publishedAt, ...meta }) => meta)(data)
   )

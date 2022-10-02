@@ -1,7 +1,7 @@
-import { Content } from '../types'
+import { Document } from '../types'
 
 export const deepReplace = (
-  obj: Content,
+  obj: Document,
   key: string,
   value: string | Date | object
 ) => {

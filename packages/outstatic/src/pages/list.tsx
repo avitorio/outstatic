@@ -6,7 +6,7 @@ import { useContext } from 'react'
 import { AdminLayout, PostsTable } from '../components'
 import { OutstaticContext } from '../context'
 import { usePostsQuery } from '../graphql/generated'
-import { Content } from '../types'
+import { Document } from '../types'
 import { ostSignOut } from '../utils/auth/hooks'
 
 type GQLErrorExtended = GraphQLError & { type: string }
@@ -40,7 +40,7 @@ export default function List({ collection }: ListProps) {
     }
   })
 
-  let posts: Omit<Content, 'content'>[] = []
+  let posts: Omit<Document, 'content'>[] = []
 
   const entries =
     data?.repository?.object?.__typename === 'Tree' &&

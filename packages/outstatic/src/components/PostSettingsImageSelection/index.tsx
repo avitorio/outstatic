@@ -1,6 +1,6 @@
 import { ChangeEvent, useContext, useEffect, useState } from 'react'
 import { PostContext } from '../../context'
-import { Content, FileType } from '../../types'
+import { Document, FileType } from '../../types'
 import Input from '../Input'
 
 type PostSettingsImageSelectionProps = {
@@ -9,7 +9,7 @@ type PostSettingsImageSelectionProps = {
   description: string
 }
 
-function resolve(path: string, obj: Content, separator = '.') {
+function resolve(path: string, obj: Document, separator = '.') {
   var properties = Array.isArray(path) ? path : path.split(separator)
   return [...properties].reduce(
     (prev: { [x: string]: any }, curr: string | number) => prev?.[curr],

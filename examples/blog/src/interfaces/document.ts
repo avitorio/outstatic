@@ -1,6 +1,6 @@
 import type Author from './author'
 
-type Content = {
+export type Document = {
   slug: string
   title: string
   publishedAt: string
@@ -12,5 +12,3 @@ type Content = {
   }
   content: string
 }
-
-export default Content

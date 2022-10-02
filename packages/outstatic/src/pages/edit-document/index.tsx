@@ -14,7 +14,7 @@ import {
 } from '../../components'
 import { OutstaticContext, PostContext } from '../../context'
 import { useCreateCommitMutation, usePostQuery } from '../../graphql/generated'
-import { Content, FileType } from '../../types'
+import { Document, FileType } from '../../types'
 import { useOstSession } from '../../utils/auth/hooks'
 import { createCommitInput } from '../../utils/createCommitInput'
 import { deepReplace } from '../../utils/deepReplace'
@@ -26,11 +26,11 @@ import useOid from '../../utils/useOid'
 import useTipTap from '../../utils/useTipTap'
 import { editPostSchema } from '../../utils/yup'
 
-type EditContentProps = {
+type EditDocumentProps = {
   collection: string
 }
 
-export default function EditContent({ collection }: EditContentProps) {
+export default function EditDocument({ collection }: EditDocumentProps) {
   const router = useRouter()
   const slug = router.query?.ost?.[1] as string
   const { repoOwner, repoSlug, contentPath, monorepoPath } =
@@ -42,7 +42,7 @@ export default function EditContent({ collection }: EditContentProps) {
   const [createCommit] = useCreateCommitMutation()
   const fetchOid = useOid()
   const [showDelete, setShowDelete] = useState(false)
-  const methods = useForm<Content>({ resolver: yupResolver(editPostSchema) })
+  const methods = useForm<Document>({ resolver: yupResolver(editPostSchema) })
   const { editor } = useTipTap({ ...methods })
 
   const editPost = (property: string, value: any) => {
@@ -63,7 +63,7 @@ export default function EditContent({ collection }: EditContentProps) {
     skip: slug === 'new' || !slug
   })
 
-  const onSubmit = async (data: Content) => {
+  const onSubmit = async (data: Document) => {
     setLoading(true)
     try {
       const post = methods.getValues()

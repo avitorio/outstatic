@@ -4,10 +4,10 @@ import Header from '../../components/Header'
 import Layout from '../../components/Layout'
 import Head from 'next/head'
 import markdownToHtml from '../../lib/markdownToHtml'
-import type Content from '../../interfaces/content'
+import { Document } from '../../interfaces/document'
 import {
-  getContentPaths,
-  getContentBySlug,
+  getDocumentPaths,
+  getDocumentBySlug,
   getCollection
 } from 'outstatic/server'
 import DateFormatter from '../../components/DateFormatter'
@@ -15,8 +15,8 @@ import Image from 'next/image'
 import ContentGrid from '../../components/ContentGrid'
 
 type Props = {
-  project: Content
-  moreProjects: Content[]
+  project: Document
+  moreProjects: Document[]
 }
 
 export default function Project({ project, moreProjects }: Props) {
@@ -95,7 +95,7 @@ type Params = {
 }
 
 export async function getStaticProps({ params }: Params) {
-  const project = getContentBySlug('projects', params.slug, [
+  const project = getDocumentBySlug('projects', params.slug, [
     'title',
     'publishedAt',
     'description',
@@ -126,7 +126,7 @@ export async function getStaticProps({ params }: Params) {
 
 export async function getStaticPaths() {
   return {
-    paths: getContentPaths('projects'),
+    paths: getDocumentPaths('projects'),
     fallback: false
   }
 }

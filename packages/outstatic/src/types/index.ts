@@ -1,7 +1,7 @@
 import { Editor } from '@tiptap/react'
 import { Dispatch, SetStateAction } from 'react'
 
-export type Content = {
+export type Document = {
   author: {
     name?: string
     picture?: string
@@ -24,7 +24,7 @@ export type FileType = {
 
 export type PostContextType = {
   editor: Editor
-  post: Content
+  post: Document
   editPost: (property: string, value: any) => void
   files: FileType[]
   setFiles: Dispatch<SetStateAction<FileType[]>>

@@ -1,15 +1,15 @@
 import { useRouter } from 'next/router'
 import ErrorPage from 'next/error'
 import Head from 'next/head'
-import type Content from '../../interfaces/content'
-import { getContentPaths, getContentBySlug } from 'outstatic/server'
+import { Document } from '../../interfaces/document'
+import { getDocumentPaths, getDocumentBySlug } from 'outstatic/server'
 import markdownToHtml from '../../lib/markdownToHtml'
 import formatDate from '../../lib/formatDate'
 import Header from '../../components/Header'
 
 type Props = {
-  doc: Content
-  menu: Content
+  doc: Document
+  menu: Document
 }
 
 export default function Post({ doc, menu }: Props) {
@@ -70,7 +70,7 @@ type Params = {
 }
 
 export async function getStaticProps({ params }: Params) {
-  const doc = getContentBySlug('docs', params.slug, [
+  const doc = getDocumentBySlug('docs', params.slug, [
     'title',
     'publishedAt',
     'slug',
@@ -79,7 +79,7 @@ export async function getStaticProps({ params }: Params) {
     'coverImage'
   ])
 
-  const menu = getContentBySlug('menus', 'docs-menu', ['content'])
+  const menu = getDocumentBySlug('menus', 'docs-menu', ['content'])
 
   const content = await markdownToHtml(doc.content || '')
   const menuContent = await markdownToHtml(menu.content || '')
@@ -99,7 +99,7 @@ export async function getStaticProps({ params }: Params) {
 
 export async function getStaticPaths() {
   return {
-    paths: getContentPaths('docs'),
+    paths: getDocumentPaths('docs'),
     fallback: false
   }
 }

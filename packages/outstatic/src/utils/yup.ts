@@ -1,7 +1,7 @@
 import * as yup from 'yup'
-import { Content } from '../types'
+import { Document } from '../types'
 
-export const editPostSchema: yup.SchemaOf<Content> = yup.object().shape({
+export const editPostSchema: yup.SchemaOf<Document> = yup.object().shape({
   title: yup.string().required('Title is required'),
   publishedAt: yup.date().required('Date is required'),
   content: yup.string().required('Content is required'),

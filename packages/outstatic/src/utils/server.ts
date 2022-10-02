@@ -7,12 +7,12 @@ const CONTENT_PATH = join(
   process.env.OST_CONTENT_PATH || 'outstatic/content'
 )
 
-export function getContentSlugs(collection: string) {
+export function getDocumentSlugs(collection: string) {
   const collectionsPath = join(CONTENT_PATH, collection)
   return fs.readdirSync(collectionsPath)
 }
 
-export function getContentBySlug(
+export function getDocumentBySlug(
   collection: string,
   slug: string,
   fields: string[] = []
@@ -51,10 +51,10 @@ export function getContentBySlug(
 }
 
 export function getCollection(collection: string, fields: string[] = []) {
-  const slugs = getContentSlugs(collection)
+  const slugs = getDocumentSlugs(collection)
   const posts = slugs
     .map((slug) =>
-      getContentBySlug(collection, slug, [...fields, 'publishedAt', 'status'])
+      getDocumentBySlug(collection, slug, [...fields, 'publishedAt', 'status'])
     )
     .filter((post) => post.status === 'published')
     // sort posts by date in descending order
@@ -62,7 +62,7 @@ export function getCollection(collection: string, fields: string[] = []) {
   return posts
 }
 
-export const getContentPaths = (collection: string) => {
+export const getDocumentPaths = (collection: string) => {
   const contentFilePaths = fs
     .readdirSync(CONTENT_PATH + '/' + collection)
     // Only include md(x) files

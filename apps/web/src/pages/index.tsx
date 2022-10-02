@@ -1,10 +1,10 @@
 import Head from 'next/head'
 import { getCollection } from 'outstatic/server'
 import ContentGrid from '../components/ContentGrid'
-import Content from '../interfaces/content'
+import { Document } from '../interfaces/document'
 
 type HomeProps = {
-  allPosts: Content[]
+  allPosts: Document[]
 }
 
 export default function Home({ allPosts }: HomeProps) {

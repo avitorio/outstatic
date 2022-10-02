@@ -1,4 +1,4 @@
-import type Content from '../interfaces/content'
+import { Document } from '../interfaces/document'
 import Link from 'next/link'
 import Image from 'next/image'
 import formatDate from '../lib/formatDate'
@@ -6,7 +6,7 @@ import formatDate from '../lib/formatDate'
 type Props = {
   collection: 'posts' | 'projects'
   title?: string
-  items: Content[]
+  items: Document[]
 }
 
 const ContentGrid = ({ title = 'More', items, collection }: Props) => {

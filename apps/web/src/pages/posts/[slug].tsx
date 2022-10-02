@@ -4,13 +4,13 @@ import Header from '../../components/Header'
 import Layout from '../../components/Layout'
 import Head from 'next/head'
 import markdownToHtml from '../../lib/markdownToHtml'
-import type Content from '../../interfaces/content'
-import { getContentPaths, getContentBySlug } from 'outstatic/server'
+import { Document } from '../../interfaces/document'
+import { getDocumentPaths, getDocumentBySlug } from 'outstatic/server'
 import Image from 'next/image'
 import formatDate from '../../lib/formatDate'
 
 type Props = {
-  post: Content
+  post: Document
 }
 
 export default function Post({ post }: Props) {
@@ -76,7 +76,7 @@ type Params = {
 }
 
 export async function getStaticProps({ params }: Params) {
-  const post = getContentBySlug('posts', params.slug, [
+  const post = getDocumentBySlug('posts', params.slug, [
     'title',
     'publishedAt',
     'slug',
@@ -98,7 +98,7 @@ export async function getStaticProps({ params }: Params) {
 
 export async function getStaticPaths() {
   return {
-    paths: getContentPaths('posts'),
+    paths: getDocumentPaths('posts'),
     fallback: false
   }
 }

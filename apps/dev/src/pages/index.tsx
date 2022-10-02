@@ -1,14 +1,14 @@
 import Layout from '../components/Layout'
 import Head from 'next/head'
-import Content from '../interfaces/content'
-import { getContentBySlug, getCollection } from 'outstatic/server'
+import { Document } from '../interfaces/document'
+import { getDocumentBySlug, getCollection } from 'outstatic/server'
 import ContentGrid from '../components/ContentGrid'
 import markdownToHtml from '../lib/markdownToHtml'
 
 type Props = {
-  page: Content
-  allPosts: Content[]
-  allProjects: Content[]
+  page: Document
+  allPosts: Document[]
+  allProjects: Document[]
 }
 
 export default function Index({ page, allPosts, allProjects }: Props) {
@@ -42,7 +42,7 @@ export default function Index({ page, allPosts, allProjects }: Props) {
 }
 
 export const getStaticProps = async () => {
-  const page = getContentBySlug('pages', 'home', ['content'])
+  const page = getDocumentBySlug('pages', 'home', ['content'])
 
   const allPosts = getCollection('posts', [
     'title',
