@@ -16,7 +16,7 @@ const Sidebar = ({ isOpen = false }: SidebarProps) => {
       }`}
       aria-label="Sidebar"
     >
-      <div className="py-4 px-3 h-full max-h-[calc(100vh-93px)] overflow-y-scroll scrollbar-hide bg-gray-50 ">
+      <div className="py-4 px-3 h-full max-h-[calc(100vh-96px)] overflow-y-scroll scrollbar-hide bg-gray-50 ">
         <ul className="space-y-2">
           <li>
             <Link href="/outstatic">
@@ -126,7 +126,6 @@ const Sidebar = ({ isOpen = false }: SidebarProps) => {
             rel="noreferrer"
             className="group"
           >
-            <title>Twitter</title>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 248 204"
