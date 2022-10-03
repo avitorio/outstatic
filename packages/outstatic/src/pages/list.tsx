@@ -70,7 +70,10 @@ export default function List({ collection }: ListProps) {
   }
 
   return (
-    <AdminLayout error={error}>
+    <AdminLayout
+      error={error}
+      title={collection[0].toUpperCase() + collection.slice(1)}
+    >
       <div className="mb-8 flex h-12 items-center">
         <h1 className="mr-12 text-2xl capitalize">{collection}</h1>
         <Link href={`/outstatic/${collection}/new`}>

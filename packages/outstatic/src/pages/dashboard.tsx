@@ -44,7 +44,7 @@ export default function Dashboard() {
   }
 
   return (
-    <AdminLayout>
+    <AdminLayout title="Dashboard">
       {collections.length === 0 ? (
         <div className="max-w-2xl">
           <div className="absolute bottom-0 left-0 md:left-64 right-0 md:top-36">

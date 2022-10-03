@@ -196,6 +196,7 @@ export default function EditDocument({ collection }: EditDocumentProps) {
       >
         <FormProvider {...methods}>
           <AdminLayout
+            title={methods.getValues('title')}
             settings={
               <PostSettings
                 loading={loading}

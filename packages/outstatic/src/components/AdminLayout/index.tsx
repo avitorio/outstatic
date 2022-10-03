@@ -1,4 +1,5 @@
 import { ApolloError } from '@apollo/client'
+import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
 import { useOstSession } from '../../utils/auth/hooks'
@@ -9,12 +10,14 @@ export type AdminLayoutProps = {
   error?: string | ApolloError
   children: React.ReactNode
   settings?: React.ReactNode
+  title?: string
 }
 
 export default function AdminLayout({
   children,
   error,
-  settings
+  settings,
+  title
 }: AdminLayoutProps) {
   const { session, status } = useOstSession()
   const { push, asPath } = useRouter()
@@ -32,6 +35,9 @@ export default function AdminLayout({
 
   return (
     <>
+      <Head>
+        <title>{title ? `${title} | ` : ''}Outstatic</title>
+      </Head>
       {status === 'loading' ? null : (
         <div className="flex h-screen flex-col bg-white text-black">
           <AdminHeader
