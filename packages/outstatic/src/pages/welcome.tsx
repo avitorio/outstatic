@@ -1,4 +1,5 @@
 import { GetServerSideProps, GetServerSidePropsContext } from 'next'
+import Head from 'next/head'
 import {
   hasMissingEnvVar,
   missingEnvVars,
@@ -12,6 +13,9 @@ type WelcomeProps = {
 export default function Welcome({ variables }: WelcomeProps) {
   return (
     <>
+      <Head>
+        <title>Welcome to Outstatic</title>
+      </Head>
       <div className="absolute bottom-10 w-full left-0 overflow-hidden z-0 md:-top-10">
         <svg
           width="100%"
