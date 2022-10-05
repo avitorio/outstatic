@@ -50,7 +50,7 @@ export function getDocumentBySlug(
   return items
 }
 
-export function getCollection(collection: string, fields: string[] = []) {
+export function getDocuments(collection: string, fields: string[] = []) {
   const slugs = getDocumentSlugs(collection)
   const posts = slugs
     .map((slug) =>

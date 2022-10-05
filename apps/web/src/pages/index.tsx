@@ -1,5 +1,5 @@
 import Head from 'next/head'
-import { getCollection } from 'outstatic/server'
+import { getDocuments } from 'outstatic/server'
 import ContentGrid from '../components/ContentGrid'
 import { Document } from '../interfaces/document'
 
@@ -54,7 +54,7 @@ export default function Home({ allPosts }: HomeProps) {
 }
 
 export const getStaticProps = async () => {
-  const allPosts = getCollection('posts', [
+  const allPosts = getDocuments('posts', [
     'title',
     'publishedAt',
     'slug',

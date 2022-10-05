@@ -8,7 +8,7 @@ import { Document } from '../../interfaces/document'
 import {
   getDocumentPaths,
   getDocumentBySlug,
-  getCollection
+  getDocuments
 } from 'outstatic/server'
 import DateFormatter from '../../components/DateFormatter'
 import Image from 'next/image'
@@ -107,11 +107,7 @@ export async function getStaticProps({ params }: Params) {
 
   const content = await markdownToHtml(project.content || '')
 
-  const moreProjects = getCollection('projects', [
-    'title',
-    'slug',
-    'coverImage'
-  ])
+  const moreProjects = getDocuments('projects', ['title', 'slug', 'coverImage'])
 
   return {
     props: {
