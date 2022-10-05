@@ -16,21 +16,27 @@ Requirements:
 
 - A [Vercel](https://vercel.com) account connected to your [Github](https://github.com) account.
 
-You can deploy a starter website on Vercel or add Outstatic manually to your current Next.js website.
+- A Github Oauth app.
 
-## Deploying with vercel:
-
-Before we start we'll need to create a Github OAuth app:
+Outstatic uses Github Oauth for authentication. Before we start you'll need to create a Github OAuth app:
 
 - First go to the "Register a new OAuth application" page on Github by [clicking here](https://github.com/settings/applications/new). It may be useful to open it in a new tab so you can refer back to this page.
 
 - Give your application a name, "Outstatic Blog" for example.
 
-- For the **Homepage URL, Authorization callback URL** field type in any valid url, ex: [https://outstatic.com](https://outstatic.com), we'll change it later.
+- For the **Homepage URL** and **Authorization callback URL** fields type in any valid url, ex: `https://outstatic.com`, we'll change them later.
 
 - You can leave the **Application** description field empty.
 
-Click on Register application. You'll be redirected to a page with your Github Oauth App settings page. There you'll find your application's Client ID and Client secret. Keep this tab open, you'll need these values for our next step.
+Click on **Register application**. You'll be redirected to your Github Oauth App settings page. There you'll find your application's Client ID and Client secret. Keep this tab open, you'll need these values for our next steps.
+
+Awesome, with your Github Oauth keys in hand select how you want to use Outstatic:
+
+- Deploy a starter website on Vercel.
+
+- Add Outstatic manually to your current Next.js website.
+
+## Deploying with vercel:
 
 To deploy with Vercel, start by clicking the button below and follow the setup steps:
 
@@ -50,8 +56,93 @@ Deploy will start. Once concluded you will be taken to your Vercel dashboard. Th
 
 Go back to your Github OAuth App settings page and update the **Homepage URL** with your new website URL.
 
-You'll also need to update the **Authorization callback URL** with your new website URL, but you'll need to add `/api/outstatic/callback` to the end of the url. Example: [https://outstatic-blog.vercel.app/api/outstatic/callback](https://outstatic-blog.vercel.app/api/outstatic/callback)
+You'll also need to update the **Authorization callback URL** with your new website URL, but you'll need to add `/api/outstatic/callback` to the end of the url. Example: `https://outstatic-blog.vercel.app/api/outstatic/callback`
 
 Click on **Update application** and you are done!
 
 You can now visit your site and start using Outstatic!
+
+We recommend you learn how Outstatic manages content and also how to fetch content from your front end.
+
+## Adding Outstatic to a Next.js website
+
+Before we start, you should know Outstatic saves content as markdown files to your Github repository. To understand how this works please read our [introduction](https://outstatic.com/docs/introduction) article.
+
+First install the Outstatic package:
+
+```bash
+# npm
+npm install outstatic
+
+# yarn
+yarn add outstatic
+
+#pnpm
+pnpm install outstatic
+```
+
+Once installed, you'll need to add two files to your `/pages` folder:
+
+`/pages/outstatic/[[...ost]].tsx`
+
+```javascript
+import 'outstatic/outstatic.css'
+import { Outstatic, OstSSP } from 'outstatic'
+
+export default Outstatic
+
+export const getServerSideProps = OstSSP
+```
+
+And `/pages/api/outstatic/[[...ost]].tsx`
+
+```javascript
+import { OutstaticApi } from 'outstatic'
+
+export default OutstaticApi
+```
+
+Start your dev server. Assuming you're on `http://localhost:3000` you can access your dashboard at `https://localhost:3000/outstatic`.
+
+You should see this page:
+
+[IMG OF ENV VARS]
+
+Let's update your environment variables.
+
+```bash
+OST_GITHUB_ID=YOUR_GITHUB_OAUTH_APP_ID
+OST_GITHUB_SECRET=YOUR_GITHUB_OAUTH_APP_SECRET
+OST_TOKEN_SECRET=A_RANDOM_TOKEN # random string min 32 chars
+OST_REPO_SLUG=YOUR_GITHUB_REPOSITORY_SLUG
+```
+
+Now go back to your Github OAuth App settings page and update the following values:
+
+- **Homepage URL**: `http://localhost:3000/`.
+
+- **Authorization callback URL:** `http://localhost:3000/api/outstatic/callback`
+
+Click on **Update application**.
+
+Restart your service and go back to the `/outstatic` page.
+
+If everything is setup correctly, then you'll see a login page and will be able to access your Dashboard.
+
+Congratulations! Your Outstatic installation is ready and you can now start creating content.
+
+We recommend you learn how Outstatic [manages content](/docs/introduction) and also how to [fetch data](/docs/fetching-data) from your front end.
+
+### Access the Outstatic dashboard from your live site
+
+If you also want to access your Outstatic dashboard from your live site you'll need to create a second Github OAuth app as Github doesn't allow for multiple callback urls for a single OAuth app.
+
+Just repeat the steps for creating a Github OAuth app, but this time, replacing `http://localhost:3000/` on **Homepage URL** and **Authorization callback URL** with your actual website address.
+
+Don't forget to add the [Environment Variables](https://vercel.com/docs/concepts/projects/environment-variables) on your Vercel project:
+
+```bash
+OST_GITHUB_ID=YOUR_GITHUB_OAUTH_APP_ID
+OST_GITHUB_SECRET=YOUR_GITHUB_OAUTH_APP_SECRET
+OST_TOKEN_SECRET=A_RANDOM_TOKEN # random string min 32 chars
+```

@@ -1,11 +1,14 @@
 import { useRouter } from 'next/router'
 import ErrorPage from 'next/error'
 import Head from 'next/head'
+import { useMemo } from 'react'
+import { getMDXComponent } from 'mdx-bundler/client'
 import { Document } from '../../interfaces/document'
 import { getDocumentPaths, getDocumentBySlug } from 'outstatic/server'
 import markdownToHtml from '../../lib/markdownToHtml'
 import formatDate from '../../lib/formatDate'
 import Header from '../../components/Header'
+import MDXComponents from '../../components/MDXComponents'
 
 type Props = {
   doc: Document
@@ -14,9 +17,12 @@ type Props = {
 
 export default function Post({ doc, menu }: Props) {
   const router = useRouter()
+  const Component = useMemo(() => getMDXComponent(doc.content), [doc.content])
+
   if (!router.isFallback && !doc?.slug) {
     return <ErrorPage statusCode={404} />
   }
+
   return (
     <>
       <Header />
@@ -50,10 +56,15 @@ export default function Post({ doc, menu }: Props) {
                   .
                 </div>
                 <hr className="border-neutral-200 mt-10 mb-10" />
-                <div
-                  className="w-full max-w-3xl prose prose-base"
-                  dangerouslySetInnerHTML={{ __html: doc.content }}
-                />
+                <div className="prose prose-base">
+                  <Component
+                    components={
+                      {
+                        ...MDXComponents
+                      } as any
+                    }
+                  />
+                </div>
               </article>
             </>
           )}
@@ -69,6 +80,9 @@ type Params = {
   }
 }
 
+import { bundleMDX } from 'mdx-bundler'
+import rehypePrism from 'rehype-prism-plus'
+
 export async function getStaticProps({ params }: Params) {
   const doc = getDocumentBySlug('docs', params.slug, [
     'title',
@@ -81,14 +95,20 @@ export async function getStaticProps({ params }: Params) {
 
   const menu = getDocumentBySlug('menus', 'docs-menu', ['content'])
 
-  const content = await markdownToHtml(doc.content || '')
+  // const content = await markdownToHtml(doc.content || '')
   const menuContent = await markdownToHtml(menu.content || '')
-
+  const result = await bundleMDX({
+    source: doc.content,
+    mdxOptions(options) {
+      options.rehypePlugins = [...(options.rehypePlugins ?? []), rehypePrism]
+      return options
+    }
+  })
   return {
     props: {
       doc: {
         ...doc,
-        content
+        content: result.code
       },
       menu: {
         content: menuContent

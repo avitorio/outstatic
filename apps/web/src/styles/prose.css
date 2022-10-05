@@ -1,0 +1,34 @@
+.prose {
+  max-width: 50rem;
+}
+
+.prose code:not(:where([data-code-type='code-block'])) {
+  @apply rounded-md border px-1 py-1 font-normal text-gray-800 bg-gray-100;
+}
+
+.prose :where(code):not(:where([class~='not-prose'] *))::before,
+.prose :where(code):not(:where([class~='not-prose'] *))::after {
+  content: '';
+}
+
+.prose a {
+  text-decoration: none;
+}
+
+.prose > ol > li > :last-child,
+.prose > ul > li > :last-child {
+  margin-bottom: 0;
+}
+.prose > ol > li > :first-child,
+.prose > ul > li > :first-child {
+  margin-top: 0;
+}
+
+.prose blockquote p:first-of-type::before,
+.prose blockquote p:last-of-type::after {
+  content: '';
+}
+
+.prose-base :where(pre code):not(:where([class~='not-prose'] *)) {
+  font-size: 1.1em;
+}
