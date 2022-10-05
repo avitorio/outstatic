@@ -33,19 +33,23 @@ export const createCommitInput = ({
 
     if (files.length > 0) {
       files.forEach(({ filename, blob, type, content: fileContents }) => {
-        const randString = window
-          .btoa(Math.random().toString())
-          .substring(10, 6)
-        const newFilename = filename.replace(/(\.[^\.]*)?$/, `-${randString}$1`)
+        // check if blob is still in the document before adding file to the commit
+        if (blob && content.search(blob) !== -1) {
+          const randString = window
+            .btoa(Math.random().toString())
+            .substring(10, 6)
+          const newFilename = filename.replace(
+            /(\.[^\.]*)?$/,
+            `-${randString}$1`
+          )
 
-        additions.push({
-          path: `${
-            monorepoPath ? monorepoPath + '/' : ''
-          }public/${type}/${newFilename}`,
-          contents: fileContents
-        })
+          additions.push({
+            path: `${
+              monorepoPath ? monorepoPath + '/' : ''
+            }public/${type}/${newFilename}`,
+            contents: fileContents
+          })
 
-        if (blob) {
           newContent = content.replace(blob, `/${type}/${newFilename}`)
         }
       })
