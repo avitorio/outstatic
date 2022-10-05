@@ -10,7 +10,7 @@ type MDEInsertImageProps = {
 }
 
 const MDEInsertImage = ({ editor, setImageMenu }: MDEInsertImageProps) => {
-  const context = useContext(PostContext)
+  const { setFiles } = useContext(PostContext)
   const [showLink, setShowLink] = useState(false)
   const [imageUrl, setImageUrl] = useState('')
 
@@ -26,7 +26,7 @@ const MDEInsertImage = ({ editor, setImageMenu }: MDEInsertImageProps) => {
       reader.onloadend = () => {
         const bytes = reader.result as string
         const buffer = Buffer.from(bytes, 'binary')
-        context?.setFiles((files: FileType[]) => [
+        setFiles((files: FileType[]) => [
           ...files,
           {
             type: 'images',
