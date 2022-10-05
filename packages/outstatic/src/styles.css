@@ -180,8 +180,7 @@ input.react-datepicker-time__input {
 }
 
 .ProseMirror p {
-  font-family: 'PT Serif', Arial, Cambria, 'Times New Roman', Times,
-    serif;
+  font-family: 'PT Serif', Arial, Cambria, 'Times New Roman', Times, serif;
   font-weight: 400;
   font-style: normal;
   font-size: 21px;
@@ -223,7 +222,7 @@ input.react-datepicker-time__input {
 }
 
 .ProseMirror pre {
-  font-family: "JetBrainsMono", monospace;
+  font-family: 'JetBrainsMono', monospace;
 }
 
 .ProseMirror code {
@@ -233,7 +232,8 @@ input.react-datepicker-time__input {
   font-weight: 500;
 }
 
-.ProseMirror code:before, .ProseMirror code:after {
+.ProseMirror code:before,
+.ProseMirror code:after {
   display: none;
 }
 
@@ -288,4 +288,10 @@ input.react-datepicker-time__input {
 
 .ProseMirror .hljs-strong {
   font-weight: 700;
+}
+
+.prose code:not(:where([data-code-type='code-block'])) {
+  border: none;
+  padding: 0;
+  border-radius: 0;
 }
