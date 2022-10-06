@@ -56,7 +56,7 @@ export default function Post({ doc, menu }: Props) {
                   .
                 </div>
                 <hr className="border-neutral-200 mt-10 mb-10" />
-                <div className="prose prose-base">
+                <div className="prose prose-base outstatic-content">
                   <Component
                     components={
                       {
@@ -81,7 +81,9 @@ type Params = {
 }
 
 import { bundleMDX } from 'mdx-bundler'
+import rehypeAutolinkHeadings from 'rehype-autolink-headings'
 import rehypePrism from 'rehype-prism-plus'
+import rehypeSlug from 'rehype-slug'
 
 export async function getStaticProps({ params }: Params) {
   const doc = getDocumentBySlug('docs', params.slug, [
@@ -100,7 +102,19 @@ export async function getStaticProps({ params }: Params) {
   const result = await bundleMDX({
     source: doc.content,
     mdxOptions(options) {
-      options.rehypePlugins = [...(options.rehypePlugins ?? []), rehypePrism]
+      options.rehypePlugins = [
+        ...(options.rehypePlugins ?? []),
+        rehypeSlug,
+        rehypePrism,
+        [
+          rehypeAutolinkHeadings,
+          {
+            properties: {
+              className: ['hash-anchor']
+            }
+          }
+        ]
+      ]
       return options
     }
   })
