@@ -108,8 +108,8 @@ const Sidebar = ({ isOpen = false }: SidebarProps) => {
               width="20"
               height="20"
               fill="none"
+              aria-label="Github logo"
             >
-              <title>Github</title>
               <path
                 fillRule="evenodd"
                 clipRule="evenodd"
