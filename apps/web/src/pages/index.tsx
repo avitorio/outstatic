@@ -17,14 +17,12 @@ export default function Home() {
         />
       </Head>
       <nav className="flex justify-between items-center w-full md:max-w-5xl p-4 md:p-6 opacity-0 animate-fade-in-up animation-delay-[1000ms] animation-duration-[300ms]">
-        <span className="text-2xl text-slate-800">
-          <Image
-            src="/images/outstatic-logo.svg"
-            width={105.2}
-            height={32}
-            alt="Outstatic Logo"
-          />
-        </span>
+        <Image
+          src="/images/outstatic-logo.svg"
+          width={105.2}
+          height={32}
+          alt="Outstatic Logo"
+        />
         <div className="gap-2 flex items-center">
           <a
             href="https://github.com/avitorio/outstatic"
