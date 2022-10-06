@@ -243,54 +243,77 @@ input.react-datepicker-time__input {
   color: #ccc;
 }
 
-.ProseMirror .hljs-variable,
-.ProseMirror .hljs-template-variable,
-.ProseMirror .hljs-attribute,
-.ProseMirror .hljs-tag,
-.ProseMirror .hljs-name,
-.ProseMirror .hljs-regexp,
-.ProseMirror .hljs-link,
-.ProseMirror .hljs-name,
-.ProseMirror .hljs-selector-id,
-.ProseMirror .hljs-selector-class {
-  color: #f98181;
+.ProseMirror .hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 0.5em;
+  background: #282a36;
 }
 
-.ProseMirror .hljs-number,
-.ProseMirror .hljs-meta,
 .ProseMirror .hljs-built_in,
-.ProseMirror .hljs-builtin-name,
-.ProseMirror .hljs-literal,
-.ProseMirror .hljs-type,
-.ProseMirror .hljs-params {
-  color: #fbbc88;
+.ProseMirror .hljs-selector-tag,
+.ProseMirror .hljs-section,
+.ProseMirror .hljs-link {
+  color: #8be9fd;
 }
 
-.ProseMirror .hljs-string,
-.ProseMirror .hljs-symbol,
-.ProseMirror .hljs-bullet {
-  color: #b9f18d;
+.ProseMirror .hljs-keyword {
+  color: #ff79c6;
+}
+
+.ProseMirror .hljs,
+.ProseMirror .hljs-subst {
+  color: #f8f8f2;
 }
 
 .ProseMirror .hljs-title,
-.ProseMirror .hljs-section {
-  color: #faf594;
+.ProseMirror .hljs-attr,
+.ProseMirror .hljs-meta-keyword {
+  font-style: italic;
+  color: #50fa7b;
+}
+
+.ProseMirror .hljs-string,
+.ProseMirror .hljs-meta,
+.ProseMirror .hljs-name,
+.ProseMirror .hljs-type,
+.ProseMirror .hljs-symbol,
+.ProseMirror .hljs-bullet,
+.ProseMirror .hljs-addition,
+.ProseMirror .hljs-variable,
+.ProseMirror .hljs-template-tag,
+.ProseMirror .hljs-template-variable {
+  color: #f1fa8c;
+}
+
+.ProseMirror .hljs-comment,
+.ProseMirror .hljs-quote,
+.ProseMirror .hljs-deletion {
+  color: #6272a4;
 }
 
 .ProseMirror .hljs-keyword,
-.ProseMirror .hljs-selector-tag {
-  color: #70cff8;
+.ProseMirror .hljs-selector-tag,
+.ProseMirror .hljs-literal,
+.ProseMirror .hljs-title,
+.ProseMirror .hljs-section,
+.ProseMirror .hljs-doctag,
+.ProseMirror .hljs-type,
+.ProseMirror .hljs-name,
+.ProseMirror .hljs-strong {
+  font-weight: bold;
+}
+
+.ProseMirror .hljs-literal,
+.ProseMirror .hljs-number {
+  color: #bd93f9;
 }
 
 .ProseMirror .hljs-emphasis {
   font-style: italic;
 }
 
-.ProseMirror .hljs-strong {
-  font-weight: 700;
-}
-
-.prose code:not(:where([data-code-type='code-block'])) {
+.ProseMirror code:not(:where([data-code-type='code-block'])) {
   border: none;
   padding: 0;
   border-radius: 0;
