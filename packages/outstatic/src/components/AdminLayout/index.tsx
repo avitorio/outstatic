@@ -36,7 +36,7 @@ export default function AdminLayout({
   return (
     <>
       <Head>
-        <title>{title ? `${title} | ` : ''}Outstatic</title>
+        <title>{title ? `${title} | Outstatic` : 'Outstatic'}</title>
       </Head>
       {status === 'loading' ? null : (
         <div className="flex h-screen flex-col bg-white text-black">
