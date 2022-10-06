@@ -7,7 +7,7 @@ import { useCreateCommitMutation } from '../graphql/generated'
 import { collectionCommitInput } from '../utils/collectionCommitInput'
 import useOid from '../utils/useOid'
 
-export default function Dashboard() {
+export default function Collections() {
   const {
     collections,
     session,
@@ -44,7 +44,7 @@ export default function Dashboard() {
   }
 
   return (
-    <AdminLayout title="Dashboard">
+    <AdminLayout title="Collections">
       {collections.length === 0 ? (
         <div className="max-w-2xl">
           <div className="absolute bottom-0 left-0 md:left-64 right-0 md:top-36">
@@ -94,7 +94,7 @@ export default function Dashboard() {
       ) : (
         <>
           <div className="mb-8 flex h-12 items-center">
-            <h1 className="mr-12 text-2xl">Dashboard</h1>
+            <h1 className="mr-12 text-2xl">Collections</h1>
             <Link href="/outstatic/collections/new">
               <a className="rounded-lg border px-5 py-2.5 text-sm font-medium focus:outline-none focus:ring-4 border-gray-600 bg-gray-800 text-white hover:border-gray-600 hover:bg-gray-700 focus:ring-gray-700">
                 New Collection

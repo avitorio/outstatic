@@ -13,7 +13,7 @@ import { collectionCommitInput } from '../../utils/collectionCommitInput'
 import useNavigationLock from '../../utils/useNavigationLock'
 import useOid from '../../utils/useOid'
 
-export default function Collections() {
+export default function EditCollection() {
   const {
     pages,
     contentPath,
@@ -34,7 +34,7 @@ export default function Collections() {
       .string()
       .matches(pagesRegex, `${pluralized} is already taken.`)
       .matches(/^[aA-zZ\s]+$/, 'Only alphabets are allowed for this field.')
-      .required('Content name is required.')
+      .required('Collection name is required.')
   })
   const [loading, setLoading] = useState(false)
   const methods = useForm<Collection>({

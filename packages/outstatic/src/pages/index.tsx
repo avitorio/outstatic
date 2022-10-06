@@ -9,8 +9,8 @@ import { initializeApollo, useApollo } from '../utils/apollo'
 import { getLoginSession } from '../utils/auth/auth'
 import { hasMissingEnvVar, missingEnvVars } from '../utils/envVarsCheck'
 import FourOhFour from './404'
+import EditCollection from './edit-collection'
 import Collections from './collections'
-import Dashboard from './dashboard'
 import EditContent from './edit-document'
 import List from './list'
 import Login from './login'
@@ -82,10 +82,10 @@ export const Outstatic = ({ missingEnvVars, providerData }: OutstaticProps) => {
       removePage={removePage}
     >
       <ApolloProvider client={client}>
-        {!slug && <Dashboard />}
+        {!slug && <Collections />}
         {slug2 && isContent && <EditContent collection={slug} />}
         {!slug2 && isContent ? <List collection={slug} /> : defaultPages[slug]}
-        {!!slug2 && !isContent && <Collections />}
+        {!!slug2 && !isContent && <EditCollection />}
       </ApolloProvider>
     </OutstaticProvider>
   )
