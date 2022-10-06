@@ -68,3 +68,17 @@
   @apply invisible absolute -right-5 top-1/2 -translate-y-1/2 text-lg;
   content: '#';
 }
+
+/* Docs */
+.docs img {
+  @apply border;
+}
+
+.sidebar .prose-base :where(ul):not(:where([class~='not-prose'] *)) {
+  padding-left: 0;
+}
+
+.sidebar .prose-base :where(li):not(:where([class~='not-prose'] *)) {
+  list-style: none;
+  padding-left: 1rem;
+}

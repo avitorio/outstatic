@@ -27,7 +27,7 @@ export default function Post({ doc, menu }: Props) {
     <>
       <Header />
       <div className="bg-white flex w-full">
-        <aside className="border-r px-4 py-4 w-full max-w-xs sticky top-10 h-[calc(100vh-4rem)] overflow-y-scroll no-scrollbar">
+        <aside className="border-r px-4 py-4 w-full max-w-xs sticky top-10 h-[calc(100vh-4rem)] overflow-y-scroll no-scrollbar sidebar">
           <div
             className="prose prose-base"
             dangerouslySetInnerHTML={{ __html: menu.content }}
@@ -56,7 +56,7 @@ export default function Post({ doc, menu }: Props) {
                   .
                 </div>
                 <hr className="border-neutral-200 mt-10 mb-10" />
-                <div className="prose prose-base outstatic-content">
+                <div className="prose prose-base outstatic-content docs">
                   <Component
                     components={
                       {
@@ -97,8 +97,8 @@ export async function getStaticProps({ params }: Params) {
 
   const menu = getDocumentBySlug('menus', 'docs-menu', ['content'])
 
-  // const content = await markdownToHtml(doc.content || '')
   const menuContent = await markdownToHtml(menu.content || '')
+
   const result = await bundleMDX({
     source: doc.content,
     mdxOptions(options) {
@@ -118,6 +118,7 @@ export async function getStaticProps({ params }: Params) {
       return options
     }
   })
+
   return {
     props: {
       doc: {
