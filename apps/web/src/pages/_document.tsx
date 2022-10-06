@@ -6,6 +6,7 @@ import Document, {
   Main,
   NextScript
 } from 'next/document'
+import HeadTags from '../components/HeadTags'
 
 class MyDocument extends Document {
   static async getInitialProps(
@@ -18,8 +19,10 @@ class MyDocument extends Document {
 
   render() {
     return (
-      <Html>
-        <Head />
+      <Html lang="en">
+        <Head>
+          <HeadTags />
+        </Head>
         <body>
           <Main />
           <NextScript />
