@@ -63,12 +63,20 @@ export function getDocuments(collection: string, fields: string[] = []) {
 }
 
 export const getDocumentPaths = (collection: string) => {
-  const contentFilePaths = fs
+  const documentFilePaths = fs
     .readdirSync(CONTENT_PATH + '/' + collection)
     // Only include md(x) files
     .filter((path) => /\.mdx?$/.test(path))
 
-  const paths = contentFilePaths
+  const publishedPaths = documentFilePaths.filter((path) => {
+    const collectionsPath = join(CONTENT_PATH, collection)
+    const fullPath = join(collectionsPath, `${path}`)
+    const fileContents = fs.readFileSync(fullPath, 'utf8')
+    const { data } = matter(fileContents)
+    return data['status'] === 'published'
+  })
+
+  const paths = publishedPaths
     // Remove file extensions for page paths
     .map((path) => path.replace(/\.mdx?$/, ''))
     // Map the path into the static paths object required by Next.js
