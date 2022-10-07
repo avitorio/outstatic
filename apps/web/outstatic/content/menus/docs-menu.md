@@ -18,9 +18,9 @@ publishedAt: '2022-09-22T14:18:37.951Z'
 
 - [Getting started](/docs/getting-started)
 
-  - [Deploy with Vercel](/docs/getting-started/#deploy-with-vercel)
+  - [Deploy with Vercel](/docs/getting-started#deploy-with-vercel)
 
-  - [Add to Next.js](/docs/getting-started/#adding-outstatic-to-a-nextjs-website)
+  - [Add to Next.js](/docs/getting-started#adding-outstatic-to-a-nextjs-website)
 
     <!-- -->
 
