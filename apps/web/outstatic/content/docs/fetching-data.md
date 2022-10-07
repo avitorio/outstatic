@@ -1,6 +1,6 @@
 ---
 title: 'Fetching data'
-status: 'draft'
+status: 'published'
 author:
   name: 'Andre Vitorio'
   picture: 'https://avatars.githubusercontent.com/u/1417109?v=4'
@@ -88,4 +88,3 @@ export async function getStaticPaths() {
 ## Usage examples:
 
 If you'd like to check out examples of how to use these functions, please refer to our [Example Blog](https://github.com/avitorio/outstatic/tree/main/examples/blog) repository.
-

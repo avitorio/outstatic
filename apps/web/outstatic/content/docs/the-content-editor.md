@@ -1,6 +1,6 @@
 ---
 title: 'The content editor'
-status: 'draft'
+status: 'published'
 author:
   name: 'Andre Vitorio'
   picture: 'https://avatars.githubusercontent.com/u/1417109?v=4'
@@ -31,4 +31,3 @@ You can add images to your documents by clicking the image button on the menu.
 [IMAGE HERE]
 
 Images are uploaded to your `/public/images` folder. Outstatic fetches the images directly from Github so they can be visualised instantly on the editor, even if your website hasn't finished deploying.
-
