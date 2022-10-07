@@ -16,7 +16,7 @@ export default function Index({ page, allPosts, allProjects }: Props) {
     <>
       <Layout>
         <Head>
-          <title>Next.js Blog Example with Outstatic</title>
+          <title>Outstatic Example Blog</title>
         </Head>
         <div className="max-w-6xl mx-auto px-5">
           <section className="mt-16 mb-16 md:mb-12">
