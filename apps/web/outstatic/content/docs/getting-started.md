@@ -20,7 +20,7 @@ Requirements:
 
 Outstatic uses Github Oauth for authentication. Before we start you'll need to create a Github OAuth app:
 
-- First go to the "Register a new OAuth application" page on Github by [clicking here](https://github.com/settings/applications/new). It may be useful to open it in a new tab so you can refer back to this page.
+- First go to the "Register a new OAuth application" page on Github by [clicking here](https://github.com/settings/applications/new).
 
 - Give your application a name, "Outstatic Blog" for example.
 
@@ -32,35 +32,43 @@ Click on **Register application**. You'll be redirected to your Github Oauth App
 
 Awesome, with your Github Oauth keys in hand select how you want to use Outstatic:
 
-- Deploy a starter website on Vercel.
+- [Deploy a starter website on Vercel](#deploying-with-vercel).
 
-- Add Outstatic manually to your current Next.js website.
+- [Add Outstatic manually to your current Next.js website](#adding-outstatic-to-a-nextjs-website).
 
-## Deploying with vercel:
+## Deploy with vercel:
 
 To deploy with Vercel, start by clicking the button below and follow the setup steps:
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Favitorio%2Foutstatic-beta%2Ftree%2Fmain%2Fexamples%2Fblog&env=OST_GITHUB_ID,OST_GITHUB_SECRET,OST_TOKEN_SECRET&project-name=outstatic-blog&repo-name=outstatic-blog&demo-title=Outstatic%20Blog%20Demo&demo-description=A%20statically%20generated%20blog%20example%20using%20Outstatic&demo-url=https%3A%2F%2Foutstatic-blog-example.vercel.app%2F&demo-image=https%3A%2F%2Foutstatic-blog-example.vercel.app%2Fassets%2Foutstatic-demo.png)
 
-First pick a name for your repository (ex: outstatic-blog) and click **create**.
+Select Github as your git service. Then, type the name of your repository (ex: `outstatic-blog`) and click **create**.
 
-Then fill in the following environment variables:
+Fill in the following environment variables:
 
-- **OST_GITHUB_ID** with your Github Client ID.
+- `OST_GITHUB_ID` with your Github Client ID.
 
-- **OST_GITHUB_SECRET** with your Github Client secret.
+- `OST_GITHUB_SECRET` with your Github Client secret.
 
-- **OST_TOKEN_SECRET** with a random string with at least 32 characters. You can generate a random string using [this service](https://onlinehashtools.com/generate-random-sha256-hash?&count=1).
+- `OST_TOKEN_SECRET` with a random string with at least 32 characters. You can generate a random string using [this service](https://onlinehashtools.com/generate-random-sha256-hash?&count=1).
 
-Deploy will start. Once concluded you will be taken to your Vercel dashboard. There you'll see your new website URL.
+Click on Deploy and wait until it's done.
+
+Once the deploy is concluded, you will be taken to your Vercel dashboard. There you'll see your new website URL.
 
 Go back to your Github OAuth App settings page and update the **Homepage URL** with your new website URL.
 
-You'll also need to update the **Authorization callback URL** with your new website URL, but you'll need to add `/api/outstatic/callback` to the end of the url. Example: `https://outstatic-blog.vercel.app/api/outstatic/callback`
+You'll also need to update the **Authorization callback URL** with your new website URL, but you'll need to add `/api/outstatic/callback` to the end of the url.
+
+Example: `https://myblog.vercel.app/api/outstatic/callback`
 
 Click on **Update application** and you are done!
 
-You can now visit your site and start using Outstatic!
+You can now visit your site.
+
+To login to your Dashboard add `/outstatic` to the end of your site url:
+
+Example: `https://myblog.vercel.app/outstatic`
 
 We recommend you learn how Outstatic manages content and also how to fetch content from your front end.
 
@@ -106,9 +114,7 @@ Start your dev server. Assuming you're on `http://localhost:3000` you can access
 
 You should see this page:
 
-[IMG OF ENV VARS]
-
-Let's update your environment variables.
+![Outstatic welcome screen](/images/outstatic-welcome-U1ND.png)Let's update your environment variables.
 
 ```bash
 OST_GITHUB_ID=YOUR_GITHUB_OAUTH_APP_ID
@@ -146,3 +152,4 @@ OST_GITHUB_ID=YOUR_GITHUB_OAUTH_APP_ID
 OST_GITHUB_SECRET=YOUR_GITHUB_OAUTH_APP_SECRET
 OST_TOKEN_SECRET=A_RANDOM_TOKEN # random string min 32 chars
 ```
+
