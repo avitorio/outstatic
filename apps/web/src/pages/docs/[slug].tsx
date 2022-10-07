@@ -42,7 +42,7 @@ export default function Post({ doc, menu }: Props) {
             <>
               <article className="mb-32 w-full">
                 <Head>
-                  <title>{`${doc.title} | Next.js + Outstatic`}</title>
+                  <title>{`${doc.title} | Outstatic Docs`}</title>
                   <meta property="og:image" content={doc.coverImage} />
                 </Head>
                 <h1 className="font-primary text-2xl font-bold md:text-4xl mb-2">
