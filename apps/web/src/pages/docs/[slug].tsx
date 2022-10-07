@@ -27,7 +27,7 @@ export default function Post({ doc, menu }: Props) {
     <>
       <Header />
       <div className="bg-white flex w-full">
-        <aside className="border-r px-4 py-4 w-full max-w-xs sticky top-10 h-[calc(100vh-4rem)] overflow-y-scroll no-scrollbar sidebar">
+        <aside className="border-r px-4 py-4 w-full max-w-xs sticky top-16 h-[calc(100vh-4rem)] overflow-y-scroll no-scrollbar sidebar">
           <div
             className="prose prose-base"
             dangerouslySetInnerHTML={{ __html: menu.content }}

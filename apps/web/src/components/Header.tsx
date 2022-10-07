@@ -3,7 +3,7 @@ import Link from 'next/link'
 
 const Header = () => {
   return (
-    <nav className="bg-white flex justify-between items-center w-full px-4 py-2 border-b sticky top-0 z-10 h-10">
+    <nav className="bg-white flex justify-between items-center w-full px-4 py-2 border-b sticky top-0 z-10 h-16">
       <Link href="/">
         <Image
           src="/images/outstatic-logo.svg"
