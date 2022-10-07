@@ -82,3 +82,7 @@
   list-style: none;
   padding-left: 1rem;
 }
+
+.sidebar .prose-base a {
+  @apply no-underline hover:underline;
+}
