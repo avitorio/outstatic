@@ -44,10 +44,12 @@ const PostsTable = (props: PostTableProps) => {
                 className="whitespace-nowrap px-6 py-4 text-base font-semibold text-gray-900"
               >
                 <Link href={`/outstatic/${props.collection}/${slug}`}>
-                  <div>
-                    {title}
-                    <div className="absolute top-0 bottom-0 left-0 right-40 cursor-pointer" />
-                  </div>
+                  <a>
+                    <div>
+                      {title}
+                      <div className="absolute top-0 bottom-0 left-0 right-40 cursor-pointer" />
+                    </div>
+                  </a>
                 </Link>
               </th>
               <td className="px-6 py-4 text-base font-semibold capitalize text-gray-900">
