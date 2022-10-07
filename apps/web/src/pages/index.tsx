@@ -70,7 +70,7 @@ export default function Home() {
       </nav>
       <main className="flex w-full flex-1 px-4 flex-col items-center justify-center md:px-20 text-center text-slate-800 mt-20 md:mt-0">
         <div className="flex items-center space-between z-10 relative">
-          <div className="top-2 max-w-xs w-64 ml-10 absolute -translate-x-[150%] hidden lg:block">
+          <div className="top-2 max-w-xs w-64 ml-10 absolute hidden -left-[360px] lg:block opacity-0 animate-fade-in-up">
             <Image
               src="/images/writer.png"
               width="256"
@@ -78,7 +78,7 @@ export default function Home() {
               alt="A girl writing on a notebook"
             />
           </div>
-          <div className="pt-8">
+          <div className="pt-8 opacity-0 animate-fade-in-up">
             <h1 className="text-6xl md:text-8xl text-slate-800">
               <div className="block min-w-[270px] md:min-w-[420px]">
                 <Image
@@ -102,7 +102,7 @@ export default function Home() {
                 Open source
               </p>
             </div>
-            <div className="p-3 md:p-6 border border-x-4 border-y-4 border-black rounded-cartoon2 -rotate-[0.5deg]  opacity-0 animate-fade-in-up animation-delay-[400ms]">
+            <div className="p-3 md:p-6 border border-x-4 border-y-4 border-black rounded-cartoon2 -rotate-[0.5deg] opacity-0 animate-fade-in-up animation-delay-[400ms]">
               <p className="text-xl font-bold text-slate-800 lg:text-3xl rotate-[0.5deg]">
                 Host for free
               </p>
@@ -171,12 +171,25 @@ export default function Home() {
           </div>
           <div>
             <Link href="/docs/getting-started">
-              <button
+              <a
                 type="button"
-                className="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-base px-6 py-3.5 mr-2 mb-2 animate-nudge animation-delay-[2s]"
+                className="inline-flex items-center text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-2xl px-6 py-3.5 mr-2 mb-2 animate-nudge animation-delay-[2s]"
               >
-                Get Started
-              </button>
+                Get started
+                <svg
+                  aria-hidden="true"
+                  className="ml-2 -mr-1 w-5 h-5"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
+                    clipRule="evenodd"
+                  ></path>
+                </svg>
+              </a>
             </Link>
           </div>
         </div>
