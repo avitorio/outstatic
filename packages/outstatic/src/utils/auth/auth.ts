@@ -40,12 +40,16 @@ export async function getLoginSession(req: Request): Promise<Session | null> {
 
   if (!token) return null
 
-  const session = await Iron.unseal(token, TOKEN_SECRET, Iron.defaults)
-  const expires = session.expires + MAX_AGE * 1000
-  // Validate the expiration date of the session
-  if (Date.now() > expires) {
-    throw new Error('Session expired')
-  }
+  try {
+    const session = await Iron.unseal(token, TOKEN_SECRET, Iron.defaults)
+    const expires = session.expires + MAX_AGE * 1000
+    // Validate the expiration date of the session
+    if (Date.now() > expires) {
+      throw new Error('Session expired')
+    }
 
-  return session
+    return session
+  } catch {
+    return null
+  }
 }
