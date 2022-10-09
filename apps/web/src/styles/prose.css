@@ -11,10 +11,6 @@
   content: '';
 }
 
-.outstatic-content a {
-  text-decoration: none;
-}
-
 .outstatic-content > ol > li > :last-child,
 .outstatic-content > ul > li > :last-child {
   margin-bottom: 0;
