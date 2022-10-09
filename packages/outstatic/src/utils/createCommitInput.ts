@@ -11,6 +11,7 @@ type createCommitInputType = {
   repoSlug: string
   contentPath: string
   monorepoPath: string
+  collection: string
 }
 
 export const createCommitInput = ({
@@ -22,7 +23,8 @@ export const createCommitInput = ({
   files = [],
   repoSlug,
   contentPath,
-  monorepoPath
+  monorepoPath,
+  collection
 }: createCommitInputType) => {
   let fileChanges = {}
   const additions = []
@@ -58,7 +60,7 @@ export const createCommitInput = ({
     additions.push({
       path: `${
         monorepoPath ? monorepoPath + '/' : ''
-      }${contentPath}/${slug}.md`,
+      }${contentPath}/${collection}/${slug}.md`,
       contents: encode(newContent)
     })
 
@@ -70,14 +72,14 @@ export const createCommitInput = ({
     deletions.push({
       path: `${
         monorepoPath ? monorepoPath + '/' : ''
-      }${contentPath}/${oldSlug}.md`
+      }${contentPath}/${collection}/${oldSlug}.md`
     })
     fileChanges = { ...fileChanges, deletions }
   }
 
   const headline = slug
-    ? `feat(blog): ${slug}`
-    : `feat(blog): remove ${oldSlug}`
+    ? `feat(${collection}): ${slug}`
+    : `feat(${collection}): remove ${oldSlug}`
 
   return {
     input: {

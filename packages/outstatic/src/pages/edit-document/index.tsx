@@ -83,8 +83,9 @@ export default function EditDocument({ collection }: EditDocumentProps) {
         oid,
         files,
         repoSlug,
-        contentPath: contentPath + '/' + collection,
-        monorepoPath
+        contentPath,
+        monorepoPath,
+        collection
       })
 
       await createCommit({ variables: commitInput })
