@@ -1,3 +1,1 @@
-# Outstatic
-
-A Static CMS for Next.js
+./packages/outstatic/README.md
