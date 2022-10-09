@@ -1,13 +1,16 @@
 import { GetServerSideProps, GetServerSidePropsContext } from 'next'
 import Head from 'next/head'
-import {
-  hasMissingEnvVar,
-  missingEnvVars,
-  envVars
-} from '../utils/envVarsCheck'
+import { envVars } from '../utils/envVarsCheck'
 
 type WelcomeProps = {
-  variables: boolean[]
+  variables: {
+    required: {
+      [key: string]: boolean
+    }
+    optional: {
+      [key: string]: boolean
+    }
+  }
 }
 
 export default function Welcome({ variables }: WelcomeProps) {
@@ -61,18 +64,15 @@ export default function Welcome({ variables }: WelcomeProps) {
             environment variables are set up:
           </p>
           <ul className="mb-5">
-            {envVars.map(
-              (variable, index) =>
-                !['OST_CONTENT_PATH', 'OST_REPO_OWNER'].includes(variable) && (
-                  <li key={variable} className="mb-1">
-                    {`${variables[index] ? '✅' : '❌'} Variable`}{' '}
-                    <span className="font-semibold">{variable}</span>{' '}
-                    {`is ${variables[index] ? 'set.' : 'missing!'}`}
-                  </li>
-                )
-            )}
+            {Object.entries(variables.required).map(([key, value]) => (
+              <li key={key} className="mb-1">
+                {`${value ? '✅' : '❌'} Variable`}{' '}
+                <span className="font-semibold">{key}</span>{' '}
+                {`is ${value ? 'set.' : 'missing!'}`}
+              </li>
+            ))}
           </ul>
-          {!variables[envVars.indexOf('OST_CONTENT_PATH')] && (
+          {!variables.optional.OST_CONTENT_PATH && (
             <p className="mb-5 p-2 bg-blue-100 rounded">
               Optional variable{' '}
               <span className="font-semibold">OST_CONTENT_PATH</span> defines
@@ -81,8 +81,7 @@ export default function Welcome({ variables }: WelcomeProps) {
               Defaulting to <code>outstatic/content</code>
             </p>
           )}
-
-          {!variables[envVars.indexOf('OST_REPO_OWNER')] && (
+          {!variables.optional.OST_REPO_OWNER && (
             <p className="mb-5 p-2 bg-blue-100 rounded">
               Optional variable{' '}
               <span className="font-semibold">OST_REPO_OWNER</span> is not set.
@@ -90,7 +89,7 @@ export default function Welcome({ variables }: WelcomeProps) {
               Defaulting to your Github user.
             </p>
           )}
-          <p>Note that you need to restart Next.js to apply the changes.</p>
+          <p>You need to restart Next.js to apply the changes.</p>
         </div>
       </main>
     </>
@@ -100,18 +99,18 @@ export default function Welcome({ variables }: WelcomeProps) {
 export const getServerSideProps: GetServerSideProps = async (
   context: GetServerSidePropsContext
 ) => {
-  if (!hasMissingEnvVar) {
+  if (!envVars.hasMissingEnvVars) {
     context.res.writeHead(302, {
       Location: '/outstatic'
     })
     context.res.end()
   }
 
-  const variables = missingEnvVars
+  console.log({ envVars })
 
   return {
     props: {
-      variables
+      variables: envVars.envVars
     }
   }
 }

@@ -7,7 +7,7 @@ import { CollectionsDocument } from '../graphql/generated'
 import { Session } from '../types'
 import { initializeApollo, useApollo } from '../utils/apollo'
 import { getLoginSession } from '../utils/auth/auth'
-import { hasMissingEnvVar, missingEnvVars } from '../utils/envVarsCheck'
+import { envVars, EnvVarsType } from '../utils/envVarsCheck'
 import FourOhFour from './404'
 import EditCollection from './edit-collection'
 import Collections from './collections'
@@ -18,7 +18,7 @@ import Settings from './settings'
 import Welcome from './welcome'
 
 type OutstaticProps = {
-  missingEnvVars: boolean[]
+  missingEnvVars: EnvVarsType | false
   providerData: {
     client: ApolloClient<any>
     repoOwner: string
@@ -56,7 +56,7 @@ export const Outstatic = ({ missingEnvVars, providerData }: OutstaticProps) => {
     console.log('removePage', page)
   }
 
-  if (missingEnvVars.length > 0) return <Welcome variables={missingEnvVars} />
+  if (missingEnvVars) return <Welcome variables={missingEnvVars} />
 
   const { session } = providerData
 
@@ -92,10 +92,10 @@ export const Outstatic = ({ missingEnvVars, providerData }: OutstaticProps) => {
 }
 
 export const OstSSP: GetServerSideProps = async ({ req }) => {
-  if (hasMissingEnvVar) {
+  if (envVars.hasMissingEnvVars) {
     return {
       props: {
-        missingEnvVars
+        missingEnvVars: envVars.envVars
       }
     }
   }
@@ -135,7 +135,7 @@ export const OstSSP: GetServerSideProps = async ({ req }) => {
 
   return {
     props: {
-      missingEnvVars: [],
+      missingEnvVars: false,
       providerData: {
         repoOwner: process.env.OST_REPO_OWNER || session?.user?.login || '',
         repoSlug: process.env.OST_REPO_SLUG || process.env.VERCEL_GIT_REPO_SLUG,
