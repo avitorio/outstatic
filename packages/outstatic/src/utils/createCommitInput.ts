@@ -52,7 +52,7 @@ export const createCommitInput = ({
             contents: fileContents
           })
 
-          newContent = content.replace(blob, `/${type}/${newFilename}`)
+          newContent = newContent.replace(blob, `/${type}/${newFilename}`)
         }
       })
     }
