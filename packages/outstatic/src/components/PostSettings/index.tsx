@@ -28,7 +28,7 @@ const PostSettings = ({
   const { post, editPost, hasChanges, collection } = useContext(PostContext)
 
   return (
-    <aside className="relative w-full border-b border-gray-300 bg-white md:w-64 md:flex-none md:flex-col md:flex-wrap md:items-start md:justify-start md:border-b-0 md:border-l md:py-6 max-h-[calc(100vh-53px)] overflow-y-scroll scrollbar-hide">
+    <aside className="relative w-full border-b border-gray-300 bg-white md:w-64 md:flex-none md:flex-col md:flex-wrap md:items-start md:justify-start md:border-b-0 md:border-l md:py-6 max-h-[calc(100vh-53px)]">
       <div className="relative hidden w-full items-center justify-between md:mb-4 md:flex px-4">
         <DateTimePicker
           id="publishedAt"
