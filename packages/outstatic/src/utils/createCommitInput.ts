@@ -40,10 +40,10 @@ export const createCommitInput = ({
           const randString = window
             .btoa(Math.random().toString())
             .substring(10, 6)
-          const newFilename = filename.replace(
-            /(\.[^\.]*)?$/,
-            `-${randString}$1`
-          )
+          const newFilename = filename
+            .toLowerCase()
+            .replace(/[^a-zA-Z0-9-_\.]/g, '-')
+            .replace(/(\.[^\.]*)?$/, `-${randString}$1`)
 
           additions.push({
             path: `${
