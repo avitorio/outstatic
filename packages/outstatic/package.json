@@ -1,6 +1,6 @@
 {
   "name": "outstatic",
-  "version": "0.0.25-rc",
+  "version": "0.0.26-rc",
   "description": "Static site CMS for Next.js",
   "author": "Andre Vitorio <andre@vitorio.net>",
   "main": "./dist/index.js",
