@@ -7,7 +7,7 @@ author:
 slug: 'fetching-data'
 description: ''
 coverImage: ''
-publishedAt: '2022-10-02T12:28:25.849Z'
+publishedAt: '2022-10-13T12:28:25.000Z'
 ---
 
 We've made it easy for you to fetch the data and content you create with Outstatic by providing a simple API. You should use this API on the front end of your Next.js website.
@@ -88,3 +88,4 @@ export async function getStaticPaths() {
 ## Usage examples:
 
 If you'd like to check out examples of how to use these functions, please refer to our [Example Blog](https://github.com/avitorio/outstatic/tree/main/examples/blog) repository.
+
