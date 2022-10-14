@@ -9,10 +9,19 @@ type MDEInsertImageProps = {
   setImageMenu: (value: boolean) => void
 }
 
+const isValidUrl = (urlString: string) => {
+  try {
+    return Boolean(new URL(urlString))
+  } catch (e) {
+    return false
+  }
+}
+
 const MDEInsertImage = ({ editor, setImageMenu }: MDEInsertImageProps) => {
   const { setFiles } = useContext(PostContext)
   const [showLink, setShowLink] = useState(false)
   const [imageUrl, setImageUrl] = useState('')
+  const [errors, setErrors] = useState({ imageUrl: '', uploadImage: '' })
 
   const addImageFile = async ({
     currentTarget
@@ -44,7 +53,12 @@ const MDEInsertImage = ({ editor, setImageMenu }: MDEInsertImageProps) => {
     setImageUrl(e.target.value)
   }
 
-  const addImageUrl = useCallback(() => {
+  const addImageUrl = useCallback(async () => {
+    if (!isValidUrl(imageUrl)) {
+      setErrors((oldState) => ({ ...oldState, imageUrl: 'Invalid URL' }))
+      return null
+    }
+
     if (imageUrl) {
       // TODO: Jump to new paragraph after adding image
       editor
@@ -61,7 +75,7 @@ const MDEInsertImage = ({ editor, setImageMenu }: MDEInsertImageProps) => {
   return (
     <>
       {showLink ? (
-        <div className="flex w-[500px] rounded-sm border border-black">
+        <div className="flex w-[500px] rounded-sm border border-black outline-none">
           <MDEMenuButton
             onClick={() => setShowLink(false)}
             editor={editor}
@@ -77,28 +91,40 @@ const MDEInsertImage = ({ editor, setImageMenu }: MDEInsertImageProps) => {
               <path d="M7.828 11H20v2H7.828l5.364 5.364-1.414 1.414L4 12l7.778-7.778 1.414 1.414z" />
             </svg>
           </MDEMenuButton>
-          <input
-            type="text"
-            className="w-[500px] border-r border-black py-2 px-3 outline-none"
-            placeholder="Insert link here"
-            onChange={handleImageInput}
-            value={imageUrl}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                addImageUrl()
-              }
-              if (e.key === 'Escape') {
-                setShowLink(false)
-              }
-            }}
-            autoFocus
-          />
+          <div
+            className={`relative w-[500px] border-r outline-none border-black`}
+          >
+            <input
+              type="text"
+              className={`w-full h-full py-2 px-3 outline-none ${
+                errors.imageUrl ? 'bg-red-50' : 'bg-white'
+              }`}
+              placeholder="Insert link here"
+              onChange={handleImageInput}
+              value={imageUrl}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  addImageUrl()
+                }
+                if (e.key === 'Escape') {
+                  setShowLink(false)
+                }
+              }}
+              onFocus={() => setErrors({ ...errors, imageUrl: '' })}
+              autoFocus
+            />
+            {errors.imageUrl && (
+              <span className="absolute text-red-500 top-10 left-0">
+                {errors.imageUrl}
+              </span>
+            )}
+          </div>
           <MDEMenuButton onClick={addImageUrl} editor={editor} name="back">
             Done
           </MDEMenuButton>
         </div>
       ) : (
-        <div className="flex rounded-sm border border-black">
+        <div className="flex rounded-sm border border-black outline-none">
           <MDEMenuButton
             onClick={() => setImageMenu(false)}
             editor={editor}
