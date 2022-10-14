@@ -64,7 +64,7 @@ const MDEInsertImage = ({ editor, setImageMenu }: MDEInsertImageProps) => {
       editor
         .chain()
         .focus()
-        .setImage({ src: imageUrl, alt: '' })
+        .setImage({ src: imageUrl, alt: '', title: 'an-image-title' })
         .insertContent('')
         .run()
       editor.chain().blur().run()

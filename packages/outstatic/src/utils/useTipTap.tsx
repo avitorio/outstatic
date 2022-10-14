@@ -15,7 +15,18 @@ const useTipTap = ({ ...rhfMethods }) => {
       StarterKit.configure({
         codeBlock: false
       }),
-      Image.configure({ inline: true }),
+      Image.extend({
+        renderHTML({ HTMLAttributes }) {
+          return [
+            'img',
+            {
+              ...HTMLAttributes,
+              onError:
+                'this.classList.add("image-error");this.alt="Couldn\'t load image.";'
+            }
+          ]
+        }
+      }).configure({ inline: true }),
       Placeholder.configure({
         placeholder: "What's your story?",
         showOnlyWhenEditable: false
