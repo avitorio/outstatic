@@ -35,16 +35,13 @@ const PostsTable = (props: PostTableProps) => {
       <tbody>
         {posts &&
           posts.map(({ slug, title, status, publishedAt }) => (
-            <tr
-              key={slug}
-              className="relative border-b bg-white hover:bg-gray-50"
-            >
+            <tr key={slug} className="border-b bg-white hover:bg-gray-50">
               <th
                 scope="row"
-                className="whitespace-nowrap px-6 py-4 text-base font-semibold text-gray-900"
+                className="relative whitespace-nowrap px-6 py-4 text-base font-semibold text-gray-900 group"
               >
                 <Link href={`/outstatic/${props.collection}/${slug}`}>
-                  <a>
+                  <a className="group-hover:text-blue-500">
                     <div>
                       {title}
                       <div className="absolute top-0 bottom-0 left-0 right-40 cursor-pointer" />
