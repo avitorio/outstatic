@@ -209,7 +209,7 @@ export default function EditDocument({ collection }: EditDocumentProps) {
             <form className="m-auto max-w-[700px] space-y-4">
               <PostTitleInput
                 id="title"
-                className="w-full resize-none outline-none bg-white text-5xl"
+                className="w-full resize-none outline-none bg-white text-5xl scrollbar-hide min-h-[55px] overflow-hidden"
                 placeholder={`Your ${singular(collection)} title`}
               />
               <div className="min-h-full prose prose-xl">
