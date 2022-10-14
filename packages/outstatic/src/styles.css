@@ -318,3 +318,8 @@ input.react-datepicker-time__input {
   padding: 0;
   border-radius: 0;
 }
+
+.tippy-box,
+.tippy-content {
+  outline: none; /* TODO: Improve accessibility */
+}
