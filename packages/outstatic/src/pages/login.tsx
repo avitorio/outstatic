@@ -51,10 +51,7 @@ export default function Login() {
             Sign in with Github to access your&nbsp;dashboard.
           </p>
           <Link href="/api/outstatic/login">
-            <a
-              type="button"
-              className="mr-2 mb-2 inline-flex items-center rounded-lg bg-[#24292F] px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-[#24292F]/90 focus:outline-none focus:ring-4 focus:ring-[#24292F]/50"
-            >
+            <a className="mr-2 mb-2 inline-flex items-center rounded-lg bg-[#24292F] px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-[#24292F]/90 focus:outline-none focus:ring-4 focus:ring-[#24292F]/50">
               <svg
                 className="mr-2 -ml-1 h-4 w-4"
                 aria-hidden="true"
