@@ -30,6 +30,7 @@ const DeletePostButton = ({
   const fetchOid = useOid()
 
   const deletePost = async (slug: string) => {
+    setDeleting(true)
     try {
       const oid = await fetchOid()
       const owner = repoOwner || session?.user?.login || ''
@@ -81,12 +82,11 @@ const DeletePostButton = ({
             </p>
           </div>
 
-          <div className="flex items-center space-x-2 rounded-b border-t border-gray-200 p-6">
+          <div className="flex items-center space-x-2 rounded-b border-t p-6">
             <button
               type="button"
               className="flex rounded-lg bg-red-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-red-800 focus:outline-none"
               onClick={() => {
-                setDeleting(true)
                 deletePost(slug)
               }}
             >
@@ -120,7 +120,7 @@ const DeletePostButton = ({
             </button>
             <button
               type="button"
-              className="rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-900 focus:z-10 focus:outline-none focus:ring-4 focus:ring-blue-300"
+              className="rounded-lg border border-gray-200 px-5 py-2.5 text-sm font-medium focus:z-10 focus:outline-none focus:ring-4 order-gray-600 bg-gray-800 text-white hover:border-gray-600 hover:bg-gray-700 focus:ring-gray-700"
               onClick={() => setShowDeleteModal(false)}
             >
               Cancel
