@@ -85,7 +85,7 @@ export default function Home() {
           </a>
         </div>
       </nav>
-      <main className="flex w-full flex-1 flex-col items-center justify-center text-center text-slate-800 mt-5 md:mt-0">
+      <main className="flex w-full flex-1 flex-col items-center justify-center text-center text-slate-800 mt-5 md:mt-20">
         <section className="flex w-full flex-1 px-4 flex-col items-center justify-center text-center text-slate-800 mt-20 md:mt-0">
           <div className="flex items-center space-between z-10 relative">
             <div className="top-2 max-w-xs w-64 ml-10 absolute hidden -left-[360px] lg:block opacity-0 animate-fade-in-up">
@@ -213,7 +213,7 @@ export default function Home() {
           </div>
         </section>
         <section className="w-full mb-20 md:px-0">
-          <div className="px-4 flex flex-col items-center">
+          <div className="px-4 flex flex-col items-center mb-10">
             <div className="block min-w-[320px] md:min-w-[700px]">
               <Image
                 src="/images/write-publish-live.svg"
@@ -223,7 +223,7 @@ export default function Home() {
                 alt="Write, Publish, It's live!"
               />
             </div>
-            <p className="mt-3 text-xl text-slate-800 mb-8">
+            <p className="mt-2 text-xl text-slate-800 mb-8">
               Get a complete dashboard to manage your Next.js static website.{' '}
               <br />
               Check out our demo below, or{' '}
