@@ -1,4 +1,4 @@
-import { Document } from '../interfaces/document'
+import type { Document } from '../interfaces/document'
 import Link from 'next/link'
 import DateFormatter from './DateFormatter'
 import Image from 'next/image'
@@ -22,7 +22,7 @@ const ContentGrid = ({ title = 'More', items, collection }: Props) => {
             as={`/${collection}/${item.slug}`}
             href={`/${collection}/[slug]`}
           >
-            <div className="cursor-pointer border project-card rounded-md md:w-full scale-100 hover:scale-[1.02] active:scale-[0.97] motion-safe:transform-gpu transition duration-100 motion-reduce:hover:scale-100 hover:shadow">
+            <div className="cursor-pointer border project-card rounded-md md:w-full scale-100 hover:scale-[1.02] active:scale-[0.97] motion-safe:transform-gpu transition duration-100 motion-reduce:hover:scale-100 hover:shadow overflow-hidden">
               <div className="sm:mx-0 relative">
                 <Image
                   src={item.coverImage}
@@ -33,9 +33,9 @@ const ContentGrid = ({ title = 'More', items, collection }: Props) => {
                   objectFit="cover"
                 />
                 {collection === 'projects' && (
-                  <h4 className="p-2 bg-opacity-80 bg-white text-center whitespace-nowrap font-bold text-3xl absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 shadow-lg rounded-lg">
+                  <h2 className="p-2 bg-opacity-80 bg-white text-center whitespace-nowrap font-bold text-3xl absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 shadow-lg rounded-lg">
                     {item.title}
-                  </h4>
+                  </h2>
                 )}
               </div>
               {collection === 'posts' && (
