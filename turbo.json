@@ -16,6 +16,9 @@
     "test": {
       "cache": false
     },
+    "web": {
+      "dependsOn": ["$NEXT_PUBLIC_GA_ID"]
+    },
     "outstatic": {
       "dependsOn": [
         "$VERCEL_GIT_REPO_SLUG",
