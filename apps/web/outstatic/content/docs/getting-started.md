@@ -32,7 +32,7 @@ Click on **Register application**. You'll be redirected to your Github Oauth App
 
 Awesome, with your Github Oauth keys in hand select how you want to use Outstatic:
 
-- [Deploy a starter website on Vercel](#deploying-with-vercel).
+- [Deploy a starter website on Vercel](#deploy-with-vercel).
 
 - [Add Outstatic manually to your current Next.js website](#adding-outstatic-to-a-nextjs-website).
 
@@ -40,7 +40,7 @@ Awesome, with your Github Oauth keys in hand select how you want to use Outstati
 
 To deploy with Vercel, start by clicking the button below and follow the setup steps:
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Favitorio%2Foutstatic-beta%2Ftree%2Fmain%2Fexamples%2Fblog&env=OST_GITHUB_ID,OST_GITHUB_SECRET,OST_TOKEN_SECRET&project-name=outstatic-blog&repo-name=outstatic-blog&demo-title=Outstatic%20Blog%20Demo&demo-description=A%20statically%20generated%20blog%20example%20using%20Outstatic&demo-url=https%3A%2F%2Foutstatic-blog-example.vercel.app%2F&demo-image=https%3A%2F%2Foutstatic-blog-example.vercel.app%2Fassets%2Foutstatic-demo.png)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Favitorio%2Foutstatic%2Ftree%2Fmain%2Fexamples%2Fblog&env=OST_GITHUB_ID,OST_GITHUB_SECRET,OST_TOKEN_SECRET&project-name=outstatic-blog&repo-name=outstatic-blog&demo-title=Outstatic%20Blog%20Demo&demo-description=A%20statically%20generated%20blog%20example%20using%20Outstatic&demo-url=https%3A%2F%2Foutstatic-blog-example.vercel.app%2F&demo-image=https%3A%2F%2Foutstatic.com%2Fimages%2Foutstatic-demo.png&envDescription=API%20Keys%20needed%20for%20installation&envLink=https%3A%2F%2Foutstatic.com%2Fdocs%2Fenvironment-variables)
 
 Select Github as your git service. Then, type the name of your repository (ex: `outstatic-blog`) and click **create**.
 
@@ -70,7 +70,7 @@ To login to your Dashboard add `/outstatic` to the end of your site url:
 
 Example: `https://myblog.vercel.app/outstatic`
 
-We recommend you learn how Outstatic manages content and also how to fetch content from your front end.
+We recommend you learn how [Outstatic manages content](/docs/introduction) and also how to [fetch content](/docs/fetching-data) from your front end.
 
 ## Adding Outstatic to a Next.js website
 
@@ -152,4 +152,3 @@ OST_GITHUB_ID=YOUR_GITHUB_OAUTH_APP_ID
 OST_GITHUB_SECRET=YOUR_GITHUB_OAUTH_APP_SECRET
 OST_TOKEN_SECRET=A_RANDOM_TOKEN # random string min 32 chars
 ```
-
