@@ -26,7 +26,14 @@ const HeadTags = () => {
       />
       <meta name="msapplication-TileColor" content="#1B1F23" />
       <meta name="theme-color" content="#ffffff" />
-      <meta property="og:image" content="/images/og-image.png" />
+      <meta
+        property="og:image"
+        content="https://outstatic.com/images/og-image.png"
+      />
+      <meta
+        property="og:image:alt"
+        content="Outstatic - a static CMS for Next.js"
+      />
     </>
   )
 }
