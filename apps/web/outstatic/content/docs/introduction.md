@@ -18,7 +18,7 @@ You can get started by visiting our [Getting started](/docs/getting-started) sec
 
 ## How does Outstatic work?
 
-We provide you with a user interface (UI) to create and edit website content. There are no tedious database or server to set up, all of the data is added to your Github repository via commits.
+We provide you with a user interface (UI) to create and edit website content. There are no tedious database or server to set up, **all of the data is added to your Github repository via commits**.
 
 To see the changes on your website you'll need to wait until Vercel finishes deploying it. In the case you are developing your site locally, you'll need to pull the changes to see them on your dev environment.
 
