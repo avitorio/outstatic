@@ -1,6 +1,6 @@
 ---
 title: 'FAQs'
-status: 'draft'
+status: 'published'
 author:
   name: 'Andre Vitorio'
   picture: 'https://avatars.githubusercontent.com/u/1417109?v=4'
