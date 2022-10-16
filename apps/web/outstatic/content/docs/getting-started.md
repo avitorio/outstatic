@@ -14,9 +14,9 @@ Here's how you can get started with Outstatic.
 
 Requirements:
 
-- A [Vercel](https://vercel.com) account connected to your [Github](https://github.com) account.
+- A [Vercel](https://vercel.com) account.
 
-- A Github Oauth app.
+- A [Github](https://github.com) account.
 
 Outstatic uses Github Oauth for authentication. Before we start you'll need to create a Github OAuth app:
 
@@ -28,7 +28,9 @@ Outstatic uses Github Oauth for authentication. Before we start you'll need to c
 
 - You can leave the **Application** description field empty.
 
-Click on **Register application**. You'll be redirected to your Github Oauth App settings page. There you'll find your application's Client ID and Client secret. Keep this tab open, you'll need these values for our next steps.
+Click on **Register application**. You'll be redirected to your Github Oauth App settings page.
+
+Next, click on **Generate a new client secret**. Once done, keep this tab open. We'll need these values for our next steps.
 
 Awesome, with your Github Oauth keys in hand select how you want to use Outstatic:
 
