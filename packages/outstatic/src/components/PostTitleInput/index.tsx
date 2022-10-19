@@ -46,7 +46,9 @@ export default function PostTitle({
               if (last === 'new') {
                 setValue(
                   'slug',
-                  convert(e.target.value, { dictionary: { "'": '' } })
+                  convert(e.target.value.toLowerCase(), {
+                    dictionary: { "'": '' }
+                  })
                 )
               }
             }

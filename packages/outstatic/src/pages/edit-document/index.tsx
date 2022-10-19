@@ -32,7 +32,7 @@ type EditDocumentProps = {
 
 export default function EditDocument({ collection }: EditDocumentProps) {
   const router = useRouter()
-  const slug = router.query?.ost?.[1] as string
+  const [slug, setSlug] = useState(router.query?.ost?.[1] as string)
   const { repoOwner, repoSlug, contentPath, monorepoPath } =
     useContext(OutstaticContext)
   const { session } = useOstSession()
@@ -91,7 +91,7 @@ export default function EditDocument({ collection }: EditDocumentProps) {
       await createCommit({ variables: commitInput })
       setLoading(false)
       setHasChanges(false)
-      window.history.replaceState('', '', `/outstatic/${collection}/${newSlug}`)
+      setSlug(newSlug)
       setShowDelete(true)
     } catch (error) {
       // TODO: Better error treatment
@@ -99,6 +99,13 @@ export default function EditDocument({ collection }: EditDocumentProps) {
       console.log({ error })
     }
   }
+
+  useEffect(() => {
+    router.push(`/outstatic/${collection}/${slug}`, undefined, {
+      shallow: true
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [slug])
 
   useEffect(() => {
     const postQueryObject = postQueryData?.repository?.object

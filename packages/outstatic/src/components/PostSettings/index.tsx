@@ -132,9 +132,12 @@ const PostSettings = ({
             inputSize="small"
             validation={{
               onChange: (e) => {
+                const lastChar = e.target.value.slice(-1)
                 editPost(
                   'slug',
-                  convert(e.target.value, { dictionary: { "'": '' } })
+                  lastChar === ' ' || lastChar === '-'
+                    ? e.target.value
+                    : convert(e.target.value, { dictionary: { "'": '' } })
                 )
               }
             }}
