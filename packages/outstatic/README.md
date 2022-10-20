@@ -31,6 +31,13 @@ Visit <a aria-label="outstatic getting started" href="https://outstatic.com/lear
 
 Visit [https://outstatic.com/docs](https://outstatic.com/docs) to view the full documentation.
 
+## Stay up-to-date
+
+The project is constantly improving with new changes being implemented on a daily basis. You can keep up by hitting the **Star** button! I really appreaciate it.
+
+![hit-the-star](https://user-images.githubusercontent.com/1417109/197028994-7261693c-0201-4ec7-9c69-a996c9de870c.gif)
+
+
 ## Author
 
 - Andre Vitorio ([@andrevitorio](https://twitter.com/andrevitorio))
