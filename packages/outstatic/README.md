@@ -1,8 +1,8 @@
 <p align="center">
   <a href="https://outstatic.com">
     <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="./../../.github/images/readme-illustration-dark.png">
-      <img src="./../../.github/images/readme-illustration-light.png">
+      <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/avitorio/outstatic/main/.github/images/readme-illustration-dark.png">
+      <img src="https://raw.githubusercontent.com/avitorio/outstatic/main/.github/images/readme-illustration-light.png">
     </picture>
     <h1 align="center">Outstatic</h1>
   </a>
