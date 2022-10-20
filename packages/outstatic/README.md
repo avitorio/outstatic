@@ -8,10 +8,6 @@
   </a>
 </p>
 
-
-https://user-images.githubusercontent.com/1417109/197012503-2378f951-c571-492c-a4d6-5e5bba4fae24.mp4
-
-
 <p align="center">
   <a aria-label="NPM version" href="https://www.npmjs.com/package/outstatic">
     <img alt="" src="https://img.shields.io/npm/v/outstatic?style=for-the-badge&labelColor=000000">
@@ -20,6 +16,12 @@ https://user-images.githubusercontent.com/1417109/197012503-2378f951-c571-492c-a
     <img alt="" src="https://img.shields.io/npm/l/outstatic?style=for-the-badge&labelColor=000000">
   </a>
 </p>
+
+
+
+https://user-images.githubusercontent.com/1417109/197012503-2378f951-c571-492c-a4d6-5e5bba4fae24.mp4
+
+Outstatic is a static site CMS that lives inside your Next.js install. No need for databases, external services or complicated setups. It allows you to create, edit and save content that is automatically commited to your repository and deployed to your live website.
 
 ## Getting Started
 
