@@ -17,13 +17,18 @@
   </a>
 </p>
 
-
-
 https://user-images.githubusercontent.com/1417109/197012503-2378f951-c571-492c-a4d6-5e5bba4fae24.mp4
 
 Outstatic is a static site CMS that lives inside your Next.js install. No need for databases, external services or complicated setups. It allows you to create, edit and save content that is automatically commited to your repository and deployed to your live website.
 
-## Getting Started
+## Key features
+
+- 📝 Full-featured dashboard
+- 🚀 Fast and easy setup
+- 💾 No database
+- 🏠 Host for free
+
+## Getting started
 
 Visit <a aria-label="outstatic getting started" href="https://outstatic.com/learn">https://outstatic.com/docs/getting-started</a> to get started with Outstatic.
 
