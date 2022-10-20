@@ -34,6 +34,20 @@ const HeadTags = () => {
         property="og:image:alt"
         content="Outstatic - a static CMS for Next.js"
       />
+      <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:site" content="@outstatic" />
+      <meta
+        name="twitter:description"
+        content="Write. Publish. It's live! Get a complete dashboard to manage your Next.js static website."
+      />
+      <meta
+        name="twitter:title"
+        content="Outstatic - A Static Site CMS for Next.js."
+      />
+      <meta
+        name="twitter:image"
+        content="https://outstatic.com/images/og-image.png"
+      />
     </>
   )
 }
