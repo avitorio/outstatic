@@ -7,6 +7,9 @@
     "lint": {
       "outputs": []
     },
+    "start": {
+      "cache": false
+    },
     "dev": {
       "cache": false
     },
@@ -14,6 +17,9 @@
       "cache": false
     },
     "test": {
+      "cache": false
+    },
+    "typecheck": {
       "cache": false
     },
     "web": {

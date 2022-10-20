@@ -15,7 +15,8 @@
     "build": "tsup && tailwindcss -i ./src/styles.css -o ./dist/outstatic.css",
     "dev": "tsup --watch & tailwindcss -i ./src/styles.css -o ./dist/outstatic.css --watch",
     "clean": "rm -rf dist",
-    "test": "jest --passWithNoTests"
+    "test": "jest --passWithNoTests",
+    "typecheck": "tsc --project tsconfig.json --noEmit"
   },
   "dependencies": {
     "@apollo/client": "^3.6.6",

@@ -5,7 +5,7 @@
     "dev": "next",
     "build": "next build",
     "start": "next start",
-    "typecheck": "tsc"
+    "typecheck": "tsc --project tsconfig.json --noEmit"
   },
   "dependencies": {
     "classnames": "^2.3.1",
