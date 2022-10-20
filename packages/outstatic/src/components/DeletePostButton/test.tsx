@@ -19,7 +19,7 @@ describe('<DeletePostButton />', () => {
 
     render(
       <TestWrapper>
-        <DeletePostButton slug={'a-post'} disabled={false} />
+        <DeletePostButton slug={'a-post'} disabled={false} collection="posts" />
       </TestWrapper>
     )
 
