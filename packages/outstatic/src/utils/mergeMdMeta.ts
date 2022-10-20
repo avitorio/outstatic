@@ -17,7 +17,7 @@ export const mergeMdMeta = (data: Document): string => {
     if (value[1] instanceof Object) {
       merged += `${value[0]}:\n`
       Object.entries(value[1]).forEach(([key, value]) => {
-        merged += `  ${key}: '${DOMPurify.sanitize(value).replaceAll(
+        merged += `  ${key}: '${DOMPurify.sanitize(value as string).replaceAll(
           "'",
           "''"
         )}'\n`
