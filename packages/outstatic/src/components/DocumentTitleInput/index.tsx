@@ -4,9 +4,9 @@ import TextareaAutosize, {
   TextareaAutosizeProps
 } from 'react-textarea-autosize'
 import convert from 'url-slug'
-import { PostContext } from '../../context'
+import { DocumentContext } from '../../context'
 
-export type PostTitleProps = {
+export type DocumentTitleProps = {
   label?: string
   id: string
   placeholder?: string
@@ -17,7 +17,7 @@ export type PostTitleProps = {
   className?: string
 } & TextareaAutosizeProps
 
-export default function PostTitle({
+export default function DocumentTitle({
   label,
   placeholder = '',
   helperText,
@@ -25,13 +25,13 @@ export default function PostTitle({
   readOnly = false,
   wrapperClass,
   ...rest
-}: PostTitleProps) {
+}: DocumentTitleProps) {
   const {
     register,
     formState: { errors },
     setValue
   } = useFormContext()
-  const { editor } = useContext(PostContext)
+  const { editor } = useContext(DocumentContext)
 
   return (
     <div className={wrapperClass}>

@@ -1,10 +1,10 @@
 import Link from 'next/link'
 import { useState } from 'react'
 import { Document } from '../../types'
-import DeletePostButton from '../DeletePostButton'
+import DeleteDocumentButton from '../DeleteDocumentButton'
 
-type PostTableProps = {
-  posts: Omit<Document, 'content'>[]
+type DocumentsTableProps = {
+  documents: Omit<Document, 'content'>[]
   collection: string
 }
 const options = {
@@ -13,8 +13,8 @@ const options = {
   day: 'numeric' as const
 }
 
-const PostsTable = (props: PostTableProps) => {
-  const [posts, setPosts] = useState(props.posts)
+const DocumentsTable = (props: DocumentsTableProps) => {
+  const [documents, setDocuments] = useState(props.documents)
 
   return (
     <table className="w-full text-left text-sm text-gray-500">
@@ -33,8 +33,8 @@ const PostsTable = (props: PostTableProps) => {
         </tr>
       </thead>
       <tbody>
-        {posts &&
-          posts.map(({ slug, title, status, publishedAt }) => (
+        {documents &&
+          documents.map(({ slug, title, status, publishedAt }) => (
             <tr key={slug} className="border-b bg-white hover:bg-gray-50">
               <th
                 scope="row"
@@ -56,11 +56,11 @@ const PostsTable = (props: PostTableProps) => {
                 {publishedAt.toLocaleDateString('en-US', options)}
               </td>
               <td className="px-6 py-4 text-right">
-                <DeletePostButton
+                <DeleteDocumentButton
                   slug={slug}
                   disabled={false}
                   onComplete={() =>
-                    setPosts(posts.filter((p) => p.slug !== slug))
+                    setDocuments(documents.filter((p) => p.slug !== slug))
                   }
                   collection={props.collection}
                 />
@@ -72,4 +72,4 @@ const PostsTable = (props: PostTableProps) => {
   )
 }
 
-export default PostsTable
+export default DocumentsTable

@@ -1,9 +1,9 @@
 import { ChangeEvent, useContext, useEffect, useState } from 'react'
-import { PostContext } from '../../context'
+import { DocumentContext } from '../../context'
 import { Document, FileType } from '../../types'
 import Input from '../Input'
 
-type PostSettingsImageSelectionProps = {
+type DocumentSettingsImageSelectionProps = {
   name: 'coverImage' | 'author.picture'
   label?: string
   description: string
@@ -17,19 +17,19 @@ function resolve(path: string, obj: Document, separator = '.') {
   )
 }
 
-const PostSettingsImageSelection = ({
+const DocumentSettingsImageSelection = ({
   name,
   description,
   label
-}: PostSettingsImageSelectionProps) => {
-  const { post, editPost, setFiles } = useContext(PostContext)
+}: DocumentSettingsImageSelectionProps) => {
+  const { document, editDocument, setFiles } = useContext(DocumentContext)
   const [showImage, setShowImage] = useState(false)
   const [showImageOptions, setShowImageOptions] = useState(false)
   const [showLink, setShowLink] = useState(false)
   const [previewLoading, setPreviewLoading] = useState(true)
   const [loadingError, setLoadingError] = useState(false)
   const [image, setImage] = useState('')
-  const resolvedImage = resolve(name, post)
+  const resolvedImage = resolve(name, document)
 
   useEffect(() => {
     const image = resolvedImage?.replace('/images/', `/api/outstatic/images/`)
@@ -44,7 +44,7 @@ const PostSettingsImageSelection = ({
     if (currentTarget.files?.length && currentTarget.files?.[0] !== null) {
       const file = currentTarget.files[0]
       const blob = URL.createObjectURL(file)
-      editPost(name, blob)
+      editDocument(name, blob)
       setShowImage(true)
       const reader = new FileReader()
       reader.readAsArrayBuffer(file)
@@ -101,7 +101,7 @@ const PostSettingsImageSelection = ({
               onError={() => {
                 setPreviewLoading(false)
                 setLoadingError(true)
-                editPost(name, '')
+                editDocument(name, '')
                 setShowLink(false)
               }}
               alt={description}
@@ -110,7 +110,7 @@ const PostSettingsImageSelection = ({
           <div className="w-full flex justify-between mt-2">
             <button
               onClick={() => {
-                editPost(name, '')
+                editDocument(name, '')
                 setShowImage(false)
                 setShowLink(false)
               }}
@@ -129,12 +129,12 @@ const PostSettingsImageSelection = ({
             id={name}
             defaultValue={resolvedImage}
             inputSize="small"
-            helperText="Remember to save the post after adding the image URL"
+            helperText="Remember to save the document after adding the image URL"
             onBlur={(e) => {
               if (e.target.value) {
                 setPreviewLoading(true)
                 setShowLink(false)
-                editPost(name, e.target.value)
+                editDocument(name, e.target.value)
               }
             }}
           />
@@ -191,4 +191,4 @@ const PostSettingsImageSelection = ({
   )
 }
 
-export default PostSettingsImageSelection
+export default DocumentSettingsImageSelection

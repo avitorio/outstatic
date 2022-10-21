@@ -3,7 +3,7 @@ import matter from 'gray-matter'
 import Link from 'next/link'
 import { singular } from 'pluralize'
 import { useContext } from 'react'
-import { AdminLayout, PostsTable } from '../components'
+import { AdminLayout, DocumentsTable } from '../components'
 import { OutstaticContext } from '../context'
 import { usePostsQuery } from '../graphql/generated'
 import { Document } from '../types'
@@ -40,33 +40,33 @@ export default function List({ collection }: ListProps) {
     }
   })
 
-  let posts: Omit<Document, 'content'>[] = []
+  let documents: Omit<Document, 'content'>[] = []
 
   const entries =
     data?.repository?.object?.__typename === 'Tree' &&
     data?.repository?.object?.entries
 
   if (entries) {
-    entries.forEach((post) => {
-      if (post.name.slice(-3) === '.md') {
+    entries.forEach((document) => {
+      if (document.name.slice(-3) === '.md') {
         const {
           data: { title, publishedAt, status, author }
         } = matter(
-          post?.object?.__typename === 'Blob' && post?.object?.text
-            ? post?.object?.text
+          document?.object?.__typename === 'Blob' && document?.object?.text
+            ? document?.object?.text
             : ''
         )
-        posts.push({
+        documents.push({
           title,
           status,
           publishedAt: publishedAt ? new Date(publishedAt) : new Date(),
-          slug: post.name.replace('.md', ''),
+          slug: document.name.replace('.md', ''),
           author
         })
       }
     })
 
-    posts.sort((a, b) => Number(b.publishedAt) - Number(a.publishedAt))
+    documents.sort((a, b) => Number(b.publishedAt) - Number(a.publishedAt))
   }
 
   return (
@@ -82,12 +82,12 @@ export default function List({ collection }: ListProps) {
           </a>
         </Link>
       </div>
-      {posts.length > 0 && (
+      {documents.length > 0 && (
         <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-          <PostsTable posts={posts} collection={collection} />
+          <DocumentsTable documents={documents} collection={collection} />
         </div>
       )}
-      {posts.length === 0 && !loading && (
+      {documents.length === 0 && !loading && (
         <div className="max-w-2xl">
           <div className="absolute bottom-0 left-0 md:left-64 right-0 md:top-36">
             <svg

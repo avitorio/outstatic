@@ -7,9 +7,9 @@ import MDEInsertImage from './MDEInsertImage'
 import MDEMenu from './MDEMenu'
 import MDEMenuButton from './MDEMenuButton'
 import MDEditor from './MDEditor'
-import PostSettings from './PostSettings'
-import PostTitleInput from './PostTitleInput'
-import PostsTable from './PostsTable'
+import DocumentSettings from './DocumentSettings'
+import DocumentTitleInput from './DocumentTitleInput'
+import DocumentsTable from './DocumentsTable'
 import Sidebar from './Sidebar'
 
 export {
@@ -22,8 +22,8 @@ export {
   MDEInsertImage,
   MDEMenu,
   MDEMenuButton,
-  PostSettings,
-  PostsTable,
-  PostTitleInput,
+  DocumentSettings,
+  DocumentsTable,
+  DocumentTitleInput,
   Sidebar
 }

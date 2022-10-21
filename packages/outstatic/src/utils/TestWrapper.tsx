@@ -3,16 +3,16 @@ import { Editor, useEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import { ReactNode } from 'react'
 import { useForm, FormProvider } from 'react-hook-form'
-import { PostContext } from '../context'
+import { DocumentContext } from '../context'
 import { OidDocument } from '../graphql/generated'
 import { Document } from '../types'
 
-const postExample: Document = {
+const documentExample: Document = {
   publishedAt: new Date('2022-07-14'),
-  title: 'Example Post',
+  title: 'Example Document',
   content: 'Example Content',
   status: 'published',
-  slug: 'post-example',
+  slug: 'document-example',
   author: {
     name: 'John Doe',
     picture: 'https://jdoe.com/picture.jpg'
@@ -56,19 +56,19 @@ export const TestWrapper = (props: { children: ReactNode }) => {
 
   return (
     <MockedProvider mocks={mocks} addTypename={false}>
-      <PostContext.Provider
+      <DocumentContext.Provider
         value={{
           editor: editor as Editor,
-          post: postExample,
-          editPost: () => {},
+          document: documentExample,
+          editDocument: () => {},
           files: [],
           setFiles: () => {},
           hasChanges: false,
-          collection: 'posts'
+          collection: 'documents'
         }}
       >
         <FormProvider {...formMethods}>{props.children}</FormProvider>
-      </PostContext.Provider>
+      </DocumentContext.Provider>
     </MockedProvider>
   )
 }

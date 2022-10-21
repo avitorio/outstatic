@@ -1,6 +1,6 @@
 import { Editor } from '@tiptap/react'
 import { useCallback, useContext, useState } from 'react'
-import { PostContext } from '../../context'
+import { DocumentContext } from '../../context'
 import MDEMenuButton from '../MDEMenuButton'
 
 type MDEUImageMenuProps = {
@@ -9,7 +9,7 @@ type MDEUImageMenuProps = {
 }
 
 const MDEUImageMenu = ({ editor, setImageSelected }: MDEUImageMenuProps) => {
-  const { setFiles } = useContext(PostContext)
+  const { setFiles } = useContext(DocumentContext)
   const [showLink, setShowLink] = useState(false)
   const [url, setUrl] = useState('')
   const [showAltText, setShowAltText] = useState(false)

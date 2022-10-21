@@ -6,7 +6,7 @@ import { createCommitInput } from '../../utils/createCommitInput'
 import useOid from '../../utils/useOid'
 import Modal from '../Modal'
 
-type DeletePostButtonProps = {
+type DeleteDocumentButtonProps = {
   slug: string
   disabled?: boolean
   onComplete?: () => void
@@ -14,13 +14,13 @@ type DeletePostButtonProps = {
   className?: string
 }
 
-const DeletePostButton = ({
+const DeleteDocumentButton = ({
   slug,
   disabled = false,
   onComplete = () => {},
   collection,
   className
-}: DeletePostButtonProps) => {
+}: DeleteDocumentButtonProps) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const { session } = useOstSession()
@@ -29,7 +29,7 @@ const DeletePostButton = ({
     useContext(OutstaticContext)
   const fetchOid = useOid()
 
-  const deletePost = async (slug: string) => {
+  const deleteDocument = async (slug: string) => {
     setDeleting(true)
     try {
       const oid = await fetchOid()
@@ -58,9 +58,9 @@ const DeletePostButton = ({
         type="button"
         disabled={disabled}
         className={`z-10 inline-block text-gray-500 hover:bg-white focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg text-sm p-1.5 ${className}`}
-        title="Delete post"
+        title="Delete document"
       >
-        <span className="sr-only">Delete post</span>
+        <span className="sr-only">Delete document</span>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
@@ -72,10 +72,10 @@ const DeletePostButton = ({
         </svg>
       </button>
       {showDeleteModal && (
-        <Modal title="Delete Post" close={() => setShowDeleteModal(false)}>
+        <Modal title="Delete Document" close={() => setShowDeleteModal(false)}>
           <div className="space-y-6 p-6 text-left">
             <p className="text-base leading-relaxed text-gray-500">
-              Are you sure you want to delete this post?
+              Are you sure you want to delete this document?
             </p>
             <p className="text-base leading-relaxed text-gray-500">
               This action cannot be undone.
@@ -87,7 +87,7 @@ const DeletePostButton = ({
               type="button"
               className="flex rounded-lg bg-red-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-red-800 focus:outline-none"
               onClick={() => {
-                deletePost(slug)
+                deleteDocument(slug)
               }}
             >
               {deleting ? (
@@ -132,4 +132,4 @@ const DeletePostButton = ({
   )
 }
 
-export default DeletePostButton
+export default DeleteDocumentButton

@@ -1,7 +1,6 @@
 import { render, screen } from '@testing-library/react'
-import React from 'react'
 import { TestWrapper } from '../../utils/TestWrapper'
-import PostsTable from '.'
+import DocumentsTable from '.'
 
 const posts = [
   {
@@ -16,11 +15,11 @@ const posts = [
   }
 ]
 
-describe('<PostsTable />', () => {
+describe('<DocumentsTable />', () => {
   it('should render the heading', () => {
     render(
       <TestWrapper>
-        <PostsTable posts={posts} collection="posts" />
+        <DocumentsTable documents={posts} collection="posts" />
       </TestWrapper>
     )
 

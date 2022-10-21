@@ -22,10 +22,10 @@ export type FileType = {
   content: string
 }
 
-export type PostContextType = {
+export type DocumentContextType = {
   editor: Editor
-  post: Document
-  editPost: (property: string, value: any) => void
+  document: Document
+  editDocument: (property: string, value: any) => void
   files: FileType[]
   setFiles: Dispatch<SetStateAction<FileType[]>>
   hasChanges: boolean

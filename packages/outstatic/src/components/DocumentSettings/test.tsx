@@ -2,12 +2,18 @@ import { render, screen } from '@testing-library/react'
 import React from 'react'
 import { TestWrapper } from '../../utils/TestWrapper'
 import { useOstSession } from '../../utils/auth/hooks'
-import DeletePostButton from '.'
+import DocumentSettings from '.'
 
 jest.mock('../../utils/auth/hooks')
 
-describe('<DeletePostButton />', () => {
-  it('should render the button', () => {
+jest.mock('react-hook-form', () => ({
+  ...jest.requireActual('react-hook-form'),
+  register: jest.fn(),
+  handleSubmit: jest.fn()
+}))
+
+describe('<DocumentSettings />', () => {
+  it('should render the date', async () => {
     ;(useOstSession as jest.Mock).mockReturnValue({
       session: {
         user: {
@@ -16,13 +22,16 @@ describe('<DeletePostButton />', () => {
       },
       status: 'authenticated'
     })
-
     render(
       <TestWrapper>
-        <DeletePostButton slug={'a-post'} disabled={false} collection="posts" />
+        <DocumentSettings
+          saveFunc={() => {}}
+          loading={false}
+          showDelete={false}
+        />
       </TestWrapper>
     )
 
-    expect(screen.getByRole('button', { name: /Delete/i })).toBeInTheDocument()
+    expect(screen.getByText('July 14, 2022')).toBeInTheDocument()
   })
 })

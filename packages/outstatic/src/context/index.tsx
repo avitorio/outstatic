@@ -1,5 +1,5 @@
 import { createContext } from 'react'
-import { PostContextType, Session } from '../types'
+import { DocumentContextType, Session } from '../types'
 
 type OutstaticProviderProps = {
   children?: React.ReactNode
@@ -54,4 +54,6 @@ export const OutstaticProvider = ({
   )
 }
 
-export const PostContext = createContext<PostContextType>({} as PostContextType)
+export const DocumentContext = createContext<DocumentContextType>(
+  {} as DocumentContextType
+)

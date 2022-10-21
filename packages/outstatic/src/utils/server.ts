@@ -52,14 +52,16 @@ export function getDocumentBySlug(
 
 export function getDocuments(collection: string, fields: string[] = []) {
   const slugs = getDocumentSlugs(collection)
-  const posts = slugs
+  const documents = slugs
     .map((slug) =>
       getDocumentBySlug(collection, slug, [...fields, 'publishedAt', 'status'])
     )
-    .filter((post) => post.status === 'published')
-    // sort posts by date in descending order
-    .sort((post1, post2) => (post1.publishedAt > post2.publishedAt ? -1 : 1))
-  return posts
+    .filter((document) => document.status === 'published')
+    // sort documents by date in descending order
+    .sort((document1, document2) =>
+      document1.publishedAt > document2.publishedAt ? -1 : 1
+    )
+  return documents
 }
 
 export const getDocumentPaths = (collection: string) => {

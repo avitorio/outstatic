@@ -9,10 +9,10 @@ import showdown from 'showdown'
 import {
   AdminLayout,
   MDEditor,
-  PostSettings,
-  PostTitleInput
+  DocumentSettings,
+  DocumentTitleInput
 } from '../../components'
-import { OutstaticContext, PostContext } from '../../context'
+import { OutstaticContext, DocumentContext } from '../../context'
 import { useCreateCommitMutation, usePostQuery } from '../../graphql/generated'
 import { Document, FileType } from '../../types'
 import { useOstSession } from '../../utils/auth/hooks'
@@ -24,7 +24,7 @@ import { replaceImageSrcRoot } from '../../utils/replaceImageSrc'
 import useNavigationLock from '../../utils/useNavigationLock'
 import useOid from '../../utils/useOid'
 import useTipTap from '../../utils/useTipTap'
-import { editPostSchema } from '../../utils/yup'
+import { editDocumentSchema } from '../../utils/yup'
 
 type EditDocumentProps = {
   collection: string
@@ -42,10 +42,12 @@ export default function EditDocument({ collection }: EditDocumentProps) {
   const [createCommit] = useCreateCommitMutation()
   const fetchOid = useOid()
   const [showDelete, setShowDelete] = useState(false)
-  const methods = useForm<Document>({ resolver: yupResolver(editPostSchema) })
+  const methods = useForm<Document>({
+    resolver: yupResolver(editDocumentSchema)
+  })
   const { editor } = useTipTap({ ...methods })
 
-  const editPost = (property: string, value: any) => {
+  const editDocument = (property: string, value: any) => {
     const formValues = methods.getValues()
     const newValue = deepReplace(formValues, property, value)
     methods.reset(newValue)
@@ -66,11 +68,11 @@ export default function EditDocument({ collection }: EditDocumentProps) {
   const onSubmit = async (data: Document) => {
     setLoading(true)
     try {
-      const post = methods.getValues()
+      const document = methods.getValues()
       const content = mergeMdMeta({ ...data })
       const oid = await fetchOid()
       const owner = repoOwner || session?.user?.login || ''
-      const newSlug = post.slug
+      const newSlug = document.slug
 
       // If the slug has changed, commit should delete old file
       const oldSlug = slug !== newSlug && slug !== 'new' ? slug : undefined
@@ -134,7 +136,7 @@ export default function EditDocument({ collection }: EditDocumentProps) {
       const parsedContent = parseContent()
 
       const newDate = publishedAt ? new Date(publishedAt) : getLocalDate()
-      const post = {
+      const document = {
         title,
         publishedAt: newDate,
         content: parsedContent,
@@ -147,7 +149,7 @@ export default function EditDocument({ collection }: EditDocumentProps) {
         description,
         coverImage
       }
-      methods.reset(post)
+      methods.reset(document)
       editor.commands.setContent(parsedContent)
       editor.commands.focus('start')
       setShowDelete(slug !== 'new')
@@ -191,11 +193,11 @@ export default function EditDocument({ collection }: EditDocumentProps) {
           rel="stylesheet"
         />
       </Head>
-      <PostContext.Provider
+      <DocumentContext.Provider
         value={{
           editor,
-          post: methods.getValues(),
-          editPost,
+          document: methods.getValues(),
+          editDocument,
           files,
           setFiles,
           hasChanges,
@@ -206,7 +208,7 @@ export default function EditDocument({ collection }: EditDocumentProps) {
           <AdminLayout
             title={methods.getValues('title')}
             settings={
-              <PostSettings
+              <DocumentSettings
                 loading={loading}
                 saveFunc={methods.handleSubmit(onSubmit)}
                 showDelete={showDelete}
@@ -214,7 +216,7 @@ export default function EditDocument({ collection }: EditDocumentProps) {
             }
           >
             <form className="m-auto max-w-[700px] space-y-4">
-              <PostTitleInput
+              <DocumentTitleInput
                 id="title"
                 className="w-full resize-none outline-none bg-white text-5xl scrollbar-hide min-h-[55px] overflow-hidden"
                 placeholder={`Your ${singular(collection)} title`}
@@ -225,7 +227,7 @@ export default function EditDocument({ collection }: EditDocumentProps) {
             </form>
           </AdminLayout>
         </FormProvider>
-      </PostContext.Provider>
+      </DocumentContext.Provider>
     </>
   )
 }

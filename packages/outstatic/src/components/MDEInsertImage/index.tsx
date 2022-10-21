@@ -1,6 +1,6 @@
 import { Editor } from '@tiptap/react'
 import { ChangeEvent, useCallback, useContext, useState } from 'react'
-import { PostContext } from '../../context'
+import { DocumentContext } from '../../context'
 import { FileType } from '../../types'
 import MDEMenuButton from '../MDEMenuButton'
 
@@ -18,7 +18,7 @@ const isValidUrl = (urlString: string) => {
 }
 
 const MDEInsertImage = ({ editor, setImageMenu }: MDEInsertImageProps) => {
-  const { setFiles } = useContext(PostContext)
+  const { setFiles } = useContext(DocumentContext)
   const [showLink, setShowLink] = useState(false)
   const [imageUrl, setImageUrl] = useState('')
   const [errors, setErrors] = useState({ imageUrl: '', uploadImage: '' })

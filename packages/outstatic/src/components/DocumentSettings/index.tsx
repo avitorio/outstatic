@@ -2,30 +2,31 @@ import { useRouter } from 'next/router'
 import { useContext } from 'react'
 import { RegisterOptions, useFormContext } from 'react-hook-form'
 import { convert } from 'url-slug'
-import { PostContext } from '../../context'
+import { DocumentContext } from '../../context'
 import Accordion from '../Accordion'
 import DateTimePicker from '../DateTimePicker'
-import DeletePostButton from '../DeletePostButton'
+import DeleteDocumentButton from '../DeleteDocumentButton'
 import Input from '../Input'
 import TextArea from '../TextArea'
-import PostSettingsImageSelection from '../PostSettingsImageSelection'
+import DocumentSettingsImageSelection from '../DocumentSettingsImageSelection'
 
-type PostSettingsProps = {
+type DocumentSettingsProps = {
   saveFunc: () => void
   loading: boolean
   validation?: RegisterOptions
   showDelete: boolean
 }
 
-const PostSettings = ({
+const DocumentSettings = ({
   saveFunc,
   loading,
   validation,
   showDelete
-}: PostSettingsProps) => {
+}: DocumentSettingsProps) => {
   const { register } = useFormContext()
   const router = useRouter()
-  const { post, editPost, hasChanges, collection } = useContext(PostContext)
+  const { document, editDocument, hasChanges, collection } =
+    useContext(DocumentContext)
 
   return (
     <aside className="relative w-full border-b border-gray-300 bg-white md:w-64 md:flex-none md:flex-col md:flex-wrap md:items-start md:justify-start md:border-b-0 md:border-l md:py-6 max-h-[calc(100vh-53px)]">
@@ -33,8 +34,8 @@ const PostSettings = ({
         <DateTimePicker
           id="publishedAt"
           label="Date"
-          date={post.publishedAt}
-          setDate={(publishedAt) => editPost('publishedAt', publishedAt)}
+          date={document.publishedAt}
+          setDate={(publishedAt) => editDocument('publishedAt', publishedAt)}
         />
       </div>
       <div className="relative hidden w-full items-center justify-between md:mb-4 md:flex px-4">
@@ -48,7 +49,7 @@ const PostSettings = ({
           {...register('status', validation)}
           name="status"
           id="status"
-          defaultValue={post.status}
+          defaultValue={document.status}
           className="block cursor-pointer appearance-none rounded-lg border border-gray-300 bg-gray-50 p-2 text-sm text-gray-900 outline-none focus:border-blue-500 focus:ring-blue-500"
         >
           <option value="draft">Draft</option>
@@ -61,9 +62,9 @@ const PostSettings = ({
         }`}
       >
         {showDelete && (
-          <DeletePostButton
+          <DeleteDocumentButton
             disabled={loading}
-            slug={post.slug}
+            slug={document.slug}
             onComplete={() => {
               router.push(`/outstatic/${collection}`)
             }}
@@ -113,11 +114,11 @@ const PostSettings = ({
             label="Name"
             name="author.name"
             id="author.name"
-            defaultValue={post.author?.name}
+            defaultValue={document.author?.name}
             inputSize="small"
             wrapperClass="mb-4"
           />
-          <PostSettingsImageSelection
+          <DocumentSettingsImageSelection
             label="Add an avatar"
             name="author.picture"
             description="Author Avatar"
@@ -128,12 +129,12 @@ const PostSettings = ({
             label="Write a slug (optional)"
             name="slug"
             id="slug"
-            defaultValue={post.slug}
+            defaultValue={document.slug}
             inputSize="small"
             validation={{
               onChange: (e) => {
                 const lastChar = e.target.value.slice(-1)
-                editPost(
+                editDocument(
                   'slug',
                   lastChar === ' ' || lastChar === '-'
                     ? e.target.value
@@ -155,7 +156,7 @@ const PostSettings = ({
         </Accordion>
 
         <Accordion title="Cover Image">
-          <PostSettingsImageSelection
+          <DocumentSettingsImageSelection
             name="coverImage"
             description="Cover Image"
           />
@@ -166,4 +167,4 @@ const PostSettings = ({
   )
 }
 
-export default PostSettings
+export default DocumentSettings
