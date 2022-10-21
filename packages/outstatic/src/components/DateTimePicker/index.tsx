@@ -99,7 +99,6 @@ const DateTimePicker = ({ date, setDate, id, label }: DateTimePickerProps) => {
                   </option>
                 ))}
               </select>
-
               <select
                 className="react-datepicker__current-month appearance-none cursor-pointer hover:text-blue-500"
                 value={months[getMonth(date)]}
@@ -141,6 +140,8 @@ const DateTimePicker = ({ date, setDate, id, label }: DateTimePickerProps) => {
           customInput={createElement(forwardRef(DatePickerButton))}
           showTimeInput
           timeInputLabel="Time:"
+          withPortal
+          portalId="__next"
         />
       </div>
     </>
