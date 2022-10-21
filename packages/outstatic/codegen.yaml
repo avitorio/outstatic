@@ -1,0 +1,10 @@
+schema: https://docs.github.com/public/schema.docs.graphql
+documents: './src/graphql/**/*.graphql'
+generates:
+  ./src/graphql/generated/index.ts:
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-react-apollo
+    config:
+      withHooks: true

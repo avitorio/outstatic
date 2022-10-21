@@ -5,7 +5,7 @@ import { singular } from 'pluralize'
 import { useContext } from 'react'
 import { AdminLayout, DocumentsTable } from '../components'
 import { OutstaticContext } from '../context'
-import { usePostsQuery } from '../graphql/generated'
+import { useDocumentsQuery } from '../graphql/generated'
 import { Document } from '../types'
 import { ostSignOut } from '../utils/auth/hooks'
 
@@ -18,7 +18,7 @@ type ListProps = {
 export default function List({ collection }: ListProps) {
   const { repoOwner, repoSlug, contentPath, monorepoPath, session } =
     useContext(OutstaticContext)
-  const { data, error, loading } = usePostsQuery({
+  const { data, error, loading } = useDocumentsQuery({
     variables: {
       owner: repoOwner || session?.user?.login || '',
       name: repoSlug || '',

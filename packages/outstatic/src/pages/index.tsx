@@ -108,7 +108,7 @@ export const OstSSP: GetServerSideProps = async ({ req }) => {
 
   if (apolloClient) {
     try {
-      const { data: postQueryData } = await apolloClient.query({
+      const { data: documentQueryData } = await apolloClient.query({
         query: CollectionsDocument,
         variables: {
           name: process.env.OST_REPO_SLUG || process.env.VERCEL_GIT_REPO_SLUG,
@@ -121,10 +121,10 @@ export const OstSSP: GetServerSideProps = async ({ req }) => {
         }
       })
 
-      const postQueryObject = postQueryData?.repository?.object
+      const documentQueryObject = documentQueryData?.repository?.object
 
-      if (postQueryObject?.__typename === 'Tree') {
-        collections = postQueryObject?.entries?.map(
+      if (documentQueryObject?.__typename === 'Tree') {
+        collections = documentQueryObject?.entries?.map(
           (entry: { name: any }) => entry.name
         ) as String[]
       }

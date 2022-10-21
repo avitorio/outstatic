@@ -13,7 +13,10 @@ import {
   DocumentTitleInput
 } from '../../components'
 import { OutstaticContext, DocumentContext } from '../../context'
-import { useCreateCommitMutation, usePostQuery } from '../../graphql/generated'
+import {
+  useCreateCommitMutation,
+  useDocumentQuery
+} from '../../graphql/generated'
 import { Document, FileType } from '../../types'
 import { useOstSession } from '../../utils/auth/hooks'
 import { createCommitInput } from '../../utils/createCommitInput'
@@ -53,7 +56,7 @@ export default function EditDocument({ collection }: EditDocumentProps) {
     methods.reset(newValue)
   }
 
-  const { data: postQueryData } = usePostQuery({
+  const { data: documentQueryData } = useDocumentQuery({
     variables: {
       owner: repoOwner || session?.user?.login || '',
       name: repoSlug,
@@ -110,10 +113,10 @@ export default function EditDocument({ collection }: EditDocumentProps) {
   }, [slug])
 
   useEffect(() => {
-    const postQueryObject = postQueryData?.repository?.object
+    const documentQueryObject = documentQueryData?.repository?.object
 
-    if (postQueryObject?.__typename === 'Blob') {
-      let mdContent = postQueryObject.text as string
+    if (documentQueryObject?.__typename === 'Blob') {
+      let mdContent = documentQueryObject.text as string
       const {
         data: { title, publishedAt, status, description, coverImage, author },
         content
@@ -173,7 +176,7 @@ export default function EditDocument({ collection }: EditDocumentProps) {
     const subscription = methods.watch(() => setHasChanges(true))
 
     return () => subscription.unsubscribe()
-  }, [postQueryData, methods, slug, editor, session])
+  }, [documentQueryData, methods, slug, editor, session])
 
   // Ask for confirmation before leaving page if changes were made.
   useNavigationLock(hasChanges)
