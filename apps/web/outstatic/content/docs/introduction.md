@@ -16,14 +16,14 @@ The concept is simple: write content, click save, and see the changes on your we
 
 Requirements:
 
-- a [Github](https://github.com) account
+- a [GitHub](https://github.com) account
 - a [Vercel](https://vercel.com/signup) account
 
 You can get started by visiting our [Getting started](/docs/getting-started) section. If you want to learn a bit more about Outstatic, keep reading.
 
 ## How does Outstatic work?
 
-We provide you with a user interface to create and edit website content. There is no database or server to set up: **all the data is added to your Github repository**.
+We provide you with a user interface to create and edit website content. There is no database or server to set up: **all the data is added to your GitHub repository**.
 
 To see the changes on your website, you'll need to wait until Vercel finishes deploying it. In the case that you are developing your site locally, you'll need to pull the changes to see them on your dev environment.
 
@@ -35,7 +35,7 @@ Collections are used to organise and define the types of content on your website
 
 Collections form the structure of your website, so you probably won't be creating them often. When you log in to your Outstatic dashboard for the first time, you'll be asked to create a **Collection**.
 
-Collections are organised as folders in your Github repository under the following path:
+Collections are organised as folders in your GitHub repository under the following path:
 
 `/outstatic/content/{collection}`
 
@@ -57,7 +57,7 @@ Documents contains some data by default:
 
 - **Status**: your Document can be in either `published` or a `draft` status. Published Documents are visible on your website.
 
-- **Author**: who created the Document. This field is automatically populated with your Github name and avatar, though it can be edited.
+- **Author**: who created the Document. This field is automatically populated with your GitHub name and avatar, though it can be edited.
 
 - **URL Slug** (optional): this is automatically created based on the Document title, but it can also be edited.
 
