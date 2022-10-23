@@ -48,7 +48,7 @@ export default function Home() {
           >
             <a
               target="_blank"
-              className="text-white bg-gray-800 hover:bg-gray-900 border focus:ring-4 focus:ring-gray-300 focus:outline-none py-2 px-3 text-xs font-medium text-center rounded-lg"
+              className="text-white bg-gray-800 hover:bg-gray-900 border focus:ring-2 focus:ring-gray-300 focus:outline-none py-2 px-3 text-xs font-medium text-center rounded-lg"
             >
               <p>Stay up-to-date!</p>
             </a>
