@@ -22,13 +22,13 @@ We provide you with a user interface to create and edit website content. There i
 
 To see the changes on your website, you'll need to wait until Vercel finishes deploying it. In the case that you are developing your site locally, you'll need to pull the changes to see them on your dev environment.
 
-Your site's content is organised into two parts: **collections** and **documents**.
+Your site's content is organised into two parts: **Collections** and **Documents**.
 
 ### What are Collections?
 
-Collections are used to organise and define the types of content on your website, think of it as categories of content. For example, in the case of a blog, you'll create a **Posts** collection. This collection will hold all the posts, each post being a post document.
+Collections are used to organise and define the types of content on your website. Think of them as categories. For example, in the case of a blog, you might create a **Posts** collection to hold your posts. Each post in the collection will be a post document.
 
-You probably won't be creating collections all the time, they are basically what form the structure of your website. When you log in to your Outstatic dashboard for the first time you'll be asked to create a **collection**.
+Collections form the structure of your website, so you probably won't be creating them often. When you log in to your Outstatic dashboard for the first time, you'll be asked to create a **Collection**.
 
 Collections are organised as folders in your Github repository under the following path:
 
@@ -36,7 +36,7 @@ Collections are organised as folders in your Github repository under the followi
 
 ### What's a Document?
 
-A document is what you will be creating and editing more frequently. In the case of our example above, a document would be a blog post.
+A Document is what you will be creating and editing more frequently. In the case of our example above, a Document would be a blog post.
 
 Documents are saved at: `/outstatic/content/{collection}/{document}`
 
@@ -44,20 +44,20 @@ Imagine we create a blog post titled: *How to raise a dragon* \- the document wo
 
 Documents contains some data by default:
 
-- **Title**: the title of the document.
+- **Title**: the title of the Document.
 
 - **Content**: comprised of text and images, the content is edited via a simple editor interface.
 
-- **Date**: the date of the document, this can be edited and will be available on the front end via the `publishedAt` variable.
+- **Date**: the date of the Document, this can be edited and will be available on the front end via the `publishedAt` variable.
 
-- **Status**: your document can be either `published` or a `draft`. Published documents are visible on the front end.
+- **Status**: your Document can be in either `published` or a `draft` status. Published Documents are visible on your website.
 
-- **Author**: the author of the document. This field can be edited but it's automatically populated with your Github's profile picture and name.
+- **Author**: who created the Document. This field is automatically populated with your Github name and avatar, though it can be edited.
 
-- **URL Slug** (optional): the slug is automatically created based on the title of the document, but it can also be edited to whatever you want.
+- **URL Slug** (optional): this is automatically created based on the Document title, but it can also be edited.
 
-- **Description** (optional): a short description of the document.
+- **Description** (optional): a short description of the Document's contents.
 
-- **Cover Image** (optional): an image to be used as a cover, open graph image, etc…
+- **Cover Image** (optional): an image to be used as a cover, or Open Graph image.
 
 You'll be using the Content Editor to edit Documents. To learn more about it, please read: [Content Editor](/docs/the-content-editor).
