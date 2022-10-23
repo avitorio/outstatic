@@ -7,7 +7,7 @@ export default function Login() {
       <Head>
         <title>Login to Outstatic</title>
       </Head>
-      <div className="absolute bottom-10 w-full left-0 overflow-hidden z-0 md:-top-10">
+      <div className="absolute w-full left-0 overflow-hidden z-0 md:-top-10 bg-white h-screen">
         <svg
           width="100%"
           height="100%"
