@@ -41,6 +41,18 @@ export default function Home() {
           alt="Outstatic Logo"
         />
         <div className="gap-2 flex items-center">
+          <Link
+            href="https://github.com/avitorio/outstatic#stay-up-to-date"
+            aria-label="Github"
+            rel="noreferrer"
+          >
+            <a
+              target="_blank"
+              className="text-white bg-gray-800 hover:bg-gray-900 border focus:ring-4 focus:ring-gray-300 focus:outline-none py-2 px-3 text-xs font-medium text-center rounded-lg"
+            >
+              <p>Stay up-to-date!</p>
+            </a>
+          </Link>
           <a
             href="https://github.com/avitorio/outstatic"
             target="_blank"
