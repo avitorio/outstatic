@@ -23,6 +23,7 @@ type OutstaticProps = {
     client: ApolloClient<any>
     repoOwner: string
     repoSlug: string
+    repoBranch: string
     contentPath: string
     monorepoPath: string
     session: Session | null
@@ -139,6 +140,7 @@ export const OstSSP: GetServerSideProps = async ({ req }) => {
       providerData: {
         repoOwner: process.env.OST_REPO_OWNER || session?.user?.login || '',
         repoSlug: process.env.OST_REPO_SLUG || process.env.VERCEL_GIT_REPO_SLUG,
+        repoBranch: process.env.OST_REPO_BRANCH || 'main',
         contentPath: process.env.OST_CONTENT_PATH || 'outstatic/content',
         monorepoPath: process.env.OST_MONOREPO_PATH || '',
         session: session || null,

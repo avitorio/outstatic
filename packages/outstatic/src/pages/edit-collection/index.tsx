@@ -20,6 +20,7 @@ export default function EditCollection() {
     monorepoPath,
     session,
     repoSlug,
+    repoBranch,
     repoOwner,
     addPage
   } = useContext(OutstaticContext)
@@ -53,6 +54,7 @@ export default function EditCollection() {
         owner,
         oid,
         repoSlug,
+        repoBranch,
         contentPath,
         monorepoPath,
         collection

@@ -5,6 +5,7 @@ type collectionCommitInputType = {
   oid: string
   remove?: boolean
   repoSlug: string
+  repoBranch: string
   contentPath: string
   monorepoPath: string
   collection: string
@@ -15,6 +16,7 @@ export const collectionCommitInput = ({
   oid,
   remove = false,
   repoSlug,
+  repoBranch,
   contentPath,
   monorepoPath,
   collection
@@ -48,7 +50,7 @@ export const collectionCommitInput = ({
     input: {
       branch: {
         repositoryNameWithOwner: `${owner}/${repoSlug}`,
-        branchName: 'main'
+        branchName: repoBranch
       },
       message: {
         headline

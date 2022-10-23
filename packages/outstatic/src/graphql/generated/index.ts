@@ -27109,6 +27109,7 @@ export type DocumentsQuery = { __typename?: 'Query', repository?: { __typename?:
 export type OidQueryVariables = Exact<{
   owner: Scalars['String'];
   name: Scalars['String'];
+  branch: Scalars['String'];
 }>;
 
 
@@ -27286,10 +27287,10 @@ export type DocumentsQueryHookResult = ReturnType<typeof useDocumentsQuery>;
 export type DocumentsLazyQueryHookResult = ReturnType<typeof useDocumentsLazyQuery>;
 export type DocumentsQueryResult = Apollo.QueryResult<DocumentsQuery, DocumentsQueryVariables>;
 export const OidDocument = gql`
-    query Oid($owner: String!, $name: String!) {
+    query Oid($owner: String!, $name: String!, $branch: String!) {
   repository(owner: $owner, name: $name) {
     id
-    ref(qualifiedName: "main") {
+    ref(qualifiedName: $branch) {
       target {
         ... on Commit {
           history(first: 1) {
@@ -27318,6 +27319,7 @@ export const OidDocument = gql`
  *   variables: {
  *      owner: // value for 'owner'
  *      name: // value for 'name'
+ *      branch: // value for 'branch'
  *   },
  * });
  */

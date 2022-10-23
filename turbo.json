@@ -29,6 +29,7 @@
       "dependsOn": [
         "$VERCEL_GIT_REPO_SLUG",
         "$OST_REPO_SLUG",
+        "$OST_REPO_BRANCH",
         "$OST_CONTENT_PATH",
         "$OST_MONOREPO_PATH",
         "$OST_REPO_OWNER"

@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import { getLoginSession } from '../../../utils/auth/auth'
 
 const REPO_SLUG = process.env.OST_REPO_SLUG || process.env.VERCEL_GIT_REPO_SLUG
+const REPO_BRANCH = process.env.OST_REPO_BRANCH || 'main'
 const MONOREPO_PATH = process.env.OST_MONOREPO_PATH
 
 export default async function handler(
@@ -14,7 +15,7 @@ export default async function handler(
     const response = await fetch(
       `https://raw.githubusercontent.com/${
         session?.user?.login
-      }/${REPO_SLUG}/main/${
+      }/${REPO_SLUG}/${REPO_BRANCH}/${
         MONOREPO_PATH ? MONOREPO_PATH + '/' : ''
       }public/images/${req.query?.ost?.[1]}`,
       {

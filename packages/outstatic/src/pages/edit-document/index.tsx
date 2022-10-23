@@ -36,7 +36,7 @@ type EditDocumentProps = {
 export default function EditDocument({ collection }: EditDocumentProps) {
   const router = useRouter()
   const [slug, setSlug] = useState(router.query?.ost?.[1] as string)
-  const { repoOwner, repoSlug, contentPath, monorepoPath } =
+  const { repoOwner, repoSlug, repoBranch, contentPath, monorepoPath } =
     useContext(OutstaticContext)
   const { session } = useOstSession()
   const [loading, setLoading] = useState(false)
@@ -88,6 +88,7 @@ export default function EditDocument({ collection }: EditDocumentProps) {
         oid,
         files,
         repoSlug,
+        repoBranch,
         contentPath,
         monorepoPath,
         collection
