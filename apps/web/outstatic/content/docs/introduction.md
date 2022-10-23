@@ -53,16 +53,16 @@ Documents contains some data by default:
 
 - **Content**: comprised of text and images, the content is edited via a simple editor interface.
 
-- **Date**: the date of the Document, this can be edited and will be available on the front end via the `publishedAt` variable.
+- **Date**: the date the Document was published. This can be edited and will be available on the frontend as the `publishedAt` variable.
 
-- **Status**: your Document can be in either `published` or a `draft` status. Published Documents are visible on your website.
+- **Status**: Documents can be in either `published` or `draft` status. Published Documents are visible on your website.
 
-- **Author**: who created the Document. This field is automatically populated with your GitHub name and avatar, though it can be edited.
+- **Author**: who created the Document. This field is automatically populated with your GitHub name and avatar, but can be edited.
 
-- **URL Slug** (optional): this is automatically created based on the Document title, but it can also be edited.
+- **URL Slug** (optional): this is created automatically based on the Document title, but can be edited.
 
 - **Description** (optional): a short description of the Document's contents.
 
-- **Cover Image** (optional): an image to be used as a cover, or [Open Graph](https://ogp.me) image.
+- **Cover Image** (optional): an image to be used as a cover or [Open Graph](https://ogp.me) image.
 
-You'll be using the Content Editor to edit Documents. To learn more about it, please read: [Content Editor](/docs/the-content-editor).
+Next: the [Content Editor](/docs/the-content-editor), which is used to edit Documents.
