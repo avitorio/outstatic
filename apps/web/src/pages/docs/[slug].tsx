@@ -53,7 +53,6 @@ export default function Post({ doc, menu }: Props) {
                   <time dateTime={doc.publishedAt}>
                     {formatDate(doc.publishedAt)}
                   </time>
-                  .
                 </div>
                 <hr className="border-neutral-200 mt-10 mb-10" />
                 <div className="prose prose-base outstatic-content docs">
