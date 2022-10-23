@@ -58,6 +58,6 @@ Documents contains some data by default:
 
 - **Description** (optional): a short description of the Document's contents.
 
-- **Cover Image** (optional): an image to be used as a cover, or Open Graph image.
+- **Cover Image** (optional): an image to be used as a cover, or [Open Graph](https://ogp.me) image.
 
 You'll be using the Content Editor to edit Documents. To learn more about it, please read: [Content Editor](/docs/the-content-editor).
