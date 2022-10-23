@@ -87,7 +87,7 @@ const DateTimePicker = ({ date, setDate, id, label }: DateTimePickerProps) => {
             prevMonthButtonDisabled,
             nextMonthButtonDisabled
           }) => (
-            <div className="react-datepicker__header ">
+            <div className="react-datepicker__header">
               <select
                 className="react-datepicker__current-month appearance-none cursor-pointer hover:text-blue-500"
                 value={getYear(date)}

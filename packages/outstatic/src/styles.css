@@ -19,7 +19,7 @@
 }
 
 .react-datepicker__portal {
-  @apply absolute top-[115px] right-[16px] z-10 w-72 transform-none rounded border-2 border-gray-200 bg-white px-3 py-2 text-sm shadow;
+  @apply absolute top-[115px] right-6 z-10 w-72 transform-none rounded border-2 border-gray-200 bg-white px-3 py-2 text-sm shadow;
 }
 
 .react-datepicker__month-container {
