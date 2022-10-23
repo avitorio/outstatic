@@ -4,12 +4,13 @@ import { useOidLazyQuery } from '../graphql/generated'
 import { useOstSession } from './auth/hooks'
 
 const useOid = () => {
-  const { repoSlug, repoOwner } = useContext(OutstaticContext)
+  const { repoSlug, repoBranch, repoOwner } = useContext(OutstaticContext)
   const { session } = useOstSession()
   const [oidQuery] = useOidLazyQuery({
     variables: {
       owner: repoOwner || session?.user?.login || '',
-      name: repoSlug
+      name: repoSlug,
+      branch: repoBranch
     },
     fetchPolicy: 'no-cache'
   })

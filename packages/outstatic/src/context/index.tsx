@@ -5,6 +5,7 @@ type OutstaticProviderProps = {
   children?: React.ReactNode
   repoOwner: string
   repoSlug: string
+  repoBranch: string
   contentPath: string
   monorepoPath: string
   session: Session | null
@@ -18,6 +19,7 @@ type OutstaticProviderProps = {
 export const OutstaticContext = createContext({
   repoOwner: '',
   repoSlug: '',
+  repoBranch: '',
   contentPath: '',
   monorepoPath: '',
   session: null
@@ -27,6 +29,7 @@ export const OutstaticProvider = ({
   children,
   repoOwner,
   repoSlug,
+  repoBranch,
   contentPath,
   monorepoPath,
   session,
@@ -40,6 +43,7 @@ export const OutstaticProvider = ({
       value={{
         repoOwner: repoOwner || '',
         repoSlug: repoSlug || '',
+        repoBranch: repoBranch || 'main',
         contentPath: contentPath || 'outstatic/content',
         monorepoPath: monorepoPath || '',
         session,

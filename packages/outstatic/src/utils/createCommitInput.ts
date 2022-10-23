@@ -9,6 +9,7 @@ type createCommitInputType = {
   oid: string
   files?: FileType[]
   repoSlug: string
+  repoBranch: string
   contentPath: string
   monorepoPath: string
   collection: string
@@ -22,6 +23,7 @@ export const createCommitInput = ({
   oid,
   files = [],
   repoSlug,
+  repoBranch,
   contentPath,
   monorepoPath,
   collection
@@ -85,7 +87,7 @@ export const createCommitInput = ({
     input: {
       branch: {
         repositoryNameWithOwner: `${owner}/${repoSlug}`,
-        branchName: 'main'
+        branchName: repoBranch
       },
       message: {
         headline

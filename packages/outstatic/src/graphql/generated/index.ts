@@ -8443,6 +8443,8 @@ export type IssueTemplate = {
   about?: Maybe<Scalars['String']>;
   /** The suggested issue body. */
   body?: Maybe<Scalars['String']>;
+  /** The template filename. */
+  filename: Scalars['String'];
   /** The template name. */
   name: Scalars['String'];
   /** The suggested issue title. */
@@ -15352,6 +15354,8 @@ export type ProjectV2 = Closable & Node & Updatable & {
   resourcePath: Scalars['URI'];
   /** The project's short description. */
   shortDescription?: Maybe<Scalars['String']>;
+  /** The teams the project is linked to. */
+  teams: TeamConnection;
   /** The project's name. */
   title: Scalars['String'];
   /** Identifies the date and time when the object was last updated. */
@@ -15400,6 +15404,16 @@ export type ProjectV2RepositoriesArgs = {
   first?: InputMaybe<Scalars['Int']>;
   last?: InputMaybe<Scalars['Int']>;
   orderBy?: InputMaybe<RepositoryOrder>;
+};
+
+
+/** New projects that manage issues, pull requests and drafts using tables and boards. */
+export type ProjectV2TeamsArgs = {
+  after?: InputMaybe<Scalars['String']>;
+  before?: InputMaybe<Scalars['String']>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<TeamOrder>;
 };
 
 
@@ -23298,6 +23312,10 @@ export type Team = MemberStatusable & Node & Subscribable & {
   parentTeam?: Maybe<Team>;
   /** The level of privacy the team has. */
   privacy: TeamPrivacy;
+  /** Finds and returns the project according to the provided project number. */
+  projectV2?: Maybe<ProjectV2>;
+  /** List of projects this team has collaborator access to. */
+  projectsV2: ProjectV2Connection;
   /** A list of repositories this team has access to. */
   repositories: TeamRepositoryConnection;
   /** The HTTP path for this team's repositories */
@@ -23406,6 +23424,22 @@ export type TeamMembersArgs = {
   orderBy?: InputMaybe<TeamMemberOrder>;
   query?: InputMaybe<Scalars['String']>;
   role?: InputMaybe<TeamMemberRole>;
+};
+
+
+/** A team of users in an organization. */
+export type TeamProjectV2Args = {
+  number: Scalars['Int'];
+};
+
+
+/** A team of users in an organization. */
+export type TeamProjectsV2Args = {
+  after?: InputMaybe<Scalars['String']>;
+  before?: InputMaybe<Scalars['String']>;
+  first?: InputMaybe<Scalars['Int']>;
+  last?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<ProjectV2Order>;
 };
 
 
@@ -27109,6 +27143,7 @@ export type DocumentsQuery = { __typename?: 'Query', repository?: { __typename?:
 export type OidQueryVariables = Exact<{
   owner: Scalars['String'];
   name: Scalars['String'];
+  branch: Scalars['String'];
 }>;
 
 
@@ -27286,10 +27321,10 @@ export type DocumentsQueryHookResult = ReturnType<typeof useDocumentsQuery>;
 export type DocumentsLazyQueryHookResult = ReturnType<typeof useDocumentsLazyQuery>;
 export type DocumentsQueryResult = Apollo.QueryResult<DocumentsQuery, DocumentsQueryVariables>;
 export const OidDocument = gql`
-    query Oid($owner: String!, $name: String!) {
+    query Oid($owner: String!, $name: String!, $branch: String!) {
   repository(owner: $owner, name: $name) {
     id
-    ref(qualifiedName: "main") {
+    ref(qualifiedName: $branch) {
       target {
         ... on Commit {
           history(first: 1) {
@@ -27318,6 +27353,7 @@ export const OidDocument = gql`
  *   variables: {
  *      owner: // value for 'owner'
  *      name: // value for 'name'
+ *      branch: // value for 'branch'
  *   },
  * });
  */
