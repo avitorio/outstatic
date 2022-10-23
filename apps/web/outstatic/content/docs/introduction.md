@@ -51,7 +51,7 @@ Documents contains some data by default:
 
 - **Title**: the title of the Document.
 
-- **Content**: comprised of text and images, the content is edited via a simple editor interface.
+- **Content**: comprising text and images, Content is edited via a simple editor interface.
 
 - **Date**: the date the Document was published. This can be edited and will be available on the frontend as the `publishedAt` variable.
 
