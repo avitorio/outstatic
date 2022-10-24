@@ -5,8 +5,8 @@ import '@/styles/dracula.css'
 import type { AppProps } from 'next/app'
 import { useEffect } from 'react'
 import { useRouter } from 'next/router'
-import * as gtag from '../lib/analytics'
-import Analytics from '../components/Analytics'
+import * as gtag from '@/lib/analytics'
+import Analytics from '@/components/Analytics'
 
 function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter()

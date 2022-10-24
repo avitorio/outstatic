@@ -3,12 +3,12 @@ import ErrorPage from 'next/error'
 import Head from 'next/head'
 import { useMemo } from 'react'
 import { getMDXComponent } from 'mdx-bundler/client'
-import { Document } from '../../interfaces/document'
+import { Document } from '@/interfaces/document'
 import { getDocumentPaths, getDocumentBySlug } from 'outstatic/server'
-import markdownToHtml from '../../lib/markdownToHtml'
-import formatDate from '../../lib/formatDate'
-import Header from '../../components/Header'
-import MDXComponents from '../../components/MDXComponents'
+import markdownToHtml from '@/lib/markdownToHtml'
+import formatDate from '@/lib/formatDate'
+import Header from '@/components/Header'
+import MDXComponents from '@/components/MDXComponents'
 
 type Props = {
   doc: Document

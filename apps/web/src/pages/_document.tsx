@@ -6,7 +6,7 @@ import Document, {
   Main,
   NextScript
 } from 'next/document'
-import HeadTags from '../components/HeadTags'
+import HeadTags from '@/components/HeadTags'
 
 class MyDocument extends Document {
   static async getInitialProps(
