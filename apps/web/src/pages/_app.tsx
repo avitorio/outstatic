@@ -1,6 +1,6 @@
-import '../styles/globals.css'
-import '../styles/prose.css'
-import '../styles/dracula.css'
+import '@/styles/globals.css'
+import '@/styles/prose.css'
+import '@/styles/dracula.css'
 
 import type { AppProps } from 'next/app'
 import { useEffect } from 'react'
