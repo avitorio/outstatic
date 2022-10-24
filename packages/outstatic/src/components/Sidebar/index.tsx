@@ -99,7 +99,7 @@ const Sidebar = ({ isOpen = false }: SidebarProps) => {
           <a
             href="https://github.com/avitorio/outstatic"
             target="_blank"
-            aria-label="Github"
+            aria-label="GitHub"
             rel="noreferrer"
             className="group"
           >
@@ -108,7 +108,7 @@ const Sidebar = ({ isOpen = false }: SidebarProps) => {
               width="20"
               height="20"
               fill="none"
-              aria-label="Github logo"
+              aria-label="GitHub logo"
             >
               <path
                 fillRule="evenodd"

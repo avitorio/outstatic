@@ -20,7 +20,7 @@ OST_TOKEN_SECRET=A_32CHAR_RANDOM_STRING_FOR_YOUR_TOKEN_SECRET
 OST_REPO_SLUG=THE_REPOSITORY_SLUG # If empty AND on Vercel, this will default to VERCEL_GIT_REPO_SLUG
 
 # OPTIONAL Environment variables
-OST_REPO_OWNER=THE_REPO_OWNER # If empty, Github username is used
+OST_REPO_OWNER=THE_REPO_OWNER # If empty, GitHub username is used
 
 OST_CONTENT_PATH=outstatic/content # Where content is saved, if empty it defaults to outstatic/content
 
@@ -29,5 +29,5 @@ OST_MONOREPO_PATH=apps/web # When using a monorepo you can specify the folder wi
 
 **Good to know**: To get your repository slug we first try fetching the `OST_REPO_SLUG` environment variable. If that is empty, we try `VERCEL_GIT_REPO_SLUG`, which is one of Vercel's default environment variables. If both are empty, you'll get a warning saying you need to add `OST_REPO_SLUG` to your environment variables.
 
-In case you need help on how to get your Github OAuth credentials, please read the [Getting started](/docs/getting-started) section.
+In case you need help on how to get your GitHub OAuth credentials, please read the [Getting started](/docs/getting-started) section.
 

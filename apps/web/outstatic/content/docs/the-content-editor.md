@@ -36,4 +36,4 @@ You can add images to your documents by clicking the image button on the menu.
 
 ![](/images/image-menu-U2ND.gif)
 
-Images are uploaded to your `/public/images` folder. Outstatic fetches the images directly from Github so they can be visualised instantly on the editor, even if your website hasn't finished deploying.
+Images are uploaded to your `/public/images` folder. Outstatic fetches the images directly from GitHub so they can be visualised instantly on the editor, even if your website hasn't finished deploying.
