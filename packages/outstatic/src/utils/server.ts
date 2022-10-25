@@ -1,12 +1,12 @@
 import fs from 'fs'
 import { join } from 'path'
 import matter from 'gray-matter'
-import { MD_MDX_REGEXP, readMdMdxFiles } from './readMdMdxFiles'
 
 const CONTENT_PATH = join(
   process.cwd(),
   process.env.OST_CONTENT_PATH || 'outstatic/content'
 )
+const MD_MDX_REGEXP = /\.mdx?$/i
 
 export function getDocumentSlugs(collection: string) {
   const collectionsPath = join(CONTENT_PATH, collection)
@@ -93,4 +93,12 @@ export const getDocumentPaths = (collection: string) => {
 export const getCollections = () => {
   const collections = fs.readdirSync(CONTENT_PATH)
   return collections
+}
+
+function readMdMdxFiles(path: string) {
+  const dirents = fs.readdirSync(path, { withFileTypes: true })
+  const mdMdxFiles = dirents
+    .filter((dirent) => dirent.isFile() && MD_MDX_REGEXP.test(dirent.name))
+    .map((dirent) => dirent.name)
+  return mdMdxFiles
 }
