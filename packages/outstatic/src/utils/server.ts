@@ -1,6 +1,7 @@
 import fs from 'fs'
 import { join } from 'path'
 import matter from 'gray-matter'
+import { MD_MDX_REGEXP, readMdMdxFiles } from './readMdMdxFiles'
 
 const CONTENT_PATH = join(
   process.cwd(),
@@ -9,7 +10,9 @@ const CONTENT_PATH = join(
 
 export function getDocumentSlugs(collection: string) {
   const collectionsPath = join(CONTENT_PATH, collection)
-  return fs.readdirSync(collectionsPath)
+  const mdMdxFiles = readMdMdxFiles(collectionsPath)
+  const slugs = mdMdxFiles.map((file) => file.replace(MD_MDX_REGEXP, ''))
+  return slugs
 }
 
 export function getDocumentBySlug(
@@ -17,7 +20,7 @@ export function getDocumentBySlug(
   slug: string,
   fields: string[] = []
 ) {
-  const realSlug = slug.replace(/\.mdx?$/, '')
+  const realSlug = slug.replace(MD_MDX_REGEXP, '')
   const collectionsPath = join(CONTENT_PATH, collection)
   const fullPath = join(collectionsPath, `${realSlug}.md`)
   const fileContents = fs.readFileSync(fullPath, 'utf8')
@@ -68,7 +71,7 @@ export const getDocumentPaths = (collection: string) => {
   const documentFilePaths = fs
     .readdirSync(CONTENT_PATH + '/' + collection)
     // Only include md(x) files
-    .filter((path) => /\.mdx?$/.test(path))
+    .filter((path) => MD_MDX_REGEXP.test(path))
 
   const publishedPaths = documentFilePaths.filter((path) => {
     const collectionsPath = join(CONTENT_PATH, collection)
@@ -80,7 +83,7 @@ export const getDocumentPaths = (collection: string) => {
 
   const paths = publishedPaths
     // Remove file extensions for page paths
-    .map((path) => path.replace(/\.mdx?$/, ''))
+    .map((path) => path.replace(MD_MDX_REGEXP, ''))
     // Map the path into the static paths object required by Next.js
     .map((slug: string) => ({ params: { slug } }))
 
