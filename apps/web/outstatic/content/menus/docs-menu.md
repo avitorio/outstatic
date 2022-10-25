@@ -28,6 +28,8 @@ publishedAt: '2022-09-22T14:18:37.951Z'
 
 - [Fetching data](/docs/fetching-data)
 
+- [Environment Variables](https://outstatic.com/docs/environment-variables)
+
 - [FAQs](/docs/faqs)
 
     - [Where is data stored?](/docs/faqs#where-is-the-data-stored)
