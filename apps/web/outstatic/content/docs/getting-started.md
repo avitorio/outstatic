@@ -147,10 +147,13 @@ If you also want to access your Outstatic dashboard from your live site you'll n
 
 Just repeat the steps for creating a Github OAuth app, but this time, replacing `http://localhost:3000/` on **Homepage URL** and **Authorization callback URL** with your actual website address.
 
-Don't forget to add the [Environment Variables](https://vercel.com/docs/concepts/projects/environment-variables) on your Vercel project:
+Don't forget to add the following environment variables to your Vercel project:
 
 ```bash
 OST_GITHUB_ID=YOUR_GITHUB_OAUTH_APP_ID
 OST_GITHUB_SECRET=YOUR_GITHUB_OAUTH_APP_SECRET
 OST_TOKEN_SECRET=A_RANDOM_TOKEN # random string min 32 chars
 ```
+
+To learn more about all the available environment variables, see the [Environment Variables ](https://outstatic.com/docs/environment-variables)section of the docs.
+
