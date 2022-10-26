@@ -60,7 +60,7 @@ export default function EditDocument({ collection }: EditDocumentProps) {
     variables: {
       owner: repoOwner || session?.user?.login || '',
       name: repoSlug,
-      filePath: `HEAD:${
+      filePath: `${repoBranch}:${
         monorepoPath ? monorepoPath + '/' : ''
       }${contentPath}/${collection}/${slug}.md`
     },

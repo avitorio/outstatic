@@ -113,7 +113,7 @@ export const OstSSP: GetServerSideProps = async ({ req }) => {
         query: CollectionsDocument,
         variables: {
           name: process.env.OST_REPO_SLUG || process.env.VERCEL_GIT_REPO_SLUG,
-          contentPath: `HEAD:${
+          contentPath: `${process.env.OST_REPO_BRANCH || 'main'}:${
             process.env.OST_MONOREPO_PATH
               ? process.env.OST_MONOREPO_PATH + '/'
               : ''
