@@ -7,7 +7,7 @@ author:
 slug: 'getting-started'
 description: ''
 coverImage: ''
-publishedAt: '2022-10-13T18:34:15.000Z'
+publishedAt: '2022-10-26T18:34:15.000Z'
 ---
 
 Here's how you can get started with Outstatic.
@@ -75,6 +75,8 @@ Example: `https://myblog.vercel.app/outstatic`
 We recommend you learn how [Outstatic manages content](/docs/introduction) and also how to [fetch content](/docs/fetching-data) from your front end.
 
 ## Adding Outstatic to a Next.js website
+
+**Next.js 13 notice**: At this moment we are only supporting Next.js 12. We are working hard to launch a version compatible with Next.js 13 soon!
 
 Before we start, you should know Outstatic saves content as markdown files to your GitHub repository. To understand how this works please read our [introduction](https://outstatic.com/docs/introduction) article.
 
@@ -159,3 +161,4 @@ OST_TOKEN_SECRET=A_RANDOM_TOKEN # random string min 32 chars
 ```
 
 To learn more about all the available environment variables, see the [Environment Variables ](https://outstatic.com/docs/environment-variables)section of the docs.
+
