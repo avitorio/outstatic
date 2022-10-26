@@ -126,7 +126,7 @@ export default function EditDocument({ collection }: EditDocumentProps) {
         const converter = new showdown.Converter({ noHeaderId: true })
         let newContent = converter.makeHtml(content)
 
-        // fetch images from Github in case deploy is not done yet
+        // fetch images from GitHub in case deploy is not done yet
         const regex = new RegExp(/(^\/images\/)/gi)
         newContent = replaceImageSrcRoot(
           newContent,

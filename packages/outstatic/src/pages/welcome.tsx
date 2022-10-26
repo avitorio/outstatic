@@ -86,7 +86,7 @@ export default function Welcome({ variables }: WelcomeProps) {
               Optional variable{' '}
               <span className="font-semibold">OST_REPO_OWNER</span> is not set.
               <br />
-              Defaulting to your Github user.
+              Defaulting to your GitHub user.
             </p>
           )}
           <p>You need to restart Next.js to apply the changes.</p>

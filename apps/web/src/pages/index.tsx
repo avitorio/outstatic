@@ -43,7 +43,7 @@ export default function Home() {
         <div className="gap-2 flex items-center">
           <Link
             href="https://github.com/avitorio/outstatic#stay-up-to-date"
-            aria-label="Github"
+            aria-label="GitHub"
             rel="noreferrer"
           >
             <a
@@ -56,7 +56,7 @@ export default function Home() {
           <a
             href="https://github.com/avitorio/outstatic"
             target="_blank"
-            aria-label="Github"
+            aria-label="GitHub"
             rel="noreferrer"
           >
             <svg
@@ -65,7 +65,7 @@ export default function Home() {
               height="28"
               fill="none"
             >
-              <title>Github</title>
+              <title>GitHub</title>
               <path
                 fillRule="evenodd"
                 clipRule="evenodd"

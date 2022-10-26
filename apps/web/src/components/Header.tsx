@@ -16,7 +16,7 @@ const Header = () => {
       <div className="gap-x-2 flex items-center">
         <Link
           href="https://github.com/avitorio/outstatic#stay-up-to-date"
-          aria-label="Github"
+          aria-label="GitHub"
           rel="noreferrer"
         >
           <a
@@ -28,7 +28,7 @@ const Header = () => {
         </Link>
         <Link
           href="https://github.com/avitorio/outstatic"
-          aria-label="Github"
+          aria-label="GitHub"
           rel="noreferrer"
         >
           <a target="_blank">
@@ -38,7 +38,7 @@ const Header = () => {
               height="28"
               fill="none"
               className="cursor-pointer group"
-              aria-label="Github"
+              aria-label="GitHub"
             >
               <path
                 fillRule="evenodd"
