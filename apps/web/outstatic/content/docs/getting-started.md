@@ -123,7 +123,9 @@ OST_GITHUB_ID=YOUR_GITHUB_OAUTH_APP_ID
 OST_GITHUB_SECRET=YOUR_GITHUB_OAUTH_APP_SECRET
 OST_TOKEN_SECRET=A_RANDOM_TOKEN # random string min 32 chars
 OST_REPO_SLUG=YOUR_GITHUB_REPOSITORY_SLUG
-OST_REPO_BRANCH=YOUR_GITHUB_REPOSITORY_BRANCH
+
+# OPTIONAL
+OST_REPO_BRANCH=YOUR_GITHUB_REPOSITORY_BRANCH # If empty this will default to main
 ```
 
 Now go back to your GitHub OAuth App settings page and update the following values:
@@ -157,4 +159,3 @@ OST_TOKEN_SECRET=A_RANDOM_TOKEN # random string min 32 chars
 ```
 
 To learn more about all the available environment variables, see the [Environment Variables ](https://outstatic.com/docs/environment-variables)section of the docs.
-
