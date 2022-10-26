@@ -16,14 +16,14 @@ type ListProps = {
 }
 
 export default function List({ collection }: ListProps) {
-  const { repoOwner, repoSlug, contentPath, monorepoPath, session } =
+  const { repoOwner, repoSlug, repoBranch, contentPath, monorepoPath, session } =
     useContext(OutstaticContext)
   const { data, error, loading } = useDocumentsQuery({
     variables: {
       owner: repoOwner || session?.user?.login || '',
       name: repoSlug || '',
       contentPath:
-        `HEAD:${
+        `${repoBranch}:${
           monorepoPath ? monorepoPath + '/' : ''
         }${contentPath}/${collection}` || ''
     },
