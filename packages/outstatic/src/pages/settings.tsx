@@ -3,7 +3,7 @@ import { AdminLayout } from '../components'
 import { OutstaticContext } from '../context'
 
 export default function Settings() {
-  const { repoSlug, contentPath } = useContext(OutstaticContext)
+  const { repoSlug, repoBranch, contentPath } = useContext(OutstaticContext)
   return (
     <AdminLayout title="Settings">
       <div className="mb-8 flex h-12 items-center">
@@ -18,6 +18,16 @@ export default function Settings() {
             <input
               className="cursor-not-allowed block p-2 w-full text-gray-900 bg-gray-50 rounded-lg border border-gray-300 sm:text-sm outline-none"
               value={repoSlug}
+              readOnly
+            />
+          </div>
+          <div className="mt-4">
+            <label className="block mb-2 text-sm font-medium text-gray-900">
+              Branch
+            </label>
+            <input
+              className="cursor-not-allowed block p-2 w-full text-gray-900 bg-gray-50 rounded-lg border border-gray-300 sm:text-sm outline-none"
+              value={repoBranch}
               readOnly
             />
           </div>
