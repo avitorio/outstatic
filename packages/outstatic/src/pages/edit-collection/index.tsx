@@ -94,6 +94,7 @@ export default function EditCollection() {
           <Input
             label="Collection Name"
             id="name"
+            name="name"
             inputSize="medium"
             className="w-full max-w-sm md:w-80"
             placeholder="Ex: Posts"
