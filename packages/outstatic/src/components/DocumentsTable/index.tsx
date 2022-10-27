@@ -40,13 +40,14 @@ const DocumentsTable = (props: DocumentsTableProps) => {
                 scope="row"
                 className="relative whitespace-nowrap px-6 py-4 text-base font-semibold text-gray-900 group"
               >
-                <Link href={`/outstatic/${props.collection}/${slug}`}>
-                  <a className="group-hover:text-blue-500">
-                    <div>
-                      {title}
-                      <div className="absolute top-0 bottom-0 left-0 right-40 cursor-pointer" />
-                    </div>
-                  </a>
+                <Link
+                  href={`/outstatic/${props.collection}/${slug}`}
+                  className="group-hover:text-blue-500"
+                >
+                  <div>
+                    {title}
+                    <div className="absolute top-0 bottom-0 left-0 right-40 cursor-pointer" />
+                  </div>
                 </Link>
               </th>
               <td className="px-6 py-4 text-base font-semibold capitalize text-gray-900">

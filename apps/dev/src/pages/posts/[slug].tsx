@@ -33,15 +33,12 @@ export default function Post({ post }: Props) {
                 <title>{`${post.title} | Next.js + Outstatic`}</title>
                 <meta property="og:image" content={post.coverImage} />
               </Head>
-              <div className="mb-2 md:mb-4 sm:mx-0">
+              <div className="relative mb-2 md:mb-4 sm:mx-0 w-full h-52 md:h-96">
                 <Image
                   alt={post.title}
                   src={post.coverImage}
-                  width={1200}
-                  height={(1200 * 2) / 5}
-                  layout="responsive"
-                  objectFit="cover"
-                  objectPosition={'center center'}
+                  fill
+                  className="object-cover object-center"
                 />
               </div>
               <h1 className="font-primary text-2xl font-bold md:text-4xl mb-2">

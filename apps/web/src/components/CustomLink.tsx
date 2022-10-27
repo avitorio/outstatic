@@ -22,10 +22,8 @@ export default function CustomLink({
 
   if (!isNewTab) {
     return (
-      <Link href={href}>
-        <a {...rest} className={className}>
-          {children}
-        </a>
+      <Link href={href} {...rest} className={className}>
+        {children}
       </Link>
     )
   }

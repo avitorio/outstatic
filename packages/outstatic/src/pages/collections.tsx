@@ -74,10 +74,11 @@ export default function Collections() {
               </p>
               <p>Create your first Collection by clicking the button below.</p>
 
-              <Link href="/outstatic/collections/new">
-                <a className="rounded-lg border px-5 py-2.5 text-sm font-medium focus:outline-none focus:ring-4 border-gray-600 bg-gray-800 text-white hover:border-gray-600 hover:bg-gray-700 focus:ring-gray-700 no-underline">
-                  New Collection
-                </a>
+              <Link
+                href="/outstatic/collections/new"
+                className="rounded-lg border px-5 py-2.5 text-sm font-medium focus:outline-none focus:ring-4 border-gray-600 bg-gray-800 text-white hover:border-gray-600 hover:bg-gray-700 focus:ring-gray-700 no-underline"
+              >
+                New Collection
               </Link>
               <p>
                 To learn more about how Collections work{' '}
@@ -97,10 +98,11 @@ export default function Collections() {
         <>
           <div className="mb-8 flex h-12 items-center">
             <h1 className="mr-12 text-2xl">Collections</h1>
-            <Link href="/outstatic/collections/new">
-              <a className="rounded-lg border px-5 py-2.5 text-sm font-medium focus:outline-none focus:ring-4 border-gray-600 bg-gray-800 text-white hover:border-gray-600 hover:bg-gray-700 focus:ring-gray-700">
-                New Collection
-              </a>
+            <Link
+              href="/outstatic/collections/new"
+              className="rounded-lg border px-5 py-2.5 text-sm font-medium focus:outline-none focus:ring-4 border-gray-600 bg-gray-800 text-white hover:border-gray-600 hover:bg-gray-700 focus:ring-gray-700"
+            >
+              New Collection
             </Link>
           </div>
           <div className="max-w-5xl w-full grid grid-cols-3 gap-6">
