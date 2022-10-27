@@ -23,7 +23,7 @@ export default function Collections() {
   const [createCommit] = useCreateCommitMutation()
   const fetchOid = useOid()
 
-  const deleteDocument = async (collection: string) => {
+  const deleteCollection = async (collection: string) => {
     try {
       const oid = await fetchOid()
       const owner = session?.user?.login || ''
@@ -162,7 +162,7 @@ export default function Collections() {
               className="flex rounded-lg bg-red-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-red-800 focus:outline-none"
               onClick={() => {
                 setDeleting(true)
-                deleteDocument(selectedCollection)
+                deleteCollection(selectedCollection)
               }}
             >
               {deleting ? (
