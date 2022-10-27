@@ -25,7 +25,7 @@ const DeleteDocumentButton = ({
   const [deleting, setDeleting] = useState(false)
   const { session } = useOstSession()
   const [createCommit] = useCreateCommitMutation()
-  const { repoOwner, repoSlug, contentPath, monorepoPath } =
+  const { repoOwner, repoSlug, repoBranch, contentPath, monorepoPath } =
     useContext(OutstaticContext)
   const fetchOid = useOid()
 
@@ -40,6 +40,7 @@ const DeleteDocumentButton = ({
         oldSlug: slug,
         oid,
         repoSlug,
+        repoBranch,
         contentPath,
         monorepoPath,
         collection

@@ -12,6 +12,7 @@ export default function Collections() {
     collections,
     session,
     repoSlug,
+    repoBranch,
     contentPath,
     monorepoPath,
     removePage
@@ -31,6 +32,7 @@ export default function Collections() {
         owner,
         oid,
         repoSlug,
+        repoBranch,
         remove: true,
         contentPath,
         monorepoPath,
