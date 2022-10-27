@@ -7,16 +7,22 @@ type Props = {
   collection: 'posts' | 'projects'
   title?: string
   items: Document[]
+  priority?: boolean
 }
 
-const ContentGrid = ({ title = 'More', items, collection }: Props) => {
+const ContentGrid = ({
+  title = 'More',
+  items,
+  collection,
+  priority = false
+}: Props) => {
   return (
     <section id={collection}>
       <h2 className="mb-8 text-5xl md:text-6xl font-bold tracking-tighter leading-tight">
         {title}
       </h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 sm:gap-x-6 lg:gap-x-8 gap-y-5 sm:gap-y-6 lg:gap-y-8 mb-8">
-        {items.map((item) => (
+        {items.map((item, id) => (
           <Link
             key={item.slug}
             as={`/${collection}/${item.slug}`}
@@ -27,9 +33,11 @@ const ContentGrid = ({ title = 'More', items, collection }: Props) => {
                 <Image
                   src={item.coverImage}
                   alt={`Cover Image for ${item.title}`}
-                  className="object-cover object-center w-full"
-                  width={347}
-                  height={192}
+                  className="object-cover object-center w-full h-auto"
+                  width={0}
+                  height={0}
+                  sizes="(min-width: 768px) 347px, 192px"
+                  priority={priority && id <= 2}
                 />
                 {collection === 'projects' && (
                   <h2 className="p-2 bg-opacity-80 bg-white text-center whitespace-nowrap font-bold text-3xl absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 shadow-lg rounded-lg">

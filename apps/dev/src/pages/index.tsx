@@ -26,7 +26,12 @@ export default function Index({ page, allPosts, allProjects }: Props) {
             />
           </section>
           {allPosts.length > 0 && (
-            <ContentGrid title="Posts" items={allPosts} collection="posts" />
+            <ContentGrid
+              title="Posts"
+              items={allPosts}
+              collection="posts"
+              priority
+            />
           )}
           {allProjects.length > 0 && (
             <ContentGrid
