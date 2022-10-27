@@ -5,6 +5,7 @@ import Sidebar from '.'
 const providerData = {
   repoOwner: 'anything',
   repoSlug: 'anything',
+  repoBranch: 'anything',
   contentPath: 'anything',
   monorepoPath: 'anything',
   session: null,
