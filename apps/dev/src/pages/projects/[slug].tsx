@@ -40,15 +40,12 @@ export default function Project({ project, moreProjects }: Props) {
                 <meta property="og:image" content={project.coverImage} />
               </Head>
               <div className="grid md:grid-cols-2 gap-8">
-                <div className="mb-2 md:mb-4 sm:mx-0">
+                <div className="relative mb-2 md:mb-4 sm:mx-0 h-64">
                   <Image
                     alt={project.title}
                     src={project.coverImage}
-                    width={540}
-                    height={540}
-                    layout="responsive"
-                    objectFit="cover"
-                    objectPosition={'center center'}
+                    fill
+                    className="object-cover object-center"
                   />
                 </div>
                 <div>

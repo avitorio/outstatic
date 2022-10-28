@@ -45,13 +45,10 @@ export default function Home() {
             href="https://github.com/avitorio/outstatic#stay-up-to-date"
             aria-label="GitHub"
             rel="noreferrer"
+            target="_blank"
+            className="text-white bg-gray-800 hover:bg-gray-900 border focus:ring-2 focus:ring-gray-300 focus:outline-none py-2 px-3 text-xs font-medium text-center rounded-lg"
           >
-            <a
-              target="_blank"
-              className="text-white bg-gray-800 hover:bg-gray-900 border focus:ring-2 focus:ring-gray-300 focus:outline-none py-2 px-3 text-xs font-medium text-center rounded-lg"
-            >
-              <p>Stay up-to-date!</p>
-            </a>
+            <p>Stay up-to-date!</p>
           </Link>
           <a
             href="https://github.com/avitorio/outstatic"
@@ -110,13 +107,13 @@ export default function Home() {
             </div>
             <div className="md:pt-8 opacity-0 animate-fade-in-up">
               <h1 className="text-6xl md:text-8xl text-slate-800">
-                <div className="block min-w-[270px] md:min-w-[420px]">
+                <div className="relative block max-w-[270px] md:max-w-[420px] md:mt-2 md:mb-6">
                   <Image
                     src="/images/outstatic-logo.svg"
                     width={420}
                     height={96}
                     alt="Outstatic"
-                    layout="responsive"
+                    className="w-full min-w-[270px] md:min-w-[420px]"
                   />
                 </div>
               </h1>
@@ -200,68 +197,73 @@ export default function Home() {
               </div>
             </div>
             <div>
-              <Link href="/docs/getting-started">
-                <a
-                  type="button"
-                  className="inline-flex items-center text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-2xl px-6 py-3.5 mr-2 mb-2 animate-nudge animation-delay-[2s] cursor-pointer"
+              <Link
+                href="/docs/getting-started"
+                type="button"
+                className="inline-flex items-center text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-2xl px-6 py-3.5 mr-2 mb-2 animate-nudge animation-delay-[2s] cursor-pointer"
+              >
+                Get started
+                <svg
+                  aria-hidden="true"
+                  className="ml-2 -mr-1 w-5 h-5"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                  xmlns="http://www.w3.org/2000/svg"
                 >
-                  Get started
-                  <svg
-                    aria-hidden="true"
-                    className="ml-2 -mr-1 w-5 h-5"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
-                      clipRule="evenodd"
-                    ></path>
-                  </svg>
-                </a>
+                  <path
+                    fillRule="evenodd"
+                    d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
+                    clipRule="evenodd"
+                  ></path>
+                </svg>
               </Link>
             </div>
           </div>
         </section>
         <section className="w-full mb-20 md:px-0">
           <div className="px-4 flex flex-col items-center mb-10">
-            <div className="block min-w-[320px] md:min-w-[700px]">
+            <div className="block max-w-[320px] md:max-w-[700px] mb-2 md:mb-4">
               <Image
                 src="/images/write-publish-live.svg"
                 width={700}
                 height={96}
-                layout="responsive"
                 alt="Write, Publish, It's live!"
+                className="w-full min-w-[320px] md:min-w-[700px] mt-8"
               />
             </div>
             <p className="mt-2 text-xl text-slate-800 mb-8">
               Get a complete dashboard to manage your Next.js static website.{' '}
               <br />
               Check out our demo below, or{' '}
-              <Link href="/docs/getting-started">
-                <a className="underline font-semibold">get&nbsp;started</a>
+              <Link
+                href="/docs/getting-started"
+                className="underline font-semibold"
+              >
+                get&nbsp;started
               </Link>
               .
             </p>
           </div>
           <div className="relative w-full flex flex-col items-center justify-center">
             <div className="w-full absolute pointer-events-none">
-              <Image
-                src="/images/line-bg-home.svg"
-                width="100%"
-                height="100%"
-                layout="responsive"
-                alt="Line background"
-              />
+              <div className="relative w-full h-screen">
+                <Image
+                  src="/images/line-bg-home.svg"
+                  fill
+                  alt="Line background"
+                />
+              </div>
             </div>
-            <div className="w-full absolute pointer-events-none left-[550px] top-60 hidden xl:block">
-              <Image
-                src="/images/boy-laptop.png"
-                width={250}
-                height={250}
-                alt="boy with laptop"
-              />
+            <div className="w-full absolute pointer-events-none left-0 top-60 hidden xl:block">
+              <div className="relative w-full h-screen">
+                <Image
+                  src="/images/boy-laptop.png"
+                  width={250}
+                  height={250}
+                  alt="boy with laptop"
+                  className="absolute right-[calc(50%-680px)]"
+                />
+              </div>
             </div>
             <div className="relative z-10 border border-t-[3px] border-b-[5px] border-x-4 border-black rounded-cartoon2 md:rounded-cartoon overflow-hidden max-w-[700px] bg-white">
               <YouTube

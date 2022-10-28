@@ -5,12 +5,12 @@
     "dev": "next",
     "build": "next build",
     "start": "next start",
-    "typecheck": "tsc"
+    "typecheck": "tsc --project tsconfig.json --noEmit"
   },
   "dependencies": {
     "date-fns": "^2.28.0",
     "gray-matter": "^4.0.3",
-    "next": "^12.3.1",
+    "next": "^13.0.0",
     "outstatic": "workspace:*",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

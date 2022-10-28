@@ -12,7 +12,8 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "preinstall": "npx only-allow pnpm",
     "test": "turbo run test",
-    "typecheck": "turbo run typecheck"
+    "typecheck": "turbo run typecheck",
+    "prepublish": "pnpm typecheck && pnpm test && pnpm build --filter='!outstatic-blog-example'"
   },
   "devDependencies": {
     "eslint": "^7.32.0",

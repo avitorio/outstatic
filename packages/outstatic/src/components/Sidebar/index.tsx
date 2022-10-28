@@ -20,7 +20,7 @@ const Sidebar = ({ isOpen = false }: SidebarProps) => {
         <ul className="space-y-2">
           <li>
             <Link href="/outstatic">
-              <a className="flex items-center rounded-lg p-2 text-base font-normal text-gray-900 hover:bg-gray-100">
+              <div className="flex items-center rounded-lg p-2 text-base font-normal text-gray-900 hover:bg-gray-100 cursor-pointer">
                 <svg
                   className="h-6 w-6 shrink-0 text-gray-500 transition duration-75 group-hover:text-gray-900"
                   xmlns="http://www.w3.org/2000/svg"
@@ -35,14 +35,14 @@ const Sidebar = ({ isOpen = false }: SidebarProps) => {
                   />
                 </svg>
                 <span className="ml-3">Collections</span>
-              </a>
+              </div>
             </Link>
           </li>
           <>
             {collections.map((collection) => (
               <li key={collection}>
                 <Link href={`/outstatic/${collection}`}>
-                  <a className="flex items-center rounded-lg p-2 text-base font-normal text-gray-900 hover:bg-gray-100">
+                  <div className="flex items-center rounded-lg p-2 text-base font-normal text-gray-900 hover:bg-gray-100 cursor-pointer">
                     <svg
                       className="h-6 w-6 shrink-0 text-gray-500 transition duration-75 group-hover:text-gray-900"
                       fill="none"
@@ -58,14 +58,14 @@ const Sidebar = ({ isOpen = false }: SidebarProps) => {
                       ></path>
                     </svg>
                     <span className="ml-3 capitalize">{collection}</span>
-                  </a>
+                  </div>
                 </Link>
               </li>
             ))}
           </>
           <li>
             <Link href="/outstatic/settings">
-              <a className="flex items-center rounded-lg p-2 text-base font-normal text-gray-900 hover:bg-gray-100">
+              <div className="flex items-center rounded-lg p-2 text-base font-normal text-gray-900 hover:bg-gray-100 cursor-pointer">
                 <svg
                   className="h-6 w-6 shrink-0 text-gray-500 transition duration-75 group-hover:text-gray-900"
                   fill="none"
@@ -81,7 +81,7 @@ const Sidebar = ({ isOpen = false }: SidebarProps) => {
                   />
                 </svg>
                 <span className="ml-3 flex-1 whitespace-nowrap">Settings</span>
-              </a>
+              </div>
             </Link>
           </li>
         </ul>
