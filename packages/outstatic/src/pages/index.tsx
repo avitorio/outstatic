@@ -65,6 +65,10 @@ export const Outstatic = ({ missingEnvVars, providerData }: OutstaticProps) => {
     return <Login />
   }
 
+  if (!router) {
+    return null
+  }
+
   const slug = router.query?.ost?.[0] || ''
   const slug2 = router.query?.ost?.[1] || ''
 
