@@ -82,11 +82,10 @@ export default function List({ collection }: ListProps) {
     >
       <div className="mb-8 flex h-12 items-center">
         <h1 className="mr-12 text-2xl capitalize">{collection}</h1>
-        <Link
-          href={`/outstatic/${collection}/new`}
-          className="rounded-lg border px-5 py-2.5 text-sm font-medium focus:outline-none focus:ring-4 border-gray-600 bg-gray-800 text-white hover:border-gray-600 hover:bg-gray-700 focus:ring-gray-700 capitalize"
-        >
-          New {singular(collection)}
+        <Link href={`/outstatic/${collection}/new`}>
+          <div className="cursor-pointer rounded-lg border px-5 py-2.5 text-sm font-medium focus:outline-none focus:ring-4 border-gray-600 bg-gray-800 text-white hover:border-gray-600 hover:bg-gray-700 focus:ring-gray-700 capitalize">
+            New {singular(collection)}
+          </div>
         </Link>
       </div>
       {documents.length > 0 && (
@@ -118,16 +117,15 @@ export default function List({ collection }: ListProps) {
                 clicking the button below.
               </p>
 
-              <Link
-                href={`/outstatic/${collection}/new`}
-                className="rounded-lg border px-5 py-2.5 text-sm font-medium focus:outline-none focus:ring-4 border-gray-600 bg-gray-800 text-white hover:border-gray-600 hover:bg-gray-700 focus:ring-gray-700 capitalize no-underline"
-              >
-                New {singular(collection)}
+              <Link href={`/outstatic/${collection}/new`}>
+                <div className="cursor-pointer rounded-lg border px-5 py-2.5 text-sm font-medium focus:outline-none focus:ring-4 border-gray-600 bg-gray-800 text-white hover:border-gray-600 hover:bg-gray-700 focus:ring-gray-700 capitalize w-32">
+                  New {singular(collection)}
+                </div>
               </Link>
               <p>
                 To learn more about how documents work{' '}
                 <a
-                  href="https://outstatic.com/docs/documents"
+                  href="https://outstatic.com/docs/introduction#whats-a-document"
                   target="_blank"
                   rel="noreferrer"
                 >

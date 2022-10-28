@@ -19,11 +19,8 @@ const Sidebar = ({ isOpen = false }: SidebarProps) => {
       <div className="py-4 px-3 h-full max-h-[calc(100vh-96px)] overflow-y-scroll scrollbar-hide bg-gray-50 ">
         <ul className="space-y-2">
           <li>
-            <Link
-              href="/outstatic"
-              className="flex items-center rounded-lg p-2 text-base font-normal text-gray-900 hover:bg-gray-100"
-            >
-              <>
+            <Link href="/outstatic">
+              <div className="flex items-center rounded-lg p-2 text-base font-normal text-gray-900 hover:bg-gray-100 cursor-pointer">
                 <svg
                   className="h-6 w-6 shrink-0 text-gray-500 transition duration-75 group-hover:text-gray-900"
                   xmlns="http://www.w3.org/2000/svg"
@@ -38,17 +35,14 @@ const Sidebar = ({ isOpen = false }: SidebarProps) => {
                   />
                 </svg>
                 <span className="ml-3">Collections</span>
-              </>
+              </div>
             </Link>
           </li>
           <>
             {collections.map((collection) => (
               <li key={collection}>
-                <Link
-                  href={`/outstatic/${collection}`}
-                  className="flex items-center rounded-lg p-2 text-base font-normal text-gray-900 hover:bg-gray-100"
-                >
-                  <>
+                <Link href={`/outstatic/${collection}`}>
+                  <div className="flex items-center rounded-lg p-2 text-base font-normal text-gray-900 hover:bg-gray-100 cursor-pointer">
                     <svg
                       className="h-6 w-6 shrink-0 text-gray-500 transition duration-75 group-hover:text-gray-900"
                       fill="none"
@@ -64,17 +58,14 @@ const Sidebar = ({ isOpen = false }: SidebarProps) => {
                       ></path>
                     </svg>
                     <span className="ml-3 capitalize">{collection}</span>
-                  </>
+                  </div>
                 </Link>
               </li>
             ))}
           </>
           <li>
-            <Link
-              href="/outstatic/settings"
-              className="flex items-center rounded-lg p-2 text-base font-normal text-gray-900 hover:bg-gray-100"
-            >
-              <>
+            <Link href="/outstatic/settings">
+              <div className="flex items-center rounded-lg p-2 text-base font-normal text-gray-900 hover:bg-gray-100 cursor-pointer">
                 <svg
                   className="h-6 w-6 shrink-0 text-gray-500 transition duration-75 group-hover:text-gray-900"
                   fill="none"
@@ -90,7 +81,7 @@ const Sidebar = ({ isOpen = false }: SidebarProps) => {
                   />
                 </svg>
                 <span className="ml-3 flex-1 whitespace-nowrap">Settings</span>
-              </>
+              </div>
             </Link>
           </li>
         </ul>
