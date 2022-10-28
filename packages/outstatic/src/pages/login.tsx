@@ -1,5 +1,4 @@
 import Head from 'next/head'
-import Link from 'next/link'
 
 export default function Login() {
   return (
@@ -50,7 +49,7 @@ export default function Login() {
           <p className="mb-5">
             Sign in with GitHub to access your&nbsp;dashboard.
           </p>
-          <Link
+          <a
             href="/api/outstatic/login"
             className="mr-2 mb-2 inline-flex items-center rounded-lg bg-[#24292F] px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-[#24292F]/90 focus:outline-none focus:ring-4 focus:ring-[#24292F]/50"
           >
@@ -70,7 +69,7 @@ export default function Login() {
               ></path>
             </svg>
             Sign in with GitHub
-          </Link>
+          </a>
         </div>
       </main>
     </>
