@@ -19,4 +19,3 @@ All your Outstatic documents and collections are saved as Markdown files in your
 We specified Vercel on the documentation as it is the only platform we've tried Outstatic on. I don't see why it wouldn't work on other platforms such as Netlify or your own preferred setup.
 
 If you try a different hosting/deploy approach, please [let us know](https://twitter.com/outstatic)!
-
