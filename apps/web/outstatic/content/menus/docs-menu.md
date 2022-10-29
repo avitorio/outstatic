@@ -20,7 +20,7 @@ publishedAt: '2022-09-22T14:18:37.951Z'
 
   - [Deploy with Vercel](/docs/getting-started#deploy-with-vercel)
 
-  - [Add to Next.js](/docs/getting-started#adding-outstatic-to-a-nextjs-website)
+  - [Add to a Next.js project](/docs/getting-started#adding-outstatic-to-a-nextjs-website)
 
     <!-- -->
 
