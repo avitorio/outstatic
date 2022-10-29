@@ -42,6 +42,8 @@ The project is constantly improving with new changes being implemented on a dail
 
 ![hit-the-star](https://user-images.githubusercontent.com/1417109/197028994-7261693c-0201-4ec7-9c69-a996c9de870c.gif)
 
+[![Star History Chart](https://api.star-history.com/svg?repos=avitorio/outstatic&type=Date)](https://star-history.com/#avitorio/outstatic&Date)
+
 
 ## Author
 
