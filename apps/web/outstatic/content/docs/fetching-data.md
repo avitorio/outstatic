@@ -85,7 +85,6 @@ export async function getStaticPaths() {
 }
 ```
 
-## Usage examples:
+## Usage examples
 
 If you'd like to check out examples of how to use these functions, please refer to our [Example Blog](https://github.com/avitorio/outstatic/tree/main/examples/blog) repository.
-
