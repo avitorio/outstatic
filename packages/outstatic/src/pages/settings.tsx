@@ -10,7 +10,7 @@ export default function Settings() {
         <h1 className="mr-12 text-2xl">Settings</h1>
       </div>
       <div className="max-w-lg">
-        <div className="mb-20 max-w-2xl p-8 px-4 md:p-8 text-black bg-white rounded-lg border border-gray-200 shadow-md prose prose-base">
+        <div className="mb-8 max-w-2xl p-8 px-4 md:p-8 text-black bg-white rounded-lg border border-gray-200 shadow-md prose prose-base">
           <div>
             <label className="block mb-2 text-sm font-medium text-gray-900">
               Repository
@@ -42,6 +42,18 @@ export default function Settings() {
             />
           </div>
         </div>
+        <p>
+          To learn more about how to update these values,{' '}
+          <a
+            href="https://outstatic.com/docs/environment-variables"
+            target="_blank"
+            rel="noreferrer"
+            className="underline font-semibold"
+          >
+            click here
+          </a>
+          .
+        </p>
       </div>
     </AdminLayout>
   )
