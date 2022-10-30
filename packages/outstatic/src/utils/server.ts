@@ -20,37 +20,42 @@ export function getDocumentBySlug(
   slug: string,
   fields: string[] = []
 ) {
-  const realSlug = slug.replace(MD_MDX_REGEXP, '')
-  const collectionsPath = join(CONTENT_PATH, collection)
-  const fullPath = join(collectionsPath, `${realSlug}.md`)
-  const fileContents = fs.readFileSync(fullPath, 'utf8')
-  const { data, content } = matter(fileContents)
+  try {
+    const realSlug = slug.replace(MD_MDX_REGEXP, '')
+    const collectionsPath = join(CONTENT_PATH, collection)
+    const fullPath = join(collectionsPath, `${realSlug}.md`)
+    const fileContents = fs.readFileSync(fullPath, 'utf8')
+    const { data, content } = matter(fileContents)
 
-  type Items = {
-    [key: string]: string
-  }
+    type Items = {
+      [key: string]: string
+    }
 
-  const items: Items = {}
+    const items: Items = {}
 
-  if (data['status'] === 'draft') {
+    if (data['status'] === 'draft') {
+      return {}
+    }
+
+    // Ensure only the minimal needed data is exposed
+    fields.forEach((field) => {
+      if (field === 'slug') {
+        items[field] = realSlug
+      }
+      if (field === 'content') {
+        items[field] = content
+      }
+
+      if (typeof data[field] !== 'undefined') {
+        items[field] = data[field]
+      }
+    })
+
+    return items
+  } catch (error) {
+    console.error({ getDocumentBySlug: error })
     return {}
   }
-
-  // Ensure only the minimal needed data is exposed
-  fields.forEach((field) => {
-    if (field === 'slug') {
-      items[field] = realSlug
-    }
-    if (field === 'content') {
-      items[field] = content
-    }
-
-    if (typeof data[field] !== 'undefined') {
-      items[field] = data[field]
-    }
-  })
-
-  return items
 }
 
 export function getDocuments(collection: string, fields: string[] = []) {
@@ -68,37 +73,52 @@ export function getDocuments(collection: string, fields: string[] = []) {
 }
 
 export const getDocumentPaths = (collection: string) => {
-  const documentFilePaths = fs
-    .readdirSync(CONTENT_PATH + '/' + collection)
-    // Only include md(x) files
-    .filter((path) => MD_MDX_REGEXP.test(path))
+  try {
+    const documentFilePaths = fs
+      .readdirSync(CONTENT_PATH + '/' + collection)
+      // Only include md(x) files
+      .filter((path) => MD_MDX_REGEXP.test(path))
 
-  const publishedPaths = documentFilePaths.filter((path) => {
-    const collectionsPath = join(CONTENT_PATH, collection)
-    const fullPath = join(collectionsPath, `${path}`)
-    const fileContents = fs.readFileSync(fullPath, 'utf8')
-    const { data } = matter(fileContents)
-    return data['status'] === 'published'
-  })
+    const publishedPaths = documentFilePaths.filter((path) => {
+      const collectionsPath = join(CONTENT_PATH, collection)
+      const fullPath = join(collectionsPath, `${path}`)
+      const fileContents = fs.readFileSync(fullPath, 'utf8')
+      const { data } = matter(fileContents)
+      return data['status'] === 'published'
+    })
 
-  const paths = publishedPaths
-    // Remove file extensions for page paths
-    .map((path) => path.replace(MD_MDX_REGEXP, ''))
-    // Map the path into the static paths object required by Next.js
-    .map((slug: string) => ({ params: { slug } }))
+    const paths = publishedPaths
+      // Remove file extensions for page paths
+      .map((path) => path.replace(MD_MDX_REGEXP, ''))
+      // Map the path into the static paths object required by Next.js
+      .map((slug: string) => ({ params: { slug } }))
 
-  return paths
+    return paths
+  } catch (error) {
+    console.error({ getDocumentPaths: error })
+    return []
+  }
 }
 
 export const getCollections = () => {
-  const collections = fs.readdirSync(CONTENT_PATH)
-  return collections
+  try {
+    const collections = fs.readdirSync(CONTENT_PATH)
+    return collections
+  } catch (error) {
+    console.error({ getCollections: error })
+    return []
+  }
 }
 
 function readMdMdxFiles(path: string) {
-  const dirents = fs.readdirSync(path, { withFileTypes: true })
-  const mdMdxFiles = dirents
-    .filter((dirent) => dirent.isFile() && MD_MDX_REGEXP.test(dirent.name))
-    .map((dirent) => dirent.name)
-  return mdMdxFiles
+  try {
+    const dirents = fs.readdirSync(path, { withFileTypes: true })
+    const mdMdxFiles = dirents
+      .filter((dirent) => dirent.isFile() && MD_MDX_REGEXP.test(dirent.name))
+      .map((dirent) => dirent.name)
+    return mdMdxFiles
+  } catch (error) {
+    console.error({ readMdMdxFiles: error })
+    return []
+  }
 }
