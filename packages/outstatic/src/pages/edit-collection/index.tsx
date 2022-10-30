@@ -1,4 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { plural } from 'pluralize'
 import { useContext, useEffect, useState } from 'react'
@@ -6,6 +7,7 @@ import { FormProvider, SubmitHandler, useForm } from 'react-hook-form'
 import { convert } from 'url-slug'
 import * as yup from 'yup'
 import { AdminLayout, Input } from '../../components'
+import Alert from '../../components/Alert'
 import { OutstaticContext } from '../../context'
 import { useCreateCommitMutation } from '../../graphql/generated'
 import { Collection } from '../../types'
@@ -38,6 +40,7 @@ export default function EditCollection() {
       .required('Collection name is required.')
   })
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(false)
   const methods = useForm<Collection>({
     resolver: yupResolver(createCollection)
   })
@@ -70,6 +73,7 @@ export default function EditCollection() {
       // TODO: Better error treatment
       setLoading(false)
       setHasChanges(false)
+      setError(true)
       console.log({ error })
     }
   }
@@ -89,6 +93,16 @@ export default function EditCollection() {
         <div className="mb-8 flex h-12 items-center">
           <h1 className="mr-12 text-2xl">Create a Collection</h1>
         </div>
+        {error ? (
+          <Alert type="error">
+            <span className="font-medium">Oops!</span> We couldn&apos;t create
+            your collection. Please, make sure your settings are correct, by{' '}
+            <Link href="/outstatic/settings">
+              <span className="underline">clicking here</span>
+            </Link>{' '}
+            .
+          </Alert>
+        ) : null}
         <form
           className="max-w-5xl w-full flex mb-4 items-start"
           onSubmit={methods.handleSubmit(onSubmit)}
@@ -145,14 +159,11 @@ export default function EditCollection() {
           </button>
         </form>
         {pluralized && (
-          <div
-            className="p-4 mb-4 text-sm max-w-xl text-blue-700 bg-blue-100 rounded-lg"
-            role="alert"
-          >
+          <Alert type="info">
             The collection will appear as{' '}
             <span className="font-semibold capitalize">{pluralized}</span> on
             the sidebar.
-          </div>
+          </Alert>
         )}
       </AdminLayout>
     </FormProvider>
