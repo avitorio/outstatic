@@ -1,8 +1,13 @@
 {
   "pipeline": {
     "build": {
-      "dependsOn": ["^build"],
-      "outputs": ["dist/**", ".next/**"]
+      "dependsOn": [
+        "^build"
+      ],
+      "outputs": [
+        "dist/**",
+        ".next/**"
+      ]
     },
     "lint": {
       "outputs": []
@@ -23,16 +28,20 @@
       "cache": false
     },
     "web": {
-      "dependsOn": ["$NEXT_PUBLIC_GA_ID"]
+      "dependsOn": [],
+      "env": [
+        "NEXT_PUBLIC_GA_ID"
+      ]
     },
     "outstatic": {
-      "dependsOn": [
-        "$VERCEL_GIT_REPO_SLUG",
-        "$OST_REPO_SLUG",
-        "$OST_REPO_BRANCH",
-        "$OST_CONTENT_PATH",
-        "$OST_MONOREPO_PATH",
-        "$OST_REPO_OWNER"
+      "dependsOn": [],
+      "env": [
+        "VERCEL_GIT_REPO_SLUG",
+        "OST_REPO_SLUG",
+        "OST_REPO_BRANCH",
+        "OST_CONTENT_PATH",
+        "OST_MONOREPO_PATH",
+        "OST_REPO_OWNER"
       ]
     }
   }
