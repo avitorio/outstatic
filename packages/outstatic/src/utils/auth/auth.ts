@@ -4,7 +4,7 @@ import { NextIncomingMessage } from 'next/dist/server/request-meta'
 import { Session } from '../../types'
 import { MAX_AGE, setTokenCookie, getTokenCookie } from './auth-cookies'
 
-type LoginSession = {
+export type LoginSession = {
   user: {
     name: string
     login: string

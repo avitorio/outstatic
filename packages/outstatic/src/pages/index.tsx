@@ -38,6 +38,13 @@ const defaultPages: { [key: string]: ReactElement | undefined } = {
   collections: undefined
 }
 
+// Start the mocking conditionally.
+// eslint-disable-next-line turbo/no-undeclared-env-vars
+if (process.env.NODE_ENV === 'test') {
+  const { server } = require('../mocks/server')
+  server.listen()
+}
+
 export const Outstatic = ({ missingEnvVars, providerData }: OutstaticProps) => {
   const [pages, setPages] = useState(providerData?.pages)
   const [collections, setCollections] = useState(providerData?.collections)
