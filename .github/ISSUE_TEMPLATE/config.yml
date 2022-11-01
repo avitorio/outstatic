@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Get Help
+    url: https://github.com/avitorio/outstatic/discussions/new?category=q-a
+    about: If you can't get something to work the way you expect, open a question in our discussion forums.
+  - name: Feature Request
+    url: https://github.com/avitorio/outstatic/discussions/new?category=ideas
+    about: 'Suggest any ideas you have using our discussion forums.'
+  - name: Bug Report
+    url: https://github.com/avitorio/outstatic/issues/new
+    about: If you've already asked for help with a problem and confirmed something is broken with Outstatic, create a bug report.
