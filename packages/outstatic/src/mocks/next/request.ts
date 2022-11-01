@@ -1,6 +1,6 @@
 import hm from 'node-mocks-http'
 import * as Iron from '@hapi/iron'
-import { LoginSession } from '../utils/auth/auth'
+import { LoginSession } from '../../utils/auth/auth'
 
 export const createMockRequest = async (
   options: hm.RequestOptions,

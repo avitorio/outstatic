@@ -1,9 +1,21 @@
 import { OstSSP } from '.'
-import { createMockContext } from '../mocks/context'
+import { mockRequests } from '../mocks/network'
+import { createMockContext } from '../mocks/next/context'
 
 describe(OstSSP, () => {
   const ENV = process.env
+  const [startMsw, stopMsw] = mockRequests({ type: 'server' })
+
+  beforeAll(() => {
+    startMsw()
+  })
+
+  afterAll(() => {
+    stopMsw()
+  })
+
   beforeEach(() => {
+    // restore process.env before each test
     process.env = JSON.parse(JSON.stringify(ENV))
   })
 
