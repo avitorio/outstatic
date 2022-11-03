@@ -28,9 +28,6 @@ describe(OstSSP, () => {
       {}
     )
 
-    // set the repo owner, which alerts MSW we want a different behavior
-    // process.env.OST_REPO_OWNER = 'msw::collections::not-implemented'
-
     const props = await OstSSP(context)
     expect(props).toMatchObject({
       props: {
