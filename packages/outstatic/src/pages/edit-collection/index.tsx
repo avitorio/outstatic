@@ -96,7 +96,7 @@ export default function EditCollection() {
         {error ? (
           <Alert type="error">
             <span className="font-medium">Oops!</span> We couldn&apos;t create
-            your collection. Please, make sure your settings are correct, by{' '}
+            your collection. Please, make sure your settings are correct by{' '}
             <Link href="/outstatic/settings">
               <span className="underline">clicking here</span>
             </Link>{' '}
