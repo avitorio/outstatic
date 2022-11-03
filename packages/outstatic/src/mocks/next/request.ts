@@ -25,7 +25,6 @@ export const createMockRequest = async (
   // see auth.ts
   const token = await Iron.seal(
     sesh,
-    // eslint-disable-next-line turbo/no-undeclared-env-vars
     process.env.OST_TOKEN_SECRET ?? '',
     Iron.defaults
   )
