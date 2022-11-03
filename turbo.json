@@ -1,13 +1,8 @@
 {
   "pipeline": {
     "build": {
-      "dependsOn": [
-        "^build"
-      ],
-      "outputs": [
-        "dist/**",
-        ".next/**"
-      ]
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**", ".next/**"]
     },
     "lint": {
       "outputs": []
@@ -29,9 +24,7 @@
     },
     "web": {
       "dependsOn": [],
-      "env": [
-        "NEXT_PUBLIC_GA_ID"
-      ]
+      "env": ["NEXT_PUBLIC_GA_ID"]
     },
     "outstatic": {
       "dependsOn": [],
@@ -41,7 +34,8 @@
         "OST_REPO_BRANCH",
         "OST_CONTENT_PATH",
         "OST_MONOREPO_PATH",
-        "OST_REPO_OWNER"
+        "OST_REPO_OWNER",
+        "OST_TOKEN_SECRET"
       ]
     }
   }
