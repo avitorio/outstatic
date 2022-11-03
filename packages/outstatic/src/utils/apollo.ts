@@ -24,7 +24,13 @@ async function getSession() {
 function createApolloClient(session?: Session | null) {
   const httpLink = createHttpLink({
     uri: 'https://api.github.com/graphql',
-    fetch
+    // Prefer explicit `window.fetch` when available so that outgoing requests
+    // are captured and deferred until the Service Worker is ready. If no window
+    // or window.fetch, default to cross-fetch's ponyfill
+    fetch: (...args) =>
+      (typeof window !== 'undefined' && typeof window.fetch === 'function'
+        ? window.fetch
+        : fetch)(...args)
   })
 
   const authLink = setContext(async (_, { headers }: { headers: Headers }) => {
