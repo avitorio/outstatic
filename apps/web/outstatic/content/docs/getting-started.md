@@ -76,8 +76,6 @@ We recommend you learn how [Outstatic manages content](/docs/introduction) and a
 
 ## Adding Outstatic to a Next.js website
 
-**Next.js 13 notice**: At this moment we are only supporting Next.js 12. We are working hard to launch a version compatible with Next.js 13 soon!
-
 Before we start, you should know Outstatic saves content as markdown files to your GitHub repository. To understand how this works please read our [introduction](https://outstatic.com/docs/introduction) article.
 
 First install the Outstatic package:
