@@ -39,6 +39,7 @@ export default function Post({ post }: Props) {
                   src={post.coverImage}
                   fill
                   className="object-cover object-center"
+                  priority
                 />
               </div>
               <h1 className="font-primary text-2xl font-bold md:text-4xl mb-2">

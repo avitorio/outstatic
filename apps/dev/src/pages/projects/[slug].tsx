@@ -46,6 +46,7 @@ export default function Project({ project, moreProjects }: Props) {
                     src={project.coverImage}
                     fill
                     className="object-cover object-center"
+                    priority
                   />
                 </div>
                 <div>
