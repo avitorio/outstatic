@@ -46,3 +46,17 @@ export type Session = {
 export type Collection = {
   name: string
 }
+
+export type CustomFields = {
+  [key: string]: {
+    type: 'string' | 'text'
+    label: string
+    required?: boolean
+  }
+}
+
+export type SchemaShape =
+  | Document
+  | {
+      [key: string]: any
+    }

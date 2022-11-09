@@ -9,19 +9,27 @@ import DeleteDocumentButton from '../DeleteDocumentButton'
 import Input from '../Input'
 import TextArea from '../TextArea'
 import DocumentSettingsImageSelection from '../DocumentSettingsImageSelection'
+import { CustomFields } from '../../types'
 
 type DocumentSettingsProps = {
   saveFunc: () => void
   loading: boolean
   validation?: RegisterOptions
   showDelete: boolean
+  customFields?: CustomFields
+}
+
+const FieldMap = {
+  string: Input,
+  text: TextArea
 }
 
 const DocumentSettings = ({
   saveFunc,
   loading,
   validation,
-  showDelete
+  showDelete,
+  customFields = {}
 }: DocumentSettingsProps) => {
   const { register } = useFormContext()
   const router = useRouter()
@@ -150,8 +158,6 @@ const DocumentSettings = ({
             type="textarea"
             label="Write a description (optional)"
             id="description"
-            rows={5}
-            className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2 text-sm text-gray-900 outline-none focus:border-blue-500 focus:ring-blue-500"
           />
         </Accordion>
 
@@ -161,6 +167,15 @@ const DocumentSettings = ({
             description="Cover Image"
           />
         </Accordion>
+        {customFields &&
+          Object.entries(customFields).map(([name, field]) => {
+            const Field = FieldMap[field.type]
+            return (
+              <Accordion key={name} title={name}>
+                <Field id={name} label={field.label} />
+              </Accordion>
+            )
+          })}
       </div>
       <hr className="pb-16" />
     </aside>
