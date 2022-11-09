@@ -20,6 +20,7 @@ export default function TextArea({
   readOnly = false,
   validation,
   wrapperClass,
+  rows = 5,
   ...rest
 }: TextAreaProps) {
   const {
@@ -46,12 +47,13 @@ export default function TextArea({
           readOnly={readOnly}
           placeholder={placeholder}
           aria-describedby={id}
+          className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2 text-sm text-gray-900 outline-none focus:border-blue-500 focus:ring-blue-500"
         />
       </div>
       <div className="mt-1">
         {helperText && <p className="text-xs text-gray-500">{helperText}</p>}
         {errors[id]?.message && (
-          <span className="text-sm text-red-500">
+          <span className="block text-sm text-red-500 first-letter:uppercase">
             {errors[id]?.message?.toString()}
           </span>
         )}

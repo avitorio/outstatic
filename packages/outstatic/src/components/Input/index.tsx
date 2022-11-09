@@ -71,7 +71,7 @@ export default function Input({
               <p className="text-xs text-gray-500">{helperText}</p>
             )}
             {errors[id]?.message && (
-              <span className="text-sm text-red-500">
+              <span className="block text-sm text-red-500 first-letter:uppercase">
                 {errors[id]?.message?.toString()}
               </span>
             )}
