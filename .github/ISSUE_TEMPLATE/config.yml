@@ -7,5 +7,5 @@ contact_links:
     url: https://github.com/avitorio/outstatic/discussions/new?category=ideas
     about: 'Suggest any ideas you have using our discussion forums.'
   - name: Bug Report
-    url: https://github.com/avitorio/outstatic/issues/new
+    url: https://github.com/avitorio/outstatic/issues/new?assignees=&labels=template%3A+bug&template=1.bug_report.yml
     about: If you've already asked for help with a problem and confirmed something is broken with Outstatic, create a bug report.
