@@ -9,8 +9,10 @@
     "dev": "turbo run dev --parallel",
     "lint": "turbo run lint",
     "clean": "turbo run clean",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "format": "prettier --write",
+    "lint-staged": "lint-staged",
     "preinstall": "npx only-allow pnpm",
+    "prepare": "husky install",
     "test": "turbo run test",
     "typecheck": "turbo run typecheck",
     "prepublish": "pnpm typecheck && pnpm test && pnpm build --filter='!outstatic-blog-example'"
@@ -18,6 +20,8 @@
   "devDependencies": {
     "eslint": "^7.32.0",
     "eslint-config-custom": "workspace:*",
+    "husky": "^8.0.2",
+    "lint-staged": "^13.0.3",
     "prettier": "^2.7.1",
     "prettier-plugin-tailwindcss": "^0.1.11",
     "turbo": "latest"
