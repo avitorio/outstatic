@@ -18,12 +18,13 @@ To fetch all your collections, without the documents, use the `getCollections` f
 
 ## Fetching documents
 
-To fetch all the documents from a collection, you should use the `getDocuments` function inside your `getStaticProps` or `getServerSideProps` functions. The `getDocuments` function accepts two parameters: the name of the collection as a string, and an array with the fields to be retrieved. It returns an array of Documents sorted by date, with the most recent `publishedAt` documents first.
+To fetch all the documents from a collection, you should use the `getDocuments` function inside your `getStaticProps` or `getServerSideProps` functions. The `getDocuments` function accepts three parameters: the name of the collection as a string, an array with the fields to be retrieved, and a boolean that determines if we fetch drafts. It returns an array of Documents sorted by date, with the most recent `publishedAt` documents first.
 
 ```javascript
 // Fetching all documents from a collection
 
 export const getStaticProps = async () => {
+  const showDraftPgs = process.env.SHOW_DRAFTS;
   const allPosts = getDocuments('posts', [
     'title',
     'publishedAt',
@@ -31,7 +32,7 @@ export const getStaticProps = async () => {
     'coverImage',
     'description',
     'author'
-  ])
+  ],showDraftPgs)
 
   return {
     props: { allPosts }
@@ -41,12 +42,13 @@ export const getStaticProps = async () => {
 
 ### Fetching documents by slug
 
-Documents can be fetched by slug, this is usually helpful when using Next.js' [Dynamic Routes](https://nextjs.org/docs/routing/dynamic-routes). The function `getDocumentBySlug` takes three parameters: the name of the collection as a string, the slug of the document, and an array with the fields to be retrieved.
+Documents can be fetched by slug, this is usually helpful when using Next.js' [Dynamic Routes](https://nextjs.org/docs/routing/dynamic-routes). The function `getDocumentBySlug` takes four parameters: the name of the collection as a string, the slug of the document, and an array with the fields to be retrieved and a boolean to determine if you want to get draft posts (defaulting to false).
 
 ```javascript
 // Example of a /pages/posts/[slug].tsx page
 
 export async function getStaticProps({ params }: Params) {
+  const showDraftPg = process.env.SHOW_DRAFTS;
   const post = getDocumentBySlug('posts', params.slug, [
     'title',
     'publishedAt',
@@ -54,7 +56,7 @@ export async function getStaticProps({ params }: Params) {
     'author',
     'content',
     'coverImage'
-  ])
+  ],showDraftPg)
   const content = await markdownToHtml(post.content || '')
 
   return {
@@ -78,8 +80,9 @@ We provide a simple helper function so you can easily get all the document paths
 // Fetching document paths
 
 export async function getStaticPaths() {
+  const showDraftPg = process.env.SHOW_DRAFTS;
   return {
-    paths: getDocumentPaths('posts'),
+    paths: getDocumentPaths('posts',showDraftPg),
     fallback: false
   }
 }
