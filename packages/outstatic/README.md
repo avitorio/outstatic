@@ -42,6 +42,15 @@ The project is constantly improving with new changes being implemented on a dail
 
 ![hit-the-star](https://user-images.githubusercontent.com/1417109/197028994-7261693c-0201-4ec7-9c69-a996c9de870c.gif)
 
+## Community
+
+The Outstatic community can be found on [GitHub Discussions](https://github.com/avitorio/outstatic/discussions), where you can ask questions, voice ideas, and share your projects.
+
+To chat with other community members you can join the [Outstatic Discord](https://discord.gg/qEjtpn7E6F).
+
+## Contributing
+
+Please see our [CONTRIBUTING.md](/CONTRIBUTING.md).
 
 ## Author
 
