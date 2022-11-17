@@ -77,3 +77,27 @@ We use `graphql-codegen` to generate queries, mutations and other GraphQL relate
 ```
 pnpm graphql-codegen
 ```
+
+## Deploying to Vercel
+
+You can deploy the `outstatic-dev-blog` to Vercel by adding a new project with the following configuration:
+
+1. Set the **Root Directory** to `apps/dev`
+
+1. On the **Build and Output Settings** section add the following to your `Build Command`:
+
+   ```
+   cd ../.. && pnpm turbo run build --scope=outstatic-dev-blog --include-dependencies --no-deps
+   ```
+
+1. Setup your Environment Variables:
+   ```
+    OST_GITHUB_ID=YOUR_GITHUB_OAUTH_ID
+    OST_GITHUB_SECRET=YOUR_GITHUB_OAUTH_SECRET
+    OST_TOKEN_SECRET=A_32CHAR_RANDOM_STRING_FOR_YOUR_TOKEN_SECRET
+    OST_REPO_SLUG=outstatic
+    OST_REPO_BRANCH=main
+    OST_CONTENT_PATH=outstatic/content
+    OST_MONOREPO_PATH=apps/dev
+   ```
+   Keep in mind that, if you want to log in to your **Outstatic Dashboard** on Vercel, you should probably create a different GitHub OAuth App from the one you use for local development, since the callback url is going to be different.
