@@ -2,6 +2,17 @@ import fs from 'fs'
 import { join } from 'path'
 import matter from 'gray-matter'
 
+export interface IOptions {
+  status: 'all' | 'published' | 'draft'
+}
+
+const defaultOptions: IOptions = {
+  status: 'published'
+}
+
+const isCorrectStatus = (options: IOptions, status?: string) =>
+  options.status === 'all' || status === options.status
+
 const CONTENT_PATH = join(
   process.cwd(),
   process.env.OST_CONTENT_PATH || 'outstatic/content'
@@ -19,7 +30,7 @@ export function getDocumentBySlug(
   collection: string,
   slug: string,
   fields: string[] = [],
-  getDrafts = false
+  options = defaultOptions
 ) {
   try {
     const realSlug = slug.replace(MD_MDX_REGEXP, '')
@@ -34,7 +45,7 @@ export function getDocumentBySlug(
 
     const items: Items = {}
 
-    if (data['status'] === 'draft' && !getDrafts) {
+    if (!isCorrectStatus(options, data['status'])) {
       return {}
     }
 
@@ -59,13 +70,22 @@ export function getDocumentBySlug(
   }
 }
 
-export function getDocuments(collection: string, fields: string[] = [],getDrafts = false) {
+export function getDocuments(
+  collection: string,
+  fields: string[] = [],
+  options = defaultOptions
+) {
   const slugs = getDocumentSlugs(collection)
   const documents = slugs
     .map((slug) =>
-      getDocumentBySlug(collection, slug, [...fields, 'publishedAt', 'status'],getDrafts)
+      getDocumentBySlug(
+        collection,
+        slug,
+        [...fields, 'publishedAt', 'status'],
+        options
+      )
     )
-    .filter((document) =>  document.status === 'published' || getDrafts)
+    .filter((document) => isCorrectStatus(options, document.status))
     // sort documents by date in descending order
     .sort((document1, document2) =>
       document1.publishedAt > document2.publishedAt ? -1 : 1
@@ -73,7 +93,10 @@ export function getDocuments(collection: string, fields: string[] = [],getDrafts
   return documents
 }
 
-export const getDocumentPaths = (collection: string,getDrafts = false) => {
+export const getDocumentPaths = (
+  collection: string,
+  options = defaultOptions
+) => {
   try {
     const documentFilePaths = fs
       .readdirSync(CONTENT_PATH + '/' + collection)
@@ -85,7 +108,7 @@ export const getDocumentPaths = (collection: string,getDrafts = false) => {
       const fullPath = join(collectionsPath, `${path}`)
       const fileContents = fs.readFileSync(fullPath, 'utf8')
       const { data } = matter(fileContents)
-      return data['status'] === 'published' || getDrafts
+      return isCorrectStatus(options, data['status'])
     })
 
     const paths = publishedPaths
@@ -96,7 +119,7 @@ export const getDocumentPaths = (collection: string,getDrafts = false) => {
 
     return paths
   } catch (error) {
-    console.error({ getDocumentPaths: error })
+    console.error({ error: error })
     return []
   }
 }
