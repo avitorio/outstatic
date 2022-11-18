@@ -119,7 +119,7 @@ export const getDocumentPaths = (
 
     return paths
   } catch (error) {
-    console.error({ error: error })
+    console.error({ getDocumentPaths: error })
     return []
   }
 }
