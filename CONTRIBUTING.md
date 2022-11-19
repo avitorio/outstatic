@@ -1,8 +1,21 @@
 # Contributing to Outstatic
 
 - Before jumping into a PR be sure to search [existing PRs](https://github.com/avitorio/outstatic/pulls) or [issues](https://github.com/avitorio/outstatic/issues) for an open or closed item that relates to your submission.
-- If you can't get something to work the way you expect or found a bug, [open a question](https://github.com/avitorio/outstatic/discussions/new?category=q-a) in our discussion forums.
+- If you can't get something to work the way you expect, [open a question](https://github.com/avitorio/outstatic/discussions/new?category=q-a) in our discussion forums.
 - If you are interested in adding a feature or improving the code, please [start a discussion](https://github.com/avitorio/outstatic/discussions/new?category=ideas) about it first.
+- Here's a summary of the monorepo structure:
+
+  ```
+  . #root of the repository
+  ├──── apps
+  │     └──── dev # a mirror of our example blog but used for development, uses the monorepo version of `outstatic`
+  │     └──── web # Outstatic's website: https://outstatic.com
+  ├──── examples
+  │     └──── blog # example blog setup using Outstatic + Next.js, uses the latest `outstatic` release
+  └──── packages
+        └──── outstatic # the actual library code
+
+  ```
 
 # Developing
 
