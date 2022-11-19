@@ -8,14 +8,16 @@
   ```
   . #root of the repository
   ├──── apps
-  │     └──── dev # a mirror of our example blog but used for development, uses the monorepo version of `outstatic`
+  │     └──── dev # development blog using the monorepo's version of `outstatic`
   │     └──── web # Outstatic's website: https://outstatic.com
   ├──── examples
-  │     └──── blog # example blog setup using Outstatic + Next.js, uses the latest `outstatic` release
+  │     └──── blog # example blog using the latest `outstatic` release
   └──── packages
         └──── outstatic # the actual library code
 
   ```
+
+  Note: changes to `/apps/dev` should be copied over to `/examples/blog`.
 
 # Developing
 
