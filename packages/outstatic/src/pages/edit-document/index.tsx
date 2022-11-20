@@ -19,8 +19,10 @@ import {
 } from '../../graphql/generated'
 import { Document, FileType } from '../../types'
 import { useOstSession } from '../../utils/auth/hooks'
+import { IMAGES_PATH } from '../../utils/constants'
 import { createCommitInput } from '../../utils/createCommitInput'
 import { deepReplace } from '../../utils/deepReplace'
+import { escapeRegExp } from '../../utils/escapeRegExp'
 import { getLocalDate } from '../../utils/getLocalDate'
 import { mergeMdMeta } from '../../utils/mergeMdMeta'
 import { replaceImageSrcRoot } from '../../utils/replaceImageSrc'
@@ -125,16 +127,14 @@ export default function EditDocument({ collection }: EditDocumentProps) {
 
       const parseContent = () => {
         const converter = new showdown.Converter({ noHeaderId: true })
-        let newContent = converter.makeHtml(content)
+        const newContent = converter.makeHtml(content)
 
         // fetch images from GitHub in case deploy is not done yet
-        const regex = new RegExp(/(^\/images\/)/gi)
-        newContent = replaceImageSrcRoot(
+        return replaceImageSrcRoot(
           newContent,
-          regex,
+          new RegExp(`^/${escapeRegExp(IMAGES_PATH)}`, 'gi'),
           '/api/outstatic/images/'
         )
-        return newContent
       }
 
       const parsedContent = parseContent()
