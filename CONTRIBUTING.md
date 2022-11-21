@@ -45,6 +45,16 @@ To develop locally:
    pnpm install
    ```
 
+<details>
+<summary>Disabling pre-commit hooks</summary>
+
+To help ensure PRs are well-formatted, Outstatic runs several checks via [lint-staged](https://github.com/okonet/lint-staged). These may include eslint checks, prettier formatting, and type checking among other things. However, we also run similar checks in our GitHub workflows, meaning the closer-to-save checks are optional. If you'd like to disable these checks, there are a few things you can do.
+
+1. _unregister_ You can remove the hooks by running `git config --unset core.hooksPath`. If you reinstall dependencies, you'll need to run the command again.
+2. _env_ You can set an environment variable for husky `HUSKY=0` either globally (ie `.profile`) or with a tool such as [direnv](https://direnv.net/) which will disable Husky and its pre-commit checks
+
+</details>
+
 ## Setting up Outstatic
 
 There are a few particularities to how Outstatic works. Since most editor actions (creating collections, editing documents, etc...) result in commits, you should avoid editor originated commits being added to your development branches. Ideally, when developing, point your `OST_REPO_BRANCH` to a different branch than the one you are working on.
