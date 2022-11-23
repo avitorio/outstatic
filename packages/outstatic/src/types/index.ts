@@ -46,3 +46,7 @@ export type Session = {
 export type Collection = {
   name: string
 }
+
+export type DeepNonNullable<T> = {
+  [P in keyof T]-?: DeepNonNullable<NonNullable<T[P]>>
+}

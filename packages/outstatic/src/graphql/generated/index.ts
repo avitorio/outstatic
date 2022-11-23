@@ -27484,13 +27484,13 @@ export type DocumentsQuery = {
   } | null
 }
 
-export type GetFilesQueryQueryVariables = Exact<{
+export type GetFileInformationQueryVariables = Exact<{
   owner: Scalars['String']
   name: Scalars['String']
   expression: Scalars['String']
 }>
 
-export type GetFilesQueryQuery = {
+export type GetFileInformationQuery = {
   __typename?: 'Query'
   repository?: {
     __typename?: 'Repository'
@@ -28053,8 +28053,12 @@ export type DocumentsQueryResult = Apollo.QueryResult<
   DocumentsQuery,
   DocumentsQueryVariables
 >
-export const GetFilesQueryDocument = gql`
-  query GetFilesQuery($owner: String!, $name: String!, $expression: String!) {
+export const GetFileInformationDocument = gql`
+  query GetFileInformation(
+    $owner: String!
+    $name: String!
+    $expression: String!
+  ) {
     repository(owner: $owner, name: $name) {
       id
       object(expression: $expression) {
@@ -28068,16 +28072,16 @@ export const GetFilesQueryDocument = gql`
 `
 
 /**
- * __useGetFilesQueryQuery__
+ * __useGetFileInformationQuery__
  *
- * To run a query within a React component, call `useGetFilesQueryQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetFilesQueryQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetFileInformationQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetFileInformationQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetFilesQueryQuery({
+ * const { data, loading, error } = useGetFileInformationQuery({
  *   variables: {
  *      owner: // value for 'owner'
  *      name: // value for 'name'
@@ -28085,39 +28089,39 @@ export const GetFilesQueryDocument = gql`
  *   },
  * });
  */
-export function useGetFilesQueryQuery(
+export function useGetFileInformationQuery(
   baseOptions: Apollo.QueryHookOptions<
-    GetFilesQueryQuery,
-    GetFilesQueryQueryVariables
+    GetFileInformationQuery,
+    GetFileInformationQueryVariables
   >
 ) {
   const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useQuery<GetFilesQueryQuery, GetFilesQueryQueryVariables>(
-    GetFilesQueryDocument,
-    options
-  )
+  return Apollo.useQuery<
+    GetFileInformationQuery,
+    GetFileInformationQueryVariables
+  >(GetFileInformationDocument, options)
 }
-export function useGetFilesQueryLazyQuery(
+export function useGetFileInformationLazyQuery(
   baseOptions?: Apollo.LazyQueryHookOptions<
-    GetFilesQueryQuery,
-    GetFilesQueryQueryVariables
+    GetFileInformationQuery,
+    GetFileInformationQueryVariables
   >
 ) {
   const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useLazyQuery<GetFilesQueryQuery, GetFilesQueryQueryVariables>(
-    GetFilesQueryDocument,
-    options
-  )
+  return Apollo.useLazyQuery<
+    GetFileInformationQuery,
+    GetFileInformationQueryVariables
+  >(GetFileInformationDocument, options)
 }
-export type GetFilesQueryQueryHookResult = ReturnType<
-  typeof useGetFilesQueryQuery
+export type GetFileInformationQueryHookResult = ReturnType<
+  typeof useGetFileInformationQuery
 >
-export type GetFilesQueryLazyQueryHookResult = ReturnType<
-  typeof useGetFilesQueryLazyQuery
+export type GetFileInformationLazyQueryHookResult = ReturnType<
+  typeof useGetFileInformationLazyQuery
 >
-export type GetFilesQueryQueryResult = Apollo.QueryResult<
-  GetFilesQueryQuery,
-  GetFilesQueryQueryVariables
+export type GetFileInformationQueryResult = Apollo.QueryResult<
+  GetFileInformationQuery,
+  GetFileInformationQueryVariables
 >
 export const OidDocument = gql`
   query Oid($owner: String!, $name: String!, $branch: String!) {

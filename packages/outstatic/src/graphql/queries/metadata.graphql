@@ -1,6 +1,10 @@
 # Get basic information about the files inside of outstatic content
 # A sample expression: "z1:apps/dev/outstatic/content"
-query GetFilesQuery($owner: String!, $name: String!, $expression: String!) {
+query GetFileInformation(
+  $owner: String!
+  $name: String!
+  $expression: String!
+) {
   repository(owner: $owner, name: $name) {
     id
     object(expression: $expression) {

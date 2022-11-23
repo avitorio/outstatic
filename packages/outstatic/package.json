@@ -33,6 +33,7 @@
     "@tiptap/react": "^2.0.0-beta.113",
     "@tiptap/starter-kit": "^2.0.0-beta.189",
     "@uiw/react-md-editor": "3.6.0",
+    "clsx": "^1.2.1",
     "cookie": "^0.5.0",
     "cross-fetch": "^3.1.5",
     "dompurify": "^2.3.9",
