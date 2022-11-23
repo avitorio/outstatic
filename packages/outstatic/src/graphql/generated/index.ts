@@ -27506,7 +27506,7 @@ export type GetFilesQueryQuery = {
             path?: string | null
             type: string
             object?:
-              | { __typename?: 'Blob'; oid: any }
+              | { __typename?: 'Blob'; oid: any; commitUrl: any }
               | { __typename?: 'Commit' }
               | { __typename?: 'Tag' }
               | {
@@ -27516,7 +27516,7 @@ export type GetFilesQueryQuery = {
                     path?: string | null
                     type: string
                     object?:
-                      | { __typename?: 'Blob'; oid: any }
+                      | { __typename?: 'Blob'; oid: any; commitUrl: any }
                       | { __typename?: 'Commit' }
                       | { __typename?: 'Tag' }
                       | {
@@ -27526,7 +27526,11 @@ export type GetFilesQueryQuery = {
                             path?: string | null
                             type: string
                             object?:
-                              | { __typename?: 'Blob'; oid: any }
+                              | {
+                                  __typename?: 'Blob'
+                                  oid: any
+                                  commitUrl: any
+                                }
                               | { __typename?: 'Commit' }
                               | { __typename?: 'Tag' }
                               | {
@@ -27536,7 +27540,11 @@ export type GetFilesQueryQuery = {
                                     path?: string | null
                                     type: string
                                     object?:
-                                      | { __typename?: 'Blob'; oid: any }
+                                      | {
+                                          __typename?: 'Blob'
+                                          oid: any
+                                          commitUrl: any
+                                        }
                                       | { __typename?: 'Commit' }
                                       | { __typename?: 'Tag' }
                                       | {
@@ -27549,6 +27557,7 @@ export type GetFilesQueryQuery = {
                                               | {
                                                   __typename?: 'Blob'
                                                   oid: any
+                                                  commitUrl: any
                                                 }
                                               | { __typename?: 'Commit' }
                                               | { __typename?: 'Tag' }
@@ -27562,6 +27571,7 @@ export type GetFilesQueryQuery = {
                                                       | {
                                                           __typename?: 'Blob'
                                                           oid: any
+                                                          commitUrl: any
                                                         }
                                                       | {
                                                           __typename?: 'Commit'
@@ -27596,7 +27606,11 @@ export type TreeDetailsFragment = {
   type: string
 }
 
-export type BlobDetailsFragment = { __typename?: 'Blob'; oid: any }
+export type BlobDetailsFragment = {
+  __typename?: 'Blob'
+  oid: any
+  commitUrl: any
+}
 
 export type RecursiveTreeDetailsFragment = {
   __typename?: 'Tree'
@@ -27605,7 +27619,7 @@ export type RecursiveTreeDetailsFragment = {
     path?: string | null
     type: string
     object?:
-      | { __typename?: 'Blob'; oid: any }
+      | { __typename?: 'Blob'; oid: any; commitUrl: any }
       | { __typename?: 'Commit' }
       | { __typename?: 'Tag' }
       | {
@@ -27615,7 +27629,7 @@ export type RecursiveTreeDetailsFragment = {
             path?: string | null
             type: string
             object?:
-              | { __typename?: 'Blob'; oid: any }
+              | { __typename?: 'Blob'; oid: any; commitUrl: any }
               | { __typename?: 'Commit' }
               | { __typename?: 'Tag' }
               | {
@@ -27625,7 +27639,7 @@ export type RecursiveTreeDetailsFragment = {
                     path?: string | null
                     type: string
                     object?:
-                      | { __typename?: 'Blob'; oid: any }
+                      | { __typename?: 'Blob'; oid: any; commitUrl: any }
                       | { __typename?: 'Commit' }
                       | { __typename?: 'Tag' }
                       | {
@@ -27635,7 +27649,11 @@ export type RecursiveTreeDetailsFragment = {
                             path?: string | null
                             type: string
                             object?:
-                              | { __typename?: 'Blob'; oid: any }
+                              | {
+                                  __typename?: 'Blob'
+                                  oid: any
+                                  commitUrl: any
+                                }
                               | { __typename?: 'Commit' }
                               | { __typename?: 'Tag' }
                               | {
@@ -27645,7 +27663,11 @@ export type RecursiveTreeDetailsFragment = {
                                     path?: string | null
                                     type: string
                                     object?:
-                                      | { __typename?: 'Blob'; oid: any }
+                                      | {
+                                          __typename?: 'Blob'
+                                          oid: any
+                                          commitUrl: any
+                                        }
                                       | { __typename?: 'Commit' }
                                       | { __typename?: 'Tag' }
                                       | {
@@ -27658,6 +27680,7 @@ export type RecursiveTreeDetailsFragment = {
                                               | {
                                                   __typename?: 'Blob'
                                                   oid: any
+                                                  commitUrl: any
                                                 }
                                               | { __typename?: 'Commit' }
                                               | { __typename?: 'Tag' }
@@ -27719,6 +27742,7 @@ export const TreeDetailsFragmentDoc = gql`
 export const BlobDetailsFragmentDoc = gql`
   fragment BlobDetails on Blob {
     oid
+    commitUrl
   }
 `
 export const RecursiveTreeDetailsFragmentDoc = gql`
