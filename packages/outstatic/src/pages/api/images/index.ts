@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { getLoginSession } from '../../../utils/auth/auth'
+import { IMAGES_PATH } from '../../../utils/constants'
 
 const REPO_SLUG = process.env.OST_REPO_SLUG || process.env.VERCEL_GIT_REPO_SLUG
 const REPO_BRANCH = process.env.OST_REPO_BRANCH || 'main'
@@ -17,7 +18,7 @@ export default async function handler(
         session?.user?.login
       }/${REPO_SLUG}/${REPO_BRANCH}/${
         MONOREPO_PATH ? MONOREPO_PATH + '/' : ''
-      }public/images/${req.query?.ost?.[1]}`,
+      }public/${IMAGES_PATH}${req.query?.ost?.[1]}`,
       {
         headers: {
           authorization: `token ${session.access_token}`

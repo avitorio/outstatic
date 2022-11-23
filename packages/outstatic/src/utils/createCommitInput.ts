@@ -1,5 +1,7 @@
 import { encode } from 'js-base64'
 import { FileType } from '../types'
+import { assertUnreachable } from './assertUnreachable'
+import { IMAGES_PATH } from './constants'
 
 type createCommitInputType = {
   owner: string
@@ -47,14 +49,23 @@ export const createCommitInput = ({
             .replace(/[^a-zA-Z0-9-_\.]/g, '-')
             .replace(/(\.[^\.]*)?$/, `-${randString}$1`)
 
+          const filePath = (() => {
+            switch (type) {
+              case 'images':
+                return IMAGES_PATH
+              default:
+                assertUnreachable(type)
+            }
+          })()
+
           additions.push({
             path: `${
               monorepoPath ? monorepoPath + '/' : ''
-            }public/${type}/${newFilename}`,
+            }public/${filePath}${newFilename}`,
             contents: fileContents
           })
 
-          newContent = newContent.replace(blob, `/${type}/${newFilename}`)
+          newContent = newContent.replace(blob, `/${filePath}${newFilename}`)
         }
       })
     }
