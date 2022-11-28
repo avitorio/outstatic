@@ -81,6 +81,7 @@ Before we start, you should know Outstatic saves content as markdown files to yo
 First install the Outstatic package:
 
 ```bash
+# For Next.js 13
 # npm
 npm install outstatic
 
@@ -89,6 +90,8 @@ yarn add outstatic
 
 #pnpm
 pnpm install outstatic
+
+# For Next.js v12 you may need to install outstatic@^0.0.31-rc
 ```
 
 Once installed, you'll need to add two files to your `/pages` folder:
@@ -121,11 +124,13 @@ You should see this page:
 ```bash
 OST_GITHUB_ID=YOUR_GITHUB_OAUTH_APP_ID
 OST_GITHUB_SECRET=YOUR_GITHUB_OAUTH_APP_SECRET
-OST_TOKEN_SECRET=A_RANDOM_TOKEN # random string min 32 chars
+# random string min 32 chars
+OST_TOKEN_SECRET=A_RANDOM_TOKEN 
 OST_REPO_SLUG=YOUR_GITHUB_REPOSITORY_SLUG
 
 # OPTIONAL
-OST_REPO_BRANCH=YOUR_GITHUB_REPOSITORY_BRANCH # If empty this will default to main
+# If empty this will default to main
+OST_REPO_BRANCH=YOUR_GITHUB_REPOSITORY_BRANCH
 ```
 
 Now go back to your GitHub OAuth App settings page and update the following values:
@@ -155,7 +160,8 @@ Don't forget to add the following environment variables to your Vercel project:
 ```bash
 OST_GITHUB_ID=YOUR_GITHUB_OAUTH_APP_ID
 OST_GITHUB_SECRET=YOUR_GITHUB_OAUTH_APP_SECRET
-OST_TOKEN_SECRET=A_RANDOM_TOKEN # random string min 32 chars
+# random string min 32 chars
+OST_TOKEN_SECRET=A_RANDOM_TOKEN
 ```
 
 To learn more about all the available environment variables, see the [Environment Variables ](https://outstatic.com/docs/environment-variables)section of the docs.
