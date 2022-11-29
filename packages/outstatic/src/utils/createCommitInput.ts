@@ -2,6 +2,7 @@ import { encode } from 'js-base64'
 import { FileType } from '../types'
 
 type createCommitInputType = {
+  message?: string
   owner: string
   slug?: string
   oldSlug?: string
@@ -16,6 +17,7 @@ type createCommitInputType = {
 }
 
 export const createCommitInput = ({
+  message,
   owner,
   slug,
   oldSlug,
@@ -79,9 +81,10 @@ export const createCommitInput = ({
     fileChanges = { ...fileChanges, deletions }
   }
 
-  const headline = slug
-    ? `feat(${collection}): ${slug}`
-    : `feat(${collection}): remove ${oldSlug}`
+  const headline =
+    message ?? slug
+      ? `feat(${collection}): ${slug}`
+      : `feat(${collection}): remove ${oldSlug}`
 
   return {
     input: {
