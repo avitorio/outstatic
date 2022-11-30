@@ -13,7 +13,7 @@ type createCommitInputType = {
   repoBranch: string
   contentPath: string
   monorepoPath: string
-  collection: string
+  collection?: string
 }
 
 export const createCommitInput = ({
@@ -30,11 +30,11 @@ export const createCommitInput = ({
   monorepoPath,
   collection
 }: createCommitInputType) => {
-  let fileChanges = {}
   const additions = []
   const deletions = []
+  let commitMessage = message ?? 'chore: Outstatic commit'
 
-  if (slug && content) {
+  if (slug && content && collection) {
     let newContent = content
 
     if (files.length > 0) {
@@ -68,7 +68,8 @@ export const createCommitInput = ({
       contents: encode(newContent)
     })
 
-    fileChanges = { additions }
+    // change to file change commit
+    commitMessage = `feat(${collection}): ${slug}`
   }
 
   // Remove old file if slug has changed
@@ -78,13 +79,9 @@ export const createCommitInput = ({
         monorepoPath ? monorepoPath + '/' : ''
       }${contentPath}/${collection}/${oldSlug}.md`
     })
-    fileChanges = { ...fileChanges, deletions }
+    // change to file delete commit
+    commitMessage = `feat(${collection}): remove ${oldSlug}`
   }
-
-  const headline =
-    message ?? slug
-      ? `feat(${collection}): ${slug}`
-      : `feat(${collection}): remove ${oldSlug}`
 
   return {
     input: {
@@ -93,9 +90,12 @@ export const createCommitInput = ({
         branchName: repoBranch
       },
       message: {
-        headline
+        headline: commitMessage
       },
-      fileChanges,
+      fileChanges: {
+        additions,
+        deletions
+      },
       expectedHeadOid: oid
     }
   }
