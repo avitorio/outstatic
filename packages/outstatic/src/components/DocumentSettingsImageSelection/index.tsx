@@ -1,6 +1,7 @@
 import { ChangeEvent, useContext, useEffect, useState } from 'react'
 import { DocumentContext } from '../../context'
 import { Document, FileType } from '../../types'
+import { IMAGES_PATH } from '../../utils/constants'
 import Input from '../Input'
 
 type DocumentSettingsImageSelectionProps = {
@@ -32,7 +33,10 @@ const DocumentSettingsImageSelection = ({
   const resolvedImage = resolve(name, document)
 
   useEffect(() => {
-    const image = resolvedImage?.replace('/images/', `/api/outstatic/images/`)
+    const image = resolvedImage?.replace(
+      `/${IMAGES_PATH}`,
+      `/api/outstatic/images/`
+    )
     setImage(image || '')
     setShowImageOptions(!resolvedImage)
     setShowImage(!!resolvedImage)
