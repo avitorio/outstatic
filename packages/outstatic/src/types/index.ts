@@ -47,12 +47,16 @@ export type Collection = {
   name: string
 }
 
+export const customFieldTypes = ['string', 'text'] as const
+
+export type CustomField = {
+  type: 'string' | 'text'
+  label: string
+  required?: boolean
+}
+
 export type CustomFields = {
-  [key: string]: {
-    type: 'string' | 'text'
-    label: string
-    required?: boolean
-  }
+  [key: string]: CustomField
 }
 
 export type SchemaShape =

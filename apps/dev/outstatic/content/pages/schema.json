@@ -1,0 +1,11 @@
+{
+  "category": {
+    "type": "string",
+    "label": "Write your category.",
+    "required": true
+  },
+  "short-bio": {
+    "type": "text",
+    "label": "Create a short paragraph."
+  }
+}

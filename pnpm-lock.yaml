@@ -190,6 +190,7 @@ importers:
       '@tiptap/extension-placeholder': 2.0.0-beta.202
       '@tiptap/react': 2.0.0-beta.202
       '@tiptap/starter-kit': 2.0.0-beta.202
+      '@types/capitalize': ^2.0.0
       '@types/cookie': ^0.5.1
       '@types/dompurify': ^2.3.3
       '@types/jest': ^29.0.0
@@ -202,6 +203,7 @@ importers:
       '@types/showdown': ^2.0.0
       '@types/testing-library__jest-dom': ^5.14.5
       '@uiw/react-md-editor': 3.6.0
+      capitalize: ^2.0.4
       concurrently: ^7.2.2
       cookie: ^0.5.0
       cross-fetch: ^3.1.5
@@ -251,6 +253,7 @@ importers:
       '@tiptap/react': 2.0.0-beta.202_b34bfmrzq6nwqs5zwwuhxagzky
       '@tiptap/starter-kit': 2.0.0-beta.202
       '@uiw/react-md-editor': 3.6.0_63dfw6rfgd64rl77ptfma4cvt4
+      capitalize: 2.0.4
       cookie: 0.5.0
       cross-fetch: 3.1.5_encoding@0.1.13
       dompurify: 2.3.10
@@ -280,6 +283,7 @@ importers:
       '@tailwindcss/typography': 0.5.4_tailwindcss@3.1.8
       '@testing-library/jest-dom': 5.16.5
       '@testing-library/react': 13.3.0_biqbaboplfbrettd7655fr4n2y
+      '@types/capitalize': 2.0.0
       '@types/cookie': 0.5.1
       '@types/dompurify': 2.3.3
       '@types/jest': 29.0.0
@@ -2615,6 +2619,10 @@ packages:
       '@babel/types': 7.18.13
     dev: true
 
+  /@types/capitalize/2.0.0:
+    resolution: {integrity: sha512-Jxz08Zch+/J+R3DUcPGmXZ4hNzZImd/FXXij32ByTfclrCQr15+geQjV5teTyFQb3zYPi7O5pRv2/YsyDfRmjA==}
+    dev: true
+
   /@types/cookie/0.4.1:
     resolution: {integrity: sha512-XW/Aa8APYr6jSVVA1y/DEIZX0/GMKLEVekNG727R8cs56ahETkRAy/3DR7+fJyh7oUgGwNQaRfXCun0+KbWY7Q==}
     dev: true
@@ -3579,6 +3587,10 @@ packages:
       tslib: 2.4.0
       upper-case-first: 2.0.2
     dev: true
+
+  /capitalize/2.0.4:
+    resolution: {integrity: sha512-wcSyiFqXRYyCoqu0o0ekXzJAKCLMkqWS5QWGlgTJFJKwRmI6pzcN2hBl5VPq9RzLW5Uf4FF/V/lcFfjCtVak2w==}
+    dev: false
 
   /ccount/2.0.1:
     resolution: {integrity: sha512-eyrF0jiFpY+3drT6383f1qhkbGsLSifNAjA61IUjZjmLCWjItY6LB9ft9YhoDgwfmclB2zhu51Lc7+95b8NRAg==}

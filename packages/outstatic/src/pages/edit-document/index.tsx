@@ -17,7 +17,7 @@ import { useCreateCommitMutation } from '../../graphql/generated'
 import { Document, FileType } from '../../types'
 import { useOstSession } from '../../utils/auth/hooks'
 import { IMAGES_PATH } from '../../utils/constants'
-import { createCommitInput } from '../../utils/createCommitInput'
+import { documentCommitInput } from '../../utils/documentCommitInput'
 import { deepReplace } from '../../utils/deepReplace'
 import { escapeRegExp } from '../../utils/escapeRegExp'
 import { getLocalDate } from '../../utils/getLocalDate'
@@ -79,7 +79,7 @@ export default function EditDocument({ collection }: EditDocumentProps) {
       // If the slug has changed, commit should delete old file
       const oldSlug = slug !== newSlug && slug !== 'new' ? slug : undefined
 
-      const commitInput = createCommitInput({
+      const commitInput = documentCommitInput({
         owner,
         slug: newSlug,
         oldSlug,

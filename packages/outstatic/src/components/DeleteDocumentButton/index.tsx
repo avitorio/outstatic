@@ -2,7 +2,7 @@ import { useContext, useState } from 'react'
 import { OutstaticContext } from '../../context'
 import { useCreateCommitMutation } from '../../graphql/generated'
 import { useOstSession } from '../../utils/auth/hooks'
-import { createCommitInput } from '../../utils/createCommitInput'
+import { documentCommitInput } from '../../utils/documentCommitInput'
 import useOid from '../../utils/useOid'
 import Modal from '../Modal'
 
@@ -35,7 +35,7 @@ const DeleteDocumentButton = ({
       const oid = await fetchOid()
       const owner = repoOwner || session?.user?.login || ''
 
-      const commitInput = createCommitInput({
+      const commitInput = documentCommitInput({
         owner,
         oldSlug: slug,
         oid,
