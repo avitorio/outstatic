@@ -58,7 +58,7 @@ const DocumentSettings = ({
           name="status"
           id="status"
           defaultValue={document.status}
-          className="block cursor-pointer appearance-none rounded-lg border border-gray-300 bg-gray-50 p-2 text-sm text-gray-900 outline-none focus:border-blue-500 focus:ring-blue-500"
+          className="block cursor-pointer appearance-none rounded-lg border border-gray-300 bg-gray-50 pl-2 py-2 text-sm text-gray-900 outline-none focus:border-blue-500 focus:ring-blue-500"
         >
           <option value="draft">Draft</option>
           <option value="published">Published</option>
