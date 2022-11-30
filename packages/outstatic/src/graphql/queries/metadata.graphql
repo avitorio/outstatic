@@ -9,6 +9,7 @@ query GetFileInformation(
     id
     object(expression: $expression) {
       ... on Tree {
+        commitUrl
         ...RecursiveTreeDetails
       }
     }
