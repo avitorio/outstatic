@@ -1,7 +1,7 @@
 import * as yup from 'yup'
-import { Document } from '../types'
+import { CustomFields, SchemaShape } from '../types'
 
-export const editDocumentSchema: yup.SchemaOf<Document> = yup.object().shape({
+const documentShape = {
   title: yup.string().required('Title is required.'),
   publishedAt: yup.date().required('Date is required.'),
   content: yup.string().required('Content is required.'),
@@ -27,4 +27,20 @@ export const editDocumentSchema: yup.SchemaOf<Document> = yup.object().shape({
     .required(),
   description: yup.string(),
   coverImage: yup.string()
-})
+}
+
+export const editDocumentSchema: yup.SchemaOf<SchemaShape> = yup
+  .object()
+  .shape(documentShape)
+
+export const convertSchemaToYup = (customFields: CustomFields) => {
+  const shape: SchemaShape = {}
+
+  Object.entries(customFields).map(([name, { type, required }]) => {
+    const fieldType = type === 'text' ? 'string' : type
+    shape[name] = required ? yup[fieldType]().required() : yup[fieldType]()
+  })
+
+  const yupSchema = yup.object().shape({ ...documentShape, ...shape })
+  return yupSchema
+}

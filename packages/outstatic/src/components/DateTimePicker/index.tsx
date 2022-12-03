@@ -89,7 +89,7 @@ const DateTimePicker = ({ date, setDate, id, label }: DateTimePickerProps) => {
           }) => (
             <div className="react-datepicker__header">
               <select
-                className="react-datepicker__current-month appearance-none cursor-pointer hover:text-blue-500"
+                className="react-datepicker__current-month appearance-none cursor-pointer hover:text-blue-500 bg-none px-1"
                 value={getYear(date)}
                 onChange={({ target: { value } }) => changeYear(Number(value))}
               >
@@ -100,7 +100,7 @@ const DateTimePicker = ({ date, setDate, id, label }: DateTimePickerProps) => {
                 ))}
               </select>
               <select
-                className="react-datepicker__current-month appearance-none cursor-pointer hover:text-blue-500"
+                className="react-datepicker__current-month appearance-none cursor-pointer hover:text-blue-500 bg-none px-1"
                 value={months[getMonth(date)]}
                 onChange={({ target: { value } }) =>
                   changeMonth(months.indexOf(value))
@@ -117,7 +117,7 @@ const DateTimePicker = ({ date, setDate, id, label }: DateTimePickerProps) => {
                 onClick={decreaseMonth}
                 disabled={prevMonthButtonDisabled}
                 type="button"
-                className="react-datepicker__navigation react-datepicker__navigation--previous"
+                className="react-datepicker__navigation react-datepicker__navigation--previous mt-2"
                 aria-label="Previous Month"
               >
                 <span className="react-datepicker__navigation-icon react-datepicker__navigation-icon--previous">
@@ -128,7 +128,7 @@ const DateTimePicker = ({ date, setDate, id, label }: DateTimePickerProps) => {
                 onClick={increaseMonth}
                 disabled={nextMonthButtonDisabled}
                 type="button"
-                className="react-datepicker__navigation react-datepicker__navigation--next"
+                className="react-datepicker__navigation react-datepicker__navigation--next pt-2 mt-2"
                 aria-label="Next Month"
               >
                 <span className="react-datepicker__navigation-icon react-datepicker__navigation-icon--next">

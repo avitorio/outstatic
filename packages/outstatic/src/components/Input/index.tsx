@@ -17,12 +17,12 @@ const sizes = {
   small: {
     label: 'mb-1 block text-sm font-medium text-gray-900',
     input:
-      'block w-full rounded-lg border border-gray-300 bg-gray-50 p-2 text-sm text-gray-900 outline-none focus:border-blue-500 focus:ring-blue-500'
+      'block w-full rounded-lg border border-gray-300 bg-gray-50 p-2 text-sm text-gray-900 outline-none focus:border-blue-500 focus:ring-blue-500 disabled:bg-gray-100 disabled:cursor-not-allowed disabled:text-gray-400'
   },
   medium: {
     label: 'block mb-2 text-sm font-medium text-gray-900',
     input:
-      'block p-2 w-full text-gray-900 bg-gray-50 rounded-lg border border-gray-300 sm:text-sm outline-none focus:ring-blue-500 focus:border-blue-500'
+      'block p-2 w-full text-gray-900 bg-gray-50 rounded-lg border border-gray-300 sm:text-sm outline-none focus:ring-blue-500 focus:border-blue-500 disabled:cursor-not-allowed disabled:text-gray-400'
   }
 }
 
@@ -71,7 +71,7 @@ export default function Input({
               <p className="text-xs text-gray-500">{helperText}</p>
             )}
             {errors[id]?.message && (
-              <span className="text-sm text-red-500">
+              <span className="block text-sm text-red-500 first-letter:uppercase">
                 {errors[id]?.message?.toString()}
               </span>
             )}

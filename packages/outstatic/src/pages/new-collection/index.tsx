@@ -15,7 +15,7 @@ import { collectionCommitInput } from '../../utils/collectionCommitInput'
 import useNavigationLock from '../../utils/useNavigationLock'
 import useOid from '../../utils/useOid'
 
-export default function EditCollection() {
+export default function NewCollection() {
   const {
     pages,
     contentPath,

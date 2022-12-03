@@ -3,7 +3,7 @@ import { FileType } from '../types'
 import { assertUnreachable } from './assertUnreachable'
 import { IMAGES_PATH } from './constants'
 
-type createCommitInputType = {
+type documentCommitInputType = {
   owner: string
   slug?: string
   oldSlug?: string
@@ -17,7 +17,7 @@ type createCommitInputType = {
   collection: string
 }
 
-export const createCommitInput = ({
+export const documentCommitInput = ({
   owner,
   slug,
   oldSlug,
@@ -29,7 +29,7 @@ export const createCommitInput = ({
   contentPath,
   monorepoPath,
   collection
-}: createCommitInputType) => {
+}: documentCommitInputType) => {
   let fileChanges = {}
   const additions = []
   const deletions = []

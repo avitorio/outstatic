@@ -46,3 +46,22 @@ export type Session = {
 export type Collection = {
   name: string
 }
+
+export const customFieldTypes = ['string', 'text'] as const
+
+export type CustomField = {
+  displayName: string
+  type: string
+  label?: string
+  required: boolean
+}
+
+export type CustomFields = {
+  [key: string]: CustomField
+}
+
+export type SchemaShape =
+  | Document
+  | {
+      [key: string]: any
+    }
