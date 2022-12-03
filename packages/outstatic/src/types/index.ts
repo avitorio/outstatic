@@ -50,9 +50,10 @@ export type Collection = {
 export const customFieldTypes = ['string', 'text'] as const
 
 export type CustomField = {
-  type: 'string' | 'text'
-  label: string
-  required?: boolean
+  displayName: string
+  type: string
+  label?: string
+  required: boolean
 }
 
 export type CustomFields = {

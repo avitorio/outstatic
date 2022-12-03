@@ -1,4 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup'
+import camelCase from 'camelcase'
 import Link from 'next/link'
 import { useContext, useEffect, useState } from 'react'
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form'
@@ -9,12 +10,7 @@ import Alert from '../../components/Alert'
 import Modal from '../../components/Modal'
 import { OutstaticContext } from '../../context'
 import { useCreateCommitMutation } from '../../graphql/generated'
-import {
-  Collection,
-  CustomField,
-  CustomFields,
-  customFieldTypes
-} from '../../types'
+import { CustomField, CustomFields, customFieldTypes } from '../../types'
 import useFileQuery from '../../utils/useFileQuery'
 import useNavigationLock from '../../utils/useNavigationLock'
 import useOid from '../../utils/useOid'
@@ -38,21 +34,24 @@ export default function EditCollection({ collection }: EditCollectionProps) {
   const [createCommit] = useCreateCommitMutation()
   const fetchOid = useOid()
   const [hasChanges, setHasChanges] = useState(false)
-  const createCollection: yup.SchemaOf<Collection> = yup.object().shape({
-    name: yup
+  const [customFields, setCustomFields] = useState<CustomFields>({})
+  const yupSchema: yup.SchemaOf<CustomField> = yup.object().shape({
+    displayName: yup
       .string()
       .matches(/^[aA-zZ\s]+$/, 'Only alphabets are allowed for this field.')
-      .required('Custom field name is required.')
+      .required('Custom field name is required.'),
+    type: yup.string().oneOf(['text', 'string']).required(),
+    label: yup.string(),
+    required: yup.boolean().required()
   })
   const [adding, setAdding] = useState(false)
-  const [error, setError] = useState(false)
+  const [error, setError] = useState('')
   const methods = useForm<CustomFieldForm>({
-    resolver: yupResolver(createCollection)
+    resolver: yupResolver(yupSchema)
   })
-  const [showAddFieldModal, setShowAddFieldModal] = useState(false)
+  const [showAddModal, setShowAddModal] = useState(false)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [deleting, setDeleting] = useState(false)
-  const [customFields, setCustomFields] = useState<CustomFields>({})
   const { data: schemaQueryData } = useFileQuery({
     file: `${collection}/schema.json`
   })
@@ -62,17 +61,62 @@ export default function EditCollection({ collection }: EditCollectionProps) {
     data: CustomFieldForm
   ) => {
     setAdding(true)
-    setHasChanges(false)
+    const { displayName, ...rest } = data
+    const fieldName = camelCase(displayName)
 
-    // TODO: convert name to camelCase
-    // Check if name is already taken
+    if (!selectedField && customFields[fieldName]) {
+      methods.setError('displayName', {
+        type: 'manual',
+        message: 'Field name is already taken.'
+      })
+      setAdding(false)
+      return
+    }
 
     try {
-      const { name, ...rest } = data
       const oid = await fetchOid()
       const owner = repoOwner || session?.user?.login || ''
-      customFields[name] = { ...rest }
+      customFields[fieldName] = {
+        ...rest,
+        displayName: capitalize(data.displayName)
+      }
       const customFieldsJSON = JSON.stringify(customFields, null, 2)
+      const commitInput = customFieldCommitInput({
+        owner,
+        oid,
+        fieldName,
+        customFieldsJSON,
+        repoSlug,
+        repoBranch,
+        contentPath,
+        monorepoPath,
+        collection
+      })
+      const created = await createCommit({ variables: commitInput })
+      if (created) {
+        setCustomFields({ ...customFields })
+      }
+    } catch (error) {
+      // TODO: Better error treatment
+      setError('add')
+      console.log({ error })
+    }
+
+    setHasChanges(false)
+    setSelectedField('')
+    setShowAddModal(false)
+    setAdding(false)
+  }
+
+  const deleteField = async (name: string) => {
+    setDeleting(true)
+
+    try {
+      let newCustomFields = { ...customFields }
+      delete newCustomFields[name]
+      const oid = await fetchOid()
+      const owner = repoOwner || session?.user?.login || ''
+      const customFieldsJSON = JSON.stringify(newCustomFields, null, 2)
       const commitInput = customFieldCommitInput({
         owner,
         oid,
@@ -84,20 +128,19 @@ export default function EditCollection({ collection }: EditCollectionProps) {
         monorepoPath,
         collection
       })
-      const created = await createCommit({ variables: commitInput })
-      if (created) {
-        setCustomFields({ ...customFields })
-        setSelectedField('')
+      const deleted = await createCommit({ variables: commitInput })
+      if (deleted) {
+        setCustomFields(newCustomFields)
       }
-      setShowAddFieldModal(false)
     } catch (error) {
       // TODO: Better error treatment
-      setAdding(false)
-      setHasChanges(false)
-      setError(true)
-      setShowAddFieldModal(false)
+      setError('delete')
       console.log({ error })
     }
+    setSelectedField('')
+    setShowDeleteModal(false)
+    setDeleting(false)
+    setHasChanges(false)
   }
 
   useEffect(() => {
@@ -128,7 +171,7 @@ export default function EditCollection({ collection }: EditCollectionProps) {
             type="button"
             onClick={() => {
               methods.reset()
-              setShowAddFieldModal(true)
+              setShowAddModal(true)
             }}
           >
             <div className="cursor-pointer rounded-lg border px-5 py-2.5 text-sm font-medium focus:outline-none focus:ring-4 border-gray-600 bg-gray-800 text-white hover:border-gray-600 hover:bg-gray-700 focus:ring-gray-700 no-underline">
@@ -149,21 +192,21 @@ export default function EditCollection({ collection }: EditCollectionProps) {
                     onClick={() => {
                       methods.reset()
                       setSelectedField(name)
-                      setShowAddFieldModal(true)
+                      setShowAddModal(true)
                     }}
                     className="text-left"
                   >
                     <span className="block text-xl cursor-pointer font-bold tracking-tight text-gray-900 capitalize hover:text-blue-500 mb-2">
-                      {/* TODO: convert camelCase to name */}
-                      {name}
+                      {field.displayName}
+                      {/* This span allows for full card click */}
                       <span className="absolute top-0 bottom-0 left-0 right-16"></span>
                     </span>
                     <span className="bg-blue-100 text-blue-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded">
-                      Type: {field.type}
+                      {field.type}
                     </span>
                     {field.required ? (
                       <span className="bg-red-100 text-red-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded">
-                        Required
+                        required
                       </span>
                     ) : null}
                   </button>
@@ -191,35 +234,44 @@ export default function EditCollection({ collection }: EditCollectionProps) {
             })}
         </div>
         {error ? (
-          <Alert type="error">
-            <span className="font-medium">Oops!</span> We couldn&apos;t create
-            your custom field. Please, make sure your settings are correct by{' '}
-            <Link href="/outstatic/settings">
-              <span className="underline">clicking here</span>
-            </Link>{' '}
-            .
-          </Alert>
+          <div className="mt-8">
+            <Alert type="error">
+              <>
+                <span className="font-medium">Oops!</span> We couldn&apos;t{' '}
+                {error} your custom field. You can probably find some useful
+                information in your browser&apos;s console.
+              </>
+            </Alert>
+          </div>
         ) : null}
-        {showAddFieldModal && (
+        {showAddModal && (
           <Modal
-            title={`Add Field to ${capitalize(collection)}`}
+            title={
+              selectedField
+                ? `Edit ${customFields[selectedField].displayName}`
+                : `Add Field to ${capitalize(collection)}`
+            }
             close={() => {
               setHasChanges(false)
               setSelectedField('')
-              setShowAddFieldModal(false)
+              setShowAddModal(false)
             }}
           >
             <form onSubmit={methods.handleSubmit(onSubmit)}>
               <div key={selectedField} className="flex p-6 text-left gap-4">
                 <Input
                   label="Field name"
-                  id="name"
+                  id="displayName"
                   inputSize="medium"
                   className="w-full max-w-sm md:w-80"
                   placeholder="Ex: Category"
                   type="text"
                   helperText="The name of the field"
-                  defaultValue={selectedField ? capitalize(selectedField) : ''}
+                  disabled={!!selectedField}
+                  autoFocus
+                  defaultValue={
+                    selectedField ? customFields[selectedField].displayName : ''
+                  }
                 />
                 <div className="mb-5">
                   <label
@@ -232,7 +284,8 @@ export default function EditCollection({ collection }: EditCollectionProps) {
                     {...methods.register('type')}
                     name="type"
                     id="type"
-                    className="block cursor-pointer appearance-none rounded-lg border border-gray-300 bg-gray-50 text-sm text-gray-900 outline-none focus:border-blue-500 focus:ring-blue-500 capitalize"
+                    className="block cursor-pointer appearance-none rounded-lg border border-gray-300 bg-gray-50 text-sm text-gray-900 outline-none focus:border-blue-500 focus:ring-blue-500 capitalize disabled:cursor-not-allowed disabled:text-gray-400"
+                    disabled={!!selectedField}
                     defaultValue={
                       selectedField
                         ? customFields[selectedField].type
@@ -322,8 +375,10 @@ export default function EditCollection({ collection }: EditCollectionProps) {
                           d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                         ></path>
                       </svg>
-                      Adding
+                      {selectedField ? 'Editing' : 'Adding'}
                     </>
+                  ) : selectedField ? (
+                    'Edit'
                   ) : (
                     'Add'
                   )}
@@ -334,7 +389,7 @@ export default function EditCollection({ collection }: EditCollectionProps) {
                   onClick={() => {
                     setHasChanges(false)
                     setSelectedField('')
-                    setShowAddFieldModal(false)
+                    setShowAddModal(false)
                   }}
                 >
                   Cancel
@@ -345,7 +400,7 @@ export default function EditCollection({ collection }: EditCollectionProps) {
         )}
         {showDeleteModal && (
           <Modal
-            title="Delete Custom Field"
+            title={`Delete ${customFields[selectedField].displayName} Field`}
             close={() => {
               setShowDeleteModal(false)
               setSelectedField('')
@@ -353,8 +408,8 @@ export default function EditCollection({ collection }: EditCollectionProps) {
           >
             <div className="space-y-6 p-6 text-left">
               <p className="text-base leading-relaxed text-gray-500">
-                Are you sure you want to delete the {capitalize(selectedField)}{' '}
-                field?
+                Are you sure you want to delete the{' '}
+                {customFields[selectedField].displayName} field?
               </p>
               <p className="text-base leading-relaxed text-gray-500">
                 This action cannot be undone.
@@ -364,10 +419,11 @@ export default function EditCollection({ collection }: EditCollectionProps) {
             <div className="flex items-center space-x-2 rounded-b border-t p-6">
               <button
                 type="button"
+                disabled={deleting}
                 className="flex rounded-lg bg-red-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-red-800 focus:outline-none"
                 onClick={() => {
                   setDeleting(true)
-                  // deleteField(selectedField)
+                  deleteField(selectedField)
                 }}
               >
                 {deleting ? (
@@ -400,7 +456,7 @@ export default function EditCollection({ collection }: EditCollectionProps) {
               </button>
               <button
                 type="button"
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                className="rounded-lg border border-gray-200 px-5 py-2.5 text-sm font-medium focus:z-10 focus:outline-none focus:ring-4 order-gray-600 bg-gray-800 text-white hover:border-gray-600 hover:bg-gray-700 focus:ring-gray-700"
                 onClick={() => {
                   setShowDeleteModal(false)
                   setSelectedField('')

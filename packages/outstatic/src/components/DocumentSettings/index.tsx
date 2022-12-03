@@ -171,7 +171,7 @@ const DocumentSettings = ({
           Object.entries(customFields).map(([name, field]) => {
             const Field = FieldMap[field.type]
             return (
-              <Accordion key={name} title={name}>
+              <Accordion key={name} title={field.displayName}>
                 <Field id={name} label={field.label} />
               </Accordion>
             )

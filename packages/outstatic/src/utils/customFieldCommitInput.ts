@@ -29,7 +29,7 @@ export const customFieldCommitInput = ({
     path: `${
       monorepoPath ? monorepoPath + '/' : ''
     }${contentPath}/${collection}/schema.json`,
-    contents: encode(customFieldsJSON)
+    contents: encode(customFieldsJSON + '\n')
   })
 
   const headline = `feat(${collection}): add ${fieldName} field`
