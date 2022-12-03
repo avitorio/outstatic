@@ -81,7 +81,6 @@ Before we start, you should know Outstatic saves content as markdown files to yo
 First install the Outstatic package:
 
 ```bash
-# For Next.js 13
 # npm
 npm install outstatic
 
@@ -90,8 +89,6 @@ yarn add outstatic
 
 #pnpm
 pnpm install outstatic
-
-# For Next.js v12 you may need to install outstatic@^0.0.31-rc
 ```
 
 Once installed, you'll need to add two files to your `/pages` folder:
