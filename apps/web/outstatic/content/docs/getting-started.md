@@ -78,7 +78,7 @@ We recommend you learn how [Outstatic manages content](/docs/introduction) and a
 
 Before we start, you should know Outstatic saves content as markdown files to your GitHub repository. To understand how this works please read our [introduction](https://outstatic.com/docs/introduction) article.
 
-First install the Outstatic package:
+First install the Outstatic package and dependencies:
 
 ```bash
 # npm
@@ -89,6 +89,19 @@ yarn add outstatic
 
 #pnpm
 pnpm install outstatic
+```
+
+Then install some needed dependencies:
+
+```javascript
+# npm
+npm install prosemirror-dropcursor prosemirror-gapcursor prosemirror-history
+
+# yarn
+yarn add prosemirror-dropcursor prosemirror-gapcursor prosemirror-history
+
+#pnpm
+pnpm install prosemirror-dropcursor prosemirror-gapcursor prosemirror-history
 ```
 
 Once installed, you'll need to add two files to your `/pages` folder:
