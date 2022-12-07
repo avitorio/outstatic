@@ -1,10 +1,7 @@
 import { encode } from 'js-base64'
 import { FileType } from '../types'
-import { assertUnreachable } from './assertUnreachable'
-import { IMAGES_PATH } from './constants'
 
 type createCommitInputType = {
-  message?: string
   owner: string
   slug?: string
   oldSlug?: string
@@ -15,11 +12,10 @@ type createCommitInputType = {
   repoBranch: string
   contentPath: string
   monorepoPath: string
-  collection?: string
+  collection: string
 }
 
 export const createCommitInput = ({
-  message,
   owner,
   slug,
   oldSlug,
@@ -32,11 +28,11 @@ export const createCommitInput = ({
   monorepoPath,
   collection
 }: createCommitInputType) => {
+  let fileChanges = {}
   const additions = []
   const deletions = []
-  let commitMessage = message ?? 'chore: Outstatic commit'
 
-  if (slug && content && collection) {
+  if (slug && content) {
     let newContent = content
 
     if (files.length > 0) {
@@ -51,23 +47,14 @@ export const createCommitInput = ({
             .replace(/[^a-zA-Z0-9-_\.]/g, '-')
             .replace(/(\.[^\.]*)?$/, `-${randString}$1`)
 
-          const filePath = (() => {
-            switch (type) {
-              case 'images':
-                return IMAGES_PATH
-              default:
-                assertUnreachable(type)
-            }
-          })()
-
           additions.push({
             path: `${
               monorepoPath ? monorepoPath + '/' : ''
-            }public/${filePath}${newFilename}`,
+            }public/${type}/${newFilename}`,
             contents: fileContents
           })
 
-          newContent = newContent.replace(blob, `/${filePath}${newFilename}`)
+          newContent = newContent.replace(blob, `/${type}/${newFilename}`)
         }
       })
     }
@@ -79,8 +66,7 @@ export const createCommitInput = ({
       contents: encode(newContent)
     })
 
-    // change to file change commit
-    commitMessage = `feat(${collection}): ${slug}`
+    fileChanges = { additions }
   }
 
   // Remove old file if slug has changed
@@ -90,9 +76,12 @@ export const createCommitInput = ({
         monorepoPath ? monorepoPath + '/' : ''
       }${contentPath}/${collection}/${oldSlug}.md`
     })
-    // change to file delete commit
-    commitMessage = `feat(${collection}): remove ${oldSlug}`
+    fileChanges = { ...fileChanges, deletions }
   }
+
+  const headline = slug
+    ? `feat(${collection}): ${slug}`
+    : `feat(${collection}): remove ${oldSlug}`
 
   return {
     input: {
@@ -101,12 +90,9 @@ export const createCommitInput = ({
         branchName: repoBranch
       },
       message: {
-        headline: commitMessage
+        headline
       },
-      fileChanges: {
-        additions,
-        deletions
-      },
+      fileChanges,
       expectedHeadOid: oid
     }
   }

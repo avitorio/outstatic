@@ -19,7 +19,7 @@ import matter from 'gray-matter'
 import { chunk } from '../../utils/chunk'
 import { hashFromUrl } from '../../utils/hashFromUrl'
 import useOid from '../../utils/useOid'
-import { createCommitInput } from '../../utils/createCommitInput'
+import { createCommit } from '../../utils/createCommit'
 
 interface MetadataBuilderProps extends HTMLAttributes<HTMLDivElement> {
   rebuild: boolean
@@ -158,26 +158,25 @@ export const MetadataBuilder: React.FC<MetadataBuilderProps> = ({
             ? data.repository.object.commitUrl
             : ''
         )
-        const payload = createCommitInput({
-          message: 'chore: Updates metadata DB',
-          owner: repoOwner,
-          repoSlug,
-          repoBranch,
-          oid,
-          contentPath,
-          monorepoPath
-        })
         const db = {
           hash: parentHash,
           generated: new Date().toUTCString(),
           metadata: docs.filter(Boolean)
         }
-        payload.input.fileChanges.additions.push({
-          path: `${
+        const capi = createCommit({
+          message: 'chore: Updates metadata DB',
+          owner: repoOwner,
+          name: repoSlug,
+          branch: repoBranch,
+          oid
+        })
+        capi.replaceFile(
+          `${
             monorepoPath ? monorepoPath + '/' : ''
           }${contentPath}/metadata.json`,
-          contents: JSON.stringify(db)
-        })
+          JSON.stringify(db)
+        )
+        const payload = capi.createInput()
 
         // TODO execute commit mutation
         console.log('PAYLOAD', payload)
