@@ -11,6 +11,7 @@ import {
   DocumentQuery,
   DocumentQueryVariables,
   GetFileInformationQuery,
+  useCreateCommitMutation,
   useGetFileInformationQuery
 } from '../../graphql/generated'
 import { DeepNonNullable } from '../../types'
@@ -42,6 +43,10 @@ interface FileMetadata {
   }
 }
 
+const isIndexable = (s: string) => {
+  return /\.md(x|oc)?$/.test(s)
+}
+
 export const MetadataBuilder: React.FC<MetadataBuilderProps> = ({
   rebuild,
   onComplete,
@@ -51,6 +56,7 @@ export const MetadataBuilder: React.FC<MetadataBuilderProps> = ({
   const [processed, setProcessed] = useState(0)
   const client = useApollo()
   const fetchOid = useOid()
+  const [commit] = useCreateCommitMutation()
 
   const { repoOwner, repoSlug, repoBranch, contentPath, monorepoPath } =
     useContext(OutstaticContext)
@@ -81,7 +87,10 @@ export const MetadataBuilder: React.FC<MetadataBuilderProps> = ({
       if (next?.object?.__typename === 'Tree') {
         // subdir - add entries to queue
         queue.push(...(next.object.entries ?? []))
-      } else if (next?.object?.__typename === 'Blob') {
+      } else if (
+        next?.object?.__typename === 'Blob' &&
+        isIndexable(next.path)
+      ) {
         // file - add to output
         output.push({
           path: next.path,
@@ -174,12 +183,20 @@ export const MetadataBuilder: React.FC<MetadataBuilderProps> = ({
           `${
             monorepoPath ? monorepoPath + '/' : ''
           }${contentPath}/metadata.json`,
-          JSON.stringify(db)
+          JSON.stringify(db, null, 2)
         )
         const payload = capi.createInput()
+        console.log(payload)
 
-        // TODO execute commit mutation
-        console.log('PAYLOAD', payload)
+        try {
+          await commit({
+            variables: {
+              input: payload
+            }
+          })
+        } catch (e) {
+          console.error(e)
+        }
       }
     }
 
@@ -194,7 +211,8 @@ export const MetadataBuilder: React.FC<MetadataBuilderProps> = ({
     rootPath,
     fetchOid,
     contentPath,
-    monorepoPath
+    monorepoPath,
+    commit
   ])
 
   useEffect(() => {

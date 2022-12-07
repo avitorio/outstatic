@@ -1,3 +1,4 @@
+import { encode } from 'js-base64'
 import {
   type FileChanges,
   type CreateCommitOnBranchInput
@@ -36,7 +37,7 @@ export const createCommit = ({
   }
 
   const replaceFile = (file: string, contents: string) => {
-    additions.push({ path: file, contents })
+    additions.push({ path: file, contents: encode(contents) })
   }
 
   const removeFile = (file: string) => {
@@ -52,8 +53,8 @@ export const createCommit = ({
       headline: commitMessage
     },
     fileChanges: {
-      additions: [],
-      deletions: []
+      additions,
+      deletions
     },
     expectedHeadOid: oid
   })
