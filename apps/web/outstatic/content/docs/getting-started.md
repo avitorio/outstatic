@@ -93,7 +93,7 @@ pnpm install outstatic
 
 Then install some needed dependencies:
 
-```javascript
+```bash
 # npm
 npm install prosemirror-dropcursor prosemirror-gapcursor prosemirror-history
 
