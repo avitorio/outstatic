@@ -2,6 +2,17 @@ import fs from 'fs'
 import { join } from 'path'
 import matter from 'gray-matter'
 
+export interface IOptions {
+  status: 'all' | 'published' | 'draft'
+}
+
+const defaultOptions: IOptions = {
+  status: 'published'
+}
+
+const isCorrectStatus = (options: IOptions, status?: string) =>
+  options.status === 'all' || status === options.status
+
 const CONTENT_PATH = join(
   process.cwd(),
   process.env.OST_CONTENT_PATH || 'outstatic/content'
@@ -18,7 +29,8 @@ export function getDocumentSlugs(collection: string) {
 export function getDocumentBySlug(
   collection: string,
   slug: string,
-  fields: string[] = []
+  fields: string[] = [],
+  options = defaultOptions
 ) {
   try {
     const realSlug = slug.replace(MD_MDX_REGEXP, '')
@@ -33,7 +45,7 @@ export function getDocumentBySlug(
 
     const items: Items = {}
 
-    if (data['status'] === 'draft') {
+    if (!isCorrectStatus(options, data['status'])) {
       return {}
     }
 
@@ -58,13 +70,22 @@ export function getDocumentBySlug(
   }
 }
 
-export function getDocuments(collection: string, fields: string[] = []) {
+export function getDocuments(
+  collection: string,
+  fields: string[] = [],
+  options = defaultOptions
+) {
   const slugs = getDocumentSlugs(collection)
   const documents = slugs
     .map((slug) =>
-      getDocumentBySlug(collection, slug, [...fields, 'publishedAt', 'status'])
+      getDocumentBySlug(
+        collection,
+        slug,
+        [...fields, 'publishedAt', 'status'],
+        options
+      )
     )
-    .filter((document) => document.status === 'published')
+    .filter((document) => isCorrectStatus(options, document.status))
     // sort documents by date in descending order
     .sort((document1, document2) =>
       document1.publishedAt > document2.publishedAt ? -1 : 1
@@ -72,7 +93,10 @@ export function getDocuments(collection: string, fields: string[] = []) {
   return documents
 }
 
-export const getDocumentPaths = (collection: string) => {
+export const getDocumentPaths = (
+  collection: string,
+  options = defaultOptions
+) => {
   try {
     const documentFilePaths = fs
       .readdirSync(CONTENT_PATH + '/' + collection)
@@ -84,7 +108,7 @@ export const getDocumentPaths = (collection: string) => {
       const fullPath = join(collectionsPath, `${path}`)
       const fileContents = fs.readFileSync(fullPath, 'utf8')
       const { data } = matter(fileContents)
-      return data['status'] === 'published'
+      return isCorrectStatus(options, data['status'])
     })
 
     const paths = publishedPaths
