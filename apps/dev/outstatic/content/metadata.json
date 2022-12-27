@@ -3,6 +3,7 @@
   "generated": "Wed, 07 Dec 2022 00:29:39 GMT",
   "metadata": [
     {
+      "_id": "apps/dev/outstatic/content/posts/how-to-create-an-outstatic-blog.md",
       "title": "Learn how to create your blog with Outstatic",
       "status": "published",
       "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.",
@@ -18,6 +19,7 @@
       "category": "posts"
     },
     {
+      "_id": "apps/dev/outstatic/content/pages/home.md",
       "title": "Home",
       "status": "published",
       "author": {
@@ -49,7 +51,8 @@
         "hash": "b22b0f4f3d38a659cbab9b89ac2b7394f2446de4",
         "path": "apps/dev/outstatic/content/projects/flycream-travel.md"
       },
-      "category": "projects"
+      "category": "projects",
+      "_id": "apps/dev/outstatic/content/projects/flycream-travel.md"
     },
     {
       "title": "If you want to make the wrong decision, ask everyone",
@@ -64,7 +67,8 @@
         "hash": "998b7f74af83e46bbdb4ab5302c8e4c39963278f",
         "path": "apps/dev/outstatic/content/posts/the-wrong-decision.md"
       },
-      "category": "posts"
+      "category": "posts",
+      "_id": "apps/dev/outstatic/content/posts/the-wrong-decision.md"
     },
     {
       "title": "Nothing is wrong. Everything is perfect",
@@ -80,7 +84,8 @@
         "hash": "d2f316fd04def3347c906f5227da5daf79971f61",
         "path": "apps/dev/outstatic/content/posts/nothing-wrong.md"
       },
-      "category": "posts"
+      "category": "posts",
+      "_id": "apps/dev/outstatic/content/posts/nothing-wrong.md"
     },
     {
       "title": "Couple Pizza",
@@ -95,7 +100,8 @@
         "hash": "aa1f387e5c66347e675bed0862b070d8946c95f4",
         "path": "apps/dev/outstatic/content/projects/couple-pizza.md"
       },
-      "category": "projects"
+      "category": "projects",
+      "_id": "apps/dev/outstatic/content/projects/couple-pizza.md"
     },
     {
       "title": " 🧸 Bearbnb",
@@ -110,7 +116,8 @@
         "hash": "caeb954ea1579e04b6b74c80ddf718e56c60a67d",
         "path": "apps/dev/outstatic/content/projects/bearbnb.md"
       },
-      "category": "projects"
+      "category": "projects",
+      "_id": "apps/dev/outstatic/content/projects/bearbnb.md"
     }
   ]
 }

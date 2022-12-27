@@ -1,6 +1,11 @@
+import 'mingo/init/system'
+
 import fs from 'fs'
-import { join } from 'path'
+import { readFile } from 'fs/promises'
+import { join, resolve } from 'path'
 import matter from 'gray-matter'
+import sift, { Query } from 'sift'
+import { firstBy } from 'thenby'
 
 const CONTENT_PATH = join(
   process.cwd(),
@@ -102,7 +107,9 @@ export const getDocumentPaths = (collection: string) => {
 
 export const getCollections = () => {
   try {
-    const collections = fs.readdirSync(CONTENT_PATH)
+    const collections = fs
+      .readdirSync(CONTENT_PATH)
+      .filter((f) => !/\.json$/.test(f))
     return collections
   } catch (error) {
     console.error({ getCollections: error })
@@ -120,5 +127,109 @@ function readMdMdxFiles(path: string) {
   } catch (error) {
     console.error({ readMdMdxFiles: error })
     return []
+  }
+}
+
+type SortFunction = (a: unknown, b: unknown) => number
+type Projection = Record<string, number> | string[]
+type OutstaticSchema<TSchema extends {} = {}> = TSchema & {
+  content: string
+  category: string
+  slug: string
+  title: string
+  status: string
+  __outstatic: {
+    hash: string
+    path: string
+  }
+}
+type QueryAPI<T> = {
+  sort: (sort: Record<string, number> | string[]) => QueryAPI<T>
+  project: (projection: Projection) => QueryAPI<T>
+  skip: (skip: number) => QueryAPI<T>
+  limit: (limit: number) => QueryAPI<T>
+  toArray: () => Promise<T[]>
+}
+
+export const load = async <TSchema extends {} = {}>() => {
+  const m = await readFile(resolve(CONTENT_PATH, './metadata.json'))
+  const metadata = JSON.parse(m.toString())
+  const mdb: unknown[] = metadata?.metadata ?? []
+
+  return {
+    find: (query: Query<OutstaticSchema<TSchema>>, projection?: Projection) => {
+      const subset = mdb.filter(sift<OutstaticSchema<TSchema>>(query))
+      let prj = projection ?? []
+      let skp = 0
+      let lmt: undefined | number = undefined
+      const api: QueryAPI<OutstaticSchema<TSchema>> = {
+        sort: (sort) => {
+          if (Array.isArray(sort)) {
+            let fn = firstBy(sort.shift() ?? '\x00')
+            for (const s of sort) {
+              fn = fn.thenBy(s)
+            }
+            subset.sort(fn as SortFunction)
+          } else {
+            const entries = Object.entries(sort)
+            const first = entries.shift()
+            if (first) {
+              let fn = firstBy(first[0], {
+                direction: first[1] >= 0 ? 'asc' : 'desc'
+              })
+              for (const [s, dir] of entries) {
+                fn = fn.thenBy(s, { direction: dir >= 0 ? 'asc' : 'desc' })
+              }
+              subset.sort(fn as SortFunction)
+            }
+          }
+          return api
+        },
+        project: (projection) => {
+          prj = projection
+          return api
+        },
+        skip: (skip) => {
+          skp = skip
+          return api
+        },
+        limit: (limit) => {
+          lmt = limit
+          return api
+        },
+        toArray: async () => {
+          // narrow down to smallest result set
+          const copied = (
+            JSON.parse(JSON.stringify(subset)) as OutstaticSchema<TSchema>[]
+          ).slice(skp, lmt)
+
+          const finalProjection = Array.isArray(prj) ? prj : Object.keys(prj)
+
+          // check projections and load content
+          const projected = await Promise.all(
+            copied.map((m) => {
+              if (
+                finalProjection.length === 0 ||
+                finalProjection.includes('content')
+              ) {
+                // TODO get content
+              }
+
+              // TODO unany
+              const result: any = {}
+              for (const p of finalProjection) {
+                if (typeof m[p as keyof typeof m] !== 'undefined') {
+                  result[p] = m[p as keyof typeof m]
+                }
+              }
+              return result as OutstaticSchema<TSchema>
+            })
+          )
+
+          return projected
+        }
+      }
+      return api
+    }
   }
 }

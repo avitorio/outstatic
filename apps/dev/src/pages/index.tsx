@@ -1,7 +1,7 @@
 import Layout from '../components/Layout'
 import Head from 'next/head'
 import { Document } from '../interfaces/document'
-import { getDocumentBySlug, getDocuments } from 'outstatic/server'
+import { load } from 'outstatic/server'
 import ContentGrid from '../components/ContentGrid'
 import markdownToHtml from '../lib/markdownToHtml'
 
@@ -47,19 +47,28 @@ export default function Index({ page, allPosts, allProjects }: Props) {
 }
 
 export const getStaticProps = async () => {
-  const page = getDocumentBySlug('pages', 'home', ['content'])
+  const db = await load()
 
-  const allPosts = getDocuments('posts', [
-    'title',
-    'publishedAt',
-    'slug',
-    'coverImage',
-    'description'
-  ])
+  const page = await db
+    .find({ category: 'pages', slug: 'home' }, ['content'])
+    .toArray()
+  const content = await markdownToHtml(page[0].content || '')
 
-  const allProjects = getDocuments('projects', ['title', 'slug', 'coverImage'])
+  const allPosts = await db
+    .find({ category: 'posts' }, [
+      'title',
+      'publishedAt',
+      'slug',
+      'coverImage',
+      'description'
+    ])
+    .sort({ publishedAt: -1 })
+    .toArray()
 
-  const content = await markdownToHtml(page.content || '')
+  const allProjects = await db
+    .find({ category: 'projects' }, ['title', 'slug', 'coverImage'])
+    .sort({ publishedAt: -1 })
+    .toArray()
 
   return {
     props: { page: { content }, allPosts, allProjects }
