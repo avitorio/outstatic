@@ -113,6 +113,8 @@ export const MetadataBuilder: React.FC<MetadataBuilderProps> = ({
         const state = MurmurHash3(res.data.repository.object.text ?? '')
         const fmd: Partial<OutstaticSchema> = {
           ...m.data,
+          slug:
+            m.data.slug ?? o.path.replace(/^.+\/(.+)\.(md|mdoc|mdx)?/, '$1'),
           __outstatic: {
             commit: o.commit,
             hash: `${state.result()}`,
