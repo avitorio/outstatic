@@ -1,7 +1,24 @@
 {
-  "commit": "37156fd513f7bbebc6c4de27149b305e5250f9f4",
-  "generated": "Wed, 28 Dec 2022 08:58:53 GMT",
+  "commit": "a3e888593a592fe5cbabf1957da818fca1f4147b",
+  "generated": "Wed, 28 Dec 2022 09:00:19 GMT",
   "metadata": [
+    {
+      "title": "Learn how to create your blog with Outstatic",
+      "status": "published",
+      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.",
+      "coverImage": "/images/jupiter-spaceship.png",
+      "publishedAt": "2022-07-14T02:34:02.322Z",
+      "author": {
+        "name": "Andre Vitorio"
+      },
+      "slug": "how-to-create-an-outstatic-blog",
+      "__outstatic": {
+        "commit": "bf4993b965319da4cb9de4a3810fb4af12bdebd6",
+        "hash": "2596208214",
+        "path": "apps/dev/outstatic/content/posts/how-to-create-an-outstatic-blog.md"
+      },
+      "category": "posts"
+    },
     {
       "title": "Home",
       "status": "published",
@@ -19,23 +36,6 @@
         "path": "apps/dev/outstatic/content/pages/home.md"
       },
       "category": "pages"
-    },
-    {
-      "title": "Learn how to create your blog with Outstatic",
-      "status": "published",
-      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.",
-      "coverImage": "/images/jupiter-spaceship.png",
-      "publishedAt": "2022-07-14T02:34:02.322Z",
-      "author": {
-        "name": "Andre Vitorio"
-      },
-      "slug": "dev/outstatic/content/posts/how-to-create-an-outstatic-blog",
-      "__outstatic": {
-        "commit": "bf4993b965319da4cb9de4a3810fb4af12bdebd6",
-        "hash": "2596208214",
-        "path": "apps/dev/outstatic/content/posts/how-to-create-an-outstatic-blog.md"
-      },
-      "category": "posts"
     },
     {
       "title": "Flycream Travel",
@@ -56,21 +56,38 @@
       "category": "projects"
     },
     {
-      "title": "Couple Pizza",
+      "title": " 🧸 Bearbnb",
       "status": "published",
-      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.",
-      "coverImage": "/images/couple-pizza.png",
-      "publishedAt": "2022-03-16T05:35:07.322Z",
+      "description": "Amazing rental locations for your teddy bear.",
+      "coverImage": "/images/bearbnb.png",
+      "publishedAt": "2022-03-17T05:35:07.322Z",
       "author": {
-        "name": "Bob Marley"
+        "name": "Andre Vitorio"
       },
-      "slug": "dev/outstatic/content/projects/couple-pizza",
+      "slug": "bearbnb",
       "__outstatic": {
-        "commit": "aa1f387e5c66347e675bed0862b070d8946c95f4",
-        "hash": "1055690014",
-        "path": "apps/dev/outstatic/content/projects/couple-pizza.md"
+        "commit": "caeb954ea1579e04b6b74c80ddf718e56c60a67d",
+        "hash": "1076515129",
+        "path": "apps/dev/outstatic/content/projects/bearbnb.md"
       },
       "category": "projects"
+    },
+    {
+      "title": "If you want to make the wrong decision, ask everyone",
+      "status": "published",
+      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.",
+      "coverImage": "/images/skyline.png",
+      "publishedAt": "2022-03-26T05:35:07.322Z",
+      "author": {
+        "name": "Naval Ravikant"
+      },
+      "slug": "the-wrong-decision",
+      "__outstatic": {
+        "commit": "998b7f74af83e46bbdb4ab5302c8e4c39963278f",
+        "hash": "3707858083",
+        "path": "apps/dev/outstatic/content/posts/the-wrong-decision.md"
+      },
+      "category": "posts"
     },
     {
       "title": "Nothing is wrong. Everything is perfect",
@@ -90,38 +107,21 @@
       "category": "posts"
     },
     {
-      "title": " 🧸 Bearbnb",
-      "status": "published",
-      "description": "Amazing rental locations for your teddy bear.",
-      "coverImage": "/images/bearbnb.png",
-      "publishedAt": "2022-03-17T05:35:07.322Z",
-      "author": {
-        "name": "Andre Vitorio"
-      },
-      "slug": "dev/outstatic/content/projects/bearbnb",
-      "__outstatic": {
-        "commit": "caeb954ea1579e04b6b74c80ddf718e56c60a67d",
-        "hash": "1076515129",
-        "path": "apps/dev/outstatic/content/projects/bearbnb.md"
-      },
-      "category": "projects"
-    },
-    {
-      "title": "If you want to make the wrong decision, ask everyone",
+      "title": "Couple Pizza",
       "status": "published",
       "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.",
-      "coverImage": "/images/skyline.png",
-      "publishedAt": "2022-03-26T05:35:07.322Z",
+      "coverImage": "/images/couple-pizza.png",
+      "publishedAt": "2022-03-16T05:35:07.322Z",
       "author": {
-        "name": "Naval Ravikant"
+        "name": "Bob Marley"
       },
-      "slug": "dev/outstatic/content/posts/the-wrong-decision",
+      "slug": "couple-pizza",
       "__outstatic": {
-        "commit": "998b7f74af83e46bbdb4ab5302c8e4c39963278f",
-        "hash": "3707858083",
-        "path": "apps/dev/outstatic/content/posts/the-wrong-decision.md"
+        "commit": "aa1f387e5c66347e675bed0862b070d8946c95f4",
+        "hash": "1055690014",
+        "path": "apps/dev/outstatic/content/projects/couple-pizza.md"
       },
-      "category": "posts"
+      "category": "projects"
     }
   ]
 }
