@@ -1,4 +1,4 @@
-import { encode } from 'js-base64'
+import { encode as toBase64 } from 'js-base64'
 import {
   type FileChanges,
   type CreateCommitOnBranchInput
@@ -7,7 +7,7 @@ import {
 export interface CommitAPI {
   createInput: () => CreateCommitOnBranchInput
   setMessage: (title: string, body?: string) => void
-  replaceFile: (file: string, contents: string) => void
+  replaceFile: (file: string, contents: string, encode?: boolean) => void
   removeFile: (file: string) => void
 }
 
@@ -36,8 +36,9 @@ export const createCommit = ({
     commitBody = body ?? commitBody
   }
 
-  const replaceFile = (file: string, contents: string) => {
-    additions.push({ path: file, contents: encode(contents) })
+  const replaceFile = (file: string, contents: string, encode = true) => {
+    const encoded = encode === true ? toBase64(contents) : contents
+    additions.push({ path: file, contents: encoded })
   }
 
   const removeFile = (file: string) => {

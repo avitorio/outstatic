@@ -4,6 +4,7 @@ query Document($owner: String!, $name: String!, $filePath: String!) {
     object(expression: $filePath) {
       ... on Blob {
         text
+        commitUrl
       }
     }
   }

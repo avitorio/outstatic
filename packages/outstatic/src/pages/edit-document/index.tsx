@@ -20,7 +20,6 @@ import {
 import { Document, FileType } from '../../types'
 import { useOstSession } from '../../utils/auth/hooks'
 import { IMAGES_PATH } from '../../utils/constants'
-import { createCommitInput } from '../../utils/createCommitInput'
 import { deepReplace } from '../../utils/deepReplace'
 import { escapeRegExp } from '../../utils/escapeRegExp'
 import { getLocalDate } from '../../utils/getLocalDate'
@@ -30,6 +29,10 @@ import useNavigationLock from '../../utils/useNavigationLock'
 import useOid from '../../utils/useOid'
 import useTipTap from '../../utils/useTipTap'
 import { editDocumentSchema } from '../../utils/yup'
+import { createCommit as createCommitApi } from '../../utils/createCommit'
+import { assertUnreachable } from '../../utils/assertUnreachable'
+import { MetadataSchema } from '../../utils/metadata/load'
+import { hashFromUrl } from '../../utils/hashFromUrl'
 
 type EditDocumentProps = {
   collection: string
@@ -70,33 +73,129 @@ export default function EditDocument({ collection }: EditDocumentProps) {
     skip: slug === 'new' || !slug
   })
 
+  const { data: metadata } = useDocumentQuery({
+    variables: {
+      owner: repoOwner || session?.user?.login || '',
+      name: repoSlug,
+      filePath: `${repoBranch}:${
+        monorepoPath ? monorepoPath + '/' : ''
+      }${contentPath}/metadata.json`
+    },
+    fetchPolicy: 'network-only'
+  })
+
   const onSubmit = async (data: Document) => {
     setLoading(true)
     try {
       const document = methods.getValues()
-      const content = mergeMdMeta({ ...data })
+      let content = mergeMdMeta({ ...data })
+      const { data: matterData } = matter(content)
       const oid = await fetchOid()
       const owner = repoOwner || session?.user?.login || ''
       const newSlug = document.slug
 
+      const fullContentPath = `${
+        monorepoPath ? monorepoPath + '/' : ''
+      }${contentPath}/${collection}/${slug}.md`
+
       // If the slug has changed, commit should delete old file
       const oldSlug = slug !== newSlug && slug !== 'new' ? slug : undefined
 
-      const commitInput = createCommitInput({
+      const capi = createCommitApi({
+        message: oldSlug
+          ? `chore: Updates ${newSlug} formerly ${oldSlug}`
+          : `chore: Updates/Creates ${newSlug}`,
         owner,
-        slug: newSlug,
-        oldSlug,
-        content,
-        oid,
-        files,
-        repoSlug,
-        repoBranch,
-        contentPath,
-        monorepoPath,
-        collection
+        oid: oid ?? '',
+        name: repoSlug,
+        branch: repoBranch
       })
 
-      await createCommit({ variables: commitInput })
+      if (oldSlug) {
+        capi.removeFile(
+          `${
+            monorepoPath ? monorepoPath + '/' : ''
+          }${contentPath}/${collection}/${oldSlug}.md`
+        )
+      }
+
+      // update metadata for this post
+      if (metadata?.repository?.object?.__typename === 'Blob') {
+        const m = JSON.parse(
+          metadata.repository.object.text ?? '{}'
+        ) as MetadataSchema
+        m.generated = new Date().toISOString()
+        m.hash = hashFromUrl(metadata.repository.object.commitUrl)
+        ;(m.metadata ?? []).filter(
+          (c) =>
+            c.category !== collection &&
+            (c.slug !== oldSlug || c.slug !== newSlug)
+        )
+        m.metadata.push({
+          ...matterData,
+          title: matterData.title,
+          publishedAt: matterData.publishedAt,
+          status: matterData.published,
+          slug: newSlug,
+          category: collection,
+          __outstatic: {
+            hash: m.hash,
+            path: fullContentPath
+          }
+        })
+
+        capi.replaceFile(
+          `${
+            monorepoPath ? monorepoPath + '/' : ''
+          }${contentPath}/metadata.json`,
+          JSON.stringify(m)
+        )
+      }
+
+      if (files.length > 0) {
+        files.forEach(({ filename, blob, type, content: fileContents }) => {
+          // check if blob is still in the document before adding file to the commit
+          if (blob && content.search(blob) !== -1) {
+            const randString = window
+              .btoa(Math.random().toString())
+              .substring(10, 6)
+            const newFilename = filename
+              .toLowerCase()
+              .replace(/[^a-zA-Z0-9-_\.]/g, '-')
+              .replace(/(\.[^\.]*)?$/, `-${randString}$1`)
+
+            const filePath = (() => {
+              switch (type) {
+                case 'images':
+                  return IMAGES_PATH
+                default:
+                  assertUnreachable(type)
+              }
+            })()
+
+            capi.replaceFile(
+              `${
+                monorepoPath ? monorepoPath + '/' : ''
+              }public/${filePath}${newFilename}`,
+              fileContents,
+              false
+            )
+
+            // replace blob in content with path
+            content = content.replace(blob, `/${filePath}${newFilename}`)
+          }
+        })
+      }
+
+      capi.replaceFile(fullContentPath, content)
+
+      const input = capi.createInput()
+
+      await createCommit({
+        variables: {
+          input
+        }
+      })
       setLoading(false)
       setHasChanges(false)
       setSlug(newSlug)

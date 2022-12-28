@@ -9,6 +9,12 @@ const CONTENT_PATH = join(
   process.env.OST_CONTENT_PATH || 'outstatic/content'
 )
 
+export type MetadataSchema<T extends {} = {}> = {
+  hash: string
+  generated: string
+  metadata: Omit<OutstaticSchema<T>, 'content'>[]
+}
+
 type Projection = Record<string, number> | string[]
 
 type OutstaticSchema<TSchema extends {} = {}> = TSchema & {
