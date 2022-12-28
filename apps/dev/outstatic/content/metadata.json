@@ -1,6 +1,6 @@
 {
-  "commit": "34957a355ca97b3fce59751ab4af8c40dfea5c5c",
-  "generated": "Wed, 28 Dec 2022 08:51:46 GMT",
+  "commit": "37156fd513f7bbebc6c4de27149b305e5250f9f4",
+  "generated": "Wed, 28 Dec 2022 08:58:53 GMT",
   "metadata": [
     {
       "title": "Home",
@@ -29,6 +29,7 @@
       "author": {
         "name": "Andre Vitorio"
       },
+      "slug": "dev/outstatic/content/posts/how-to-create-an-outstatic-blog",
       "__outstatic": {
         "commit": "bf4993b965319da4cb9de4a3810fb4af12bdebd6",
         "hash": "2596208214",
@@ -63,12 +64,30 @@
       "author": {
         "name": "Bob Marley"
       },
+      "slug": "dev/outstatic/content/projects/couple-pizza",
       "__outstatic": {
         "commit": "aa1f387e5c66347e675bed0862b070d8946c95f4",
         "hash": "1055690014",
         "path": "apps/dev/outstatic/content/projects/couple-pizza.md"
       },
       "category": "projects"
+    },
+    {
+      "title": "Nothing is wrong. Everything is perfect",
+      "status": "published",
+      "author": {
+        "name": "Andre Vitorio"
+      },
+      "slug": "nothing-wrong",
+      "description": "One more day, one more joy. I feel blessed.",
+      "coverImage": "/images/industrial-pattern.png",
+      "publishedAt": "2022-09-14T17:55:40.452Z",
+      "__outstatic": {
+        "commit": "d2f316fd04def3347c906f5227da5daf79971f61",
+        "hash": "4086614036",
+        "path": "apps/dev/outstatic/content/posts/nothing-wrong.md"
+      },
+      "category": "posts"
     },
     {
       "title": " 🧸 Bearbnb",
@@ -79,6 +98,7 @@
       "author": {
         "name": "Andre Vitorio"
       },
+      "slug": "dev/outstatic/content/projects/bearbnb",
       "__outstatic": {
         "commit": "caeb954ea1579e04b6b74c80ddf718e56c60a67d",
         "hash": "1076515129",
@@ -95,27 +115,11 @@
       "author": {
         "name": "Naval Ravikant"
       },
+      "slug": "dev/outstatic/content/posts/the-wrong-decision",
       "__outstatic": {
         "commit": "998b7f74af83e46bbdb4ab5302c8e4c39963278f",
         "hash": "3707858083",
         "path": "apps/dev/outstatic/content/posts/the-wrong-decision.md"
-      },
-      "category": "posts"
-    },
-    {
-      "title": "Nothing is wrong. Everything is perfect",
-      "status": "published",
-      "author": {
-        "name": "Andre Vitorio"
-      },
-      "slug": "nothing-wrong",
-      "description": "One more day, one more joy. I feel blessed.",
-      "coverImage": "/images/industrial-pattern.png",
-      "publishedAt": "2022-09-14T17:55:40.452Z",
-      "__outstatic": {
-        "commit": "d2f316fd04def3347c906f5227da5daf79971f61",
-        "hash": "4086614036",
-        "path": "apps/dev/outstatic/content/posts/nothing-wrong.md"
       },
       "category": "posts"
     }
