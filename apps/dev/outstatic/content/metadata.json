@@ -1,7 +1,24 @@
 {
-  "commit": "34957a355ca97b3fce59751ab4af8c40dfea5c5c",
-  "generated": "Wed, 28 Dec 2022 08:51:46 GMT",
+  "commit": "a3e888593a592fe5cbabf1957da818fca1f4147b",
+  "generated": "Wed, 28 Dec 2022 09:00:19 GMT",
   "metadata": [
+    {
+      "title": "Learn how to create your blog with Outstatic",
+      "status": "published",
+      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.",
+      "coverImage": "/images/jupiter-spaceship.png",
+      "publishedAt": "2022-07-14T02:34:02.322Z",
+      "author": {
+        "name": "Andre Vitorio"
+      },
+      "slug": "how-to-create-an-outstatic-blog",
+      "__outstatic": {
+        "commit": "bf4993b965319da4cb9de4a3810fb4af12bdebd6",
+        "hash": "2596208214",
+        "path": "apps/dev/outstatic/content/posts/how-to-create-an-outstatic-blog.md"
+      },
+      "category": "posts"
+    },
     {
       "title": "Home",
       "status": "published",
@@ -19,22 +36,6 @@
         "path": "apps/dev/outstatic/content/pages/home.md"
       },
       "category": "pages"
-    },
-    {
-      "title": "Learn how to create your blog with Outstatic",
-      "status": "published",
-      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.",
-      "coverImage": "/images/jupiter-spaceship.png",
-      "publishedAt": "2022-07-14T02:34:02.322Z",
-      "author": {
-        "name": "Andre Vitorio"
-      },
-      "__outstatic": {
-        "commit": "bf4993b965319da4cb9de4a3810fb4af12bdebd6",
-        "hash": "2596208214",
-        "path": "apps/dev/outstatic/content/posts/how-to-create-an-outstatic-blog.md"
-      },
-      "category": "posts"
     },
     {
       "title": "Flycream Travel",
@@ -55,22 +56,6 @@
       "category": "projects"
     },
     {
-      "title": "Couple Pizza",
-      "status": "published",
-      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.",
-      "coverImage": "/images/couple-pizza.png",
-      "publishedAt": "2022-03-16T05:35:07.322Z",
-      "author": {
-        "name": "Bob Marley"
-      },
-      "__outstatic": {
-        "commit": "aa1f387e5c66347e675bed0862b070d8946c95f4",
-        "hash": "1055690014",
-        "path": "apps/dev/outstatic/content/projects/couple-pizza.md"
-      },
-      "category": "projects"
-    },
-    {
       "title": " 🧸 Bearbnb",
       "status": "published",
       "description": "Amazing rental locations for your teddy bear.",
@@ -79,6 +64,7 @@
       "author": {
         "name": "Andre Vitorio"
       },
+      "slug": "bearbnb",
       "__outstatic": {
         "commit": "caeb954ea1579e04b6b74c80ddf718e56c60a67d",
         "hash": "1076515129",
@@ -95,6 +81,7 @@
       "author": {
         "name": "Naval Ravikant"
       },
+      "slug": "the-wrong-decision",
       "__outstatic": {
         "commit": "998b7f74af83e46bbdb4ab5302c8e4c39963278f",
         "hash": "3707858083",
@@ -118,6 +105,23 @@
         "path": "apps/dev/outstatic/content/posts/nothing-wrong.md"
       },
       "category": "posts"
+    },
+    {
+      "title": "Couple Pizza",
+      "status": "published",
+      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.",
+      "coverImage": "/images/couple-pizza.png",
+      "publishedAt": "2022-03-16T05:35:07.322Z",
+      "author": {
+        "name": "Bob Marley"
+      },
+      "slug": "couple-pizza",
+      "__outstatic": {
+        "commit": "aa1f387e5c66347e675bed0862b070d8946c95f4",
+        "hash": "1055690014",
+        "path": "apps/dev/outstatic/content/projects/couple-pizza.md"
+      },
+      "category": "projects"
     }
   ]
 }
