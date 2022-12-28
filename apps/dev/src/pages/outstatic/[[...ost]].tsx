@@ -1,5 +1,6 @@
-import 'outstatic/outstatic.css'
 import { Outstatic, OstSSP } from 'outstatic'
+
+import('outstatic/outstatic.css')
 
 export default Outstatic
 

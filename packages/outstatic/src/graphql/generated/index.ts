@@ -28146,7 +28146,11 @@ export type CollectionsQuery = {
       | { __typename?: 'Tag' }
       | {
           __typename?: 'Tree'
-          entries?: Array<{ __typename?: 'TreeEntry'; name: string }> | null
+          entries?: Array<{
+            __typename?: 'TreeEntry'
+            name: string
+            type: string
+          }> | null
         }
       | null
   } | null
@@ -28593,6 +28597,7 @@ export const CollectionsDocument = gql`
         ... on Tree {
           entries {
             name
+            type
           }
         }
       }

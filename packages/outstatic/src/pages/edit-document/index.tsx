@@ -31,8 +31,9 @@ import useTipTap from '../../utils/useTipTap'
 import { editDocumentSchema } from '../../utils/yup'
 import { createCommit as createCommitApi } from '../../utils/createCommit'
 import { assertUnreachable } from '../../utils/assertUnreachable'
-import { MetadataSchema } from '../../utils/metadata/load'
+import { MetadataSchema } from '../../utils/metadata/types'
 import { hashFromUrl } from '../../utils/hashFromUrl'
+import MurmurHash3 from 'imurmurhash'
 
 type EditDocumentProps = {
   collection: string
@@ -119,39 +120,6 @@ export default function EditDocument({ collection }: EditDocumentProps) {
         )
       }
 
-      // update metadata for this post
-      if (metadata?.repository?.object?.__typename === 'Blob') {
-        const m = JSON.parse(
-          metadata.repository.object.text ?? '{}'
-        ) as MetadataSchema
-        m.generated = new Date().toISOString()
-        m.hash = hashFromUrl(metadata.repository.object.commitUrl)
-        ;(m.metadata ?? []).filter(
-          (c) =>
-            c.category !== collection &&
-            (c.slug !== oldSlug || c.slug !== newSlug)
-        )
-        m.metadata.push({
-          ...matterData,
-          title: matterData.title,
-          publishedAt: matterData.publishedAt,
-          status: matterData.published,
-          slug: newSlug,
-          category: collection,
-          __outstatic: {
-            hash: m.hash,
-            path: fullContentPath
-          }
-        })
-
-        capi.replaceFile(
-          `${
-            monorepoPath ? monorepoPath + '/' : ''
-          }${contentPath}/metadata.json`,
-          JSON.stringify(m)
-        )
-      }
-
       if (files.length > 0) {
         files.forEach(({ filename, blob, type, content: fileContents }) => {
           // check if blob is still in the document before adding file to the commit
@@ -188,6 +156,42 @@ export default function EditDocument({ collection }: EditDocumentProps) {
       }
 
       capi.replaceFile(fullContentPath, content)
+
+      // update metadata for this post
+      // requires final content for hashing
+      if (metadata?.repository?.object?.__typename === 'Blob') {
+        const m = JSON.parse(
+          metadata.repository.object.text ?? '{}'
+        ) as MetadataSchema
+        m.generated = new Date().toISOString()
+        m.commit = hashFromUrl(metadata.repository.object.commitUrl)
+        ;(m.metadata ?? []).filter(
+          (c) =>
+            c.category !== collection &&
+            (c.slug !== oldSlug || c.slug !== newSlug)
+        )
+        const state = MurmurHash3(content)
+        m.metadata.push({
+          ...matterData,
+          title: matterData.title,
+          publishedAt: matterData.publishedAt,
+          status: matterData.published,
+          slug: newSlug,
+          category: collection,
+          __outstatic: {
+            hash: `${state.result()}`,
+            commit: m.commit,
+            path: fullContentPath
+          }
+        })
+
+        capi.replaceFile(
+          `${
+            monorepoPath ? monorepoPath + '/' : ''
+          }${contentPath}/metadata.json`,
+          JSON.stringify(m)
+        )
+      }
 
       const input = capi.createInput()
 

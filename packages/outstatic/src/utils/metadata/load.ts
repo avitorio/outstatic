@@ -3,64 +3,12 @@ import { join, resolve } from 'path'
 import matter from 'gray-matter'
 import sift, { Query } from 'sift'
 import { firstBy } from 'thenby'
+import { FindAPI, OutstaticSchema, Projection } from './types'
 
 const CONTENT_PATH = join(
   process.cwd(),
   process.env.OST_CONTENT_PATH || 'outstatic/content'
 )
-
-export type MetadataSchema<T extends {} = {}> = {
-  hash: string
-  generated: string
-  metadata: Omit<OutstaticSchema<T>, 'content'>[]
-}
-
-type Projection = Record<string, number> | string[]
-
-type OutstaticSchema<TSchema extends {} = {}> = TSchema & {
-  content: string
-  category: string
-  slug: string
-  title: string
-  status: string
-  description?: string
-  coverImage?: string
-  publishedAt: Date
-  author?: {
-    name?: string
-    picture?: string
-  }
-  __outstatic: {
-    hash: string
-    path: string
-  }
-}
-
-type SortDeclaration = {
-  [key: string]: number
-}
-
-type QueryAPI<T, P> = {
-  /**
-   * Sort the results using the following options for `sort`
-   *   * As an array of strings - sorted using ascending sort
-   *   * As an object in key-order - {publishedAt: 1, slug: -1} using `1` for ascending and `-1` for descending
-   *   * An array containing a mix of the above values
-   */
-  sort: (
-    sort: SortDeclaration | (keyof T)[] | SortDeclaration | keyof T
-  ) => QueryAPI<T, P>
-  /** Limit the fields returned before running the find operation */
-  project: (projection: Projection) => QueryAPI<T, P>
-  /** Skip the specified number of entries from the result */
-  skip: (skip: number) => QueryAPI<T, P>
-  /** Limit the find results to the specified number of results */
-  limit: (limit: number) => QueryAPI<T, P>
-  /** Take the first result from the query, disregarding others. Populates additional data from the filesystem */
-  first: () => Promise<P>
-  /** Return the results as an array, populating additional data from the filesystem as needed */
-  toArray: () => Promise<P[]>
-}
 
 export const load = async <TSchema extends {} = {}>() => {
   const m = await readFile(resolve(CONTENT_PATH, './metadata.json'))
@@ -80,7 +28,7 @@ export const load = async <TSchema extends {} = {}>() => {
       let prj = projection ?? []
       let skp = 0
       let lmt: undefined | number = undefined
-      const api: QueryAPI<OutstaticSchema<TSchema>, TProjection> = {
+      const api: FindAPI<OutstaticSchema<TSchema>, TProjection> = {
         sort: (sort) => {
           const applyKeys = (obj: Record<string, number>, tb: IThenBy<any>) => {
             let next = tb

@@ -21,6 +21,8 @@ import { chunk } from '../../utils/chunk'
 import { hashFromUrl } from '../../utils/hashFromUrl'
 import useOid from '../../utils/useOid'
 import { createCommit } from '../../utils/createCommit'
+import MurmurHash3 from 'imurmurhash'
+import { MetadataSchema, OutstaticSchema } from '../../utils/metadata/types'
 
 interface MetadataBuilderProps extends HTMLAttributes<HTMLDivElement> {
   rebuild: boolean
@@ -32,15 +34,6 @@ interface FileData {
   path: string
   oid: string
   commit: string
-}
-
-/** Describes the metadata format */
-interface FileMetadata {
-  [key: string]: unknown
-  __outstatic: {
-    path: string
-    hash: string
-  }
 }
 
 const isIndexable = (s: string) => {
@@ -117,10 +110,12 @@ export const MetadataBuilder: React.FC<MetadataBuilderProps> = ({
 
       if (res.data.repository?.object?.__typename === 'Blob') {
         const m = matter(res.data.repository.object.text ?? '')
-        const fmd: FileMetadata = {
+        const state = MurmurHash3(res.data.repository.object.text ?? '')
+        const fmd: Partial<OutstaticSchema> = {
           ...m.data,
           __outstatic: {
-            hash: o.commit,
+            commit: o.commit,
+            hash: `${state.result()}`,
             path: o.path
           }
         }
@@ -167,8 +162,8 @@ export const MetadataBuilder: React.FC<MetadataBuilderProps> = ({
             ? data.repository.object.commitUrl
             : ''
         )
-        const db = {
-          hash: parentHash,
+        const db: MetadataSchema = {
+          commit: parentHash,
           generated: new Date().toUTCString(),
           metadata: docs.filter(Boolean)
         }
