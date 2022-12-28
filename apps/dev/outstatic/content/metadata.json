@@ -3,7 +3,6 @@
   "generated": "Wed, 07 Dec 2022 00:29:39 GMT",
   "metadata": [
     {
-      "_id": "apps/dev/outstatic/content/posts/how-to-create-an-outstatic-blog.md",
       "title": "Learn how to create your blog with Outstatic",
       "status": "published",
       "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.",
@@ -14,12 +13,11 @@
       },
       "__outstatic": {
         "hash": "bf4993b965319da4cb9de4a3810fb4af12bdebd6",
-        "path": "apps/dev/outstatic/content/posts/how-to-create-an-outstatic-blog.md"
+        "path": "posts/how-to-create-an-outstatic-blog.md"
       },
       "category": "posts"
     },
     {
-      "_id": "apps/dev/outstatic/content/pages/home.md",
       "title": "Home",
       "status": "published",
       "author": {
@@ -32,7 +30,7 @@
       "publishedAt": "2022-03-17T05:35:07.322Z",
       "__outstatic": {
         "hash": "2e47122b5b6d49d6d1ddb15bcd33edc4a0c1256e",
-        "path": "apps/dev/outstatic/content/pages/home.md"
+        "path": "pages/home.md"
       },
       "category": "pages"
     },
@@ -49,10 +47,9 @@
       "publishedAt": "2022-09-14T17:55:40.452Z",
       "__outstatic": {
         "hash": "b22b0f4f3d38a659cbab9b89ac2b7394f2446de4",
-        "path": "apps/dev/outstatic/content/projects/flycream-travel.md"
+        "path": "projects/flycream-travel.md"
       },
-      "category": "projects",
-      "_id": "apps/dev/outstatic/content/projects/flycream-travel.md"
+      "category": "projects"
     },
     {
       "title": "If you want to make the wrong decision, ask everyone",
@@ -65,10 +62,9 @@
       },
       "__outstatic": {
         "hash": "998b7f74af83e46bbdb4ab5302c8e4c39963278f",
-        "path": "apps/dev/outstatic/content/posts/the-wrong-decision.md"
+        "path": "posts/the-wrong-decision.md"
       },
-      "category": "posts",
-      "_id": "apps/dev/outstatic/content/posts/the-wrong-decision.md"
+      "category": "posts"
     },
     {
       "title": "Nothing is wrong. Everything is perfect",
@@ -82,10 +78,9 @@
       "publishedAt": "2022-09-14T17:55:40.452Z",
       "__outstatic": {
         "hash": "d2f316fd04def3347c906f5227da5daf79971f61",
-        "path": "apps/dev/outstatic/content/posts/nothing-wrong.md"
+        "path": "posts/nothing-wrong.md"
       },
-      "category": "posts",
-      "_id": "apps/dev/outstatic/content/posts/nothing-wrong.md"
+      "category": "posts"
     },
     {
       "title": "Couple Pizza",
@@ -98,10 +93,9 @@
       },
       "__outstatic": {
         "hash": "aa1f387e5c66347e675bed0862b070d8946c95f4",
-        "path": "apps/dev/outstatic/content/projects/couple-pizza.md"
+        "path": "projects/couple-pizza.md"
       },
-      "category": "projects",
-      "_id": "apps/dev/outstatic/content/projects/couple-pizza.md"
+      "category": "projects"
     },
     {
       "title": " 🧸 Bearbnb",
@@ -114,10 +108,9 @@
       },
       "__outstatic": {
         "hash": "caeb954ea1579e04b6b74c80ddf718e56c60a67d",
-        "path": "apps/dev/outstatic/content/projects/bearbnb.md"
+        "path": "projects/bearbnb.md"
       },
-      "category": "projects",
-      "_id": "apps/dev/outstatic/content/projects/bearbnb.md"
+      "category": "projects"
     }
   ]
 }
