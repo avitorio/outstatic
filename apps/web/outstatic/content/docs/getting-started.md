@@ -96,7 +96,6 @@ Once installed, you'll need to add two files to your `/pages` folder:
 `/pages/outstatic/[[...ost]].tsx`
 
 ```javascript
-import 'outstatic/outstatic.css'
 import { Outstatic, OstSSP } from 'outstatic'
 
 export default Outstatic
@@ -110,6 +109,12 @@ And `/pages/api/outstatic/[[...ost]].tsx`
 import { OutstaticApi } from 'outstatic'
 
 export default OutstaticApi
+```
+
+Finally, add the outstatic CSS to the top of your `pages/_app.tsx`
+
+```javascript
+import 'outstatic/outstatic.css'
 ```
 
 Start your dev server. Assuming you're on `http://localhost:3000` you can access your dashboard at `https://localhost:3000/outstatic`.
