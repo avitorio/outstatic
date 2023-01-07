@@ -16,20 +16,22 @@ const useOid = () => {
   })
 
   const fetchOid = useCallback(async () => {
-    try {
-      const { data: oidData, error: oidError } = await oidQuery()
-      if (oidError) {
-        console.error(oidError)
-      }
-
-      if (oidData?.repository?.ref?.target?.__typename !== 'Commit') {
-        return undefined
-      }
-
-      return oidData.repository.ref.target.history.nodes?.[0]?.oid
-    } catch (error) {
-      console.error(error)
+    const { data: oidData, error: oidError } = await oidQuery()
+    if (oidError) {
+      throw oidError
     }
+
+    if (oidData?.repository?.ref?.target?.__typename !== 'Commit') {
+      throw new Error('No valid oid found')
+    }
+
+    if (
+      typeof oidData.repository.ref.target.history.nodes?.[0]?.oid !== 'string'
+    ) {
+      throw new Error('Received a non-string oid')
+    }
+
+    return oidData.repository.ref.target.history.nodes[0].oid
   }, [oidQuery])
 
   return fetchOid
