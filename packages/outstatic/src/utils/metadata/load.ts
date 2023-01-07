@@ -128,7 +128,7 @@ export const load = async <TSchema extends {} = {}>() => {
                 finalProjection.includes('content')
               ) {
                 const buf = await readFile(
-                  resolve(CONTENT_PATH, `./${m.__outstatic.path}`)
+                  resolve(process.cwd(), `./${m.__outstatic.path}`)
                 )
                 const { content } = matter(buf.toString())
                 m.content = content
