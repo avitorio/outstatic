@@ -38,30 +38,32 @@ export default function AdminLayout({
       <Head>
         <title>{title ? `${title} | Outstatic` : 'Outstatic'}</title>
       </Head>
-      {status === 'loading' ? null : (
-        <div className="flex h-screen flex-col bg-white text-black">
-          <AdminHeader
-            {...session?.user}
-            status={status}
-            toggleSidebar={toggleSidebar}
-          />
-          <div className="flex grow flex-col-reverse justify-between md:flex-row">
-            <Sidebar isOpen={openSidebar} />
-            <main className="w-auto flex-auto p-5 md:p-10 bg-white max-h-[calc(100vh-53px)] overflow-y-scroll scrollbar-hide">
-              {error && (
-                <div className="mb-6 border border-red-500 p-2">
-                  Something went wrong{' '}
-                  <span role="img" aria-label="sad face">
-                    😓
-                  </span>
-                </div>
-              )}
-              {children}
-            </main>
-            {settings && settings}
+      <div id="outstatic">
+        {status === 'loading' ? null : (
+          <div className="flex h-screen flex-col bg-white text-black">
+            <AdminHeader
+              {...session?.user}
+              status={status}
+              toggleSidebar={toggleSidebar}
+            />
+            <div className="flex grow flex-col-reverse justify-between md:flex-row">
+              <Sidebar isOpen={openSidebar} />
+              <main className="w-auto flex-auto p-5 md:p-10 bg-white max-h-[calc(100vh-53px)] overflow-y-scroll scrollbar-hide">
+                {error && (
+                  <div className="mb-6 border border-red-500 p-2">
+                    Something went wrong{' '}
+                    <span role="img" aria-label="sad face">
+                      😓
+                    </span>
+                  </div>
+                )}
+                {children}
+              </main>
+              {settings && settings}
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </>
   )
 }

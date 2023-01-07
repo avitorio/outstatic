@@ -15,6 +15,8 @@ module.exports = {
       }
     }
   },
+  // https://tailwindcss.com/docs/configuration#selector-strategy
+  important: '#outstatic',
   plugins: [
     require('@tailwindcss/typography'),
     plugin(function ({ addUtilities }) {

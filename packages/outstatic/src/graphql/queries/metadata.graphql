@@ -1,0 +1,100 @@
+# Get basic information about the files inside of outstatic content
+# A sample expression: "z1:apps/dev/outstatic/content"
+query GetFileInformation(
+  $owner: String!
+  $name: String!
+  $expression: String!
+) {
+  repository(owner: $owner, name: $name) {
+    id
+    object(expression: $expression) {
+      ... on Tree {
+        commitUrl
+        ...RecursiveTreeDetails
+      }
+    }
+  }
+}
+
+# When the Tree details returns a tree object (directory) return these fields
+fragment TreeDetails on TreeEntry {
+  path
+  type
+}
+
+# When the Tree details returns a blob object (file) return these fields
+fragment BlobDetails on Blob {
+  oid
+  commitUrl
+}
+
+# The recursive tree is a manual walk 5 sub-paths deep
+# GitHub's GraphQL API explicitly disallows recusive fragments,
+# so this depth query must be explicitly spelled out.
+# ref: https://docs.github.com/en/graphql/reference/objects#tree
+fragment RecursiveTreeDetails on Tree {
+  # /{collection}
+  entries {
+    ...TreeDetails
+    object {
+      ... on Blob {
+        ...BlobDetails
+      }
+      ... on Tree {
+        # /{collection}/{p1}
+        entries {
+          ...TreeDetails
+          object {
+            ... on Blob {
+              ...BlobDetails
+            }
+            ... on Tree {
+              # /{collection}/{p1}/{p2}
+              entries {
+                ...TreeDetails
+                object {
+                  ... on Blob {
+                    ...BlobDetails
+                  }
+                  ... on Tree {
+                    # /{collection}/{p1}/{p2}/{p3}
+                    entries {
+                      ...TreeDetails
+                      object {
+                        ... on Blob {
+                          ...BlobDetails
+                        }
+                        ... on Tree {
+                          # /{collection}/{p1}/{p2}/{p3}/{p4}
+                          entries {
+                            ...TreeDetails
+                            object {
+                              ... on Blob {
+                                ...BlobDetails
+                              }
+                              ... on Tree {
+                                # /{collection}/{p1}/{p2}/{p3}/{p4}/{p5}
+                                entries {
+                                  ...TreeDetails
+                                  object {
+                                    ... on Blob {
+                                      ...BlobDetails
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
