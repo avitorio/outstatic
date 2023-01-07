@@ -96,7 +96,7 @@ type Params = {
 export async function getStaticProps({ params }: Params) {
   const db = await load()
   const project = await db
-    .find({ category: 'projects', slug: params.slug }, [
+    .find({ collection: 'projects', slug: params.slug }, [
       'title',
       'publishedAt',
       'description',
@@ -110,7 +110,7 @@ export async function getStaticProps({ params }: Params) {
   const content = await markdownToHtml(project.content || '')
 
   const moreProjects = await db
-    .find({ category: 'projects', slug: { $ne: params.slug } }, [
+    .find({ collection: 'projects', slug: { $ne: params.slug } }, [
       'title',
       'slug',
       'coverImage'

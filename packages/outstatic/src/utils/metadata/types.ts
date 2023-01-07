@@ -12,7 +12,7 @@ export type OutstaticSchema<
   TSchema extends { [key: string]: unknown } = { [key: string]: unknown }
 > = TSchema & {
   content: string
-  category: string
+  collection: string
   slug: string
   title: string
   status: string

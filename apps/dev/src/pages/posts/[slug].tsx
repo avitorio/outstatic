@@ -73,7 +73,7 @@ type Params = {
 export async function getStaticProps({ params }: Params) {
   const db = await load()
   const post = await db
-    .find({ category: 'posts', slug: params.slug }, [
+    .find({ collection: 'posts', slug: params.slug }, [
       'title',
       'publishedAt',
       'slug',

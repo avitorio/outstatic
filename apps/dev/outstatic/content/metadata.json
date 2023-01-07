@@ -17,7 +17,7 @@
         "hash": "2596208214",
         "path": "apps/dev/outstatic/content/posts/how-to-create-an-outstatic-blog.md"
       },
-      "category": "posts"
+      "collection": "posts"
     },
     {
       "title": "Home",
@@ -35,7 +35,7 @@
         "hash": "217348983",
         "path": "apps/dev/outstatic/content/pages/home.md"
       },
-      "category": "pages"
+      "collection": "pages"
     },
     {
       "title": "Flycream Travel",
@@ -53,7 +53,7 @@
         "hash": "425893791",
         "path": "apps/dev/outstatic/content/projects/flycream-travel.md"
       },
-      "category": "projects"
+      "collection": "projects"
     },
     {
       "title": " 🧸 Bearbnb",
@@ -70,7 +70,7 @@
         "hash": "1076515129",
         "path": "apps/dev/outstatic/content/projects/bearbnb.md"
       },
-      "category": "projects"
+      "collection": "projects"
     },
     {
       "title": "If you want to make the wrong decision, ask everyone",
@@ -87,7 +87,7 @@
         "hash": "3707858083",
         "path": "apps/dev/outstatic/content/posts/the-wrong-decision.md"
       },
-      "category": "posts"
+      "collection": "posts"
     },
     {
       "title": "Nothing is wrong. Everything is perfect",
@@ -104,7 +104,7 @@
         "hash": "4086614036",
         "path": "apps/dev/outstatic/content/posts/nothing-wrong.md"
       },
-      "category": "posts"
+      "collection": "posts"
     },
     {
       "title": "Couple Pizza",
@@ -121,7 +121,7 @@
         "hash": "1055690014",
         "path": "apps/dev/outstatic/content/projects/couple-pizza.md"
       },
-      "category": "projects"
+      "collection": "projects"
     }
   ]
 }

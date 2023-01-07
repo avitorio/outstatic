@@ -144,7 +144,7 @@ export const MetadataBuilder: React.FC<MetadataBuilderProps> = ({
             const meta = await takeAndProcess(fd)
             docs.push({
               ...meta,
-              category: fd.path
+              collection: fd.path
                 .replace(rootPath, '') // strip root
                 .replace(/^\/+/, '') // strip leading slashes
                 .replace(/\/.+$/, '') // strip all after 1st slash

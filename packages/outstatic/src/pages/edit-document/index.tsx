@@ -167,7 +167,7 @@ export default function EditDocument({ collection }: EditDocumentProps) {
         m.commit = hashFromUrl(metadata.repository.object.commitUrl)
         ;(m.metadata ?? []).filter(
           (c) =>
-            c.category !== collection &&
+            c.collection !== collection &&
             (c.slug !== oldSlug || c.slug !== newSlug)
         )
         const state = MurmurHash3(content)
@@ -177,7 +177,7 @@ export default function EditDocument({ collection }: EditDocumentProps) {
           publishedAt: matterData.publishedAt,
           status: matterData.published,
           slug: newSlug,
-          category: collection,
+          collection,
           __outstatic: {
             hash: `${state.result()}`,
             commit: m.commit,

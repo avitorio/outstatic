@@ -50,12 +50,12 @@ export const getStaticProps = async () => {
   const db = await load()
 
   const page = await db
-    .find({ category: 'pages', slug: 'home' }, ['content'])
+    .find({ collection: 'pages', slug: 'home' }, ['content'])
     .first()
   const content = await markdownToHtml(page.content || '')
 
   const allPosts = await db
-    .find({ category: 'posts' }, [
+    .find({ collection: 'posts' }, [
       'title',
       'publishedAt',
       'slug',
@@ -66,7 +66,7 @@ export const getStaticProps = async () => {
     .toArray()
 
   const allProjects = await db
-    .find({ category: 'projects' }, ['title', 'slug', 'coverImage'])
+    .find({ collection: 'projects' }, ['title', 'slug', 'coverImage'])
     .sort({ publishedAt: -1 })
     .toArray()
 
