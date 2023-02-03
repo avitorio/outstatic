@@ -118,7 +118,7 @@ export const MetadataBuilder: React.FC<MetadataBuilderProps> = ({
           __outstatic: {
             commit: o.commit,
             hash: `${state.result()}`,
-            path: o.path
+            path: monorepoPath ? o.path.replace(monorepoPath, '') : o.path
           }
         }
         return fmd

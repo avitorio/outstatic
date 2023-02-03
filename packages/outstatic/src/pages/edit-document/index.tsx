@@ -95,9 +95,7 @@ export default function EditDocument({ collection }: EditDocumentProps) {
       const owner = repoOwner || session?.user?.login || ''
       const newSlug = document.slug
 
-      const fullContentPath = `${
-        monorepoPath ? monorepoPath + '/' : ''
-      }${contentPath}/${collection}/${slug}.md`
+      const fullContentPath = `${contentPath}/${collection}/${slug}.md`
 
       // If the slug has changed, commit should delete old file
       const oldSlug = slug !== newSlug && slug !== 'new' ? slug : undefined

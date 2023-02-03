@@ -5,7 +5,7 @@ import Layout from '../../components/Layout'
 import Head from 'next/head'
 import markdownToHtml from '../../lib/markdownToHtml'
 import { Document } from '../../interfaces/document'
-import { getDocumentPaths, getDocumentBySlug, load } from 'outstatic/server'
+import { getDocumentPaths, load } from 'outstatic/server'
 import DateFormatter from '../../components/DateFormatter'
 import Image from 'next/image'
 

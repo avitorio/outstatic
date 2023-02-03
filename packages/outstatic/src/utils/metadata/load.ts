@@ -127,8 +127,15 @@ export const load = async <TSchema extends {} = {}>() => {
                 finalProjection.length === 0 ||
                 finalProjection.includes('content')
               ) {
+                const cleanPath = process.env.OST_MONOREPO_PATH
+                  ? m.__outstatic.path.replace(
+                      process.env.OST_MONOREPO_PATH,
+                      ''
+                    )
+                  : m.__outstatic.path
+
                 const buf = await readFile(
-                  resolve(process.cwd(), `./${m.__outstatic.path}`)
+                  resolve(process.cwd(), `./${cleanPath}`)
                 )
                 const { content } = matter(buf.toString())
                 m.content = content
