@@ -34,6 +34,7 @@ import { assertUnreachable } from '../../utils/assertUnreachable'
 import { MetadataSchema } from '../../utils/metadata/types'
 import { hashFromUrl } from '../../utils/hashFromUrl'
 import MurmurHash3 from 'imurmurhash'
+import { stringifyMetadata } from '../../utils/metadata/stringify'
 
 type EditDocumentProps = {
   collection: string
@@ -190,7 +191,7 @@ export default function EditDocument({ collection }: EditDocumentProps) {
           `${
             monorepoPath ? monorepoPath + '/' : ''
           }${contentPath}/metadata.json`,
-          JSON.stringify(m)
+          stringifyMetadata(m)
         )
       }
 

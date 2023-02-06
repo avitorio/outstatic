@@ -23,6 +23,7 @@ import useOid from '../../utils/useOid'
 import { createCommit } from '../../utils/createCommit'
 import MurmurHash3 from 'imurmurhash'
 import { MetadataSchema, OutstaticSchema } from '../../utils/metadata/types'
+import { stringifyMetadata } from '../../utils/metadata/stringify'
 
 interface MetadataBuilderProps extends HTMLAttributes<HTMLDivElement> {
   rebuild: boolean
@@ -180,7 +181,7 @@ export const MetadataBuilder: React.FC<MetadataBuilderProps> = ({
           `${
             monorepoPath ? monorepoPath + '/' : ''
           }${contentPath}/metadata.json`,
-          JSON.stringify(db, null, 2)
+          stringifyMetadata(db)
         )
         const payload = capi.createInput()
         console.log(payload)
