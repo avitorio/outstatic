@@ -109,6 +109,7 @@ Once installed, you'll need to add two files to your `/pages` folder:
 `/pages/outstatic/[[...ost]].tsx`
 
 ```javascript
+import 'outstatic/outstatic.css'
 import { Outstatic, OstSSP } from 'outstatic'
 
 export default Outstatic
@@ -119,7 +120,6 @@ export const getServerSideProps = OstSSP
 And `/pages/api/outstatic/[[...ost]].tsx`
 
 ```javascript
-import 'outstatic/outstatic.css'
 import { OutstaticApi } from 'outstatic'
 
 export default OutstaticApi

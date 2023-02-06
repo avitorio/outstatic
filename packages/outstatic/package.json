@@ -8,8 +8,7 @@
   "exports": {
     ".": "./dist/index.js",
     "./server": "./dist/utils/server.js",
-    "./outstatic.css": "./dist/outstatic.css",
-    "./outstatic.module.css": "./dist/outstatic.css"
+    "./outstatic.css": "./dist/outstatic.css"
   },
   "license": "MIT",
   "scripts": {
