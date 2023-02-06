@@ -1,25 +1,7 @@
 {
-  "commit": "3d21a2295776b34590a34eda8bf600956d7fb5e6",
-  "generated": "Fri, 03 Feb 2023 22:20:48 GMT",
+  "commit": "41ed0581c19d8d5132f080e19d8c892a0bbbb53b",
+  "generated": "Mon, 06 Feb 2023 00:35:18 GMT",
   "metadata": [
-    {
-      "title": "Home",
-      "status": "published",
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": ""
-      },
-      "slug": "home",
-      "description": "This is my blog.",
-      "coverImage": "",
-      "publishedAt": "2022-03-17T05:35:07.322Z",
-      "__outstatic": {
-        "commit": "2e47122b5b6d49d6d1ddb15bcd33edc4a0c1256e",
-        "hash": "217348983",
-        "path": "/outstatic/content/pages/home.md"
-      },
-      "collection": "pages"
-    },
     {
       "title": "Learn how to create your blog with Outstatic",
       "status": "published",
@@ -38,55 +20,22 @@
       "collection": "posts"
     },
     {
-      "title": "Couple Pizza",
-      "status": "published",
-      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.",
-      "coverImage": "/images/couple-pizza.png",
-      "publishedAt": "2022-03-16T05:35:07.322Z",
-      "author": {
-        "name": "Bob Marley"
-      },
-      "slug": "couple-pizza",
-      "__outstatic": {
-        "commit": "aa1f387e5c66347e675bed0862b070d8946c95f4",
-        "hash": "1055690014",
-        "path": "/outstatic/content/projects/couple-pizza.md"
-      },
-      "collection": "projects"
-    },
-    {
-      "title": "Nothing is wrong. Everything is perfect",
+      "title": "Home",
       "status": "published",
       "author": {
-        "name": "Andre Vitorio"
+        "name": "Andre Vitorio",
+        "picture": ""
       },
-      "slug": "nothing-wrong",
-      "description": "One more day, one more joy. I feel blessed.",
-      "coverImage": "/images/industrial-pattern.png",
-      "publishedAt": "2022-09-14T17:55:40.452Z",
+      "slug": "home",
+      "description": "This is my blog.",
+      "coverImage": "",
+      "publishedAt": "2022-03-17T05:35:07.322Z",
       "__outstatic": {
-        "commit": "d2f316fd04def3347c906f5227da5daf79971f61",
-        "hash": "4086614036",
-        "path": "/outstatic/content/posts/nothing-wrong.md"
+        "commit": "2e47122b5b6d49d6d1ddb15bcd33edc4a0c1256e",
+        "hash": "217348983",
+        "path": "/outstatic/content/pages/home.md"
       },
-      "collection": "posts"
-    },
-    {
-      "title": "If you want to make the wrong decision, ask everyone",
-      "status": "published",
-      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.",
-      "coverImage": "/images/skyline.png",
-      "publishedAt": "2022-03-26T05:35:07.322Z",
-      "author": {
-        "name": "Naval Ravikant"
-      },
-      "slug": "the-wrong-decision",
-      "__outstatic": {
-        "commit": "998b7f74af83e46bbdb4ab5302c8e4c39963278f",
-        "hash": "3707858083",
-        "path": "/outstatic/content/posts/the-wrong-decision.md"
-      },
-      "collection": "posts"
+      "collection": "pages"
     },
     {
       "title": " 🧸 Bearbnb",
@@ -122,6 +71,57 @@
         "path": "/outstatic/content/projects/flycream-travel.md"
       },
       "collection": "projects"
+    },
+    {
+      "title": "Nothing is wrong. Everything is perfect",
+      "status": "published",
+      "author": {
+        "name": "Andre Vitorio"
+      },
+      "slug": "nothing-wrong",
+      "description": "One more day, one more joy. I feel blessed.",
+      "coverImage": "/images/industrial-pattern.png",
+      "publishedAt": "2022-09-14T17:55:40.452Z",
+      "__outstatic": {
+        "commit": "d2f316fd04def3347c906f5227da5daf79971f61",
+        "hash": "4086614036",
+        "path": "/outstatic/content/posts/nothing-wrong.md"
+      },
+      "collection": "posts"
+    },
+    {
+      "title": "Couple Pizza",
+      "status": "published",
+      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.",
+      "coverImage": "/images/couple-pizza.png",
+      "publishedAt": "2022-03-16T05:35:07.322Z",
+      "author": {
+        "name": "Bob Marley"
+      },
+      "slug": "couple-pizza",
+      "__outstatic": {
+        "commit": "aa1f387e5c66347e675bed0862b070d8946c95f4",
+        "hash": "1055690014",
+        "path": "/outstatic/content/projects/couple-pizza.md"
+      },
+      "collection": "projects"
+    },
+    {
+      "title": "If you want to make the wrong decision, ask everyone",
+      "status": "published",
+      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.",
+      "coverImage": "/images/skyline.png",
+      "publishedAt": "2022-03-26T05:35:07.322Z",
+      "author": {
+        "name": "Naval Ravikant"
+      },
+      "slug": "the-wrong-decision",
+      "__outstatic": {
+        "commit": "998b7f74af83e46bbdb4ab5302c8e4c39963278f",
+        "hash": "3707858083",
+        "path": "/outstatic/content/posts/the-wrong-decision.md"
+      },
+      "collection": "posts"
     }
   ]
 }
