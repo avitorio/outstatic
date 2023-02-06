@@ -119,15 +119,10 @@ export const getServerSideProps = OstSSP
 And `/pages/api/outstatic/[[...ost]].tsx`
 
 ```javascript
+import 'outstatic/outstatic.css'
 import { OutstaticApi } from 'outstatic'
 
 export default OutstaticApi
-```
-
-Finally, add the outstatic CSS to the top of your `pages/_app.tsx`
-
-```javascript
-import 'outstatic/outstatic.css'
 ```
 
 Start your dev server. Assuming you're on `http://localhost:3000` you can access your dashboard at `https://localhost:3000/outstatic`.
