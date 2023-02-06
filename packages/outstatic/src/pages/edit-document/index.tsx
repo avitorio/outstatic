@@ -95,8 +95,6 @@ export default function EditDocument({ collection }: EditDocumentProps) {
       const owner = repoOwner || session?.user?.login || ''
       const newSlug = document.slug
 
-      const fullContentPath = `${contentPath}/${collection}/${slug}.md`
-
       // If the slug has changed, commit should delete old file
       const oldSlug = slug !== newSlug && slug !== 'new' ? slug : undefined
 
@@ -153,7 +151,12 @@ export default function EditDocument({ collection }: EditDocumentProps) {
         })
       }
 
-      capi.replaceFile(fullContentPath, content)
+      capi.replaceFile(
+        `${
+          monorepoPath ? monorepoPath + '/' : ''
+        }${contentPath}/${collection}/${newSlug}.md`,
+        content
+      )
 
       // update metadata for this post
       // requires final content for hashing
@@ -179,7 +182,7 @@ export default function EditDocument({ collection }: EditDocumentProps) {
           __outstatic: {
             hash: `${state.result()}`,
             commit: m.commit,
-            path: fullContentPath
+            path: `${contentPath}/${collection}/${newSlug}.md`
           }
         })
 
