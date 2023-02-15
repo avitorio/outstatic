@@ -7,6 +7,15 @@
   "commitConvention": "angular",
   "contributors": [
     {
+      "login": "jakobo",
+      "name": "Jakob Heuser",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1795?v=4",
+      "profile": "https://codedrift.com",
+      "contributions": [
+        "code", "doc"
+      ]
+    },
+    {
       "login": "ahaasler",
       "name": "Adrian Haasler García",
       "avatar_url": "https://avatars.githubusercontent.com/u/1241721?v=4",
