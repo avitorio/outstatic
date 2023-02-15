@@ -1,0 +1,1 @@
+./packages/outstatic/README.md
