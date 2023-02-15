@@ -52,6 +52,13 @@ To chat with other community members you can join the [Outstatic Discord](https:
 
 Please see our [CONTRIBUTING.md](/CONTRIBUTING.md).
 
-## Author
+## Contributors
 
-- Andre Vitorio ([@andrevitorio](https://twitter.com/andrevitorio))
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
