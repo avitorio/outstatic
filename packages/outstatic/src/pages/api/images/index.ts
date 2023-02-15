@@ -12,11 +12,11 @@ export default async function handler(
 ) {
   const session = await getLoginSession(req)
 
+  const REPO_OWNER = process.env.OST_REPO_OWNER || session?.user?.login
+
   if (session?.access_token) {
     const response = await fetch(
-      `https://raw.githubusercontent.com/${
-        session?.user?.login
-      }/${REPO_SLUG}/${REPO_BRANCH}/${
+      `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_SLUG}/${REPO_BRANCH}/${
         MONOREPO_PATH ? MONOREPO_PATH + '/' : ''
       }public/${IMAGES_PATH}${req.query?.ost?.[1]}`,
       {
