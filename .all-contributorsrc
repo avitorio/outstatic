@@ -1,0 +1,25 @@
+{
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "commitConvention": "angular",
+  "contributors": [
+    {
+      "login": "ahaasler",
+      "name": "Adrian Haasler García",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1241721?v=4",
+      "profile": "https://ahaasler.com",
+      "contributions": [
+        "code"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "skipCi": true,
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "projectName": "outstatic",
+  "projectOwner": "avitorio"
+}
