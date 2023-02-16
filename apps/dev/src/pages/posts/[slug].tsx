@@ -5,7 +5,7 @@ import Layout from '../../components/Layout'
 import Head from 'next/head'
 import markdownToHtml from '../../lib/markdownToHtml'
 import { Document } from '../../interfaces/document'
-import { getDocumentPaths, getDocumentBySlug } from 'outstatic/server'
+import { getDocumentPaths, load } from 'outstatic/server'
 import DateFormatter from '../../components/DateFormatter'
 import Image from 'next/image'
 
@@ -71,14 +71,18 @@ type Params = {
 }
 
 export async function getStaticProps({ params }: Params) {
-  const post = getDocumentBySlug('posts', params.slug, [
-    'title',
-    'publishedAt',
-    'slug',
-    'author',
-    'content',
-    'coverImage'
-  ])
+  const db = await load()
+  const post = await db
+    .find({ collection: 'posts', slug: params.slug }, [
+      'title',
+      'publishedAt',
+      'slug',
+      'author',
+      'content',
+      'coverImage'
+    ])
+    .first()
+
   const content = await markdownToHtml(post.content || '')
 
   return {

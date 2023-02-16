@@ -78,7 +78,7 @@ We recommend you learn how [Outstatic manages content](/docs/introduction) and a
 
 Before we start, you should know Outstatic saves content as markdown files to your GitHub repository. To understand how this works please read our [introduction](https://outstatic.com/docs/introduction) article.
 
-First install the Outstatic package:
+First install the Outstatic package and dependencies:
 
 ```bash
 # npm
@@ -89,6 +89,19 @@ yarn add outstatic
 
 #pnpm
 pnpm install outstatic
+```
+
+Then install some needed dependencies:
+
+```bash
+# npm
+npm install prosemirror-dropcursor prosemirror-gapcursor prosemirror-history
+
+# yarn
+yarn add prosemirror-dropcursor prosemirror-gapcursor prosemirror-history
+
+#pnpm
+pnpm install prosemirror-dropcursor prosemirror-gapcursor prosemirror-history
 ```
 
 Once installed, you'll need to add two files to your `/pages` folder:
@@ -122,7 +135,7 @@ You should see this page:
 OST_GITHUB_ID=YOUR_GITHUB_OAUTH_APP_ID
 OST_GITHUB_SECRET=YOUR_GITHUB_OAUTH_APP_SECRET
 # random string min 32 chars
-OST_TOKEN_SECRET=A_RANDOM_TOKEN 
+OST_TOKEN_SECRET=A_RANDOM_TOKEN
 OST_REPO_SLUG=YOUR_GITHUB_REPOSITORY_SLUG
 
 # OPTIONAL
@@ -162,4 +175,3 @@ OST_TOKEN_SECRET=A_RANDOM_TOKEN
 ```
 
 To learn more about all the available environment variables, see the [Environment Variables ](https://outstatic.com/docs/environment-variables)section of the docs.
-

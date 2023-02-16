@@ -8,3 +8,5 @@ generates:
       - typescript-react-apollo
     config:
       withHooks: true
+      scalars:
+        GitObjectID: string
