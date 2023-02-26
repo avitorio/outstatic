@@ -95,13 +95,13 @@ Then install some needed dependencies:
 
 ```bash
 # npm
-npm install prosemirror-dropcursor prosemirror-gapcursor prosemirror-history
+npm install @tiptap/pm
 
 # yarn
-yarn add prosemirror-dropcursor prosemirror-gapcursor prosemirror-history
+yarn add @tiptap/pm
 
 #pnpm
-pnpm install prosemirror-dropcursor prosemirror-gapcursor prosemirror-history
+pnpm install @tiptap/pm
 ```
 
 Once installed, you'll need to add two files to your `/pages` folder:
