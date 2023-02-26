@@ -20,6 +20,7 @@ import List from './list'
 import Login from './login'
 import Settings from './settings'
 import Welcome from './welcome'
+import AddCustomField from './add-custom-field'
 
 type OutstaticProps = {
   missingEnvVars: EnvVarsType | false
@@ -94,6 +95,9 @@ export const Outstatic = ({ missingEnvVars, providerData }: OutstaticProps) => {
         {!slug && <Collections />}
         {slug2 && isContent && <EditDocument collection={slug} />}
         {!slug2 && isContent ? <List collection={slug} /> : defaultPages[slug]}
+        {slug === 'collections' && collections.includes(slug2) && (
+          <AddCustomField collection={slug2} />
+        )}
         {!!slug2 && !isContent && <NewCollection />}
       </ApolloProvider>
     </OutstaticProvider>

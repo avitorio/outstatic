@@ -50,3 +50,22 @@ export type Collection = {
 export type DeepNonNullable<T> = {
   [P in keyof T]-?: DeepNonNullable<NonNullable<T[P]>>
 }
+
+export const customFieldTypes = ['string', 'text'] as const
+
+export type CustomField = {
+  title: string
+  type: 'string' | 'text'
+  description?: string
+  required?: boolean
+}
+
+export type CustomFields = {
+  [key: string]: CustomField
+}
+
+export type SchemaShape =
+  | Document
+  | {
+      [key: string]: any
+    }
