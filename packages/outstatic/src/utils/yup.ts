@@ -20,10 +20,6 @@ export const editDocumentSchema: yup.SchemaOf<Document> = yup.object().shape({
       /^[a-z0-9-]+$/,
       'Slugs can only contain lowercase letters, numbers and dashes.'
     )
-    .matches(
-      /^[a-z](-?[a-z])*$/,
-      'Slugs can only start and end with a letter and cannot contain two dashes in a row.'
-    )
     .required(),
   description: yup.string(),
   coverImage: yup.string()
