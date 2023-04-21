@@ -91,7 +91,6 @@ export default function EditDocument({ collection }: EditDocumentProps) {
     try {
       const document = methods.getValues()
       let content = mergeMdMeta({ ...data })
-      const { data: matterData } = matter(content)
       const oid = await fetchOid()
       const owner = repoOwner || session?.user?.login || ''
       const newSlug = document.slug
@@ -152,6 +151,8 @@ export default function EditDocument({ collection }: EditDocumentProps) {
         })
       }
 
+      const { data: matterData } = matter(content)
+
       capi.replaceFile(
         `${
           monorepoPath ? monorepoPath + '/' : ''
@@ -177,7 +178,7 @@ export default function EditDocument({ collection }: EditDocumentProps) {
           ...matterData,
           title: matterData.title,
           publishedAt: matterData.publishedAt,
-          status: matterData.published,
+          status: matterData.status,
           slug: newSlug,
           collection,
           __outstatic: {
