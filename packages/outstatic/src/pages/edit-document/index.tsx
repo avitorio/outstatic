@@ -168,13 +168,15 @@ export default function EditDocument({ collection }: EditDocumentProps) {
         ) as MetadataSchema
         m.generated = new Date().toISOString()
         m.commit = hashFromUrl(metadata.repository.object.commitUrl)
-        ;(m.metadata ?? []).filter(
+        const newMeta = (m.metadata ?? []).filter(
           (c) =>
-            c.collection !== collection &&
-            (c.slug !== oldSlug || c.slug !== newSlug)
+            !(
+              c.collection === collection &&
+              (c.slug === oldSlug || c.slug === newSlug)
+            )
         )
         const state = MurmurHash3(content)
-        m.metadata.push({
+        newMeta.push({
           ...matterData,
           title: matterData.title,
           publishedAt: matterData.publishedAt,
@@ -192,7 +194,7 @@ export default function EditDocument({ collection }: EditDocumentProps) {
           `${
             monorepoPath ? monorepoPath + '/' : ''
           }${contentPath}/metadata.json`,
-          stringifyMetadata(m)
+          stringifyMetadata({ ...m, metadata: newMeta })
         )
       }
 
