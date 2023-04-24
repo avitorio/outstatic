@@ -102,9 +102,8 @@ export default function AddCustomField({ collection }: AddCustomFieldProps) {
   ) => {
     setAdding(true)
     const { title, ...rest } = data
-    const fieldName = camelCase(title)
 
-    if (!selectedField && customFields[fieldName]) {
+    if (!selectedField && customFields[title]) {
       methods.setError('title', {
         type: 'manual',
         message: 'Field name is already taken.'
@@ -114,9 +113,9 @@ export default function AddCustomField({ collection }: AddCustomFieldProps) {
     }
 
     try {
-      customFields[fieldName] = {
+      customFields[title] = {
         ...rest,
-        title: data.title
+        title
       }
 
       const created = await capiHelper({ customFields })
