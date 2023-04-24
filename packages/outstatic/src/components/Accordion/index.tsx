@@ -24,7 +24,7 @@ const Accordion = ({ title, callback, children }: AccordionProps) => {
           className="flex items-center justify-between w-full text-sm font-medium text-gray-900 p-4 hover:bg-gray-50 focus:outline-none focus:outline-blue-300 focus:outline-offset-[-1px]"
           onClick={handleShow}
         >
-          <span>{title}</span>
+          <span className="capitalize">{title}</span>
           <svg
             data-accordion-icon
             className={`w-6 h-6 shrink-0 ${show ? '' : 'rotate-180'}`}

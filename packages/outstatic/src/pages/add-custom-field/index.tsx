@@ -2,7 +2,6 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import camelCase from 'camelcase'
 import { useContext, useEffect, useState } from 'react'
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form'
-import capitalize from 'capitalize'
 import * as yup from 'yup'
 import { AdminLayout, Input } from '../../components'
 import Alert from '../../components/Alert'
@@ -117,7 +116,7 @@ export default function AddCustomField({ collection }: AddCustomFieldProps) {
     try {
       customFields[fieldName] = {
         ...rest,
-        title: capitalize(data.title)
+        title: data.title
       }
 
       const created = await capiHelper({ customFields })
@@ -321,7 +320,7 @@ export default function AddCustomField({ collection }: AddCustomFieldProps) {
             title={
               selectedField
                 ? `Edit ${customFields[selectedField].title}`
-                : `Add Custom Field to ${capitalize(collection)}`
+                : `Add Custom Field to ${collection}`
             }
             close={() => {
               setHasChanges(false)
@@ -418,8 +417,8 @@ export default function AddCustomField({ collection }: AddCustomFieldProps) {
                         id="helper-checkbox-text"
                         className="text-xs font-normal text-gray-500"
                       >
-                        {capitalize(collection)} documents will only be saved if
-                        this field is not empty
+                        <span className="capitalize">{collection}</span>{' '}
+                        documents will only be saved if this field is not empty
                       </p>
                     </div>
                   </div>
