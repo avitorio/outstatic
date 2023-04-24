@@ -177,8 +177,8 @@ export default function AddCustomField({ collection }: AddCustomFieldProps) {
   useNavigationLock(hasChanges)
 
   return (
-    <FormProvider {...methods}>
-      <AdminLayout title="Add Custom Fields">
+    <AdminLayout title="Add Custom Fields">
+      <FormProvider {...methods}>
         <div className="mb-8 flex h-12 items-center">
           <h1 className="mr-12 text-2xl">
             <span className="capitalize">{collection}</span> Fields
@@ -549,7 +549,7 @@ export default function AddCustomField({ collection }: AddCustomFieldProps) {
             </div>
           </Modal>
         )}
-      </AdminLayout>
-    </FormProvider>
+      </FormProvider>
+    </AdminLayout>
   )
 }
