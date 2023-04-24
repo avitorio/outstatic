@@ -228,23 +228,25 @@ export default function AddCustomField({ collection }: AddCustomFieldProps) {
                     >
                       Add Custom Field
                     </div>
-                    {/* <p>
-                    To learn more about how Custom Fields work{' '}
-                    <a
-                      href="https://outstatic.com/docs/custom-fields"
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      click here
-                    </a>
-                    .
-                  </p> */}
+                    {/* 
+                      TODO: Uncomment when docs are live
+                      <p>
+                      To learn more about how Custom Fields work{' '}
+                      <a
+                        href="https://outstatic.com/docs/custom-fields"
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        click here
+                      </a>
+                      .
+                    </p> 
+                  */}
                   </div>
                 </div>
               </div>
             ) : (
               <>
-                <h1>Whay</h1>
                 <div className="max-w-5xl w-full grid grid-cols-3 gap-6">
                   {customFields &&
                     Object.entries(customFields).map(([name, field]) => {
