@@ -19,9 +19,9 @@ type DocumentSettingsProps = {
   customFields?: CustomFields
 }
 
-const FieldMap = {
-  string: Input,
-  text: TextArea
+const FieldDataMap = {
+  String: Input,
+  Text: TextArea
 }
 
 const DocumentSettings = ({
@@ -171,8 +171,7 @@ const DocumentSettings = ({
         </Accordion>
         {customFields &&
           Object.entries(customFields).map(([name, field]) => {
-            const Field =
-              field.type == 'string' ? FieldMap['string'] : FieldMap['text']
+            const Field = FieldDataMap[field.fieldType]
             return (
               <Accordion key={name} title={field.title}>
                 <Field id={name} label={field.description} />

@@ -51,11 +51,13 @@ export type DeepNonNullable<T> = {
   [P in keyof T]-?: DeepNonNullable<NonNullable<T[P]>>
 }
 
-export const customFieldTypes = ['string', 'text'] as const
+export const customFieldTypes = ['String', 'Text'] as const
+export const customFieldData = ['string'] as const
 
 export type CustomField = {
   title: string
-  type: 'string' | 'text'
+  fieldType: typeof customFieldTypes[number]
+  dataType: typeof customFieldData[number]
   description?: string
   required?: boolean
 }

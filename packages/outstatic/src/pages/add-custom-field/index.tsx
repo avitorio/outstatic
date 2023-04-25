@@ -20,6 +20,11 @@ type AddCustomFieldProps = {
 
 type CustomFieldForm = CustomField & { name: string }
 
+const fieldDataMap = {
+  Text: 'string',
+  String: 'string'
+} as const
+
 export default function AddCustomField({ collection }: AddCustomFieldProps) {
   const {
     contentPath,
@@ -38,7 +43,10 @@ export default function AddCustomField({ collection }: AddCustomFieldProps) {
       .string()
       .matches(/^[aA-zZ\s]+$/, 'Only alphabets are allowed for this field.')
       .required('Custom field name is required.'),
-    type: yup.string().oneOf(['text', 'string']).required(),
+    fieldType: yup
+      .string()
+      .oneOf([...customFieldTypes])
+      .required(),
     description: yup.string(),
     required: yup.boolean().required()
   })
@@ -101,9 +109,10 @@ export default function AddCustomField({ collection }: AddCustomFieldProps) {
     data: CustomFieldForm
   ) => {
     setAdding(true)
-    const { title, ...rest } = data
+    const { title, fieldType, ...rest } = data
+    const fieldName = camelCase(title)
 
-    if (!selectedField && customFields[title]) {
+    if (!selectedField && customFields[fieldName]) {
       methods.setError('title', {
         type: 'manual',
         message: 'Field name is already taken.'
@@ -113,9 +122,11 @@ export default function AddCustomField({ collection }: AddCustomFieldProps) {
     }
 
     try {
-      customFields[title] = {
+      customFields[fieldName] = {
         ...rest,
-        title
+        fieldType,
+        dataType: fieldDataMap[fieldType],
+        title: data.title
       }
 
       const created = await capiHelper({ customFields })
@@ -270,7 +281,7 @@ export default function AddCustomField({ collection }: AddCustomFieldProps) {
                               <span className="absolute top-0 bottom-0 left-0 right-16"></span>
                             </span>
                             <span className="bg-blue-100 text-blue-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded">
-                              {field.type}
+                              {field.fieldType}
                             </span>
                             {field.required ? (
                               <span className="bg-red-100 text-red-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded">
@@ -358,15 +369,15 @@ export default function AddCustomField({ collection }: AddCustomFieldProps) {
                     Field type
                   </label>
                   <select
-                    {...methods.register('type')}
-                    name="type"
-                    id="type"
+                    {...methods.register('fieldType')}
+                    name="fieldType"
+                    id="fieldType"
                     className="block cursor-pointer appearance-none rounded-lg border border-gray-300 bg-gray-50 p-2 text-sm text-gray-900 outline-none focus:border-blue-500 focus:ring-blue-500"
                     disabled={!!selectedField}
                     defaultValue={
                       selectedField
-                        ? customFields[selectedField].type
-                        : 'string'
+                        ? customFields[selectedField].fieldType
+                        : 'String'
                     }
                   >
                     {customFieldTypes.map((type) => {

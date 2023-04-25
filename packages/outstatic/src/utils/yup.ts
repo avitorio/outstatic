@@ -38,9 +38,7 @@ export const convertSchemaToYup = (customFields: {
   const shape: SchemaShape = {}
 
   Object.entries(customFields.properties).map(([name, fields]) => {
-    // Yup doesn't support text fields, so we convert them to string
-    const fieldType = fields.type === 'text' ? 'string' : fields.type
-    shape[name] = { ...customFields.properties[name], type: fieldType }
+    shape[name] = { ...customFields.properties[name], type: fields.dataType }
   })
 
   const yupSchema = buildYup({
