@@ -22,7 +22,8 @@ type CustomFieldForm = CustomField & { name: string }
 
 const fieldDataMap = {
   Text: 'string',
-  String: 'string'
+  String: 'string',
+  Number: 'number'
 } as const
 
 export default function AddCustomField({ collection }: AddCustomFieldProps) {

@@ -20,8 +20,9 @@ type DocumentSettingsProps = {
 }
 
 const FieldDataMap = {
-  String: Input,
-  Text: TextArea
+  String: { component: Input, props: { type: 'text' } },
+  Text: { component: TextArea, props: {} },
+  Number: { component: Input, props: { type: 'number' } }
 }
 
 const DocumentSettings = ({
@@ -174,7 +175,11 @@ const DocumentSettings = ({
             const Field = FieldDataMap[field.fieldType]
             return (
               <Accordion key={name} title={field.title}>
-                <Field id={name} label={field.description} />
+                <Field.component
+                  id={name}
+                  label={field.description}
+                  {...Field.props}
+                />
               </Accordion>
             )
           })}
