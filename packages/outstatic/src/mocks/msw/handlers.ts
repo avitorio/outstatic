@@ -27,12 +27,15 @@ export const handlers = [
             __typename: 'Tree',
             entries: [
               {
+                type: 'tree',
                 name: 'pages'
               },
               {
+                type: 'tree',
                 name: 'posts'
               },
               {
+                type: 'tree',
                 name: 'projects'
               }
             ]
