@@ -321,9 +321,8 @@ export default function AddCustomField({ collection }: AddCustomFieldProps) {
           <div className="mt-8">
             <Alert type="error">
               <>
-                <span className="font-medium">Oops!</span> We couldn&apos;t{' '}
-                {error} your custom field. You can probably find some useful
-                information in your browser&apos;s console.
+                <span className="font-medium">Oops!</span> We are unable to{' '}
+                {error} your custom field.
               </>
             </Alert>
           </div>
