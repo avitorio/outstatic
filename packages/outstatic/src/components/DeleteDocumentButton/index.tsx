@@ -1,10 +1,17 @@
 import { useContext, useState } from 'react'
 import { OutstaticContext } from '../../context'
-import { useCreateCommitMutation } from '../../graphql/generated'
+import {
+  useCreateCommitMutation,
+  useDocumentQuery
+} from '../../graphql/generated'
 import { useOstSession } from '../../utils/auth/hooks'
 import { createCommitInput } from '../../utils/createCommitInput'
+import { createCommit as createCommitApi } from '../../utils/createCommit'
 import useOid from '../../utils/useOid'
 import Modal from '../Modal'
+import { MetadataSchema } from '../../utils/metadata/types'
+import { hashFromUrl } from '../../utils/hashFromUrl'
+import { stringifyMetadata } from '../../utils/metadata/stringify'
 
 type DeleteDocumentButtonProps = {
   slug: string
@@ -29,24 +36,57 @@ const DeleteDocumentButton = ({
     useContext(OutstaticContext)
   const fetchOid = useOid()
 
+  const { data: metadata } = useDocumentQuery({
+    variables: {
+      owner: repoOwner || session?.user?.login || '',
+      name: repoSlug,
+      filePath: `${repoBranch}:${
+        monorepoPath ? monorepoPath + '/' : ''
+      }${contentPath}/metadata.json`
+    },
+    fetchPolicy: 'network-only'
+  })
+
   const deleteDocument = async (slug: string) => {
     setDeleting(true)
     try {
       const oid = await fetchOid()
       const owner = repoOwner || session?.user?.login || ''
 
-      const commitInput = createCommitInput({
+      const capi = createCommitApi({
+        message: `feat(${collection}): remove ${slug}`,
         owner,
-        oldSlug: slug,
-        oid,
-        repoSlug,
-        repoBranch,
-        contentPath,
-        monorepoPath,
-        collection
+        oid: oid ?? '',
+        name: repoSlug,
+        branch: repoBranch
       })
 
-      await createCommit({ variables: commitInput })
+      // remove post markdown file
+      capi.removeFile(
+        `${
+          monorepoPath ? monorepoPath + '/' : ''
+        }${contentPath}/${collection}/${slug}.md`
+      )
+
+      // remove post from metadata.json
+      if (metadata?.repository?.object?.__typename === 'Blob') {
+        const m = JSON.parse(
+          metadata.repository.object.text ?? '{}'
+        ) as MetadataSchema
+        m.generated = new Date().toISOString()
+        m.commit = hashFromUrl(metadata.repository.object.commitUrl)
+        const newMeta = (m.metadata ?? []).filter((post) => post.slug !== slug)
+        capi.replaceFile(
+          `${
+            monorepoPath ? monorepoPath + '/' : ''
+          }${contentPath}/metadata.json`,
+          stringifyMetadata({ ...m, metadata: newMeta })
+        )
+      }
+
+      const input = capi.createInput()
+
+      await createCommit({ variables: { input } })
       setShowDeleteModal(false)
       if (onComplete) onComplete()
     } catch (error) {}
