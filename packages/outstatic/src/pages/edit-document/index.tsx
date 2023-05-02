@@ -91,7 +91,6 @@ export default function EditDocument({ collection }: EditDocumentProps) {
     try {
       const document = methods.getValues()
       let content = mergeMdMeta({ ...data })
-      const { data: matterData } = matter(content)
       const oid = await fetchOid()
       const owner = repoOwner || session?.user?.login || ''
       const newSlug = document.slug
@@ -152,6 +151,8 @@ export default function EditDocument({ collection }: EditDocumentProps) {
         })
       }
 
+      const { data: matterData } = matter(content)
+
       capi.replaceFile(
         `${
           monorepoPath ? monorepoPath + '/' : ''
@@ -167,17 +168,19 @@ export default function EditDocument({ collection }: EditDocumentProps) {
         ) as MetadataSchema
         m.generated = new Date().toISOString()
         m.commit = hashFromUrl(metadata.repository.object.commitUrl)
-        ;(m.metadata ?? []).filter(
+        const newMeta = (m.metadata ?? []).filter(
           (c) =>
-            c.collection !== collection &&
-            (c.slug !== oldSlug || c.slug !== newSlug)
+            !(
+              c.collection === collection &&
+              (c.slug === oldSlug || c.slug === newSlug)
+            )
         )
         const state = MurmurHash3(content)
-        m.metadata.push({
+        newMeta.push({
           ...matterData,
           title: matterData.title,
           publishedAt: matterData.publishedAt,
-          status: matterData.published,
+          status: matterData.status,
           slug: newSlug,
           collection,
           __outstatic: {
@@ -191,7 +194,7 @@ export default function EditDocument({ collection }: EditDocumentProps) {
           `${
             monorepoPath ? monorepoPath + '/' : ''
           }${contentPath}/metadata.json`,
-          stringifyMetadata(m)
+          stringifyMetadata({ ...m, metadata: newMeta })
         )
       }
 
