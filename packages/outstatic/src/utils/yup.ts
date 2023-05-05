@@ -1,5 +1,6 @@
 import * as yup from 'yup'
 import { Document } from '../types'
+import { slugRegex } from './slugRegex'
 
 export const editDocumentSchema: yup.SchemaOf<Document> = yup.object().shape({
   title: yup.string().required('Title is required.'),
@@ -17,13 +18,10 @@ export const editDocumentSchema: yup.SchemaOf<Document> = yup.object().shape({
     .string()
     .matches(/^(?!new$)/, 'The word "new" is not a valid slug.')
     .matches(
-      /^[a-z0-9-]+$/,
-      'Slugs can only contain lowercase letters, numbers and dashes.'
+      slugRegex,
+      'Slug must contain only lowercase letters, numbers, and hyphens, and cannot start or end with a hyphen.'
     )
-    .matches(
-      /^[a-z](-?[a-z])*$/,
-      'Slugs can only start and end with a letter and cannot contain two dashes in a row.'
-    )
+    .max(200, 'Slugs can be a maximum of 200 characters.')
     .required(),
   description: yup.string(),
   coverImage: yup.string()
