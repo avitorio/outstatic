@@ -341,7 +341,25 @@ export default function AddCustomField({ collection }: AddCustomFieldProps) {
             }}
           >
             <form onSubmit={methods.handleSubmit(onSubmit)}>
-              <div key={selectedField} className="flex p-6 text-left gap-4">
+              {!!selectedField ? (
+                <div className="pt-6 pl-6">
+                  <Alert type="info">
+                    <>
+                      <span className="font-medium">Field name</span> and{' '}
+                      <span className="font-medium">Field type</span> editing is
+                      disabled to avoid data conflicts.
+                    </>
+                  </Alert>
+                </div>
+              ) : null}
+              <div
+                key={selectedField}
+                className={`flex p-6 text-left gap-4 ${
+                  !!selectedField
+                    ? 'pt-0 opacity-50 cursor-not-allowed pointer-events-none'
+                    : ''
+                }`}
+              >
                 <Input
                   label="Field name"
                   id="title"
@@ -350,8 +368,8 @@ export default function AddCustomField({ collection }: AddCustomFieldProps) {
                   placeholder="Ex: Category"
                   type="text"
                   helperText="The name of the field"
-                  disabled={!!selectedField}
-                  autoFocus
+                  readOnly={!!selectedField}
+                  autoFocus={!selectedField}
                   defaultValue={
                     selectedField ? customFields[selectedField].title : ''
                   }
@@ -373,7 +391,6 @@ export default function AddCustomField({ collection }: AddCustomFieldProps) {
                     name="fieldType"
                     id="fieldType"
                     className="block cursor-pointer appearance-none rounded-lg border border-gray-300 bg-gray-50 p-2 text-sm text-gray-900 outline-none focus:border-blue-500 focus:ring-blue-500"
-                    disabled={!!selectedField}
                     defaultValue={
                       selectedField
                         ? customFields[selectedField].fieldType
@@ -382,7 +399,11 @@ export default function AddCustomField({ collection }: AddCustomFieldProps) {
                   >
                     {customFieldTypes.map((type) => {
                       return (
-                        <option key={type} value={type}>
+                        <option
+                          key={type}
+                          value={type}
+                          disabled={!!selectedField}
+                        >
                           {type}
                         </option>
                       )
