@@ -95,10 +95,10 @@ export const Outstatic = ({ missingEnvVars, providerData }: OutstaticProps) => {
         {!slug && <Collections />}
         {slug2 && isContent && <EditDocument collection={slug} />}
         {!slug2 && isContent ? <List collection={slug} /> : defaultPages[slug]}
-        {slug === 'collections' && collections.includes(slug2) && (
+        {(slug === 'collections' && collections.includes(slug2) && (
           <AddCustomField collection={slug2} />
-        )}
-        {!!slug2 && !isContent && <NewCollection />}
+        )) ||
+          (!!slug2 && !isContent && <NewCollection />)}
       </ApolloProvider>
     </OutstaticProvider>
   )
