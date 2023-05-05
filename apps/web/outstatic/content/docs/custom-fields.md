@@ -24,29 +24,64 @@ First, head over to the Collections page and click on the Collection you want to
 
 Once you've selected your Collection, click the Add Custom Field button. This will bring up a modal with a few options for you to fill out.
 
-Field Name:
-Enter the name of your custom field in the "Field Name" section. This will be the name of the field that appears on your Document.
+**Field name:**
+Enter the name of your custom field in the "Field name" section. This will be the name of the field that appears on your Document.
 
-Field Type:
+**Field type:**
 Choose the data type that you would like the custom field to be in the "Field Type" section. For example, you might choose "string".
 
-Description:
+**Description:**
 You can add a brief description of the field in the "Description" field. This is a good place to provide context for the field and explain how it should be used.
 
-Required Field:
+**Required field:**
 If you want to make the custom field mandatory, select the "Required Field" checkbox. If someone tries to save a document without filling in this custom field, they will be prompted to enter data into this field before the document can be saved.
 
-This field will be accessible on the frontend as:
+**This field will be accessible on the frontend as:**
 Outstatic will generate a camel case id based on the field name. This is how the field will be stored in your Markdown files and you should use this id to fetch data from the frontend. Check out the Fetching data section of the docs to learn more.
 
 Step 5: Save the custom field
 Finally, save your new custom field by clicking the "Add" button in the custom fields interface. Once saved, the custom fields will be available for use on the selected collection documents.
 
-Editing and deleting custom fields is also super easy. Just click on the field you want to edit, make your changes, and hit save. To delete a field, simply click the delete button next to the field you want to remove.
+## Editing Custom Fields
+
+Editing is limited to the Description and Required fields. To avoid conflicts with already saved data, you will not be able to edit the Field name or Field type.
+
+Just click on the field you want to edit, make your changes, and hit Edit.
+
+## Deleting Custom Fields
+
+To delete a field, simply click the trash icon next to the field you want to remove.
+
+**Important:** deleting a field does not remove the metadata from your Markdown files.
 
 ## Good to know
 
-Fields are Collection specific, that means if you have two Collections with the same field name, you will have to fetch them separately.
+Fields are Collection specific, they are stored under `/outstatic/content/{collection}/schema.json`. That means if you have two Collections with the same field name, you will have to fetch them separately.
+
+Example `schema.json` file:
+
+```json
+{
+  "title": "projects",
+  "type": "object",
+  "properties": {
+    "websiteUrl": {
+      "required": false,
+      "description": "website url",
+      "fieldType": "String",
+      "dataType": "string",
+      "title": "website url"
+    },
+    "websiteSummary": {
+      "required": false,
+      "description": "Summary",
+      "fieldType": "Text",
+      "dataType": "string",
+      "title": "website summary"
+    }
+  }
+}
+```
 
 ## Conclusion
 
