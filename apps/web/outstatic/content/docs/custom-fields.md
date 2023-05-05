@@ -56,7 +56,13 @@ To delete a field, simply click the trash icon next to the field you want to rem
 
 ## Good to know
 
-Fields are Collection specific, they are stored under `/outstatic/content/{collection}/schema.json`. That means if you have two Collections with the same field name, you will have to fetch them separately.
+### Fetching Custom Fields
+
+Custom fields will be unique to a collection, but metadata queries will operate across all collections (and should be narrowed by collection if you care about a specific collection's custom fields). To learn more about how to fetch collection specific data read the [Fetching data](/docs/fetching-data) section of the docs.
+
+### How are Custom Fields stored?
+
+Fields are stored under `/outstatic/content/{collection}/schema.json`.
 
 Example `schema.json` file:
 
