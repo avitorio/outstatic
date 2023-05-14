@@ -32,7 +32,10 @@ const DocumentSettings = ({
   showDelete,
   customFields = {}
 }: DocumentSettingsProps) => {
-  const { register } = useFormContext()
+  const {
+    register,
+    formState: { errors }
+  } = useFormContext()
   const router = useRouter()
   const { document, editDocument, hasChanges, collection } =
     useContext(DocumentContext)
@@ -174,7 +177,11 @@ const DocumentSettings = ({
           Object.entries(customFields).map(([name, field]) => {
             const Field = FieldDataMap[field.fieldType]
             return (
-              <Accordion key={name} title={field.title}>
+              <Accordion
+                key={name}
+                title={`${field.title}${field.required ? '*' : ''}`}
+                error={!!errors[name]?.message}
+              >
                 <Field.component
                   id={name}
                   label={field.description}
