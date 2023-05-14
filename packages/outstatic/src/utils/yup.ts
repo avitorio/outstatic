@@ -1,8 +1,9 @@
 import * as yup from 'yup'
-import { Document } from '../types'
 import { slugRegex } from './slugRegex'
+import { buildYup } from 'schema-to-yup'
+import { CustomFields, SchemaShape } from '../types'
 
-export const editDocumentSchema: yup.SchemaOf<Document> = yup.object().shape({
+const documentShape = {
   title: yup.string().required('Title is required.'),
   publishedAt: yup.date().required('Date is required.'),
   content: yup.string().required('Content is required.'),
@@ -25,4 +26,24 @@ export const editDocumentSchema: yup.SchemaOf<Document> = yup.object().shape({
     .required(),
   description: yup.string(),
   coverImage: yup.string()
-})
+}
+
+export const editDocumentSchema: yup.SchemaOf<SchemaShape> = yup
+  .object()
+  .shape(documentShape)
+
+export const convertSchemaToYup = (customFields: {
+  properties: CustomFields
+}) => {
+  const shape: SchemaShape = {}
+
+  Object.entries(customFields.properties).map(([name, fields]) => {
+    shape[name] = { ...customFields.properties[name], type: fields.dataType }
+  })
+
+  const yupSchema = buildYup({
+    type: 'object',
+    properties: { ...documentShape, ...shape }
+  })
+  return yupSchema
+}

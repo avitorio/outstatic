@@ -47,7 +47,10 @@ export default function Input({
   return (
     <div className={wrapperClass}>
       {label && (
-        <label htmlFor={id} className={`${sizes[inputSize].label}`}>
+        <label
+          htmlFor={id}
+          className={`${sizes[inputSize].label} first-letter:capitalize`}
+        >
           {label}
         </label>
       )}
