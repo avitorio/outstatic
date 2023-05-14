@@ -14,7 +14,7 @@ import { CustomFields } from '../../types'
 type DocumentSettingsProps = {
   saveFunc: () => void
   loading: boolean
-  validation?: RegisterOptions
+  registerOptions?: RegisterOptions
   showDelete: boolean
   customFields?: CustomFields
 }
@@ -28,7 +28,7 @@ const FieldDataMap = {
 const DocumentSettings = ({
   saveFunc,
   loading,
-  validation,
+  registerOptions,
   showDelete,
   customFields = {}
 }: DocumentSettingsProps) => {
@@ -58,7 +58,7 @@ const DocumentSettings = ({
           Status
         </label>
         <select
-          {...register('status', validation)}
+          {...register('status', registerOptions)}
           name="status"
           id="status"
           defaultValue={document.status}
@@ -143,7 +143,7 @@ const DocumentSettings = ({
             id="slug"
             defaultValue={document.slug}
             inputSize="small"
-            validation={{
+            registerOptions={{
               onChange: (e) => {
                 const lastChar = e.target.value.slice(-1)
                 editDocument(

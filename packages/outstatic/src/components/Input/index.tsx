@@ -1,4 +1,3 @@
-import { forwardRef } from 'react'
 import { useFormContext, RegisterOptions } from 'react-hook-form'
 
 export type InputProps = {
@@ -8,7 +7,7 @@ export type InputProps = {
   helperText?: string
   type?: string
   readOnly?: boolean
-  validation?: RegisterOptions
+  registerOptions?: RegisterOptions
   wrapperClass?: string
   className?: string
   inputSize?: 'small' | 'medium'
@@ -27,22 +26,19 @@ const sizes = {
   }
 }
 
-const InputField = (
-  {
-    label,
-    placeholder = '',
-    helperText,
-    id,
-    type = 'text',
-    readOnly = false,
-    validation,
-    wrapperClass,
-    className,
-    inputSize = 'medium',
-    ...rest
-  }: InputProps,
-  ref: React.ForwardedRef<HTMLInputElement>
-) => {
+const InputField = ({
+  label,
+  placeholder = '',
+  helperText,
+  id,
+  type = 'text',
+  readOnly = false,
+  registerOptions,
+  wrapperClass,
+  className,
+  inputSize = 'medium',
+  ...rest
+}: InputProps) => {
   const {
     register,
     formState: { errors }
@@ -60,7 +56,7 @@ const InputField = (
       )}
       <div className="relative">
         <input
-          {...register(id, validation)}
+          {...register(id, registerOptions)}
           {...rest}
           className={`${sizes[inputSize].input} ${className}`}
           type={type}
@@ -69,7 +65,6 @@ const InputField = (
           readOnly={readOnly}
           placeholder={placeholder}
           aria-describedby={id}
-          ref={ref}
         />
       </div>
       <>
@@ -90,6 +85,4 @@ const InputField = (
   )
 }
 
-const Input = forwardRef(InputField)
-
-export default Input
+export default InputField

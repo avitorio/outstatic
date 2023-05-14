@@ -7,7 +7,7 @@ export type TextAreaProps = {
   helperText?: string
   type?: string
   readOnly?: boolean
-  validation?: RegisterOptions
+  registerOptions?: RegisterOptions
   wrapperClass?: string
 } & React.ComponentPropsWithoutRef<'textarea'>
 
@@ -18,7 +18,7 @@ export default function TextArea({
   id,
   type = 'text',
   readOnly = false,
-  validation,
+  registerOptions,
   wrapperClass,
   ...rest
 }: TextAreaProps) {
@@ -39,7 +39,7 @@ export default function TextArea({
       )}
       <div className="relative">
         <textarea
-          {...register(id, validation)}
+          {...register(id, registerOptions)}
           {...rest}
           name={id}
           id={id}

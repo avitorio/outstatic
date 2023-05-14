@@ -115,7 +115,7 @@ export default function NewCollection() {
             placeholder="Ex: Posts"
             type="text"
             helperText="Use the plural form of the collection name, ex: Docs"
-            validation={{
+            registerOptions={{
               onChange: (e) => {
                 setPlural(plural(e.target.value))
               },

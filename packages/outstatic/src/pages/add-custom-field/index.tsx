@@ -370,11 +370,11 @@ export default function AddCustomField({ collection }: AddCustomFieldProps) {
                   defaultValue={
                     selectedField ? customFields[selectedField].title : ''
                   }
-                  {...methods.register('title', {
+                  registerOptions={{
                     onChange: (e) => {
                       setFieldName(camelCase(e.target.value))
                     }
-                  })}
+                  }}
                 />
                 <div className="mb-5">
                   <label
