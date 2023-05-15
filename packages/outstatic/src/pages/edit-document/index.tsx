@@ -14,7 +14,13 @@ import {
 } from '../../components'
 import { OutstaticContext, DocumentContext } from '../../context'
 import { useCreateCommitMutation } from '../../graphql/generated'
-import { Document, FileType } from '../../types'
+import {
+  CustomFieldArrayValue,
+  CustomFields,
+  Document,
+  FileType,
+  isArrayCustomField
+} from '../../types'
 import { useOstSession } from '../../utils/auth/hooks'
 import { IMAGES_PATH } from '../../utils/constants'
 import { deepReplace } from '../../utils/deepReplace'
@@ -55,7 +61,7 @@ export default function EditDocument({ collection }: EditDocumentProps) {
     resolver: yupResolver(documentSchema)
   })
   const { editor } = useTipTap({ ...methods })
-  const [customFields, setCustomFields] = useState({})
+  const [customFields, setCustomFields] = useState<CustomFields>({})
 
   const editDocument = (property: string, value: any) => {
     const formValues = methods.getValues()
@@ -149,6 +155,54 @@ export default function EditDocument({ collection }: EditDocumentProps) {
         }${contentPath}/${collection}/${newSlug}.md`,
         content
       )
+
+      // Check if a new tag value was added
+      let hasNewTag = false
+      Object.entries(customFields).forEach(([key, field]) => {
+        const customField = customFields[key]
+
+        // Only check for new values in array fields
+        if (isArrayCustomField(field) && isArrayCustomField(customField)) {
+          // @ts-ignore
+          data[key].forEach((selectedTag: CustomFieldArrayValue) => {
+            // Check if the selected tag already exists
+            const exists = field.values.some(
+              (savedTag: CustomFieldArrayValue) =>
+                savedTag.value === selectedTag.value
+            )
+
+            // If the selected tag does not exist, add it
+            if (!exists) {
+              customField.values.push({
+                value: selectedTag.value,
+                label: selectedTag.label
+              })
+              customFields[key] = customField
+              setCustomFields({ ...customFields })
+              hasNewTag = true
+            }
+          })
+        }
+      })
+
+      if (hasNewTag) {
+        const customFieldsJSON = JSON.stringify(
+          {
+            title: collection,
+            type: 'object',
+            properties: { ...customFields }
+          },
+          null,
+          2
+        )
+
+        capi.replaceFile(
+          `${
+            monorepoPath ? monorepoPath + '/' : ''
+          }${contentPath}/${collection}/schema.json`,
+          customFieldsJSON + '\n'
+        )
+      }
 
       // update metadata for this post
       // requires final content for hashing

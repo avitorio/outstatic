@@ -18,12 +18,15 @@ type AddCustomFieldProps = {
   collection: string
 }
 
-type CustomFieldForm = CustomField & { name: string }
+type CustomFieldForm = CustomField<'string' | 'number' | 'array'> & {
+  name: string
+}
 
 const fieldDataMap = {
   Text: 'string',
   String: 'string',
-  Number: 'number'
+  Number: 'number',
+  Tags: 'array'
 } as const
 
 export default function AddCustomField({ collection }: AddCustomFieldProps) {
@@ -128,6 +131,10 @@ export default function AddCustomField({ collection }: AddCustomFieldProps) {
         fieldType,
         dataType: fieldDataMap[fieldType],
         title: data.title
+      }
+
+      if (fieldDataMap[fieldType] === 'array') {
+        customFields[fieldName] = { ...customFields[fieldName], values: [] }
       }
 
       const created = await capiHelper({ customFields })

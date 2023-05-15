@@ -50,6 +50,7 @@
     "pluralize": "^8.0.0",
     "react-datepicker": "^4.8.0",
     "react-hook-form": "^7.31.3",
+    "react-select": "^5.7.3",
     "react-textarea-autosize": "^8.3.4",
     "schema-to-yup": "^1.12.9",
     "showdown": "^2.1.0",
