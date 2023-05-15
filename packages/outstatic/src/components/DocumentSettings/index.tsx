@@ -8,8 +8,13 @@ import DateTimePicker from '../DateTimePicker'
 import DeleteDocumentButton from '../DeleteDocumentButton'
 import Input from '../Input'
 import TextArea from '../TextArea'
+import TagInput from '../TagInput'
 import DocumentSettingsImageSelection from '../DocumentSettingsImageSelection'
-import { CustomFields } from '../../types'
+import {
+  CustomFieldArrayValue,
+  CustomFields,
+  isArrayCustomField
+} from '../../types'
 
 type DocumentSettingsProps = {
   saveFunc: () => void
@@ -19,10 +24,33 @@ type DocumentSettingsProps = {
   customFields?: CustomFields
 }
 
-const FieldDataMap = {
+interface InputProps {
+  type?: 'text' | 'number'
+  suggestions?: CustomFieldArrayValue[]
+}
+
+type ComponentType = {
+  component: typeof Input | typeof TextArea | typeof TagInput
+  props: InputProps
+}
+
+type FieldDataMapType = {
+  String: ComponentType
+  Text: ComponentType
+  Number: ComponentType
+  Tags: ComponentType
+}
+
+const FieldDataMap: FieldDataMapType = {
   String: { component: Input, props: { type: 'text' } },
   Text: { component: TextArea, props: {} },
-  Number: { component: Input, props: { type: 'number' } }
+  Number: { component: Input, props: { type: 'number' } },
+  Tags: {
+    component: TagInput,
+    props: {
+      suggestions: []
+    }
+  }
 }
 
 const DocumentSettings = ({
@@ -176,6 +204,9 @@ const DocumentSettings = ({
         {customFields &&
           Object.entries(customFields).map(([name, field]) => {
             const Field = FieldDataMap[field.fieldType]
+            if (isArrayCustomField(field)) {
+              Field.props.suggestions = field.values
+            }
             return (
               <Accordion
                 key={name}
