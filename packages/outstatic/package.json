@@ -7,6 +7,7 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": "./dist/index.js",
+    "./client": "./dist/client/client.js",
     "./server": "./dist/utils/server.js",
     "./outstatic.css": "./dist/outstatic.css"
   },

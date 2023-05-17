@@ -3,6 +3,7 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import { NextIncomingMessage } from 'next/dist/server/request-meta'
 import { Session } from '../../types'
 import { MAX_AGE, setTokenCookie, getTokenCookie } from './auth-cookies'
+import { NextFetchEvent } from 'next/server'
 
 export type LoginSession = {
   user: {
@@ -15,29 +16,27 @@ export type LoginSession = {
   expires: Date
 }
 
-export type Request =
-  | NextApiRequest
-  | (NextIncomingMessage & {
-      cookies: Partial<{
-        [key: string]: string
-      }>
-    })
+export type Request = {
+  cookies: Partial<{
+    [key: string]: string
+  }>
+  headers: {
+    cookie: string
+  }
+}
 
 const TOKEN_SECRET = process.env.OST_TOKEN_SECRET ?? ''
 
-export async function setLoginSession(
-  res: NextApiResponse,
-  session: LoginSession
-) {
+export async function setLoginSession(session: LoginSession) {
   // Create a session object with a max age that we can validate later
   const obj = { ...session }
   const token = await Iron.seal(obj, TOKEN_SECRET, Iron.defaults)
-  setTokenCookie(res, token)
+  setTokenCookie(token)
 }
 
 export async function getLoginSession(req: Request): Promise<Session | null> {
   const token = getTokenCookie(req)
-
+  console.log('token', token)
   if (!token) return null
 
   try {

@@ -1,6 +1,7 @@
 module.exports = {
   '(!README)*.(md|json|graphql)': 'prettier --write',
   ...[
+    'apps/dev13',
     'apps/dev',
     'apps/dev13',
     'apps/web',
