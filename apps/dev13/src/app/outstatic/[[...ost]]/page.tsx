@@ -2,8 +2,8 @@ import 'outstatic/outstatic.css'
 import { Outstatic } from 'outstatic'
 import { OstClient } from 'outstatic/client'
 
-export default async function Page() {
+export default async function Page({ params }: { params: { slug: string[] } }) {
   const providerData = await Outstatic()
-  console.log(providerData)
-  return <OstClient providerData={providerData} />
+  console.log({ params })
+  return <OstClient providerData={providerData} params={{ slug: [] }} />
 }

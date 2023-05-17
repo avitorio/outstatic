@@ -7,7 +7,7 @@ import { AdminLayout, DocumentsTable } from '../components'
 import { OutstaticContext } from '../context'
 import { useDocumentsQuery } from '../graphql/generated'
 import { Document } from '../types'
-import { ostSignOut } from '../utils/auth/hooks'
+import { useOstSignOut } from '../utils/auth/hooks'
 
 type GQLErrorExtended = GraphQLError & { type: string }
 
@@ -39,7 +39,7 @@ export default function List({ collection }: ListProps) {
         graphQLErrors &&
         (graphQLErrors?.[0] as GQLErrorExtended)?.type === 'NOT_FOUND'
       ) {
-        ostSignOut()
+        useOstSignOut()
         return null
       }
       return null

@@ -73,7 +73,7 @@ router
 
     if (userData && access_token) {
       const { name, login, email, avatar_url } = userData
-      await setLoginSession(res, {
+      await setLoginSession({
         user: { name, login, email, image: avatar_url },
         access_token,
         expires: new Date(Date.now() + MAX_AGE * 1000)

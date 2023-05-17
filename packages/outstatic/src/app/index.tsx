@@ -36,7 +36,6 @@ const defaultPages: { [key: string]: ReactElement | undefined } = {
 
 export async function Outstatic() {
   const { missingEnvVars, providerData } = await OstSSR()
-
   if (missingEnvVars)
     return <Welcome variables={missingEnvVars as EnvVarsType} />
 
@@ -51,19 +50,17 @@ export async function OstSSR() {
   }
 
   const cookieStore = cookies()
-  const ost_token = cookieStore.get('ost_token')
+  const ost_token = cookieStore.get('ost_token') || { value: '' }
 
-  console.log({ ost_token })
   const req = {
     cookies: {
+      //@ts-ignore
       ost_token: ost_token?.value || ''
     },
     headers: {
       cookie: cookies().get('ost_token') || ''
     }
   }
-
-  console.log({ req })
 
   const session = await getLoginSession(req)
 
@@ -102,8 +99,6 @@ export async function OstSSR() {
     }
   }
 
-  console.log(apolloClient)
-
   return {
     missingEnvVars: false,
     providerData: {
@@ -114,7 +109,7 @@ export async function OstSSR() {
       contentPath: process.env.OST_CONTENT_PATH || 'outstatic/content',
       monorepoPath: process.env.OST_MONOREPO_PATH || '',
       session: session || null,
-      initialApolloState: apolloClient?.cache.extract() || null,
+      initialApolloState: null,
       collections,
       pages: [...Object.keys(defaultPages), ...collections]
     }

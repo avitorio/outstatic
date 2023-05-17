@@ -1,4 +1,5 @@
 import * as Iron from '@hapi/iron'
+import { cookies } from 'next/headers'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { NextIncomingMessage } from 'next/dist/server/request-meta'
 import { Session } from '../../types'
@@ -35,8 +36,9 @@ export async function setLoginSession(session: LoginSession) {
 }
 
 export async function getLoginSession(req: Request): Promise<Session | null> {
-  const token = getTokenCookie(req)
-  console.log('token', token)
+  const cookieStore = cookies()
+  const token = cookieStore.get('ost_token')?.value
+
   if (!token) return null
 
   try {

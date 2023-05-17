@@ -26,7 +26,6 @@ const router = createEdgeRouter<Request, RequestContext>()
 const getSession = nextSession()
 
 export default async function GET(request: Request) {
-  console.log('zzzz')
   return router.run(request, { params: { id: '1' } })
 }
 
@@ -58,14 +57,14 @@ async function fetchGitHubUser(token: string) {
 
 router
   .use(async (req, res, next) => {
-    console.log('dddd')
     //@ts-ignore
     await getSession(req, res) // session is set to req.session
-    console.log(req)
-    console.log('asdad')
     const response = await next()
     if (response) {
-      return NextResponse.redirect('http://localhost:3000/outstatic')
+      const url = req.nextUrl.clone()
+      url.pathname = '/outstatic'
+      url.search = ''
+      return NextResponse.redirect(url)
     }
   })
   .get(async (req, res) => {
@@ -103,7 +102,6 @@ router
         access_token,
         expires: new Date(Date.now() + MAX_AGE * 1000)
       })
-      console.log({ name, login, email, image: avatar_url })
       return true
     } else {
       return new NextResponse('Something brokez!', {

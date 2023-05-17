@@ -1,7 +1,10 @@
-import Router from 'next/router'
+import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 import useSWR from 'swr'
 import { Session } from '../../types'
+import { cookies } from 'next/headers'
+import { serialize } from 'cookie'
+import { TOKEN_NAME } from './auth-cookies'
 
 type useOstSessionProps = {
   redirectTo?: string
@@ -30,6 +33,7 @@ export const useOstSession = ({
   const session = data?.session as Session
   const finished = Boolean(data)
   const hasUser = Boolean(session)
+  const router = useRouter()
 
   useEffect(() => {
     if (!redirectTo || !finished) return
@@ -39,7 +43,7 @@ export const useOstSession = ({
       // If redirectIfFound is also set, redirect if the user was found
       (redirectIfFound && hasUser)
     ) {
-      Router.push(redirectTo)
+      router.push(redirectTo)
     }
   }, [redirectTo, redirectIfFound, finished, hasUser])
 
@@ -63,6 +67,12 @@ export const useOstSession = ({
   }
 }
 
-export async function ostSignOut() {
-  Router.push('/api/outstatic/signout')
+export function useOstSignOut() {
+  const router = useRouter()
+
+  const signOut = () => {
+    router.push('/api/outstatic/signout')
+  }
+
+  return { signOut }
 }

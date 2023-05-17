@@ -59,6 +59,8 @@ export const OstClient = ({ providerData, params }: ProviderDataProps) => {
     return <Login />
   }
 
+  console.log({ params })
+
   if (!params.slug) {
     return null
   }

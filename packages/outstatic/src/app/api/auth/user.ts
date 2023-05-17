@@ -1,12 +1,21 @@
-import { NextApiRequest, NextApiResponse } from 'next'
+import { cookies } from 'next/headers'
 import { getLoginSession } from '../../../utils/auth/auth'
+import { NextResponse } from 'next/server'
 
-export default async function user(req: NextApiRequest, res: NextApiResponse) {
+export type Request = {
+  cookies: Partial<{
+    [key: string]: string
+  }>
+  headers: {
+    cookie: string
+  }
+}
+
+export default async function user(req: Request, res: Response) {
   try {
     const session = await getLoginSession(req)
-    res.status(200).json({ session })
+    return NextResponse.json({ session })
   } catch (error) {
-    console.error(error)
-    res.status(500).end('Authentication token is invalid, please log in')
+    return NextResponse.json({ error })
   }
 }

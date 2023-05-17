@@ -24,7 +24,6 @@ export const OutstaticApi = {
   GET: async (req: Request, params: QueryType) => {
     const { ost } = params
     const rsp = pages[ost[0]](req)
-    console.log('you are here')
     return rsp
   }
 }
