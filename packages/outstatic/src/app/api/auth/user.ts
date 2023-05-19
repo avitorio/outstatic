@@ -1,4 +1,3 @@
-import { cookies } from 'next/headers'
 import { getLoginSession } from '../../../utils/auth/auth'
 import { NextResponse } from 'next/server'
 

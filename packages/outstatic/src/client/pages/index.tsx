@@ -1,7 +1,6 @@
 import { ApolloClient, ApolloProvider } from '@apollo/client'
 import { Session } from '../../types'
 import { ReactElement, useState } from 'react'
-import { useRouter } from 'next/router'
 import { useApollo } from '../../utils/apollo'
 import Login from '../../pages/login'
 import FourOhFour from '../../pages/404'
@@ -34,7 +33,6 @@ const defaultPages: { [key: string]: ReactElement | undefined } = {
 }
 
 export const OstClient = ({ providerData, params }: ProviderDataProps) => {
-  'use client'
   const [pages, setPages] = useState(providerData?.pages)
   const [collections, setCollections] = useState(providerData?.collections)
 
