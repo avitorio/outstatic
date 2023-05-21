@@ -1,24 +1,11 @@
-import { useRouter } from 'next/navigation'
-import ErrorPage from 'next/error'
 import Header from '../../../components/Header'
 import Layout from '../../../components/Layout'
 import Head from 'next/head'
 import markdownToHtml from '../../../lib/markdownToHtml'
-import { Document } from '../../../interfaces/document'
-import {
-  getDocumentPaths,
-  getDocumentBySlug,
-  getDocuments,
-  load
-} from 'outstatic/server'
+import { getDocumentPaths, load } from 'outstatic/server'
 import DateFormatter from '../../../components/DateFormatter'
 import Image from 'next/image'
 import ContentGrid from '../../../components/ContentGrid'
-
-type Props = {
-  project: Document
-  moreProjects: Document[]
-}
 
 export default async function Project({
   params
@@ -26,6 +13,7 @@ export default async function Project({
   params: { slug: string }
 }) {
   const { project, moreProjects, content } = await getData(params)
+
   return (
     <Layout>
       <div className="max-w-6xl mx-auto px-5">
@@ -49,18 +37,17 @@ export default async function Project({
               <h1 className="font-primary text-2xl font-bold md:text-4xl mb-2">
                 {project.title}
               </h1>
-              {/* <div className="hidden md:block md:mb-8 text-slate-600">
-                    Launched on{' '}
-                    <DateFormatter dateString={project.publishedAt} /> by{' '}
-                    {project.author.name}.
-                  </div> */}
+              <div className="hidden md:block md:mb-8 text-slate-600">
+                Launched on <DateFormatter dateString={project.publishedAt} />{' '}
+                {project?.author?.name ? `by ${project?.author?.name}` : null}.
+              </div>
               <div className="inline-block p-4 border mb-8 font-semibold text-lg rounded shadow">
                 {project.description}
               </div>
               <div className="max-w-2xl mx-auto">
                 <div
                   className="prose lg:prose-xl"
-                  dangerouslySetInnerHTML={{ __html: project.content }}
+                  dangerouslySetInnerHTML={{ __html: content }}
                 />
               </div>
             </div>
@@ -78,12 +65,6 @@ export default async function Project({
       </div>
     </Layout>
   )
-}
-
-type Params = {
-  params: {
-    slug: string
-  }
 }
 
 async function getData(params: { slug: string }) {

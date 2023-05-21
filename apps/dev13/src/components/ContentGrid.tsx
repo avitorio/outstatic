@@ -1,11 +1,11 @@
-import type { Document } from '../interfaces/document'
+import type { OstDocument } from 'outstatic'
 import Link from 'next/link'
 import Image from 'next/image'
 
 type Props = {
   collection: 'posts' | 'projects'
   title?: string
-  items: Document[]
+  items: OstDocument[]
   priority?: boolean
 }
 
@@ -30,7 +30,7 @@ const ContentGrid = ({
             <div className="cursor-pointer border project-card rounded-md md:w-full scale-100 hover:scale-[1.02] active:scale-[0.97] motion-safe:transform-gpu transition duration-100 motion-reduce:hover:scale-100 hover:shadow overflow-hidden">
               <div className="sm:mx-0">
                 <Image
-                  src={item.coverImage}
+                  src={item.coverImage ?? ''}
                   alt={`Cover Image for ${item.title}`}
                   className="object-cover object-center w-full h-auto"
                   width={0}

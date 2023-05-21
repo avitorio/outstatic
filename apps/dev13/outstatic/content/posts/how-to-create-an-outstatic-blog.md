@@ -4,6 +4,12 @@ status: 'published'
 description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.'
 coverImage: '/images/jupiter-spaceship.png'
 publishedAt: '2022-07-14T02:34:02.322Z'
+tags:
+  [
+    { 'label': 'NextJs', value: 'nextJs' },
+    { 'label': 'GitHub', value: 'gitHub' },
+    { 'label': 'Outstatic', value: 'outstatic' }
+  ]
 author:
   name: Andre Vitorio
 ---
