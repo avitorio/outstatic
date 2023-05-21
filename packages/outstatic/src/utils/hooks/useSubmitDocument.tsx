@@ -6,6 +6,7 @@ import {
   CustomFields,
   Document,
   FileType,
+  Session,
   isArrayCustomField
 } from '../../types'
 import { createCommit as createCommitApi } from '../../utils/createCommit'
@@ -18,16 +19,17 @@ import { stringifyMetadata } from '../metadata/stringify'
 import matter from 'gray-matter'
 import useOid from '../useOid'
 import useFileQuery from '../useFileQuery'
+import { useCreateCommitMutation } from '../../graphql/generated'
+import { UseFormReturn } from 'react-hook-form'
 
 type SubmitDocumentProps = {
-  session: any
+  session: Session | null
   slug: string
   setSlug: (slug: string) => void
   setShowDelete: (showDelete: boolean) => void
   setLoading: (loading: boolean) => void
   files: FileType[]
-  createCommit: any
-  methods: any
+  methods: UseFormReturn<Document, any>
   collection: string
   customFields: CustomFields
   setCustomFields: (customFields: CustomFields) => void
@@ -41,13 +43,13 @@ function useSubmitDocument({
   setShowDelete,
   setLoading,
   files,
-  createCommit,
   methods,
   collection,
   customFields,
   setCustomFields,
   setHasChanges
 }: SubmitDocumentProps) {
+  const [createCommit] = useCreateCommitMutation()
   const { repoOwner, repoSlug, repoBranch, contentPath, monorepoPath } =
     useContext(OutstaticContext)
   const fetchOid = useOid()

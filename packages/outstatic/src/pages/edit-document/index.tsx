@@ -1,11 +1,9 @@
 import { yupResolver } from '@hookform/resolvers/yup'
-import matter from 'gray-matter'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { singular } from 'pluralize'
 import { useEffect, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
-import showdown from 'showdown'
 import {
   AdminLayout,
   MDEditor,
@@ -16,16 +14,13 @@ import { DocumentContext } from '../../context'
 import { useCreateCommitMutation } from '../../graphql/generated'
 import { CustomFields, Document, FileType } from '../../types'
 import { useOstSession } from '../../utils/auth/hooks'
-import { IMAGES_PATH } from '../../utils/constants'
 import { deepReplace } from '../../utils/deepReplace'
-import { escapeRegExp } from '../../utils/escapeRegExp'
-import { getLocalDate } from '../../utils/getLocalDate'
-import { replaceImageSrcRoot } from '../../utils/replaceImageSrc'
 import useNavigationLock from '../../utils/useNavigationLock'
 import useTipTap from '../../utils/useTipTap'
 import { convertSchemaToYup, editDocumentSchema } from '../../utils/yup'
 import useFileQuery from '../../utils/useFileQuery'
 import useSubmitDocument from '../../utils/hooks/useSubmitDocument'
+import { useDocumentUpdateEffect } from '../../utils/hooks/useDocumentUpdateEffect'
 
 export default function EditDocument({ collection }: { collection: string }) {
   const router = useRouter()
@@ -34,7 +29,6 @@ export default function EditDocument({ collection }: { collection: string }) {
   const [loading, setLoading] = useState(false)
   const [hasChanges, setHasChanges] = useState(false)
   const [files, setFiles] = useState<FileType[]>([])
-  const [createCommit] = useCreateCommitMutation()
   const [showDelete, setShowDelete] = useState(false)
   const [documentSchema, setDocumentSchema] = useState(editDocumentSchema)
   const methods = useForm<Document>({ resolver: yupResolver(documentSchema) })
@@ -47,11 +41,6 @@ export default function EditDocument({ collection }: { collection: string }) {
     methods.reset(newValue)
   }
 
-  const { data: documentQueryData } = useFileQuery({
-    file: `${collection}/${slug}.md`,
-    skip: slug === 'new' || !slug
-  })
-
   const { data: schemaQueryData } = useFileQuery({
     file: `${collection}/schema.json`
   })
@@ -63,7 +52,6 @@ export default function EditDocument({ collection }: { collection: string }) {
     setShowDelete,
     setLoading,
     files,
-    createCommit,
     methods,
     collection,
     customFields,
@@ -78,61 +66,15 @@ export default function EditDocument({ collection }: { collection: string }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [slug])
 
-  useEffect(() => {
-    const documentQueryObject = documentQueryData?.repository?.object
-
-    if (documentQueryObject?.__typename === 'Blob') {
-      let mdContent = documentQueryObject.text as string
-      const { data, content } = matter(mdContent)
-
-      const parseContent = () => {
-        const converter = new showdown.Converter({ noHeaderId: true })
-        const newContent = converter.makeHtml(content)
-
-        // fetch images from GitHub in case deploy is not done yet
-        return replaceImageSrcRoot(
-          newContent,
-          new RegExp(`^/${escapeRegExp(IMAGES_PATH)}`, 'gi'),
-          '/api/outstatic/images/'
-        )
-      }
-
-      const parsedContent = parseContent()
-
-      const newDate = data.publishedAt
-        ? new Date(data.publishedAt)
-        : getLocalDate()
-      const document = {
-        ...data,
-        publishedAt: newDate,
-        content: parsedContent,
-        slug
-      }
-      methods.reset(document)
-      editor.commands.setContent(parsedContent)
-      editor.commands.focus('start')
-      setShowDelete(slug !== 'new')
-    } else {
-      // Set publishedAt value on slug update to avoid undefined on first render
-      if (slug) {
-        const formData = methods.getValues()
-
-        methods.reset({
-          ...formData,
-          author: {
-            name: session?.user.name,
-            picture: session?.user.image ?? ''
-          },
-          coverImage: '',
-          publishedAt: slug === 'new' ? getLocalDate() : formData.publishedAt
-        })
-      }
-    }
-
-    const subscription = methods.watch(() => setHasChanges(true))
-
-    return () => subscription.unsubscribe()
-  }, [documentQueryData, methods, slug, editor, session])
+  useDocumentUpdateEffect({
+    collection,
+    methods,
+    slug,
+    editor,
+    session,
+    setHasChanges,
+    setShowDelete
+  })
 
   useEffect(() => {
     const documentQueryObject = schemaQueryData?.repository?.object
