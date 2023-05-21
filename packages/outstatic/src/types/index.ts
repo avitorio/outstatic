@@ -13,6 +13,7 @@ export type Document = {
   slug: string
   description?: string
   coverImage?: string
+  [key: string]: string | Date | object | [] | undefined
 }
 
 export type FileType = {
