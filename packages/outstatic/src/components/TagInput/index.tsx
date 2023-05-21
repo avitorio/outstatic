@@ -59,7 +59,6 @@ const TagInput = ({
         <Controller
           name={id}
           control={control}
-          rules={{ required: true }}
           render={({ field }) => (
             <Creatable
               {...field}

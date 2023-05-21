@@ -1,7 +1,7 @@
 import { useContext } from 'react'
-import { OutstaticContext } from '../context'
-import { useDocumentQuery } from '../graphql/generated'
-import { useOstSession } from './auth/hooks'
+import { OutstaticContext } from '../../context'
+import { useDocumentQuery } from '../../graphql/generated'
+import { useOstSession } from '../auth/hooks'
 
 type useFileQueryProps = {
   file: string

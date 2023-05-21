@@ -11,7 +11,8 @@ const posts = [
     author: {
       name: 'John Doe',
       picture: 'https://jdoe.com/picture.jpg'
-    }
+    },
+    content: 'This is the content'
   }
 ]
 
