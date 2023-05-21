@@ -46,7 +46,7 @@ export default function List({ collection }: ListProps) {
     }
   })
 
-  let documents: Omit<Document, 'content'>[] = []
+  let documents: Document[] = []
 
   const entries =
     data?.repository?.object?.__typename === 'Tree' &&
@@ -67,7 +67,8 @@ export default function List({ collection }: ListProps) {
           status,
           publishedAt: publishedAt ? new Date(publishedAt) : new Date(),
           slug: document.name.replace('.md', ''),
-          author
+          author,
+          content: ''
         })
       }
     })

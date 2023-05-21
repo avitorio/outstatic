@@ -5,7 +5,7 @@ import Modal from '../components/Modal'
 import { OutstaticContext } from '../context'
 import { useCreateCommitMutation } from '../graphql/generated'
 import { collectionCommitInput } from '../utils/collectionCommitInput'
-import useOid from '../utils/useOid'
+import useOid from '../utils/hooks/useOid'
 
 export default function Collections() {
   const {

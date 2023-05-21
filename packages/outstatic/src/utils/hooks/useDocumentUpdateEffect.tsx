@@ -8,7 +8,7 @@ import { replaceImageSrcRoot } from '../replaceImageSrc'
 import { escapeRegExp } from '../escapeRegExp'
 import { IMAGES_PATH } from '../constants'
 import { getLocalDate } from '../getLocalDate'
-import useFileQuery from '../useFileQuery'
+import useFileQuery from './useFileQuery'
 
 interface UseDocumentUpdateEffectProps {
   collection: string

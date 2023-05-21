@@ -5,9 +5,8 @@ import {
   useDocumentQuery
 } from '../../graphql/generated'
 import { useOstSession } from '../../utils/auth/hooks'
-import { createCommitInput } from '../../utils/createCommitInput'
 import { createCommit as createCommitApi } from '../../utils/createCommit'
-import useOid from '../../utils/useOid'
+import useOid from '../../utils/hooks/useOid'
 import Modal from '../Modal'
 import { MetadataSchema } from '../../utils/metadata/types'
 import { hashFromUrl } from '../../utils/hashFromUrl'

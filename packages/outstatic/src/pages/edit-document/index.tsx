@@ -11,14 +11,13 @@ import {
   DocumentTitleInput
 } from '../../components'
 import { DocumentContext } from '../../context'
-import { useCreateCommitMutation } from '../../graphql/generated'
 import { CustomFields, Document, FileType } from '../../types'
 import { useOstSession } from '../../utils/auth/hooks'
 import { deepReplace } from '../../utils/deepReplace'
-import useNavigationLock from '../../utils/useNavigationLock'
-import useTipTap from '../../utils/useTipTap'
+import useNavigationLock from '../../utils/hooks/useNavigationLock'
+import useTipTap from '../../utils/hooks/useTipTap'
 import { convertSchemaToYup, editDocumentSchema } from '../../utils/yup'
-import useFileQuery from '../../utils/useFileQuery'
+import useFileQuery from '../../utils/hooks/useFileQuery'
 import useSubmitDocument from '../../utils/hooks/useSubmitDocument'
 import { useDocumentUpdateEffect } from '../../utils/hooks/useDocumentUpdateEffect'
 

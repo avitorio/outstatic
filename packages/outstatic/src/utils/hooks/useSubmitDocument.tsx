@@ -17,8 +17,8 @@ import { hashFromUrl } from '../hashFromUrl'
 import MurmurHash3 from 'imurmurhash'
 import { stringifyMetadata } from '../metadata/stringify'
 import matter from 'gray-matter'
-import useOid from '../useOid'
-import useFileQuery from '../useFileQuery'
+import useOid from './useOid'
+import useFileQuery from './useFileQuery'
 import { useCreateCommitMutation } from '../../graphql/generated'
 import { UseFormReturn } from 'react-hook-form'
 
@@ -137,6 +137,7 @@ function useSubmitDocument({
         let hasNewTag = false
         Object.entries(customFields).forEach(([key, field]) => {
           const customField = customFields[key]
+          //@ts-ignore
           let dataKey = data[key]
           // Only check for new values in array fields
           if (isArrayCustomField(field) && isArrayCustomField(customField)) {

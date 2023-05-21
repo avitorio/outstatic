@@ -12,8 +12,8 @@ import { OutstaticContext } from '../../context'
 import { useCreateCommitMutation } from '../../graphql/generated'
 import { Collection } from '../../types'
 import { collectionCommitInput } from '../../utils/collectionCommitInput'
-import useNavigationLock from '../../utils/useNavigationLock'
-import useOid from '../../utils/useOid'
+import useNavigationLock from '../../utils/hooks/useNavigationLock'
+import useOid from '../../utils/hooks/useOid'
 
 export default function NewCollection() {
   const {

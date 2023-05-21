@@ -9,9 +9,9 @@ import Modal from '../../components/Modal'
 import { OutstaticContext } from '../../context'
 import { useCreateCommitMutation } from '../../graphql/generated'
 import { CustomField, CustomFields, customFieldTypes } from '../../types'
-import useFileQuery from '../../utils/useFileQuery'
-import useNavigationLock from '../../utils/useNavigationLock'
-import useOid from '../../utils/useOid'
+import useFileQuery from '../../utils/hooks/useFileQuery'
+import useNavigationLock from '../../utils/hooks/useNavigationLock'
+import useOid from '../../utils/hooks/useOid'
 import { createCommit as createCommitApi } from '../../utils/createCommit'
 
 type AddCustomFieldProps = {
