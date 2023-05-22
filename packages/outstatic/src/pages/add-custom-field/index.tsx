@@ -8,11 +8,17 @@ import Alert from '../../components/Alert'
 import Modal from '../../components/Modal'
 import { OutstaticContext } from '../../context'
 import { useCreateCommitMutation } from '../../graphql/generated'
-import { CustomField, CustomFields, customFieldTypes } from '../../types'
+import {
+  CustomField,
+  CustomFields,
+  customFieldTypes,
+  isArrayCustomField
+} from '../../types'
 import useFileQuery from '../../utils/hooks/useFileQuery'
 import useNavigationLock from '../../utils/hooks/useNavigationLock'
 import useOid from '../../utils/hooks/useOid'
 import { createCommit as createCommitApi } from '../../utils/createCommit'
+import TagInput from '../../components/TagInput'
 
 type AddCustomFieldProps = {
   collection: string
@@ -133,8 +139,11 @@ export default function AddCustomField({ collection }: AddCustomFieldProps) {
         title: data.title
       }
 
-      if (fieldDataMap[fieldType] === 'array') {
-        customFields[fieldName] = { ...customFields[fieldName], values: [] }
+      if (isArrayCustomField(data)) {
+        customFields[fieldName] = {
+          ...customFields[fieldName],
+          values: data.values || []
+        }
       }
 
       const created = await capiHelper({ customFields })
@@ -360,7 +369,7 @@ export default function AddCustomField({ collection }: AddCustomFieldProps) {
                 key={selectedField}
                 className={`flex p-6 text-left gap-4 ${
                   !!selectedField
-                    ? 'pt-0 opacity-50 cursor-not-allowed pointer-events-none'
+                    ? 'pt-0 opacity-50 cursor-not-allowed pointer-events-none hidden'
                     : ''
                 }`}
               >
@@ -415,6 +424,7 @@ export default function AddCustomField({ collection }: AddCustomFieldProps) {
                   </select>
                 </div>
               </div>
+
               <div className="flex px-6 text-left gap-4 mb-4">
                 <Input
                   label="description"
@@ -461,6 +471,26 @@ export default function AddCustomField({ collection }: AddCustomFieldProps) {
                   </div>
                 </fieldset>
               </div>
+              {selectedField &&
+              customFields[selectedField].fieldType === 'Tags' &&
+              customFields[selectedField].dataType === 'array' ? (
+                <div className="flex px-6 text-left gap-4 mb-4">
+                  <TagInput
+                    label="Your tags"
+                    id="values"
+                    helperText="Deleting tags will remove them from suggestions, not from existing documents."
+                    //@ts-ignore
+                    defaultValue={customFields[selectedField].values || []}
+                    noOptionsMessage={() => null}
+                    isClearable={false}
+                    isSearchable={false}
+                    components={{
+                      DropdownIndicator: () => null,
+                      IndicatorSeparator: () => null
+                    }}
+                  />
+                </div>
+              ) : null}
               <div className="space-x-2 rounded-b border-t p-6 text-sm text-gray-700">
                 This field will be accessible on the frontend as:{'  '}
                 <code className="bg-gray-200 font-semibold">

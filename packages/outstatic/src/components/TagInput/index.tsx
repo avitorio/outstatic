@@ -3,6 +3,7 @@ import { CustomFieldArrayValue } from '../../types'
 import Creatable from 'react-select/creatable'
 import camelcase from 'camelcase'
 import { useState } from 'react'
+import CreatableSelect from 'react-select/dist/declarations/src/Creatable'
 
 export type TagProps = {
   label?: string
@@ -15,14 +16,30 @@ export type TagProps = {
   wrapperClass?: string
   className?: string
   suggestions?: CustomFieldArrayValue[]
-} & React.ComponentPropsWithoutRef<'input'>
+  inputSize?: 'small' | 'medium'
+} & React.ComponentPropsWithoutRef<CreatableSelect>
+
+const sizes = {
+  small: {
+    label: 'mb-1 block text-sm font-medium text-gray-900',
+    input:
+      'w-full rounded-lg border border-gray-300 bg-gray-50 p-2 text-sm text-gray-900 outline-none focus:border-blue-500 focus:ring-blue-500'
+  },
+  medium: {
+    label: 'block mb-2 text-sm font-medium text-gray-900',
+    input:
+      'w-full text-gray-900 bg-gray-50 rounded-lg border border-gray-300 sm:text-sm outline-none focus:ring-blue-500 focus:border-blue-500'
+  }
+}
 
 const TagInput = ({
   label,
   helperText,
   id,
   wrapperClass,
-  suggestions = []
+  inputSize = 'medium',
+  suggestions = [],
+  ...rest
 }: TagProps) => {
   const {
     control,
@@ -50,7 +67,7 @@ const TagInput = ({
       {label && (
         <label
           htmlFor={id}
-          className={`'block mb-2 text-sm font-medium text-gray-900 first-letter:capitalize`}
+          className={`${sizes[inputSize].label} first-letter:capitalize`}
         >
           {label}
         </label>
@@ -68,16 +85,22 @@ const TagInput = ({
               styles={{
                 control: (baseStyles, state) => ({
                   ...baseStyles,
-                  borderColor: state.isFocused ? 'focus:ring-blue-500' : '',
+                  borderColor: state.isFocused
+                    ? 'focus:ring-blue-500'
+                    : 'border-gray-300 bg-gray-50',
                   borderRadius: '0.375rem',
                   backgroundColor: '#f9fafb',
                   fontSize: '0.875rem'
                 })
               }}
               classNames={{
-                menu: () => 'text-sm'
+                menu: () => (inputSize === 'small' ? 'text-sm' : 'text-base'),
+                control: () => sizes[inputSize].input,
+                valueContainer: () => 'p-2'
               }}
               onCreateOption={handleCreate}
+              isClearable={false}
+              {...rest}
             />
           )}
         />
