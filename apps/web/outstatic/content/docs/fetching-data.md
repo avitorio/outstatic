@@ -144,9 +144,9 @@ export async function getStaticPaths() {
 
 ## Fetching documents - Advanced
 
-Documents can also be retrieved with outstatic's JSON database. The `load` method retrieves the JSON database, and you can then `find()` documents matching either Outstatic properties such as `publishedAt` and `collection`, or any custom fields you've defined.
+Documents can also be retrieved with Outstatic's JSON database. The `load` method retrieves the JSON database, and you can then `find()` documents matching either Outstatic properties such as `publishedAt` and `collection`, or any custom fields you've defined.
 
-```js
+```javascript
 import { load } from 'outstatic/server'
 
 export async function getStaticProps({ params }: Params) {
@@ -165,7 +165,7 @@ export async function getStaticProps({ params }: Params) {
 
 Querying for documents is done by passing an object in to `find()`, containing a [mongo-like query object](http://docs.mongodb.org/manual/reference/operator/query/). Under the hood, we use the excellent [sift](https://www.npmjs.com/package/sift) library which supports: $in, $nin, $exists, $gte, $gt, $lte, $lt, $eq, $ne, $mod, $all, $and, $or, $nor, $not, $size, $type, $regex, $where, and $elemMatch.
 
-```js
+```javascript
 // find all posts in the "blog" collection
 db.find({
   collection: 'blog'
@@ -181,7 +181,7 @@ db.find({
 
 When retrieving documents, you can also specify one or more fields you'd like returned as part of the query, or call `.project()` later on if you prefer a different syntax.
 
-```js
+```javascript
 // as a second argument
 db.find(query, ['title', 'collection', 'publishedAt', 'slug'])
 
