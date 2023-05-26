@@ -121,7 +121,7 @@ export async function getStaticProps({ params }: Params) {
 
 Keep in mind that the content is returned as Markdown. In order to convert it to HTML you should use a library such as [remark](https://www.npmjs.com/package/remark). To see an example of how you can use remark to convert Markdown to html, please take a look at our [Blog Example template](https://github.com/avitorio/outstatic/blob/main/examples/blog/src/lib/markdownToHtml.ts).
 
-### Getting paths to use with `getStaticPaths` or `generateStaticParams` 
+### Getting paths to use with `getStaticPaths` or `generateStaticParams`
 
 We provide a simple helper function so you can easily get all the document paths for a specific collection. This is helpful to feed the array of slugs needed for Next.js to statically generate dynamic routes.
 
@@ -273,7 +273,7 @@ export async function getStaticProps({ params }: Params) {
 }
 ```
 
-### Getting paths to use with `getStaticPaths` or `generateStaticParams` 
+### Getting paths to use with `getStaticPaths` or `generateStaticParams`
 
 The `load` method and `find()` API can also be used for retrieving static paths. In these situations, it's recommended to retrieve as few fields as necessary for Next.js to build quickly.
 
@@ -288,11 +288,7 @@ export async function generateStaticParams() {
     .project(['slug'])
     .toArray()
 
-  return {
-    paths: posts.map((post) => `posts/${[post.slug]}`),
-    fallback: false
-  }
-  return getDocumentPaths('posts')
+  return posts
 }
 
 // /pages
