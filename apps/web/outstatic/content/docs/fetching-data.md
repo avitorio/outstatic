@@ -7,7 +7,7 @@ author:
 slug: 'fetching-data'
 description: ''
 coverImage: ''
-publishedAt: '2022-10-13T12:28:25.000Z'
+publishedAt: '2023-05-26T12:28:25.000Z'
 ---
 
 We've made it easy for you to fetch the data and content you create with Outstatic by providing simple functions and APIs. You should use these on the front end of your Next.js website. They can be used as async functions in the `/app` or `/pages` directories.
