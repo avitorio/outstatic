@@ -16,7 +16,7 @@ We've made it easy for you to fetch the data and content you create with Outstat
 
 To fetch all your collections, without the documents, use the `getCollections` function. It will return an array of strings, each string being the name of a folder under `/outstatic/content/`.
 
-## Fetching documents - Basic Usage
+## Basic Document Fetching
 
 ### Fetching all documents
 
@@ -140,7 +140,7 @@ export async function getStaticPaths() {
 }
 ```
 
-## Fetching documents - Advanced Usage
+## Advanced Document Fetching
 
 Documents can also be retrieved with Outstatic's JSON database. The `load` method retrieves the JSON database, and you can then `find()` documents matching either Outstatic properties such as `publishedAt` and `collection`, or any custom fields you've defined.
 
