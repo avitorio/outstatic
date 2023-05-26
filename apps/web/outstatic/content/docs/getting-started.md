@@ -135,7 +135,7 @@ You should see this page:
 OST_GITHUB_ID=YOUR_GITHUB_OAUTH_APP_ID
 OST_GITHUB_SECRET=YOUR_GITHUB_OAUTH_APP_SECRET
 # random string min 32 chars
-OST_TOKEN_SECRET=A_RANDOM_TOKEN 
+OST_TOKEN_SECRET=A_RANDOM_TOKEN
 OST_REPO_SLUG=YOUR_GITHUB_REPOSITORY_SLUG
 
 # OPTIONAL
@@ -175,4 +175,3 @@ OST_TOKEN_SECRET=A_RANDOM_TOKEN
 ```
 
 To learn more about all the available environment variables, see the [Environment Variables ](https://outstatic.com/docs/environment-variables)section of the docs.
-

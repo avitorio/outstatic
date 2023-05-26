@@ -4,9 +4,15 @@ type AccordionProps = {
   title: string
   callback?: () => void
   children: React.ReactNode
+  error?: boolean
 }
 
-const Accordion = ({ title, callback, children }: AccordionProps) => {
+const Accordion = ({
+  title,
+  callback,
+  children,
+  error = false
+}: AccordionProps) => {
   const [show, setShow] = useState(false)
 
   const handleShow = () => {
@@ -18,13 +24,15 @@ const Accordion = ({ title, callback, children }: AccordionProps) => {
 
   return (
     <div className="w-full border-b first:border-t">
-      <h2 id="accordion-collapse-heading-1">
+      <h2 id="accordion-collapse-heading-1 bg-red-50 ">
         <button
           type="button"
-          className="flex items-center justify-between w-full text-sm font-medium text-gray-900 p-4 hover:bg-gray-50 focus:outline-none focus:outline-blue-300 focus:outline-offset-[-1px]"
+          className={`flex items-center justify-between w-full text-sm font-medium text-gray-900 p-4 hover:bg-gray-50 focus:outline-none focus:outline-blue-300 focus:outline-offset-[-1px] ${
+            error ? 'bg-red-50' : ''
+          }`}
           onClick={handleShow}
         >
-          <span>{title}</span>
+          <span className="capitalize">{title}</span>
           <svg
             data-accordion-icon
             className={`w-6 h-6 shrink-0 ${show ? '' : 'rotate-180'}`}

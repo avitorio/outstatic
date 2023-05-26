@@ -5,7 +5,7 @@ import Modal from '../components/Modal'
 import { OutstaticContext } from '../context'
 import { useCreateCommitMutation } from '../graphql/generated'
 import { collectionCommitInput } from '../utils/collectionCommitInput'
-import useOid from '../utils/useOid'
+import useOid from '../utils/hooks/useOid'
 
 export default function Collections() {
   const {
@@ -109,7 +109,7 @@ export default function Collections() {
                 key={collection}
                 className="relative flex p-6 justify-between items-center max-w-sm bg-white rounded-lg border border-gray-200 shadow-md hover:bg-slate-100"
               >
-                <Link href={`/outstatic/${collection}`}>
+                <Link href={`/outstatic/collections/${collection}`}>
                   <h5 className="text-2xl cursor-pointer font-bold tracking-tight text-gray-900 capitalize hover:text-blue-500">
                     {collection}
                     <span className="absolute top-0 bottom-0 left-0 right-16"></span>

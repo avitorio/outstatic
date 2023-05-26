@@ -6,6 +6,7 @@ query Collections($owner: String!, $name: String!, $contentPath: String!) {
       ... on Tree {
         entries {
           name
+          type
         }
       }
     }

@@ -2,6 +2,9 @@ import fs from 'fs'
 import { join } from 'path'
 import matter from 'gray-matter'
 
+// metadata db features
+export { load } from './metadata/load'
+
 const CONTENT_PATH = join(
   process.cwd(),
   process.env.OST_CONTENT_PATH || 'outstatic/content'
@@ -102,7 +105,9 @@ export const getDocumentPaths = (collection: string) => {
 
 export const getCollections = () => {
   try {
-    const collections = fs.readdirSync(CONTENT_PATH)
+    const collections = fs
+      .readdirSync(CONTENT_PATH)
+      .filter((f) => !/\.json$/.test(f))
     return collections
   } catch (error) {
     console.error({ getCollections: error })

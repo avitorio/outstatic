@@ -7,7 +7,7 @@ export type InputProps = {
   helperText?: string
   type?: string
   readOnly?: boolean
-  validation?: RegisterOptions
+  registerOptions?: RegisterOptions
   wrapperClass?: string
   className?: string
   inputSize?: 'small' | 'medium'
@@ -26,19 +26,19 @@ const sizes = {
   }
 }
 
-export default function Input({
+const InputField = ({
   label,
   placeholder = '',
   helperText,
   id,
   type = 'text',
   readOnly = false,
-  validation,
+  registerOptions,
   wrapperClass,
   className,
   inputSize = 'medium',
   ...rest
-}: InputProps) {
+}: InputProps) => {
   const {
     register,
     formState: { errors }
@@ -47,13 +47,16 @@ export default function Input({
   return (
     <div className={wrapperClass}>
       {label && (
-        <label htmlFor={id} className={`${sizes[inputSize].label}`}>
+        <label
+          htmlFor={id}
+          className={`${sizes[inputSize].label} first-letter:capitalize`}
+        >
           {label}
         </label>
       )}
       <div className="relative">
         <input
-          {...register(id, validation)}
+          {...register(id, registerOptions)}
           {...rest}
           className={`${sizes[inputSize].input} ${className}`}
           type={type}
@@ -66,7 +69,7 @@ export default function Input({
       </div>
       <>
         {(errors[id]?.message || helperText) && (
-          <div className="mt-1">
+          <div className="mt-1 first-letter:capitalize">
             {helperText && (
               <p className="text-xs text-gray-500">{helperText}</p>
             )}
@@ -81,3 +84,5 @@ export default function Input({
     </div>
   )
 }
+
+export default InputField

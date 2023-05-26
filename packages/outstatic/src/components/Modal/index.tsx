@@ -9,7 +9,9 @@ const Modal = ({ children, title, close }: ModalProps) => (
     <div className="relative h-full w-full max-w-2xl p-4 md:h-auto">
       <div className="relative rounded-lg bg-white shadow">
         <div className="flex items-start justify-between rounded-t border-b p-4">
-          <h3 className="text-xl font-semibold text-gray-900">{title}</h3>
+          <h3 className="text-xl font-semibold text-gray-900 capitalize">
+            {title}
+          </h3>
           <button
             type="button"
             className="ml-auto inline-flex items-center rounded-lg bg-transparent p-1.5 text-sm text-gray-400 hover:bg-gray-200 hover:text-gray-900 dark:hover:bg-gray-600 dark:hover:text-white"

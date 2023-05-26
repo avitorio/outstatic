@@ -3,19 +3,24 @@ import { GetServerSideProps } from 'next'
 import { useRouter } from 'next/router'
 import { ReactElement, useState } from 'react'
 import { OutstaticProvider } from '../context'
-import { CollectionsDocument } from '../graphql/generated'
+import {
+  CollectionsDocument,
+  CollectionsQuery,
+  CollectionsQueryVariables
+} from '../graphql/generated'
 import { Session } from '../types'
 import { initializeApollo, useApollo } from '../utils/apollo'
 import { getLoginSession } from '../utils/auth/auth'
 import { envVars, EnvVarsType } from '../utils/envVarsCheck'
 import FourOhFour from './404'
-import EditCollection from './edit-collection'
+import NewCollection from './new-collection'
 import Collections from './collections'
-import EditContent from './edit-document'
+import EditDocument from './edit-document'
 import List from './list'
 import Login from './login'
 import Settings from './settings'
 import Welcome from './welcome'
+import AddCustomField from './add-custom-field'
 
 type OutstaticProps = {
   missingEnvVars: EnvVarsType | false
@@ -88,9 +93,12 @@ export const Outstatic = ({ missingEnvVars, providerData }: OutstaticProps) => {
     >
       <ApolloProvider client={client}>
         {!slug && <Collections />}
-        {slug2 && isContent && <EditContent collection={slug} />}
+        {slug2 && isContent && <EditDocument collection={slug} />}
         {!slug2 && isContent ? <List collection={slug} /> : defaultPages[slug]}
-        {!!slug2 && !isContent && <EditCollection />}
+        {(slug === 'collections' && collections.includes(slug2) && (
+          <AddCustomField collection={slug2} />
+        )) ||
+          (!!slug2 && !isContent && <NewCollection />)}
       </ApolloProvider>
     </OutstaticProvider>
   )
@@ -113,10 +121,14 @@ export const OstSSP: GetServerSideProps = async ({ req }) => {
 
   if (apolloClient) {
     try {
-      const { data: documentQueryData } = await apolloClient.query({
+      const { data: documentQueryData } = await apolloClient.query<
+        CollectionsQuery,
+        CollectionsQueryVariables
+      >({
         query: CollectionsDocument,
         variables: {
-          name: process.env.OST_REPO_SLUG || process.env.VERCEL_GIT_REPO_SLUG,
+          name:
+            process.env.OST_REPO_SLUG ?? process.env.VERCEL_GIT_REPO_SLUG ?? '',
           contentPath: `${process.env.OST_REPO_BRANCH || 'main'}:${
             process.env.OST_MONOREPO_PATH
               ? process.env.OST_MONOREPO_PATH + '/'
@@ -129,9 +141,9 @@ export const OstSSP: GetServerSideProps = async ({ req }) => {
       const documentQueryObject = documentQueryData?.repository?.object
 
       if (documentQueryObject?.__typename === 'Tree') {
-        collections = documentQueryObject?.entries?.map(
-          (entry: { name: any }) => entry.name
-        ) as String[]
+        collections = documentQueryObject?.entries
+          ?.map((entry) => (entry.type === 'tree' ? entry.name : undefined))
+          .filter(Boolean) as String[]
       }
     } catch (error) {
       console.log({ error })

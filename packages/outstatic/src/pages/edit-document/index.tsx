@@ -1,56 +1,38 @@
 import { yupResolver } from '@hookform/resolvers/yup'
-import matter from 'gray-matter'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { singular } from 'pluralize'
-import { useContext, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
-import showdown from 'showdown'
 import {
   AdminLayout,
   MDEditor,
   DocumentSettings,
   DocumentTitleInput
 } from '../../components'
-import { OutstaticContext, DocumentContext } from '../../context'
-import {
-  useCreateCommitMutation,
-  useDocumentQuery
-} from '../../graphql/generated'
-import { Document, FileType } from '../../types'
+import { DocumentContext } from '../../context'
+import { CustomFields, Document, FileType } from '../../types'
 import { useOstSession } from '../../utils/auth/hooks'
-import { IMAGES_PATH } from '../../utils/constants'
-import { createCommitInput } from '../../utils/createCommitInput'
 import { deepReplace } from '../../utils/deepReplace'
-import { escapeRegExp } from '../../utils/escapeRegExp'
-import { getLocalDate } from '../../utils/getLocalDate'
-import { mergeMdMeta } from '../../utils/mergeMdMeta'
-import { replaceImageSrcRoot } from '../../utils/replaceImageSrc'
-import useNavigationLock from '../../utils/useNavigationLock'
-import useOid from '../../utils/useOid'
-import useTipTap from '../../utils/useTipTap'
-import { editDocumentSchema } from '../../utils/yup'
+import useNavigationLock from '../../utils/hooks/useNavigationLock'
+import useTipTap from '../../utils/hooks/useTipTap'
+import { convertSchemaToYup, editDocumentSchema } from '../../utils/yup'
+import useFileQuery from '../../utils/hooks/useFileQuery'
+import useSubmitDocument from '../../utils/hooks/useSubmitDocument'
+import { useDocumentUpdateEffect } from '../../utils/hooks/useDocumentUpdateEffect'
 
-type EditDocumentProps = {
-  collection: string
-}
-
-export default function EditDocument({ collection }: EditDocumentProps) {
+export default function EditDocument({ collection }: { collection: string }) {
   const router = useRouter()
   const [slug, setSlug] = useState(router.query?.ost?.[1] as string)
-  const { repoOwner, repoSlug, repoBranch, contentPath, monorepoPath } =
-    useContext(OutstaticContext)
   const { session } = useOstSession()
   const [loading, setLoading] = useState(false)
   const [hasChanges, setHasChanges] = useState(false)
   const [files, setFiles] = useState<FileType[]>([])
-  const [createCommit] = useCreateCommitMutation()
-  const fetchOid = useOid()
   const [showDelete, setShowDelete] = useState(false)
-  const methods = useForm<Document>({
-    resolver: yupResolver(editDocumentSchema)
-  })
+  const [documentSchema, setDocumentSchema] = useState(editDocumentSchema)
+  const methods = useForm<Document>({ resolver: yupResolver(documentSchema) })
   const { editor } = useTipTap({ ...methods })
+  const [customFields, setCustomFields] = useState<CustomFields>({})
 
   const editDocument = (property: string, value: any) => {
     const formValues = methods.getValues()
@@ -58,55 +40,23 @@ export default function EditDocument({ collection }: EditDocumentProps) {
     methods.reset(newValue)
   }
 
-  const { data: documentQueryData } = useDocumentQuery({
-    variables: {
-      owner: repoOwner || session?.user?.login || '',
-      name: repoSlug,
-      filePath: `${repoBranch}:${
-        monorepoPath ? monorepoPath + '/' : ''
-      }${contentPath}/${collection}/${slug}.md`
-    },
-    fetchPolicy: 'network-only',
-    skip: slug === 'new' || !slug
+  const { data: schemaQueryData } = useFileQuery({
+    file: `${collection}/schema.json`
   })
 
-  const onSubmit = async (data: Document) => {
-    setLoading(true)
-    try {
-      const document = methods.getValues()
-      const content = mergeMdMeta({ ...data })
-      const oid = await fetchOid()
-      const owner = repoOwner || session?.user?.login || ''
-      const newSlug = document.slug
-
-      // If the slug has changed, commit should delete old file
-      const oldSlug = slug !== newSlug && slug !== 'new' ? slug : undefined
-
-      const commitInput = createCommitInput({
-        owner,
-        slug: newSlug,
-        oldSlug,
-        content,
-        oid,
-        files,
-        repoSlug,
-        repoBranch,
-        contentPath,
-        monorepoPath,
-        collection
-      })
-
-      await createCommit({ variables: commitInput })
-      setLoading(false)
-      setHasChanges(false)
-      setSlug(newSlug)
-      setShowDelete(true)
-    } catch (error) {
-      // TODO: Better error treatment
-      setLoading(false)
-      console.log({ error })
-    }
-  }
+  const onSubmit = useSubmitDocument({
+    session,
+    slug,
+    setSlug,
+    setShowDelete,
+    setLoading,
+    files,
+    methods,
+    collection,
+    customFields,
+    setCustomFields,
+    setHasChanges
+  })
 
   useEffect(() => {
     router.push(`/outstatic/${collection}/${slug}`, undefined, {
@@ -115,69 +65,25 @@ export default function EditDocument({ collection }: EditDocumentProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [slug])
 
+  useDocumentUpdateEffect({
+    collection,
+    methods,
+    slug,
+    editor,
+    session,
+    setHasChanges,
+    setShowDelete
+  })
+
   useEffect(() => {
-    const documentQueryObject = documentQueryData?.repository?.object
-
+    const documentQueryObject = schemaQueryData?.repository?.object
     if (documentQueryObject?.__typename === 'Blob') {
-      let mdContent = documentQueryObject.text as string
-      const {
-        data: { title, publishedAt, status, description, coverImage, author },
-        content
-      } = matter(mdContent)
-
-      const parseContent = () => {
-        const converter = new showdown.Converter({ noHeaderId: true })
-        const newContent = converter.makeHtml(content)
-
-        // fetch images from GitHub in case deploy is not done yet
-        return replaceImageSrcRoot(
-          newContent,
-          new RegExp(`^/${escapeRegExp(IMAGES_PATH)}`, 'gi'),
-          '/api/outstatic/images/'
-        )
-      }
-
-      const parsedContent = parseContent()
-
-      const newDate = publishedAt ? new Date(publishedAt) : getLocalDate()
-      const document = {
-        title,
-        publishedAt: newDate,
-        content: parsedContent,
-        status,
-        author: {
-          name: author?.name,
-          picture: author?.picture || ''
-        },
-        slug,
-        description,
-        coverImage
-      }
-      methods.reset(document)
-      editor.commands.setContent(parsedContent)
-      editor.commands.focus('start')
-      setShowDelete(slug !== 'new')
-    } else {
-      // Set publishedAt value on slug update to avoid undefined on first render
-      if (slug) {
-        const formData = methods.getValues()
-
-        methods.reset({
-          ...formData,
-          author: {
-            name: session?.user.name,
-            picture: session?.user.image ?? ''
-          },
-          coverImage: '',
-          publishedAt: slug === 'new' ? getLocalDate() : formData.publishedAt
-        })
-      }
+      const schema = JSON.parse(documentQueryObject?.text || '{}')
+      const yupSchema = convertSchemaToYup(schema)
+      setDocumentSchema(yupSchema)
+      setCustomFields(schema.properties)
     }
-
-    const subscription = methods.watch(() => setHasChanges(true))
-
-    return () => subscription.unsubscribe()
-  }, [documentQueryData, methods, slug, editor, session])
+  }, [schemaQueryData])
 
   // Ask for confirmation before leaving page if changes were made.
   useNavigationLock(hasChanges)
@@ -216,6 +122,7 @@ export default function EditDocument({ collection }: EditDocumentProps) {
                 loading={loading}
                 saveFunc={methods.handleSubmit(onSubmit)}
                 showDelete={showDelete}
+                customFields={customFields}
               />
             }
           >

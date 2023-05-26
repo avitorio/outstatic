@@ -4,7 +4,7 @@ import { Document } from '../../types'
 import DeleteDocumentButton from '../DeleteDocumentButton'
 
 type DocumentsTableProps = {
-  documents: Omit<Document, 'content'>[]
+  documents: Document[]
   collection: string
 }
 const options = {
