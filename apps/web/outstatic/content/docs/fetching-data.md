@@ -16,7 +16,7 @@ We've made it easy for you to fetch the data and content you create with Outstat
 
 To fetch all your collections, without the documents, use the `getCollections` function. It will return an array of strings, each string being the name of a folder under `/outstatic/content/`.
 
-## Fetching documents - Basic
+## Fetching documents - Basic Usage
 
 ### Fetching all documents
 
@@ -62,8 +62,6 @@ export const getStaticProps = async () => {
 }
 ```
 
-
-
 ### Fetching documents by slug
 
 Documents can be fetched by slug, this is usually helpful when using Next.js' [Dynamic Routes](https://nextjs.org/docs/app/building-your-application/routing/dynamic-routes). The function `getDocumentBySlug` takes three parameters: the name of the collection as a string, the slug of the document, and an array with the fields to be retrieved.
@@ -71,6 +69,8 @@ Documents can be fetched by slug, this is usually helpful when using Next.js' [D
 **App directory example:**
 
 ```javascript
+// Example of a app/posts/[slug]/page.tsx
+
 async function getData(params: { slug: string }) {
   const post = getDocumentBySlug('posts', params.slug, [
     'title',
@@ -140,7 +140,7 @@ export async function getStaticPaths() {
 }
 ```
 
-## Fetching documents - Advanced
+## Fetching documents - Advanced Usage
 
 Documents can also be retrieved with Outstatic's JSON database. The `load` method retrieves the JSON database, and you can then `find()` documents matching either Outstatic properties such as `publishedAt` and `collection`, or any custom fields you've defined.
 
@@ -157,6 +157,8 @@ export async function getStaticProps({ params }: Params) {
     .project(fields) // chain this to update the fields you want returned
     .toArray() // end the chain, returning a Promise of the resulting documents
 }
+
+//...
 ```
 
 ### The Query Object
@@ -212,7 +214,7 @@ As a convienence, you can also call `first()` instead, which returns the first r
 await db.find({}).toArray()
 ```
 
-## Fetch examples
+## Advanced Fetch examples
 
 ### Fetch a collection
 
