@@ -1,3 +1,6 @@
-const withTM = require("next-transpile-modules")(["outstatic"]);
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  transpilePackages: ['outstatic']
+}
 
-module.exports = withTM({ reactStrictMode: true });
+module.exports = nextConfig

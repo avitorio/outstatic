@@ -1,5 +1,9 @@
 module.exports = {
-  content: ['./src/components/**/*.tsx', './src/pages/**/*.tsx'],
+  content: [
+    './src/components/**/*.tsx',
+    './src/pages/**/*.tsx',
+    './src/app/**/*.tsx'
+  ],
   theme: {
     extend: {
       colors: {
@@ -16,7 +20,7 @@ module.exports = {
         tighter: '-.04em'
       },
       lineHeight: {
-        tight: 1.2
+        tight: '1.2'
       },
       fontSize: {
         '5xl': '2.5rem',
