@@ -30,9 +30,11 @@ publishedAt: '2022-09-22T14:18:37.951Z'
 
     - [Basic Document Fetching](http://localhost:3000/docs/fetching-data#basic-document-fetching)
 
-    - [Advanced Document Fetching](http://localhost:3000/docs/fetching-data#advanced-document-fetching)
+    - [Advanced Document Fetching ](http://localhost:3000/docs/fetching-data#advanced-document-fetching)
 
     <!-- -->
+
+- [Custom Fields (NEW!)](https://outstatic.com/docs/custom-fields)
 
 - [Environment Variables](https://outstatic.com/docs/environment-variables)
 
