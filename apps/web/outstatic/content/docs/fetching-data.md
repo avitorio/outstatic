@@ -10,7 +10,7 @@ coverImage: ''
 publishedAt: '2022-10-13T12:28:25.000Z'
 ---
 
-We've made it easy for you to fetch the data and content you create with Outstatic by providing a simple functions and APIs. You should use this API on the front end of your Next.js website. They can be used as async functions in the `/app` directory or inside of `getStaticProps` on the `/pages` directory.
+We've made it easy for you to fetch the data and content you create with Outstatic by providing simple functions and APIs. You should use this API on the front end of your Next.js website. They can be used as async functions in the `/app` directory or inside of `getStaticProps` on the `/pages` directory.
 
 ## Fetching collections
 
