@@ -68,7 +68,7 @@ export async function getStaticPaths() {
 
 ### Fetching documents by slug
 
-Documents can be fetched by slug, this is usually helpful when using Next.js' [Dynamic Routes](https://nextjs.org/docs/routing/dynamic-routes). The function `getDocumentBySlug` takes three parameters: the name of the collection as a string, the slug of the document, and an array with the fields to be retrieved.
+Documents can be fetched by slug, this is usually helpful when using Next.js' [Dynamic Routes](https://nextjs.org/docs/app/building-your-application/routing/dynamic-routes). The function `getDocumentBySlug` takes three parameters: the name of the collection as a string, the slug of the document, and an array with the fields to be retrieved.
 
 **App directory example:**
 
@@ -209,7 +209,7 @@ Finally, once you've specified your query and any additional options, you can ca
 
 As a convienence, you can also call `first()` instead, which returns the first result of the `toArray()` call for you.
 
-```js
+```javascript
 // return ALL documents - pretty expensive
 await db.find({}).toArray()
 ```
@@ -218,7 +218,7 @@ await db.find({}).toArray()
 
 ### Fetch a collection
 
-```js
+```javascript
 import { load } from 'outstatic/server'
 
 export async function getStaticProps({ params }: Params) {
@@ -240,7 +240,7 @@ export async function getStaticProps({ params }: Params) {
 
 ### Fetch by slug
 
-```js
+```javascript
 import { load } from 'outstatic/server'
 
 export async function getStaticProps({ params }: Params) {
@@ -275,9 +275,27 @@ export async function getStaticProps({ params }: Params) {
 
 ### Getting paths to use with `getStaticPaths` or `generateStaticParams` 
 
-The `load` method and `find()` API can also be used for retrieving static paths. In these situations, it's recommended to retrieve as few fields as necessary for next.js to build quickly.
+The `load` method and `find()` API can also be used for retrieving static paths. In these situations, it's recommended to retrieve as few fields as necessary for Next.js to build quickly.
 
-```js
+```javascript
+// /app
+export async function generateStaticParams() {
+  const db = await load()
+  const posts = await db
+    .find({
+      collection: 'posts'
+    })
+    .project(['slug'])
+    .toArray()
+
+  return {
+    paths: posts.map((post) => `posts/${[post.slug]}`),
+    fallback: false
+  }
+  return getDocumentPaths('posts')
+}
+
+// /pages
 export async function getStaticPaths() {
   const db = await load()
   const posts = await db
