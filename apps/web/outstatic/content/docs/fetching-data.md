@@ -28,17 +28,17 @@ To fetch all the documents from a collection, you can use the `getDocuments` fun
 // Fetch ALL Documents from the posts collection
 // /app/posts/[slug]/page.tsx
 
-export default async function Post() {
-  const posts = await getData(params)
-  return { posts.map( post => <h1>{post.title}</h1) }
+import { getDocuments } from 'outstatic/server'
+
+export default async function Index() {
+  const posts = await getData()
+  return posts.map((post) => <h1>{post.title}</h1)
 }
 
 async function getData() {
-  const posts = await getDocuments('posts', [
-    'title',
-  ])
+  const posts = getDocuments('posts', ['title'])
 
-  return posts;
+  return posts
 }
 ```
 
@@ -48,23 +48,21 @@ async function getData() {
 // Fetch ALL Documents from the posts collection
 // /pages/posts/[slug].tsx
 
-export const getStaticProps = async () => {
-  const allPosts = getDocuments('posts', [
-    'title'
-  ])
+import { getDocuments } from 'outstatic/server'
 
-  return {
-    props: { allPosts }
-  }
+export default function Index({ posts }) {
+  return posts.map((post) => <h1>{post.title}</h1)
 }
 
-export async function getStaticPaths() {
+export const getStaticProps = async () => {
+  const posts = getDocuments('posts', ['title'])
   return {
-    paths: getDocumentPaths('posts'),
-    fallback: false
+    props: { posts }
   }
 }
 ```
+
+
 
 ### Fetching documents by slug
 
