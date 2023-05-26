@@ -7,33 +7,31 @@ export default async function Index() {
   const { page, allPosts, allProjects } = await getData()
 
   return (
-    <>
-      <Layout>
-        <div className="max-w-6xl mx-auto px-5">
-          <section className="mt-16 mb-16 md:mb-12">
-            <div
-              className="prose lg:prose-2xl home-intro"
-              dangerouslySetInnerHTML={{ __html: page.content }}
-            />
-          </section>
-          {allPosts.length > 0 && (
-            <ContentGrid
-              title="Posts"
-              items={allPosts}
-              collection="posts"
-              priority
-            />
-          )}
-          {allProjects.length > 0 && (
-            <ContentGrid
-              title="Projects"
-              items={allProjects}
-              collection="projects"
-            />
-          )}
-        </div>
-      </Layout>
-    </>
+    <Layout>
+      <div className="max-w-6xl mx-auto px-5">
+        <section className="mt-16 mb-16 md:mb-12">
+          <div
+            className="prose lg:prose-2xl home-intro"
+            dangerouslySetInnerHTML={{ __html: page.content }}
+          />
+        </section>
+        {allPosts.length > 0 && (
+          <ContentGrid
+            title="Posts"
+            items={allPosts}
+            collection="posts"
+            priority
+          />
+        )}
+        {allProjects.length > 0 && (
+          <ContentGrid
+            title="Projects"
+            items={allProjects}
+            collection="projects"
+          />
+        )}
+      </div>
+    </Layout>
   )
 }
 
