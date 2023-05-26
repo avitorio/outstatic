@@ -10,15 +10,141 @@ coverImage: ''
 publishedAt: '2022-10-13T12:28:25.000Z'
 ---
 
-We've made it easy for you to fetch the data and content you create with Outstatic by providing a simple API. You should use this API on the front end of your Next.js website, inside of `getStaticProps`.
+We've made it easy for you to fetch the data and content you create with Outstatic by providing a simple functions and APIs. You should use this API on the front end of your Next.js website. They can be used as async functions in the `/app` directory or inside of `getStaticProps` on the `/pages` directory.
 
 ## Fetching collections
 
 To fetch all your collections, without the documents, use the `getCollections` function. It will return an array of strings, each string being the name of a folder under `/outstatic/content/`.
 
-## Fetching documents
+## Fetching documents - Basic
 
-Retrieving documents is done with outstatic's JSON database. The `load` method retrieves the JSON database, and you can then `find()` documents matching either Outstatic properties such as `publishedAt` and `collection`, or any custom fields you've defined.
+### Fetching all documents
+
+To fetch all the documents from a collection, you can use the `getDocuments` function as an async function when using the `/app` directory or inside `getStaticProps` or `getServerSideProps` functions in the `/pages` directory. The `getDocuments` function accepts two parameters: the name of the collection as a string, and an array with the fields to be retrieved. It returns an array of Documents sorted by date, with the most recent `publishedAt` documents first.
+
+**App directory example:**
+
+```javascript
+// Fetch ALL Documents from the posts collection
+// /app/posts/[slug]/page.tsx
+
+export default async function Post() {
+  const posts = await getData(params)
+  return { posts.map( post => <h1>{post.title}</h1) }
+}
+
+async function getData() {
+  const posts = await getDocuments('posts', [
+    'title',
+  ])
+
+  return posts;
+}
+```
+
+**Pages directory example:**
+
+```javascript
+// Fetch ALL Documents from the posts collection
+// /pages/posts/[slug].tsx
+
+export const getStaticProps = async () => {
+  const allPosts = getDocuments('posts', [
+    'title'
+  ])
+
+  return {
+    props: { allPosts }
+  }
+}
+
+export async function getStaticPaths() {
+  return {
+    paths: getDocumentPaths('posts'),
+    fallback: false
+  }
+}
+```
+
+### Fetching documents by slug
+
+Documents can be fetched by slug, this is usually helpful when using Next.js' [Dynamic Routes](https://nextjs.org/docs/routing/dynamic-routes). The function `getDocumentBySlug` takes three parameters: the name of the collection as a string, the slug of the document, and an array with the fields to be retrieved.
+
+**App directory example:**
+
+```javascript
+async function getData(params: { slug: string }) {
+  const post = getDocumentBySlug('posts', params.slug, [
+    'title',
+    'publishedAt',
+    'slug',
+    'author',
+    'content',
+    'coverImage'
+  ])
+
+  const content = await markdownToHtml(post.content || '')
+
+  return {
+    ...post,
+    content
+  }
+}
+```
+
+**Pages directory example:**
+
+```javascript
+// Example of a /pages/posts/[slug].tsx page
+
+export async function getStaticProps({ params }: Params) {
+  const post = getDocumentBySlug('posts', params.slug, [
+    'title',
+    'publishedAt',
+    'slug',
+    'author',
+    'content',
+    'coverImage'
+  ])
+  const content = await markdownToHtml(post.content || '')
+
+  return {
+    props: {
+      post: {
+        ...post,
+        content
+      }
+    }
+  }
+}
+```
+
+Keep in mind that the content is returned as Markdown. In order to convert it to HTML you should use a library such as [remark](https://www.npmjs.com/package/remark). To see an example of how you can use remark to convert Markdown to html, please take a look at our [Blog Example template](https://github.com/avitorio/outstatic/blob/main/examples/blog/src/lib/markdownToHtml.ts).
+
+### Getting paths to use with `getStaticPaths` or `generateStaticParams` 
+
+We provide a simple helper function so you can easily get all the document paths for a specific collection. This is helpful to feed the array of slugs needed for Next.js to statically generate dynamic routes.
+
+```javascript
+// Fetching document paths
+
+// /app
+export async function generateStaticParams() {
+  return getDocumentPaths('posts')
+}
+
+// /pages
+export async function getStaticPaths() {
+  return {
+    paths: getDocumentPaths('posts'),
+    fallback: false
+  }
+}
+```
+
+## Fetching documents - Advanced
+
+Documents can also be retrieved with outstatic's JSON database. The `load` method retrieves the JSON database, and you can then `find()` documents matching either Outstatic properties such as `publishedAt` and `collection`, or any custom fields you've defined.
 
 ```js
 import { load } from 'outstatic/server'
@@ -68,7 +194,9 @@ db.find(query).project(['title', 'collection', 'publishedAt', 'slug'])
 Outstatic supports [mongo-like sorting](https://www.mongodb.com/docs/drivers/node/current/fundamentals/crud/read-operations/sort/). When sorting, you can pass:
 
 - a string, which will sort the field ascending: `"title"`
+
 - an object, where the key is the field to sort, and the value is `1` to sort ascending or `-1` to sort decending: `{title: 1}`
+
 - an array containing a mix of the above two sorting options: `[{publishedAt: -1}, {title: 1}]`
 
 ### Skipping and Limiting
@@ -145,7 +273,7 @@ export async function getStaticProps({ params }: Params) {
 }
 ```
 
-### Getting paths to use with `getStaticPaths`
+### Getting paths to use with `getStaticPaths` or `generateStaticParams` 
 
 The `load` method and `find()` API can also be used for retrieving static paths. In these situations, it's recommended to retrieve as few fields as necessary for next.js to build quickly.
 
@@ -169,3 +297,4 @@ export async function getStaticPaths() {
 ## Usage examples:
 
 If you'd like to check out examples of how to use these functions, please refer to our [Example Blog](https://github.com/avitorio/outstatic/tree/main/examples/blog) repository.
+
