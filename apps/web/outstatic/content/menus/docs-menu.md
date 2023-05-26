@@ -28,6 +28,12 @@ publishedAt: '2022-09-22T14:18:37.951Z'
 
 - [Fetching data](/docs/fetching-data)
 
+    - [Basic Document Fetching](http://localhost:3000/docs/fetching-data#basic-document-fetching)
+
+    - [Advanced Document Fetching](http://localhost:3000/docs/fetching-data#advanced-document-fetching)
+
+    <!-- -->
+
 - [Environment Variables](https://outstatic.com/docs/environment-variables)
 
 - [FAQs](/docs/faqs)
