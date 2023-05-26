@@ -7,7 +7,7 @@ author:
 slug: 'introduction'
 description: ''
 coverImage: ''
-publishedAt: '2022-10-13T17:50:55.000Z'
+publishedAt: '2023-05-26T17:50:55.000Z'
 ---
 
 Outstatic is an open source content management system (CMS) for static websites using [Next.js](https://nextjs.org).
@@ -17,6 +17,7 @@ The concept is simple: write content, click save, and see the changes on your we
 Requirements:
 
 - a [GitHub](https://github.com) account
+
 - a [Vercel](https://vercel.com/signup) account
 
 You can get started by visiting our [Getting started](/docs/getting-started) section. If you want to learn a bit more about Outstatic, keep reading.
@@ -65,4 +66,7 @@ Documents contains some data by default:
 
 - **Cover Image** (optional): an image to be used as a cover or [Open Graph](https://ogp.me) image.
 
+But you are not limited to the above, you can also add [Custom Fields](/docs/custom-fields) to your documents.
+
 Next: the [Content Editor](/docs/the-content-editor), which is used to edit Documents.
+
