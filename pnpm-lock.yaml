@@ -127,7 +127,7 @@ importers:
       date-fns: ^2.28.0
       gray-matter: ^4.0.3
       next: ^13.0.0
-      outstatic: ^0.0.36-canary.1
+      outstatic: ^0.0.36-canary.2
       postcss: ^8.4.14
       react: ^18.2.0
       react-dom: ^18.2.0
