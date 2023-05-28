@@ -2,6 +2,7 @@ module.exports = {
   '(!README)*.(md|json|graphql)': 'prettier --write',
   ...[
     'apps/dev',
+    'apps/dev13',
     'apps/web',
     'examples/blog',
     'packages/eslint-custom-config',

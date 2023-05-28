@@ -1,12 +1,15 @@
-import type { Document } from '../interfaces/document'
+import type { OstDocument } from 'outstatic'
 import Link from 'next/link'
-import DateFormatter from './DateFormatter'
 import Image from 'next/image'
+
+type Item = {
+  tags?: { value: string; label: string }[]
+} & OstDocument
 
 type Props = {
   collection: 'posts' | 'projects'
   title?: string
-  items: Document[]
+  items: Item[]
   priority?: boolean
 }
 
@@ -31,7 +34,7 @@ const ContentGrid = ({
             <div className="cursor-pointer border project-card rounded-md md:w-full scale-100 hover:scale-[1.02] active:scale-[0.97] motion-safe:transform-gpu transition duration-100 motion-reduce:hover:scale-100 hover:shadow overflow-hidden">
               <div className="sm:mx-0">
                 <Image
-                  src={item.coverImage}
+                  src={item.coverImage ?? ''}
                   alt={`Cover Image for ${item.title}`}
                   className="object-cover object-center w-full h-auto"
                   width={0}
@@ -47,12 +50,17 @@ const ContentGrid = ({
               </div>
               {collection === 'posts' && (
                 <div className="p-4">
+                  {Array.isArray(item?.tags)
+                    ? item.tags.map(({ label }) => (
+                        <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+                          {label}
+                        </span>
+                      ))
+                    : null}
                   <h3 className="text-xl mb-2 leading-snug font-bold hover:underline">
                     {item.title}
                   </h3>
-                  <div className="text-md mb-4 text-slate-700">
-                    <DateFormatter dateString={item.publishedAt} />
-                  </div>
+                  <div className="text-md mb-4 text-slate-700"></div>
                   <p className="text-lg leading-relaxed mb-4">
                     {item.description}
                   </p>
