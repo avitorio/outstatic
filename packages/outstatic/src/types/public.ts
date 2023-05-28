@@ -1,6 +1,4 @@
-import type Author from './author'
-
-export type Document = {
+export type OstDocument = {
   content: string
   collection: string
   slug: string
@@ -8,10 +6,9 @@ export type Document = {
   status: string
   description?: string
   coverImage?: string
-  publishedAt: Date
+  publishedAt: string
   author?: {
     name?: string
     picture?: string
   }
-  __outstatic: any
 }

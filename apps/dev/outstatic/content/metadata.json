@@ -35,7 +35,12 @@
       "publishedAt": "2022-07-14T02:34:02.322Z",
       "slug": "how-to-create-an-outstatic-blog",
       "status": "published",
-      "title": "Learn how to create your blog with Outstatic"
+      "title": "Learn how to create your blog with Outstatic",
+      "tags": [
+        { "label": "NextJs", "value": "nextJs" },
+        { "label": "GitHub", "value": "gitHub" },
+        { "label": "Outstatic", "value": "outstatic" }
+      ]
     },
     {
       "__outstatic": {
