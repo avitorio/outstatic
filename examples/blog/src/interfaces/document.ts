@@ -1,14 +1,17 @@
 import type Author from './author'
 
 export type Document = {
+  content: string
+  collection: string
   slug: string
   title: string
-  publishedAt: string
-  coverImage: string
-  author: Author
-  description: string
-  ogImage: {
-    url: string
+  status: string
+  description?: string
+  coverImage?: string
+  publishedAt: Date
+  author?: {
+    name?: string
+    picture?: string
   }
-  content: string
+  __outstatic: any
 }
