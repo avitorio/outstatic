@@ -9,6 +9,7 @@
     "typecheck": "tsc --project tsconfig.json --noEmit"
   },
   "dependencies": {
+    "@tiptap/pm": "^2.0.3",
     "date-fns": "^2.28.0",
     "eslint-config-next": "^13.4.2",
     "gray-matter": "^4.0.3",
