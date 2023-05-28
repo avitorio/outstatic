@@ -13,9 +13,6 @@
     "dev": {
       "cache": false
     },
-    "dev13": {
-      "cache": false
-    },
     "clean": {
       "cache": false
     },
