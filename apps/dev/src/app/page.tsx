@@ -4,7 +4,7 @@ import ContentGrid from '../components/ContentGrid'
 import markdownToHtml from '../lib/markdownToHtml'
 
 export default async function Index() {
-  const { page, allPosts, allProjects } = await getData()
+  const { content, allPosts, allProjects } = await getData()
 
   return (
     <Layout>
@@ -12,7 +12,7 @@ export default async function Index() {
         <section className="mt-16 mb-16 md:mb-12">
           <div
             className="prose lg:prose-2xl home-intro"
-            dangerouslySetInnerHTML={{ __html: page.content }}
+            dangerouslySetInnerHTML={{ __html: content }}
           />
         </section>
         {allPosts.length > 0 && (
@@ -41,7 +41,8 @@ async function getData() {
   const page = await db
     .find({ collection: 'pages', slug: 'home' }, ['content'])
     .first()
-  const content = await markdownToHtml(page.content || '')
+
+  const content = await markdownToHtml(page.content)
 
   const allPosts = await db
     .find({ collection: 'posts' }, [
@@ -60,21 +61,7 @@ async function getData() {
     .toArray()
 
   return {
-    page: {
-      content,
-      slug: '',
-      title: '',
-      publishedAt: '',
-      coverImage: '',
-      author: {
-        name: '',
-        picture: ''
-      },
-      description: '',
-      ogImage: {
-        url: ''
-      }
-    },
+    content,
     allPosts,
     allProjects
   }

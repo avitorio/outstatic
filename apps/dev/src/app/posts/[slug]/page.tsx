@@ -67,7 +67,7 @@ async function getData(params: { slug: string }) {
     ])
     .first()
 
-  const content = await markdownToHtml(post.content || '')
+  const content = await markdownToHtml(post.content)
 
   return {
     ...post,
