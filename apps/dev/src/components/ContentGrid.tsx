@@ -2,10 +2,14 @@ import type { OstDocument } from 'outstatic'
 import Link from 'next/link'
 import Image from 'next/image'
 
+type Item = {
+  tags?: { value: string; label: string }[]
+} & OstDocument
+
 type Props = {
   collection: 'posts' | 'projects'
   title?: string
-  items: OstDocument[]
+  items: Item[]
   priority?: boolean
 }
 
@@ -46,6 +50,13 @@ const ContentGrid = ({
               </div>
               {collection === 'posts' && (
                 <div className="p-4">
+                  {Array.isArray(item?.tags)
+                    ? item.tags.map(({ label }) => (
+                        <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+                          {label}
+                        </span>
+                      ))
+                    : null}
                   <h3 className="text-xl mb-2 leading-snug font-bold hover:underline">
                     {item.title}
                   </h3>
