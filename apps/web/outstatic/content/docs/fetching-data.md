@@ -141,7 +141,7 @@ export async function getStaticPaths() {
 }
 ```
 
-## Advanced Document Fetching
+## Advanced Document Fetching - Metadata DB
 
 Documents can also be retrieved with Outstatic's JSON database. The `load` method retrieves the JSON database, and you can then `find()` documents matching either Outstatic properties such as `publishedAt` and `collection`, or any custom fields you've defined.
 
@@ -312,3 +312,4 @@ export async function getStaticPaths() {
 ## Usage examples:
 
 If you'd like to check out examples of how to use these functions, please refer to our [Example Blog](https://github.com/avitorio/outstatic/tree/main/examples/blog) repository.
+
