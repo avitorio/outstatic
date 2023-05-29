@@ -9,6 +9,7 @@ const CONTENT_PATH = join(
   process.cwd(),
   process.env.OST_CONTENT_PATH || 'outstatic/content'
 )
+
 const MD_MDX_REGEXP = /\.mdx?$/i
 
 export function getDocumentSlugs(collection: string) {

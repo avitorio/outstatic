@@ -10,11 +10,13 @@ const CONTENT_PATH = join(
   process.env.OST_CONTENT_PATH || 'outstatic/content'
 )
 
+const METADATA_PATH = resolve(CONTENT_PATH, './metadata.json')
+
 export const load = async <TSchema extends {} = {}>() => {
-  const m = await readFile(resolve(CONTENT_PATH, './metadata.json'))
+  const m = await readFile(METADATA_PATH)
   const metadata = JSON.parse(m.toString())
   const mdb: unknown[] = metadata?.metadata ?? []
-
+  // console.log(metadata)
   return {
     /**
      * Find a post matching a provided query, with options for sorting and limiting

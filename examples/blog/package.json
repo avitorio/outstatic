@@ -14,7 +14,7 @@
     "eslint-config-next": "^13.4.2",
     "gray-matter": "^4.0.3",
     "next": "^13.4.2",
-    "outstatic": "0.0.36-canary.4",
+    "outstatic": "0.0.36-canary.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "remark": "^14.0.2",
