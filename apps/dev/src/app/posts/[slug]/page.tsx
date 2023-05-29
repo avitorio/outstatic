@@ -1,7 +1,7 @@
 import Header from '../../../components/Header'
 import Layout from '../../../components/Layout'
 import markdownToHtml from '../../../lib/markdownToHtml'
-import { getDocumentPaths, load } from 'outstatic/server'
+import { getDocumentSlugs, load } from 'outstatic/server'
 import DateFormatter from '../../../components/DateFormatter'
 import Image from 'next/image'
 import { OstDocument } from 'outstatic'
@@ -80,5 +80,6 @@ async function getData(params: { slug: string }) {
 }
 
 export async function generateStaticParams() {
-  return getDocumentPaths('posts')
+  const posts = getDocumentSlugs('posts')
+  return posts.map((slug) => ({ slug }))
 }

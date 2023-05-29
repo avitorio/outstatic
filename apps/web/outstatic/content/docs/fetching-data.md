@@ -128,7 +128,8 @@ We provide a simple helper function so you can easily get all the document paths
 
 // /app
 export async function generateStaticParams() {
-  return getDocumentPaths('posts')
+  const posts = getDocumentSlugs('posts')
+  return posts.map((slug) => ({ slug }))
 }
 
 // /pages
@@ -311,4 +312,3 @@ export async function getStaticPaths() {
 ## Usage examples:
 
 If you'd like to check out examples of how to use these functions, please refer to our [Example Blog](https://github.com/avitorio/outstatic/tree/main/examples/blog) repository.
-
