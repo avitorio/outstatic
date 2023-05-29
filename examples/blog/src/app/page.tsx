@@ -50,7 +50,8 @@ async function getData() {
       'publishedAt',
       'slug',
       'coverImage',
-      'description'
+      'description',
+      'tags'
     ])
     .sort({ publishedAt: -1 })
     .toArray()

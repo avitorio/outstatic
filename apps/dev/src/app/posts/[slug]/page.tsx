@@ -28,7 +28,10 @@ export default async function Post({ params }: { params: { slug: string } }) {
           </div>
           {Array.isArray(post?.tags)
             ? post.tags.map(({ label }) => (
-                <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+                <span
+                  key="label"
+                  className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2"
+                >
                   {label}
                 </span>
               ))
@@ -55,6 +58,7 @@ export default async function Post({ params }: { params: { slug: string } }) {
 
 async function getData(params: { slug: string }) {
   const db = await load()
+
   const post = await db
     .find<Post>({ collection: 'posts', slug: params.slug }, [
       'title',
