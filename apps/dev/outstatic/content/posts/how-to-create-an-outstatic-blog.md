@@ -3,7 +3,7 @@ title: 'Learn how to create your blog with Outstatic'
 status: 'published'
 description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.'
 coverImage: '/images/jupiter-spaceship.png'
-tags: [{"label":"NextJs","value":"nextJs"},{"label":"GitHub","value":"gitHub"}]
+tags: [{"label":"NextJs","value":"nextJs"},{"label":"GitHub","value":"gitHub"},{"label":"Outstatic","value":"outstatic"}]
 author:
   name: 'Andre Vitorio'
 slug: 'how-to-create-an-outstatic-blog'

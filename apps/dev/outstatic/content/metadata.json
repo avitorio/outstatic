@@ -1,6 +1,6 @@
 {
   "commit": "f1d49d79a01c1d85981f368c71944529e6583183",
-  "generated": "2023-06-07T23:08:24.053Z",
+  "generated": "2023-06-07T23:08:34.841Z",
   "metadata": [
     {
       "__outstatic": {
@@ -109,7 +109,7 @@
     {
       "__outstatic": {
         "commit": "f1d49d79a01c1d85981f368c71944529e6583183",
-        "hash": "2704173279",
+        "hash": "2395411135",
         "path": "outstatic/content/posts/how-to-create-an-outstatic-blog.md"
       },
       "author": {
@@ -129,6 +129,10 @@
         {
           "label": "GitHub",
           "value": "gitHub"
+        },
+        {
+          "label": "Outstatic",
+          "value": "outstatic"
         }
       ],
       "title": "Learn how to create your blog with Outstatic"
