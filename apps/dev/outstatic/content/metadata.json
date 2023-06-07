@@ -1,6 +1,6 @@
 {
-  "commit": "4b8ca15309d4a1e235ba3f30a95acb6fe267baa6",
-  "generated": "Mon, 06 Feb 2023 00:55:33 GMT",
+  "commit": "f1d49d79a01c1d85981f368c71944529e6583183",
+  "generated": "2023-06-07T23:08:24.053Z",
   "metadata": [
     {
       "__outstatic": {
@@ -19,28 +19,6 @@
       "slug": "home",
       "status": "published",
       "title": "Home"
-    },
-    {
-      "__outstatic": {
-        "commit": "bf4993b965319da4cb9de4a3810fb4af12bdebd6",
-        "hash": "2596208214",
-        "path": "/outstatic/content/posts/how-to-create-an-outstatic-blog.md"
-      },
-      "author": {
-        "name": "Andre Vitorio"
-      },
-      "collection": "posts",
-      "coverImage": "/images/jupiter-spaceship.png",
-      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.",
-      "publishedAt": "2022-07-14T02:34:02.322Z",
-      "slug": "how-to-create-an-outstatic-blog",
-      "status": "published",
-      "title": "Learn how to create your blog with Outstatic",
-      "tags": [
-        { "label": "NextJs", "value": "nextJs" },
-        { "label": "GitHub", "value": "gitHub" },
-        { "label": "Outstatic", "value": "outstatic" }
-      ]
     },
     {
       "__outstatic": {
@@ -127,6 +105,33 @@
       "slug": "flycream-travel",
       "status": "published",
       "title": "Flycream Travel"
+    },
+    {
+      "__outstatic": {
+        "commit": "f1d49d79a01c1d85981f368c71944529e6583183",
+        "hash": "2704173279",
+        "path": "outstatic/content/posts/how-to-create-an-outstatic-blog.md"
+      },
+      "author": {
+        "name": "Andre Vitorio"
+      },
+      "collection": "posts",
+      "coverImage": "/images/jupiter-spaceship.png",
+      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.",
+      "publishedAt": "2022-07-14T02:34:02.322Z",
+      "slug": "how-to-create-an-outstatic-blog",
+      "status": "published",
+      "tags": [
+        {
+          "label": "NextJs",
+          "value": "nextJs"
+        },
+        {
+          "label": "GitHub",
+          "value": "gitHub"
+        }
+      ],
+      "title": "Learn how to create your blog with Outstatic"
     }
   ]
 }
