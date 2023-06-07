@@ -1,6 +1,6 @@
 {
-  "commit": "f1d49d79a01c1d85981f368c71944529e6583183",
-  "generated": "2023-06-07T23:08:34.841Z",
+  "commit": "8228cd439c8769c4b3fcbac4bcf9c88ed2dc5bd6",
+  "generated": "2023-06-07T23:10:40.074Z",
   "metadata": [
     {
       "__outstatic": {
@@ -36,23 +36,6 @@
       "slug": "the-wrong-decision",
       "status": "published",
       "title": "If you want to make the wrong decision, ask everyone"
-    },
-    {
-      "__outstatic": {
-        "commit": "d2f316fd04def3347c906f5227da5daf79971f61",
-        "hash": "4086614036",
-        "path": "/outstatic/content/posts/nothing-wrong.md"
-      },
-      "author": {
-        "name": "Andre Vitorio"
-      },
-      "collection": "posts",
-      "coverImage": "/images/industrial-pattern.png",
-      "description": "One more day, one more joy. I feel blessed.",
-      "publishedAt": "2022-09-14T17:55:40.452Z",
-      "slug": "nothing-wrong",
-      "status": "published",
-      "title": "Nothing is wrong. Everything is perfect"
     },
     {
       "__outstatic": {
@@ -136,6 +119,29 @@
         }
       ],
       "title": "Learn how to create your blog with Outstatic"
+    },
+    {
+      "__outstatic": {
+        "commit": "8228cd439c8769c4b3fcbac4bcf9c88ed2dc5bd6",
+        "hash": "1744946817",
+        "path": "outstatic/content/posts/nothing-wrong.md"
+      },
+      "author": {
+        "name": "Andre Vitorio"
+      },
+      "collection": "posts",
+      "coverImage": "/images/industrial-pattern.png",
+      "description": "One more day, one more joy. I feel blessed.",
+      "publishedAt": "2022-09-14T17:55:40.452Z",
+      "slug": "nothing-wrong",
+      "status": "published",
+      "tags": [
+        {
+          "label": "Next.js",
+          "value": "nextJs"
+        }
+      ],
+      "title": "Nothing is wrong. Everything is perfect"
     }
   ]
 }
