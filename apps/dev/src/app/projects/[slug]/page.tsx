@@ -1,11 +1,11 @@
-import Header from '../../../components/Header'
-import Layout from '../../../components/Layout'
+import Header from '@/components/Header'
+import Layout from '@/components/Layout'
 import Head from 'next/head'
-import markdownToHtml from '../../../lib/markdownToHtml'
+import markdownToHtml from '@/lib/markdownToHtml'
 import { getDocumentSlugs, load } from 'outstatic/server'
-import DateFormatter from '../../../components/DateFormatter'
+import DateFormatter from '@/components/DateFormatter'
 import Image from 'next/image'
-import ContentGrid from '../../../components/ContentGrid'
+import ContentGrid from '@/components/ContentGrid'
 
 export default async function Project({
   params

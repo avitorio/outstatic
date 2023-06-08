@@ -139,10 +139,11 @@ export default function AddCustomField({ collection }: AddCustomFieldProps) {
         title: data.title
       }
 
-      if (isArrayCustomField(data)) {
+      if (fieldDataMap[fieldType] === 'array') {
         customFields[fieldName] = {
           ...customFields[fieldName],
-          values: data.values || []
+          // @ts-ignore
+          values: data?.values || []
         }
       }
 

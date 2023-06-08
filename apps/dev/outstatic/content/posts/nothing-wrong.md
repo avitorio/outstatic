@@ -6,6 +6,7 @@ author:
 slug: 'nothing-wrong'
 description: 'One more day, one more joy. I feel blessed.'
 coverImage: '/images/industrial-pattern.png'
+tags: [{"label":"Next.js","value":"nextJs"}]
 publishedAt: '2022-09-14T17:55:40.452Z'
 ---
 
@@ -22,3 +23,4 @@ let happy = 'be'
 ```
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Praesent elementum facilisis leo vel fringilla est ullamcorper eget. At imperdiet dui accumsan sit amet nulla facilities morbi tempus. Praesent elementum facilisis leo vel fringilla. Congue mauris rhoncus aenean vel. Egestas sed tempus urna et pharetra pharetra massa massa ultricies.
+

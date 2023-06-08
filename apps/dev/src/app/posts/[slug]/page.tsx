@@ -1,8 +1,8 @@
-import Header from '../../../components/Header'
-import Layout from '../../../components/Layout'
-import markdownToHtml from '../../../lib/markdownToHtml'
+import Header from '@/components/Header'
+import Layout from '@/components/Layout'
+import markdownToHtml from '@/lib/markdownToHtml'
 import { getDocumentSlugs, load } from 'outstatic/server'
-import DateFormatter from '../../../components/DateFormatter'
+import DateFormatter from '@/components/DateFormatter'
 import Image from 'next/image'
 import { OstDocument } from 'outstatic'
 

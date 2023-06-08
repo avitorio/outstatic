@@ -1,6 +1,6 @@
 {
   "name": "outstatic",
-  "version": "0.0.36-canary.5",
+  "version": "0.0.36-canary.6",
   "description": "Static site CMS for Next.js",
   "author": "Andre Vitorio <andre@vitorio.net>",
   "main": "./dist/index.js",
@@ -85,7 +85,7 @@
     "@types/testing-library__jest-dom": "^5.14.5",
     "concurrently": "^7.2.2",
     "encoding": "^0.1.13",
-    "eslint": "^7.32.0",
+    "eslint": "8.42.0",
     "eslint-config-custom": "workspace:*",
     "jest": "^29.0.1",
     "jest-environment-jsdom": "^29.0.1",
