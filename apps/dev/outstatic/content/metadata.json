@@ -1,6 +1,6 @@
 {
-  "commit": "816219deeb6a57ab321036d288206fe59c668066",
-  "generated": "2023-06-08T00:11:16.708Z",
+  "commit": "c0398fef2c171a4efee83438c0879197837314f6",
+  "generated": "2023-06-08T00:12:48.425Z",
   "metadata": [
     {
       "__outstatic": {
@@ -114,8 +114,8 @@
     },
     {
       "__outstatic": {
-        "commit": "816219deeb6a57ab321036d288206fe59c668066",
-        "hash": "3003994670",
+        "commit": "c0398fef2c171a4efee83438c0879197837314f6",
+        "hash": "2395411135",
         "path": "outstatic/content/posts/how-to-create-an-outstatic-blog.md"
       },
       "author": {
@@ -139,10 +139,6 @@
         {
           "label": "Outstatic",
           "value": "outstatic"
-        },
-        {
-          "label": "Vercel",
-          "value": "vercel"
         }
       ],
       "title": "Learn how to create your blog with Outstatic"

@@ -8,7 +8,20 @@
       "fieldType": "Tags",
       "dataType": "array",
       "title": "Tags",
-      "values": []
+      "values": [
+        {
+          "value": "nextJs",
+          "label": "NextJs"
+        },
+        {
+          "value": "gitHub",
+          "label": "GitHub"
+        },
+        {
+          "value": "outstatic",
+          "label": "Outstatic"
+        }
+      ]
     }
   }
 }
