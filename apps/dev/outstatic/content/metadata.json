@@ -1,6 +1,6 @@
 {
-  "commit": "8228cd439c8769c4b3fcbac4bcf9c88ed2dc5bd6",
-  "generated": "2023-06-07T23:10:40.074Z",
+  "commit": "816219deeb6a57ab321036d288206fe59c668066",
+  "generated": "2023-06-08T00:11:16.708Z",
   "metadata": [
     {
       "__outstatic": {
@@ -91,8 +91,31 @@
     },
     {
       "__outstatic": {
-        "commit": "f1d49d79a01c1d85981f368c71944529e6583183",
-        "hash": "2395411135",
+        "commit": "8228cd439c8769c4b3fcbac4bcf9c88ed2dc5bd6",
+        "hash": "1744946817",
+        "path": "outstatic/content/posts/nothing-wrong.md"
+      },
+      "author": {
+        "name": "Andre Vitorio"
+      },
+      "collection": "posts",
+      "coverImage": "/images/industrial-pattern.png",
+      "description": "One more day, one more joy. I feel blessed.",
+      "publishedAt": "2022-09-14T17:55:40.452Z",
+      "slug": "nothing-wrong",
+      "status": "published",
+      "tags": [
+        {
+          "label": "Next.js",
+          "value": "nextJs"
+        }
+      ],
+      "title": "Nothing is wrong. Everything is perfect"
+    },
+    {
+      "__outstatic": {
+        "commit": "816219deeb6a57ab321036d288206fe59c668066",
+        "hash": "3003994670",
         "path": "outstatic/content/posts/how-to-create-an-outstatic-blog.md"
       },
       "author": {
@@ -116,32 +139,13 @@
         {
           "label": "Outstatic",
           "value": "outstatic"
+        },
+        {
+          "label": "Vercel",
+          "value": "vercel"
         }
       ],
       "title": "Learn how to create your blog with Outstatic"
-    },
-    {
-      "__outstatic": {
-        "commit": "8228cd439c8769c4b3fcbac4bcf9c88ed2dc5bd6",
-        "hash": "1744946817",
-        "path": "outstatic/content/posts/nothing-wrong.md"
-      },
-      "author": {
-        "name": "Andre Vitorio"
-      },
-      "collection": "posts",
-      "coverImage": "/images/industrial-pattern.png",
-      "description": "One more day, one more joy. I feel blessed.",
-      "publishedAt": "2022-09-14T17:55:40.452Z",
-      "slug": "nothing-wrong",
-      "status": "published",
-      "tags": [
-        {
-          "label": "Next.js",
-          "value": "nextJs"
-        }
-      ],
-      "title": "Nothing is wrong. Everything is perfect"
     }
   ]
 }
