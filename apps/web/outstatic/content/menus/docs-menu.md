@@ -16,8 +16,6 @@ publishedAt: '2022-09-22T14:18:37.951Z'
 
     <!-- -->
 
-    <!-- -->
-
 - [Getting started](/docs/getting-started)
 
     - [Deploy with Vercel](/docs/getting-started#deploy-with-vercel)
@@ -26,11 +24,11 @@ publishedAt: '2022-09-22T14:18:37.951Z'
 
     <!-- -->
 
-    <!-- -->
-
 - [The Content Editor](/docs/the-content-editor)
 
 - [Fetching data](/docs/fetching-data)
+
+- [Custom Fields](/docs/custom-fields) (New)
 
 - [Environment Variables](https://outstatic.com/docs/environment-variables)
 
@@ -39,8 +37,6 @@ publishedAt: '2022-09-22T14:18:37.951Z'
     - [Where is data stored?](/docs/faqs#where-is-the-data-stored)
 
     - [Do I need Vercel?](/docs/faqs#can-i-host-my-outstatic-website-on-a-provider-other-than-vercel)
-
-    <!-- -->
 
     <!-- -->
 

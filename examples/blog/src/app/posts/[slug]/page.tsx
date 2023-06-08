@@ -1,8 +1,8 @@
-import Header from '../../../components/Header'
-import Layout from '../../../components/Layout'
-import markdownToHtml from '../../../lib/markdownToHtml'
+import Header from '@/components/Header'
+import Layout from '@/components/Layout'
+import markdownToHtml from '@/lib/markdownToHtml'
 import { getDocumentSlugs, load } from 'outstatic/server'
-import DateFormatter from '../../../components/DateFormatter'
+import DateFormatter from '@/components/DateFormatter'
 import Image from 'next/image'
 import { OstDocument } from 'outstatic'
 
@@ -29,7 +29,7 @@ export default async function Post({ params }: { params: { slug: string } }) {
           {Array.isArray(post?.tags)
             ? post.tags.map(({ label }) => (
                 <span
-                  key={label}
+                  key="label"
                   className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2"
                 >
                   {label}

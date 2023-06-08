@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  transpilePackages: ['outstatic']
+  transpilePackages: ['outstatic'],
+  swcMinify: false
 }
 
 module.exports = nextConfig
