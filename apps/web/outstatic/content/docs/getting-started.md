@@ -157,6 +157,14 @@ If everything is setup correctly, then you'll see a login page and will be able 
 
 Congratulations! Your Outstatic installation is ready and you can now start creating content.
 
+**Next.js 13 Warning:** In case your Outstatic Dashboard throws errors while trying to create new pages. Add the option `swcMinify: false` to your `next.config.js` file. Example:
+
+```javascript
+const nextConfig = {
+  swcMinify: false
+}
+```
+
 We recommend you learn how Outstatic [manages content](/docs/introduction) and also how to [fetch data](/docs/fetching-data) from your front end.
 
 ### Access the Outstatic dashboard from your live site
@@ -175,3 +183,4 @@ OST_TOKEN_SECRET=A_RANDOM_TOKEN
 ```
 
 To learn more about all the available environment variables, see the [Environment Variables ](https://outstatic.com/docs/environment-variables)section of the docs.
+
