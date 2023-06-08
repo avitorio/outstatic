@@ -1,5 +1,14 @@
 {
   "title": "posts",
   "type": "object",
-  "properties": {}
+  "properties": {
+    "tags": {
+      "required": false,
+      "description": "Add tags to the post",
+      "fieldType": "Tags",
+      "dataType": "array",
+      "title": "Tags",
+      "values": []
+    }
+  }
 }
