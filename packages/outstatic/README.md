@@ -1,57 +1,32 @@
-<p align="center">
-  <a href="https://outstatic.com">
-    <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/avitorio/outstatic/main/.github/images/readme-illustration-dark.png">
-      <img src="https://raw.githubusercontent.com/avitorio/outstatic/main/.github/images/readme-illustration-light.png">
-    </picture>
-    <h1 align="center">Outstatic</h1>
-  </a>
-</p>
+# swcMinify issue with react-hook-form and turborepo
 
-<p align="center">
-  <a aria-label="NPM version" href="https://www.npmjs.com/package/outstatic">
-    <img alt="" src="https://img.shields.io/npm/v/outstatic?style=for-the-badge&labelColor=000000">
-  </a>
-  <a aria-label="License" href="https://github.com/avitorio/outstatic/blob/main/license.md">
-    <img alt="" src="https://img.shields.io/npm/l/outstatic?style=for-the-badge&labelColor=000000">
-  </a>
-</p>
+Minification ends up creating the same variable twice, once as a `var` and secondly as a `let`, in the same scope, one close to the other.
 
-https://user-images.githubusercontent.com/1417109/197012503-2378f951-c571-492c-a4d6-5e5bba4fae24.mp4
+This error started with `next@v13.1.7-canary.9` more information here: https://github.com/avitorio/outstatic/issues/109
 
-Outstatic is a static site CMS that lives inside your Next.js install. No need for databases, external services or complicated setups. It allows you to create, edit and save content that is automatically commited to your repository and deployed to your live website.
+Main directories:
+`/apps/dev`: Next.js install using outstatic package
+`/packages/outstatic`: The outstatic package
 
-## Key features
+## Steps to reproduce the error
 
-- 📝 Full-featured dashboard
-- 🚀 Fast and easy setup
-- 💾 No database
-- 🏠 Host for free
+- Clone the repository
+- Run `pnpm install`
+- Run `pnpm build --filter outstatic`
+- Go to `/apps/dev`
+- Run `pnpm build && pnpm start`
+- Visit `http://localhost:3000/outstatic`
 
-## Getting started
+Check the console, you should see this error:
+`Uncaught SyntaxError: Identifier `eo` has already been declared`
 
-Visit <a aria-label="outstatic getting started" href="https://outstatic.com/learn">https://outstatic.com/docs/getting-started</a> to get started with Outstatic.
+The error seems to happen in this line of react-hook-form: https://github.com/react-hook-form/react-hook-form/blob/27ac86d4819a0a231a9669317c62649d8f65d27d/src/logic/createFormControl.ts#L984C11-L984C11
 
-## Documentation
+The variable `fieldRef` is minified but declared twice. Minified it looks like this, in this case `eo`:
 
-Visit [https://outstatic.com/docs](https://outstatic.com/docs) to view the full documentation.
+`ref:eu=>{if(eu){var eo;eX(et,en),ei=eg(ea,et);let eo=ey(eu.value)`
 
-## Stay up-to-date
+The error can be suppressed by not using `react-hook-form`'s `useFormContext`.
+In this example repo this is found at `packages/outstatic/src/pages/index.tsx`
 
-The project is constantly improving with new changes being implemented on a daily basis. You can keep up by hitting the **Star** button! I really appreaciate it.
-
-![hit-the-star](https://user-images.githubusercontent.com/1417109/197028994-7261693c-0201-4ec7-9c69-a996c9de870c.gif)
-
-## Community
-
-The Outstatic community can be found on [GitHub Discussions](https://github.com/avitorio/outstatic/discussions), where you can ask questions, voice ideas, and share your projects.
-
-To chat with other community members you can join the [Outstatic Discord](https://discord.gg/qEjtpn7E6F).
-
-## Contributing
-
-Please see our [CONTRIBUTING.md](/CONTRIBUTING.md).
-
-## Author
-
-- Andre Vitorio ([@andrevitorio](https://twitter.com/andrevitorio))
+It can also be fixed by setting `swcMinify: false` on `next.config.js`
