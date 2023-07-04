@@ -1,7 +1,7 @@
-const withTM = require('next-transpile-modules')(['outstatic'])
-
-module.exports = withTM({
+/** @type {import('next').NextConfig} */
+const nextConfig = {
   reactStrictMode: true,
+  transpilePackages: ['outstatic'],
   async redirects() {
     return [
       {
@@ -11,4 +11,6 @@ module.exports = withTM({
       }
     ]
   }
-})
+}
+
+module.exports = nextConfig
