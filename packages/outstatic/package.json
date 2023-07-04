@@ -13,7 +13,7 @@
   "license": "MIT",
   "scripts": {
     "build": "tsup && tailwindcss -i ./src/styles.css -o ./dist/outstatic.css",
-    "dev": "tsup --watch & tailwindcss -i ./src/styles.css -o ./dist/outstatic.css --watch",
+    "dev": "concurrently \"tsup --watch\" \"tailwindcss -i ./src/styles.css -o ./dist/outstatic.css --watch\"",
     "clean": "rm -rf dist",
     "test": "jest --passWithNoTests",
     "typecheck": "tsc --project tsconfig.json --noEmit",
@@ -83,7 +83,7 @@
     "@types/react-dom": "^18.0.6",
     "@types/showdown": "^2.0.0",
     "@types/testing-library__jest-dom": "^5.14.5",
-    "concurrently": "^7.2.2",
+    "concurrently": "^7.6.0",
     "encoding": "^0.1.13",
     "eslint": "8.42.0",
     "eslint-config-custom": "workspace:*",
