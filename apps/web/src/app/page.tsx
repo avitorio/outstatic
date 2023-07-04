@@ -34,7 +34,6 @@ export default function Home() {
               height="28"
               fill="none"
             >
-              <title>GitHub</title>
               <path
                 fillRule="evenodd"
                 clipRule="evenodd"
@@ -50,7 +49,6 @@ export default function Home() {
             aria-label="Twitter"
             rel="noreferrer"
           >
-            <title>Twitter</title>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 248 204"

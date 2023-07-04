@@ -1,10 +1,53 @@
 import { getDocumentBySlug, getDocumentSlugs, load } from 'outstatic/server'
+import { Metadata } from 'next'
 import markdownToHtml from '@/lib/markdownToHtml'
 import formatDate from '@/lib/formatDate'
 import Header from '@/components/Header'
 import Mdx from '@/components/MDXComponent'
 
-export default async function Post({ params }: { params: { slug: string } }) {
+interface Params {
+  params: {
+    slug: string
+  }
+}
+
+export async function generateMetadata(params: Params): Promise<Metadata> {
+  const { doc } = await getData(params)
+
+  if (!doc) {
+    return {}
+  }
+
+  const ogUrl = new URL(`https://outstatic.com/docs/${doc.slug}`)
+  ogUrl.searchParams.set('heading', `${doc.title} - Outstatic`)
+
+  return {
+    title: `${doc.title} - Outstatic`,
+    description: doc.description,
+    openGraph: {
+      title: `${doc.title} - Outstatic`,
+      description: doc.description,
+      type: 'article',
+      url: `https://outstatic.com/docs/${doc.slug}`,
+      images: [
+        {
+          url: 'https://outstatic.com/images/og-image.png',
+          width: 1200,
+          height: 630,
+          alt: doc.title
+        }
+      ]
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: doc.title,
+      description: doc.description,
+      images: 'https://outstatic.com/images/og-image.png'
+    }
+  }
+}
+
+export default async function Post(params: Params) {
   const { doc, menu } = await getData(params)
 
   return (
@@ -44,7 +87,7 @@ import rehypeAutolinkHeadings from 'rehype-autolink-headings'
 import rehypePrism from 'rehype-prism-plus'
 import rehypeSlug from 'rehype-slug'
 
-async function getData(params: { slug: string }) {
+async function getData({ params }: Params) {
   const db = await load()
 
   const doc = await db
