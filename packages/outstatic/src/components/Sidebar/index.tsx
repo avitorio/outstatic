@@ -20,13 +20,13 @@ const Sidebar = ({ isOpen = false }: SidebarProps) => {
 
   useEffect(() => {
     const broadcast = async () => {
-      const url = new URL(`${OUTSTATIC_URL}/api/broadcast`)
+      const url = new URL(`https://analytics.outstatic.com/`)
       const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone
       const uniqueId = await generateUniqueId({ repoOwner, repoSlug })
       url.searchParams.append('timezone', timezone)
       url.searchParams.append('unique_id', uniqueId)
       url.searchParams.append('version', OUTSTATIC_VERSION)
-      fetch(url.toString())
+      await fetch(url.toString())
         .then((res) => res.json())
         .then((data) => {
           if (data?.title) {
