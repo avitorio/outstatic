@@ -27,6 +27,7 @@ Outstatic is a static site CMS that lives inside your Next.js install. No need f
 - 🚀 Fast and easy setup
 - 💾 No database
 - 🏠 Host for free
+- 🧩 Custom Fields
 
 ## Getting started
 
