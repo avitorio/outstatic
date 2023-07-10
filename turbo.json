@@ -24,7 +24,12 @@
     },
     "web": {
       "dependsOn": [],
-      "env": ["NEXT_PUBLIC_GA_ID"]
+      "env": [
+        "NEXT_PUBLIC_GA_ID",
+        "NEXT_PUBLIC_TINYBIRD_TOKEN",
+        "TINYBIRD_TRACKER",
+        "ANALYTICS_SOURCE"
+      ]
     },
     "outstatic": {
       "dependsOn": [],

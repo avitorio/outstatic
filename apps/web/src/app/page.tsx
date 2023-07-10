@@ -1,38 +1,10 @@
-import Head from 'next/head'
 import Image from 'next/image'
 import Link from 'next/link'
-import YouTube, { YouTubeProps } from 'react-youtube'
+import HomeVideo from '@/components/Youtube'
 
 export default function Home() {
-  const onPlayerReady: YouTubeProps['onReady'] = (event) => {
-    event.target.pauseVideo()
-  }
-
-  const opts: YouTubeProps['opts'] = {
-    // height: '525',
-    // width: '700',
-    playerVars: {
-      // https://developers.google.com/youtube/player_parameters
-      color: 'white',
-      controls: 0,
-      modestbranding: 1,
-      rel: 0
-    }
-  }
-
   return (
     <div className="flex min-h-screen flex-col items-center justify-center py-2 max-w-screen overflow-hidden">
-      <Head>
-        <title>Outstatic - A Static Site CMS for Next.js</title>
-        <meta
-          property="og:description"
-          content="An open source static site CMS for Next.js. Create your blog or website in minutes. No dabatase needed."
-        />
-        <meta
-          name="description"
-          content="An open source static site CMS for Next.js. Create your blog or website in minutes. No dabatase needed."
-        />
-      </Head>
       <nav className="flex justify-between items-center w-full md:max-w-5xl p-4 md:p-6 opacity-0 animate-fade-in-up animation-delay-[1000ms] animation-duration-[300ms]">
         <Image
           src="/images/outstatic-logo.svg"
@@ -62,7 +34,6 @@ export default function Home() {
               height="28"
               fill="none"
             >
-              <title>GitHub</title>
               <path
                 fillRule="evenodd"
                 clipRule="evenodd"
@@ -78,7 +49,6 @@ export default function Home() {
             aria-label="Twitter"
             rel="noreferrer"
           >
-            <title>Twitter</title>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 248 204"
@@ -265,15 +235,7 @@ export default function Home() {
                 />
               </div>
             </div>
-            <div className="relative z-10 border border-t-[3px] border-b-[5px] border-x-4 border-black rounded-cartoon2 md:rounded-cartoon overflow-hidden max-w-[700px] bg-white">
-              <YouTube
-                videoId="K-YXF-dBKPI"
-                opts={opts}
-                onReady={onPlayerReady}
-                className="relative pb-[56.25%] max-w-xs w-80 h-60 md:w-[700px] md:h-[525px] md:max-w-3xl"
-                iframeClassName="absolute top-0 left-0 w-full h-full"
-              />
-            </div>
+            <HomeVideo />
           </div>
         </section>
 
