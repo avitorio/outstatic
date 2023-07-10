@@ -12,10 +12,11 @@ export default async function handler(
       method: 'POST',
       body: JSON.stringify({
         timestamp: new Date().toISOString(),
-        country: ct.getCountryForTimezone(req.query.timezone as TimezoneName)
-          .name,
-        unique_id: req.query.unique_id || 'undefined',
-        version: req.query.version || 'undefined'
+        country:
+          ct.getCountryForTimezone(req.query.timezone as TimezoneName)?.name ||
+          'undefined',
+        unique_id: req.query?.unique_id || 'undefined',
+        version: req.query?.version || 'undefined'
       }),
       headers: { Authorization: `Bearer ${TINYBIRD_TRACKER}` }
     }

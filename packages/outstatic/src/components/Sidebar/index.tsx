@@ -26,13 +26,15 @@ const Sidebar = ({ isOpen = false }: SidebarProps) => {
       url.searchParams.append('timezone', timezone)
       url.searchParams.append('unique_id', uniqueId)
       url.searchParams.append('version', OUTSTATIC_VERSION)
-      console.log(url.toString())
       fetch(url.toString())
         .then((res) => res.json())
         .then((data) => {
           if (data?.title) {
             setBroadcast(data)
           }
+        })
+        .catch((err) => {
+          console.log(err)
         })
     }
 
