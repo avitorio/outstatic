@@ -1,17 +1,57 @@
 import Header from '@/components/Header'
 import Layout from '@/components/Layout'
-import Head from 'next/head'
 import markdownToHtml from '@/lib/markdownToHtml'
 import { getDocumentSlugs, load } from 'outstatic/server'
 import DateFormatter from '@/components/DateFormatter'
 import Image from 'next/image'
 import ContentGrid from '@/components/ContentGrid'
+import { OstDocument } from 'outstatic'
+import { Metadata } from 'next'
+import { absoluteUrl } from '@/lib/utils'
 
-export default async function Project({
-  params
-}: {
-  params: { slug: string }
-}) {
+type Project = {
+  tags: { value: string; label: string }[]
+} & OstDocument
+
+interface Params {
+  params: {
+    slug: string
+  }
+}
+export async function generateMetadata(params: Params): Promise<Metadata> {
+  const { project } = await getData(params)
+
+  if (!project) {
+    return {}
+  }
+
+  return {
+    title: `${project.title}`,
+    description: project.description,
+    openGraph: {
+      title: `${project.title}`,
+      description: project.description,
+      type: 'article',
+      url: absoluteUrl(`/projects/${project.slug}`),
+      images: [
+        {
+          url: absoluteUrl(project?.coverImage || '/images/og-image.png'),
+          width: 1200,
+          height: 630,
+          alt: project.title
+        }
+      ]
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: project.title,
+      description: project.description,
+      images: absoluteUrl(project?.coverImage || '/images/og-image.png')
+    }
+  }
+}
+
+export default async function Project(params: Params) {
   const { project, moreProjects, content } = await getData(params)
 
   return (
@@ -19,12 +59,8 @@ export default async function Project({
       <div className="max-w-6xl mx-auto px-5">
         <Header />
         <article className="mb-8">
-          <Head>
-            <title>{`${project.title} | Next.js + Outstatic`}</title>
-            <meta property="og:image" content={project.coverImage} />
-          </Head>
           <div className="grid md:grid-cols-2 gap-8">
-            <div className="relative mb-2 md:mb-4 sm:mx-0 h-64">
+            <div className="relative mb-2 md:mb-4 sm:mx-0 aspect-square">
               <Image
                 alt={project.title}
                 src={project.coverImage ?? ''}
@@ -67,10 +103,10 @@ export default async function Project({
   )
 }
 
-async function getData(params: { slug: string }) {
+async function getData({ params }: Params) {
   const db = await load()
   const project = await db
-    .find({ collection: 'projects', slug: params.slug }, [
+    .find<Project>({ collection: 'projects', slug: params.slug }, [
       'title',
       'publishedAt',
       'description',

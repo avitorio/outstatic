@@ -1,3 +1,4 @@
+import { absoluteUrl } from '@/lib/utils'
 import '../styles/index.css'
 import { Metadata } from 'next'
 
@@ -9,16 +10,14 @@ export const metadata: Metadata = {
   description: 'A blog starter built with Outstatic.',
   openGraph: {
     title: 'Outstatic - A Static Site CMS for Next.js',
-    description:
-      'An open source static site CMS for Next.js. Create your blog or website in minutes. No dabatase needed.',
-    url: 'https://outstatic.com',
+    description: 'A blog starter built with Outstatic.',
+    url: absoluteUrl('/'),
     siteName: 'Next.js',
     images: [
       {
-        url: 'https://outstatic.com/images/og-image.png',
+        url: absoluteUrl('/images/og-image.png'),
         width: 1800,
-        height: 1600,
-        alt: 'Outstatic - a static CMS for Next.js'
+        height: 1600
       }
     ],
     locale: 'en_US',
