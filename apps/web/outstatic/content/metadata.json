@@ -1,0 +1,167 @@
+{
+  "commit": "a38518557d6e5a42e3efb115a5964191919556a9",
+  "generated": "Tue, 04 Jul 2023 15:35:07 GMT",
+  "metadata": [
+    {
+      "__outstatic": {
+        "commit": "68333f264d85cfd5a44bc6333b5964105484c412",
+        "hash": "1843016944",
+        "path": "/outstatic/content/docs/fetching-data.md"
+      },
+      "author": {
+        "name": "Jakob Heuser",
+        "picture": "https://avatars.githubusercontent.com/u/1795?v=4"
+      },
+      "collection": "docs",
+      "coverImage": "",
+      "description": "",
+      "publishedAt": "2023-05-26T12:28:25.000Z",
+      "slug": "fetching-data",
+      "status": "published",
+      "title": "Fetching data"
+    },
+    {
+      "__outstatic": {
+        "commit": "b95b1317a7190d50316c7da40cd5e7f29751a01c",
+        "hash": "1753329854",
+        "path": "/outstatic/content/docs/faqs.md"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "coverImage": "",
+      "description": "",
+      "publishedAt": "2022-10-16T12:07:51.270Z",
+      "slug": "faqs",
+      "status": "published",
+      "title": "FAQs"
+    },
+    {
+      "__outstatic": {
+        "commit": "28fb2f86179c26f5063364ced8395466b6f7985c",
+        "hash": "25742991",
+        "path": "/outstatic/content/docs/custom-fields.md"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "coverImage": "",
+      "description": "",
+      "publishedAt": "2023-05-26T20:01:41.000Z",
+      "slug": "custom-fields",
+      "status": "published",
+      "title": "Custom Fields"
+    },
+    {
+      "__outstatic": {
+        "commit": "f88e9cbc1e92098f47f24353f52ec2e379ff17dc",
+        "hash": "1802544230",
+        "path": "/outstatic/content/docs/environment-variables.md"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "coverImage": "",
+      "description": "",
+      "publishedAt": "2022-10-13T12:36:25.000Z",
+      "slug": "environment-variables",
+      "status": "published",
+      "title": "Environment variables"
+    },
+    {
+      "__outstatic": {
+        "commit": "a36a42a309ed2ca9176c49ce0302bf005243b928",
+        "hash": "3142407191",
+        "path": "/outstatic/content/posts/how-to-create-a-blog-with-outstatic.md"
+      },
+      "author": {
+        "name": "Andre Vitorio"
+      },
+      "collection": "posts",
+      "coverImage": "/images/outstatic-demo.png",
+      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.",
+      "publishedAt": "2022-07-14T02:34:02.322Z",
+      "slug": "how-to-create-a-blog-with-outstatic",
+      "status": "published",
+      "title": "Learn how to create your blog with Outstatic"
+    },
+    {
+      "__outstatic": {
+        "commit": "7a1a8c7a3cbe843fad5927a96ef8f961df8b2cdb",
+        "hash": "586304173",
+        "path": "/outstatic/content/menus/docs-menu.md"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "menus",
+      "coverImage": "",
+      "description": "",
+      "publishedAt": "2022-09-22T14:18:37.951Z",
+      "slug": "docs-menu",
+      "status": "published",
+      "title": "Docs Menu"
+    },
+    {
+      "__outstatic": {
+        "commit": "e91d3250c8d69aa088b87c0401181136f6859b90",
+        "hash": "3340137951",
+        "path": "/outstatic/content/docs/the-content-editor.md"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "coverImage": "",
+      "description": "",
+      "publishedAt": "2022-10-13T12:26:38.000Z",
+      "slug": "the-content-editor",
+      "status": "published",
+      "title": "The content editor"
+    },
+    {
+      "__outstatic": {
+        "commit": "3bbf1f134c75554e5c13021122ec22f45cc34718",
+        "hash": "4022666034",
+        "path": "/outstatic/content/docs/introduction.md"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "coverImage": "",
+      "description": "",
+      "publishedAt": "2023-05-26T17:50:55.000Z",
+      "slug": "introduction",
+      "status": "published",
+      "title": "Introduction"
+    },
+    {
+      "__outstatic": {
+        "commit": "b322fd7d646a930a53e04f826abb299be82c68ec",
+        "hash": "2483367419",
+        "path": "/outstatic/content/docs/getting-started.md"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "coverImage": "",
+      "description": "",
+      "publishedAt": "2023-06-08T18:34:15.000Z",
+      "slug": "getting-started",
+      "status": "published",
+      "title": "Getting started"
+    }
+  ]
+}

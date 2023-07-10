@@ -1,13 +1,43 @@
 import Link from 'next/link'
-import { useContext } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { OutstaticContext } from '../../context'
+import generateUniqueId from '../../utils/generateUniqueId'
+import { OUTSTATIC_URL, OUTSTATIC_VERSION } from '../../utils/constants'
 
 type SidebarProps = {
   isOpen: boolean
 }
 
+type Broadcast = {
+  title: string
+  content: string
+  link: string
+}
+
 const Sidebar = ({ isOpen = false }: SidebarProps) => {
-  const { collections } = useContext(OutstaticContext)
+  const [broadcast, setBroadcast] = useState<Broadcast | null>(null)
+  const { collections, repoOwner, repoSlug } = useContext(OutstaticContext)
+
+  useEffect(() => {
+    const broadcast = async () => {
+      const url = new URL(`${OUTSTATIC_URL}/api/broadcast`)
+      const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone
+      const uniqueId = await generateUniqueId({ repoOwner, repoSlug })
+      url.searchParams.append('timezone', timezone)
+      url.searchParams.append('unique_id', uniqueId)
+      url.searchParams.append('version', OUTSTATIC_VERSION)
+      console.log(url.toString())
+      fetch(url.toString())
+        .then((res) => res.json())
+        .then((data) => {
+          if (data?.title) {
+            setBroadcast(data)
+          }
+        })
+    }
+
+    broadcast()
+  }, [repoOwner, repoSlug])
 
   return (
     <aside
@@ -16,7 +46,7 @@ const Sidebar = ({ isOpen = false }: SidebarProps) => {
       }`}
       aria-label="Sidebar"
     >
-      <div className="py-4 px-3 h-full max-h-[calc(100vh-96px)] overflow-y-scroll scrollbar-hide bg-gray-50 ">
+      <div className="flex flex-col py-4 px-3 h-full max-h-[calc(100vh-96px)] overflow-y-scroll scrollbar-hide bg-gray-50 justify-between">
         <ul className="space-y-2">
           <li>
             <Link href="/outstatic">
@@ -85,7 +115,28 @@ const Sidebar = ({ isOpen = false }: SidebarProps) => {
             </Link>
           </li>
         </ul>
+        {broadcast ? (
+          <div
+            className="p-4 mt-6 rounded-lg bg-white border border-gray"
+            role="alert"
+          >
+            <div className="flex items-center mb-3">
+              <span className="bg-blue-100 text-blue-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full">
+                {broadcast.title}
+              </span>
+            </div>
+            <p className="text-sm">{broadcast.content}</p>
+            {broadcast?.link ? (
+              <a href={broadcast.link} target="_blank" rel="noreferrer">
+                <span className="mt-3 text-xs underline font-medium">
+                  Learn more
+                </span>
+              </a>
+            ) : null}
+          </div>
+        ) : null}
       </div>
+
       <div className="h-10 bg-gray-50 py-2 px-4 border-t text-xs flex justify-between items-center w-full">
         <a
           className="font-semibold text-gray-500 hover:underline hover:text-gray-900"

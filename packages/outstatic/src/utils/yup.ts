@@ -2,6 +2,8 @@ import * as yup from 'yup'
 import { slugRegex } from './slugRegex'
 import { buildYup } from 'schema-to-yup'
 import { CustomFields, SchemaShape } from '../types'
+import { AnyObject } from 'yup/lib/types'
+import { AssertsShape, TypeOfShape } from 'yup/lib/object'
 
 const documentShape = {
   title: yup.string().required('Title is required.'),
@@ -34,7 +36,7 @@ export const editDocumentSchema: yup.SchemaOf<SchemaShape> = yup
 
 export const convertSchemaToYup = (customFields: {
   properties: CustomFields
-}) => {
+}): yup.ObjectSchema<any, AnyObject, TypeOfShape<any>, AssertsShape<any>> => {
   const shape: SchemaShape = {}
 
   Object.entries(customFields.properties).map(([name, fields]) => {
