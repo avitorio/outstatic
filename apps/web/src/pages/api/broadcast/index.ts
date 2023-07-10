@@ -6,7 +6,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  fetch(
+  await fetch(
     `https://api.tinybird.co/v0/events?name=${process.env.ANALYTICS_SOURCE}`,
     {
       method: 'POST',
