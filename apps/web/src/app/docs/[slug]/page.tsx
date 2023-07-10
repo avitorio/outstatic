@@ -18,9 +18,6 @@ export async function generateMetadata(params: Params): Promise<Metadata> {
     return {}
   }
 
-  const ogUrl = new URL(`https://outstatic.com/docs/${doc.slug}`)
-  ogUrl.searchParams.set('heading', `${doc.title} - Outstatic`)
-
   return {
     title: `${doc.title} - Outstatic`,
     description: doc.description,

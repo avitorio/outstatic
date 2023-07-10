@@ -11,7 +11,8 @@
       "cache": false
     },
     "dev": {
-      "cache": false
+      "cache": false,
+      "env": ["NEXT_PUBLIC_APP_URL"]
     },
     "clean": {
       "cache": false

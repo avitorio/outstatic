@@ -184,7 +184,6 @@ export const MetadataBuilder: React.FC<MetadataBuilderProps> = ({
           stringifyMetadata(db)
         )
         const payload = capi.createInput()
-        console.log(payload)
 
         try {
           await commit({

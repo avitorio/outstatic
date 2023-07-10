@@ -109,8 +109,6 @@ export const getServerSideProps: GetServerSideProps = async (
     context.res.end()
   }
 
-  console.log({ envVars })
-
   return {
     props: {
       variables: envVars.envVars

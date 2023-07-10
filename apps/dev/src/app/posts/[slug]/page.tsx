@@ -1,16 +1,57 @@
+import Image from 'next/image'
+import { Metadata } from 'next'
+import { OstDocument } from 'outstatic'
 import Header from '@/components/Header'
 import Layout from '@/components/Layout'
 import markdownToHtml from '@/lib/markdownToHtml'
 import { getDocumentSlugs, load } from 'outstatic/server'
 import DateFormatter from '@/components/DateFormatter'
-import Image from 'next/image'
-import { OstDocument } from 'outstatic'
+import { absoluteUrl } from '@/lib/utils'
 
 type Post = {
   tags: { value: string; label: string }[]
 } & OstDocument
 
-export default async function Post({ params }: { params: { slug: string } }) {
+interface Params {
+  params: {
+    slug: string
+  }
+}
+
+export async function generateMetadata(params: Params): Promise<Metadata> {
+  const post = await getData(params)
+
+  if (!post) {
+    return {}
+  }
+
+  return {
+    title: `${post.title}`,
+    description: post.description,
+    openGraph: {
+      title: `${post.title}`,
+      description: post.description,
+      type: 'article',
+      url: absoluteUrl(`/posts/${post.slug}`),
+      images: [
+        {
+          url: absoluteUrl(post?.coverImage || '/images/og-image.png'),
+          width: 1200,
+          height: 630,
+          alt: post.title
+        }
+      ]
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: post.title,
+      description: post.description,
+      images: absoluteUrl(post?.coverImage || '/images/og-image.png')
+    }
+  }
+}
+
+export default async function Post(params: Params) {
   const post = await getData(params)
   return (
     <Layout>
@@ -56,7 +97,7 @@ export default async function Post({ params }: { params: { slug: string } }) {
   )
 }
 
-async function getData(params: { slug: string }) {
+async function getData({ params }: Params) {
   const db = await load()
 
   const post = await db

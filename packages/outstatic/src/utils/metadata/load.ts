@@ -16,7 +16,7 @@ export const load = async <TSchema extends {} = {}>() => {
   const m = await readFile(METADATA_PATH)
   const metadata = JSON.parse(m.toString())
   const mdb: unknown[] = metadata?.metadata ?? []
-  // console.log(metadata)
+
   return {
     /**
      * Find a post matching a provided query, with options for sorting and limiting
