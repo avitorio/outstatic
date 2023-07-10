@@ -26,10 +26,10 @@ export async function generateMetadata(params: Params): Promise<Metadata> {
   }
 
   return {
-    title: `${project.title}`,
+    title: project.title,
     description: project.description,
     openGraph: {
-      title: `${project.title}`,
+      title: project.title,
       description: project.description,
       type: 'article',
       url: absoluteUrl(`/projects/${project.slug}`),

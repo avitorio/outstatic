@@ -26,10 +26,10 @@ export async function generateMetadata(params: Params): Promise<Metadata> {
   }
 
   return {
-    title: `${post.title}`,
+    title: post.title,
     description: post.description,
     openGraph: {
-      title: `${post.title}`,
+      title: post.title,
       description: post.description,
       type: 'article',
       url: absoluteUrl(`/posts/${post.slug}`),
@@ -104,6 +104,7 @@ async function getData({ params }: Params) {
     .find<Post>({ collection: 'posts', slug: params.slug }, [
       'title',
       'publishedAt',
+      'description',
       'slug',
       'author',
       'content',
