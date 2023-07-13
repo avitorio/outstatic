@@ -1,8 +1,9 @@
 import Link from 'next/link'
 import { useContext, useEffect, useState } from 'react'
+import cookies from 'js-cookie'
 import { OutstaticContext } from '../../context'
 import generateUniqueId from '../../utils/generateUniqueId'
-import { OUTSTATIC_URL, OUTSTATIC_VERSION } from '../../utils/constants'
+import { OUTSTATIC_VERSION } from '../../utils/constants'
 
 type SidebarProps = {
   isOpen: boolean
@@ -14,12 +15,21 @@ type Broadcast = {
   link: string
 }
 
+const initialBroadcast = () => {
+  const broadcast = cookies.get('ost_broadcast')
+
+  return broadcast ? JSON.parse(broadcast) : null
+}
+
 const Sidebar = ({ isOpen = false }: SidebarProps) => {
-  const [broadcast, setBroadcast] = useState<Broadcast | null>(null)
+  const [broadcast, setBroadcast] = useState<Broadcast | null>(
+    initialBroadcast()
+  )
   const { collections, repoOwner, repoSlug } = useContext(OutstaticContext)
 
   useEffect(() => {
-    const broadcast = async () => {
+    console.log('fetching broadcast')
+    const fetchBroadcast = async () => {
       const url = new URL(`https://analytics.outstatic.com/`)
       const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone
       const uniqueId = await generateUniqueId({ repoOwner, repoSlug })
@@ -31,6 +41,9 @@ const Sidebar = ({ isOpen = false }: SidebarProps) => {
         .then((data) => {
           if (data?.title) {
             setBroadcast(data)
+            cookies.set('ost_broadcast', JSON.stringify(data), {
+              expires: 60 * 60 * 24 // 1 day
+            })
           }
         })
         .catch((err) => {
@@ -38,8 +51,12 @@ const Sidebar = ({ isOpen = false }: SidebarProps) => {
         })
     }
 
-    broadcast()
-  }, [repoOwner, repoSlug])
+    if (!broadcast) {
+      fetchBroadcast()
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
     <aside
