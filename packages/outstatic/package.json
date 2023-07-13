@@ -1,6 +1,6 @@
 {
   "name": "outstatic",
-  "version": "0.0.36-canary.9",
+  "version": "0.0.37",
   "description": "Static site CMS for Next.js",
   "author": "Andre Vitorio <andre@vitorio.net>",
   "main": "./dist/index.js",
@@ -42,6 +42,7 @@
     "highlight.js": "^11.6.0",
     "imurmurhash": "^0.1.4",
     "js-base64": "^3.7.2",
+    "js-cookie": "^3.0.5",
     "json-stable-stringify": "^1.0.2",
     "lowlight": "^1.0",
     "next-connect": "^1.0.0-next.2",
@@ -74,6 +75,7 @@
     "@types/dompurify": "^2.3.3",
     "@types/imurmurhash": "^0.1.1",
     "@types/jest": "^29.0.0",
+    "@types/js-cookie": "^3.0.3",
     "@types/json-stable-stringify": "^1.0.34",
     "@types/lowlight": "^0.0.3",
     "@types/node": "^18.0.3",

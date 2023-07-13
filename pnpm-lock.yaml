@@ -137,7 +137,7 @@ importers:
       eslint-config-next: ^13.4.4
       gray-matter: ^4.0.3
       next: 13.4.4
-      outstatic: ^0.0.36-canary.9
+      outstatic: ^0.0.37
       postcss: 8.4.24
       react: 18.2.0
       react-dom: 18.2.0
@@ -206,6 +206,7 @@ importers:
       '@types/dompurify': ^2.3.3
       '@types/imurmurhash': ^0.1.1
       '@types/jest': ^29.0.0
+      '@types/js-cookie': ^3.0.3
       '@types/json-stable-stringify': ^1.0.34
       '@types/lowlight': ^0.0.3
       '@types/node': ^18.0.3
@@ -231,6 +232,7 @@ importers:
       jest: ^29.0.1
       jest-environment-jsdom: ^29.0.1
       js-base64: ^3.7.2
+      js-cookie: ^3.0.5
       json-stable-stringify: ^1.0.2
       lowlight: ^1.0
       msw: ^0.47.4
@@ -281,6 +283,7 @@ importers:
       highlight.js: 11.8.0
       imurmurhash: 0.1.4
       js-base64: 3.7.5
+      js-cookie: 3.0.5
       json-stable-stringify: 1.0.2
       lowlight: 1.20.0
       next-connect: 1.0.0
@@ -312,6 +315,7 @@ importers:
       '@types/dompurify': 2.4.0
       '@types/imurmurhash': 0.1.1
       '@types/jest': 29.5.2
+      '@types/js-cookie': 3.0.3
       '@types/json-stable-stringify': 1.0.34
       '@types/lowlight': 0.0.3
       '@types/node': 18.16.19
@@ -3365,6 +3369,10 @@ packages:
     dependencies:
       expect: 29.6.0
       pretty-format: 29.6.0
+    dev: true
+
+  /@types/js-cookie/3.0.3:
+    resolution: {integrity: sha512-Xe7IImK09HP1sv2M/aI+48a20VX+TdRJucfq4vfRVy6nWN8PYPOEnlMRSgxJAgYQIXJVL8dZ4/ilAM7dWNaOww==}
     dev: true
 
   /@types/js-levenshtein/1.1.1:
@@ -7585,6 +7593,11 @@ packages:
 
   /js-base64/3.7.5:
     resolution: {integrity: sha512-3MEt5DTINKqfScXKfJFrRbxkrnk2AxPWGBL/ycjz4dK8iqiSJ06UxD8jh8xuh6p10TX4t2+7FsBYVxxQbMg+qA==}
+    dev: false
+
+  /js-cookie/3.0.5:
+    resolution: {integrity: sha512-cEiJEAEoIbWfCZYKWhVwFuvPX1gETRYPw6LlaTKoxD3s2AkXzkCjnp6h0V77ozyqj0jakteJ4YqDJT830+lVGw==}
+    engines: {node: '>=14'}
     dev: false
 
   /js-levenshtein/1.1.6:
