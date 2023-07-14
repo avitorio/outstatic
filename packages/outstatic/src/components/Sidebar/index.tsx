@@ -28,7 +28,6 @@ const Sidebar = ({ isOpen = false }: SidebarProps) => {
   const { collections, repoOwner, repoSlug } = useContext(OutstaticContext)
 
   useEffect(() => {
-    console.log('fetching broadcast')
     const fetchBroadcast = async () => {
       const url = new URL(`https://analytics.outstatic.com/`)
       const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone
