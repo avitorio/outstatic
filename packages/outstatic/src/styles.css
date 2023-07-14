@@ -148,7 +148,15 @@ input.react-datepicker-time__input {
 }
 
 .react-datepicker__aria-live {
-  display: none;
+  position: absolute;
+  clip-path: circle(0);
+  border: 0;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  width: 1px;
+  white-space: nowrap;
 }
 
 /* Basic editor styles */
