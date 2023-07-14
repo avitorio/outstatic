@@ -41,7 +41,7 @@ const Sidebar = ({ isOpen = false }: SidebarProps) => {
           if (data?.title) {
             setBroadcast(data)
             cookies.set('ost_broadcast', JSON.stringify(data), {
-              expires: 60 * 60 * 24 // 1 day
+              expires: 1 // 1 day
             })
           }
         })
