@@ -146,6 +146,11 @@ input.react-datepicker-time__input {
 .react-datepicker__day--range-end {
   @apply bg-blue-500 text-white hover:bg-white hover:text-gray-700;
 }
+
+.react-datepicker__aria-live {
+  display: none;
+}
+
 /* Basic editor styles */
 .ProseMirror {
   outline: none;
