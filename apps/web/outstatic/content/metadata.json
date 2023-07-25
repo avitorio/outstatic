@@ -1,25 +1,7 @@
 {
-  "commit": "5267b2f5e14c69c738d602407d3488a4dc5235dd",
-  "generated": "2023-07-25T08:36:57.923Z",
+  "commit": "8717398b5a07b3f21620330b5e8170ab267427cd",
+  "generated": "2023-07-25T08:39:13.612Z",
   "metadata": [
-    {
-      "__outstatic": {
-        "commit": "b95b1317a7190d50316c7da40cd5e7f29751a01c",
-        "hash": "1753329854",
-        "path": "/outstatic/content/docs/faqs.md"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "docs",
-      "coverImage": "",
-      "description": "",
-      "publishedAt": "2022-10-16T12:07:51.270Z",
-      "slug": "faqs",
-      "status": "published",
-      "title": "FAQs"
-    },
     {
       "__outstatic": {
         "commit": "28fb2f86179c26f5063364ced8395466b6f7985c",
@@ -162,6 +144,24 @@
       "slug": "fetching-data",
       "status": "published",
       "title": "Fetching data"
+    },
+    {
+      "__outstatic": {
+        "commit": "8717398b5a07b3f21620330b5e8170ab267427cd",
+        "hash": "1656507452",
+        "path": "outstatic/content/docs/faqs.md"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "coverImage": "",
+      "description": "",
+      "publishedAt": "2023-07-25T12:07:51.000Z",
+      "slug": "faqs",
+      "status": "published",
+      "title": "FAQs"
     }
   ]
 }

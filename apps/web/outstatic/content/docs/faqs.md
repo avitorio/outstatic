@@ -7,12 +7,14 @@ author:
 slug: 'faqs'
 description: ''
 coverImage: ''
-publishedAt: '2022-10-16T12:07:51.270Z'
+publishedAt: '2023-07-25T12:07:51.000Z'
 ---
 
 ## Where is the data stored?
 
-All your Outstatic documents and collections are saved as Markdown files in your GitHub repository. In other words, all saved content creates a commit. The commit message specifies the collection and document that is created, for example, if your document is in the recipes collection the commit message would be: `feat(recipes): apple-pie-recipe`
+All your Outstatic documents and collections are saved as Markdown files in your GitHub repository. In other words, all saved content creates a commit. The commit message specifies the collection and document that is created, for example, if your document is in the recipes collection the commit message would be: `feat(recipes): apple-pie-recipe`o
+
+For convenience we also store metadata in a `metadata.json` file to be used with our [Advanced Data Fetching](/docs/fetching-data#advanced-document-fetching---metadata-db) methods.
 
 ## Can I host my Outstatic website on a provider other than Vercel?
 
