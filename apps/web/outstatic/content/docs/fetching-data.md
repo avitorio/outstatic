@@ -7,7 +7,7 @@ author:
 slug: 'fetching-data'
 description: ''
 coverImage: ''
-publishedAt: '2023-05-26T12:28:25.000Z'
+publishedAt: '2023-07-25T12:28:25.000Z'
 ---
 
 We've made it easy for you to fetch the data and content you create with Outstatic by providing simple functions and APIs. You should use these on the front end of your Next.js website. They can be used as async functions in the `/app` or `/pages` directories.
@@ -143,7 +143,7 @@ export async function getStaticPaths() {
 
 ## Advanced Document Fetching - Metadata DB
 
-Documents can also be retrieved with Outstatic's JSON database. The `load` method retrieves the JSON database, and you can then `find()` documents matching either Outstatic properties such as `publishedAt` and `collection`, or any custom fields you've defined.
+Documents can also be retrieved with Outstatic's JSON database. Outstatic creates a `metadata.json` file in the `/outstatic/content` folder, where all the metadata for documents is stored. The `load` method retrieves the JSON database, and you can then `find()` documents matching either Outstatic properties such as `publishedAt` and `collection`, or any custom fields you've defined.
 
 ```javascript
 import { load } from 'outstatic/server'
