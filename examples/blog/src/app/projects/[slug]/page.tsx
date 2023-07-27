@@ -24,13 +24,13 @@ export async function generateMetadata(params: Params): Promise<Metadata> {
   if (!project) {
     return {}
   }
-  console.log(project.description)
+
   return {
     title: project.title,
-    description: project.description || 'jello',
+    description: project.description,
     openGraph: {
       title: project.title,
-      description: project.description || 'wjjjaaa',
+      description: project.description,
       type: 'article',
       url: absoluteUrl(`/projects/${project.slug}`),
       images: [
