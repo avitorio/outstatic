@@ -118,7 +118,7 @@ export const load = async <TSchema extends {} = {}>() => {
           // narrow down to smallest result set
           const copied = (
             JSON.parse(JSON.stringify(subset)) as OutstaticSchema<TSchema>[]
-          ).slice(skp, lmt)
+          ).slice(skp, lmt ? skp + lmt : undefined)
 
           const finalProjection = Array.isArray(prj) ? prj : Object.keys(prj)
 
