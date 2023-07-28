@@ -47,5 +47,7 @@ export const convertSchemaToYup = (customFields: {
     type: 'object',
     properties: { ...documentShape, ...shape }
   })
+
+  // @ts-ignore
   return yupSchema
 }

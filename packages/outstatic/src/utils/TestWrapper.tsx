@@ -55,6 +55,7 @@ export const TestWrapper = (props: { children: ReactNode }) => {
   })
 
   return (
+    // @ts-ignore
     <MockedProvider mocks={mocks} addTypename={false}>
       <DocumentContext.Provider
         value={{

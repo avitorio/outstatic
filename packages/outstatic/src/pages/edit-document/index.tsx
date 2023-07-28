@@ -95,7 +95,7 @@ export default function EditDocument({ collection }: { collection: string }) {
         <link
           rel="preconnect"
           href="https://fonts.gstatic.com"
-          crossOrigin="true"
+          crossOrigin=""
         />
         {/* eslint-disable-next-line @next/next/no-page-custom-font*/}
         <link
