@@ -2,20 +2,7 @@ import { render, screen } from '@testing-library/react'
 import { OutstaticProvider } from '../../context'
 import Sidebar from './'
 import { act } from 'react-dom/test-utils'
-
-const providerData = {
-  repoOwner: 'anything',
-  repoSlug: 'anything',
-  repoBranch: 'anything',
-  contentPath: 'anything',
-  monorepoPath: 'anything',
-  session: null,
-  initialApolloState: null,
-  collections: ['collection1', 'collection2', 'collection3'],
-  pages: [],
-  addPage: (page: string) => {},
-  removePage: (page: string) => {}
-}
+import mockProviderProps from '../../utils/tests/mockProviderProps'
 
 jest.mock('next/link', () => {
   return ({ children }: any) => {
@@ -49,7 +36,7 @@ describe('<Sidebar />', () => {
   it('should render the component correctly', async () => {
     await act(async () => {
       render(
-        <OutstaticProvider {...providerData}>
+        <OutstaticProvider {...mockProviderProps}>
           <Sidebar isOpen={true} />
         </OutstaticProvider>
       )
@@ -68,7 +55,7 @@ describe('<Sidebar />', () => {
   it('should fetch broadcast data and set it as cookie', async () => {
     await act(async () => {
       render(
-        <OutstaticProvider {...providerData}>
+        <OutstaticProvider {...mockProviderProps}>
           <Sidebar isOpen={true} />
         </OutstaticProvider>
       )
