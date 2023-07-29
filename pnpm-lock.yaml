@@ -137,7 +137,7 @@ importers:
       eslint-config-next: ^13.4.0
       gray-matter: ^4.0.3
       next: ^13.4.0
-      outstatic: ^0.0.38
+      outstatic: ^0.0.39
       postcss: 8.4.24
       react: 18.2.0
       react-dom: 18.2.0
@@ -176,7 +176,7 @@ importers:
     dependencies:
       eslint-config-next: 13.4.4
       eslint-config-prettier: 8.8.0
-      eslint-config-turbo: 1.10.11
+      eslint-config-turbo: 1.10.12
       eslint-plugin-react: 7.32.2
 
   packages/outstatic:
@@ -5484,12 +5484,12 @@ packages:
       eslint: '>=7.0.0'
     dev: false
 
-  /eslint-config-turbo/1.10.11:
-    resolution: {integrity: sha512-NMzy6Mabjag6yTo01MsOJjbZoz0FV58L3+vOPcHU2vFP/9fIGG8yY8dtBvo+GPdffCXDdbOwZrdHZmC+s5SGvg==}
+  /eslint-config-turbo/1.10.12:
+    resolution: {integrity: sha512-z3jfh+D7UGYlzMWGh+Kqz++hf8LOE96q3o5R8X4HTjmxaBWlLAWG+0Ounr38h+JLR2TJno0hU9zfzoPNkR9BdA==}
     peerDependencies:
       eslint: '>6.6.0'
     dependencies:
-      eslint-plugin-turbo: 1.10.11
+      eslint-plugin-turbo: 1.10.12
     dev: false
 
   /eslint-import-resolver-node/0.3.7:
@@ -5785,8 +5785,8 @@ packages:
       string.prototype.matchall: 4.0.8
     dev: false
 
-  /eslint-plugin-turbo/1.10.11:
-    resolution: {integrity: sha512-horw5Ri7GScrB3yKYE7HUa34VhGCIPKKXmlAQDcvjLtMyrDytUD4/qVat4Ca3EQetk12wqoRdIEbMevby1PRNw==}
+  /eslint-plugin-turbo/1.10.12:
+    resolution: {integrity: sha512-uNbdj+ohZaYo4tFJ6dStRXu2FZigwulR1b3URPXe0Q8YaE7thuekKNP+54CHtZPH9Zey9dmDx5btAQl9mfzGOw==}
     peerDependencies:
       eslint: '>6.6.0'
     dependencies:

@@ -18,7 +18,7 @@
     "eslint-config-next": "^13.4.0",
     "gray-matter": "^4.0.3",
     "next": "^13.4.0",
-    "outstatic": "^0.0.38",
+    "outstatic": "^0.0.39",
     "postcss": "8.4.24",
     "react": "18.2.0",
     "react-dom": "18.2.0",
