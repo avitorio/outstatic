@@ -193,6 +193,7 @@ importers:
       '@tailwindcss/typography': ^0.5.4
       '@testing-library/jest-dom': ^5.16.5
       '@testing-library/react': ^13.3.0
+      '@testing-library/user-event': ^14.4.3
       '@tiptap/core': 2.0.0-beta.202
       '@tiptap/extension-bubble-menu': 2.0.0-beta.202
       '@tiptap/extension-code-block-lowlight': 2.0.0-beta.202
@@ -312,6 +313,7 @@ importers:
       '@tailwindcss/typography': 0.5.9_tailwindcss@3.3.2
       '@testing-library/jest-dom': 5.16.5
       '@testing-library/react': 13.4.0_biqbaboplfbrettd7655fr4n2y
+      '@testing-library/user-event': 14.4.3
       '@types/cookie': 0.5.1
       '@types/dompurify': 2.4.0
       '@types/imurmurhash': 0.1.1
@@ -2954,6 +2956,13 @@ packages:
       '@types/react-dom': 18.2.6
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
+    dev: true
+
+  /@testing-library/user-event/14.4.3:
+    resolution: {integrity: sha512-kCUc5MEwaEMakkO5x7aoD+DLi02ehmEM2QCGWvNqAS1dV/fAvORWEjnjsEIvml59M7Y5kCkWN6fCCyPOe8OL6Q==}
+    engines: {node: '>=12', npm: '>=6'}
+    peerDependencies:
+      '@testing-library/dom': '>=7.21.4'
     dev: true
 
   /@tiptap/core/2.0.0-beta.202:
