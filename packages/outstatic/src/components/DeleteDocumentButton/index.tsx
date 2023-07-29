@@ -88,7 +88,9 @@ const DeleteDocumentButton = ({
       await createCommit({ variables: { input } })
       setShowDeleteModal(false)
       if (onComplete) onComplete()
-    } catch (error) {}
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   return (

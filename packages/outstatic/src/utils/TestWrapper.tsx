@@ -4,7 +4,11 @@ import StarterKit from '@tiptap/starter-kit'
 import { ReactNode } from 'react'
 import { useForm, FormProvider } from 'react-hook-form'
 import { DocumentContext } from '../context'
-import { OidDocument } from '../graphql/generated'
+import {
+  OidDocument,
+  DocumentDocument,
+  CreateCommitDocument
+} from '../graphql/generated'
 import { Document } from '../types'
 
 const documentExample: Document = {
@@ -41,6 +45,54 @@ const mocks = [
                 ]
               }
             }
+          }
+        }
+      }
+    }
+  },
+  {
+    request: {
+      query: DocumentDocument,
+      variables: {
+        owner: '',
+        name: '',
+        filePath: `:/metadata.json`
+      },
+      fetchPolicy: 'network-only'
+    },
+    result: {
+      data: {
+        repository: {
+          id: '123',
+          object: {
+            text: JSON.stringify({
+              documents: [
+                {
+                  publishedAt: '2022-07-14T00:00:00.000Z',
+                  title: 'Example Document',
+                  content: 'Example Content',
+                  status: 'published',
+                  slug: 'document-example'
+                }
+              ]
+            })
+          }
+        }
+      }
+    }
+  },
+  {
+    request: {
+      query: CreateCommitDocument,
+      variables: {
+        input: undefined
+      }
+    },
+    result: {
+      data: {
+        createCommitOnBranch: {
+          commit: {
+            oid: 'abcdefghijklmnopqrstuvwxyz'
           }
         }
       }
