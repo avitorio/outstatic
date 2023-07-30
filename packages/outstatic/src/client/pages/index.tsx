@@ -1,30 +1,22 @@
-import { ApolloClient, ApolloProvider } from '@apollo/client'
-import { Session } from '../../types'
+'use client'
+import { ApolloProvider } from '@apollo/client'
 import { ReactElement, useState } from 'react'
 import { useApollo } from '../../utils/apollo'
-import Login from '../../pages/login'
-import FourOhFour from '../../pages/404'
+import Login from './login'
+import FourOhFour from './404'
 import { OutstaticProvider } from '../../context'
-import Collections from '../../pages/collections'
-import EditDocument from '../../pages/edit-document'
-import List from '../../pages/list'
-import AddCustomField from '../../pages/add-custom-field'
-import NewCollection from '../../pages/new-collection'
-import Settings from '../../app/settings'
+import Collections from './collections'
+import EditDocument from './edit-document'
+import List from './list'
+import AddCustomField from './add-custom-field'
+import NewCollection from './new-collection'
+import Settings from './settings'
+import Welcome from './welcome'
+import { OutstaticData } from '../../app'
 
 export type ProviderDataProps = {
-  params: { slug: string[] }
-  providerData: {
-    repoOwner: string
-    repoSlug: string
-    repoBranch: string
-    contentPath: string
-    monorepoPath: string
-    session: Session | null
-    initialApolloState?: null
-    collections: string[]
-    pages: string[]
-  }
+  params: { ost: string[] }
+  ostData: OutstaticData
 }
 
 const defaultPages: { [key: string]: ReactElement | undefined } = {
@@ -32,11 +24,14 @@ const defaultPages: { [key: string]: ReactElement | undefined } = {
   collections: undefined
 }
 
-export const OstClient = ({ providerData, params }: ProviderDataProps) => {
-  const [pages, setPages] = useState(providerData?.pages)
-  const [collections, setCollections] = useState(providerData?.collections)
+export const OstClient = ({ ostData, params }: ProviderDataProps) => {
+  const [pages, setPages] = useState(ostData?.pages || [])
+  const [collections, setCollections] = useState(ostData?.collections || [])
+  const client = useApollo(ostData?.initialApolloState)
 
-  const client = useApollo(providerData?.initialApolloState)
+  if (ostData.missingEnvVars) {
+    return <Welcome variables={ostData.missingEnvVars} />
+  }
 
   const addPage = (page: string) => {
     if (pages.includes(page)) return
@@ -51,20 +46,14 @@ export const OstClient = ({ providerData, params }: ProviderDataProps) => {
     console.log('removePage', page)
   }
 
-  const { session } = providerData
+  const { session } = ostData
 
   if (!session) {
     return <Login />
   }
 
-  console.log({ params })
-
-  if (!params.slug) {
-    return null
-  }
-
-  const slug = params.slug[0] || ''
-  const slug2 = params.slug[1] || ''
+  const slug = params?.ost?.[0] || ''
+  const slug2 = params?.ost?.[1] || ''
 
   if (slug && !pages.includes(slug)) {
     return <FourOhFour />
@@ -74,7 +63,7 @@ export const OstClient = ({ providerData, params }: ProviderDataProps) => {
 
   return (
     <OutstaticProvider
-      {...providerData}
+      {...ostData}
       pages={pages}
       collections={collections}
       addPage={addPage}

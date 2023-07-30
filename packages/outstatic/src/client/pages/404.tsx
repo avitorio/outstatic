@@ -1,24 +1,6 @@
-import { GetServerSideProps, GetServerSidePropsContext } from 'next'
-import Head from 'next/head'
-import { envVars } from '../utils/envVarsCheck'
-
-type WelcomeProps = {
-  variables: {
-    required: {
-      [key: string]: boolean
-    }
-    optional: {
-      [key: string]: boolean
-    }
-  }
-}
-
-export default function Welcome({ variables }: WelcomeProps) {
+export default function FourOhFour() {
   return (
     <>
-      <Head>
-        <title>Welcome to Outstatic</title>
-      </Head>
       <div id="outstatic">
         <div className="absolute bottom-10 w-full left-0 overflow-hidden z-0 md:-top-10">
           <svg
@@ -59,59 +41,11 @@ export default function Welcome({ variables }: WelcomeProps) {
               </g>
             </svg>
           </h1>
-          <div className="mb-20 max-w-2xl p-8 px-4 md:p-8 text-black bg-white rounded-lg border border-gray-200 shadow-md">
-            <p className="mb-5">
-              Before you can access your admin area, make sure the following
-              environment variables are set up:
-            </p>
-            <ul className="mb-5">
-              {Object.entries(variables.required).map(([key, value]) => (
-                <li key={key} className="mb-1">
-                  {`${value ? '✅' : '❌'} Variable`}{' '}
-                  <span className="font-semibold">{key}</span>{' '}
-                  {`is ${value ? 'set.' : 'missing!'}`}
-                </li>
-              ))}
-            </ul>
-            {!variables.optional.OST_CONTENT_PATH && (
-              <p className="mb-5 p-2 bg-blue-100 rounded">
-                Optional variable{' '}
-                <span className="font-semibold">OST_CONTENT_PATH</span> defines
-                where your content is saved.
-                <br />
-                Defaulting to <code>outstatic/content</code>
-              </p>
-            )}
-            {!variables.optional.OST_REPO_OWNER && (
-              <p className="mb-5 p-2 bg-blue-100 rounded">
-                Optional variable{' '}
-                <span className="font-semibold">OST_REPO_OWNER</span> is not
-                set.
-                <br />
-                Defaulting to your GitHub user.
-              </p>
-            )}
-            <p>You need to restart Next.js to apply the changes.</p>
+          <div className="text-center mb-20 flex max-w-2xl flex-col items-center p-8 px-4 md:p-8 text-black bg-white rounded-lg border border-gray-200 shadow-md">
+            <p className="text-2xl">404 - Nothing here...</p>
           </div>
         </main>
       </div>
     </>
   )
-}
-
-export const getServerSideProps: GetServerSideProps = async (
-  context: GetServerSidePropsContext
-) => {
-  if (!envVars.hasMissingEnvVars) {
-    context.res.writeHead(302, {
-      Location: '/outstatic'
-    })
-    context.res.end()
-  }
-
-  return {
-    props: {
-      variables: envVars.envVars
-    }
-  }
 }

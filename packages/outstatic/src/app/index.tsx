@@ -1,8 +1,4 @@
-import { ApolloClient, ApolloProvider } from '@apollo/client'
-import { Session } from '../types'
-import { cookies, headers } from 'next/headers'
-import { envVars, EnvVarsType } from '../utils/envVarsCheck'
-import Welcome from './welcome'
+import { EnvVarsType, envVars } from '../utils/envVarsCheck'
 import { getLoginSession } from '../utils/auth/auth'
 import { initializeApollo } from '../utils/apollo'
 import {
@@ -10,59 +6,31 @@ import {
   CollectionsQuery,
   CollectionsQueryVariables
 } from '../graphql/generated'
-import { JSXElementConstructor, ReactElement, useState } from 'react'
-import Settings from './settings'
-import { ProviderDataProps } from '../client/pages'
+import { Session } from '../types'
 
-type OutstaticProps = {
+export type OutstaticData = {
+  repoOwner: string
+  repoSlug: string
+  repoBranch: string
+  contentPath: string
+  monorepoPath: string
+  session: Session | null
+  initialApolloState?: null
+  collections: string[]
+  pages: string[]
   missingEnvVars: EnvVarsType | false
-  providerData: {
-    client: ApolloClient<any>
-    repoOwner: string
-    repoSlug: string
-    repoBranch: string
-    contentPath: string
-    monorepoPath: string
-    session: Session | null
-    initialApolloState?: null
-    collections: string[]
-    pages: string[]
-  }
 }
 
-const defaultPages: { [key: string]: ReactElement | undefined } = {
-  collections: undefined
-}
+export const defaultPages = ['settings', 'collections']
 
 export async function Outstatic() {
-  const { missingEnvVars, providerData } = await OstSSR()
-  if (missingEnvVars)
-    return <Welcome variables={missingEnvVars as EnvVarsType} />
-
-  return providerData
-}
-
-export async function OstSSR() {
   if (envVars.hasMissingEnvVars) {
     return {
       missingEnvVars: envVars.envVars
-    }
+    } as OutstaticData
   }
 
-  const cookieStore = cookies()
-  const ost_token = cookieStore.get('ost_token') || { value: '' }
-
-  const req = {
-    cookies: {
-      //@ts-ignore
-      ost_token: ost_token?.value || ''
-    },
-    headers: {
-      cookie: cookies().get('ost_token') || ''
-    }
-  }
-
-  const session = await getLoginSession(req)
+  const session = await getLoginSession()
 
   const apolloClient = session ? initializeApollo(null, session) : null
 
@@ -84,7 +52,8 @@ export async function OstSSR() {
               : ''
           }${process.env.OST_CONTENT_PATH || 'outstatic/content'}`,
           owner: process.env.OST_REPO_OWNER || session?.user?.login || ''
-        }
+        },
+        fetchPolicy: 'no-cache'
       })
 
       const documentQueryObject = documentQueryData?.repository?.object
@@ -100,18 +69,16 @@ export async function OstSSR() {
   }
 
   return {
-    missingEnvVars: false,
-    providerData: {
-      repoOwner: process.env.OST_REPO_OWNER || session?.user?.login || '',
-      repoSlug:
-        process.env.OST_REPO_SLUG || process.env.VERCEL_GIT_REPO_SLUG || '',
-      repoBranch: process.env.OST_REPO_BRANCH || 'main',
-      contentPath: process.env.OST_CONTENT_PATH || 'outstatic/content',
-      monorepoPath: process.env.OST_MONOREPO_PATH || '',
-      session: session || null,
-      initialApolloState: null,
-      collections,
-      pages: [...Object.keys(defaultPages), ...collections]
-    }
-  }
+    repoOwner: process.env.OST_REPO_OWNER || session?.user?.login || '',
+    repoSlug:
+      process.env.OST_REPO_SLUG || process.env.VERCEL_GIT_REPO_SLUG || '',
+    repoBranch: process.env.OST_REPO_BRANCH || 'main',
+    contentPath: process.env.OST_CONTENT_PATH || 'outstatic/content',
+    monorepoPath: process.env.OST_MONOREPO_PATH || '',
+    session: session || null,
+    initialApolloState: null,
+    collections,
+    pages: [...defaultPages, ...collections],
+    missingEnvVars: false
+  } as OutstaticData
 }

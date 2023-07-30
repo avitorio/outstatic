@@ -2,9 +2,6 @@ import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 import useSWR from 'swr'
 import { Session } from '../../types'
-import { cookies } from 'next/headers'
-import { serialize } from 'cookie'
-import { TOKEN_NAME } from './auth-cookies'
 
 type useOstSessionProps = {
   redirectTo?: string
@@ -45,6 +42,8 @@ export const useOstSession = ({
     ) {
       router.push(redirectTo)
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [redirectTo, redirectIfFound, finished, hasUser])
 
   if (!data) {

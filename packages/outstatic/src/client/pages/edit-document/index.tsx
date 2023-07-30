@@ -1,6 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import Head from 'next/head'
-import { useRouter } from 'next/router'
+import { useRouter, usePathname } from 'next/navigation'
 import { singular } from 'pluralize'
 import { useEffect, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
@@ -9,21 +9,24 @@ import {
   MDEditor,
   DocumentSettings,
   DocumentTitleInput
-} from '../../components'
-import { DocumentContext } from '../../context'
-import { CustomFields, Document, FileType } from '../../types'
-import { useOstSession } from '../../utils/auth/hooks'
-import { deepReplace } from '../../utils/deepReplace'
-import useNavigationLock from '../../utils/hooks/useNavigationLock'
-import useTipTap from '../../utils/hooks/useTipTap'
-import { convertSchemaToYup, editDocumentSchema } from '../../utils/yup'
-import useFileQuery from '../../utils/hooks/useFileQuery'
-import useSubmitDocument from '../../utils/hooks/useSubmitDocument'
-import { useDocumentUpdateEffect } from '../../utils/hooks/useDocumentUpdateEffect'
+} from '../../../components'
+import { DocumentContext } from '../../../context'
+import { CustomFields, Document, FileType } from '../../../types'
+import { useOstSession } from '../../../utils/auth/hooks'
+import { deepReplace } from '../../../utils/deepReplace'
+import useNavigationLock from '../../../utils/hooks/useNavigationLock'
+import useTipTap from '../../../utils/hooks/useTipTap'
+import { convertSchemaToYup, editDocumentSchema } from '../../../utils/yup'
+import useFileQuery from '../../../utils/hooks/useFileQuery'
+import useSubmitDocument from '../../../utils/hooks/useSubmitDocument'
+import { useDocumentUpdateEffect } from '../../../utils/hooks/useDocumentUpdateEffect'
 
 export default function EditDocument({ collection }: { collection: string }) {
   const router = useRouter()
-  const [slug, setSlug] = useState(router.query?.ost?.[1] as string)
+  const pathname = usePathname()
+  const [slug, setSlug] = useState(
+    pathname.split('/').pop() || `/${collection}/new`
+  )
   const { session } = useOstSession()
   const [loading, setLoading] = useState(false)
   const [hasChanges, setHasChanges] = useState(false)
@@ -59,9 +62,7 @@ export default function EditDocument({ collection }: { collection: string }) {
   })
 
   useEffect(() => {
-    router.push(`/outstatic/${collection}/${slug}`, undefined, {
-      shallow: true
-    })
+    router.replace(`/outstatic/${collection}/${slug}`)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [slug])
 

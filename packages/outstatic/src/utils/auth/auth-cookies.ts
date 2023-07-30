@@ -1,8 +1,6 @@
-import { serialize, parse } from 'cookie'
-import { NextApiResponse } from 'next'
+import { parse } from 'cookie'
 import { Request } from './auth'
 import { cookies } from 'next/headers'
-import { NextFetchEvent, NextResponse } from 'next/server'
 
 export const TOKEN_NAME = 'ost_token'
 
@@ -31,4 +29,8 @@ export function parseCookies(req: Request) {
 export function getTokenCookie(req: Request) {
   const cookies = parseCookies(req)
   return cookies[TOKEN_NAME]
+}
+
+export function removeTokenCookie() {
+  cookies().set({ name: TOKEN_NAME, value: '', maxAge: 0 })
 }

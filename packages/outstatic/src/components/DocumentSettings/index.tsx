@@ -1,4 +1,4 @@
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/navigation'
 import { useContext } from 'react'
 import { RegisterOptions, useFormContext } from 'react-hook-form'
 import { convert } from 'url-slug'

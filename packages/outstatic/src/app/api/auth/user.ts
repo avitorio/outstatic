@@ -10,9 +10,9 @@ export type Request = {
   }
 }
 
-export default async function user(req: Request, res: Response) {
+export default async function user() {
   try {
-    const session = await getLoginSession(req)
+    const session = await getLoginSession()
     return NextResponse.json({ session })
   } catch (error) {
     return NextResponse.json({ error })

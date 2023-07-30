@@ -1,6 +1,6 @@
 import fs from 'fs'
 import path from 'path'
-import { defineConfig } from 'tsup'
+import { Options, defineConfig } from 'tsup'
 
 const filePath = path.join(__dirname, './dist/client/client.js')
 
@@ -31,5 +31,5 @@ export default defineConfig((options) => {
         })
       })
     }
-  }
+  } as Options
 })

@@ -1,13 +1,13 @@
+import { useRouter } from 'next/navigation'
 import { GraphQLError } from 'graphql'
 import matter from 'gray-matter'
 import Link from 'next/link'
 import { singular } from 'pluralize'
 import { useContext } from 'react'
-import { AdminLayout, DocumentsTable } from '../components'
-import { OutstaticContext } from '../context'
-import { useDocumentsQuery } from '../graphql/generated'
-import { Document } from '../types'
-import { useOstSignOut } from '../utils/auth/hooks'
+import { AdminLayout, DocumentsTable } from '../../components'
+import { OutstaticContext } from '../../context'
+import { useDocumentsQuery } from '../../graphql/generated'
+import { Document } from '../../types'
 
 type GQLErrorExtended = GraphQLError & { type: string }
 
@@ -16,6 +16,7 @@ type ListProps = {
 }
 
 export default function List({ collection }: ListProps) {
+  const router = useRouter()
   const {
     repoOwner,
     repoSlug,
@@ -39,7 +40,7 @@ export default function List({ collection }: ListProps) {
         graphQLErrors &&
         (graphQLErrors?.[0] as GQLErrorExtended)?.type === 'NOT_FOUND'
       ) {
-        useOstSignOut()
+        router.push('/api/outstatic/signout')
         return null
       }
       return null

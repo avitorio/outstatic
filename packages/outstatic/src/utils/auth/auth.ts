@@ -35,10 +35,9 @@ export async function setLoginSession(session: LoginSession) {
   setTokenCookie(token)
 }
 
-export async function getLoginSession(req: Request): Promise<Session | null> {
+export async function getLoginSession(): Promise<Session | null> {
   const cookieStore = cookies()
   const token = cookieStore.get('ost_token')?.value
-
   if (!token) return null
 
   try {

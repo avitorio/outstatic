@@ -10,7 +10,11 @@ export interface Request extends NextRequest {
   session: Session
 }
 
-type QueryType = { ost: ['callback', 'login', 'signout', 'user', 'images'] }
+export type QueryType = {
+  params: {
+    ost: ['callback', 'login', 'signout', 'user', 'images']
+  }
+}
 
 const pages = {
   callback,
@@ -21,7 +25,7 @@ const pages = {
 }
 
 export const OutstaticApi = {
-  GET: async (req: Request, params: QueryType) => {
+  GET: async (req: Request, { params }: QueryType) => {
     const { ost } = params
     const rsp = pages[ost[0]](req)
     return rsp
