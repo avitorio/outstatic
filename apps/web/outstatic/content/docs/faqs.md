@@ -10,6 +10,16 @@ coverImage: ''
 publishedAt: '2023-07-25T12:07:51.000Z'
 ---
 
+## I already have a Next.js Markdown blog, how do I start using Outstatic?
+
+Follow the [**Add to Next.js**](/docs/getting-started#adding-outstatic-to-a-nextjs-website)** **documentation. Once finished, log in to your Outstatic dashboard, create collections that match your content and then copy the .md files into the collection directories inside `/outstatic/content`, for example: `/outstatic/content/blog/my-blog-post.md`.
+
+Don't forget to recreate the Metadata Database with your new posts by going to Settings > Rebuild Metadata:
+
+![](/images/rebuild-metadata-I2Nz.png)
+
+
+
 ## Where is the data stored?
 
 All your Outstatic documents and collections are saved as Markdown files in your GitHub repository. In other words, all saved content creates a commit. The commit message specifies the collection and document that is created, for example, if your document is in the recipes collection the commit message would be: `feat(recipes): apple-pie-recipe`o
