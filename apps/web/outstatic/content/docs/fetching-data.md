@@ -32,7 +32,7 @@ import { getDocuments } from 'outstatic/server'
 
 export default async function Index() {
   const posts = await getData()
-  return posts.map((post) => <h1>{post.title}</h1)
+  return posts.map((post) => <h1>{post.title}</h1>)
 }
 
 async function getData() {
@@ -51,7 +51,7 @@ async function getData() {
 import { getDocuments } from 'outstatic/server'
 
 export default function Index({ posts }) {
-  return posts.map((post) => <h1>{post.title}</h1)
+  return posts.map((post) => <h1>{post.title}</h1>)
 }
 
 export const getStaticProps = async () => {
