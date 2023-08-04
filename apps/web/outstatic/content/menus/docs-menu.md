@@ -7,7 +7,7 @@ author:
 slug: 'docs-menu'
 description: ''
 coverImage: ''
-publishedAt: '2022-09-22T14:18:37.951Z'
+publishedAt: '2023-08-04T14:18:37.000Z'
 ---
 
 - [Introduction](/docs/introduction)
@@ -33,6 +33,8 @@ publishedAt: '2022-09-22T14:18:37.951Z'
 - [Environment Variables](https://outstatic.com/docs/environment-variables)
 
 - [FAQs](/docs/faqs)
+
+    - [How do I add Outstatic to a Next.js Markdown blog?](/docs/faqs#i-already-have-a-nextjs-markdown-blog-how-do-i-start-using-outstatic)
 
     - [Where is data stored?](/docs/faqs#where-is-the-data-stored)
 

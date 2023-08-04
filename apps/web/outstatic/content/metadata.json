@@ -1,6 +1,6 @@
 {
-  "commit": "7a08f0af96e65fe2cba9ff8986b9dfc56ef848cd",
-  "generated": "2023-08-04T11:40:50.450Z",
+  "commit": "e69f713ee3804145198ff03d3365ee9c1c15587f",
+  "generated": "2023-08-04T11:45:20.789Z",
   "metadata": [
     {
       "__outstatic": {
@@ -54,24 +54,6 @@
       "slug": "how-to-create-a-blog-with-outstatic",
       "status": "published",
       "title": "Learn how to create your blog with Outstatic"
-    },
-    {
-      "__outstatic": {
-        "commit": "7a1a8c7a3cbe843fad5927a96ef8f961df8b2cdb",
-        "hash": "586304173",
-        "path": "/outstatic/content/menus/docs-menu.md"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "menus",
-      "coverImage": "",
-      "description": "",
-      "publishedAt": "2022-09-22T14:18:37.951Z",
-      "slug": "docs-menu",
-      "status": "published",
-      "title": "Docs Menu"
     },
     {
       "__outstatic": {
@@ -162,6 +144,24 @@
       "slug": "faqs",
       "status": "published",
       "title": "FAQs"
+    },
+    {
+      "__outstatic": {
+        "commit": "e69f713ee3804145198ff03d3365ee9c1c15587f",
+        "hash": "1483956279",
+        "path": "outstatic/content/menus/docs-menu.md"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "menus",
+      "coverImage": "",
+      "description": "",
+      "publishedAt": "2023-08-04T14:18:37.000Z",
+      "slug": "docs-menu",
+      "status": "published",
+      "title": "Docs Menu"
     }
   ]
 }
