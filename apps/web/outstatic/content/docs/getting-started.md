@@ -157,6 +157,8 @@ If everything is setup correctly, then you'll see a login page and will be able 
 
 Congratulations! Your Outstatic installation is ready and you can now start creating content.
 
+![](/images/outstatic-login-screen-I4Mz.png)
+
 **Next.js 13 Warning:** In case your Outstatic Dashboard throws errors while trying to create new pages. Either update Next.js to a version above `13.4.8` or add the option `swcMinify: false` to your `next.config.js` file. Example:
 
 ```javascript
