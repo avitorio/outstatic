@@ -7,7 +7,7 @@ author:
 slug: 'getting-started'
 description: ''
 coverImage: ''
-publishedAt: '2023-07-25T18:34:15.000Z'
+publishedAt: '2023-08-04T18:34:15.000Z'
 ---
 
 Here's how you can get started with Outstatic.
@@ -155,9 +155,11 @@ Restart your service and go back to the `/outstatic` page.
 
 If everything is setup correctly, then you'll see a login page and will be able to access your Dashboard.
 
+![](/images/outstatic-login-screen-I4Mz.png)
+
 Congratulations! Your Outstatic installation is ready and you can now start creating content.
 
-![](/images/outstatic-login-screen-I4Mz.png)
+If you already have a Markdown Next.js blog and want to start editing your files with Outstatic, follow the [steps here](/docs/faqs#i-already-have-a-nextjs-markdown-blog-how-do-i-start-using-outstatic) to move your content to the `outstatic/content` folder.
 
 **Next.js 13 Warning:** In case your Outstatic Dashboard throws errors while trying to create new pages. Either update Next.js to a version above `13.4.8` or add the option `swcMinify: false` to your `next.config.js` file. Example:
 

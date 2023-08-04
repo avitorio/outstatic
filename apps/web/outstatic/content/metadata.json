@@ -1,6 +1,6 @@
 {
-  "commit": "e69f713ee3804145198ff03d3365ee9c1c15587f",
-  "generated": "2023-08-04T11:45:20.789Z",
+  "commit": "da0a90be1bb8bcf7a4b11ad835ff2d925dbd1da6",
+  "generated": "2023-08-04T11:47:53.089Z",
   "metadata": [
     {
       "__outstatic": {
@@ -111,24 +111,6 @@
     },
     {
       "__outstatic": {
-        "commit": "fe091ccd17c4628c95045539ad2af36607345bc2",
-        "hash": "2157911278",
-        "path": "outstatic/content/docs/getting-started.md"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "docs",
-      "coverImage": "",
-      "description": "",
-      "publishedAt": "2023-07-25T18:34:15.000Z",
-      "slug": "getting-started",
-      "status": "published",
-      "title": "Getting started"
-    },
-    {
-      "__outstatic": {
         "commit": "7a08f0af96e65fe2cba9ff8986b9dfc56ef848cd",
         "hash": "2608304761",
         "path": "outstatic/content/docs/faqs.md"
@@ -162,6 +144,24 @@
       "slug": "docs-menu",
       "status": "published",
       "title": "Docs Menu"
+    },
+    {
+      "__outstatic": {
+        "commit": "da0a90be1bb8bcf7a4b11ad835ff2d925dbd1da6",
+        "hash": "3008570723",
+        "path": "outstatic/content/docs/getting-started.md"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "coverImage": "",
+      "description": "",
+      "publishedAt": "2023-08-04T18:34:15.000Z",
+      "slug": "getting-started",
+      "status": "published",
+      "title": "Getting started"
     }
   ]
 }
