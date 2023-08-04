@@ -7,7 +7,7 @@ author:
 slug: 'faqs'
 description: ''
 coverImage: ''
-publishedAt: '2023-07-25T12:07:51.000Z'
+publishedAt: '2023-08-04T12:07:51.000Z'
 ---
 
 ## I already have a Next.js Markdown blog, how do I start using Outstatic?
@@ -16,7 +16,7 @@ Follow the [**Add to Next.js**](/docs/getting-started#adding-outstatic-to-a-next
 
 Don't forget to recreate the Metadata Database with your new posts by going to Settings > Rebuild Metadata:
 
-![](/images/rebuild-metadata-I2Nz.png)
+![](/images/rebuild-metadata-Y4MT.png)
 
 
 
