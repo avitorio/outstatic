@@ -9,7 +9,7 @@ fs.readFile(filePath, 'utf8', function (err, data) {
   }
 
   const result = data.replace(/"use strict";/g, '"use client";')
-  console.log(result)
+
   fs.writeFile(filePath, result, 'utf8', function (err) {
     if (err) {
       return console.error(err)
