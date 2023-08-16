@@ -36,6 +36,10 @@ Outstatic can work with GitHub Applications as well as Oauth applications out of
 
 - Generate a **Client Secret** by clicking on **Generate a new client secret**
 
+- In your application settings, click on "Install App" and click "Install" for the account/organization where you want to add the repository.
+
+- You can select to give permission to all repositories inside the account/organization but it is best to choose "Only select repositories" and add your repository there. (You can still change your app permission in the account/organization settings).
+
 Then you only need to follow the [Getting Started Guide](/docs/getting-started) to configure your application with these values.
 
 
