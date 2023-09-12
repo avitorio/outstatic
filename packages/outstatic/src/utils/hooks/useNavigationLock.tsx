@@ -1,4 +1,4 @@
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 
 /** Ask for confirmation before changing page or leaving site.
@@ -21,20 +21,22 @@ const useNavigationLock = (
     const handleBrowseAway = () => {
       if (!isEnabled) return
       if (window.confirm(warningText)) return
-      router.events.emit('routeChangeError')
-      if (router.asPath !== window.location.pathname) {
-        window.history.pushState('', '', router.asPath)
-      }
+      // router.events.emit('routeChangeError')
+      // if (router.asPath !== window.location.pathname) {
+      //   window.history.pushState('', '', router.asPath)
+      // }
+
       throw 'Navigation cancelled'
     }
 
     window.addEventListener('beforeunload', handleWindowClose)
 
-    router.events.on('routeChangeStart', handleBrowseAway)
+    // TODO: Handle route change events
+    // router.events.on('routeChangeStart', handleBrowseAway)
 
     return () => {
       window.removeEventListener('beforeunload', handleWindowClose)
-      router.events.off('routeChangeStart', handleBrowseAway)
+      // router.events.off('routeChangeStart', handleBrowseAway)
     }
   }, [isEnabled, router, warningText])
 }

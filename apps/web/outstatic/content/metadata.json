@@ -1,6 +1,6 @@
 {
-  "commit": "60f9e6b188a6872b415f6c9db4ac4ab21cdaad92",
-  "generated": "2023-09-12T10:52:48.380Z",
+  "commit": "963676f690d1251bc62fd263b96684dff549d4a3",
+  "generated": "2023-09-12T11:45:18.707Z",
   "metadata": [
     {
       "__outstatic": {
@@ -129,24 +129,6 @@
     },
     {
       "__outstatic": {
-        "commit": "da0a90be1bb8bcf7a4b11ad835ff2d925dbd1da6",
-        "hash": "3008570723",
-        "path": "outstatic/content/docs/getting-started.md"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "docs",
-      "coverImage": "",
-      "description": "",
-      "publishedAt": "2023-08-04T18:34:15.000Z",
-      "slug": "getting-started",
-      "status": "published",
-      "title": "Getting started"
-    },
-    {
-      "__outstatic": {
         "commit": "60f9e6b188a6872b415f6c9db4ac4ab21cdaad92",
         "hash": "3629486105",
         "path": "outstatic/content/docs/faqs.md"
@@ -162,6 +144,42 @@
       "slug": "faqs",
       "status": "published",
       "title": "FAQs"
+    },
+    {
+      "__outstatic": {
+        "commit": "743b05c529db34e3aecb1ae464b741ca9fdbd59a",
+        "hash": "901466412",
+        "path": "outstatic/content/docs/using-with-next-js-12.md"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "coverImage": "",
+      "description": "",
+      "publishedAt": "2023-09-12T11:50:07.653Z",
+      "slug": "using-with-next-js-12",
+      "status": "draft",
+      "title": "Using with Next.js 12"
+    },
+    {
+      "__outstatic": {
+        "commit": "963676f690d1251bc62fd263b96684dff549d4a3",
+        "hash": "2631906313",
+        "path": "outstatic/content/docs/getting-started.md"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "coverImage": "",
+      "description": "",
+      "publishedAt": "2023-09-12T18:34:15.000Z",
+      "slug": "getting-started",
+      "status": "published",
+      "title": "Getting started"
     }
   ]
 }

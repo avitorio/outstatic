@@ -1,4 +1,6 @@
-export type OstDocument = {
+export type OstDocument<
+  TSchema extends { [key: string]: unknown } = { [key: string]: unknown }
+> = TSchema & {
   content: string
   collection: string
   slug: string

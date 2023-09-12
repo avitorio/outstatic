@@ -5,7 +5,7 @@ import { useOstSession } from '../../utils/auth/hooks'
 import DocumentSettings from '.'
 
 jest.mock('../../utils/auth/hooks')
-jest.mock('next/router', () => require('next-router-mock'))
+jest.mock('next/navigation', () => require('next-router-mock'))
 
 jest.mock('react-hook-form', () => ({
   ...jest.requireActual('react-hook-form'),

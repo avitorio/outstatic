@@ -1,13 +1,13 @@
-import { serialize, parse } from 'cookie'
-import { NextApiResponse } from 'next'
+import { parse } from 'cookie'
 import { Request } from './auth'
+import { cookies } from 'next/headers'
 
-const TOKEN_NAME = 'ost_token'
+export const TOKEN_NAME = 'ost_token'
 
 export const MAX_AGE = 60 * 60 * 8 // 8 hours
 
-export function setTokenCookie(res: NextApiResponse, token: string) {
-  const cookie = serialize(TOKEN_NAME, token, {
+export function setTokenCookie(token: string) {
+  cookies().set(TOKEN_NAME, token, {
     maxAge: MAX_AGE,
     expires: new Date(Date.now() + MAX_AGE * 1000),
     httpOnly: true,
@@ -15,17 +15,6 @@ export function setTokenCookie(res: NextApiResponse, token: string) {
     path: '/',
     sameSite: 'lax'
   })
-
-  res.setHeader('Set-Cookie', cookie)
-}
-
-export function removeTokenCookie(res: NextApiResponse) {
-  const cookie = serialize(TOKEN_NAME, '', {
-    maxAge: -1,
-    path: '/'
-  })
-
-  res.setHeader('Set-Cookie', cookie)
 }
 
 export function parseCookies(req: Request) {
@@ -40,4 +29,8 @@ export function parseCookies(req: Request) {
 export function getTokenCookie(req: Request) {
   const cookies = parseCookies(req)
   return cookies[TOKEN_NAME]
+}
+
+export function removeTokenCookie() {
+  cookies().set({ name: TOKEN_NAME, value: '', maxAge: 0 })
 }
