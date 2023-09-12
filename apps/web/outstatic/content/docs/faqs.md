@@ -16,7 +16,7 @@ Follow the [**Add to Next.js**](/docs/getting-started#adding-outstatic-to-a-next
 
 Don't forget to recreate the Metadata Database with your new posts by going to Settings > Rebuild Metadata:
 
-![](/images/rebuild-metadata-Y4MT.png)<br>
+![](/images/rebuild-metadata-Y4MT.png)
 
 This will create a `metadata.json` file inside of `outstatic/content` in your GitHub repository. You should pull the changes to your local install to be able to use the Metadata DB.
 
@@ -33,4 +33,3 @@ Yes. We have seen examples of websites being launched on Netlify and other provi
 We specified Vercel on the documentation as it is the only platform we've tried Outstatic on. I don't see why it wouldn't work on other or your own preferred setup.
 
 If you try a different hosting/deploy approach, please [let us know](https://twitter.com/outstatic)!
-
