@@ -18,6 +18,7 @@
     "prepublish": "pnpm typecheck && pnpm test && pnpm build --filter='!outstatic-blog-example'"
   },
   "devDependencies": {
+    "@changesets/cli": "^2.26.2",
     "eslint": "8.42.0",
     "eslint-config-custom": "workspace:*",
     "husky": "^8.0.3",
