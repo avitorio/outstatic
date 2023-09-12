@@ -1,6 +1,6 @@
 {
-  "commit": "3799c464f1412def06e9713ea2154e928aa15bab",
-  "generated": "2023-08-06T12:32:58.056Z",
+  "commit": "60f9e6b188a6872b415f6c9db4ac4ab21cdaad92",
+  "generated": "2023-09-12T10:52:48.380Z",
   "metadata": [
     {
       "__outstatic": {
@@ -147,7 +147,7 @@
     },
     {
       "__outstatic": {
-        "commit": "3799c464f1412def06e9713ea2154e928aa15bab",
+        "commit": "60f9e6b188a6872b415f6c9db4ac4ab21cdaad92",
         "hash": "3629486105",
         "path": "outstatic/content/docs/faqs.md"
       },
