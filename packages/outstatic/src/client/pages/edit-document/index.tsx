@@ -62,7 +62,7 @@ export default function EditDocument({ collection }: { collection: string }) {
   })
 
   useEffect(() => {
-    router.replace(`/outstatic/${collection}/${slug}`)
+    window.history.replaceState({}, '', `/outstatic/${collection}/${slug}`)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [slug])
 
