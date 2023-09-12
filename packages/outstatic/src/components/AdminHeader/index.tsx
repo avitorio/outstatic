@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { useState } from 'react'
-import { ostSignOut } from '../../utils/auth/hooks'
+import { useOstSignOut } from '../../utils/auth/hooks'
 
 type AdminHeaderProps = {
   name?: string | null | undefined
@@ -18,6 +18,7 @@ const AdminHeader = ({
   toggleSidebar
 }: AdminHeaderProps) => {
   const [isOpen, setIsOpen] = useState(false)
+  const { signOut } = useOstSignOut()
 
   return (
     <>
@@ -118,7 +119,7 @@ const AdminHeader = ({
                   <li>
                     <a
                       className="block cursor-pointer py-2 px-4 text-sm text-gray-700 hover:bg-gray-100"
-                      onClick={() => ostSignOut()}
+                      onClick={signOut}
                     >
                       Sign out
                     </a>

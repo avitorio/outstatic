@@ -7,7 +7,7 @@ author:
 slug: 'getting-started'
 description: ''
 coverImage: ''
-publishedAt: '2023-08-04T18:34:15.000Z'
+publishedAt: '2023-09-12T18:34:15.000Z'
 ---
 
 Here's how you can get started with Outstatic.
@@ -76,6 +76,8 @@ We recommend you learn how [Outstatic manages content](/docs/introduction) and a
 
 ## Adding Outstatic to a Next.js website
 
+If you want to use Outstatic with Next.js 12, you can [continue here](/docs/using-with-next-js-12).
+
 Before we start, you should know Outstatic saves content as markdown files to your GitHub repository. To understand how this works please read our [introduction](https://outstatic.com/docs/introduction) article.
 
 First install the Outstatic package and dependencies:
@@ -104,25 +106,28 @@ yarn add @tiptap/pm
 pnpm install @tiptap/pm
 ```
 
-Once installed, you'll need to add two files to your `/pages` folder:
+Once installed, you'll need to add two files to your `/app` folder:
 
-`/pages/outstatic/[[...ost]].tsx`
+`/app/outstatic/[[...ost]]/page.tsx`
 
 ```javascript
 import 'outstatic/outstatic.css'
-import { Outstatic, OstSSP } from 'outstatic'
+import { Outstatic } from 'outstatic'
+import { OstClient } from 'outstatic/client'
 
-export default Outstatic
-
-export const getServerSideProps = OstSSP
+export default async function Page({ params }: { params: { ost: string[] } }) {
+  const ostData = await Outstatic()
+  return <OstClient ostData={ostData} params={params} />
+}
 ```
 
-And `/pages/api/outstatic/[[...ost]].tsx`
+And `/app/api/outstatic/[[...ost]]/route.ts`
 
 ```javascript
-import { OutstaticApi } from 'outstatic'
+import { OutstaticApi, Request, QueryType } from 'outstatic'
 
-export default OutstaticApi
+export const GET = async (req: Request, params: QueryType) =>
+  OutstaticApi.GET(req, params)
 ```
 
 Start your dev server. Assuming you're on `http://localhost:3000` you can access your dashboard at `https://localhost:3000/outstatic`.
