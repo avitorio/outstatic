@@ -7,7 +7,7 @@ author:
 slug: 'getting-started'
 description: ''
 coverImage: ''
-publishedAt: '2023-09-12T18:34:15.000Z'
+publishedAt: '2023-09-18T18:34:15.000Z'
 ---
 
 Here's how you can get started with Outstatic.
@@ -91,19 +91,6 @@ yarn add outstatic
 
 #pnpm
 pnpm install outstatic
-```
-
-Then install some needed dependencies:
-
-```bash
-# npm
-npm install @tiptap/pm
-
-# yarn
-yarn add @tiptap/pm
-
-#pnpm
-pnpm install @tiptap/pm
 ```
 
 Once installed, you'll need to add two files to your `/app` folder:
@@ -192,4 +179,3 @@ OST_TOKEN_SECRET=A_RANDOM_TOKEN
 ```
 
 To learn more about all the available environment variables, see the [Environment Variables ](https://outstatic.com/docs/environment-variables)section of the docs.
-
