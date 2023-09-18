@@ -8,7 +8,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@tiptap/pm": "^2.0.3",
+    "@tiptap/pm": "^2.1.10",
     "@types/node": "20.2.5",
     "@types/react": "18.2.9",
     "@types/react-dom": "18.2.4",
@@ -18,7 +18,7 @@
     "eslint-config-next": "^13.4.0",
     "gray-matter": "^4.0.3",
     "next": "^13.4.0",
-    "outstatic": "^0.0.39",
+    "outstatic": "^0.0.40",
     "postcss": "8.4.24",
     "react": "18.2.0",
     "react-dom": "18.2.0",
