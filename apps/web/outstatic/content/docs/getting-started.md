@@ -91,19 +91,6 @@ yarn add outstatic
 pnpm install outstatic
 ```
 
-Then install some needed dependencies:
-
-```bash
-# npm
-npm install @tiptap/pm
-
-# yarn
-yarn add @tiptap/pm
-
-#pnpm
-pnpm install @tiptap/pm
-```
-
 Once installed, you'll need to add two files to your `/pages` folder:
 
 `/pages/outstatic/[[...ost]].tsx`
@@ -187,4 +174,3 @@ OST_TOKEN_SECRET=A_RANDOM_TOKEN
 ```
 
 To learn more about all the available environment variables, see the [Environment Variables ](https://outstatic.com/docs/environment-variables)section of the docs.
-
