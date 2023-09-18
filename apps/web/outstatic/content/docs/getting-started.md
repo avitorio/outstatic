@@ -7,7 +7,7 @@ author:
 slug: 'getting-started'
 description: ''
 coverImage: ''
-publishedAt: '2023-09-12T18:34:15.000Z'
+publishedAt: '2023-09-18T18:34:15.000Z'
 ---
 
 Here's how you can get started with Outstatic.
