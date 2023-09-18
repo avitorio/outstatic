@@ -10,7 +10,7 @@
     "typecheck": "tsc --project tsconfig.json --noEmit"
   },
   "dependencies": {
-    "@tiptap/pm": "^2.0.3",
+    "@tiptap/pm": "^2.1.10",
     "countries-and-timezones": "^3.5.1",
     "date-fns": "^2.28.0",
     "gray-matter": "^4.0.3",
