@@ -1,6 +1,6 @@
 {
-  "commit": "a70577ace1a9d17c1cce796d53455052911cc72e",
-  "generated": "Sat, 23 Sep 2023 15:59:09 GMT",
+  "commit": "45ca9e42f40af5b62cae3238db8e59ff4f4773ab",
+  "generated": "2023-09-23T17:31:06.402Z",
   "metadata": [
     {
       "__outstatic": {
@@ -147,24 +147,6 @@
     },
     {
       "__outstatic": {
-        "commit": "6d414033ccce62198b97db81749ca953a7e4a421",
-        "hash": "901466412",
-        "path": "/outstatic/content/docs/using-with-next-js-12.md"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "docs",
-      "coverImage": "",
-      "description": "",
-      "publishedAt": "2023-09-12T11:50:07.653Z",
-      "slug": "using-with-next-js-12",
-      "status": "draft",
-      "title": "Using with Next.js 12"
-    },
-    {
-      "__outstatic": {
         "commit": "e91d3250c8d69aa088b87c0401181136f6859b90",
         "hash": "3340137951",
         "path": "/outstatic/content/docs/the-content-editor.md"
@@ -198,6 +180,24 @@
       "slug": "local-development",
       "status": "published",
       "title": "Local Development"
+    },
+    {
+      "__outstatic": {
+        "commit": "45ca9e42f40af5b62cae3238db8e59ff4f4773ab",
+        "hash": "2303996183",
+        "path": "outstatic/content/docs/using-with-next-js-12.md"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "coverImage": "",
+      "description": "",
+      "publishedAt": "2023-09-12T11:50:07.653Z",
+      "slug": "using-with-next-js-12",
+      "status": "draft",
+      "title": "Using with Next.js 12"
     }
   ]
 }
