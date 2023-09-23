@@ -30,7 +30,7 @@ Enter any valid URL as the Homepage URL. This can be updated later to your actua
 
 #### 4\. Configure Callback URL
 
-Set the Callback URL to `https://my-website-name.com/api/outstatic/callback`. For local development, using [localhost](http://localhost) with a port is also acceptable.
+Set the Callback URL to `https://my-website-name.com/api/outstatic/callback`. For local development, you can use `http://localhost:3000/api/outstatic/callback`.
 
 #### 5\. Set Permissions
 
