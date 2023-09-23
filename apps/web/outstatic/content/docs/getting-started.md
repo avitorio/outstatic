@@ -72,9 +72,7 @@ To login to your Dashboard add `/outstatic` to the end of your site url:
 
 Example: `https://myblog.vercel.app/outstatic`
 
-Congratulations! Now you have a website with a full-featured dashboard to edit your content.<br>
-
-<br>
+Congratulations! Now you have a website with a full-featured dashboard to edit your content.
 
 To develop your Vercel deployed website locally, please check the [Local Development](/docs/local-development) page.
 
@@ -185,4 +183,3 @@ OST_TOKEN_SECRET=A_RANDOM_TOKEN
 ```
 
 To learn more about all the available environment variables, see the [Environment Variables ](https://outstatic.com/docs/environment-variables)section of the docs.
-
