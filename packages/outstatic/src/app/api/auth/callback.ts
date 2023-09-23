@@ -1,6 +1,5 @@
-import { NextFetchEvent, NextRequest, NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { createEdgeRouter } from 'next-connect'
-import { redirect } from 'next/navigation'
 import nextSession from 'next-session'
 import { Session } from 'next-session/lib/types'
 import { setLoginSession } from '../../../utils/auth/auth'
@@ -55,6 +54,19 @@ async function fetchGitHubUser(token: string) {
   return await request.json()
 }
 
+async function checkCollaborator(token: string, userName: string) {
+  const response = await fetch(
+    `https://api.github.com/repos/${process.env.OST_REPO_OWNER}/${process.env.OST_REPO_SLUG}/collaborators/${userName}`,
+    {
+      headers: {
+        Authorization: `token ${token}`
+      }
+    }
+  )
+  if (response.status === 204) return true
+  else return false
+}
+
 router
   .use(async (req, res, next) => {
     //@ts-ignore
@@ -64,6 +76,10 @@ router
       const url = req.nextUrl.clone()
       url.pathname = '/outstatic'
       url.search = ''
+      if (response.status !== 200) {
+        const data = await response.json()
+        url.searchParams.set('error', data.error)
+      }
       return NextResponse.redirect(url)
     }
   })
@@ -72,6 +88,20 @@ router
     const access_token = await getAccessToken(code)
     req.session.token = access_token
     const userData = await fetchGitHubUser(access_token || '')
+
+    if (process.env.OST_REPO_OWNER) {
+      const isCollaborator = await checkCollaborator(
+        req.session.token,
+        userData.login
+      )
+
+      if (!isCollaborator) {
+        return NextResponse.json(
+          { error: 'not-collaborator' },
+          { status: 403, statusText: 'Forbidden' }
+        )
+      }
+    }
 
     if (!userData.email) {
       const emails = await (
@@ -102,10 +132,8 @@ router
         access_token,
         expires: new Date(Date.now() + MAX_AGE * 1000)
       })
-      return true
+      return new NextResponse('ok', { status: 200 })
     } else {
-      return new NextResponse('Something brokez!', {
-        status: 404
-      })
+      return NextResponse.json({ error: 'something' }, { status: 403 })
     }
   })
