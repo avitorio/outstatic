@@ -26,7 +26,7 @@ Before diving in, it's essential to configure GitHub Authentication for your pro
 
 - **GitHub Apps:** setup is generally more complex, providing a refined level of access and control.
 
-For those opting for GitHub Applications, please refer to the relevant [Github Apps Authentication](http://localhost:3000/docs/github-apps-authentication) documentation.
+For those opting for GitHub Apps, please refer to the relevant [GitHub Apps Authentication](http://localhost:3000/docs/github-apps-authentication) documentation.
 
 #### Setting up a GitHub OAuth Application:
 
