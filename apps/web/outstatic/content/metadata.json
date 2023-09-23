@@ -1,6 +1,6 @@
 {
-  "commit": "45ca9e42f40af5b62cae3238db8e59ff4f4773ab",
-  "generated": "2023-09-23T17:31:06.402Z",
+  "commit": "4bd16341cea9c4e431916ee6afad9e57c5b657ee",
+  "generated": "2023-09-23T17:35:23.661Z",
   "metadata": [
     {
       "__outstatic": {
@@ -37,24 +37,6 @@
       "slug": "introduction",
       "status": "published",
       "title": "Introduction"
-    },
-    {
-      "__outstatic": {
-        "commit": "d4393a4f904e2fb1e65eea0b71c92175c821072c",
-        "hash": "3774119962",
-        "path": "/outstatic/content/docs/getting-started.md"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "docs",
-      "coverImage": "",
-      "description": "",
-      "publishedAt": "2023-09-18T18:34:15.000Z",
-      "slug": "getting-started",
-      "status": "published",
-      "title": "Getting started"
     },
     {
       "__outstatic": {
@@ -198,6 +180,24 @@
       "slug": "using-with-next-js-12",
       "status": "draft",
       "title": "Using with Next.js 12"
+    },
+    {
+      "__outstatic": {
+        "commit": "4bd16341cea9c4e431916ee6afad9e57c5b657ee",
+        "hash": "4081880286",
+        "path": "outstatic/content/docs/getting-started.md"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "coverImage": "",
+      "description": "",
+      "publishedAt": "2023-09-23T18:34:15.000Z",
+      "slug": "getting-started",
+      "status": "published",
+      "title": "Getting started"
     }
   ]
 }
