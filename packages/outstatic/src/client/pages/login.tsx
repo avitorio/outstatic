@@ -1,4 +1,14 @@
+import { useSearchParams } from 'next/navigation'
+import Alert from '../../components/Alert'
+import loginErrors from '../../utils/errors/loginErrors'
+
+type Errors = keyof typeof loginErrors
+
 export default function Login() {
+  const searchParams = useSearchParams()
+
+  const error = searchParams.get('error') as Errors
+
   return (
     <>
       <div id="outstatic">
@@ -41,6 +51,9 @@ export default function Login() {
               </g>
             </svg>
           </h1>
+          {error && loginErrors[error] ? (
+            <Alert type="error">{loginErrors[error]}</Alert>
+          ) : null}
           <div className="text-center mb-20 flex max-w-2xl flex-col items-center p-8 px-4 md:p-8 text-black bg-white rounded-lg border border-gray-200 shadow-md">
             <p className="mb-5">
               Sign in with GitHub to access your&nbsp;dashboard.
