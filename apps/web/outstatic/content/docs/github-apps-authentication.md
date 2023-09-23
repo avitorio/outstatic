@@ -7,38 +7,54 @@ author:
 slug: 'github-apps-authentication'
 description: ''
 coverImage: ''
-publishedAt: '2023-08-04T21:00:00.000Z'
+publishedAt: '2023-09-23T21:00:00.000Z'
 ---
 
 ## Use Github Apps for Authentication
 
-GitHub Documentation recommands the usage of GitHub Applications instead of OAuth Applications as stated in [this article](https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/differences-between-github-apps-and-oauth-apps).
+The preferred method of integration, as suggested by [GitHub Documentation](https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/differences-between-github-apps-and-oauth-apps), is the utilization of GitHub Apps over OAuth Applications. Outstatic has built-in support to seamlessly integrate with Github Apps.
 
-Outstatic can work with GitHub Applications as well as Oauth applications out of the box. Let's create a GitHub Application:
+Follow the steps below to create a new GitHub App:
 
-- First go to the "Register a new OAuth application" page on GitHub by [clicking here](https://github.com/settings/apps/new).
+#### 1\. Register a New Application
 
-- Give your application a name, "Outstatic Blog" for example.
+First go to the "Register a new GitHub App" page on GitHub by [clicking here](https://github.com/settings/apps/new).
 
-- For **Homepage URL**, give any valid URL. You can change it later to your website URL.
+#### 2\. Name Your Application
 
-- For **Callback URL**, set it to `https://my-website-name.com/api/outstatic/callback` (for local developpment, localhost with a port also works).
+Enter a name for your application, such as "Outstatic Blog".
 
-- You do not need to check anythink in the next section.
+#### 3\. Set Homepage URL
 
-- For **Permissions**, Outstatic only needs read and wite access to a specific repository. You can open "Repository permissions" and next to "Contents", select "Read and write"
+Enter any valid URL as the Homepage URL. This can be updated later to your actual website URL.
 
-- In the last section. If you want to create the repository on your own account check "Only on this account" otherwise chose "Any account"
+#### 4\. Configure Callback URL
 
-- Click on **Create GitHub App**, you will be redirected to your application settings.
+Set the Callback URL to `https://my-website-name.com/api/outstatic/callback`. For local development, using [localhost](http://localhost) with a port is also acceptable.
 
-- Copy your **Client ID** from your application settings
+#### 5\. Set Permissions
 
-- Generate a **Client Secret** by clicking on **Generate a new client secret**
+Outstatic requires read and write access to specific repositories. Navigate to "Repository permissions" and enable "Read and write" access next to "Contents". No other permissions are needed.
 
-- In your application settings, click on "Install App" and click "Install" for the account/organization where you want to add the repository.
+#### 6\. Select Account Scope
 
-- You can select to give permission to all repositories inside the account/organization but it is best to choose "Only select repositories" and add your repository there. (You can still change your app permission in the account/organization settings).
+In the last section, select "Only on this account" if you are creating a repository on your personal account. For creating on other accounts, choose "Any account".
+
+#### 7\. Create GitHub App
+
+Click "Create GitHub App". You will be redirected to your application settings.
+
+#### 8\. Retrieve Client ID & Generate Client Secret
+
+Copy the Client ID from your application settings and generate a Client Secret by selecting "Generate a new client secret". These will be used for `OST_GITHUB_ID` and `OST_GITHUB_SECRET` respectively.
+
+#### 9\. Install the Application
+
+Go to "Install App" in your application settings and click "Install" for the account/organization where you want to add the repository.
+
+#### 10\. Set Repository Permissions
+
+Although providing permission to all repositories is possible, it is recommended to choose "Only select repositories" and add your desired repository. This permission can be modified later in the account/organization settings.
 
 Then you only need to follow the [Getting Started Guide](/docs/getting-started) to configure your application with these values.
 
