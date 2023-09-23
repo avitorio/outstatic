@@ -1,7 +1,25 @@
 {
-  "commit": "4bd16341cea9c4e431916ee6afad9e57c5b657ee",
-  "generated": "2023-09-23T17:35:23.661Z",
+  "commit": "82f4d266ba8f48cad7a79409de0861a449ebadd3",
+  "generated": "Sat, 23 Sep 2023 19:04:16 GMT",
   "metadata": [
+    {
+      "__outstatic": {
+        "commit": "f88e9cbc1e92098f47f24353f52ec2e379ff17dc",
+        "hash": "1802544230",
+        "path": "/outstatic/content/docs/environment-variables.md"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "coverImage": "",
+      "description": "",
+      "publishedAt": "2022-10-13T12:36:25.000Z",
+      "slug": "environment-variables",
+      "status": "published",
+      "title": "Environment variables"
+    },
     {
       "__outstatic": {
         "commit": "28fb2f86179c26f5063364ced8395466b6f7985c",
@@ -40,39 +58,21 @@
     },
     {
       "__outstatic": {
-        "commit": "22650aab8e1fa8241dd7756b1bf90fd79342969d",
-        "hash": "3223339599",
-        "path": "/outstatic/content/docs/fetching-data.md"
+        "commit": "d284432c4f249abdc1b70341c757a5fef958f7ae",
+        "hash": "233056259",
+        "path": "/outstatic/content/docs/github-applications.md"
       },
       "author": {
-        "name": "Jakob Heuser",
-        "picture": "https://avatars.githubusercontent.com/u/1795?v=4"
+        "name": "Anthony Quéré",
+        "picture": "https://avatars.githubusercontent.com/u/47711333?v=4"
       },
       "collection": "docs",
       "coverImage": "",
       "description": "",
-      "publishedAt": "2023-07-25T12:28:25.000Z",
-      "slug": "fetching-data",
-      "status": "published",
-      "title": "Fetching data"
-    },
-    {
-      "__outstatic": {
-        "commit": "f88e9cbc1e92098f47f24353f52ec2e379ff17dc",
-        "hash": "1802544230",
-        "path": "/outstatic/content/docs/environment-variables.md"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "docs",
-      "coverImage": "",
-      "description": "",
-      "publishedAt": "2022-10-13T12:36:25.000Z",
-      "slug": "environment-variables",
-      "status": "published",
-      "title": "Environment variables"
+      "publishedAt": "2023-08-04T21:00:00.000Z",
+      "slug": "github-application",
+      "status": "draft",
+      "title": "GitHub Application"
     },
     {
       "__outstatic": {
@@ -94,20 +94,39 @@
     },
     {
       "__outstatic": {
-        "commit": "a36a42a309ed2ca9176c49ce0302bf005243b928",
-        "hash": "3142407191",
-        "path": "/outstatic/content/posts/how-to-create-a-blog-with-outstatic.md"
+        "commit": "9e4fdd9014f3e9aa0907d4831dd32fb2a4a323cd",
+        "hash": "4070692543",
+        "path": "/outstatic/content/docs/getting-started.md"
       },
       "author": {
-        "name": "Andre Vitorio"
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
       },
-      "collection": "posts",
-      "coverImage": "/images/outstatic-demo.png",
-      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.",
-      "publishedAt": "2022-07-14T02:34:02.322Z",
-      "slug": "how-to-create-a-blog-with-outstatic",
+      "collection": "docs",
+      "coverImage": "",
+      "description": "",
+      "publishedAt": "2023-09-23T18:34:15.000Z",
+      "slug": "getting-started",
       "status": "published",
-      "title": "Learn how to create your blog with Outstatic"
+      "title": "Getting started"
+    },
+    {
+      "__outstatic": {
+        "commit": "22650aab8e1fa8241dd7756b1bf90fd79342969d",
+        "hash": "3223339599",
+        "path": "/outstatic/content/docs/fetching-data.md"
+      },
+      "author": {
+        "name": "Jakob Heuser",
+        "picture": "https://avatars.githubusercontent.com/u/1795?v=4"
+      },
+      "collection": "docs",
+      "coverImage": "",
+      "description": "",
+      "publishedAt": "2023-07-25T12:28:25.000Z",
+      "slug": "fetching-data",
+      "status": "published",
+      "title": "Fetching data"
     },
     {
       "__outstatic": {
@@ -126,6 +145,23 @@
       "slug": "docs-menu",
       "status": "published",
       "title": "Docs Menu"
+    },
+    {
+      "__outstatic": {
+        "commit": "a36a42a309ed2ca9176c49ce0302bf005243b928",
+        "hash": "3142407191",
+        "path": "/outstatic/content/posts/how-to-create-a-blog-with-outstatic.md"
+      },
+      "author": {
+        "name": "Andre Vitorio"
+      },
+      "collection": "posts",
+      "coverImage": "/images/outstatic-demo.png",
+      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.",
+      "publishedAt": "2022-07-14T02:34:02.322Z",
+      "slug": "how-to-create-a-blog-with-outstatic",
+      "status": "published",
+      "title": "Learn how to create your blog with Outstatic"
     },
     {
       "__outstatic": {
@@ -165,9 +201,9 @@
     },
     {
       "__outstatic": {
-        "commit": "45ca9e42f40af5b62cae3238db8e59ff4f4773ab",
+        "commit": "07a1c5d4917cb890b42c9c65d7438d8b03900e6b",
         "hash": "2303996183",
-        "path": "outstatic/content/docs/using-with-next-js-12.md"
+        "path": "/outstatic/content/docs/using-with-next-js-12.md"
       },
       "author": {
         "name": "Andre Vitorio",
@@ -180,24 +216,6 @@
       "slug": "using-with-next-js-12",
       "status": "draft",
       "title": "Using with Next.js 12"
-    },
-    {
-      "__outstatic": {
-        "commit": "4bd16341cea9c4e431916ee6afad9e57c5b657ee",
-        "hash": "4081880286",
-        "path": "outstatic/content/docs/getting-started.md"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "docs",
-      "coverImage": "",
-      "description": "",
-      "publishedAt": "2023-09-23T18:34:15.000Z",
-      "slug": "getting-started",
-      "status": "published",
-      "title": "Getting started"
     }
   ]
 }
