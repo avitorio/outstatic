@@ -88,16 +88,19 @@ router
     const access_token = await getAccessToken(code)
     req.session.token = access_token
     const userData = await fetchGitHubUser(access_token || '')
-    const isCollaborator = await checkCollaborator(
-      req.session.token,
-      userData.login
-    )
 
-    if (!isCollaborator) {
-      return NextResponse.json(
-        { error: 'not-collaborator' },
-        { status: 403, statusText: 'Forbidden' }
+    if (process.env.OST_REPO_OWNER) {
+      const isCollaborator = await checkCollaborator(
+        req.session.token,
+        userData.login
       )
+
+      if (!isCollaborator) {
+        return NextResponse.json(
+          { error: 'not-collaborator' },
+          { status: 403, statusText: 'Forbidden' }
+        )
+      }
     }
 
     if (!userData.email) {
