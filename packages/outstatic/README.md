@@ -53,6 +53,10 @@ To chat with other community members you can join the [Outstatic Discord](https:
 
 Please see our [CONTRIBUTING.md](/CONTRIBUTING.md).
 
+<a href="https://github.com/avitorio/outstatic/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=avitorio/outstatic" />
+</a>
+
 ## Author
 
 - Andre Vitorio ([@andrevitorio](https://twitter.com/andrevitorio))
