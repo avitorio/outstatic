@@ -10,7 +10,7 @@ coverImage: ''
 publishedAt: '2023-09-12T11:50:07.653Z'
 ---
 
-To use Outstatic with Next.js 12, using the `/pages` directory, you will need to use Outstatic version `0.0.39` or lower.
+To use Outstatic with Next.js 12, using the `/pages` directory, you will need to use Outstatic version `0.0.41` or lower.
 
 First install the Outstatic package and dependencies:
 

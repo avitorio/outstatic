@@ -7,7 +7,7 @@ author:
 slug: 'getting-started'
 description: ''
 coverImage: ''
-publishedAt: '2023-09-18T18:34:15.000Z'
+publishedAt: '2023-09-23T18:34:15.000Z'
 ---
 
 Here's how you can get started with Outstatic.
@@ -71,6 +71,10 @@ You can now visit your site.
 To login to your Dashboard add `/outstatic` to the end of your site url:
 
 Example: `https://myblog.vercel.app/outstatic`
+
+Congratulations! Now you have a website with a full-featured dashboard to edit your content.
+
+To develop your Vercel deployed website locally, please check the [Local Development](/docs/local-development) page.
 
 We recommend you learn how [Outstatic manages content](/docs/introduction) and also how to [fetch content](/docs/fetching-data) from your front end.
 
