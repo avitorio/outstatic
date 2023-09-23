@@ -1,6 +1,6 @@
 {
-  "commit": "963676f690d1251bc62fd263b96684dff549d4a3",
-  "generated": "2023-09-12T11:45:18.707Z",
+  "commit": "a70577ace1a9d17c1cce796d53455052911cc72e",
+  "generated": "Sat, 23 Sep 2023 15:59:09 GMT",
   "metadata": [
     {
       "__outstatic": {
@@ -22,6 +22,60 @@
     },
     {
       "__outstatic": {
+        "commit": "3bbf1f134c75554e5c13021122ec22f45cc34718",
+        "hash": "4022666034",
+        "path": "/outstatic/content/docs/introduction.md"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "coverImage": "",
+      "description": "",
+      "publishedAt": "2023-05-26T17:50:55.000Z",
+      "slug": "introduction",
+      "status": "published",
+      "title": "Introduction"
+    },
+    {
+      "__outstatic": {
+        "commit": "d4393a4f904e2fb1e65eea0b71c92175c821072c",
+        "hash": "3774119962",
+        "path": "/outstatic/content/docs/getting-started.md"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "coverImage": "",
+      "description": "",
+      "publishedAt": "2023-09-18T18:34:15.000Z",
+      "slug": "getting-started",
+      "status": "published",
+      "title": "Getting started"
+    },
+    {
+      "__outstatic": {
+        "commit": "22650aab8e1fa8241dd7756b1bf90fd79342969d",
+        "hash": "3223339599",
+        "path": "/outstatic/content/docs/fetching-data.md"
+      },
+      "author": {
+        "name": "Jakob Heuser",
+        "picture": "https://avatars.githubusercontent.com/u/1795?v=4"
+      },
+      "collection": "docs",
+      "coverImage": "",
+      "description": "",
+      "publishedAt": "2023-07-25T12:28:25.000Z",
+      "slug": "fetching-data",
+      "status": "published",
+      "title": "Fetching data"
+    },
+    {
+      "__outstatic": {
         "commit": "f88e9cbc1e92098f47f24353f52ec2e379ff17dc",
         "hash": "1802544230",
         "path": "/outstatic/content/docs/environment-variables.md"
@@ -40,6 +94,24 @@
     },
     {
       "__outstatic": {
+        "commit": "ec445ed70a6ecc6aed484f02dd2049c732c230d2",
+        "hash": "2176425421",
+        "path": "/outstatic/content/docs/faqs.md"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "coverImage": "",
+      "description": "",
+      "publishedAt": "2023-08-06T12:07:51.000Z",
+      "slug": "faqs",
+      "status": "published",
+      "title": "FAQs"
+    },
+    {
+      "__outstatic": {
         "commit": "a36a42a309ed2ca9176c49ce0302bf005243b928",
         "hash": "3142407191",
         "path": "/outstatic/content/posts/how-to-create-a-blog-with-outstatic.md"
@@ -54,6 +126,42 @@
       "slug": "how-to-create-a-blog-with-outstatic",
       "status": "published",
       "title": "Learn how to create your blog with Outstatic"
+    },
+    {
+      "__outstatic": {
+        "commit": "0c61efdb3c5e7811c3cd779224099bedad0c4e9d",
+        "hash": "3955814468",
+        "path": "/outstatic/content/menus/docs-menu.md"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "menus",
+      "coverImage": "",
+      "description": "",
+      "publishedAt": "2023-08-04T14:18:37.000Z",
+      "slug": "docs-menu",
+      "status": "published",
+      "title": "Docs Menu"
+    },
+    {
+      "__outstatic": {
+        "commit": "6d414033ccce62198b97db81749ca953a7e4a421",
+        "hash": "901466412",
+        "path": "/outstatic/content/docs/using-with-next-js-12.md"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "coverImage": "",
+      "description": "",
+      "publishedAt": "2023-09-12T11:50:07.653Z",
+      "slug": "using-with-next-js-12",
+      "status": "draft",
+      "title": "Using with Next.js 12"
     },
     {
       "__outstatic": {
@@ -75,111 +183,21 @@
     },
     {
       "__outstatic": {
-        "commit": "3bbf1f134c75554e5c13021122ec22f45cc34718",
-        "hash": "4022666034",
-        "path": "/outstatic/content/docs/introduction.md"
+        "commit": "baab0613ec7117304e95b6dbdcd0d84fbab2c45a",
+        "hash": "2166371953",
+        "path": "/outstatic/content/docs/local-development.md"
       },
       "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+        "name": "leplay",
+        "picture": "https://avatars.githubusercontent.com/u/284475?v=4"
       },
       "collection": "docs",
       "coverImage": "",
       "description": "",
-      "publishedAt": "2023-05-26T17:50:55.000Z",
-      "slug": "introduction",
+      "publishedAt": "2023-09-23T08:42:29.464Z",
+      "slug": "local-development",
       "status": "published",
-      "title": "Introduction"
-    },
-    {
-      "__outstatic": {
-        "commit": "5267b2f5e14c69c738d602407d3488a4dc5235dd",
-        "hash": "2541376530",
-        "path": "outstatic/content/docs/fetching-data.md"
-      },
-      "author": {
-        "name": "Jakob Heuser",
-        "picture": "https://avatars.githubusercontent.com/u/1795?v=4"
-      },
-      "collection": "docs",
-      "coverImage": "",
-      "description": "",
-      "publishedAt": "2023-07-25T12:28:25.000Z",
-      "slug": "fetching-data",
-      "status": "published",
-      "title": "Fetching data"
-    },
-    {
-      "__outstatic": {
-        "commit": "e69f713ee3804145198ff03d3365ee9c1c15587f",
-        "hash": "1483956279",
-        "path": "outstatic/content/menus/docs-menu.md"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "menus",
-      "coverImage": "",
-      "description": "",
-      "publishedAt": "2023-08-04T14:18:37.000Z",
-      "slug": "docs-menu",
-      "status": "published",
-      "title": "Docs Menu"
-    },
-    {
-      "__outstatic": {
-        "commit": "60f9e6b188a6872b415f6c9db4ac4ab21cdaad92",
-        "hash": "3629486105",
-        "path": "outstatic/content/docs/faqs.md"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "docs",
-      "coverImage": "",
-      "description": "",
-      "publishedAt": "2023-08-06T12:07:51.000Z",
-      "slug": "faqs",
-      "status": "published",
-      "title": "FAQs"
-    },
-    {
-      "__outstatic": {
-        "commit": "743b05c529db34e3aecb1ae464b741ca9fdbd59a",
-        "hash": "901466412",
-        "path": "outstatic/content/docs/using-with-next-js-12.md"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "docs",
-      "coverImage": "",
-      "description": "",
-      "publishedAt": "2023-09-12T11:50:07.653Z",
-      "slug": "using-with-next-js-12",
-      "status": "draft",
-      "title": "Using with Next.js 12"
-    },
-    {
-      "__outstatic": {
-        "commit": "963676f690d1251bc62fd263b96684dff549d4a3",
-        "hash": "2631906313",
-        "path": "outstatic/content/docs/getting-started.md"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "docs",
-      "coverImage": "",
-      "description": "",
-      "publishedAt": "2023-09-12T18:34:15.000Z",
-      "slug": "getting-started",
-      "status": "published",
-      "title": "Getting started"
+      "title": "Local Development"
     }
   ]
 }
