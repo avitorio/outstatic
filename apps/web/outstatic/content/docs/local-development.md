@@ -1,6 +1,6 @@
 ---
 title: 'Local Development'
-status: 'draft'
+status: 'published'
 author:
   name: 'leplay'
   picture: 'https://avatars.githubusercontent.com/u/284475?v=4'
