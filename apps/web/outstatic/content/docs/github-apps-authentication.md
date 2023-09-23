@@ -1,6 +1,6 @@
 ---
 title: 'GitHub Apps Authentication'
-status: 'draft'
+status: 'published'
 author:
   name: 'Anthony Quéré'
   picture: 'https://avatars.githubusercontent.com/u/47711333?v=4'
