@@ -20,6 +20,8 @@ publishedAt: '2023-08-04T14:18:37.000Z'
 
     - [Deploy with Vercel](/docs/getting-started#deploy-with-vercel)
 
+    - [Local Development](/docs/local-development)
+
     - [Add to Next.js](/docs/getting-started#adding-outstatic-to-a-nextjs-website)
 
     <!-- -->
@@ -41,4 +43,3 @@ publishedAt: '2023-08-04T14:18:37.000Z'
     - [Do I need Vercel?](/docs/faqs#can-i-host-my-outstatic-website-on-a-provider-other-than-vercel)
 
     <!-- -->
-
