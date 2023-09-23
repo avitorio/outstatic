@@ -1,7 +1,13 @@
 import { redirect } from 'next/navigation'
 
 export default async function GET() {
-  redirect(
-    `https://github.com/login/oauth/authorize?client_id=${process.env.OST_GITHUB_ID}&scope=repo%2C%20user&response_type=code`
-  )
+  const scopes = ['read:user', 'repo']
+
+  const url = new URL('https://github.com/login/oauth/authorize')
+
+  url.searchParams.append('client_id', process.env.OST_GITHUB_ID ?? '')
+  url.searchParams.append('scopes', scopes.join(' '))
+  url.searchParams.append('response_type', 'code')
+
+  redirect(url.toString())
 }

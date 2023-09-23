@@ -18,7 +18,19 @@ Requirements:
 
 - A [GitHub](https://github.com) account.
 
-Outstatic uses GitHub Oauth for authentication. Before we start you'll need to create a GitHub OAuth app:
+### **Initiating Setup: GitHub Authentication**
+
+Before diving in, it's essential to configure GitHub Authentication for your project. Outstatic accommodates both **GitHub OAuth** and **GitHub Apps** for authentication purposes:
+
+- **GitHub OAuth:** easier and quicker to set up, ideal for simpler integrations.
+
+- **GitHub Apps:** setup is generally more complex, providing a refined level of access and control.
+
+For those opting for GitHub Apps, please refer to the relevant [GitHub Apps Authentication](/docs/github-apps-authentication) documentation.
+
+#### Setting up a GitHub OAuth Application:
+
+Let’s walk through the steps to create a GitHub OAuth Application, streamlining your project’s initial setup:
 
 - First go to the "Register a new OAuth application" page on GitHub by [clicking here](https://github.com/settings/applications/new).
 
@@ -183,3 +195,4 @@ OST_TOKEN_SECRET=A_RANDOM_TOKEN
 ```
 
 To learn more about all the available environment variables, see the [Environment Variables ](https://outstatic.com/docs/environment-variables)section of the docs.
+
