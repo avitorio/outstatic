@@ -1,6 +1,6 @@
 {
-  "commit": "82f4d266ba8f48cad7a79409de0861a449ebadd3",
-  "generated": "Sat, 23 Sep 2023 19:04:16 GMT",
+  "commit": "be5c6708424ebff6c0ba0fc2b0bdf5bc1d101b12",
+  "generated": "2023-09-23T19:10:19.760Z",
   "metadata": [
     {
       "__outstatic": {
@@ -216,6 +216,24 @@
       "slug": "using-with-next-js-12",
       "status": "draft",
       "title": "Using with Next.js 12"
+    },
+    {
+      "__outstatic": {
+        "commit": "be5c6708424ebff6c0ba0fc2b0bdf5bc1d101b12",
+        "hash": "1391498526",
+        "path": "outstatic/content/docs/github-apps-authentication.md"
+      },
+      "author": {
+        "name": "Anthony Quéré",
+        "picture": "https://avatars.githubusercontent.com/u/47711333?v=4"
+      },
+      "collection": "docs",
+      "coverImage": "",
+      "description": "",
+      "publishedAt": "2023-08-04T21:00:00.000Z",
+      "slug": "github-apps-authentication",
+      "status": "draft",
+      "title": "GitHub Apps Authentication"
     }
   ]
 }

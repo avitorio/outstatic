@@ -1,16 +1,16 @@
 ---
-title: 'GitHub Application'
+title: 'GitHub Apps Authentication'
 status: 'draft'
 author:
   name: 'Anthony Quéré'
   picture: 'https://avatars.githubusercontent.com/u/47711333?v=4'
-slug: 'github-application'
+slug: 'github-apps-authentication'
 description: ''
 coverImage: ''
 publishedAt: '2023-08-04T21:00:00.000Z'
 ---
 
-## Use a GitHub Application
+## Use Github Apps for Authentication
 
 GitHub Documentation recommands the usage of GitHub Applications instead of OAuth Applications as stated in [this article](https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/differences-between-github-apps-and-oauth-apps).
 
@@ -41,5 +41,4 @@ Outstatic can work with GitHub Applications as well as Oauth applications out of
 - You can select to give permission to all repositories inside the account/organization but it is best to choose "Only select repositories" and add your repository there. (You can still change your app permission in the account/organization settings).
 
 Then you only need to follow the [Getting Started Guide](/docs/getting-started) to configure your application with these values.
-
 
