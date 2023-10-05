@@ -56,12 +56,14 @@ async function fetchGitHubUser(token: string) {
 
 async function checkRepository(token: string, userName: string) {
   const repoOwner = process.env.OST_REPO_OWNER || userName
-  const url = `https://api.github.com/repos/${repoOwner}/${process.env.OST_REPO_SLUG}`
-  const response = await fetch(url, {
-    headers: {
-      Authorization: `token ${token}`
+  const response = await fetch(
+    `https://api.github.com/repos/${repoOwner}/${process.env.OST_REPO_SLUG}`,
+    {
+      headers: {
+        Authorization: `token ${token}`
+      }
     }
-  })
+  )
   if (response.status === 200) return true
   else return false
 }
