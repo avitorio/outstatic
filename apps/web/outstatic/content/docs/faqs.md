@@ -7,12 +7,22 @@ author:
 slug: 'faqs'
 description: ''
 coverImage: ''
-publishedAt: '2023-08-06T12:07:51.000Z'
+publishedAt: '2023-10-05T12:07:51.000Z'
 ---
+
+## Troubleshooting Login and Repository Access Issues.
+
+Many users encounter login issues due to either missing the correct environment variables or lacking the necessary permissions for a repository.
+
+If you're using Outstatic with a GitHub repository you don't own, ensure you've set the `OST_REPO_OWNER` environment variable to the repository's owner.
+
+For repositories you own, ensure the `OST_REPO_SLUG` environment variable reflects the correct repository name. Remember, the repository name shouldn't include the username. For instance, use `outstatic` instead of `avitorio/outstatic` for the `OST_REPO_SLUG`.
+
+Lastly, if you're attempting to access a repository you don't own, ensure the repository owner has granted you collaborator access. Without this, you won't have full dashboard access.
 
 ## I already have a Next.js Markdown blog, how do I start using Outstatic?
 
-Follow the [**Add to Next.js**](/docs/getting-started#adding-outstatic-to-a-nextjs-website)\*\* \*\*documentation. Once finished, log in to your Outstatic dashboard, create collections that match your content and then copy the .md files into the collection directories inside `/outstatic/content`, for example: `/outstatic/content/blog/my-blog-post.md`.
+Follow the [**Add to Next.js**](/docs/getting-started#adding-outstatic-to-a-nextjs-website) documentation. Once finished, log in to your Outstatic dashboard, create collections that match your content and then copy the .md files into the collection directories inside `/outstatic/content`, for example: `/outstatic/content/blog/my-blog-post.md`.
 
 Don't forget to recreate the Metadata Database with your new posts by going to Settings > Rebuild Metadata:
 
@@ -32,4 +42,5 @@ Yes. We have seen examples of websites being launched on Netlify and other provi
 
 We specified Vercel on the documentation as it is the only platform we've tried Outstatic on. I don't see why it wouldn't work on other or your own preferred setup.
 
-If you try a different hosting/deploy approach, please [let us know](https://twitter.com/outstatic)!
+If you try a different hosting/deploy approach, please [let us know](https://twitter.com/outstatic)
+

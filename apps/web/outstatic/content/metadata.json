@@ -1,6 +1,6 @@
 {
-  "commit": "60f9e6b188a6872b415f6c9db4ac4ab21cdaad92",
-  "generated": "2023-09-12T10:52:48.380Z",
+  "commit": "743b05c529db34e3aecb1ae464b741ca9fdbd59a",
+  "generated": "2023-10-05T16:52:40.490Z",
   "metadata": [
     {
       "__outstatic": {
@@ -147,8 +147,8 @@
     },
     {
       "__outstatic": {
-        "commit": "60f9e6b188a6872b415f6c9db4ac4ab21cdaad92",
-        "hash": "3629486105",
+        "commit": "743b05c529db34e3aecb1ae464b741ca9fdbd59a",
+        "hash": "521535048",
         "path": "outstatic/content/docs/faqs.md"
       },
       "author": {
@@ -158,7 +158,7 @@
       "collection": "docs",
       "coverImage": "",
       "description": "",
-      "publishedAt": "2023-08-06T12:07:51.000Z",
+      "publishedAt": "2023-10-05T12:07:51.000Z",
       "slug": "faqs",
       "status": "published",
       "title": "FAQs"
