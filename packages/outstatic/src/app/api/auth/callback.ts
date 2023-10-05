@@ -54,16 +54,15 @@ async function fetchGitHubUser(token: string) {
   return await request.json()
 }
 
-async function checkCollaborator(token: string, userName: string) {
-  const response = await fetch(
-    `https://api.github.com/repos/${process.env.OST_REPO_OWNER}/${process.env.OST_REPO_SLUG}/collaborators/${userName}`,
-    {
-      headers: {
-        Authorization: `token ${token}`
-      }
+async function checkRepository(token: string, userName: string) {
+  const repoOwner = process.env.OST_REPO_OWNER || userName
+  const url = `https://api.github.com/repos/${repoOwner}/${process.env.OST_REPO_SLUG}`
+  const response = await fetch(url, {
+    headers: {
+      Authorization: `token ${token}`
     }
-  )
-  if (response.status === 204) return true
+  })
+  if (response.status === 200) return true
   else return false
 }
 
@@ -83,24 +82,19 @@ router
       return NextResponse.redirect(url)
     }
   })
-  .get(async (req, res) => {
+  .get(async (req) => {
     const code = req?.nextUrl.searchParams?.get('code') as string
     const access_token = await getAccessToken(code)
     req.session.token = access_token
     const userData = await fetchGitHubUser(access_token || '')
 
-    if (process.env.OST_REPO_OWNER) {
-      const isCollaborator = await checkCollaborator(
-        req.session.token,
-        userData.login
-      )
+    const repoExists = checkRepository(req.session.token, userData.login)
 
-      if (!isCollaborator) {
-        return NextResponse.json(
-          { error: 'not-collaborator' },
-          { status: 403, statusText: 'Forbidden' }
-        )
-      }
+    if (!repoExists) {
+      return NextResponse.json(
+        { error: 'repository-not-found' },
+        { status: 404, statusText: 'Repository not found' }
+      )
     }
 
     if (!userData.email) {
