@@ -113,7 +113,6 @@ router
     const [repoExists, isCollaborator] = await checks
 
     if (!repoExists) {
-      console.log({ repoExists })
       return NextResponse.json(
         { error: 'repository-not-found' },
         { status: 404, statusText: 'Repository not found' }
