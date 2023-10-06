@@ -1,6 +1,7 @@
 import fs from 'fs'
 import { join } from 'path'
 import matter from 'gray-matter'
+import { OstDocument } from '../types/public'
 
 // metadata db features
 export { load } from './metadata/load'
@@ -23,7 +24,7 @@ export function getDocumentBySlug(
   collection: string,
   slug: string,
   fields: string[] = []
-) {
+): OstDocument | null {
   try {
     const realSlug = slug.replace(MD_MDX_REGEXP, '')
     const collectionsPath = join(CONTENT_PATH, collection)
@@ -38,7 +39,7 @@ export function getDocumentBySlug(
     const items: Items = {}
 
     if (data['status'] === 'draft') {
-      return {}
+      return null
     }
 
     // Ensure only the minimal needed data is exposed
@@ -55,18 +56,23 @@ export function getDocumentBySlug(
       }
     })
 
-    return items
+    return items as OstDocument
   } catch (error) {
     console.error({ getDocumentBySlug: error })
-    return {}
+    return null
   }
 }
 
 export function getDocuments(collection: string, fields: string[] = []) {
   const slugs = getDocumentSlugs(collection)
   const documents = slugs
-    .map((slug) =>
-      getDocumentBySlug(collection, slug, [...fields, 'publishedAt', 'status'])
+    .map(
+      (slug) =>
+        getDocumentBySlug(collection, slug, [
+          ...fields,
+          'publishedAt',
+          'status'
+        ]) as OstDocument
     )
     .filter((document) => document.status === 'published')
     // sort documents by date in descending order
