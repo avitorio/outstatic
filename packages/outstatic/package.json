@@ -1,6 +1,6 @@
 {
   "name": "outstatic",
-  "version": "1.0.0-canary.2",
+  "version": "1.0.0-canary.3",
   "description": "Static site CMS for Next.js",
   "author": "Andre Vitorio <andre@vitorio.net>",
   "main": "./dist/index.js",
