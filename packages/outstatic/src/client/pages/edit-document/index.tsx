@@ -1,6 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import Head from 'next/head'
-import { useRouter, usePathname } from 'next/navigation'
+import { usePathname } from 'next/navigation'
 import { singular } from 'pluralize'
 import { useEffect, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
@@ -22,7 +22,6 @@ import useSubmitDocument from '../../../utils/hooks/useSubmitDocument'
 import { useDocumentUpdateEffect } from '../../../utils/hooks/useDocumentUpdateEffect'
 
 export default function EditDocument({ collection }: { collection: string }) {
-  const router = useRouter()
   const pathname = usePathname()
   const [slug, setSlug] = useState(
     pathname.split('/').pop() || `/${collection}/new`
