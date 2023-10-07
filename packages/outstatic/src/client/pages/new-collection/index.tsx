@@ -2,10 +2,9 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { plural } from 'pluralize'
 import { useContext, useEffect, useState } from 'react'
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form'
-import { convert } from 'url-slug'
+import { slugify } from 'transliteration'
 import * as yup from 'yup'
 import { AdminLayout, Input } from '../../../components'
 import Alert from '../../../components/Alert'
@@ -31,13 +30,12 @@ export default function NewCollection() {
   const [createCommit] = useCreateCommitMutation()
   const fetchOid = useOid()
   const [hasChanges, setHasChanges] = useState(false)
-  const [pluralized, setPlural] = useState('')
+  const [collectionName, setCollectionName] = useState('')
   const pagesRegex = new RegExp(`^(?!${pages.join('$|')}$)`, 'i')
   const createCollection: yup.SchemaOf<Collection> = yup.object().shape({
     name: yup
       .string()
-      .matches(pagesRegex, `${pluralized} is already taken.`)
-      .matches(/^[aA-zZ\s]+$/, 'Only alphabets are allowed for this field.')
+      .matches(pagesRegex, `${collectionName} is already taken.`)
       .required('Collection name is required.')
   })
   const [loading, setLoading] = useState(false)
@@ -53,7 +51,7 @@ export default function NewCollection() {
     try {
       const oid = await fetchOid()
       const owner = repoOwner || session?.user?.login || ''
-      const collection = convert(name, { dictionary: { "'": '' } })
+      const collection = slugify(name)
       const commitInput = collectionCommitInput({
         owner,
         oid,
@@ -115,13 +113,13 @@ export default function NewCollection() {
             className="w-full max-w-sm md:w-80"
             placeholder="Ex: Posts"
             type="text"
-            helperText="Use the plural form of the collection name, ex: Docs"
+            helperText="We suggest naming the collection in plural form, ex: Docs"
             registerOptions={{
               onChange: (e) => {
-                setPlural(plural(e.target.value))
+                setCollectionName(e.target.value)
               },
               onBlur: (e) => {
-                methods.setValue('name', plural(e.target.value))
+                methods.setValue('name', e.target.value)
               }
             }}
           />
@@ -159,11 +157,11 @@ export default function NewCollection() {
             )}
           </button>
         </form>
-        {pluralized && (
+        {collectionName && (
           <Alert type="info">
             The collection will appear as{' '}
-            <span className="font-semibold capitalize">{pluralized}</span> on
-            the sidebar.
+            <span className="font-semibold capitalize">{collectionName}</span>{' '}
+            on the sidebar.
           </Alert>
         )}
       </AdminLayout>
