@@ -25,7 +25,7 @@ const router = createEdgeRouter<Request, RequestContext>()
 const getSession = nextSession()
 
 export default async function GET(request: Request) {
-  return router.run(request, { params: { id: '1' } })
+  return router.run(request, { params: { id: '1' } }) as Promise<Response>
 }
 
 async function getAccessToken(code: string) {

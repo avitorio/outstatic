@@ -8,8 +8,6 @@ export default async function GET(req: NextRequest) {
     path: '/'
   })
 
-  const url = req.nextUrl.clone()
-  url.pathname = '/outstatic'
-  url.search = ''
-  return NextResponse.redirect(url)
+  const homeUrl = new URL('/', req.url)
+  return NextResponse.redirect(homeUrl)
 }

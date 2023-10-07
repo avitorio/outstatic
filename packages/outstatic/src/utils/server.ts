@@ -29,6 +29,13 @@ export function getDocumentBySlug(
     const realSlug = slug.replace(MD_MDX_REGEXP, '')
     const collectionsPath = join(CONTENT_PATH, collection)
     const fullPath = join(collectionsPath, `${realSlug}.md`)
+
+    // Check if the file exists
+    if (!fs.existsSync(fullPath)) {
+      console.error('File does not exist:', fullPath)
+      return null
+    }
+
     const fileContents = fs.readFileSync(fullPath, 'utf8')
     const { data, content } = matter(fileContents)
 
