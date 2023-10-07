@@ -1,6 +1,6 @@
 {
   "name": "outstatic",
-  "version": "1.0.0-canary.3",
+  "version": "1.0.0-canary.4",
   "description": "Static site CMS for Next.js",
   "author": "Andre Vitorio <andre@vitorio.net>",
   "main": "./dist/index.js",
@@ -111,5 +111,8 @@
     "next": "^13",
     "react": "^17.0.2 || ^18",
     "react-dom": "^17.0.2 || ^18"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
