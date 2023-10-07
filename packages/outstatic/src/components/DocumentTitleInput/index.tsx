@@ -3,7 +3,7 @@ import { useFormContext } from 'react-hook-form'
 import TextareaAutosize, {
   TextareaAutosizeProps
 } from 'react-textarea-autosize'
-import convert from 'url-slug'
+import { slugify } from 'transliteration'
 import { DocumentContext } from '../../context'
 
 export type DocumentTitleProps = {
@@ -44,12 +44,7 @@ export default function DocumentTitle({
               )
               const last = segments.pop() || segments.pop()
               if (last === 'new') {
-                setValue(
-                  'slug',
-                  convert(e.target.value.toLowerCase(), {
-                    dictionary: { "'": '' }
-                  })
-                )
+                setValue('slug', slugify(e.target.value))
               }
             }
           })}

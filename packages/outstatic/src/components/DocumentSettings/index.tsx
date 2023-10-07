@@ -1,7 +1,7 @@
 import { useRouter } from 'next/navigation'
 import { useContext } from 'react'
 import { RegisterOptions, useFormContext } from 'react-hook-form'
-import { convert } from 'url-slug'
+import { slugify } from 'transliteration'
 import { DocumentContext } from '../../context'
 import Accordion from '../Accordion'
 import DateTimePicker from '../DateTimePicker'
@@ -178,7 +178,7 @@ const DocumentSettings = ({
                   'slug',
                   lastChar === ' ' || lastChar === '-'
                     ? e.target.value
-                    : convert(e.target.value, { dictionary: { "'": '' } })
+                    : slugify(e.target.value)
                 )
               }
             }}
