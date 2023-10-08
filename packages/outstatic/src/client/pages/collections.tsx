@@ -41,6 +41,7 @@ export default function Collections() {
 
       await createCommit({ variables: commitInput })
       setShowDeleteModal(false)
+      setDeleting(false)
       removePage(collection)
     } catch (error) {}
   }
