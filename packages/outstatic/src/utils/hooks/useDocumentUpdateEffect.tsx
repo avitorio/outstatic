@@ -42,18 +42,22 @@ export const useDocumentUpdateEffect = ({
       const { data, content } = matter(mdContent)
 
       const parseContent = () => {
-        const converter = new showdown.Converter({ noHeaderId: true })
-        const newContent = converter.makeHtml(content)
-
-        // fetch images from GitHub in case deploy is not done yet
-        return replaceImageSrcRoot(
-          newContent,
-          new RegExp(`^/${escapeRegExp(IMAGES_PATH)}`, 'gi'),
-          '/api/outstatic/images/'
+        const API_IMAGES_PATH = '/api/outstatic/images/'
+        // Prepare regex
+        let regex = new RegExp(
+          `(\\!\\[[^\\]]*\\]\\()/${IMAGES_PATH.replace(/\//g, '\\/')}([^)]+)`,
+          'g'
         )
+
+        // Replace the path for image files in Markdown image syntax, regardless of file format
+        let result = content.replace(regex, `$1${API_IMAGES_PATH}$2`)
+        // fetch images from GitHub in case deploy is not done yet
+        return result
       }
 
       const parsedContent = parseContent()
+
+      console.log(parsedContent)
 
       const newDate = data.publishedAt
         ? new Date(data.publishedAt)
