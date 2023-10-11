@@ -112,24 +112,7 @@ const items = [
     title: 'Image',
     description: 'Upload or embed with a link.',
     searchTerms: ['photo', 'picture', 'media'],
-    icon: <ImageIcon size={18} />,
-    subItems: [
-      {
-        title: 'Image Upload',
-        description: 'Upload or embed with a link.',
-        searchTerms: ['upload', 'picture', 'media'],
-        icon: <ImageIcon size={18} />,
-        command: () => {}
-      },
-      {
-        title: 'Image from URL',
-        description: 'Upload or embed with a link.',
-        searchTerms: ['photo', 'picture', 'media'],
-        icon: <ImageIcon size={18} />,
-        command: ({ editor, range }: CommandProps) =>
-          editor.chain().focus().deleteRange(range).toggleCodeBlock().run()
-      }
-    ]
+    icon: <ImageIcon size={18} />
   }
 ]
 
@@ -148,17 +131,11 @@ const filterItems = (
       return true
     }
 
-    if (item.subItems && item.subItems.length > 0) {
-      item.subItems = filterItems(item.subItems, search)
-      return item?.subItems && item?.subItems.length > 0
-    }
-
     return false
   })
 }
 
 export const getSuggestionItems = (props: { query: string }) => {
-  console.log({ props })
   const { query } = props
   if (typeof query !== 'string' || query.length === 0) {
     return items
