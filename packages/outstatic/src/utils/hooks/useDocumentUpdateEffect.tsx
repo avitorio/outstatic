@@ -57,8 +57,6 @@ export const useDocumentUpdateEffect = ({
 
       const parsedContent = parseContent()
 
-      console.log(parsedContent)
-
       const newDate = data.publishedAt
         ? new Date(data.publishedAt)
         : getLocalDate()
