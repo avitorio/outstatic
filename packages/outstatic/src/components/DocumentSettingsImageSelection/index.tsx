@@ -49,7 +49,6 @@ const DocumentSettingsImageSelection = ({
       const file = currentTarget.files[0]
       const blob = URL.createObjectURL(file)
       editDocument(name, blob)
-      setShowImage(true)
       const reader = new FileReader()
       reader.readAsArrayBuffer(file)
       reader.onloadend = () => {
