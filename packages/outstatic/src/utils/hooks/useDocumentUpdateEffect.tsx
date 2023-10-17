@@ -1,12 +1,9 @@
 import { Dispatch, SetStateAction, useEffect } from 'react'
-import showdown from 'showdown'
 import matter from 'gray-matter'
 import { UseFormReturn } from 'react-hook-form'
 import { Document, Session } from '../../types'
 import { Editor } from '@tiptap/react'
-import { replaceImageSrcRoot } from '../replaceImageSrc'
-import { escapeRegExp } from '../escapeRegExp'
-import { IMAGES_PATH } from '../constants'
+import { API_IMAGES_PATH, IMAGES_PATH } from '../constants'
 import { getLocalDate } from '../getLocalDate'
 import useFileQuery from './useFileQuery'
 
@@ -42,7 +39,6 @@ export const useDocumentUpdateEffect = ({
       const { data, content } = matter(mdContent)
 
       const parseContent = () => {
-        const API_IMAGES_PATH = '/api/outstatic/images/'
         // Prepare regex
         let regex = new RegExp(
           `(\\!\\[[^\\]]*\\]\\()/${IMAGES_PATH.replace(/\//g, '\\/')}([^)]+)`,

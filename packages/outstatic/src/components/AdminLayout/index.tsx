@@ -5,6 +5,7 @@ import { useState } from 'react'
 import { useOstSession } from '../../utils/auth/hooks'
 import AdminHeader from '../AdminHeader'
 import Sidebar from '../Sidebar'
+import { Toaster } from 'sonner'
 
 export type AdminLayoutProps = {
   error?: string | ApolloError
@@ -39,6 +40,7 @@ export default function AdminLayout({
         <title>{title ? `${title} | Outstatic` : 'Outstatic'}</title>
       </Head>
       <div id="outstatic">
+        <Toaster richColors />
         {status === 'loading' ? null : (
           <div className="flex h-screen flex-col bg-white text-black">
             <AdminHeader

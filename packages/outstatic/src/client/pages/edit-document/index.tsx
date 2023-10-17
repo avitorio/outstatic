@@ -11,7 +11,7 @@ import {
   DocumentTitleInput
 } from '../../../components'
 import { DocumentContext } from '../../../context'
-import { CustomFields, Document, FileType } from '../../../types'
+import { CustomFields, Document } from '../../../types'
 import { useOstSession } from '../../../utils/auth/hooks'
 import { deepReplace } from '../../../utils/deepReplace'
 import useNavigationLock from '../../../utils/hooks/useNavigationLock'
@@ -20,6 +20,7 @@ import { convertSchemaToYup, editDocumentSchema } from '../../../utils/yup'
 import useFileQuery from '../../../utils/hooks/useFileQuery'
 import useSubmitDocument from '../../../utils/hooks/useSubmitDocument'
 import { useDocumentUpdateEffect } from '../../../utils/hooks/useDocumentUpdateEffect'
+import { useFileStore } from '../../../utils/hooks/useFileStore'
 
 export default function EditDocument({ collection }: { collection: string }) {
   const pathname = usePathname()
@@ -29,12 +30,12 @@ export default function EditDocument({ collection }: { collection: string }) {
   const { session } = useOstSession()
   const [loading, setLoading] = useState(false)
   const [hasChanges, setHasChanges] = useState(false)
-  const [files, setFiles] = useState<FileType[]>([])
   const [showDelete, setShowDelete] = useState(false)
   const [documentSchema, setDocumentSchema] = useState(editDocumentSchema)
   const methods = useForm<Document>({ resolver: yupResolver(documentSchema) })
   const { editor } = useTipTap({ ...methods })
   const [customFields, setCustomFields] = useState<CustomFields>({})
+  const files = useFileStore((state) => state.files)
 
   const editDocument = (property: string, value: any) => {
     const formValues = methods.getValues()
@@ -57,7 +58,8 @@ export default function EditDocument({ collection }: { collection: string }) {
     collection,
     customFields,
     setCustomFields,
-    setHasChanges
+    setHasChanges,
+    editor
   })
 
   useEffect(() => {
@@ -75,6 +77,7 @@ export default function EditDocument({ collection }: { collection: string }) {
     setShowDelete
   })
 
+  // Add custom fields
   useEffect(() => {
     const documentQueryObject = schemaQueryData?.repository?.object
     if (documentQueryObject?.__typename === 'Blob') {
@@ -108,8 +111,6 @@ export default function EditDocument({ collection }: { collection: string }) {
           editor,
           document: methods.getValues(),
           editDocument,
-          files,
-          setFiles,
           hasChanges,
           collection
         }}

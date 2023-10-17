@@ -130,7 +130,6 @@ const CommandList = ({
         editor={editor as Editor}
         setImageMenu={setImageMenu}
         range={range}
-        selectedIndex={selectedIndex}
       />
     ) : (
       <BaseCommandList

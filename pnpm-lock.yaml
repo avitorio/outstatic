@@ -219,7 +219,6 @@ importers:
       '@types/react': ^18.0.15
       '@types/react-datepicker': ^4.4.2
       '@types/react-dom': ^18.0.6
-      '@types/showdown': ^2.0.0
       '@types/testing-library__jest-dom': ^5.14.5
       camelcase: ^6.3.0
       clsx: ^1.2.1
@@ -258,7 +257,6 @@ importers:
       react-select: ^5.7.3
       react-textarea-autosize: ^8.3.4
       schema-to-yup: ^1.12.9
-      showdown: ^2.1.0
       sift: ^16.0.1
       sonner: ^0.6.2
       swr: ^1.3.0
@@ -274,6 +272,7 @@ importers:
       url-slug: ^3.0.4
       view: link:@tiptap/pm/view
       yup: ^0.32.11
+      zustand: ^4.4.3
     dependencies:
       '@apollo/client': 3.7.16_5ztug3kkjzdoe5zdptj2lue3qa
       '@hapi/iron': 7.0.1
@@ -319,7 +318,6 @@ importers:
       react-select: 5.7.3_qzycrpzqvmvb7wd2jdibmpq2cy
       react-textarea-autosize: 8.5.2_i73ekzlbntu7jol6ph2fvy4mga
       schema-to-yup: 1.12.15
-      showdown: 2.1.0
       sift: 16.0.1
       sonner: 0.6.2_biqbaboplfbrettd7655fr4n2y
       swr: 1.3.0_react@18.2.0
@@ -331,6 +329,7 @@ importers:
       url-slug: 3.0.6
       view: link:@tiptap/pm/view
       yup: 0.32.11
+      zustand: 4.4.3_i73ekzlbntu7jol6ph2fvy4mga
     devDependencies:
       '@babel/preset-typescript': 7.22.5
       '@graphql-codegen/cli': 2.16.5_giiylfulh7m7d2ieo6i7fok3hu
@@ -354,7 +353,6 @@ importers:
       '@types/react': 18.2.14
       '@types/react-datepicker': 4.11.2_biqbaboplfbrettd7655fr4n2y
       '@types/react-dom': 18.2.6
-      '@types/showdown': 2.0.1
       '@types/testing-library__jest-dom': 5.14.6
       concurrently: 7.6.0
       encoding: 0.1.13
@@ -3865,10 +3863,6 @@ packages:
       '@types/node': 20.2.5
     dev: true
 
-  /@types/showdown/2.0.1:
-    resolution: {integrity: sha512-xdnAw2nFqomkaL0QdtEk0t7yz26UkaVPl4v1pYJvtE1T0fmfQEH3JaxErEhGByEAl3zUZrkNBlneuJp0WJGqEA==}
-    dev: true
-
   /@types/stack-utils/2.0.1:
     resolution: {integrity: sha512-Hl219/BT5fLAaz6NDkSuhzasy49dwQS/DSdu4MdggFB8zcXv7vflBI3xp7FEmkmdDkBUI2bPUNeMttp2knYdxw==}
     dev: true
@@ -4973,11 +4967,6 @@ packages:
   /commander/4.1.1:
     resolution: {integrity: sha512-NOKm8xhkzAjzFx8B2v5OAHT+u5pRQc2UCa2Vq9jYL/31o2wi9mxBA7LIFs3sV5VSC49z6pEhfbMULvShKj26WA==}
     engines: {node: '>= 6'}
-
-  /commander/9.5.0:
-    resolution: {integrity: sha512-KRs7WVDKg86PWiuAqhDrAQnTXZKraVcCc6vFdL14qrZ/DcWwuRo7VoiYXalXO7S5GKpqYiVEwCbgFDfxNHKJBQ==}
-    engines: {node: ^12.20.0 || >=14}
-    dev: false
 
   /common-tags/1.8.2:
     resolution: {integrity: sha512-gk/Z852D2Wtb//0I+kRFNKKE9dIIVirjoqPoA1wJU+XePVXZfGeBpk45+A1rKO4Q43prqWBNY/MiIeRLbPWUaA==}
@@ -10671,13 +10660,6 @@ packages:
     resolution: {integrity: sha512-6j1W9l1iAs/4xYBI1SYOVZyFcCis9b4KCLQ8fgAGG07QvzaRLVVRQvAy85yNmmZSjYjg4MWh4gNvlPujU/5LpA==}
     dev: true
 
-  /showdown/2.1.0:
-    resolution: {integrity: sha512-/6NVYu4U819R2pUIk79n67SYgJHWCce0a5xTP979WbNp0FL9MN1I1QK662IDU1b6JzKTvmhgI7T7JYIxBi3kMQ==}
-    hasBin: true
-    dependencies:
-      commander: 9.5.0
-    dev: false
-
   /side-channel/1.0.4:
     resolution: {integrity: sha512-q5XPytqFEIKHkGdiMIrY10mvLRvnQh42/+GoBlFW3b2LXLE2xxJpZFdm94we0BaoV3RwJyGqg5wS7epxTv0Zvw==}
     dependencies:
@@ -11755,6 +11737,14 @@ packages:
       use-isomorphic-layout-effect: 1.1.2_i73ekzlbntu7jol6ph2fvy4mga
     dev: false
 
+  /use-sync-external-store/1.2.0_react@18.2.0:
+    resolution: {integrity: sha512-eEgnFxGQ1Ife9bzYs6VLi8/4X6CObHMw9Qr9tPY43iKwsPw8xE8+EFsf/2cFZ5S3esXgpWgtSCtLNS41F+sKPA==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      react: 18.2.0
+    dev: false
+
   /util-deprecate/1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
 
@@ -12165,6 +12155,26 @@ packages:
   /zod/3.21.4:
     resolution: {integrity: sha512-m46AKbrzKVzOzs/DZgVnG5H55N1sv1M8qZU3A8RIKbs3mrACDNeIOeilDymVb2HdmP8uwshOCF4uJ8uM9rCqJw==}
     dev: true
+
+  /zustand/4.4.3_i73ekzlbntu7jol6ph2fvy4mga:
+    resolution: {integrity: sha512-oRy+X3ZazZvLfmv6viIaQmtLOMeij1noakIsK/Y47PWYhT8glfXzQ4j0YcP5i0P0qI1A4rIB//SGROGyZhx91A==}
+    engines: {node: '>=12.7.0'}
+    peerDependencies:
+      '@types/react': '>=16.8'
+      immer: '>=9.0'
+      react: '>=16.8'
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      immer:
+        optional: true
+      react:
+        optional: true
+    dependencies:
+      '@types/react': 18.2.14
+      react: 18.2.0
+      use-sync-external-store: 1.2.0_react@18.2.0
+    dev: false
 
   /zwitch/2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}

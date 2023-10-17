@@ -1,7 +1,7 @@
 import {
   CommandItemProps,
   updateScrollView
-} from '../../extensions/slash-command'
+} from '../../extensions/SlashCommand'
 import { useLayoutEffect, useRef } from 'react'
 
 export const BaseCommandList = ({

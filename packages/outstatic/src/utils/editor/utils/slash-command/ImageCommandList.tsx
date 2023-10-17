@@ -1,26 +1,23 @@
 import { Editor, Range } from '@tiptap/react'
 import {
   ChangeEvent,
-  useContext,
   useEffect,
   useLayoutEffect,
   useRef,
   useState
 } from 'react'
-import { DocumentContext } from '../../../../context'
-import { FileType } from '../../../../types'
 import MDEMenuButton from '../../../../components/MDEMenuButton'
 import {
   CommandItemProps,
   updateScrollView
-} from '../../../../utils/editor/extensions/slash-command'
+} from '../../../../utils/editor/extensions/SlashCommand'
 import { Link, Upload } from 'lucide-react'
+import { addImage } from '../addImage'
 
 type ImageCommandListProps = {
   editor: Editor
   setImageMenu: (value: boolean) => void
   range: Range
-  selectedIndex: number
 }
 
 const isValidUrl = (urlString: string) => {
@@ -51,7 +48,6 @@ const ImageCommandList = ({
   range,
   setImageMenu
 }: ImageCommandListProps) => {
-  const { setFiles } = useContext(DocumentContext)
   const [showLink, setShowLink] = useState(false)
   const [imageUrl, setImageUrl] = useState('')
   const [errors, setErrors] = useState({ imageUrl: '', uploadImage: '' })
@@ -66,22 +62,9 @@ const ImageCommandList = ({
     input.onchange = async () => {
       if (input.files?.length) {
         const file = input.files[0]
-        const blob = URL.createObjectURL(file)
-        editor.chain().focus().setImage({ src: blob, alt: '' }).run()
-        const reader = new FileReader()
-        reader.readAsArrayBuffer(file)
-        reader.onloadend = () => {
-          const bytes = reader.result as string
-          const buffer = Buffer.from(bytes, 'binary')
-          setFiles((files: FileType[]) => [
-            ...files,
-            {
-              type: 'images',
-              blob,
-              filename: file.name,
-              content: buffer.toString('base64')
-            }
-          ])
+        const image = addImage(file)
+        if (image) {
+          editor.chain().focus().setImage({ src: image, alt: '' }).run()
         }
       }
     }

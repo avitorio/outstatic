@@ -1,4 +1,5 @@
 import { EditorProps } from '@tiptap/pm/view'
+import { addImage } from './utils/addImage'
 
 export const TiptapEditorProps: EditorProps = {
   attributes: {
@@ -22,9 +23,18 @@ export const TiptapEditorProps: EditorProps = {
       event.clipboardData.files[0]
     ) {
       event.preventDefault()
-      const file = event.clipboardData.files[0]
-      const pos = view.state.selection.from
-      return true
+      const items = Array.from(event.clipboardData?.items || [])
+      for (const item of items) {
+        if (item.type.indexOf('image') === 0) {
+          const { schema } = view.state
+          const file = event.clipboardData.files[0]
+          const image = addImage(file)
+          const node = schema.nodes.image.create({ src: image, alt: '' })
+          const transaction = view.state.tr.replaceSelectionWith(node)
+          view.dispatch(transaction)
+          return true
+        }
+      }
     }
     return false
   },
@@ -36,14 +46,16 @@ export const TiptapEditorProps: EditorProps = {
       event.dataTransfer.files[0]
     ) {
       event.preventDefault()
-      const file = event.dataTransfer.files[0]
-      const coordinates = view.posAtCoords({
-        left: event.clientX,
-        top: event.clientY
-      })
-      // here we deduct 1 from the pos or else the image will create an extra node
-      return true
+      if (event.dataTransfer.files[0] !== undefined) {
+        const file = event.dataTransfer.files[0]
+        const image = addImage(file)
+        const { schema } = view.state
+        const node = schema.nodes.image.create({ src: image, alt: '' })
+        const transaction = view.state.tr.replaceSelectionWith(node)
+        view.dispatch(transaction)
+        return true
+      }
+      return false
     }
-    return false
   }
 }

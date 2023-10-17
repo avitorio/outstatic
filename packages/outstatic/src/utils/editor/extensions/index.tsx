@@ -12,8 +12,7 @@ import Highlight from '@tiptap/extension-highlight'
 import { ReactNodeViewRenderer } from '@tiptap/react'
 import lowlight from 'lowlight'
 import CodeBlock from './CodeBlock'
-
-import SlashCommand from './slash-command'
+import SlashCommand from './SlashCommand'
 import { InputRule } from '@tiptap/core'
 
 export const TiptapExtensions = [
@@ -97,7 +96,7 @@ export const TiptapExtensions = [
   }),
   Markdown.configure({
     html: false,
-    transformCopiedText: true
+    transformPastedText: true
   }),
   Image.extend({
     renderHTML({ HTMLAttributes }) {

@@ -9,7 +9,7 @@ import {
   Image as ImageIcon,
   Code
 } from 'lucide-react'
-import { CommandItemProps, CommandProps } from '../../extensions/slash-command'
+import { CommandItemProps, CommandProps } from '../../extensions/SlashCommand'
 
 const items = [
   {

@@ -210,7 +210,7 @@ input.react-datepicker-time__input {
 }
 
 .ProseMirror img {
-  max-width: 100%;
+  max-width: 99%;
   height: auto;
   margin: 0;
   display: inline-block;
