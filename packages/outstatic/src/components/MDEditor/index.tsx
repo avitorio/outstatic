@@ -1,6 +1,5 @@
 import { Editor, EditorContent } from '@tiptap/react'
 import { useFormContext } from 'react-hook-form'
-import MDEFloatingMenu from '../MDEFloatingMenu'
 import MDEMenu from '../MDEMenu'
 
 interface MDEditorProps {
