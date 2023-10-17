@@ -88,7 +88,6 @@ importers:
       rehype-slug: ^5.0.1
       remark: ^14.0.2
       remark-html: ^15.0.1
-      tailwind-config: workspace:*
       tailwindcss: ^3.1.2
       tsconfig: workspace:*
       typescript: ^4.5.3
@@ -117,7 +116,6 @@ importers:
       rehype-autolink-headings: 6.1.1
       rehype-prism-plus: 1.6.1
       rehype-slug: 5.1.0
-      tailwind-config: link:../../packages/tailwind-config
       tailwindcss: 3.3.2
       tsconfig: link:../../packages/tsconfig
       typescript: 4.9.5
@@ -371,12 +369,6 @@ importers:
       tsconfig: link:../tsconfig
       tsup: 6.7.0_duj33tn3zrzs4zlnd3pdtrmypm
       typescript: 4.9.5
-
-  packages/tailwind-config:
-    specifiers:
-      tailwindcss: ^3.1.4
-    devDependencies:
-      tailwindcss: 3.3.2
 
   packages/tsconfig:
     specifiers: {}
