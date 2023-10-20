@@ -37,6 +37,7 @@ export const useDocumentUpdateEffect = ({
     if (documentQueryObject?.__typename === 'Blob') {
       let mdContent = documentQueryObject.text as string
       const { data, content } = matter(mdContent)
+
       const parsedContent = parseContent(content)
 
       const newDate = data.publishedAt
