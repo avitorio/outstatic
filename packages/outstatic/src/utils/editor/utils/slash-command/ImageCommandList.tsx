@@ -96,7 +96,7 @@ const ImageCommandList = ({
   }
 
   useEffect(() => {
-    const navigationKeys = ['ArrowUp', 'ArrowDown', 'Enter']
+    const navigationKeys = ['ArrowUp', 'ArrowDown', 'Enter', 'Escape']
     const onKeyDown = (e: KeyboardEvent) => {
       if (navigationKeys.includes(e.key)) {
         e.preventDefault()
@@ -112,13 +112,19 @@ const ImageCommandList = ({
           if (items[selectedIndex].title === 'Image Upload') {
             addImageFile()
           } else {
-            setShowLink(true)
+            showLink ? addImageUrl() : setShowLink(true)
           }
           return true
         }
         if (e.key === 'Escape') {
-          setImageMenu(false)
-          return false
+          console.log('escape')
+          if (showLink) {
+            setShowLink(false)
+          } else {
+            setImageMenu(false)
+            editor.chain().focus().run()
+          }
+          return true
         }
         return false
       }
@@ -128,7 +134,11 @@ const ImageCommandList = ({
     return () => {
       document.removeEventListener('keydown', onKeyDown)
     }
-  }, [selectedIndex])
+  }, [selectedIndex, showLink])
+
+  useEffect(() => {
+    editor.chain().blur().run()
+  }, [])
 
   useEffect(() => {
     setSelectedIndex(0)
@@ -159,14 +169,6 @@ const ImageCommandList = ({
               placeholder="Insert link here"
               onChange={handleImageInput}
               value={imageUrl}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  addImageUrl()
-                }
-                if (e.key === 'Escape') {
-                  setShowLink(false)
-                }
-              }}
               onFocus={() => setErrors({ ...errors, imageUrl: '' })}
               autoFocus
             />

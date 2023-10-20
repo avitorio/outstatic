@@ -1,18 +1,69 @@
+import { Editor } from '@tiptap/react'
 import {
   CommandItemProps,
   updateScrollView
 } from '../../extensions/SlashCommand'
-import { useLayoutEffect, useRef } from 'react'
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState
+} from 'react'
 
 export const BaseCommandList = ({
   items,
-  selectedIndex,
-  selectItem
+  command,
+  setImageMenu
 }: {
   items: CommandItemProps[]
-  selectedIndex: number
-  selectItem: (index: number) => void
+  setImageMenu: (value: boolean) => void
+  command: any
 }) => {
+  const [selectedIndex, setSelectedIndex] = useState(0)
+  const selectItem = useCallback(
+    (index: number) => {
+      const item = items[index]
+      if (item.title === 'Image') {
+        setImageMenu(true)
+      } else if (item) {
+        command(item)
+      }
+    },
+    [items]
+  )
+
+  useEffect(() => {
+    const navigationKeys = ['ArrowUp', 'ArrowDown', 'Enter']
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (navigationKeys.includes(e.key)) {
+        e.preventDefault()
+        if (e.key === 'ArrowUp') {
+          setSelectedIndex((selectedIndex + items.length - 1) % items.length)
+          return true
+        }
+        if (e.key === 'ArrowDown') {
+          setSelectedIndex((selectedIndex + 1) % items.length)
+          return true
+        }
+        if (e.key === 'Enter') {
+          selectItem(selectedIndex)
+          return true
+        }
+        return false
+      }
+    }
+
+    document.addEventListener('keydown', onKeyDown)
+    return () => {
+      document.removeEventListener('keydown', onKeyDown)
+    }
+  }, [items, selectItem, selectedIndex])
+
+  useEffect(() => {
+    setSelectedIndex(0)
+  }, [items])
+
   const commandListContainer = useRef<HTMLDivElement>(null)
 
   useLayoutEffect(() => {

@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, ReactNode } from 'react'
+import { useState, ReactNode, useEffect } from 'react'
 import { Range, Extension } from '@tiptap/core'
 import { Editor } from '@tiptap/react'
 import Suggestion from '@tiptap/suggestion'
@@ -78,64 +78,19 @@ const CommandList = ({
   range: Range
 }) => {
   const [imageMenu, setImageMenu] = useState(false)
-  const [selectedIndex, setSelectedIndex] = useState(0)
-
-  const selectItem = useCallback(
-    (index: number) => {
-      const item = items[index]
-
-      if (item.title === 'Image') {
-        setImageMenu(true)
-      } else if (item) {
-        command(item)
-      }
-    },
-    [items]
-  )
-
-  useEffect(() => {
-    const navigationKeys = ['ArrowUp', 'ArrowDown', 'Enter']
-    const onKeyDown = (e: KeyboardEvent) => {
-      if (navigationKeys.includes(e.key)) {
-        e.preventDefault()
-        if (e.key === 'ArrowUp') {
-          setSelectedIndex((selectedIndex + items.length - 1) % items.length)
-          return true
-        }
-        if (e.key === 'ArrowDown') {
-          setSelectedIndex((selectedIndex + 1) % items.length)
-          return true
-        }
-        if (e.key === 'Enter') {
-          selectItem(selectedIndex)
-          return true
-        }
-        return false
-      }
-    }
-
-    document.addEventListener('keydown', onKeyDown)
-    return () => {
-      document.removeEventListener('keydown', onKeyDown)
-    }
-  }, [items, selectItem, selectedIndex])
-
-  useEffect(() => {
-    setSelectedIndex(0)
-  }, [items])
 
   return items.length > 0 ? (
     imageMenu ? (
       <ImageCommandList
-        editor={editor as Editor}
+        editor={editor}
         setImageMenu={setImageMenu}
         range={range}
       />
     ) : (
       <BaseCommandList
-        selectedIndex={selectedIndex}
         items={items}
-        selectItem={selectItem}
+        command={command}
+        setImageMenu={setImageMenu}
       />
     )
   ) : null
