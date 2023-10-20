@@ -5,8 +5,6 @@ import HorizontalRule from '@tiptap/extension-horizontal-rule'
 import Link from '@tiptap/extension-link'
 import Placeholder from '@tiptap/extension-placeholder'
 import TiptapUnderline from '@tiptap/extension-underline'
-import TextStyle from '@tiptap/extension-text-style'
-import { Color } from '@tiptap/extension-color'
 import { Markdown } from 'tiptap-markdown'
 import Highlight from '@tiptap/extension-highlight'
 import { ReactNodeViewRenderer } from '@tiptap/react'
@@ -89,8 +87,6 @@ export const TiptapExtensions = [
   }),
   SlashCommand,
   TiptapUnderline,
-  TextStyle,
-  Color,
   Highlight.configure({
     multicolor: true
   }),
