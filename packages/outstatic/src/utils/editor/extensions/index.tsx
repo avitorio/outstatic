@@ -1,17 +1,17 @@
-import StarterKit from '@tiptap/starter-kit'
+import { InputRule } from '@tiptap/core'
 import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight'
-import Image from '@tiptap/extension-image'
+import Highlight from '@tiptap/extension-highlight'
 import HorizontalRule from '@tiptap/extension-horizontal-rule'
+import Image from '@tiptap/extension-image'
 import Link from '@tiptap/extension-link'
 import Placeholder from '@tiptap/extension-placeholder'
 import TiptapUnderline from '@tiptap/extension-underline'
-import { Markdown } from 'tiptap-markdown'
-import Highlight from '@tiptap/extension-highlight'
 import { ReactNodeViewRenderer } from '@tiptap/react'
+import StarterKit from '@tiptap/starter-kit'
 import lowlight from 'lowlight'
+import { Markdown } from 'tiptap-markdown'
 import CodeBlock from './CodeBlock'
 import SlashCommand from './SlashCommand'
-import { InputRule } from '@tiptap/core'
 
 export const TiptapExtensions = [
   StarterKit.configure({

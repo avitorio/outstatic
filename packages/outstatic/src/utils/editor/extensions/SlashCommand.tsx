@@ -1,12 +1,11 @@
-import { useState, ReactNode, useEffect } from 'react'
-import { Range, Extension } from '@tiptap/core'
-import { Editor } from '@tiptap/react'
+import { Extension, Range } from '@tiptap/core'
+import { Editor, ReactRenderer } from '@tiptap/react'
 import Suggestion from '@tiptap/suggestion'
-import { ReactRenderer } from '@tiptap/react'
+import { ReactNode, useState } from 'react'
 import tippy from 'tippy.js'
-import { getSuggestionItems } from '../utils/slash-command/getSuggestionItems'
 import { BaseCommandList } from '../utils/slash-command/BaseCommandList'
 import ImageCommandList from '../utils/slash-command/ImageCommandList'
+import { getSuggestionItems } from '../utils/slash-command/getSuggestionItems'
 
 export type CommandItemProps = {
   title: string

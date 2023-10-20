@@ -1,8 +1,3 @@
-import { Editor } from '@tiptap/react'
-import {
-  CommandItemProps,
-  updateScrollView
-} from '../../extensions/SlashCommand'
 import {
   useCallback,
   useEffect,
@@ -10,6 +5,10 @@ import {
   useRef,
   useState
 } from 'react'
+import {
+  CommandItemProps,
+  updateScrollView
+} from '../../extensions/SlashCommand'
 
 export const BaseCommandList = ({
   items,

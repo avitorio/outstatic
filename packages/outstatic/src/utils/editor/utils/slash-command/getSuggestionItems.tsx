@@ -1,13 +1,13 @@
 import {
+  Code,
   Heading1,
   Heading2,
   Heading3,
+  Image as ImageIcon,
   List,
   ListOrdered,
   Text,
-  TextQuote,
-  Image as ImageIcon,
-  Code
+  TextQuote
 } from 'lucide-react'
 import { CommandItemProps, CommandProps } from '../../extensions/SlashCommand'
 

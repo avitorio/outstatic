@@ -1,4 +1,5 @@
 import { Editor, Range } from '@tiptap/react'
+import { Link, Upload } from 'lucide-react'
 import {
   ChangeEvent,
   useEffect,
@@ -11,7 +12,6 @@ import {
   CommandItemProps,
   updateScrollView
 } from '../../../../utils/editor/extensions/SlashCommand'
-import { Link, Upload } from 'lucide-react'
 import { addImage } from '../addImage'
 
 type ImageCommandListProps = {
