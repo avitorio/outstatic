@@ -1,4 +1,5 @@
-import { OutstaticApi, Request, QueryType } from 'outstatic'
+import { OutstaticApi } from 'outstatic'
 
-export const GET = async (req: Request, params: QueryType) =>
-  OutstaticApi.GET(req, params)
+export const GET = OutstaticApi.GET
+
+export const POST = OutstaticApi.POST

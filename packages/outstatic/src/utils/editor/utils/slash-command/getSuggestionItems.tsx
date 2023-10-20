@@ -1,5 +1,6 @@
 import {
   Code,
+  Edit3,
   Heading1,
   Heading2,
   Heading3,
@@ -12,6 +13,11 @@ import {
 import { CommandItemProps, CommandProps } from '../../extensions/SlashCommand'
 
 const items = [
+  {
+    title: 'Continue writing',
+    description: 'Use AI to expand your thoughts.',
+    icon: <Edit3 size={18} />
+  },
   {
     title: 'Text',
     description: 'Just start typing with plain text.',
@@ -114,7 +120,7 @@ const items = [
     searchTerms: ['photo', 'picture', 'media'],
     icon: <ImageIcon size={18} />
   }
-]
+] as CommandItemProps[]
 
 const filterItems = (
   items: CommandItemProps[],

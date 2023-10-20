@@ -1,3 +1,5 @@
+import { Editor, Range } from '@tiptap/react'
+import { useCompletion } from 'ai/react'
 import {
   useCallback,
   useEffect,
@@ -5,31 +7,65 @@ import {
   useRef,
   useState
 } from 'react'
+import { toast } from 'sonner'
 import {
   CommandItemProps,
   updateScrollView
 } from '../../extensions/SlashCommand'
+import { getPrevText } from '../getPrevText'
 
 export const BaseCommandList = ({
   items,
   command,
-  setImageMenu
+  setImageMenu,
+  editor,
+  range
 }: {
   items: CommandItemProps[]
   setImageMenu: (value: boolean) => void
   command: any
+  editor: Editor
+  range: Range
 }) => {
   const [selectedIndex, setSelectedIndex] = useState(0)
+
+  const { complete, isLoading } = useCompletion({
+    api: '/api/outstatic/generate',
+    onResponse: () => {
+      editor.chain().focus().deleteRange(range).run()
+    },
+    onFinish: (_prompt, completion) => {
+      editor.commands.setTextSelection({
+        from: range.from,
+        to: range.from + completion.length
+      })
+      editor.chain().focus().insertContent(completion).run()
+    },
+    onError: (e) => {
+      toast.error(e.message)
+    }
+  })
+
   const selectItem = useCallback(
     (index: number) => {
       const item = items[index]
-      if (item.title === 'Image') {
-        setImageMenu(true)
-      } else if (item) {
-        command(item)
+      if (item) {
+        if (item.title === 'Continue writing') {
+          if (isLoading) return
+          complete(
+            getPrevText(editor, {
+              chars: 5000,
+              offset: 1
+            })
+          )
+        } else if (item.title === 'Image') {
+          setImageMenu(true)
+        } else {
+          command(item)
+        }
       }
     },
-    [items]
+    [complete, isLoading, command, editor, items]
   )
 
   useEffect(() => {
@@ -90,7 +126,33 @@ export const BaseCommandList = ({
               onClick={() => selectItem(index)}
             >
               <div className="flex h-10 w-10 items-center justify-center rounded-md border border-stone-200 bg-white">
-                {item.icon}
+                {item.title === 'Continue writing' && isLoading ? (
+                  <div>
+                    <svg
+                      className="h-6 animate-spin text-black"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      width="18"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      ></path>
+                    </svg>
+                  </div>
+                ) : (
+                  item.icon
+                )}
               </div>
               <div>
                 <p className="font-medium">{item.title}</p>

@@ -90,6 +90,8 @@ const CommandList = ({
         items={items}
         command={command}
         setImageMenu={setImageMenu}
+        editor={editor}
+        range={range}
       />
     )
   ) : null

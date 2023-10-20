@@ -1,4 +1,6 @@
 import { Editor, EditorContent } from '@tiptap/react'
+import { useCompletion } from 'ai/react'
+import { useEffect, useRef } from 'react'
 import { useFormContext } from 'react-hook-form'
 import MDEMenu from '../MDEMenu'
 
@@ -12,8 +14,30 @@ const MDEditor = ({ id, editor }: MDEditorProps) => {
     watch,
     formState: { errors }
   } = useFormContext()
+  const { completion } = useCompletion({
+    api: '/api/outstatic/generate'
+  })
 
   const watchContent = watch('content')
+
+  const prev = useRef('')
+
+  useEffect(() => {
+    if (prev.current === '') {
+      // remove the "/" command before inserting the completion
+      editor
+        ?.chain()
+        .focus()
+        .deleteRange({
+          from: editor.state.selection.from - 1,
+          to: editor.state.selection.to
+        })
+        .run()
+    }
+    const diff = completion.slice(prev.current.length)
+    prev.current = completion
+    editor?.commands.insertContent(diff)
+  }, [editor, completion])
 
   return (
     <>
