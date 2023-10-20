@@ -1,6 +1,6 @@
 {
-  "commit": "819d30ab3c7f2796b94bd8fd21e936f7a988b07e",
-  "generated": "2023-10-20T16:38:50.940Z",
+  "commit": "438f8f425e22da276d89c77e8696db13a80a34b7",
+  "generated": "2023-10-20T21:07:43.482Z",
   "metadata": [
     {
       "__outstatic": {
@@ -147,24 +147,6 @@
     },
     {
       "__outstatic": {
-        "commit": "e91d3250c8d69aa088b87c0401181136f6859b90",
-        "hash": "3340137951",
-        "path": "/outstatic/content/docs/the-content-editor.md"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "docs",
-      "coverImage": "",
-      "description": "",
-      "publishedAt": "2022-10-13T12:26:38.000Z",
-      "slug": "the-content-editor",
-      "status": "published",
-      "title": "The content editor"
-    },
-    {
-      "__outstatic": {
         "commit": "baab0613ec7117304e95b6dbdcd0d84fbab2c45a",
         "hash": "2166371953",
         "path": "/outstatic/content/docs/local-development.md"
@@ -234,6 +216,24 @@
       "slug": "using-with-next-js-12",
       "status": "published",
       "title": "Using with Next.js 12"
+    },
+    {
+      "__outstatic": {
+        "commit": "438f8f425e22da276d89c77e8696db13a80a34b7",
+        "hash": "3606381726",
+        "path": "outstatic/content/docs/the-content-editor.md"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "coverImage": "",
+      "description": "",
+      "publishedAt": "2022-10-20T12:26:38.000Z",
+      "slug": "the-content-editor",
+      "status": "published",
+      "title": "The content editor"
     }
   ]
 }
