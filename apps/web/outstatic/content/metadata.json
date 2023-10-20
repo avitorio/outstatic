@@ -1,6 +1,6 @@
 {
-  "commit": "fec08610d176b40d8e7ced1e524a00748eab8323",
-  "generated": "2023-09-23T20:49:32.407Z",
+  "commit": "819d30ab3c7f2796b94bd8fd21e936f7a988b07e",
+  "generated": "2023-10-20T16:38:50.940Z",
   "metadata": [
     {
       "__outstatic": {
@@ -183,24 +183,6 @@
     },
     {
       "__outstatic": {
-        "commit": "07a1c5d4917cb890b42c9c65d7438d8b03900e6b",
-        "hash": "2303996183",
-        "path": "/outstatic/content/docs/using-with-next-js-12.md"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "docs",
-      "coverImage": "",
-      "description": "",
-      "publishedAt": "2023-09-12T11:50:07.653Z",
-      "slug": "using-with-next-js-12",
-      "status": "draft",
-      "title": "Using with Next.js 12"
-    },
-    {
-      "__outstatic": {
         "commit": "0203755b3e71110daa0f698a949d9908ce70e8ac",
         "hash": "2432495499",
         "path": "outstatic/content/docs/github-apps-authentication.md"
@@ -234,6 +216,24 @@
       "slug": "getting-started",
       "status": "published",
       "title": "Getting started"
+    },
+    {
+      "__outstatic": {
+        "commit": "819d30ab3c7f2796b94bd8fd21e936f7a988b07e",
+        "hash": "3670638841",
+        "path": "outstatic/content/docs/using-with-next-js-12.md"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "coverImage": "",
+      "description": "",
+      "publishedAt": "2023-09-12T11:50:07.653Z",
+      "slug": "using-with-next-js-12",
+      "status": "published",
+      "title": "Using with Next.js 12"
     }
   ]
 }

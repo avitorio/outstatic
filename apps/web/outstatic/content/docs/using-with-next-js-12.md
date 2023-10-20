@@ -1,6 +1,6 @@
 ---
 title: 'Using with Next.js 12'
-status: 'draft'
+status: 'published'
 author:
   name: 'Andre Vitorio'
   picture: 'https://avatars.githubusercontent.com/u/1417109?v=4'
@@ -10,19 +10,19 @@ coverImage: ''
 publishedAt: '2023-09-12T11:50:07.653Z'
 ---
 
-To use Outstatic with Next.js 12, using the `/pages` directory, you will need to use Outstatic version `0.0.41` or lower.
+To use Outstatic with Next.js 12, using the `/pages` directory, you will need to use Outstatic with a version lower than v1.0.
 
 First install the Outstatic package and dependencies:
 
 ```bash
 # npm
-npm install outstatic@0.0.39
+npm install outstatic@<1.0
 
 # yarn
-yarn add outstatic@0.0.39
+yarn add outstatic@<1.0
 
 #pnpm
-pnpm install outstatic@0.0.39
+pnpm install outstatic@<1.0
 ```
 
 Then install some needed dependencies:
