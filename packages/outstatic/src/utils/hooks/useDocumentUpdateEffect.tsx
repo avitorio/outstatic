@@ -3,9 +3,9 @@ import matter from 'gray-matter'
 import { UseFormReturn } from 'react-hook-form'
 import { Document, Session } from '../../types'
 import { Editor } from '@tiptap/react'
-import { API_IMAGES_PATH, IMAGES_PATH } from '../constants'
 import { getLocalDate } from '../getLocalDate'
 import useFileQuery from './useFileQuery'
+import { parseContent } from '../parseContent'
 
 interface UseDocumentUpdateEffectProps {
   collection: string
@@ -38,20 +38,7 @@ export const useDocumentUpdateEffect = ({
       let mdContent = documentQueryObject.text as string
       const { data, content } = matter(mdContent)
 
-      const parseContent = () => {
-        // Prepare regex
-        let regex = new RegExp(
-          `(\\!\\[[^\\]]*\\]\\()/${IMAGES_PATH.replace(/\//g, '\\/')}([^)]+)`,
-          'g'
-        )
-
-        // Replace the path for image files in Markdown image syntax, regardless of file format
-        let result = content.replace(regex, `$1${API_IMAGES_PATH}$2`)
-        // fetch images from GitHub in case deploy is not done yet
-        return result
-      }
-
-      const parsedContent = parseContent()
+      const parsedContent = parseContent(content)
 
       const newDate = data.publishedAt
         ? new Date(data.publishedAt)

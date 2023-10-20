@@ -117,7 +117,6 @@ const ImageCommandList = ({
           return true
         }
         if (e.key === 'Escape') {
-          console.log('escape')
           if (showLink) {
             setShowLink(false)
           } else {
