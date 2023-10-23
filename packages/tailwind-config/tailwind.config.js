@@ -12,6 +12,16 @@ module.exports = {
       colors: {
         brandblue: colors.blue[500],
         brandred: colors.red[500]
+      },
+      animation: {
+        draw: 'draw 3000ms linear infinite'
+      },
+      keyframes: {
+        draw: {
+          '0%': { 'stroke-dashoffset': '0' },
+          '50%': { 'stroke-dashoffset': '4000' },
+          '100%': { 'stroke-dashoffset': '0' }
+        }
       }
     }
   },
