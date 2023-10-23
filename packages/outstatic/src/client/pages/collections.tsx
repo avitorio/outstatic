@@ -110,31 +110,51 @@ export default function Collections() {
                 key={collection}
                 className="relative flex p-6 justify-between items-center max-w-sm bg-white rounded-lg border border-gray-200 shadow-md hover:bg-slate-100"
               >
-                <Link href={`/outstatic/collections/${collection}`}>
+                <Link
+                  href={`/outstatic/${collection}`}
+                  className="focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg"
+                >
                   <h5 className="text-2xl cursor-pointer font-bold tracking-tight text-gray-900 capitalize hover:text-blue-500">
                     {collection}
                     <span className="absolute top-0 bottom-0 left-0 right-16"></span>
                   </h5>
                 </Link>
-                <button
-                  className="z-10 inline-block text-gray-500 hover:bg-white focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg text-sm p-1.5"
-                  type="button"
-                  onClick={() => {
-                    setShowDeleteModal(true)
-                    setSelectedCollection(collection)
-                  }}
-                >
-                  <span className="sr-only">Delete content</span>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    width="24"
-                    height="24"
+                <div className="z-10 flex gap-2">
+                  <Link
+                    href={`/outstatic/collections/${collection}`}
+                    className="inline-block text-gray-500 hover:bg-white focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg text-sm p-1.5"
                   >
-                    <path fill="none" d="M0 0h24v24H0z" />
-                    <path d="M17 6h5v2h-2v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V8H2V6h5V3a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v3zm1 2H6v12h12V8zm-9 3h2v6H9v-6zm4 0h2v6h-2v-6zM9 4v2h6V4H9z" />
-                  </svg>
-                </button>
+                    <span className="sr-only">Edit collection</span>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      width="24"
+                      height="24"
+                    >
+                      <path fill="none" d="M0 0h24v24H0z" />
+                      <path d="M15.7279 9.57629L14.3137 8.16207L5 17.4758V18.89H6.41421L15.7279 9.57629ZM17.1421 8.16207L18.5563 6.74786L17.1421 5.33365L15.7279 6.74786L17.1421 8.16207ZM7.24264 20.89H3V16.6474L16.435 3.21233C16.8256 2.8218 17.4587 2.8218 17.8492 3.21233L20.6777 6.04075C21.0682 6.43128 21.0682 7.06444 20.6777 7.45497L7.24264 20.89Z"></path>
+                    </svg>
+                  </Link>
+                  <button
+                    className="z-10 inline-block text-gray-500 hover:bg-white focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg text-sm p-1.5"
+                    type="button"
+                    onClick={() => {
+                      setShowDeleteModal(true)
+                      setSelectedCollection(collection)
+                    }}
+                  >
+                    <span className="sr-only">Delete content</span>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      width="24"
+                      height="24"
+                    >
+                      <path fill="none" d="M0 0h24v24H0z" />
+                      <path d="M17 6h5v2h-2v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V8H2V6h5V3a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v3zm1 2H6v12h12V8zm-9 3h2v6H9v-6zm4 0h2v6h-2v-6zM9 4v2h6V4H9z" />
+                    </svg>
+                  </button>
+                </div>
               </div>
             ))}
           </div>
