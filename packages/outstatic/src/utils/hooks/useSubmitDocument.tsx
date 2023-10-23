@@ -21,6 +21,7 @@ import useOid from './useOid'
 import useFileQuery from './useFileQuery'
 import { useCreateCommitMutation } from '../../graphql/generated'
 import { UseFormReturn } from 'react-hook-form'
+import { Editor } from '@tiptap/react'
 
 type SubmitDocumentProps = {
   session: Session | null
@@ -34,6 +35,7 @@ type SubmitDocumentProps = {
   customFields: CustomFields
   setCustomFields: (customFields: CustomFields) => void
   setHasChanges: (hasChanges: boolean) => void
+  editor: Editor
 }
 
 function useSubmitDocument({
@@ -47,7 +49,8 @@ function useSubmitDocument({
   collection,
   customFields,
   setCustomFields,
-  setHasChanges
+  setHasChanges,
+  editor
 }: SubmitDocumentProps) {
   const [createCommit] = useCreateCommitMutation()
   const { repoOwner, repoSlug, repoBranch, contentPath, monorepoPath } =
@@ -63,7 +66,8 @@ function useSubmitDocument({
 
       try {
         const document = methods.getValues()
-        let content = mergeMdMeta({ ...data })
+        const mdContent = editor.storage.markdown.getMarkdown()
+        let content = mergeMdMeta({ ...data, content: mdContent })
         const oid = await fetchOid()
         const owner = repoOwner || session?.user?.login || ''
         const newSlug = document.slug
@@ -103,7 +107,7 @@ function useSubmitDocument({
 
               const filePath = (() => {
                 switch (type) {
-                  case 'images':
+                  case 'image':
                     return IMAGES_PATH
                   default:
                     assertUnreachable(type)
@@ -261,7 +265,8 @@ function useSubmitDocument({
       repoSlug,
       repoBranch,
       metadata,
-      setHasChanges
+      setHasChanges,
+      editor
     ]
   )
 

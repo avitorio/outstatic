@@ -51,7 +51,7 @@ export const createCommitInput = ({
 
           const filePath = (() => {
             switch (type) {
-              case 'images':
+              case 'image':
                 return IMAGES_PATH
               default:
                 assertUnreachable(type)

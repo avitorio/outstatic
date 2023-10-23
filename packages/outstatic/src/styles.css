@@ -210,7 +210,7 @@ input.react-datepicker-time__input {
 }
 
 .ProseMirror img {
-  max-width: 100%;
+  max-width: 99%;
   height: auto;
   margin: 0;
   display: inline-block;
@@ -339,4 +339,25 @@ input.react-datepicker-time__input {
 
 .ProseMirror .image-error {
   @apply block bg-red-50 border border-red-300 relative w-full h-32 text-base font-normal font-sans;
+}
+
+.ProseMirror .is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  color: #9ca3af;
+  pointer-events: none;
+  height: 0;
+}
+.ProseMirror .is-empty::before {
+  content: attr(data-placeholder);
+  float: left;
+  color: #9ca3af;
+  pointer-events: none;
+  height: 0;
+}
+
+ul[data-type='taskList'] li[data-checked='true'] > div > p {
+  color: #9ca3af;
+  text-decoration: line-through;
+  text-decoration-thickness: 2px;
 }

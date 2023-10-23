@@ -1,7 +1,7 @@
 import { Editor } from '@tiptap/react'
-import { useCallback, useContext, useState } from 'react'
-import { DocumentContext } from '../../context'
+import { useCallback, useState } from 'react'
 import MDEMenuButton from '../MDEMenuButton'
+import { useFileStore } from '../../utils/hooks/useFileStore'
 
 type MDEUImageMenuProps = {
   editor: Editor
@@ -9,7 +9,7 @@ type MDEUImageMenuProps = {
 }
 
 const MDEUImageMenu = ({ editor, setImageSelected }: MDEUImageMenuProps) => {
-  const { setFiles } = useContext(DocumentContext)
+  const { removeFile } = useFileStore()
   const [showLink, setShowLink] = useState(false)
   const [url, setUrl] = useState('')
   const [showAltText, setShowAltText] = useState(false)
@@ -48,11 +48,7 @@ const MDEUImageMenu = ({ editor, setImageSelected }: MDEUImageMenuProps) => {
 
   const removeImage = () => {
     const blob = editor.getAttributes('image').src
-    setFiles((oldState) => {
-      return oldState.filter((file) => {
-        return file.blob !== blob
-      })
-    })
+    removeFile(blob)
     editor.chain().focus().deleteSelection().run()
     setImageSelected(false)
   }

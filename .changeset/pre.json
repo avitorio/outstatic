@@ -5,7 +5,6 @@
     "web": "1.0.0",
     "eslint-config-custom": "0.0.0",
     "outstatic": "1.0.0-canary.4",
-    "tailwind-config": "0.0.0",
     "tsconfig": "0.0.0"
   },
   "changesets": []
