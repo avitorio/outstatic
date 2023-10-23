@@ -1,8 +1,9 @@
 import { ChangeEvent, useContext, useEffect, useState } from 'react'
 import { DocumentContext } from '../../context'
-import { Document, FileType } from '../../types'
-import { IMAGES_PATH } from '../../utils/constants'
+import { Document } from '../../types'
+import { API_IMAGES_PATH, IMAGES_PATH } from '../../utils/constants'
 import Input from '../Input'
+import { addImage } from '../../utils/editor/utils/addImage'
 
 type DocumentSettingsImageSelectionProps = {
   name: 'coverImage' | 'author.picture'
@@ -23,7 +24,7 @@ const DocumentSettingsImageSelection = ({
   description,
   label
 }: DocumentSettingsImageSelectionProps) => {
-  const { document, editDocument, setFiles } = useContext(DocumentContext)
+  const { document, editDocument } = useContext(DocumentContext)
   const [showImage, setShowImage] = useState(false)
   const [showImageOptions, setShowImageOptions] = useState(false)
   const [showLink, setShowLink] = useState(false)
@@ -35,7 +36,7 @@ const DocumentSettingsImageSelection = ({
   useEffect(() => {
     const image = resolvedImage?.replace(
       `/${IMAGES_PATH}`,
-      `/api/outstatic/images/`
+      `/${API_IMAGES_PATH}`
     )
     setImage(image || '')
     setShowImageOptions(!resolvedImage)
@@ -47,23 +48,8 @@ const DocumentSettingsImageSelection = ({
   }: ChangeEvent<HTMLInputElement>) => {
     if (currentTarget.files?.length && currentTarget.files?.[0] !== null) {
       const file = currentTarget.files[0]
-      const blob = URL.createObjectURL(file)
-      editDocument(name, blob)
-      const reader = new FileReader()
-      reader.readAsArrayBuffer(file)
-      reader.onloadend = () => {
-        const bytes = reader.result as string
-        const buffer = Buffer.from(bytes, 'binary')
-        setFiles((files: FileType[]) => [
-          ...files,
-          {
-            type: 'images',
-            blob,
-            filename: file.name,
-            content: buffer.toString('base64')
-          }
-        ])
-      }
+      const image = addImage(file)
+      editDocument(name, image)
     }
   }
 

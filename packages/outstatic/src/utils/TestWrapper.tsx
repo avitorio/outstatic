@@ -114,8 +114,6 @@ export const TestWrapper = (props: { children: ReactNode }) => {
           editor: editor as Editor,
           document: documentExample,
           editDocument: () => {},
-          files: [],
-          setFiles: () => {},
           hasChanges: false,
           collection: 'documents'
         }}
