@@ -2,12 +2,14 @@ import { Editor, Range } from '@tiptap/react'
 import { useCompletion } from 'ai/react'
 import {
   useCallback,
+  useContext,
   useEffect,
   useLayoutEffect,
   useRef,
   useState
 } from 'react'
 import { toast } from 'sonner'
+import { OutstaticContext } from '../../../../context'
 import {
   CommandItemProps,
   updateScrollView
@@ -28,6 +30,7 @@ export const BaseCommandList = ({
   range: Range
 }) => {
   const [selectedIndex, setSelectedIndex] = useState(0)
+  const { hasOpenAIKey } = useContext(OutstaticContext)
 
   const { complete, isLoading } = useCompletion({
     api: '/api/outstatic/generate',
@@ -117,6 +120,7 @@ export const BaseCommandList = ({
         className="z-50 h-auto max-h-[330px] w-72 overflow-y-auto rounded-md border border-stone-200 bg-white px-1 py-2 shadow-md transition-all"
       >
         {items.map((item: CommandItemProps, index: number) => {
+          if (item.title === 'Continue writing' && !hasOpenAIKey) return null
           return (
             <button
               className={`flex w-full items-center space-x-2 rounded-md px-2 py-1 text-left text-sm text-stone-900 hover:bg-stone-100 ${

@@ -14,6 +14,7 @@ type OutstaticProviderProps = {
   pages: string[]
   addPage: (page: string) => void
   removePage: (page: string) => void
+  hasOpenAIKey: boolean
 }
 
 export const OutstaticContext = createContext({
@@ -22,7 +23,8 @@ export const OutstaticContext = createContext({
   repoBranch: '',
   contentPath: '',
   monorepoPath: '',
-  session: null
+  session: null,
+  hasOpenAIKey: false
 } as Omit<OutstaticProviderProps, 'client'>)
 
 export const OutstaticProvider = ({
@@ -36,7 +38,8 @@ export const OutstaticProvider = ({
   collections,
   pages,
   addPage,
-  removePage
+  removePage,
+  hasOpenAIKey
 }: OutstaticProviderProps) => {
   return (
     <OutstaticContext.Provider
@@ -50,7 +53,8 @@ export const OutstaticProvider = ({
         collections,
         pages,
         addPage,
-        removePage
+        removePage,
+        hasOpenAIKey: hasOpenAIKey || false
       }}
     >
       {children}
