@@ -9,9 +9,6 @@ module.exports = {
   ],
   theme: {
     extend: {
-      colors: {
-        brandblue: colors.blue[500],
-        brandred: colors.red[500]
       animation: {
         draw: 'draw 8s cubic-bezier(.34,.06,.13,.92) infinite'
       },
@@ -25,7 +22,6 @@ module.exports = {
           },
           '100%': { 'stroke-dashoffset': '1500', 'stroke-dasharray': '4000' }
         }
-      }
       }
     }
   },
