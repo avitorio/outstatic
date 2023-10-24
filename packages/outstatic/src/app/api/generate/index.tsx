@@ -1,18 +1,17 @@
 import { OpenAIStream, StreamingTextResponse } from 'ai'
-import { Configuration, OpenAIApi } from 'openai-edge'
+import OpenAI from 'openai'
 
 // Create an OpenAI API client (that's edge friendly!)
-const config = new Configuration({
-  apiKey: process.env.OPENAI_API_KEY
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY || ''
 })
-const openai = new OpenAIApi(config)
 
 export const runtime = 'edge'
 
 export default async function POST(req: Request): Promise<Response> {
   let { prompt } = await req.json()
 
-  const response = await openai.createChatCompletion({
+  const response = await openai.chat.completions.create({
     model: 'gpt-3.5-turbo',
     messages: [
       {
@@ -27,7 +26,6 @@ export default async function POST(req: Request): Promise<Response> {
         content: prompt
       }
     ],
-    max_tokens: 50,
     temperature: 0.7,
     top_p: 1,
     frequency_penalty: 0,

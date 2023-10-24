@@ -2,12 +2,19 @@ import { Editor, useEditor } from '@tiptap/react'
 import { useCompletion } from 'ai/react'
 import { useEffect, useRef } from 'react'
 import { toast } from 'sonner'
+import { useDebouncedCallback } from 'use-debounce'
 import { TiptapExtensions } from '../editor/extensions'
 import { TiptapEditorProps } from '../editor/props'
 import { getPrevText } from '../editor/utils/getPrevText'
 
 const useTipTap = ({ ...rhfMethods }) => {
   const { setValue, trigger } = rhfMethods
+
+  const debouncedUpdates = useDebouncedCallback(async ({ editor }) => {
+    const val = editor.getHTML()
+    setValue('content', val && !editor.isEmpty ? val : '')
+    ;(async () => await trigger('content'))()
+  }, 750)
 
   const editor = useEditor({
     extensions: TiptapExtensions,
@@ -30,10 +37,9 @@ const useTipTap = ({ ...rhfMethods }) => {
         } else {
           complete(prevText)
         }
+      } else {
+        debouncedUpdates({ editor })
       }
-      const val = editor.getHTML()
-      setValue('content', val && !editor.isEmpty ? val : '')
-      ;(async () => await trigger('content'))()
     }
   })
 
@@ -70,8 +76,8 @@ const useTipTap = ({ ...rhfMethods }) => {
             from: editor.state.selection.from - completion.length,
             to: editor.state.selection.from
           })
+          toast.message('AI writing cancelled.')
         }
-        editor?.commands.insertContent('++')
       }
     }
     const mousedownHandler = (e: MouseEvent) => {

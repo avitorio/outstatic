@@ -38,11 +38,15 @@ export const BaseCommandList = ({
       editor.chain().focus().deleteRange(range).run()
     },
     onFinish: (_prompt, completion) => {
+      console.log({ range })
+      console.log({ completion })
+      // highlight the generated text
       editor.commands.setTextSelection({
         from: range.from,
         to: range.from + completion.length
       })
-      editor.chain().focus().insertContent(completion).run()
+
+      // editor.chain().focus().insertContent(completion).run()
     },
     onError: (e) => {
       toast.error(e.message)
