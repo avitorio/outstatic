@@ -9,9 +9,19 @@ module.exports = {
   ],
   theme: {
     extend: {
-      colors: {
-        brandblue: colors.blue[500],
-        brandred: colors.red[500]
+      animation: {
+        draw: 'draw 8s cubic-bezier(.34,.06,.13,.92) infinite'
+      },
+      keyframes: {
+        draw: {
+          '0%': { 'stroke-dashoffset': '8000', 'stroke-dasharray': '4000' },
+          '50%': { 'stroke-dashoffset': '5000', 'stroke-dasharray': '4000' },
+          '50.001%': {
+            'stroke-dashoffset': '4000',
+            'stroke-dasharray': '4000'
+          },
+          '100%': { 'stroke-dashoffset': '1500', 'stroke-dasharray': '4000' }
+        }
       }
     }
   },
