@@ -23,12 +23,17 @@ export default async function GET(req: NextRequest, res: NextResponse) {
       }
     )
     if (response.status === 200 && response.body) {
-      const buffer = Buffer.from(await response.arrayBuffer())
+      const contentType = response.headers.get('Content-Type')
+      const content =
+        contentType === 'image/svg+xml'
+          ? await response.blob()
+          : Buffer.from(await response.arrayBuffer())
+
       const newHeaders = new Headers(req.headers)
       // Add a new header
       newHeaders.set('Cache-Control', 'max-age=300')
 
-      return new Response(buffer, {
+      return new Response(content, {
         status: 200,
         headers: { 'Cache-Control': 'max-age=300' }
       })
