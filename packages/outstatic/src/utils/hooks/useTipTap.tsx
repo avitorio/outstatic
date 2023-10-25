@@ -44,6 +44,7 @@ const useTipTap = ({ ...rhfMethods }) => {
   })
 
   const { complete, completion, isLoading, stop } = useCompletion({
+    id: 'outstatic',
     api: '/api/outstatic/generate',
     onFinish: (_prompt, completion) => {
       editor?.commands.setTextSelection({
