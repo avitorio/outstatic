@@ -1,6 +1,6 @@
 {
-  "commit": "438f8f425e22da276d89c77e8696db13a80a34b7",
-  "generated": "2023-10-20T21:07:43.482Z",
+  "commit": "f8fe4e93c3f4a107dcb07dd6215153494afee54f",
+  "generated": "2023-10-26T21:12:27.827Z",
   "metadata": [
     {
       "__outstatic": {
@@ -219,8 +219,8 @@
     },
     {
       "__outstatic": {
-        "commit": "438f8f425e22da276d89c77e8696db13a80a34b7",
-        "hash": "3606381726",
+        "commit": "f8fe4e93c3f4a107dcb07dd6215153494afee54f",
+        "hash": "1119889240",
         "path": "outstatic/content/docs/the-content-editor.md"
       },
       "author": {
@@ -230,7 +230,7 @@
       "collection": "docs",
       "coverImage": "",
       "description": "",
-      "publishedAt": "2022-10-20T12:26:38.000Z",
+      "publishedAt": "2022-10-26T12:26:38.000Z",
       "slug": "the-content-editor",
       "status": "published",
       "title": "The content editor"
