@@ -12,6 +12,7 @@ import lowlight from 'lowlight'
 import { Markdown } from 'tiptap-markdown'
 import CodeBlock from './CodeBlock'
 import SlashCommand from './SlashCommand'
+import { ToggleClass } from './ToggleClass'
 
 export const TiptapExtensions = [
   StarterKit.configure({
@@ -50,6 +51,7 @@ export const TiptapExtensions = [
     },
     gapcursor: false
   }),
+  ToggleClass,
   // patch to fix horizontal rule bug: https://github.com/ueberdosis/tiptap/pull/3859#issuecomment-1536799740
   HorizontalRule.extend({
     addInputRules() {

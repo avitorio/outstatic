@@ -9,6 +9,8 @@ import { getPrevText } from '../editor/utils/getPrevText'
 
 const useTipTap = ({ ...rhfMethods }) => {
   const { setValue, trigger } = rhfMethods
+  // Define editorRef to hold the current reference to the editor.
+  const editorRef = useRef<Editor | null>(null)
 
   const debouncedUpdates = useDebouncedCallback(async ({ editor }) => {
     const val = editor.getHTML()
@@ -43,14 +45,20 @@ const useTipTap = ({ ...rhfMethods }) => {
     }
   })
 
+  useEffect(() => {
+    editorRef.current = editor
+  }, [editor])
+
   const { complete, completion, isLoading, stop } = useCompletion({
     id: 'outstatic',
     api: '/api/outstatic/generate',
     onFinish: (_prompt, completion) => {
-      editor?.commands.setTextSelection({
-        from: editor.state.selection.from - completion.length,
-        to: editor.state.selection.from
-      })
+      if (editorRef.current) {
+        editorRef.current.commands.setTextSelection({
+          from: editorRef.current.state.selection.from - completion.length,
+          to: editorRef.current.state.selection.from
+        })
+      }
     },
     onError: (err) => {
       toast.error(err.message)
@@ -58,6 +66,10 @@ const useTipTap = ({ ...rhfMethods }) => {
   })
 
   const prev = useRef('')
+
+  useEffect(() => {
+    editor?.commands.toggleClass('completing')
+  }, [isLoading])
 
   // Insert chunks of the generated text
   useEffect(() => {
