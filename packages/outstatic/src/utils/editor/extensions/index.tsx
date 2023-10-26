@@ -4,7 +4,6 @@ import Highlight from '@tiptap/extension-highlight'
 import HorizontalRule from '@tiptap/extension-horizontal-rule'
 import Image from '@tiptap/extension-image'
 import Link from '@tiptap/extension-link'
-import Placeholder from '@tiptap/extension-placeholder'
 import TiptapUnderline from '@tiptap/extension-underline'
 import { ReactNodeViewRenderer } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
@@ -77,15 +76,6 @@ export const TiptapExtensions = [
     HTMLAttributes: {
       class: 'mt-4 mb-6 border-t border-stone-300'
     }
-  }),
-  Placeholder.configure({
-    placeholder: ({ node }) => {
-      if (node.type.name === 'heading') {
-        return `Heading ${node.attrs.level}`
-      }
-      return "Press '/' for commands, or '++' for AI autocomplete..."
-    },
-    includeChildren: true
   }),
   SlashCommand,
   TiptapUnderline,

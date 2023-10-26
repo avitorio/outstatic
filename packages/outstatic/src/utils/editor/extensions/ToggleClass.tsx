@@ -21,7 +21,6 @@ declare module '@tiptap/core' {
 const toggleClass =
   (className: string) =>
   ({ tr, state }: { tr: Transaction; state: EditorState }) => {
-    console.log('toggleClass')
     const { selection } = state
     const { $anchor } = selection
 

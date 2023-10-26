@@ -1,13 +1,16 @@
+import Placeholder from '@tiptap/extension-placeholder'
 import { Editor, useEditor } from '@tiptap/react'
 import { useCompletion } from 'ai/react'
-import { useEffect, useRef } from 'react'
+import { useContext, useEffect, useRef } from 'react'
 import { toast } from 'sonner'
 import { useDebouncedCallback } from 'use-debounce'
+import { OutstaticContext } from '../../context'
 import { TiptapExtensions } from '../editor/extensions'
 import { TiptapEditorProps } from '../editor/props'
 import { getPrevText } from '../editor/utils/getPrevText'
 
 const useTipTap = ({ ...rhfMethods }) => {
+  const { hasOpenAIKey } = useContext(OutstaticContext)
   const { setValue, trigger } = rhfMethods
   // Define editorRef to hold the current reference to the editor.
   const editorRef = useRef<Editor | null>(null)
@@ -19,7 +22,20 @@ const useTipTap = ({ ...rhfMethods }) => {
   }, 750)
 
   const editor = useEditor({
-    extensions: TiptapExtensions,
+    extensions: [
+      ...TiptapExtensions,
+      Placeholder.configure({
+        placeholder: ({ node }) => {
+          if (node.type.name === 'heading') {
+            return `Heading ${node.attrs.level}`
+          }
+          return `Press '/' for commands${
+            hasOpenAIKey ? ", or '++' for AI autocomplete..." : ''
+          }`
+        },
+        includeChildren: true
+      })
+    ],
     editorProps: TiptapEditorProps,
     autofocus: 'end',
     onUpdate({ editor }) {
@@ -27,7 +43,7 @@ const useTipTap = ({ ...rhfMethods }) => {
       const lastTwo = getPrevText(editor, {
         chars: 2
       })
-      if (lastTwo === '++' && !isLoading) {
+      if (hasOpenAIKey && lastTwo === '++' && !isLoading) {
         editor.commands.deleteRange({
           from: selection.from - 2,
           to: selection.from
