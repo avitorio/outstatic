@@ -1,6 +1,6 @@
 {
-  "commit": "8583616ab802faea66adba9158464a8c733e1246",
-  "generated": "2023-10-26T21:31:43.357Z",
+  "commit": "c4dfcaf2419382ea2f1112ece7420aa045d3e3b4",
+  "generated": "2023-10-26T21:35:09.295Z",
   "metadata": [
     {
       "__outstatic": {
@@ -165,24 +165,6 @@
     },
     {
       "__outstatic": {
-        "commit": "fec08610d176b40d8e7ced1e524a00748eab8323",
-        "hash": "2000599834",
-        "path": "outstatic/content/docs/getting-started.md"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "docs",
-      "coverImage": "",
-      "description": "",
-      "publishedAt": "2023-09-23T18:34:15.000Z",
-      "slug": "getting-started",
-      "status": "published",
-      "title": "Getting started"
-    },
-    {
-      "__outstatic": {
         "commit": "819d30ab3c7f2796b94bd8fd21e936f7a988b07e",
         "hash": "3670638841",
         "path": "outstatic/content/docs/using-with-next-js-12.md"
@@ -234,6 +216,24 @@
       "slug": "the-content-editor",
       "status": "published",
       "title": "The content editor"
+    },
+    {
+      "__outstatic": {
+        "commit": "c4dfcaf2419382ea2f1112ece7420aa045d3e3b4",
+        "hash": "1475054812",
+        "path": "outstatic/content/docs/getting-started.md"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "coverImage": "",
+      "description": "",
+      "publishedAt": "2023-09-23T18:34:15.000Z",
+      "slug": "getting-started",
+      "status": "published",
+      "title": "Getting started"
     }
   ]
 }

@@ -127,17 +127,18 @@ export default async function Page({ params }: { params: { ost: string[] } }) {
 And `/app/api/outstatic/[[...ost]]/route.ts`
 
 ```javascript
-import { OutstaticApi, Request, QueryType } from 'outstatic'
+import { OutstaticApi } from 'outstatic'
 
-export const GET = async (req: Request, params: QueryType) =>
-  OutstaticApi.GET(req, params)
+export const GET = OutstaticApi.GET
+
+export const POST = OutstaticApi.POST
 ```
 
 Start your dev server. Assuming you're on `http://localhost:3000` you can access your dashboard at `https://localhost:3000/outstatic`.
 
 You should see this page:
 
-![Outstatic welcome screen](/images/outstatic-welcome-U1ND.png)Let's update your environment variables.
+![Outstatic welcome screen](/api/outstatic/images/outstatic-welcome-U1ND.png)Let's update your environment variables.
 
 ```bash
 OST_GITHUB_ID=YOUR_GITHUB_OAUTH_APP_ID
@@ -163,7 +164,7 @@ Restart your service and go back to the `/outstatic` page.
 
 If everything is setup correctly, then you'll see a login page and will be able to access your Dashboard.
 
-![](/images/outstatic-login-screen-I4Mz.png)
+![](/api/outstatic/images/outstatic-login-screen-I4Mz.png)
 
 Congratulations! Your Outstatic installation is ready and you can now start creating content.
 
@@ -195,4 +196,3 @@ OST_TOKEN_SECRET=A_RANDOM_TOKEN
 ```
 
 To learn more about all the available environment variables, see the [Environment Variables ](https://outstatic.com/docs/environment-variables)section of the docs.
-
