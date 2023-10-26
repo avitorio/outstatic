@@ -1,25 +1,7 @@
 {
   "commit": "8e58e12a50a8722e6dbb838125393f89d78f8028",
-  "generated": "2023-10-26T21:29:11.560Z",
+  "generated": "2023-10-26T21:29:37.759Z",
   "metadata": [
-    {
-      "__outstatic": {
-        "commit": "f88e9cbc1e92098f47f24353f52ec2e379ff17dc",
-        "hash": "1802544230",
-        "path": "/outstatic/content/docs/environment-variables.md"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "docs",
-      "coverImage": "",
-      "description": "",
-      "publishedAt": "2022-10-13T12:36:25.000Z",
-      "slug": "environment-variables",
-      "status": "published",
-      "title": "Environment variables"
-    },
     {
       "__outstatic": {
         "commit": "28fb2f86179c26f5063364ced8395466b6f7985c",
@@ -165,6 +147,24 @@
     },
     {
       "__outstatic": {
+        "commit": "0203755b3e71110daa0f698a949d9908ce70e8ac",
+        "hash": "2432495499",
+        "path": "outstatic/content/docs/github-apps-authentication.md"
+      },
+      "author": {
+        "name": "Anthony Quéré",
+        "picture": "https://avatars.githubusercontent.com/u/47711333?v=4"
+      },
+      "collection": "docs",
+      "coverImage": "",
+      "description": "",
+      "publishedAt": "2023-09-23T21:00:00.000Z",
+      "slug": "github-apps-authentication",
+      "status": "published",
+      "title": "GitHub Apps Authentication"
+    },
+    {
+      "__outstatic": {
         "commit": "fec08610d176b40d8e7ced1e524a00748eab8323",
         "hash": "2000599834",
         "path": "outstatic/content/docs/getting-started.md"
@@ -220,20 +220,20 @@
     {
       "__outstatic": {
         "commit": "8e58e12a50a8722e6dbb838125393f89d78f8028",
-        "hash": "1636474919",
-        "path": "outstatic/content/docs/github-apps-authentication.md"
+        "hash": "2396177196",
+        "path": "outstatic/content/docs/environment-variables.md"
       },
       "author": {
-        "name": "Anthony Quéré",
-        "picture": "https://avatars.githubusercontent.com/u/47711333?v=4"
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
       },
       "collection": "docs",
       "coverImage": "",
       "description": "",
-      "publishedAt": "2023-09-23T21:00:00.000Z",
-      "slug": "github-apps-authentication",
+      "publishedAt": "2022-10-26T12:36:25.000Z",
+      "slug": "environment-variables",
       "status": "published",
-      "title": "GitHub Apps Authentication"
+      "title": "Environment variables"
     }
   ]
 }
