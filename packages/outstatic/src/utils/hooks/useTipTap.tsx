@@ -63,7 +63,14 @@ const useTipTap = ({ ...rhfMethods }) => {
   useEffect(() => {
     const diff = completion.slice(prev.current.length)
     prev.current = completion
-    editor?.commands.insertContent(diff)
+    try {
+      // Temp fix for this issue: https://github.com/ueberdosis/tiptap/issues/3580
+      queueMicrotask(() => {
+        editor?.commands.insertContent(diff)
+      })
+    } catch (e) {
+      console.log(`error adding content: ${diff}`)
+    }
   }, [isLoading, editor, completion])
 
   useEffect(() => {
