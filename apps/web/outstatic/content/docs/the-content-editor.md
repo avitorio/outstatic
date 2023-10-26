@@ -40,19 +40,19 @@ You can enhance your documents by incorporating images using various methods: ch
 
 Images are uploaded to your `/public/images` folder. Outstatic fetches the images directly from GitHub so they can be visualised instantly on the editor, even if your website hasn't finished deploying.
 
-## AI Autocomplete
+## AI Completion
 
-Outstatic provides immediate access to AI Autocomplete functionality, seamlessly integrated and ready to use. This feature is driven by the sophisticated technology from OpenAI. To harness its capabilities, follow these simple steps:
+Outstatic provides immediate access to **AI completion** functionality, seamlessly integrated and ready to use. This feature is driven by the leveraging OpenAI's API. To harness its capabilities, follow these simple steps:
 
 1. Obtain an OpenAI API key ([get one here](https://platform.openai.com/account/api-keys)).
 2. Integrate this key into your system by setting it as an environment variable using the following template:
 
-```
+```bash
 OPENAI_API_KEY=sk-XXXXXXXXXXXXXXXXXXXXXXXXX
 ```
 
-When this is done you will be able to trigger autocompletion in two ways. Through the **slash command menu** by selecting the **Continue writing** option, or by typing `++`.  
+When this is done you will be able to trigger completion in two ways. Through the **slash command menu** by selecting the **Continue writing** option, or by typing `++`.
 
-![](/images/ai-autocomplete-Q2Mj.gif)
+![](/api/outstatic/images/ai-autocomplete-Q2Mj.gif)
 
-These triggers activate Outstatic's AI-powered insights, offering you an effortless writing experience by suggesting content continuations and creative directions in real-time.
+Outstatic's AI-powered completions offers you an effortless writing experience by suggesting content continuations and creative directions in real-time.

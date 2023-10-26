@@ -1,6 +1,6 @@
 {
-  "commit": "8e58e12a50a8722e6dbb838125393f89d78f8028",
-  "generated": "2023-10-26T21:29:37.759Z",
+  "commit": "8583616ab802faea66adba9158464a8c733e1246",
+  "generated": "2023-10-26T21:31:43.357Z",
   "metadata": [
     {
       "__outstatic": {
@@ -201,24 +201,6 @@
     },
     {
       "__outstatic": {
-        "commit": "f8fe4e93c3f4a107dcb07dd6215153494afee54f",
-        "hash": "2922807103",
-        "path": "outstatic/content/docs/the-content-editor.md"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "docs",
-      "coverImage": "",
-      "description": "",
-      "publishedAt": "2022-10-26T12:26:38.000Z",
-      "slug": "the-content-editor",
-      "status": "published",
-      "title": "The content editor"
-    },
-    {
-      "__outstatic": {
         "commit": "8e58e12a50a8722e6dbb838125393f89d78f8028",
         "hash": "2396177196",
         "path": "outstatic/content/docs/environment-variables.md"
@@ -234,6 +216,24 @@
       "slug": "environment-variables",
       "status": "published",
       "title": "Environment variables"
+    },
+    {
+      "__outstatic": {
+        "commit": "8583616ab802faea66adba9158464a8c733e1246",
+        "hash": "3124498582",
+        "path": "outstatic/content/docs/the-content-editor.md"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "coverImage": "",
+      "description": "",
+      "publishedAt": "2022-10-26T12:26:38.000Z",
+      "slug": "the-content-editor",
+      "status": "published",
+      "title": "The content editor"
     }
   ]
 }
