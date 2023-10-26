@@ -1,6 +1,6 @@
 {
   "commit": "f8fe4e93c3f4a107dcb07dd6215153494afee54f",
-  "generated": "2023-10-26T21:12:27.827Z",
+  "generated": "2023-10-26T21:13:58.790Z",
   "metadata": [
     {
       "__outstatic": {
@@ -220,7 +220,7 @@
     {
       "__outstatic": {
         "commit": "f8fe4e93c3f4a107dcb07dd6215153494afee54f",
-        "hash": "1119889240",
+        "hash": "2922807103",
         "path": "outstatic/content/docs/the-content-editor.md"
       },
       "author": {

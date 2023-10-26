@@ -53,4 +53,6 @@ OPENAI_API_KEY=sk-XXXXXXXXXXXXXXXXXXXXXXXXX
 
 When this is done you will be able to trigger autocompletion in two ways. Through the **slash command menu** by selecting the **Continue writing** option, or by typing `++`.  
 
-![](/images/ai-autocomplete-UyOT.gif)
+![](/images/ai-autocomplete-Q2Mj.gif)
+
+These triggers activate Outstatic's AI-powered insights, offering you an effortless writing experience by suggesting content continuations and creative directions in real-time.
