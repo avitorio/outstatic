@@ -1,5 +1,6 @@
 import { OpenAIStream, StreamingTextResponse } from 'ai'
 import OpenAI from 'openai'
+import { getLoginSession } from '../../../utils/auth/auth'
 
 // Create an OpenAI API client (that's edge friendly!)
 const openai = new OpenAI({
@@ -9,6 +10,12 @@ const openai = new OpenAI({
 export const runtime = 'edge'
 
 export default async function POST(req: Request): Promise<Response> {
+  const session = await getLoginSession()
+
+  if (!session) {
+    return new Response('Unauthorized', { status: 401 })
+  }
+
   let { prompt } = await req.json()
 
   const response = await openai.chat.completions.create({
