@@ -5,7 +5,7 @@ author:
   name: 'Andre Vitorio'
   picture: 'https://avatars.githubusercontent.com/u/1417109?v=4'
 slug: 'getting-started'
-description: ''
+description: 'Get started with Outstatic'
 coverImage: ''
 publishedAt: '2023-09-23T18:34:15.000Z'
 ---
@@ -138,7 +138,7 @@ Start your dev server. Assuming you're on `http://localhost:3000` you can access
 
 You should see this page:
 
-![Outstatic welcome screen](/api/outstatic/images/outstatic-welcome-U1ND.png)Let's update your environment variables.
+![Outstatic welcome screen](/images/outstatic-welcome-U1ND.png)Let's update your environment variables.
 
 ```bash
 OST_GITHUB_ID=YOUR_GITHUB_OAUTH_APP_ID
@@ -164,7 +164,7 @@ Restart your service and go back to the `/outstatic` page.
 
 If everything is setup correctly, then you'll see a login page and will be able to access your Dashboard.
 
-![](/api/outstatic/images/outstatic-login-screen-I4Mz.png)
+![](/images/outstatic-login-screen-I4Mz.png)
 
 Congratulations! Your Outstatic installation is ready and you can now start creating content.
 
