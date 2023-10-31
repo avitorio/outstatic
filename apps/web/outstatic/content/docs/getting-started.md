@@ -5,7 +5,7 @@ author:
   name: 'Andre Vitorio'
   picture: 'https://avatars.githubusercontent.com/u/1417109?v=4'
 slug: 'getting-started'
-description: ''
+description: 'Get started with Outstatic'
 coverImage: ''
 publishedAt: '2023-09-23T18:34:15.000Z'
 ---
@@ -127,10 +127,11 @@ export default async function Page({ params }: { params: { ost: string[] } }) {
 And `/app/api/outstatic/[[...ost]]/route.ts`
 
 ```javascript
-import { OutstaticApi, Request, QueryType } from 'outstatic'
+import { OutstaticApi } from 'outstatic'
 
-export const GET = async (req: Request, params: QueryType) =>
-  OutstaticApi.GET(req, params)
+export const GET = OutstaticApi.GET
+
+export const POST = OutstaticApi.POST
 ```
 
 Start your dev server. Assuming you're on `http://localhost:3000` you can access your dashboard at `https://localhost:3000/outstatic`.
@@ -195,4 +196,3 @@ OST_TOKEN_SECRET=A_RANDOM_TOKEN
 ```
 
 To learn more about all the available environment variables, see the [Environment Variables ](https://outstatic.com/docs/environment-variables)section of the docs.
-

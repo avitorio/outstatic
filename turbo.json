@@ -42,7 +42,8 @@
         "OST_REPO_SLUG",
         "OST_REPO_OWNER",
         "OST_TOKEN_SECRET",
-        "VERCEL_GIT_REPO_SLUG"
+        "VERCEL_GIT_REPO_SLUG",
+        "OPENAI_API_KEY"
       ]
     }
   }

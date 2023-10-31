@@ -1,25 +1,7 @@
 {
-  "commit": "f8fe4e93c3f4a107dcb07dd6215153494afee54f",
-  "generated": "2023-10-26T21:13:58.790Z",
+  "commit": "f8f14edc5fdfa0c113a2ad64f7b542efceb062de",
+  "generated": "2023-10-27T20:15:47.275Z",
   "metadata": [
-    {
-      "__outstatic": {
-        "commit": "f88e9cbc1e92098f47f24353f52ec2e379ff17dc",
-        "hash": "1802544230",
-        "path": "/outstatic/content/docs/environment-variables.md"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "docs",
-      "coverImage": "",
-      "description": "",
-      "publishedAt": "2022-10-13T12:36:25.000Z",
-      "slug": "environment-variables",
-      "status": "published",
-      "title": "Environment variables"
-    },
     {
       "__outstatic": {
         "commit": "28fb2f86179c26f5063364ced8395466b6f7985c",
@@ -183,24 +165,6 @@
     },
     {
       "__outstatic": {
-        "commit": "fec08610d176b40d8e7ced1e524a00748eab8323",
-        "hash": "2000599834",
-        "path": "outstatic/content/docs/getting-started.md"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "docs",
-      "coverImage": "",
-      "description": "",
-      "publishedAt": "2023-09-23T18:34:15.000Z",
-      "slug": "getting-started",
-      "status": "published",
-      "title": "Getting started"
-    },
-    {
-      "__outstatic": {
         "commit": "819d30ab3c7f2796b94bd8fd21e936f7a988b07e",
         "hash": "3670638841",
         "path": "outstatic/content/docs/using-with-next-js-12.md"
@@ -219,9 +183,9 @@
     },
     {
       "__outstatic": {
-        "commit": "f8fe4e93c3f4a107dcb07dd6215153494afee54f",
-        "hash": "2922807103",
-        "path": "outstatic/content/docs/the-content-editor.md"
+        "commit": "8e58e12a50a8722e6dbb838125393f89d78f8028",
+        "hash": "2396177196",
+        "path": "outstatic/content/docs/environment-variables.md"
       },
       "author": {
         "name": "Andre Vitorio",
@@ -230,10 +194,46 @@
       "collection": "docs",
       "coverImage": "",
       "description": "",
+      "publishedAt": "2022-10-26T12:36:25.000Z",
+      "slug": "environment-variables",
+      "status": "published",
+      "title": "Environment variables"
+    },
+    {
+      "__outstatic": {
+        "commit": "8eab69c7c7ae74a8a974448363eb28df8f5ee535",
+        "hash": "1038937038",
+        "path": "outstatic/content/docs/the-content-editor.md"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "coverImage": "",
+      "description": "Learn how the Outstatic Content Editor works.",
       "publishedAt": "2022-10-26T12:26:38.000Z",
       "slug": "the-content-editor",
       "status": "published",
       "title": "The content editor"
+    },
+    {
+      "__outstatic": {
+        "commit": "f8f14edc5fdfa0c113a2ad64f7b542efceb062de",
+        "hash": "2908528600",
+        "path": "outstatic/content/docs/getting-started.md"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "coverImage": "",
+      "description": "Get started with Outstatic",
+      "publishedAt": "2023-09-23T18:34:15.000Z",
+      "slug": "getting-started",
+      "status": "published",
+      "title": "Getting started"
     }
   ]
 }

@@ -4,7 +4,6 @@ import Highlight from '@tiptap/extension-highlight'
 import HorizontalRule from '@tiptap/extension-horizontal-rule'
 import Image from '@tiptap/extension-image'
 import Link from '@tiptap/extension-link'
-import Placeholder from '@tiptap/extension-placeholder'
 import TiptapUnderline from '@tiptap/extension-underline'
 import { ReactNodeViewRenderer } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
@@ -12,6 +11,7 @@ import lowlight from 'lowlight'
 import { Markdown } from 'tiptap-markdown'
 import CodeBlock from './CodeBlock'
 import SlashCommand from './SlashCommand'
+import { ToggleClass } from './ToggleClass'
 
 export const TiptapExtensions = [
   StarterKit.configure({
@@ -50,6 +50,7 @@ export const TiptapExtensions = [
     },
     gapcursor: false
   }),
+  ToggleClass,
   // patch to fix horizontal rule bug: https://github.com/ueberdosis/tiptap/pull/3859#issuecomment-1536799740
   HorizontalRule.extend({
     addInputRules() {
@@ -75,15 +76,6 @@ export const TiptapExtensions = [
     HTMLAttributes: {
       class: 'mt-4 mb-6 border-t border-stone-300'
     }
-  }),
-  Placeholder.configure({
-    placeholder: ({ node }) => {
-      if (node.type.name === 'heading') {
-        return `Heading ${node.attrs.level}`
-      }
-      return "Press '/' for commands"
-    },
-    includeChildren: true
   }),
   SlashCommand,
   TiptapUnderline,

@@ -199,6 +199,30 @@ input.react-datepicker-time__input {
   font-size: 21px;
   line-height: 1.58;
   letter-spacing: -0.003em;
+  position: relative;
+}
+
+.ProseMirror *.completing:after {
+  content: 'O';
+  animation: completing 2s linear infinite;
+  position: relative;
+  display: inline-block;
+  margin-left: 5px;
+}
+
+@keyframes completing {
+  0% {
+    transform: rotate(0deg);
+    opacity: 1;
+  }
+  50% {
+    transform: rotate(180deg);
+    opacity: 0.5;
+  }
+  100% {
+    transform: rotate(360deg);
+    opacity: 0.5;
+  }
 }
 
 .ProseMirror p:first-child:before {
@@ -207,6 +231,14 @@ input.react-datepicker-time__input {
   float: left;
   height: 0;
   pointer-events: none;
+}
+
+.ProseMirror *.completing.is-empty:before {
+  content: '';
+}
+
+.ProseMirror *.completing.is-empty br {
+  display: none;
 }
 
 .ProseMirror img {
