@@ -44,7 +44,12 @@ export const convertSchemaToYup = (customFields: {
       shape[name] = shape[name].required(`${fields.title} is a required field.`)
     }
     if (fields.dataType === 'number') {
-      shape[name] = shape[name].typeError('Must be a number.')
+      shape[name] = shape[name].typeError(
+        `${fields.title} is a required field.`
+      )
+    }
+    if (fields.dataType === 'array' && fields.required) {
+      shape[name] = shape[name].min(1, `${fields.title} is a required field.`)
     }
   }
 
