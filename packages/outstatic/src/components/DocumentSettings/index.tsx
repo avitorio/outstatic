@@ -3,18 +3,18 @@ import { useContext } from 'react'
 import { RegisterOptions, useFormContext } from 'react-hook-form'
 import { slugify } from 'transliteration'
 import { DocumentContext } from '../../context'
-import Accordion from '../Accordion'
-import DateTimePicker from '../DateTimePicker'
-import DeleteDocumentButton from '../DeleteDocumentButton'
-import Input from '../Input'
-import TextArea from '../TextArea'
-import TagInput from '../TagInput'
-import DocumentSettingsImageSelection from '../DocumentSettingsImageSelection'
 import {
   CustomFieldArrayValue,
   CustomFields,
   isArrayCustomField
 } from '../../types'
+import Accordion from '../Accordion'
+import DateTimePicker from '../DateTimePicker'
+import DeleteDocumentButton from '../DeleteDocumentButton'
+import DocumentSettingsImageSelection from '../DocumentSettingsImageSelection'
+import Input from '../Input'
+import TagInput from '../TagInput'
+import TextArea from '../TextArea'
 
 type DocumentSettingsProps = {
   saveFunc: () => void
@@ -206,6 +206,18 @@ const DocumentSettings = ({
             const Field = FieldDataMap[field.fieldType]
             if (isArrayCustomField(field)) {
               Field.props.suggestions = field.values
+            }
+
+            // Fix for NaN error when saving a non-required number
+            if (field.fieldType === 'Number' && !field.required) {
+              Field.props = {
+                ...Field.props,
+                // @ts-ignore
+                registerOptions: {
+                  setValueAs: (value: any) =>
+                    isNaN(value) ? undefined : Number(value)
+                }
+              }
             }
             return (
               <Accordion
