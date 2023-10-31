@@ -209,14 +209,18 @@ const DocumentSettings = ({
             }
 
             // Fix for NaN error when saving a non-required number
-            if (field.fieldType === 'Number' && !field.required) {
+            if (field.fieldType === 'Number') {
+              const registerOptions: RegisterOptions = {}
+              if (!field.required) {
+                console.log('too')
+                registerOptions.setValueAs = (value: any) =>
+                  isNaN(value) ? undefined : Number(value)
+              }
+
               Field.props = {
                 ...Field.props,
                 // @ts-ignore
-                registerOptions: {
-                  setValueAs: (value: any) =>
-                    isNaN(value) ? undefined : Number(value)
-                }
+                registerOptions
               }
             }
             return (
