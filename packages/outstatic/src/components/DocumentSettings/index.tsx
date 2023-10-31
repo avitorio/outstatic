@@ -24,14 +24,15 @@ type DocumentSettingsProps = {
   customFields?: CustomFields
 }
 
-interface InputProps {
+interface CustomInputProps {
   type?: 'text' | 'number'
   suggestions?: CustomFieldArrayValue[]
+  registerOptions?: RegisterOptions
 }
 
 type ComponentType = {
   component: typeof Input | typeof TextArea | typeof TagInput
-  props: InputProps
+  props: CustomInputProps
 }
 
 type FieldDataMapType = {
@@ -212,7 +213,6 @@ const DocumentSettings = ({
             if (field.fieldType === 'Number' && !field.required) {
               Field.props = {
                 ...Field.props,
-                // @ts-ignore
                 registerOptions: {
                   setValueAs: (value: any) =>
                     isNaN(value) ? undefined : Number(value)
