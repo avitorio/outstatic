@@ -43,11 +43,28 @@ The project is constantly improving with new changes being implemented on a dail
 
 ![hit-the-star](https://user-images.githubusercontent.com/1417109/197028994-7261693c-0201-4ec7-9c69-a996c9de870c.gif)
 
+## Tech Stack
+
+Novel is built on the following stack:
+
+- [Next.js](https://nextjs.org/) – framework
+- [GitHub](https://github.com/) – content storage and auth
+- [Tiptap](https://tiptap.dev/) – text editor
+- [OpenAI](https://openai.com/) - AI completions
+- [Vercel AI SDK](https://sdk.vercel.ai/docs) – AI library
+- [TailwindCSS](https://tailwindcss.com/) – styles
+- [Novel](https://novel.sh) – AI completions and slash command
+
 ## Community
 
 The Outstatic community can be found on [GitHub Discussions](https://github.com/avitorio/outstatic/discussions), where you can ask questions, voice ideas, and share your projects.
 
 To chat with other community members you can join the [Outstatic Discord](https://discord.gg/qEjtpn7E6F).
+You can also follow us on [X / Twitter](https://x.com/outstatic).
+
+## Author
+
+- Andre Vitorio ([@andrevitorio](https://twitter.com/andrevitorio))
 
 ## Contributing
 
@@ -56,7 +73,3 @@ Please see our [CONTRIBUTING.md](/CONTRIBUTING.md).
 <a href="https://github.com/avitorio/outstatic/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=avitorio/outstatic" />
 </a>
-
-## Author
-
-- Andre Vitorio ([@andrevitorio](https://twitter.com/andrevitorio))

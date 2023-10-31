@@ -10,7 +10,7 @@ coverImage: ''
 publishedAt: '2023-09-23T21:00:00.000Z'
 ---
 
-## Use Github Apps for Authentication
+## Use GitHub Apps for Authentication
 
 The preferred method of integration, as suggested by [GitHub Documentation](https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/differences-between-github-apps-and-oauth-apps), is the utilization of GitHub Apps over OAuth Applications. Outstatic has built-in support to seamlessly integrate with Github Apps.
 
@@ -57,4 +57,3 @@ Go to "Install App" in your application settings and click "Install" for the acc
 Although providing permission to all repositories is possible, it is recommended to choose "Only select repositories" and add your desired repository. This permission can be modified later in the account/organization settings.
 
 Then you only need to follow the [Getting Started Guide](/docs/getting-started) to configure your application with these values.
-
