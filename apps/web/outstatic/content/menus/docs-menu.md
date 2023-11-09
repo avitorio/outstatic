@@ -18,9 +18,9 @@ publishedAt: '2023-08-04T14:18:37.000Z'
 
   - [Deploy with Vercel](/docs/getting-started#deploy-with-vercel)
 
-  - [Local Development](/docs/local-development)
-
   - [Add to Next.js](/docs/getting-started#adding-outstatic-to-a-nextjs-website)
+
+  - [Local Development](/docs/local-development)
 
 - [The Content Editor](/docs/the-content-editor)
 
