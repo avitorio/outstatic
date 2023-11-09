@@ -1,6 +1,6 @@
 {
   "name": "outstatic",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Static site CMS for Next.js",
   "author": "Andre Vitorio <andre@vitorio.net>",
   "repository": {
@@ -75,7 +75,7 @@
     "tailwind-merge": "^1.13.2",
     "thenby": "^1.3.4",
     "tippy.js": "^6.3.7",
-    "tiptap-markdown": "^0.8.1",
+    "tiptap-markdown": "0.8.1",
     "transliteration": "^2.3.5",
     "url-slug": "^3.0.4",
     "use-debounce": "^9.0.4",

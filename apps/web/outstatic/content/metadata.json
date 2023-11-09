@@ -1,6 +1,6 @@
 {
-  "commit": "64c356eef746b804f886d7ef578a0f1ff3795f9c",
-  "generated": "2023-11-09T19:01:34.271Z",
+  "commit": "b5611574e85620d818e5802034b375ceec97d70e",
+  "generated": "2023-11-09T21:36:48.495Z",
   "metadata": [
     {
       "__outstatic": {
@@ -219,8 +219,8 @@
     },
     {
       "__outstatic": {
-        "commit": "64c356eef746b804f886d7ef578a0f1ff3795f9c",
-        "hash": "2956013328",
+        "commit": "b5611574e85620d818e5802034b375ceec97d70e",
+        "hash": "1463380872",
         "path": "outstatic/content/menus/docs-menu.md"
       },
       "author": {
