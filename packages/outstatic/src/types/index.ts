@@ -16,7 +16,7 @@ export type Document = {
 }
 
 export type FileType = {
-  type: 'images'
+  type: 'image'
   blob?: string
   filename: string
   content: string
@@ -26,8 +26,6 @@ export type DocumentContextType = {
   editor: Editor
   document: Document
   editDocument: (property: string, value: any) => void
-  files: FileType[]
-  setFiles: Dispatch<SetStateAction<FileType[]>>
   hasChanges: boolean
   collection: string
 }

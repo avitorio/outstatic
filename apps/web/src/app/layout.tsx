@@ -8,11 +8,11 @@ export const metadata: Metadata = {
   metadataBase: new URL('https://outstatic.com'),
   title: 'Outstatic - A Static Site CMS for Next.js',
   description:
-    'An open source static site CMS for Next.js. Create your blog or website in minutes. No dabatase needed.',
+    'An open source static site CMS for Next.js. Create your blog or website in minutes. No database needed.',
   openGraph: {
     title: 'Outstatic - A Static Site CMS for Next.js',
     description:
-      'An open source static site CMS for Next.js. Create your blog or website in minutes. No dabatase needed.',
+      'An open source static site CMS for Next.js. Create your blog or website in minutes. No database needed.',
     url: 'https://outstatic.com',
     siteName: 'Next.js',
     images: [

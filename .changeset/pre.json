@@ -1,0 +1,11 @@
+{
+  "mode": "pre",
+  "tag": "canary",
+  "initialVersions": {
+    "web": "1.0.0",
+    "eslint-config-custom": "0.0.0",
+    "outstatic": "1.0.0",
+    "tsconfig": "0.0.0"
+  },
+  "changesets": []
+}

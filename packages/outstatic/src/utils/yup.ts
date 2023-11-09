@@ -1,9 +1,8 @@
 import * as yup from 'yup'
-import { slugRegex } from './slugRegex'
-import { buildYup } from 'schema-to-yup'
-import { CustomFields, SchemaShape } from '../types'
-import { AnyObject } from 'yup/lib/types'
 import { AssertsShape, TypeOfShape } from 'yup/lib/object'
+import { AnyObject } from 'yup/lib/types'
+import { CustomFields, SchemaShape } from '../types'
+import { slugRegex } from './slugRegex'
 
 const documentShape = {
   title: yup.string().required('Title is required.'),
@@ -39,15 +38,25 @@ export const convertSchemaToYup = (customFields: {
 }): yup.ObjectSchema<any, AnyObject, TypeOfShape<any>, AssertsShape<any>> => {
   const shape: SchemaShape = {}
 
-  Object.entries(customFields.properties).map(([name, fields]) => {
-    shape[name] = { ...customFields.properties[name], type: fields.dataType }
+  for (const [name, fields] of Object.entries(customFields.properties)) {
+    shape[name] = yup[fields.dataType]()
+    if (fields.required) {
+      shape[name] = shape[name].required(`${fields.title} is a required field.`)
+    }
+    if (fields.dataType === 'number') {
+      shape[name] = shape[name].typeError(
+        `${fields.title} is a required field.`
+      )
+    }
+    if (fields.dataType === 'array' && fields.required) {
+      shape[name] = shape[name].min(1, `${fields.title} is a required field.`)
+    }
+  }
+
+  const mergedSchema = yup.object().shape({
+    ...documentShape,
+    ...shape
   })
 
-  const yupSchema = buildYup({
-    type: 'object',
-    properties: { ...documentShape, ...shape }
-  })
-
-  // @ts-ignore
-  return yupSchema
+  return mergedSchema
 }

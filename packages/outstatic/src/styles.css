@@ -199,6 +199,30 @@ input.react-datepicker-time__input {
   font-size: 21px;
   line-height: 1.58;
   letter-spacing: -0.003em;
+  position: relative;
+}
+
+.ProseMirror *.completing:after {
+  content: 'O';
+  animation: completing 2s linear infinite;
+  position: relative;
+  display: inline-block;
+  margin-left: 5px;
+}
+
+@keyframes completing {
+  0% {
+    transform: rotate(0deg);
+    opacity: 1;
+  }
+  50% {
+    transform: rotate(180deg);
+    opacity: 0.5;
+  }
+  100% {
+    transform: rotate(360deg);
+    opacity: 0.5;
+  }
 }
 
 .ProseMirror p:first-child:before {
@@ -209,8 +233,16 @@ input.react-datepicker-time__input {
   pointer-events: none;
 }
 
+.ProseMirror *.completing.is-empty:before {
+  content: '';
+}
+
+.ProseMirror *.completing.is-empty br {
+  display: none;
+}
+
 .ProseMirror img {
-  max-width: 100%;
+  max-width: 99%;
   height: auto;
   margin: 0;
   display: inline-block;
@@ -339,4 +371,25 @@ input.react-datepicker-time__input {
 
 .ProseMirror .image-error {
   @apply block bg-red-50 border border-red-300 relative w-full h-32 text-base font-normal font-sans;
+}
+
+.ProseMirror .is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  color: #9ca3af;
+  pointer-events: none;
+  height: 0;
+}
+.ProseMirror .is-empty::before {
+  content: attr(data-placeholder);
+  float: left;
+  color: #9ca3af;
+  pointer-events: none;
+  height: 0;
+}
+
+ul[data-type='taskList'] li[data-checked='true'] > div > p {
+  color: #9ca3af;
+  text-decoration: line-through;
+  text-decoration-thickness: 2px;
 }

@@ -1,4 +1,4 @@
-import { useFormContext, RegisterOptions } from 'react-hook-form'
+import { RegisterOptions, useFormContext } from 'react-hook-form'
 
 export type InputProps = {
   label?: string

@@ -1,13 +1,10 @@
-import { Dispatch, SetStateAction, useEffect } from 'react'
-import showdown from 'showdown'
+import { Editor } from '@tiptap/react'
 import matter from 'gray-matter'
+import { Dispatch, SetStateAction, useEffect } from 'react'
 import { UseFormReturn } from 'react-hook-form'
 import { Document, Session } from '../../types'
-import { Editor } from '@tiptap/react'
-import { replaceImageSrcRoot } from '../replaceImageSrc'
-import { escapeRegExp } from '../escapeRegExp'
-import { IMAGES_PATH } from '../constants'
 import { getLocalDate } from '../getLocalDate'
+import { parseContent } from '../parseContent'
 import useFileQuery from './useFileQuery'
 
 interface UseDocumentUpdateEffectProps {
@@ -41,19 +38,7 @@ export const useDocumentUpdateEffect = ({
       let mdContent = documentQueryObject.text as string
       const { data, content } = matter(mdContent)
 
-      const parseContent = () => {
-        const converter = new showdown.Converter({ noHeaderId: true })
-        const newContent = converter.makeHtml(content)
-
-        // fetch images from GitHub in case deploy is not done yet
-        return replaceImageSrcRoot(
-          newContent,
-          new RegExp(`^/${escapeRegExp(IMAGES_PATH)}`, 'gi'),
-          '/api/outstatic/images/'
-        )
-      }
-
-      const parsedContent = parseContent()
+      const parsedContent = parseContent(content)
 
       const newDate = data.publishedAt
         ? new Date(data.publishedAt)

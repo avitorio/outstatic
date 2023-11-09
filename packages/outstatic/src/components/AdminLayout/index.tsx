@@ -1,10 +1,11 @@
 import { ApolloError } from '@apollo/client'
 import Head from 'next/head'
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { useOstSession } from '../../utils/auth/hooks'
 import AdminHeader from '../AdminHeader'
 import Sidebar from '../Sidebar'
+import { Toaster } from 'sonner'
 
 export type AdminLayoutProps = {
   error?: string | ApolloError
@@ -20,7 +21,7 @@ export default function AdminLayout({
   title
 }: AdminLayoutProps) {
   const { session, status } = useOstSession()
-  const { push, asPath } = useRouter()
+  const { push } = useRouter()
   const [openSidebar, setOpenSidebar] = useState(false)
   const toggleSidebar = () => {
     setOpenSidebar(!openSidebar)
@@ -28,7 +29,7 @@ export default function AdminLayout({
 
   if (status === 'unauthenticated') {
     if (typeof window !== 'undefined') {
-      push(`/outstatic/?callbackUrl=${asPath}`)
+      push(`/outstatic`)
     }
     return null
   }
@@ -39,6 +40,7 @@ export default function AdminLayout({
         <title>{title ? `${title} | Outstatic` : 'Outstatic'}</title>
       </Head>
       <div id="outstatic">
+        <Toaster richColors />
         {status === 'loading' ? null : (
           <div className="flex h-screen flex-col bg-white text-black">
             <AdminHeader

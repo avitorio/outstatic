@@ -12,17 +12,15 @@ publishedAt: '2023-08-04T14:18:37.000Z'
 
 - [Introduction](/docs/introduction)
 
-    - [How does Outstatic work?](/docs/introduction#how-does-outstatic-work)
-
-    <!-- -->
+  - [How does Outstatic work?](/docs/introduction#how-does-outstatic-work)
 
 - [Getting started](/docs/getting-started)
 
-    - [Deploy with Vercel](/docs/getting-started#deploy-with-vercel)
+  - [Deploy with Vercel](/docs/getting-started#deploy-with-vercel)
 
-    - [Add to Next.js](/docs/getting-started#adding-outstatic-to-a-nextjs-website)
+  - [Local Development](/docs/local-development)
 
-    <!-- -->
+  - [Add to Next.js](/docs/getting-started#adding-outstatic-to-a-nextjs-website)
 
 - [The Content Editor](/docs/the-content-editor)
 
@@ -30,15 +28,12 @@ publishedAt: '2023-08-04T14:18:37.000Z'
 
 - [Custom Fields](/docs/custom-fields) (New)
 
-- [Environment Variables](https://outstatic.com/docs/environment-variables)
+- [Environment Variables](/docs/environment-variables)
 
 - [FAQs](/docs/faqs)
 
-    - [How do I add Outstatic to a Next.js Markdown blog?](/docs/faqs#i-already-have-a-nextjs-markdown-blog-how-do-i-start-using-outstatic)
+  - [How do I add Outstatic to a Next.js Markdown blog?](/docs/faqs#i-already-have-a-nextjs-markdown-blog-how-do-i-start-using-outstatic)
 
-    - [Where is data stored?](/docs/faqs#where-is-the-data-stored)
+  - [Where is data stored?](/docs/faqs#where-is-the-data-stored)
 
-    - [Do I need Vercel?](/docs/faqs#can-i-host-my-outstatic-website-on-a-provider-other-than-vercel)
-
-    <!-- -->
-
+  - [Do I need Vercel?](/docs/faqs#can-i-host-my-outstatic-website-on-a-provider-other-than-vercel)

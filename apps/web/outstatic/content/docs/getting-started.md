@@ -5,9 +5,9 @@ author:
   name: 'Andre Vitorio'
   picture: 'https://avatars.githubusercontent.com/u/1417109?v=4'
 slug: 'getting-started'
-description: ''
+description: 'Get started with Outstatic'
 coverImage: ''
-publishedAt: '2023-08-04T18:34:15.000Z'
+publishedAt: '2023-09-23T18:34:15.000Z'
 ---
 
 Here's how you can get started with Outstatic.
@@ -18,7 +18,19 @@ Requirements:
 
 - A [GitHub](https://github.com) account.
 
-Outstatic uses GitHub Oauth for authentication. Before we start you'll need to create a GitHub OAuth app:
+### **Initiating Setup: GitHub Authentication**
+
+Before diving in, it's essential to configure GitHub Authentication for your project. Outstatic accommodates both **GitHub OAuth** and **GitHub Apps** for authentication purposes:
+
+- **GitHub OAuth:** easier and quicker to set up, ideal for simpler integrations.
+
+- **GitHub Apps:** setup is generally more complex, providing a refined level of access and control.
+
+For those opting for GitHub Apps, please refer to the relevant [GitHub Apps Authentication](/docs/github-apps-authentication) documentation.
+
+#### Setting up a GitHub OAuth Application:
+
+Let’s walk through the steps to create a GitHub OAuth Application, streamlining your project’s initial setup:
 
 - First go to the "Register a new OAuth application" page on GitHub by [clicking here](https://github.com/settings/applications/new).
 
@@ -72,9 +84,15 @@ To login to your Dashboard add `/outstatic` to the end of your site url:
 
 Example: `https://myblog.vercel.app/outstatic`
 
+Congratulations! Now you have a website with a full-featured dashboard to edit your content.
+
+To develop your Vercel deployed website locally, please check the [Local Development](/docs/local-development) page.
+
 We recommend you learn how [Outstatic manages content](/docs/introduction) and also how to [fetch content](/docs/fetching-data) from your front end.
 
 ## Adding Outstatic to a Next.js website
+
+If you want to use Outstatic with Next.js 12, you can [continue here](/docs/using-with-next-js-12).
 
 Before we start, you should know Outstatic saves content as markdown files to your GitHub repository. To understand how this works please read our [introduction](https://outstatic.com/docs/introduction) article.
 
@@ -91,25 +109,29 @@ yarn add outstatic
 pnpm install outstatic
 ```
 
-Once installed, you'll need to add two files to your `/pages` folder:
+Once installed, you'll need to add two files to your `/app` folder:
 
-`/pages/outstatic/[[...ost]].tsx`
+`/app/outstatic/[[...ost]]/page.tsx`
 
 ```javascript
 import 'outstatic/outstatic.css'
-import { Outstatic, OstSSP } from 'outstatic'
+import { Outstatic } from 'outstatic'
+import { OstClient } from 'outstatic/client'
 
-export default Outstatic
-
-export const getServerSideProps = OstSSP
+export default async function Page({ params }: { params: { ost: string[] } }) {
+  const ostData = await Outstatic()
+  return <OstClient ostData={ostData} params={params} />
+}
 ```
 
-And `/pages/api/outstatic/[[...ost]].tsx`
+And `/app/api/outstatic/[[...ost]]/route.ts`
 
 ```javascript
 import { OutstaticApi } from 'outstatic'
 
-export default OutstaticApi
+export const GET = OutstaticApi.GET
+
+export const POST = OutstaticApi.POST
 ```
 
 Start your dev server. Assuming you're on `http://localhost:3000` you can access your dashboard at `https://localhost:3000/outstatic`.

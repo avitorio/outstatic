@@ -1,6 +1,6 @@
 import './styles.css'
 
-export * from './pages'
-export * from './pages/api'
-export * from './context'
+export * from './app'
+export * from './app/api'
+export * from './types'
 export * from './types/public'

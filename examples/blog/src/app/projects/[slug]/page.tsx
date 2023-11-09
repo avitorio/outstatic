@@ -8,6 +8,7 @@ import ContentGrid from '@/components/ContentGrid'
 import { OstDocument } from 'outstatic'
 import { Metadata } from 'next'
 import { absoluteUrl } from '@/lib/utils'
+import { notFound } from 'next/navigation'
 
 type Project = {
   tags: { value: string; label: string }[]
@@ -116,6 +117,10 @@ async function getData({ params }: Params) {
       'coverImage'
     ])
     .first()
+
+  if (!project) {
+    notFound()
+  }
 
   const content = await markdownToHtml(project.content)
 

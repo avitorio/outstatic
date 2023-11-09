@@ -7,6 +7,7 @@ import markdownToHtml from '@/lib/markdownToHtml'
 import { getDocumentSlugs, load } from 'outstatic/server'
 import DateFormatter from '@/components/DateFormatter'
 import { absoluteUrl } from '@/lib/utils'
+import { notFound } from 'next/navigation'
 
 type Post = {
   tags: { value: string; label: string }[]
@@ -112,6 +113,10 @@ async function getData({ params }: Params) {
       'tags'
     ])
     .first()
+
+  if (!post) {
+    notFound()
+  }
 
   const content = await markdownToHtml(post.content)
 

@@ -100,7 +100,7 @@ async function getData({ params }: Params) {
 
   const menu = getDocumentBySlug('menus', 'docs-menu', ['content'])
 
-  const menuContent = await markdownToHtml(menu.content || '')
+  const menuContent = await markdownToHtml(menu?.content || '')
 
   const result = await bundleMDX({
     source: doc.content,

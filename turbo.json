@@ -14,6 +14,9 @@
       "cache": false,
       "env": ["NEXT_PUBLIC_APP_URL"]
     },
+    "dev13": {
+      "cache": false
+    },
     "clean": {
       "cache": false
     },
@@ -39,7 +42,8 @@
         "OST_REPO_SLUG",
         "OST_REPO_OWNER",
         "OST_TOKEN_SECRET",
-        "VERCEL_GIT_REPO_SLUG"
+        "VERCEL_GIT_REPO_SLUG",
+        "OPENAI_API_KEY"
       ]
     }
   }

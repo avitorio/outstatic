@@ -1,20 +1,20 @@
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/navigation'
 import { useContext } from 'react'
 import { RegisterOptions, useFormContext } from 'react-hook-form'
-import { convert } from 'url-slug'
+import { slugify } from 'transliteration'
 import { DocumentContext } from '../../context'
-import Accordion from '../Accordion'
-import DateTimePicker from '../DateTimePicker'
-import DeleteDocumentButton from '../DeleteDocumentButton'
-import Input from '../Input'
-import TextArea from '../TextArea'
-import TagInput from '../TagInput'
-import DocumentSettingsImageSelection from '../DocumentSettingsImageSelection'
 import {
   CustomFieldArrayValue,
   CustomFields,
   isArrayCustomField
 } from '../../types'
+import Accordion from '../Accordion'
+import DateTimePicker from '../DateTimePicker'
+import DeleteDocumentButton from '../DeleteDocumentButton'
+import DocumentSettingsImageSelection from '../DocumentSettingsImageSelection'
+import Input from '../Input'
+import TagInput from '../TagInput'
+import TextArea from '../TextArea'
 
 type DocumentSettingsProps = {
   saveFunc: () => void
@@ -24,14 +24,15 @@ type DocumentSettingsProps = {
   customFields?: CustomFields
 }
 
-interface InputProps {
+interface CustomInputProps {
   type?: 'text' | 'number'
   suggestions?: CustomFieldArrayValue[]
+  registerOptions?: RegisterOptions
 }
 
 type ComponentType = {
   component: typeof Input | typeof TextArea | typeof TagInput
-  props: InputProps
+  props: CustomInputProps
 }
 
 type FieldDataMapType = {
@@ -178,7 +179,7 @@ const DocumentSettings = ({
                   'slug',
                   lastChar === ' ' || lastChar === '-'
                     ? e.target.value
-                    : convert(e.target.value, { dictionary: { "'": '' } })
+                    : slugify(e.target.value)
                 )
               }
             }}
@@ -206,6 +207,17 @@ const DocumentSettings = ({
             const Field = FieldDataMap[field.fieldType]
             if (isArrayCustomField(field)) {
               Field.props.suggestions = field.values
+            }
+
+            // Fix for NaN error when saving a non-required number
+            if (field.fieldType === 'Number' && !field.required) {
+              Field.props = {
+                ...Field.props,
+                registerOptions: {
+                  setValueAs: (value: any) =>
+                    isNaN(value) ? undefined : Number(value)
+                }
+              }
             }
             return (
               <Accordion
