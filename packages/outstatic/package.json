@@ -75,7 +75,7 @@
     "tailwind-merge": "^1.13.2",
     "thenby": "^1.3.4",
     "tippy.js": "^6.3.7",
-    "tiptap-markdown": "^0.8.1",
+    "tiptap-markdown": "0.8.1",
     "transliteration": "^2.3.5",
     "url-slug": "^3.0.4",
     "use-debounce": "^9.0.4",
