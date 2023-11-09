@@ -1,6 +1,6 @@
 {
   "name": "outstatic",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Static site CMS for Next.js",
   "author": "Andre Vitorio <andre@vitorio.net>",
   "repository": {
