@@ -1,6 +1,6 @@
 {
-  "commit": "f8f14edc5fdfa0c113a2ad64f7b542efceb062de",
-  "generated": "2023-10-27T20:15:47.275Z",
+  "commit": "64c356eef746b804f886d7ef578a0f1ff3795f9c",
+  "generated": "2023-11-09T19:01:34.271Z",
   "metadata": [
     {
       "__outstatic": {
@@ -91,24 +91,6 @@
       "slug": "fetching-data",
       "status": "published",
       "title": "Fetching data"
-    },
-    {
-      "__outstatic": {
-        "commit": "0c61efdb3c5e7811c3cd779224099bedad0c4e9d",
-        "hash": "3955814468",
-        "path": "/outstatic/content/menus/docs-menu.md"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "menus",
-      "coverImage": "",
-      "description": "",
-      "publishedAt": "2023-08-04T14:18:37.000Z",
-      "slug": "docs-menu",
-      "status": "published",
-      "title": "Docs Menu"
     },
     {
       "__outstatic": {
@@ -234,6 +216,24 @@
       "slug": "getting-started",
       "status": "published",
       "title": "Getting started"
+    },
+    {
+      "__outstatic": {
+        "commit": "64c356eef746b804f886d7ef578a0f1ff3795f9c",
+        "hash": "2956013328",
+        "path": "outstatic/content/menus/docs-menu.md"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "menus",
+      "coverImage": "",
+      "description": "",
+      "publishedAt": "2023-08-04T14:18:37.000Z",
+      "slug": "docs-menu",
+      "status": "published",
+      "title": "Docs Menu"
     }
   ]
 }
