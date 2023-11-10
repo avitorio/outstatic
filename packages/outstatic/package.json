@@ -79,7 +79,6 @@
     "transliteration": "^2.3.5",
     "url-slug": "^3.0.4",
     "use-debounce": "^9.0.4",
-    "view": "link:@tiptap/pm/view",
     "yup": "^0.32.11",
     "zustand": "^4.4.3"
   },
