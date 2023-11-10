@@ -2,9 +2,9 @@
   "mode": "pre",
   "tag": "canary",
   "initialVersions": {
-    "web": "1.0.1-canary",
+    "web": "1.0.2",
     "eslint-config-custom": "0.0.0",
-    "outstatic": "1.0.1-canary",
+    "outstatic": "1.0.2",
     "tsconfig": "0.0.0"
   },
   "changesets": []
