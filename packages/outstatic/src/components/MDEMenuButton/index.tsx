@@ -33,9 +33,9 @@ const MDEMenuButton = ({
         onClick()
       }}
       title={name}
-      className={`group border-r border-black py-2 px-3 last-of-type:border-r-0 disabled:cursor-not-allowed disabled:hover:bg-gray-600 ${
+      className={`group border-r border-slate-300 py-4 px-4 last-of-type:border-r-0 disabled:cursor-not-allowed disabled:hover:bg-gray-600 ${
         editor.isActive(name, attributes)
-          ? 'is-active bg-black text-white [&>svg]:fill-white'
+          ? 'is-active bg-slate-200'
           : 'bg-white text-black hover:bg-slate-100'
       }`}
       disabled={disabled}
