@@ -132,7 +132,7 @@ importers:
       eslint-config-next: ^13.4.0
       gray-matter: ^4.0.3
       next: ^13.5.4
-      outstatic: ^1
+      outstatic: ^1.0.0
       postcss: 8.4.24
       react: 18.2.0
       react-dom: 18.2.0
@@ -268,7 +268,6 @@ importers:
       typescript: ^4.5.2
       url-slug: ^3.0.4
       use-debounce: ^9.0.4
-      view: link:@tiptap/pm/view
       yup: ^0.32.11
       zustand: ^4.4.3
     dependencies:
@@ -325,7 +324,6 @@ importers:
       transliteration: 2.3.5
       url-slug: 3.0.6
       use-debounce: 9.0.4_react@18.2.0
-      view: link:@tiptap/pm/view
       yup: 0.32.11
       zustand: 4.4.3_i73ekzlbntu7jol6ph2fvy4mga
     devDependencies:
