@@ -22,11 +22,15 @@ publishedAt: '2023-08-04T14:18:37.000Z'
 
   - [Local Development](/docs/local-development)
 
+  - [Migrating to v1](/docs/migrating-to-v1)
+
 - [The Content Editor](/docs/the-content-editor)
+
+  - [AI Completion](/docs/the-content-editor#ai-completion)
 
 - [Fetching data](/docs/fetching-data)
 
-- [Custom Fields](/docs/custom-fields) (New)
+- [Custom Fields](/docs/custom-fields) ⚡︎
 
 - [Environment Variables](/docs/environment-variables)
 

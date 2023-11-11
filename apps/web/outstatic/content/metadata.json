@@ -1,6 +1,6 @@
 {
-  "commit": "bbdd4ea46504b696b0af71adafc8bbf6b2e4b809",
-  "generated": "2023-11-11T19:02:20.802Z",
+  "commit": "d178eb249777406a3f9bd14390f4e9d4bed33eea",
+  "generated": "2023-11-11T19:03:41.825Z",
   "metadata": [
     {
       "__outstatic": {
@@ -219,24 +219,6 @@
     },
     {
       "__outstatic": {
-        "commit": "b5611574e85620d818e5802034b375ceec97d70e",
-        "hash": "1463380872",
-        "path": "outstatic/content/menus/docs-menu.md"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "menus",
-      "coverImage": "",
-      "description": "",
-      "publishedAt": "2023-08-04T14:18:37.000Z",
-      "slug": "docs-menu",
-      "status": "published",
-      "title": "Docs Menu"
-    },
-    {
-      "__outstatic": {
         "commit": "bbdd4ea46504b696b0af71adafc8bbf6b2e4b809",
         "hash": "85927068",
         "path": "outstatic/content/docs/migrating-to-v1.md"
@@ -252,6 +234,24 @@
       "slug": "migrating-to-v1",
       "status": "published",
       "title": "Migrating to v1"
+    },
+    {
+      "__outstatic": {
+        "commit": "d178eb249777406a3f9bd14390f4e9d4bed33eea",
+        "hash": "3534638505",
+        "path": "outstatic/content/menus/docs-menu.md"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "menus",
+      "coverImage": "",
+      "description": "",
+      "publishedAt": "2023-08-04T14:18:37.000Z",
+      "slug": "docs-menu",
+      "status": "published",
+      "title": "Docs Menu"
     }
   ]
 }
