@@ -1,6 +1,6 @@
 {
-  "commit": "b5611574e85620d818e5802034b375ceec97d70e",
-  "generated": "2023-11-09T21:36:48.495Z",
+  "commit": "bbdd4ea46504b696b0af71adafc8bbf6b2e4b809",
+  "generated": "2023-11-11T19:02:20.802Z",
   "metadata": [
     {
       "__outstatic": {
@@ -234,6 +234,24 @@
       "slug": "docs-menu",
       "status": "published",
       "title": "Docs Menu"
+    },
+    {
+      "__outstatic": {
+        "commit": "bbdd4ea46504b696b0af71adafc8bbf6b2e4b809",
+        "hash": "85927068",
+        "path": "outstatic/content/docs/migrating-to-v1.md"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "coverImage": "",
+      "description": "Migrating Outstatic to >v1.0.0",
+      "publishedAt": "2023-11-11T18:59:51.912Z",
+      "slug": "migrating-to-v1",
+      "status": "published",
+      "title": "Migrating to v1"
     }
   ]
 }
