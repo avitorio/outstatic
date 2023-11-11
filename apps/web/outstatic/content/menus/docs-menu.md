@@ -26,7 +26,7 @@ publishedAt: '2023-08-04T14:18:37.000Z'
 
 - [The Content Editor](/docs/the-content-editor)
 
-  - [AI Completion](/docs/the-content-editor#ai-completion)
+  - [AI Completion ](/docs/the-content-editor#ai-completion)🤖
 
 - [Fetching data](/docs/fetching-data)
 

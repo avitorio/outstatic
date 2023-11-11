@@ -1,6 +1,6 @@
 {
   "commit": "d178eb249777406a3f9bd14390f4e9d4bed33eea",
-  "generated": "2023-11-11T19:03:41.825Z",
+  "generated": "2023-11-11T19:03:48.625Z",
   "metadata": [
     {
       "__outstatic": {
@@ -238,7 +238,7 @@
     {
       "__outstatic": {
         "commit": "d178eb249777406a3f9bd14390f4e9d4bed33eea",
-        "hash": "3534638505",
+        "hash": "1374522046",
         "path": "outstatic/content/menus/docs-menu.md"
       },
       "author": {
