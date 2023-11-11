@@ -1,6 +1,6 @@
 {
   "commit": "d178eb249777406a3f9bd14390f4e9d4bed33eea",
-  "generated": "2023-11-11T19:03:48.625Z",
+  "generated": "2023-11-11T19:04:00.031Z",
   "metadata": [
     {
       "__outstatic": {
@@ -238,7 +238,7 @@
     {
       "__outstatic": {
         "commit": "d178eb249777406a3f9bd14390f4e9d4bed33eea",
-        "hash": "1374522046",
+        "hash": "2110381651",
         "path": "outstatic/content/menus/docs-menu.md"
       },
       "author": {
@@ -248,7 +248,7 @@
       "collection": "menus",
       "coverImage": "",
       "description": "",
-      "publishedAt": "2023-08-04T14:18:37.000Z",
+      "publishedAt": "2023-11-11T15:18:37.000Z",
       "slug": "docs-menu",
       "status": "published",
       "title": "Docs Menu"

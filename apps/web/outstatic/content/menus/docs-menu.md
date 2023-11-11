@@ -7,7 +7,7 @@ author:
 slug: 'docs-menu'
 description: ''
 coverImage: ''
-publishedAt: '2023-08-04T14:18:37.000Z'
+publishedAt: '2023-11-11T15:18:37.000Z'
 ---
 
 - [Introduction](/docs/introduction)
