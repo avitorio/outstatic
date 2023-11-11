@@ -37,7 +37,6 @@ const useTipTap = ({ ...rhfMethods }) => {
       })
     ],
     editorProps: TiptapEditorProps,
-    autofocus: 'end',
     onUpdate({ editor }) {
       const selection = editor.state.selection
       const lastTwo = getPrevText(editor, {
