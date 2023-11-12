@@ -220,7 +220,7 @@ importers:
       clsx: ^1.2.1
       concurrently: ^7.6.0
       cookie: ^0.5.0
-      cross-fetch: ^3.1.5
+      cross-fetch: ^4.0.0
       dompurify: ^2.3.9
       encoding: ^0.1.13
       eslint: 8.42.0
@@ -292,7 +292,7 @@ importers:
       camelcase: 6.3.0
       clsx: 1.2.1
       cookie: 0.5.0
-      cross-fetch: 3.1.8_encoding@0.1.13
+      cross-fetch: 4.0.0_encoding@0.1.13
       dompurify: 2.4.5
       graphql: 16.7.1
       gray-matter: 4.0.3
@@ -5087,6 +5087,15 @@ packages:
       node-fetch: 2.6.12_encoding@0.1.13
     transitivePeerDependencies:
       - encoding
+    dev: true
+
+  /cross-fetch/4.0.0_encoding@0.1.13:
+    resolution: {integrity: sha512-e4a5N8lVvuLgAWgnCrLr2PP0YyDOTHa9H/Rj54dirp61qXnNq46m82bRhNqIA5VccJtWBvPTFRV3TtvHUKPB1g==}
+    dependencies:
+      node-fetch: 2.6.12_encoding@0.1.13
+    transitivePeerDependencies:
+      - encoding
+    dev: false
 
   /cross-spawn/5.1.0:
     resolution: {integrity: sha512-pTgQJ5KC0d2hcY8eyL1IzlBPYjTkyH72XRZPnLyKus2mBfNjQs3klqbJU2VILqZryAZUt9JOb3h/mWMy23/f5A==}

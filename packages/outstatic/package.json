@@ -47,7 +47,7 @@
     "camelcase": "^6.3.0",
     "clsx": "^1.2.1",
     "cookie": "^0.5.0",
-    "cross-fetch": "^3.1.5",
+    "cross-fetch": "^4.0.0",
     "dompurify": "^2.3.9",
     "graphql": "^16.5.0",
     "gray-matter": "^4.0.3",
