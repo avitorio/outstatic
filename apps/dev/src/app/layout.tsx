@@ -3,6 +3,7 @@ import '../styles/index.css'
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://outstatic.com'),
   title: {
     default: 'Outstatic',
     template: '%s | Outstatic'

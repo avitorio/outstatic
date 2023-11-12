@@ -1,8 +1,9 @@
 import { absoluteUrl } from '@/lib/utils'
-import '../styles/index.css'
 import { Metadata } from 'next'
+import '../styles/index.css'
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://outstatic.com'),
   title: {
     default: 'Outstatic',
     template: '%s | Outstatic'
