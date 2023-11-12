@@ -1,6 +1,6 @@
 {
   "name": "web",
-  "version": "1.0.2",
+  "version": "1.0.2-canary.1",
   "private": true,
   "scripts": {
     "dev": "next dev",
