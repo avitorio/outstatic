@@ -1,6 +1,6 @@
 {
-  "commit": "cdd3b81cdc002ee9f57b53f0f46bff42bbf79d19",
-  "generated": "2023-11-20T09:56:38.328Z",
+  "commit": "f57759922b7e0847856a251ebed1e479e93704ab",
+  "generated": "2023-11-20T09:57:19.531Z",
   "metadata": [
     {
       "__outstatic": {
@@ -201,24 +201,6 @@
     },
     {
       "__outstatic": {
-        "commit": "d178eb249777406a3f9bd14390f4e9d4bed33eea",
-        "hash": "2110381651",
-        "path": "outstatic/content/menus/docs-menu.md"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "menus",
-      "coverImage": "",
-      "description": "",
-      "publishedAt": "2023-11-11T15:18:37.000Z",
-      "slug": "docs-menu",
-      "status": "published",
-      "title": "Docs Menu"
-    },
-    {
-      "__outstatic": {
         "commit": "5dae185dbcd98997cc9e0c925ebebf12823a9f86",
         "hash": "3218713448",
         "path": "outstatic/content/docs/environment-variables.md"
@@ -252,6 +234,24 @@
       "slug": "faqs",
       "status": "published",
       "title": "FAQs"
+    },
+    {
+      "__outstatic": {
+        "commit": "f57759922b7e0847856a251ebed1e479e93704ab",
+        "hash": "3579180601",
+        "path": "outstatic/content/menus/docs-menu.md"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "menus",
+      "coverImage": "",
+      "description": "",
+      "publishedAt": "2023-11-20T15:18:37.000Z",
+      "slug": "docs-menu",
+      "status": "published",
+      "title": "Docs Menu"
     }
   ]
 }
