@@ -1,6 +1,6 @@
 {
-  "commit": "8335b28234ed06066d500bf60e386e43b1e60050",
-  "generated": "2023-11-20T09:55:24.008Z",
+  "commit": "cdd3b81cdc002ee9f57b53f0f46bff42bbf79d19",
+  "generated": "2023-11-20T09:56:38.328Z",
   "metadata": [
     {
       "__outstatic": {
@@ -237,8 +237,8 @@
     },
     {
       "__outstatic": {
-        "commit": "8335b28234ed06066d500bf60e386e43b1e60050",
-        "hash": "1917718940",
+        "commit": "cdd3b81cdc002ee9f57b53f0f46bff42bbf79d19",
+        "hash": "3433676299",
         "path": "outstatic/content/docs/faqs.md"
       },
       "author": {
