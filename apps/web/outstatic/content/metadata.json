@@ -1,6 +1,6 @@
 {
-  "commit": "d178eb249777406a3f9bd14390f4e9d4bed33eea",
-  "generated": "2023-11-11T19:04:00.031Z",
+  "commit": "5dae185dbcd98997cc9e0c925ebebf12823a9f86",
+  "generated": "2023-11-20T09:53:51.331Z",
   "metadata": [
     {
       "__outstatic": {
@@ -165,24 +165,6 @@
     },
     {
       "__outstatic": {
-        "commit": "8e58e12a50a8722e6dbb838125393f89d78f8028",
-        "hash": "2396177196",
-        "path": "outstatic/content/docs/environment-variables.md"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "docs",
-      "coverImage": "",
-      "description": "",
-      "publishedAt": "2022-10-26T12:36:25.000Z",
-      "slug": "environment-variables",
-      "status": "published",
-      "title": "Environment variables"
-    },
-    {
-      "__outstatic": {
         "commit": "8eab69c7c7ae74a8a974448363eb28df8f5ee535",
         "hash": "1038937038",
         "path": "outstatic/content/docs/the-content-editor.md"
@@ -252,6 +234,24 @@
       "slug": "docs-menu",
       "status": "published",
       "title": "Docs Menu"
+    },
+    {
+      "__outstatic": {
+        "commit": "5dae185dbcd98997cc9e0c925ebebf12823a9f86",
+        "hash": "3218713448",
+        "path": "outstatic/content/docs/environment-variables.md"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "coverImage": "",
+      "description": "",
+      "publishedAt": "2022-10-26T12:36:25.000Z",
+      "slug": "environment-variables",
+      "status": "published",
+      "title": "Environment Variables"
     }
   ]
 }
