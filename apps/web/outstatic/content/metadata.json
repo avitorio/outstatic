@@ -1,6 +1,6 @@
 {
-  "commit": "5dae185dbcd98997cc9e0c925ebebf12823a9f86",
-  "generated": "2023-11-20T09:53:51.331Z",
+  "commit": "8335b28234ed06066d500bf60e386e43b1e60050",
+  "generated": "2023-11-20T09:55:24.008Z",
   "metadata": [
     {
       "__outstatic": {
@@ -55,24 +55,6 @@
       "slug": "github-application",
       "status": "draft",
       "title": "GitHub Application"
-    },
-    {
-      "__outstatic": {
-        "commit": "ec445ed70a6ecc6aed484f02dd2049c732c230d2",
-        "hash": "2176425421",
-        "path": "/outstatic/content/docs/faqs.md"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "docs",
-      "coverImage": "",
-      "description": "",
-      "publishedAt": "2023-08-06T12:07:51.000Z",
-      "slug": "faqs",
-      "status": "published",
-      "title": "FAQs"
     },
     {
       "__outstatic": {
@@ -252,6 +234,24 @@
       "slug": "environment-variables",
       "status": "published",
       "title": "Environment Variables"
+    },
+    {
+      "__outstatic": {
+        "commit": "8335b28234ed06066d500bf60e386e43b1e60050",
+        "hash": "1917718940",
+        "path": "outstatic/content/docs/faqs.md"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "coverImage": "",
+      "description": "",
+      "publishedAt": "2023-11-20T13:07:51.000Z",
+      "slug": "faqs",
+      "status": "published",
+      "title": "FAQs"
     }
   ]
 }
