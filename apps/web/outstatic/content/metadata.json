@@ -1,6 +1,6 @@
 {
-  "commit": "f57759922b7e0847856a251ebed1e479e93704ab",
-  "generated": "2023-11-20T09:57:19.531Z",
+  "commit": "af25a4558e63e9324b4dd427d478b5788b798382",
+  "generated": "2023-11-24T23:11:52.144Z",
   "metadata": [
     {
       "__outstatic": {
@@ -90,24 +90,6 @@
       "slug": "how-to-create-a-blog-with-outstatic",
       "status": "published",
       "title": "Learn how to create your blog with Outstatic"
-    },
-    {
-      "__outstatic": {
-        "commit": "baab0613ec7117304e95b6dbdcd0d84fbab2c45a",
-        "hash": "2166371953",
-        "path": "/outstatic/content/docs/local-development.md"
-      },
-      "author": {
-        "name": "leplay",
-        "picture": "https://avatars.githubusercontent.com/u/284475?v=4"
-      },
-      "collection": "docs",
-      "coverImage": "",
-      "description": "",
-      "publishedAt": "2023-09-23T08:42:29.464Z",
-      "slug": "local-development",
-      "status": "published",
-      "title": "Local Development"
     },
     {
       "__outstatic": {
@@ -252,6 +234,24 @@
       "slug": "docs-menu",
       "status": "published",
       "title": "Docs Menu"
+    },
+    {
+      "__outstatic": {
+        "commit": "af25a4558e63e9324b4dd427d478b5788b798382",
+        "hash": "191850098",
+        "path": "outstatic/content/docs/local-development.md"
+      },
+      "author": {
+        "name": "leplay",
+        "picture": "https://avatars.githubusercontent.com/u/284475?v=4"
+      },
+      "collection": "docs",
+      "coverImage": "",
+      "description": "",
+      "publishedAt": "2023-11-25T09:42:29.000Z",
+      "slug": "local-development",
+      "status": "published",
+      "title": "Local Development"
     }
   ]
 }
