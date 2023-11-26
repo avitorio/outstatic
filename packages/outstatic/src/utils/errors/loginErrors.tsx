@@ -27,6 +27,22 @@ const loginErrors = {
       </a>
       .
     </>
+  ),
+  redirect_uri_mismatch: (
+    <>
+      The redirect_uri MUST match the registered callback URL for this
+      application. <br />
+      <br />
+      For more information:{' '}
+      <a
+        className="underline"
+        target="_blank"
+        href="https://docs.github.com/apps/managing-oauth-apps/troubleshooting-authorization-request-errors/#redirect-uri-mismatch"
+      >
+        GitHub Apps troubleshooting
+      </a>
+      .
+    </>
   )
 }
 
