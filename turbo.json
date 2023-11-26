@@ -43,7 +43,8 @@
         "OST_REPO_OWNER",
         "OST_TOKEN_SECRET",
         "VERCEL_GIT_REPO_SLUG",
-        "OPENAI_API_KEY"
+        "OPENAI_API_KEY",
+        "OST_GITHUB_CALLBACK_URL"
       ]
     }
   }

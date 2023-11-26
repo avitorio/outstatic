@@ -9,7 +9,7 @@ export default async function GET() {
   url.searchParams.append('scope', scopes.join(','))
   url.searchParams.append('response_type', 'code')
   if (process.env?.OST_GITHUB_CALLBACK_URL) {
-    url.searchParams.append('redirect_uri', process.env?.OST_GITHUB_CALLBACK_URL)
+    url.searchParams.append('redirect_uri', process.env.OST_GITHUB_CALLBACK_URL)
   }
 
   redirect(url.toString())
