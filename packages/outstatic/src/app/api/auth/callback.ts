@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server'
 import { createEdgeRouter } from 'next-connect'
 import nextSession from 'next-session'
 import { Session } from 'next-session/lib/types'
+import { NextRequest, NextResponse } from 'next/server'
 import { setLoginSession } from '../../../utils/auth/auth'
 import { MAX_AGE } from '../../../utils/auth/auth-cookies'
 
@@ -100,6 +100,13 @@ router
     }
   })
   .get(async (req) => {
+    const error = req?.nextUrl.searchParams?.get('error')
+
+    // check for GitHub errors
+    if (error) {
+      return NextResponse.json({ error }, { status: 403 })
+    }
+
     const code = req?.nextUrl.searchParams?.get('code') as string
     const access_token = await getAccessToken(code)
     req.session.token = access_token
