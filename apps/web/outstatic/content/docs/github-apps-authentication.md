@@ -7,7 +7,7 @@ author:
 slug: 'github-apps-authentication'
 description: ''
 coverImage: ''
-publishedAt: '2023-10-26T21:00:00.000Z'
+publishedAt: '2023-11-26T22:00:00.000Z'
 ---
 
 ## Use GitHub Apps for Authentication
@@ -38,7 +38,7 @@ Set the Callback URL to `https://my-website-name.com/api/outstatic/callback`. Fo
 
 Unselect the "Active" option on the Webhook section.\
 \
-![](/images/image-E4ND.png)
+![](/images/image-MzNT.png)
 
 #### 6\. Set Permissions
 
@@ -60,9 +60,9 @@ Copy the Client ID from your application settings and generate a Client Secret b
 
 Go to "Install App" in your application settings and click "Install" for the account/organization where you want to add the repository.
 
-![](/images/cleanshot-2023-11-26-at-22.36.06-2x-czOT.png)
+![](/images/cleanshot-2023-11-26-at-22.36.06-2x-E2OT.png)
 
-#### 10\. Set Repository Permissions
+#### 11\. Set Repository Permissions
 
 Although providing permission to all repositories is possible, it is recommended to choose "Only select repositories" and add your desired repository. This permission can be modified later in the account/organization settings.
 

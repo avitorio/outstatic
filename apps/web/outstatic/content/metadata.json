@@ -1,6 +1,6 @@
 {
   "commit": "28229851a2eed6b7d565c7e96de476bc6c0795ed",
-  "generated": "2023-11-26T22:15:28.295Z",
+  "generated": "2023-11-26T22:15:49.702Z",
   "metadata": [
     {
       "__outstatic": {
@@ -238,7 +238,7 @@
     {
       "__outstatic": {
         "commit": "28229851a2eed6b7d565c7e96de476bc6c0795ed",
-        "hash": "2135592917",
+        "hash": "3687552268",
         "path": "outstatic/content/docs/github-apps-authentication.md"
       },
       "author": {
@@ -248,7 +248,7 @@
       "collection": "docs",
       "coverImage": "",
       "description": "",
-      "publishedAt": "2023-10-26T21:00:00.000Z",
+      "publishedAt": "2023-11-26T22:00:00.000Z",
       "slug": "github-apps-authentication",
       "status": "published",
       "title": "GitHub Apps Authentication"
