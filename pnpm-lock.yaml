@@ -76,6 +76,7 @@ importers:
       esbuild: ^0.15.10
       eslint-config-custom: workspace:*
       gray-matter: ^4.0.3
+      lucide-react: ^0.260.0
       mdx-bundler: ^9.0.1
       next: ^13.5.4
       outstatic: workspace:*
@@ -95,6 +96,7 @@ importers:
       countries-and-timezones: 3.5.1
       date-fns: 2.30.0
       gray-matter: 4.0.3
+      lucide-react: 0.260.0_react@18.2.0
       next: 13.5.4_biqbaboplfbrettd7655fr4n2y
       outstatic: link:../../packages/outstatic
       react: 18.2.0
