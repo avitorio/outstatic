@@ -1,6 +1,6 @@
 {
-  "commit": "d178eb249777406a3f9bd14390f4e9d4bed33eea",
-  "generated": "2023-11-11T19:04:00.031Z",
+  "commit": "28229851a2eed6b7d565c7e96de476bc6c0795ed",
+  "generated": "2023-11-26T22:15:28.295Z",
   "metadata": [
     {
       "__outstatic": {
@@ -129,24 +129,6 @@
     },
     {
       "__outstatic": {
-        "commit": "0203755b3e71110daa0f698a949d9908ce70e8ac",
-        "hash": "2432495499",
-        "path": "outstatic/content/docs/github-apps-authentication.md"
-      },
-      "author": {
-        "name": "Anthony Quéré",
-        "picture": "https://avatars.githubusercontent.com/u/47711333?v=4"
-      },
-      "collection": "docs",
-      "coverImage": "",
-      "description": "",
-      "publishedAt": "2023-09-23T21:00:00.000Z",
-      "slug": "github-apps-authentication",
-      "status": "published",
-      "title": "GitHub Apps Authentication"
-    },
-    {
-      "__outstatic": {
         "commit": "819d30ab3c7f2796b94bd8fd21e936f7a988b07e",
         "hash": "3670638841",
         "path": "outstatic/content/docs/using-with-next-js-12.md"
@@ -252,6 +234,24 @@
       "slug": "docs-menu",
       "status": "published",
       "title": "Docs Menu"
+    },
+    {
+      "__outstatic": {
+        "commit": "28229851a2eed6b7d565c7e96de476bc6c0795ed",
+        "hash": "2135592917",
+        "path": "outstatic/content/docs/github-apps-authentication.md"
+      },
+      "author": {
+        "name": "Anthony Quéré",
+        "picture": "https://avatars.githubusercontent.com/u/47711333?v=4"
+      },
+      "collection": "docs",
+      "coverImage": "",
+      "description": "",
+      "publishedAt": "2023-10-26T21:00:00.000Z",
+      "slug": "github-apps-authentication",
+      "status": "published",
+      "title": "GitHub Apps Authentication"
     }
   ]
 }
