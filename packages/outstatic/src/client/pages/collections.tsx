@@ -9,6 +9,7 @@ import useOid from '../../utils/hooks/useOid'
 
 export default function Collections() {
   const {
+    repoOwner,
     collections,
     session,
     repoSlug,
@@ -26,7 +27,7 @@ export default function Collections() {
   const deleteCollection = async (collection: string) => {
     try {
       const oid = await fetchOid()
-      const owner = process.env.OST_REPO_OWNER || session?.user?.login || ''
+      const owner = repoOwner || session?.user?.login || ''
 
       const commitInput = collectionCommitInput({
         owner,
