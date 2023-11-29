@@ -7,7 +7,7 @@ author:
 slug: 'docs-menu'
 description: ''
 coverImage: ''
-publishedAt: '2023-11-11T15:18:37.000Z'
+publishedAt: '2023-11-20T15:18:37.000Z'
 ---
 
 - [Introduction](/docs/introduction)
@@ -41,3 +41,5 @@ publishedAt: '2023-11-11T15:18:37.000Z'
   - [Where is data stored?](/docs/faqs#where-is-the-data-stored)
 
   - [Do I need Vercel?](/docs/faqs#can-i-host-my-outstatic-website-on-a-provider-other-than-vercel)
+
+  - [Troubleshooting Login and Repository Access Issues](/docs/faqs#troubleshooting-login-and-repository-access-issues)

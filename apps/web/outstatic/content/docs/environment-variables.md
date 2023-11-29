@@ -1,5 +1,5 @@
 ---
-title: 'Environment variables'
+title: 'Environment Variables'
 status: 'published'
 author:
   name: 'Andre Vitorio'
@@ -38,6 +38,8 @@ OST_MONOREPO_PATH=apps/web
 OPENAI_API_KEY=sk-XXXXXXX
 ```
 
-**Good to know**: To get your repository slug we first try fetching the `OST_REPO_SLUG` environment variable. If that is empty, we try `VERCEL_GIT_REPO_SLUG`, which is one of Vercel's default environment variables. If both are empty, you'll get a warning saying you need to add `OST_REPO_SLUG` to your environment variables.
+**Good to know**: To get your repository slug we first try fetching the `OST_REPO_SLUG` environment variable. If that is empty, we try `VERCEL_GIT_REPO_SLUG`, which is one of Vercel's default environment variables. If both are empty, you'll get a warning saying you need to add `OST_REPO_SLUG` to your environment variables.\
+\
+**Important:** Don't forget to redeploy your website or restart your server after updating environment variables.
 
 In case you need help on how to get your GitHub OAuth credentials, please read the [Getting started](/docs/getting-started) section.

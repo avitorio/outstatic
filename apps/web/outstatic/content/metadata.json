@@ -58,24 +58,6 @@
     },
     {
       "__outstatic": {
-        "commit": "ec445ed70a6ecc6aed484f02dd2049c732c230d2",
-        "hash": "2176425421",
-        "path": "/outstatic/content/docs/faqs.md"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "docs",
-      "coverImage": "",
-      "description": "",
-      "publishedAt": "2023-08-06T12:07:51.000Z",
-      "slug": "faqs",
-      "status": "published",
-      "title": "FAQs"
-    },
-    {
-      "__outstatic": {
         "commit": "22650aab8e1fa8241dd7756b1bf90fd79342969d",
         "hash": "3223339599",
         "path": "/outstatic/content/docs/fetching-data.md"
@@ -147,24 +129,6 @@
     },
     {
       "__outstatic": {
-        "commit": "8e58e12a50a8722e6dbb838125393f89d78f8028",
-        "hash": "2396177196",
-        "path": "outstatic/content/docs/environment-variables.md"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "docs",
-      "coverImage": "",
-      "description": "",
-      "publishedAt": "2022-10-26T12:36:25.000Z",
-      "slug": "environment-variables",
-      "status": "published",
-      "title": "Environment variables"
-    },
-    {
-      "__outstatic": {
         "commit": "8eab69c7c7ae74a8a974448363eb28df8f5ee535",
         "hash": "1038937038",
         "path": "outstatic/content/docs/the-content-editor.md"
@@ -219,8 +183,44 @@
     },
     {
       "__outstatic": {
-        "commit": "d178eb249777406a3f9bd14390f4e9d4bed33eea",
-        "hash": "2110381651",
+        "commit": "5dae185dbcd98997cc9e0c925ebebf12823a9f86",
+        "hash": "3218713448",
+        "path": "outstatic/content/docs/environment-variables.md"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "coverImage": "",
+      "description": "",
+      "publishedAt": "2022-10-26T12:36:25.000Z",
+      "slug": "environment-variables",
+      "status": "published",
+      "title": "Environment Variables"
+    },
+    {
+      "__outstatic": {
+        "commit": "cdd3b81cdc002ee9f57b53f0f46bff42bbf79d19",
+        "hash": "3433676299",
+        "path": "outstatic/content/docs/faqs.md"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "coverImage": "",
+      "description": "",
+      "publishedAt": "2023-11-20T13:07:51.000Z",
+      "slug": "faqs",
+      "status": "published",
+      "title": "FAQs"
+    },
+    {
+      "__outstatic": {
+        "commit": "f57759922b7e0847856a251ebed1e479e93704ab",
+        "hash": "3579180601",
         "path": "outstatic/content/menus/docs-menu.md"
       },
       "author": {
@@ -230,7 +230,7 @@
       "collection": "menus",
       "coverImage": "",
       "description": "",
-      "publishedAt": "2023-11-11T15:18:37.000Z",
+      "publishedAt": "2023-11-20T15:18:37.000Z",
       "slug": "docs-menu",
       "status": "published",
       "title": "Docs Menu"
