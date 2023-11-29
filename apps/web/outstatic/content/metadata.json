@@ -1,6 +1,6 @@
 {
-  "commit": "af25a4558e63e9324b4dd427d478b5788b798382",
-  "generated": "2023-11-24T23:11:52.144Z",
+  "commit": "28229851a2eed6b7d565c7e96de476bc6c0795ed",
+  "generated": "2023-11-26T22:15:49.702Z",
   "metadata": [
     {
       "__outstatic": {
@@ -93,21 +93,21 @@
     },
     {
       "__outstatic": {
-        "commit": "0203755b3e71110daa0f698a949d9908ce70e8ac",
-        "hash": "2432495499",
-        "path": "outstatic/content/docs/github-apps-authentication.md"
+        "commit": "baab0613ec7117304e95b6dbdcd0d84fbab2c45a",
+        "hash": "2166371953",
+        "path": "/outstatic/content/docs/local-development.md"
       },
       "author": {
-        "name": "Anthony Quéré",
-        "picture": "https://avatars.githubusercontent.com/u/47711333?v=4"
+        "name": "leplay",
+        "picture": "https://avatars.githubusercontent.com/u/284475?v=4"
       },
       "collection": "docs",
       "coverImage": "",
       "description": "",
-      "publishedAt": "2023-09-23T21:00:00.000Z",
-      "slug": "github-apps-authentication",
+      "publishedAt": "2023-09-23T08:42:29.464Z",
+      "slug": "local-development",
       "status": "published",
-      "title": "GitHub Apps Authentication"
+      "title": "Local Development"
     },
     {
       "__outstatic": {
@@ -237,21 +237,21 @@
     },
     {
       "__outstatic": {
-        "commit": "af25a4558e63e9324b4dd427d478b5788b798382",
-        "hash": "191850098",
-        "path": "outstatic/content/docs/local-development.md"
+        "commit": "28229851a2eed6b7d565c7e96de476bc6c0795ed",
+        "hash": "3687552268",
+        "path": "outstatic/content/docs/github-apps-authentication.md"
       },
       "author": {
-        "name": "leplay",
-        "picture": "https://avatars.githubusercontent.com/u/284475?v=4"
+        "name": "Anthony Quéré",
+        "picture": "https://avatars.githubusercontent.com/u/47711333?v=4"
       },
       "collection": "docs",
       "coverImage": "",
       "description": "",
-      "publishedAt": "2023-11-25T09:42:29.000Z",
-      "slug": "local-development",
+      "publishedAt": "2023-11-26T22:00:00.000Z",
+      "slug": "github-apps-authentication",
       "status": "published",
-      "title": "Local Development"
+      "title": "GitHub Apps Authentication"
     }
   ]
 }

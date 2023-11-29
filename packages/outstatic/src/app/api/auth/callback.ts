@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server'
 import { createEdgeRouter } from 'next-connect'
 import nextSession from 'next-session'
 import { Session } from 'next-session/lib/types'
+import { NextRequest, NextResponse } from 'next/server'
 import { setLoginSession } from '../../../utils/auth/auth'
 import { MAX_AGE } from '../../../utils/auth/auth-cookies'
 
@@ -56,8 +56,10 @@ async function fetchGitHubUser(token: string) {
 
 async function checkRepository(token: string, userName: string) {
   const repoOwner = process.env.OST_REPO_OWNER || userName
+  const repoSlug =
+    process.env.OST_REPO_SLUG || process.env.VERCEL_GIT_REPO_SLUG || ''
   const response = await fetch(
-    `https://api.github.com/repos/${repoOwner}/${process.env.OST_REPO_SLUG}`,
+    `https://api.github.com/repos/${repoOwner}/${repoSlug}`,
     {
       headers: {
         Authorization: `token ${token}`
@@ -69,9 +71,11 @@ async function checkRepository(token: string, userName: string) {
 }
 
 async function checkCollaborator(token: string, userName: string) {
+  const repoSlug =
+    process.env.OST_REPO_SLUG || process.env.VERCEL_GIT_REPO_SLUG || ''
   if (process.env.OST_REPO_OWNER) {
     const response = await fetch(
-      `https://api.github.com/repos/${process.env.OST_REPO_OWNER}/${process.env.OST_REPO_SLUG}/collaborators/${userName}`,
+      `https://api.github.com/repos/${process.env.OST_REPO_OWNER}/${repoSlug}/collaborators/${userName}`,
       {
         headers: {
           Authorization: `token ${token}`
@@ -100,6 +104,13 @@ router
     }
   })
   .get(async (req) => {
+    const error = req?.nextUrl.searchParams?.get('error')
+
+    // check for GitHub errors
+    if (error) {
+      return NextResponse.json({ error }, { status: 403 })
+    }
+
     const code = req?.nextUrl.searchParams?.get('code') as string
     const access_token = await getAccessToken(code)
     req.session.token = access_token
