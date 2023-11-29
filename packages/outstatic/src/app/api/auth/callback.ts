@@ -56,8 +56,10 @@ async function fetchGitHubUser(token: string) {
 
 async function checkRepository(token: string, userName: string) {
   const repoOwner = process.env.OST_REPO_OWNER || userName
+  const repoSlug =
+    process.env.OST_REPO_SLUG || process.env.VERCEL_GIT_REPO_SLUG || ''
   const response = await fetch(
-    `https://api.github.com/repos/${repoOwner}/${process.env.OST_REPO_SLUG}`,
+    `https://api.github.com/repos/${repoOwner}/${repoSlug}`,
     {
       headers: {
         Authorization: `token ${token}`
@@ -69,9 +71,11 @@ async function checkRepository(token: string, userName: string) {
 }
 
 async function checkCollaborator(token: string, userName: string) {
+  const repoSlug =
+    process.env.OST_REPO_SLUG || process.env.VERCEL_GIT_REPO_SLUG || ''
   if (process.env.OST_REPO_OWNER) {
     const response = await fetch(
-      `https://api.github.com/repos/${process.env.OST_REPO_OWNER}/${process.env.OST_REPO_SLUG}/collaborators/${userName}`,
+      `https://api.github.com/repos/${process.env.OST_REPO_OWNER}/${repoSlug}/collaborators/${userName}`,
       {
         headers: {
           Authorization: `token ${token}`
