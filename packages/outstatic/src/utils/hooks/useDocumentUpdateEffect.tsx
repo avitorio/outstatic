@@ -61,7 +61,7 @@ export const useDocumentUpdateEffect = ({
         methods.reset({
           ...formData,
           author: {
-            name: session?.user.name,
+            name: session?.user.name ?? '',
             picture: session?.user.image ?? ''
           },
           coverImage: '',

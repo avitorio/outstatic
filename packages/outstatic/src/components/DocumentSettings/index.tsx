@@ -155,7 +155,7 @@ const DocumentSettings = ({
             label="Name"
             name="author.name"
             id="author.name"
-            defaultValue={document.author?.name}
+            defaultValue={document.author?.name ?? ""}
             inputSize="small"
             wrapperClass="mb-4"
           />
