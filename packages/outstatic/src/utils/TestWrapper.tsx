@@ -9,9 +9,9 @@ import {
   DocumentDocument,
   CreateCommitDocument
 } from '../graphql/generated'
-import { Document } from '../types'
+import { Document, DocumentContextType } from '../types'
 
-const documentExample: Document = {
+export const documentExample: Document = {
   publishedAt: new Date('2022-07-14'),
   title: 'Example Document',
   content: 'Example Content',
@@ -23,7 +23,7 @@ const documentExample: Document = {
   }
 }
 
-const mocks = [
+export const mocks = [
   {
     request: {
       query: OidDocument,
@@ -100,26 +100,57 @@ const mocks = [
   }
 ]
 
-export const TestWrapper = (props: { children: ReactNode }) => {
-  const formMethods = useForm<FormData>()
+const TestApolloProviders = ({ children }: { children: React.ReactNode }) => {
+  return (
+    // @ts-ignore
+    <MockedProvider mocks={mocks} addTypename={false}>
+      {children}
+    </MockedProvider>
+  )
+}
+
+const TestDocumentContextProvider = ({
+  children,
+  value = {}
+}: {
+  children: React.ReactNode
+  value?: Partial<DocumentContextType>
+}) => {
   const editor = useEditor({
     extensions: [StarterKit]
   })
 
+  const defaultValue: DocumentContextType = {
+    editor: editor as Editor,
+    document: documentExample,
+    editDocument: () => {},
+    hasChanges: false,
+    collection: 'documents'
+  }
+
   return (
-    // @ts-ignore
-    <MockedProvider mocks={mocks} addTypename={false}>
-      <DocumentContext.Provider
-        value={{
-          editor: editor as Editor,
-          document: documentExample,
-          editDocument: () => {},
-          hasChanges: false,
-          collection: 'documents'
-        }}
-      >
-        <FormProvider {...formMethods}>{props.children}</FormProvider>
-      </DocumentContext.Provider>
-    </MockedProvider>
+    <DocumentContext.Provider value={{ ...defaultValue, ...value }}>
+      {children}
+    </DocumentContext.Provider>
   )
+}
+
+const TestFormProvider = ({ children }: { children: React.ReactNode }) => {
+  const formMethods = useForm<FormData>()
+
+  return <FormProvider {...formMethods}>{children}</FormProvider>
+}
+
+export const TestWrapper = (props: { children: ReactNode }) => (
+  <TestProviders.Apollo>
+    <TestProviders.DocumentContext>
+      <TestProviders.Form>{props.children}</TestProviders.Form>
+    </TestProviders.DocumentContext>
+  </TestProviders.Apollo>
+)
+
+export const TestProviders = {
+  Apollo: TestApolloProviders,
+  DocumentContext: TestDocumentContextProvider,
+  Form: TestFormProvider
 }

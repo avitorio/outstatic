@@ -1,6 +1,11 @@
 import { render, screen } from '@testing-library/react'
 import React from 'react'
-import { TestWrapper } from '../../utils/TestWrapper'
+
+import {
+  TestWrapper,
+  TestProviders,
+  documentExample
+} from '../../utils/TestWrapper'
 import { useOstSession } from '../../utils/auth/hooks'
 import DocumentSettings from '.'
 
@@ -34,5 +39,35 @@ describe('<DocumentSettings />', () => {
     )
 
     expect(screen.getByText('July 14, 2022')).toBeInTheDocument()
+  })
+  it('should handle empty author name', async () => {
+    ;(useOstSession as jest.Mock).mockReturnValue({
+      session: {
+        user: {
+          username: 'avitorio'
+        }
+      },
+      status: 'authenticated'
+    })
+
+    render(
+      <TestProviders.Apollo>
+        <TestProviders.DocumentContext
+          value={{
+            document: { ...documentExample, author: { name: undefined } }
+          }}
+        >
+          <TestProviders.Form>
+            <DocumentSettings
+              saveFunc={() => {}}
+              loading={false}
+              showDelete={false}
+            />
+          </TestProviders.Form>
+        </TestProviders.DocumentContext>
+      </TestProviders.Apollo>
+    )
+    expect(screen.getByLabelText('Name')).toHaveValue('')
+    expect(screen.getByLabelText('Name')).not.toBeUndefined()
   })
 })
