@@ -1,13 +1,12 @@
 import { render, screen } from '@testing-library/react'
-import React from 'react'
-
+import DocumentSettings from '.'
 import {
-  TestWrapper,
   TestProviders,
+  TestWrapper,
   documentExample
 } from '../../utils/TestWrapper'
 import { useOstSession } from '../../utils/auth/hooks'
-import DocumentSettings from '.'
+import { dateToString } from '../../utils/tests/utils'
 
 jest.mock('../../utils/auth/hooks')
 jest.mock('next/navigation', () => require('next-router-mock'))
@@ -38,7 +37,9 @@ describe('<DocumentSettings />', () => {
       </TestWrapper>
     )
 
-    expect(screen.getByText('July 14, 2022')).toBeInTheDocument()
+    expect(
+      screen.getByText(dateToString(new Date('2022-07-14')))
+    ).toBeInTheDocument()
   })
   it('should handle empty author name', async () => {
     ;(useOstSession as jest.Mock).mockReturnValue({
