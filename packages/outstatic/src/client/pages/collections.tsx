@@ -3,9 +3,15 @@ import { useContext, useState } from 'react'
 import { AdminLayout } from '../../components'
 import Modal from '../../components/Modal'
 import { OutstaticContext } from '../../context'
-import { useCreateCommitMutation } from '../../graphql/generated'
-import { collectionCommitInput } from '../../utils/collectionCommitInput'
+import {
+  useCreateCommitMutation,
+  useDocumentLazyQuery
+} from '../../graphql/generated'
+import { createCommitApi } from '../../utils/createCommitApi'
+import { hashFromUrl } from '../../utils/hashFromUrl'
 import useOid from '../../utils/hooks/useOid'
+import { stringifyMetadata } from '../../utils/metadata/stringify'
+import { MetadataSchema } from '../../utils/metadata/types'
 
 export default function Collections() {
   const {
@@ -24,27 +30,63 @@ export default function Collections() {
   const [createCommit] = useCreateCommitMutation()
   const fetchOid = useOid()
 
+  const [loadMetadata] = useDocumentLazyQuery({
+    variables: {
+      owner: repoOwner || session?.user?.login || '',
+      name: repoSlug,
+      filePath: `${repoBranch}:${
+        monorepoPath ? monorepoPath + '/' : ''
+      }${contentPath}/metadata.json`
+    },
+    fetchPolicy: 'network-only'
+  })
+
   const deleteCollection = async (collection: string) => {
-    try {
-      const oid = await fetchOid()
-      const owner = repoOwner || session?.user?.login || ''
+    loadMetadata().then(async ({ data: metadata }) => {
+      try {
+        const oid = await fetchOid()
+        const owner = repoOwner || session?.user?.login || ''
 
-      const commitInput = collectionCommitInput({
-        owner,
-        oid,
-        repoSlug,
-        repoBranch,
-        remove: true,
-        contentPath,
-        monorepoPath,
-        collection
-      })
+        const capi = createCommitApi({
+          message: `feat(${collection}): remove ${collection}`,
+          owner,
+          oid: oid ?? '',
+          name: repoSlug,
+          branch: repoBranch
+        })
 
-      await createCommit({ variables: commitInput })
-      setShowDeleteModal(false)
-      setDeleting(false)
-      removePage(collection)
-    } catch (error) {}
+        capi.removeFile(
+          `${
+            monorepoPath ? monorepoPath + '/' : ''
+          }${contentPath}/${collection}`
+        )
+
+        // remove collection from metadata.json
+        if (metadata?.repository?.object?.__typename === 'Blob') {
+          const m = JSON.parse(
+            metadata.repository.object.text ?? '{}'
+          ) as MetadataSchema
+          m.generated = new Date().toISOString()
+          m.commit = hashFromUrl(metadata.repository.object.commitUrl)
+          const newMeta = (m.metadata ?? []).filter(
+            (post) => post.collection !== collection
+          )
+          capi.replaceFile(
+            `${
+              monorepoPath ? monorepoPath + '/' : ''
+            }${contentPath}/metadata.json`,
+            stringifyMetadata({ ...m, metadata: newMeta })
+          )
+        }
+
+        const input = capi.createInput()
+
+        await createCommit({ variables: { input } })
+        setShowDeleteModal(false)
+        setDeleting(false)
+        removePage(collection)
+      } catch (error) {}
+    })
   }
 
   return (

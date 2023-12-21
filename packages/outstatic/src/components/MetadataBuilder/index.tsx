@@ -1,3 +1,5 @@
+import matter from 'gray-matter'
+import MurmurHash3 from 'imurmurhash'
 import React, {
   HTMLAttributes,
   useContext,
@@ -16,14 +18,12 @@ import {
 } from '../../graphql/generated'
 import { DeepNonNullable } from '../../types'
 import { useApollo } from '../../utils/apollo'
-import matter from 'gray-matter'
 import { chunk } from '../../utils/chunk'
+import { createCommitApi } from '../../utils/createCommitApi'
 import { hashFromUrl } from '../../utils/hashFromUrl'
 import useOid from '../../utils/hooks/useOid'
-import { createCommit } from '../../utils/createCommit'
-import MurmurHash3 from 'imurmurhash'
-import { MetadataSchema, OutstaticSchema } from '../../utils/metadata/types'
 import { stringifyMetadata } from '../../utils/metadata/stringify'
+import { MetadataSchema, OutstaticSchema } from '../../utils/metadata/types'
 
 interface MetadataBuilderProps extends HTMLAttributes<HTMLDivElement> {
   rebuild: boolean
@@ -170,13 +170,14 @@ export const MetadataBuilder: React.FC<MetadataBuilderProps> = ({
           generated: new Date().toUTCString(),
           metadata: docs.filter(Boolean)
         }
-        const capi = createCommit({
+        const capi = createCommitApi({
           message: 'chore: Updates metadata DB',
           owner: repoOwner,
           name: repoSlug,
           branch: repoBranch,
           oid
         })
+
         capi.replaceFile(
           `${
             monorepoPath ? monorepoPath + '/' : ''

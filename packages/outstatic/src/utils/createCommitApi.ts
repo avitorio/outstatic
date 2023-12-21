@@ -1,7 +1,7 @@
 import { encode as toBase64 } from 'js-base64'
 import {
-  type FileChanges,
-  type CreateCommitOnBranchInput
+  type CreateCommitOnBranchInput,
+  type FileChanges
 } from '../graphql/generated'
 
 export interface CommitAPI {
@@ -19,7 +19,7 @@ interface CreateCommitOptions {
   branch: string
 }
 
-export const createCommit = ({
+export const createCommitApi = ({
   message,
   owner,
   oid,

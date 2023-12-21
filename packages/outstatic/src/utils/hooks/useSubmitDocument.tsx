@@ -1,6 +1,10 @@
+import { Editor } from '@tiptap/react'
+import matter from 'gray-matter'
+import MurmurHash3 from 'imurmurhash'
 import { useCallback, useContext } from 'react'
-import { mergeMdMeta } from '../mergeMdMeta'
+import { UseFormReturn } from 'react-hook-form'
 import { OutstaticContext } from '../../context'
+import { useCreateCommitMutation } from '../../graphql/generated'
 import {
   CustomFieldArrayValue,
   CustomFields,
@@ -9,19 +13,15 @@ import {
   Session,
   isArrayCustomField
 } from '../../types'
-import { createCommit as createCommitApi } from '../../utils/createCommit'
 import { assertUnreachable } from '../assertUnreachable'
 import { IMAGES_PATH } from '../constants'
-import { MetadataSchema } from '../metadata/types'
+import { createCommitApi } from '../createCommitApi'
 import { hashFromUrl } from '../hashFromUrl'
-import MurmurHash3 from 'imurmurhash'
+import { mergeMdMeta } from '../mergeMdMeta'
 import { stringifyMetadata } from '../metadata/stringify'
-import matter from 'gray-matter'
-import useOid from './useOid'
+import { MetadataSchema } from '../metadata/types'
 import useFileQuery from './useFileQuery'
-import { useCreateCommitMutation } from '../../graphql/generated'
-import { UseFormReturn } from 'react-hook-form'
-import { Editor } from '@tiptap/react'
+import useOid from './useOid'
 
 type SubmitDocumentProps = {
   session: Session | null

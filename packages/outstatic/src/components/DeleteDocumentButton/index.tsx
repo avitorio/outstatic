@@ -5,12 +5,12 @@ import {
   useDocumentQuery
 } from '../../graphql/generated'
 import { useOstSession } from '../../utils/auth/hooks'
-import { createCommit as createCommitApi } from '../../utils/createCommit'
-import useOid from '../../utils/hooks/useOid'
-import Modal from '../Modal'
-import { MetadataSchema } from '../../utils/metadata/types'
+import { createCommitApi } from '../../utils/createCommitApi'
 import { hashFromUrl } from '../../utils/hashFromUrl'
+import useOid from '../../utils/hooks/useOid'
 import { stringifyMetadata } from '../../utils/metadata/stringify'
+import { MetadataSchema } from '../../utils/metadata/types'
+import Modal from '../Modal'
 
 type DeleteDocumentButtonProps = {
   slug: string
