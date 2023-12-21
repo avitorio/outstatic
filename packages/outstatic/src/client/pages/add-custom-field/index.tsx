@@ -6,14 +6,14 @@ import * as yup from 'yup'
 import { AdminLayout, Input } from '../../../components'
 import Alert from '../../../components/Alert'
 import Modal from '../../../components/Modal'
+import TagInput from '../../../components/TagInput'
 import { OutstaticContext } from '../../../context'
 import { useCreateCommitMutation } from '../../../graphql/generated'
 import { CustomField, CustomFields, customFieldTypes } from '../../../types'
+import { createCommitApi } from '../../../utils/createCommitApi'
 import useFileQuery from '../../../utils/hooks/useFileQuery'
 import useNavigationLock from '../../../utils/hooks/useNavigationLock'
 import useOid from '../../../utils/hooks/useOid'
-import { createCommit as createCommitApi } from '../../../utils/createCommit'
-import TagInput from '../../../components/TagInput'
 
 type AddCustomFieldProps = {
   collection: string
