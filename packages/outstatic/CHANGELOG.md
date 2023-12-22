@@ -1,5 +1,12 @@
 # outstatic
 
+## 1.0.5-canary.0
+
+### Patch Changes
+
+- 796efef: feat: remove collections from metadata db
+- 3f79373: fix: author name check
+
 ## 1.0.4
 
 ### Patch Changes
