@@ -1,7 +1,6 @@
-import React from 'react'
-import { render, fireEvent, waitFor, screen } from '@testing-library/react'
-import DeleteDocumentButton from '../DeleteDocumentButton'
+import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { TestWrapper } from '../../utils/TestWrapper'
+import DeleteDocumentButton from '../DeleteDocumentButton'
 
 // Mock the useOstSession hook
 jest.mock('../../utils/auth/hooks', () => ({
@@ -18,9 +17,9 @@ jest.mock('../../utils/auth/hooks', () => ({
 // Mock useOid hook
 jest.mock('../../utils/hooks/useOid', () => () => jest.fn())
 
-// // Mock createCommitApi
-jest.mock('../../utils/createCommit', () => ({
-  createCommit: () => ({
+// Mock createCommitApi
+jest.mock('../../utils/createCommitApi', () => ({
+  createCommitApi: () => ({
     removeFile: jest.fn(),
     replaceFile: jest.fn(),
     createInput: jest.fn()
