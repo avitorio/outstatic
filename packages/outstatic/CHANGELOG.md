@@ -1,6 +1,6 @@
 # outstatic
 
-## 1.0.5-canary.0
+## 1.0.5
 
 ### Patch Changes
 
