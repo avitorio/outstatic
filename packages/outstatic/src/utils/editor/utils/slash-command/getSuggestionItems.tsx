@@ -1,4 +1,5 @@
 import {
+  Bluetooth,
   Code,
   Edit3,
   Heading1,
@@ -119,6 +120,14 @@ const items = [
     description: 'Upload or embed with a link.',
     searchTerms: ['photo', 'picture', 'media'],
     icon: <ImageIcon size={18} />
+  },
+  {
+    title: 'Button',
+    description: 'Insert a button.',
+    searchTerms: ['photo', 'picture', 'media'],
+    icon: <Bluetooth size={18} />,
+    command: ({ editor, range }: CommandProps) =>
+      editor.chain().focus().deleteRange(range).setButton().run()
   }
 ] as CommandItemProps[]
 

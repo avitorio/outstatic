@@ -324,6 +324,7 @@ importers:
       '@types/js-cookie': ^3.0.3
       '@types/json-stable-stringify': ^1.0.34
       '@types/lowlight': ^0.0.3
+      '@types/markdown-it-container': ^2.0.9
       '@types/node': ^20
       '@types/pluralize': ^0.0.29
       '@types/react': ^18
@@ -370,6 +371,9 @@ importers:
       react-hook-form: ^7.31.3
       react-select: ^5.7.3
       react-textarea-autosize: ^8.3.4
+      remark-mdx: ^3.0.0
+      remark-parse: ^11.0.0
+      remark-stringify: ^11.0.0
       sift: ^16.0.1
       sonner: ^0.6.2
       swr: ^1.3.0
@@ -383,6 +387,8 @@ importers:
       tsconfig: workspace:*
       tsup: ^6.1.3
       typescript: ^4.5.2
+      unified: ^11.0.4
+      unist-util-visit: ^5.0.0
       url-slug: ^3.0.4
       use-debounce: ^9.0.4
       yup: ^0.32.11
@@ -437,6 +443,9 @@ importers:
       react-hook-form: 7.45.1_react@18.2.0
       react-select: 5.7.3_qzycrpzqvmvb7wd2jdibmpq2cy
       react-textarea-autosize: 8.5.2_i73ekzlbntu7jol6ph2fvy4mga
+      remark-mdx: 3.0.0
+      remark-parse: 11.0.0
+      remark-stringify: 11.0.0
       sift: 16.0.1
       sonner: 0.6.2_biqbaboplfbrettd7655fr4n2y
       swr: 1.3.0_react@18.2.0
@@ -445,6 +454,8 @@ importers:
       tippy.js: 6.3.7
       tiptap-markdown: 0.8.1_@tiptap+core@2.1.10
       transliteration: 2.3.5
+      unified: 11.0.4
+      unist-util-visit: 5.0.0
       url-slug: 3.0.6
       use-debounce: 9.0.4_react@18.2.0
       yup: 0.32.11
@@ -467,6 +478,7 @@ importers:
       '@types/js-cookie': 3.0.3
       '@types/json-stable-stringify': 1.0.34
       '@types/lowlight': 0.0.3
+      '@types/markdown-it-container': 2.0.9
       '@types/node': 20.2.5
       '@types/pluralize': 0.0.29
       '@types/react': 18.2.14
@@ -4369,7 +4381,6 @@ packages:
 
   /@types/linkify-it/3.0.2:
     resolution: {integrity: sha512-HZQYqbiFVWufzCwexrvh694SOim8z2d+xJl5UNamcvQFejLY/2YUtzXHYi3cHdI7PMlS8ejH2slRAOJQ32aNbA==}
-    dev: false
 
   /@types/lodash/4.14.195:
     resolution: {integrity: sha512-Hwx9EUgdwf2GLarOjQp5ZH8ZmblzcbTBC2wtQWNKARBSxM9ezRIAUpeDTgoQRAFB0+8CNWXVA9+MaSOzOF3nPg==}
@@ -4379,12 +4390,17 @@ packages:
     resolution: {integrity: sha512-R83q/yPX2nIlo9D3WtSjyUDd57t8s+GVLaL8YIv3k7zMMWpYpOXqjJgrWp80qXUJB/a1t76nTyBpxrv0JNYaEg==}
     dev: true
 
+  /@types/markdown-it-container/2.0.9:
+    resolution: {integrity: sha512-pW2W5ibThEXN/wKXTCsORMRJ0zKdFae/v+/n2YV8p6L/1gWQKIaW9KovmckuNV+v9u6yInMV1cXtfmDj+Q52NA==}
+    dependencies:
+      '@types/markdown-it': 12.2.3
+    dev: true
+
   /@types/markdown-it/12.2.3:
     resolution: {integrity: sha512-GKMHFfv3458yYy+v/N8gjufHO6MSZKCOXpZc5GXIWWy8uldwfmPn98vp81gZ5f9SVw8YYBctgfJ22a2d7AOMeQ==}
     dependencies:
       '@types/linkify-it': 3.0.2
       '@types/mdurl': 1.0.2
-    dev: false
 
   /@types/mdast/3.0.11:
     resolution: {integrity: sha512-Y/uImid8aAwrEA24/1tcRZwpxX3pIFTSilcNDKSPn+Y2iDywSEachzRuvgAYYLR3wpGXAsMbv5lvKLDZLeYPAw==}
@@ -4399,7 +4415,6 @@ packages:
 
   /@types/mdurl/1.0.2:
     resolution: {integrity: sha512-eC4U9MlIcu2q0KQmXszyn5Akca/0jrQmwDRgpAMJai7qBWq4amIQhZyNau4VYGtCeALvW1/NtjzJJ567aZxfKA==}
-    dev: false
 
   /@types/mdx/2.0.5:
     resolution: {integrity: sha512-76CqzuD6Q7LC+AtbPqrvD9AqsN0k8bsYo2bM2J8pmNldP1aIPAbzUQ7QbobyXL4eLr1wK5x8FZFe8eF/ubRuBg==}
@@ -12020,6 +12035,15 @@ packages:
       - supports-color
     dev: true
 
+  /remark-mdx/3.0.0:
+    resolution: {integrity: sha512-O7yfjuC6ra3NHPbRVxfflafAj3LTwx3b73aBvkEFU5z4PsD6FD4vrqJAkE5iNGLz71GdjXfgRqm3SQ0h0VuE7g==}
+    dependencies:
+      mdast-util-mdx: 3.0.0
+      micromark-extension-mdxjs: 3.0.0
+    transitivePeerDependencies:
+      - supports-color
+    dev: false
+
   /remark-mdx/3.0.1:
     resolution: {integrity: sha512-3Pz3yPQ5Rht2pM5R+0J2MrGoBSrzf+tJG94N+t/ilfdh8YLyyKYtidAYwTveB20BoHAcwIopOUqhcmh2F7hGYA==}
     dependencies:
@@ -12074,6 +12098,14 @@ packages:
       '@types/mdast': 3.0.11
       mdast-util-to-markdown: 1.5.0
       unified: 10.1.2
+    dev: false
+
+  /remark-stringify/11.0.0:
+    resolution: {integrity: sha512-1OSmLd3awB/t8qdoEOMazZkNsfVTeY4fTsgzcQFdXNq8ToTN4ZGwrMnlda4K6smTFKD+GRV6O48i6Z4iKgPPpw==}
+    dependencies:
+      '@types/mdast': 4.0.3
+      mdast-util-to-markdown: 2.1.0
+      unified: 11.0.4
     dev: false
 
   /remark/14.0.3:

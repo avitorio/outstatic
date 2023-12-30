@@ -50,9 +50,11 @@ export const useDocumentUpdateEffect = ({
         slug
       }
       methods.reset(document)
-      editor.commands.setContent(parsedContent)
-      editor.commands.focus('start')
-      setShowDelete(slug !== 'new')
+      queueMicrotask(() => {
+        editor.commands.setContent(parsedContent)
+        editor.commands.focus('start')
+        setShowDelete(slug !== 'new')
+      })
     } else {
       // Set publishedAt value on slug update to avoid undefined on first render
       if (slug) {
