@@ -12,6 +12,7 @@ import { Markdown } from 'tiptap-markdown'
 import CodeBlock from './CodeBlock'
 import SlashCommand from './SlashCommand'
 import { ToggleClass } from './ToggleClass'
+import ReactComponent from './button/Extension'
 
 export const TiptapExtensions = [
   StarterKit.configure({
@@ -83,8 +84,7 @@ export const TiptapExtensions = [
     multicolor: true
   }),
   Markdown.configure({
-    html: false,
-    linkify: false,
+    html: true,
     transformPastedText: true
   }),
   Image.extend({
@@ -106,5 +106,6 @@ export const TiptapExtensions = [
     }
   }).configure({
     lowlight
-  })
+  }),
+  ReactComponent
 ]
