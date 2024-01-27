@@ -10,7 +10,29 @@ export default function Home() {
       <Navbar />
       <main className="flex w-full flex-1 flex-col items-center justify-center text-slate-800 mt-5 md:mt-10">
         <Hero />
+        <div className="relative w-full pointer-events-none">
+          <div
+            className="absolute h-[36rem] w-full bg-cover bg-no-repeat -top-24 -z-10"
+            style={{
+              backgroundImage: 'url(/images/divider.svg)',
+              backgroundPositionX: 'center'
+            }}
+          >
+            {/* <img src="/images/divider.svg" className="absolute -top-24" /> */}
+          </div>
+        </div>
         <FeaturesSection />
+        <div className="relative w-full pointer-events-none">
+          <div
+            className="absolute h-[36rem] w-full bg-cover bg-no-repeat -top-24 -z-10"
+            style={{
+              backgroundImage: 'url(/images/divider-2.svg)',
+              backgroundPositionX: 'center'
+            }}
+          >
+            {/* <img src="/images/divider.svg" className="absolute -top-24" /> */}
+          </div>
+        </div>
         <VideoSection />
         <section className="mb-20">
           <div className="flex flex-col items-center">

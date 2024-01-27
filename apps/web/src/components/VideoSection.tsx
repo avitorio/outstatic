@@ -4,7 +4,7 @@ import HomeVideo from './HomeVideo'
 
 export default function VideoSection() {
   return (
-    <section className="w-full mb-20 md:px-0">
+    <section className="w-full mb-20 md:px-0 z-10 mt-20 md:mt-48">
       <div className="px-4 flex flex-col items-center mb-10">
         <div className="block max-w-[320px] md:max-w-[700px] mb-2 md:mb-4">
           <Image
@@ -15,7 +15,7 @@ export default function VideoSection() {
             className="w-full min-w-[320px] md:min-w-[700px] mt-8"
           />
         </div>
-        <p className="mt-2 text-xl text-slate-800 mb-8">
+        <p className="mt-2 text-xl text-slate-800 mb-8 text-center">
           Get a complete dashboard to manage your Next.js static website. <br />
           Check out our demo below, or{' '}
           <Link

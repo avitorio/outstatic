@@ -4,6 +4,7 @@ type FeatureProps = {
   icon: ReactElement
   title: string
   video: string
+  roundedCartoon?: string
   children?: ReactNode
 }
 
@@ -11,7 +12,8 @@ export default function Feature({
   icon,
   title,
   video,
-  children
+  children,
+  roundedCartoon = 'rounded-cartoon md:rounded-cartoon2'
 }: FeatureProps) {
   const newIcon = cloneElement(icon, { className: 'w-8 h-8 md:w-12 md:h-12' })
   return (
@@ -25,7 +27,9 @@ export default function Feature({
         </div>
         {children}
       </div>
-      <div className="bg-white border border-t-[3px] border-b-[5px] border-x-4 border-black rounded-cartoon2 md:rounded-cartoon overflow-hidden">
+      <div
+        className={`bg-white border border-t-[3px] border-b-[5px] border-x-4 border-black overflow-hidden ${roundedCartoon}`}
+      >
         <video
           controls={false}
           loop

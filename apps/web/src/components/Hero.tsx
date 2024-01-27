@@ -4,7 +4,7 @@ import Link from 'next/link'
 export const Hero = () => (
   <>
     <Link
-      className="inline-flex items-center rounded-lg bg-muted px-3 py-1 text-md font-medium bg-gray-800 hover:bg-gray-900 text-white md:mb-10"
+      className="inline-flex items-center rounded-lg text-sm bg-muted px-3 py-1 md:text-md font-medium bg-gray-800 hover:bg-gray-900 text-white md:mb-10"
       href="/docs/custom-fields"
     >
       🎉{' '}

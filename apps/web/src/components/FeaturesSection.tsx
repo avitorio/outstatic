@@ -4,11 +4,8 @@ import Feature from './Feature'
 
 export default function FeaturesSection() {
   return (
-    <section
-      className="flex w-full flex-1 px-4 md:py-36 flex-col text-slate-800 mt-20 md:mt-0 items-center bg-repeat-x"
-      style={{ backgroundImage: 'url(/images/features-bg.svg' }}
-    >
-      <div className="flex flex-col max-w-2xl text-center">
+    <section className="flex w-full flex-1 px-4 py-24 md:py-36 flex-col text-slate-800 mt-16 md:mb-24 items-center">
+      <div className="flex flex-col max-w-2xl text-center z-10">
         <h2 className="font-lora text-3xl md:text-6xl font-medium mb-8">
           A full featured content editor for your site
         </h2>
@@ -46,6 +43,7 @@ export default function FeaturesSection() {
         icon={<Shapes size={48} />}
         title="Custom Fields"
         video="https://res.cloudinary.com/dpek791br/video/upload/v1706392006/outstatic-feature-2_br1psz.mp4"
+        roundedCartoon="rounded-cartoon2 md:rounded-cartoon -rotate-[0.5deg]"
       >
         <p>Tailor your site with ease.</p>
         <p>
