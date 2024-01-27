@@ -1,8 +1,7 @@
-import Feature from '@/components/Features'
+import FeaturesSection from '@/components/FeaturesSection'
 import Hero from '@/components/Hero'
-import HomeVideo from '@/components/HomeVideo'
 import Navbar from '@/components/Navbar'
-import { Sparkles } from 'lucide-react'
+import VideoSection from '@/components/VideoSection'
 import Image from 'next/image'
 
 export default function Home() {
@@ -11,17 +10,8 @@ export default function Home() {
       <Navbar />
       <main className="flex w-full flex-1 flex-col items-center justify-center text-slate-800 mt-5 md:mt-10">
         <Hero />
-        <Feature
-          icon={<Sparkles size={48} />}
-          title="AI Completion"
-          video="https://res.cloudinary.com/dpek791br/video/upload/v1700147120/outstatic-feature-1_jrw4zg.mp4"
-          points={[
-            'Speed Up Your Writing.',
-            'Enhanced Accuracy & Consistency.',
-            'Creative suggestions.'
-          ]}
-        />
-        <HomeVideo />
+        <FeaturesSection />
+        <VideoSection />
         <section className="mb-20">
           <div className="flex flex-col items-center">
             <div className="flex flex-col md:flex-row justify-center items-center md:gap-10 min-w-[270px] md:min-w-[700px] px-4">

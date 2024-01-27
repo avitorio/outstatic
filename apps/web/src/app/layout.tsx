@@ -2,7 +2,14 @@ import '@/styles/dracula.css'
 import '@/styles/globals.css'
 import '@/styles/prose.css'
 import { Metadata } from 'next'
+import { Lora } from 'next/font/google'
 import Script from 'next/script'
+
+const lora = Lora({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-lora'
+})
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://outstatic.com'),
@@ -38,7 +45,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
+    <html lang="en" className={`${lora.variable}`}>
       <head>
         <Script
           defer

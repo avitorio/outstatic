@@ -9,6 +9,9 @@ module.exports = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        lora: ['var(--font-lora)']
+      },
       borderRadius: {
         cartoon: '2% 95% 1% 95%/95% 3% 92% 3%',
         cartoon2: '95% 1% 90% 1%/5% 90% 2% 93%'
