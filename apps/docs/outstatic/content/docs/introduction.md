@@ -20,7 +20,7 @@ Requirements:
 
 - a [Vercel](https://vercel.com/signup) account
 
-You can get started by visiting our [Getting started](/docs/getting-started) section. If you want to learn a bit more about Outstatic, keep reading.
+You can get started by visiting our [Getting started](/getting-started) section. If you want to learn a bit more about Outstatic, keep reading.
 
 ## How does Outstatic work?
 
@@ -46,7 +46,7 @@ A Document is what you will be creating and editing more frequently. In the case
 
 Documents are saved at: `/outstatic/content/{collection}/{document}`
 
-Imagine we create a blog post titled: *How to raise a dragon* \- the document would be: `/outstatic/content/posts/how-to-raise-a-dragon.md`
+Imagine we create a blog post titled: _How to raise a dragon_ \- the document would be: `/outstatic/content/posts/how-to-raise-a-dragon.md`
 
 Documents contains some data by default:
 
@@ -66,7 +66,6 @@ Documents contains some data by default:
 
 - **Cover Image** (optional): an image to be used as a cover or [Open Graph](https://ogp.me) image.
 
-But you are not limited to the above, you can also add [Custom Fields](/docs/custom-fields) to your documents.
+But you are not limited to the above, you can also add [Custom Fields](/custom-fields) to your documents.
 
-Next: the [Content Editor](/docs/the-content-editor), which is used to edit Documents.
-
+Next: the [Content Editor](/the-content-editor), which is used to edit Documents.

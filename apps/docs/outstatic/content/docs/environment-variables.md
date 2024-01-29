@@ -29,10 +29,10 @@ OST_REPO_BRANCH=main
 OST_REPO_OWNER=myusername
 
 # Where content is saved. Defaults to outstatic/content if empty.
-OST_CONTENT_PATH=outstatic/content 
+OST_CONTENT_PATH=outstatic/content
 
 # Specify monorepo folder of your Outstatic content
-OST_MONOREPO_PATH=apps/web 
+OST_MONOREPO_PATH=apps/web
 
 # OpenAI API Key for AI Completions
 OPENAI_API_KEY=sk-XXXXXXX
@@ -42,4 +42,4 @@ OPENAI_API_KEY=sk-XXXXXXX
 \
 **Important:** Don't forget to redeploy your website or restart your server after updating environment variables.
 
-In case you need help on how to get your GitHub OAuth credentials, please read the [Getting started](/docs/getting-started) section.
+In case you need help on how to get your GitHub OAuth credentials, please read the [Getting started](/getting-started) section.
