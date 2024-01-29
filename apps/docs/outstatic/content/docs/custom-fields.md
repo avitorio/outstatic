@@ -66,7 +66,7 @@ To delete a field, simply click the trash icon next to the field you want to rem
 
 ### Fetching Custom Fields
 
-Custom fields will be unique to a collection, but metadata queries will operate across all collections (and should be narrowed by collection if you care about a specific collection's custom fields). To learn more about how to fetch collection specific data read the [Fetching data](/docs/fetching-data) section of the docs.
+Custom fields will be unique to a collection, but metadata queries will operate across all collections (and should be narrowed by collection if you care about a specific collection's custom fields). To learn more about how to fetch collection specific data read the [Fetching data](/fetching-data) section of the docs.
 
 ### How are Custom Fields stored?
 
@@ -100,4 +100,3 @@ Example `schema.json` file:
 ## Conclusion
 
 Overall, custom fields are an awesome way to extend your content with additional structured data. By following these steps, you'll be able to create custom fields and start using them in no time!
-
