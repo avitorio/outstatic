@@ -8,5 +8,7 @@
     "outstatic": "1.0.5",
     "tsconfig": "0.0.0"
   },
-  "changesets": []
+  "changesets": [
+    "lemon-eels-draw"
+  ]
 }

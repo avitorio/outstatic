@@ -1,5 +1,11 @@
 # outstatic
 
+## 1.0.6-canary.0
+
+### Patch Changes
+
+- 11a297f: Add exit intercept for links inside the admin
+
 ## 1.0.5
 
 ### Patch Changes
