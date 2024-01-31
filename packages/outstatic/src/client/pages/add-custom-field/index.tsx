@@ -12,7 +12,6 @@ import { useCreateCommitMutation } from '../../../graphql/generated'
 import { CustomField, CustomFields, customFieldTypes } from '../../../types'
 import { createCommitApi } from '../../../utils/createCommitApi'
 import useFileQuery from '../../../utils/hooks/useFileQuery'
-import useNavigationLock from '../../../utils/hooks/useNavigationLock'
 import useOid from '../../../utils/hooks/useOid'
 
 type AddCustomFieldProps = {
@@ -41,7 +40,7 @@ export default function AddCustomField({ collection }: AddCustomFieldProps) {
   } = useContext(OutstaticContext)
   const [createCommit] = useCreateCommitMutation()
   const fetchOid = useOid()
-  const [hasChanges, setHasChanges] = useState(false)
+  const { setHasChanges } = useContext(OutstaticContext)
   const [customFields, setCustomFields] = useState<CustomFields>({})
   const yupSchema = yup.object().shape({
     title: yup
@@ -196,9 +195,6 @@ export default function AddCustomField({ collection }: AddCustomFieldProps) {
     const subscription = methods.watch(() => setHasChanges(true))
     return () => subscription.unsubscribe()
   }, [methods])
-
-  // Ask for confirmation before leaving page if changes were made.
-  useNavigationLock(hasChanges)
 
   return (
     <AdminLayout title="Add Custom Fields">

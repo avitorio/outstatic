@@ -12,7 +12,6 @@ import { OutstaticContext } from '../../../context'
 import { useCreateCommitMutation } from '../../../graphql/generated'
 import { Collection } from '../../../types'
 import { collectionCommitInput } from '../../../utils/collectionCommitInput'
-import useNavigationLock from '../../../utils/hooks/useNavigationLock'
 import useOid from '../../../utils/hooks/useOid'
 
 export default function NewCollection() {
@@ -29,7 +28,7 @@ export default function NewCollection() {
   const router = useRouter()
   const [createCommit] = useCreateCommitMutation()
   const fetchOid = useOid()
-  const [hasChanges, setHasChanges] = useState(false)
+  const { hasChanges, setHasChanges } = useContext(OutstaticContext)
   const [collectionName, setCollectionName] = useState('')
   const pagesRegex = new RegExp(`^(?!${pages.join('$|')}$)`, 'i')
   const createCollection: yup.SchemaOf<Collection> = yup.object().shape({
@@ -82,9 +81,6 @@ export default function NewCollection() {
 
     return () => subscription.unsubscribe()
   }, [methods])
-
-  // Ask for confirmation before leaving page if changes were made.
-  useNavigationLock(hasChanges)
 
   return (
     <FormProvider {...methods}>
