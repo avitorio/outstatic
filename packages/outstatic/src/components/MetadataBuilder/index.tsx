@@ -1,3 +1,20 @@
+import { OutstaticContext } from '@/context'
+import {
+  DocumentDocument,
+  DocumentQuery,
+  DocumentQueryVariables,
+  GetFileInformationQuery,
+  useCreateCommitMutation,
+  useGetFileInformationQuery
+} from '@/graphql/generated'
+import { DeepNonNullable } from '@/types'
+import { useApollo } from '@/utils/apollo'
+import { chunk } from '@/utils/chunk'
+import { createCommitApi } from '@/utils/createCommitApi'
+import { hashFromUrl } from '@/utils/hashFromUrl'
+import useOid from '@/utils/hooks/useOid'
+import { stringifyMetadata } from '@/utils/metadata/stringify'
+import { MetadataSchema, OutstaticSchema } from '@/utils/metadata/types'
 import matter from 'gray-matter'
 import MurmurHash3 from 'imurmurhash'
 import React, {
@@ -7,23 +24,6 @@ import React, {
   useMemo,
   useState
 } from 'react'
-import { OutstaticContext } from '../../context'
-import {
-  DocumentDocument,
-  DocumentQuery,
-  DocumentQueryVariables,
-  GetFileInformationQuery,
-  useCreateCommitMutation,
-  useGetFileInformationQuery
-} from '../../graphql/generated'
-import { DeepNonNullable } from '../../types'
-import { useApollo } from '../../utils/apollo'
-import { chunk } from '../../utils/chunk'
-import { createCommitApi } from '../../utils/createCommitApi'
-import { hashFromUrl } from '../../utils/hashFromUrl'
-import useOid from '../../utils/hooks/useOid'
-import { stringifyMetadata } from '../../utils/metadata/stringify'
-import { MetadataSchema, OutstaticSchema } from '../../utils/metadata/types'
 
 interface MetadataBuilderProps extends HTMLAttributes<HTMLDivElement> {
   rebuild: boolean

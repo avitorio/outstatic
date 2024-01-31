@@ -1,11 +1,11 @@
+import callback from '@/app/api/auth/callback'
+import login from '@/app/api/auth/login'
+import signout from '@/app/api/auth/signout'
+import user from '@/app/api/auth/user'
+import generate from '@/app/api/generate'
+import images from '@/app/api/images'
 import { Session } from 'next-session/lib/types'
 import { NextRequest } from 'next/server'
-import callback from './auth/callback'
-import login from './auth/login'
-import signout from './auth/signout'
-import user from './auth/user'
-import generate from './generate'
-import images from './images'
 
 export interface Request extends NextRequest {
   session: Session

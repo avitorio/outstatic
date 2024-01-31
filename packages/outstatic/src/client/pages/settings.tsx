@@ -1,8 +1,8 @@
-import { useContext, useState } from 'react'
+import { AdminLayout } from '@/components'
+import { MetadataBuilder } from '@/components/MetadataBuilder'
+import { OutstaticContext } from '@/context'
 import { clsx } from 'clsx'
-import { AdminLayout } from '../../components'
-import { OutstaticContext } from '../../context'
-import { MetadataBuilder } from '../../components/MetadataBuilder'
+import { useContext, useState } from 'react'
 
 export default function Settings() {
   const [rebuild, setRebuilding] = useState(false)

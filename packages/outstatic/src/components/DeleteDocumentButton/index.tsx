@@ -1,17 +1,14 @@
+import Modal from '@/components/Modal'
+import { OutstaticContext } from '@/context'
+import { useCreateCommitMutation, useDocumentQuery } from '@/graphql/generated'
+import { useOstSession } from '@/utils/auth/hooks'
+import { createCommitApi } from '@/utils/createCommitApi'
+import { hashFromUrl } from '@/utils/hashFromUrl'
+import useOid from '@/utils/hooks/useOid'
+import { stringifyMetadata } from '@/utils/metadata/stringify'
+import { MetadataSchema } from '@/utils/metadata/types'
 import { Trash2 } from 'lucide-react'
 import { useContext, useState } from 'react'
-import { OutstaticContext } from '../../context'
-import {
-  useCreateCommitMutation,
-  useDocumentQuery
-} from '../../graphql/generated'
-import { useOstSession } from '../../utils/auth/hooks'
-import { createCommitApi } from '../../utils/createCommitApi'
-import { hashFromUrl } from '../../utils/hashFromUrl'
-import useOid from '../../utils/hooks/useOid'
-import { stringifyMetadata } from '../../utils/metadata/stringify'
-import { MetadataSchema } from '../../utils/metadata/types'
-import Modal from '../Modal'
 
 type DeleteDocumentButtonProps = {
   slug: string

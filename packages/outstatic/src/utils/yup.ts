@@ -1,7 +1,7 @@
+import { CustomFields, SchemaShape } from '@/types'
 import * as yup from 'yup'
 import { AssertsShape, TypeOfShape } from 'yup/lib/object'
 import { AnyObject } from 'yup/lib/types'
-import { CustomFields, SchemaShape } from '../types'
 import { slugRegex } from './slugRegex'
 
 const documentShape = {

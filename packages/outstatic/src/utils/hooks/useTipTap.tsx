@@ -1,13 +1,13 @@
+import { OutstaticContext } from '@/context'
+import { TiptapExtensions } from '@/utils/editor/extensions'
+import { TiptapEditorProps } from '@/utils/editor/props'
+import { getPrevText } from '@/utils/editor/utils/getPrevText'
 import Placeholder from '@tiptap/extension-placeholder'
 import { Editor, useEditor } from '@tiptap/react'
 import { useCompletion } from 'ai/react'
 import { useContext, useEffect, useRef } from 'react'
 import { toast } from 'sonner'
 import { useDebouncedCallback } from 'use-debounce'
-import { OutstaticContext } from '../../context'
-import { TiptapExtensions } from '../editor/extensions'
-import { TiptapEditorProps } from '../editor/props'
-import { getPrevText } from '../editor/utils/getPrevText'
 
 const useTipTap = ({ ...rhfMethods }) => {
   const { hasOpenAIKey } = useContext(OutstaticContext)

@@ -1,4 +1,4 @@
-import { getLoginSession } from '../../../utils/auth/auth'
+import { getLoginSession } from '@/utils/auth/auth'
 import { NextResponse } from 'next/server'
 
 export type Request = {

@@ -1,21 +1,21 @@
+import Accordion from '@/components/Accordion'
+import DateTimePicker from '@/components/DateTimePicker'
+import DeleteDocumentButton from '@/components/DeleteDocumentButton'
+import DocumentSettingsImageSelection from '@/components/DocumentSettingsImageSelection'
+import Input from '@/components/Input'
+import TagInput from '@/components/TagInput'
+import TextArea from '@/components/TextArea'
+import { DocumentContext } from '@/context'
+import {
+  CustomFieldArrayValue,
+  CustomFields,
+  isArrayCustomField
+} from '@/types'
 import { PanelRight, PanelRightClose } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useContext, useState } from 'react'
 import { RegisterOptions, useFormContext } from 'react-hook-form'
 import { slugify } from 'transliteration'
-import { DocumentContext } from '../../context'
-import {
-  CustomFieldArrayValue,
-  CustomFields,
-  isArrayCustomField
-} from '../../types'
-import Accordion from '../Accordion'
-import DateTimePicker from '../DateTimePicker'
-import DeleteDocumentButton from '../DeleteDocumentButton'
-import DocumentSettingsImageSelection from '../DocumentSettingsImageSelection'
-import Input from '../Input'
-import TagInput from '../TagInput'
-import TextArea from '../TextArea'
 
 type DocumentSettingsProps = {
   saveFunc: () => void

@@ -1,3 +1,4 @@
+import { OutstaticContext } from '@/context'
 import { Editor, Range } from '@tiptap/react'
 import { useCompletion } from 'ai/react'
 import {
@@ -9,7 +10,6 @@ import {
   useState
 } from 'react'
 import { toast } from 'sonner'
-import { OutstaticContext } from '../../../../context'
 import {
   CommandItemProps,
   updateScrollView

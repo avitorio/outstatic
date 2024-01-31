@@ -1,4 +1,4 @@
-import { OstDocument } from '../../types/public'
+import { OstDocument } from '@/types/public'
 
 export type MetadataSchema<
   T extends { [key: string]: unknown } = { [key: string]: unknown }

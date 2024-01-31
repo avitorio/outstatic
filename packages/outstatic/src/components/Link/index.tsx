@@ -1,9 +1,9 @@
+import { OutstaticContext } from '@/context'
 import type { LinkProps as NextLinkProps } from 'next/link'
 import NextLink from 'next/link'
 import { useRouter } from 'next/navigation'
 import type { HTMLAttributes, PropsWithChildren } from 'react'
 import React, { useCallback, useContext, type MouseEvent } from 'react'
-import { OutstaticContext } from '../../context'
 
 export type LinkProps = PropsWithChildren<
   NextLinkProps & HTMLAttributes<HTMLAnchorElement>

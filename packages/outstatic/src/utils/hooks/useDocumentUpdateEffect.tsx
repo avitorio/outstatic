@@ -1,10 +1,10 @@
+import { Document, Session } from '@/types'
+import { getLocalDate } from '@/utils/getLocalDate'
+import { parseContent } from '@/utils/parseContent'
 import { Editor } from '@tiptap/react'
 import matter from 'gray-matter'
 import { Dispatch, SetStateAction, useEffect } from 'react'
 import { UseFormReturn } from 'react-hook-form'
-import { Document, Session } from '../../types'
-import { getLocalDate } from '../getLocalDate'
-import { parseContent } from '../parseContent'
 import useFileQuery from './useFileQuery'
 
 interface UseDocumentUpdateEffectProps {

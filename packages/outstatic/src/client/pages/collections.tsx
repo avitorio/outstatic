@@ -1,17 +1,17 @@
-import Link from 'next/link'
-import { useContext, useState } from 'react'
-import { AdminLayout } from '../../components'
-import Modal from '../../components/Modal'
-import { OutstaticContext } from '../../context'
+import { AdminLayout } from '@/components'
+import Modal from '@/components/Modal'
+import { OutstaticContext } from '@/context'
 import {
   useCreateCommitMutation,
   useDocumentLazyQuery
-} from '../../graphql/generated'
-import { createCommitApi } from '../../utils/createCommitApi'
-import { hashFromUrl } from '../../utils/hashFromUrl'
-import useOid from '../../utils/hooks/useOid'
-import { stringifyMetadata } from '../../utils/metadata/stringify'
-import { MetadataSchema } from '../../utils/metadata/types'
+} from '@/graphql/generated'
+import { createCommitApi } from '@/utils/createCommitApi'
+import { hashFromUrl } from '@/utils/hashFromUrl'
+import useOid from '@/utils/hooks/useOid'
+import { stringifyMetadata } from '@/utils/metadata/stringify'
+import { MetadataSchema } from '@/utils/metadata/types'
+import Link from 'next/link'
+import { useContext, useState } from 'react'
 
 export default function Collections() {
   const {

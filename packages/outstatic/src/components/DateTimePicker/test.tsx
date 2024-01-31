@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react'
 
+import { dateToString } from '@/utils/tests/utils'
 import DateTimePicker from '.'
-import { dateToString } from '../../utils/tests/utils'
 
 describe('<DateTimePicker />', () => {
   it('should render the heading', () => {

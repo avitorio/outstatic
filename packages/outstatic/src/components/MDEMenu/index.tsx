@@ -1,3 +1,4 @@
+import MDEMenuButton from '@/components/MDEMenuButton'
 import { BubbleMenu, Editor, isTextSelection } from '@tiptap/react'
 import {
   ArrowLeft,
@@ -13,7 +14,6 @@ import {
 } from 'lucide-react'
 import { useCallback, useEffect, useState } from 'react'
 import { MDEImageMenu } from '..'
-import MDEMenuButton from '../MDEMenuButton'
 
 type MDEMenuProps = {
   editor: Editor

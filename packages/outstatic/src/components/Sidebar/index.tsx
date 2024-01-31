@@ -1,9 +1,9 @@
+import Link from '@/components/Link'
+import { OutstaticContext } from '@/context'
+import { OUTSTATIC_VERSION } from '@/utils/constants'
+import generateUniqueId from '@/utils/generateUniqueId'
 import cookies from 'js-cookie'
 import { useContext, useEffect, useState } from 'react'
-import { OutstaticContext } from '../../context'
-import { OUTSTATIC_VERSION } from '../../utils/constants'
-import generateUniqueId from '../../utils/generateUniqueId'
-import Link from '../Link'
 
 type SidebarProps = {
   isOpen: boolean

@@ -1,13 +1,13 @@
-import { useRouter } from 'next/navigation'
+import { AdminLayout, DocumentsTable } from '@/components'
+import { OutstaticContext } from '@/context'
+import { useDocumentsQuery } from '@/graphql/generated'
+import { Document } from '@/types'
 import { GraphQLError } from 'graphql'
 import matter from 'gray-matter'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { singular } from 'pluralize'
 import { useContext } from 'react'
-import { AdminLayout, DocumentsTable } from '../../components'
-import { OutstaticContext } from '../../context'
-import { useDocumentsQuery } from '../../graphql/generated'
-import { Document } from '../../types'
 
 type GQLErrorExtended = GraphQLError & { type: string }
 

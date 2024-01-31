@@ -1,7 +1,7 @@
+import Link from '@/components/Link'
+import { useOstSignOut } from '@/utils/auth/hooks'
 import { Menu } from 'lucide-react'
 import { useState } from 'react'
-import { useOstSignOut } from '../../utils/auth/hooks'
-import Link from '../Link'
 
 type AdminHeaderProps = {
   name?: string | null | undefined

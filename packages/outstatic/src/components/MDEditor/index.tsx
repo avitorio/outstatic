@@ -1,6 +1,6 @@
+import MDEMenu from '@/components/MDEMenu'
 import { Editor, EditorContent } from '@tiptap/react'
 import { useFormContext } from 'react-hook-form'
-import MDEMenu from '../MDEMenu'
 
 interface MDEditorProps {
   editor: Editor

@@ -1,8 +1,8 @@
+import Alert from '@/components/Alert'
+import loginErrors from '@/utils/errors/loginErrors'
 import clsx from 'clsx'
 import { useSearchParams } from 'next/navigation'
 import { useState } from 'react'
-import Alert from '../../components/Alert'
-import loginErrors from '../../utils/errors/loginErrors'
 
 type Errors = keyof typeof loginErrors
 

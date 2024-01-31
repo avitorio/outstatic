@@ -1,5 +1,5 @@
+import { FileType } from '@/types'
 import { encode } from 'js-base64'
-import { FileType } from '../types'
 import { assertUnreachable } from './assertUnreachable'
 import { IMAGES_PATH } from './constants'
 

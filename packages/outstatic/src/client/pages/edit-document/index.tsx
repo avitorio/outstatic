@@ -1,25 +1,25 @@
+import {
+  AdminLayout,
+  DocumentSettings,
+  DocumentTitleInput,
+  MDEditor
+} from '@/components'
+import { DocumentContext, OutstaticContext } from '@/context'
+import { CustomFields, Document } from '@/types'
+import { useOstSession } from '@/utils/auth/hooks'
+import { deepReplace } from '@/utils/deepReplace'
+import { useDocumentUpdateEffect } from '@/utils/hooks/useDocumentUpdateEffect'
+import useFileQuery from '@/utils/hooks/useFileQuery'
+import { useFileStore } from '@/utils/hooks/useFileStore'
+import useSubmitDocument from '@/utils/hooks/useSubmitDocument'
+import useTipTap from '@/utils/hooks/useTipTap'
+import { convertSchemaToYup, editDocumentSchema } from '@/utils/yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import Head from 'next/head'
 import { usePathname } from 'next/navigation'
 import { singular } from 'pluralize'
 import { useContext, useEffect, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
-import {
-  AdminLayout,
-  DocumentSettings,
-  DocumentTitleInput,
-  MDEditor
-} from '../../../components'
-import { DocumentContext, OutstaticContext } from '../../../context'
-import { CustomFields, Document } from '../../../types'
-import { useOstSession } from '../../../utils/auth/hooks'
-import { deepReplace } from '../../../utils/deepReplace'
-import { useDocumentUpdateEffect } from '../../../utils/hooks/useDocumentUpdateEffect'
-import useFileQuery from '../../../utils/hooks/useFileQuery'
-import { useFileStore } from '../../../utils/hooks/useFileStore'
-import useSubmitDocument from '../../../utils/hooks/useSubmitDocument'
-import useTipTap from '../../../utils/hooks/useTipTap'
-import { convertSchemaToYup, editDocumentSchema } from '../../../utils/yup'
 
 export default function EditDocument({ collection }: { collection: string }) {
   const pathname = usePathname()

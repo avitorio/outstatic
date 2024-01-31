@@ -1,10 +1,10 @@
+import { DocumentContext } from '@/context'
 import { useContext } from 'react'
 import { useFormContext } from 'react-hook-form'
 import TextareaAutosize, {
   TextareaAutosizeProps
 } from 'react-textarea-autosize'
 import { slugify } from 'transliteration'
-import { DocumentContext } from '../../context'
 
 export type DocumentTitleProps = {
   label?: string

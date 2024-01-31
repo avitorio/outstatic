@@ -1,9 +1,9 @@
+import Input from '@/components/Input'
+import { DocumentContext } from '@/context'
+import { Document } from '@/types'
+import { API_IMAGES_PATH, IMAGES_PATH } from '@/utils/constants'
+import { addImage } from '@/utils/editor/utils/addImage'
 import { ChangeEvent, useContext, useEffect, useState } from 'react'
-import { DocumentContext } from '../../context'
-import { Document } from '../../types'
-import { API_IMAGES_PATH, IMAGES_PATH } from '../../utils/constants'
-import Input from '../Input'
-import { addImage } from '../../utils/editor/utils/addImage'
 
 type DocumentSettingsImageSelectionProps = {
   name: 'coverImage' | 'author.picture'

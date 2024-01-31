@@ -1,15 +1,15 @@
+import { DocumentContext } from '@/context'
+import {
+  CreateCommitDocument,
+  DocumentDocument,
+  OidDocument
+} from '@/graphql/generated'
+import { Document, DocumentContextType } from '@/types'
 import { MockedProvider } from '@apollo/client/testing'
 import { Editor, useEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import { ReactNode } from 'react'
-import { useForm, FormProvider } from 'react-hook-form'
-import { DocumentContext } from '../context'
-import {
-  OidDocument,
-  DocumentDocument,
-  CreateCommitDocument
-} from '../graphql/generated'
-import { Document, DocumentContextType } from '../types'
+import { FormProvider, useForm } from 'react-hook-form'
 
 export const documentExample: Document = {
   publishedAt: new Date('2022-07-14'),

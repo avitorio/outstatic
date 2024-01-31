@@ -1,5 +1,5 @@
+import { Document } from '@/types'
 import DOMPurify from 'dompurify'
-import { Document } from '../types'
 import replaceImagePath from './replaceImagePath'
 
 export const mergeMdMeta = (data: Document): string => {

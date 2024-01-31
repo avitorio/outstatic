@@ -1,5 +1,5 @@
+import { FileType } from '@/types'
 import { create } from 'zustand'
-import { FileType } from '../../types'
 
 type FileStore = {
   files: FileType[]
