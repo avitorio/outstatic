@@ -91,10 +91,7 @@ const useTipTap = ({ ...rhfMethods }) => {
     const diff = completion.slice(prev.current.length)
     prev.current = completion
     try {
-      // Temp fix for this issue: https://github.com/ueberdosis/tiptap/issues/3580
-      queueMicrotask(() => {
-        editor?.commands.insertContent(diff)
-      })
+      editor?.commands.insertContent(diff)
     } catch (e) {
       console.log(`error adding content: ${diff}`)
     }
