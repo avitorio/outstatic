@@ -50,7 +50,7 @@ export default function NewCollection() {
     try {
       const oid = await fetchOid()
       const owner = repoOwner || session?.user?.login || ''
-      const collection = slugify(name)
+      const collection = slugify(name, { allowedChars: 'a-zA-Z0-9' })
       const commitInput = collectionCommitInput({
         owner,
         oid,

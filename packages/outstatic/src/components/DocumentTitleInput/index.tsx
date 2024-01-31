@@ -44,7 +44,10 @@ export default function DocumentTitle({
               )
               const last = segments.pop() || segments.pop()
               if (last === 'new') {
-                setValue('slug', slugify(e.target.value))
+                setValue(
+                  'slug',
+                  slugify(e.target.value, { allowedChars: 'a-zA-Z0-9' })
+                )
               }
             }
           })}
