@@ -147,7 +147,7 @@ export default function Collections() {
               </div>
             </Link>
           </div>
-          <div className="max-w-5xl w-full grid grid-cols-3 gap-6">
+          <div className="max-w-5xl w-full grid md:grid-cols-3 gap-6">
             {collections.map((collection) => (
               <div
                 key={collection}

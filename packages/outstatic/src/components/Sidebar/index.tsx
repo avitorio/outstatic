@@ -59,7 +59,7 @@ const Sidebar = ({ isOpen = false }: SidebarProps) => {
 
   return (
     <aside
-      className={`absolute top-[53px] z-20 h-full w-full md:relative md:top-0 md:block md:w-64 md:min-w-[16rem]${
+      className={`absolute top-[53px] z-20 h-full w-full md:relative md:top-0 lg:block md:w-64 md:min-w-[16rem] ${
         isOpen ? 'block' : 'hidden'
       }`}
       aria-label="Sidebar"
