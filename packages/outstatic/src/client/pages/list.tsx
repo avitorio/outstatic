@@ -1,13 +1,13 @@
-import { useRouter } from 'next/navigation'
 import { GraphQLError } from 'graphql'
 import matter from 'gray-matter'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { singular } from 'pluralize'
 import { useContext } from 'react'
 import { AdminLayout, DocumentsTable } from '../../components'
 import { OutstaticContext } from '../../context'
 import { useDocumentsQuery } from '../../graphql/generated'
-import { Document } from '../../types'
+import { OstDocument } from '../../types/public'
 
 type GQLErrorExtended = GraphQLError & { type: string }
 
@@ -15,8 +15,15 @@ type ListProps = {
   collection: string
 }
 
+const options = {
+  year: 'numeric' as const,
+  month: 'long' as const,
+  day: 'numeric' as const
+}
+
 export default function List({ collection }: ListProps) {
   const router = useRouter()
+
   const {
     repoOwner,
     repoSlug,
@@ -47,7 +54,7 @@ export default function List({ collection }: ListProps) {
     }
   })
 
-  let documents: Document[] = []
+  let documents: OstDocument[] = []
 
   const entries =
     data?.repository?.object?.__typename === 'Tree' &&
@@ -56,20 +63,22 @@ export default function List({ collection }: ListProps) {
   if (entries) {
     entries.forEach((document) => {
       if (document.name.slice(-3) === '.md') {
-        const {
-          data: { title, publishedAt, status, author }
-        } = matter(
+        const { data } = matter(
           document?.object?.__typename === 'Blob' && document?.object?.text
             ? document?.object?.text
             : ''
         )
+        delete data.content
+        delete data.coverImage
+
         documents.push({
-          title,
-          status,
-          publishedAt: publishedAt ? new Date(publishedAt) : new Date(),
-          slug: document.name.replace('.md', ''),
-          author,
-          content: ''
+          ...(data as OstDocument),
+          author: data.author.name || '',
+          publishedAt: new Date(data.publishedAt).toLocaleDateString(
+            'en-US',
+            options
+          ),
+          slug: document.name.replace('.md', '')
         })
       }
     })
@@ -91,7 +100,7 @@ export default function List({ collection }: ListProps) {
         </Link>
       </div>
       {documents.length > 0 && (
-        <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+        <div className="relative shadow-md sm:rounded-lg">
           <DocumentsTable documents={documents} collection={collection} />
         </div>
       )}
