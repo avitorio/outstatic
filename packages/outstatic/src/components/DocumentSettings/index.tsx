@@ -155,7 +155,7 @@ const DocumentSettings = ({
             label="Name"
             name="author.name"
             id="author.name"
-            defaultValue={document.author?.name ?? ""}
+            defaultValue={document.author?.name ?? ''}
             inputSize="small"
             wrapperClass="mb-4"
           />
@@ -179,7 +179,7 @@ const DocumentSettings = ({
                   'slug',
                   lastChar === ' ' || lastChar === '-'
                     ? e.target.value
-                    : slugify(e.target.value)
+                    : slugify(e.target.value, { allowedChars: 'a-zA-Z0-9' })
                 )
               }
             }}
