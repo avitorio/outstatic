@@ -2,10 +2,10 @@ import { ApolloError } from '@apollo/client'
 import Head from 'next/head'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
+import { Toaster } from 'sonner'
 import { useOstSession } from '../../utils/auth/hooks'
 import AdminHeader from '../AdminHeader'
 import Sidebar from '../Sidebar'
-import { Toaster } from 'sonner'
 
 export type AdminLayoutProps = {
   error?: string | ApolloError
@@ -48,9 +48,9 @@ export default function AdminLayout({
               status={status}
               toggleSidebar={toggleSidebar}
             />
-            <div className="flex grow flex-col-reverse justify-between md:flex-row">
+            <div className="flex md:grow flex-col-reverse justify-between md:flex-row">
               <Sidebar isOpen={openSidebar} />
-              <main className="w-auto flex-auto p-5 md:p-10 bg-white max-h-[calc(100vh-53px)] overflow-y-scroll scrollbar-hide">
+              <main className="w-auto flex-auto p-5 md:p-10 bg-white h-dvh max-h-[calc(100vh-128px)] md:max-h-[calc(100vh-53px)] overflow-y-scroll scrollbar-hide">
                 {error && (
                   <div className="mb-6 border border-red-500 p-2">
                     Something went wrong{' '}
