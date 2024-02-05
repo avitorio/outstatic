@@ -1,7 +1,6 @@
 import { ApolloError } from '@apollo/client'
-import Head from 'next/head'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Toaster } from 'sonner'
 import { useOstSession } from '../../utils/auth/hooks'
 import AdminHeader from '../AdminHeader'
@@ -27,6 +26,11 @@ export default function AdminLayout({
     setOpenSidebar(!openSidebar)
   }
 
+  useEffect(() => {
+    const pageTitle = title ? `${title} | Outstatic` : 'Outstatic'
+    document.title = pageTitle
+  }, [title])
+
   if (status === 'unauthenticated') {
     if (typeof window !== 'undefined') {
       push(`/outstatic`)
@@ -36,9 +40,6 @@ export default function AdminLayout({
 
   return (
     <>
-      <Head>
-        <title>{title ? `${title} | Outstatic` : 'Outstatic'}</title>
-      </Head>
       <div id="outstatic">
         <Toaster richColors />
         {status === 'loading' ? null : (
