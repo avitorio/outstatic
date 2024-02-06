@@ -1,7 +1,7 @@
+import { OutstaticProvider } from '@/context'
+import mockProviderProps from '@/utils/tests/mockProviderProps'
 import { render, screen } from '@testing-library/react'
 import { act } from 'react-dom/test-utils'
-import { OutstaticProvider } from '../../context'
-import mockProviderProps from '../../utils/tests/mockProviderProps'
 import Sidebar from './'
 
 jest.mock('next/navigation', () => ({
@@ -17,7 +17,7 @@ jest.mock('js-cookie', () => ({
   set: jest.fn()
 }))
 
-jest.mock('../../utils/generateUniqueId', () => jest.fn())
+jest.mock('@/utils/generateUniqueId', () => jest.fn())
 
 describe('<Sidebar />', () => {
   const mockCollections = ['collection1', 'collection2', 'collection3']

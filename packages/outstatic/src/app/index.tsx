@@ -2,11 +2,11 @@ import {
   CollectionsDocument,
   CollectionsQuery,
   CollectionsQueryVariables
-} from '../graphql/generated'
-import { Session } from '../types'
-import { initializeApollo } from '../utils/apollo'
-import { getLoginSession } from '../utils/auth/auth'
-import { EnvVarsType, envVars } from '../utils/envVarsCheck'
+} from '@/graphql/generated'
+import { Session } from '@/types'
+import { initializeApollo } from '@/utils/apollo'
+import { getLoginSession } from '@/utils/auth/auth'
+import { EnvVarsType, envVars } from '@/utils/envVarsCheck'
 
 export type OutstaticData = {
   repoOwner: string

@@ -1,7 +1,7 @@
+import { OstDocument } from '@/types/public'
 import fs from 'fs'
-import { join } from 'path'
 import matter from 'gray-matter'
-import { OstDocument } from '../types/public'
+import { join } from 'path'
 
 // metadata db features
 export { load } from './metadata/load'

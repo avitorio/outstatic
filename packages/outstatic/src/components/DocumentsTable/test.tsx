@@ -1,8 +1,8 @@
+import { Document } from '@/types'
+import { dateToString } from '@/utils/tests/utils'
 import { act, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import React from 'react'
-import { Document } from '../../types'
-import { dateToString } from '../../utils/tests/utils'
 import DocumentsTable from './'
 
 jest.mock(
@@ -13,7 +13,7 @@ jest.mock(
 )
 
 // Mock the DeleteDocumentButton component
-jest.mock('../DeleteDocumentButton', () => {
+jest.mock('@/components/DeleteDocumentButton', () => {
   return jest.fn(({ onComplete }) => (
     <button onClick={onComplete} data-testid="delete-button">
       Delete

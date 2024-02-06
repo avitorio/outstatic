@@ -1,13 +1,3 @@
-import matter from 'gray-matter'
-import MurmurHash3 from 'imurmurhash'
-import React, {
-  HTMLAttributes,
-  useContext,
-  useEffect,
-  useMemo,
-  useState
-} from 'react'
-import { OutstaticContext } from '../../context'
 import {
   DocumentDocument,
   DocumentQuery,
@@ -15,15 +5,19 @@ import {
   GetFileInformationQuery,
   useCreateCommitMutation,
   useGetFileInformationQuery
-} from '../../graphql/generated'
-import { DeepNonNullable } from '../../types'
-import { useApollo } from '../../utils/apollo'
-import { chunk } from '../../utils/chunk'
-import { createCommitApi } from '../../utils/createCommitApi'
-import { hashFromUrl } from '../../utils/hashFromUrl'
-import useOid from '../../utils/hooks/useOid'
-import { stringifyMetadata } from '../../utils/metadata/stringify'
-import { MetadataSchema, OutstaticSchema } from '../../utils/metadata/types'
+} from '@/graphql/generated'
+import { DeepNonNullable } from '@/types'
+import { useApollo } from '@/utils/apollo'
+import { chunk } from '@/utils/chunk'
+import { createCommitApi } from '@/utils/createCommitApi'
+import { hashFromUrl } from '@/utils/hashFromUrl'
+import useOid from '@/utils/hooks/useOid'
+import useOutstatic from '@/utils/hooks/useOutstatic'
+import { stringifyMetadata } from '@/utils/metadata/stringify'
+import { MetadataSchema, OutstaticSchema } from '@/utils/metadata/types'
+import matter from 'gray-matter'
+import MurmurHash3 from 'imurmurhash'
+import React, { HTMLAttributes, useEffect, useMemo, useState } from 'react'
 
 interface MetadataBuilderProps extends HTMLAttributes<HTMLDivElement> {
   rebuild: boolean
@@ -53,7 +47,7 @@ export const MetadataBuilder: React.FC<MetadataBuilderProps> = ({
   const [commit] = useCreateCommitMutation()
 
   const { repoOwner, repoSlug, repoBranch, contentPath, monorepoPath } =
-    useContext(OutstaticContext)
+    useOutstatic()
 
   const rootPath = [monorepoPath, contentPath].filter(Boolean).join('/')
 

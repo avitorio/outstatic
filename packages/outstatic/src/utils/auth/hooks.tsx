@@ -1,7 +1,7 @@
+import { Session } from '@/types'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 import useSWR from 'swr'
-import { Session } from '../../types'
 
 type useOstSessionProps = {
   redirectTo?: string

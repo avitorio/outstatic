@@ -1,9 +1,9 @@
+import { setLoginSession } from '@/utils/auth/auth'
+import { MAX_AGE } from '@/utils/auth/auth-cookies'
 import { createEdgeRouter } from 'next-connect'
 import nextSession from 'next-session'
 import { Session } from 'next-session/lib/types'
 import { NextRequest, NextResponse } from 'next/server'
-import { setLoginSession } from '../../../utils/auth/auth'
-import { MAX_AGE } from '../../../utils/auth/auth-cookies'
 
 interface Request extends NextRequest {
   session: Session

@@ -1,5 +1,5 @@
+import { DocumentContextType, Session } from '@/types'
 import { Dispatch, SetStateAction, createContext } from 'react'
-import { DocumentContextType, Session } from '../types'
 
 type OutstaticProviderProps = {
   children?: React.ReactNode

@@ -1,18 +1,18 @@
+import { AdminLayout, Input } from '@/components'
+import Alert from '@/components/Alert'
+import Modal from '@/components/Modal'
+import TagInput from '@/components/TagInput'
+import { useCreateCommitMutation } from '@/graphql/generated'
+import { CustomField, CustomFields, customFieldTypes } from '@/types'
+import { createCommitApi } from '@/utils/createCommitApi'
+import useFileQuery from '@/utils/hooks/useFileQuery'
+import useOid from '@/utils/hooks/useOid'
+import useOutstatic from '@/utils/hooks/useOutstatic'
 import { yupResolver } from '@hookform/resolvers/yup'
 import camelCase from 'camelcase'
-import { useContext, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form'
 import * as yup from 'yup'
-import { AdminLayout, Input } from '../../../components'
-import Alert from '../../../components/Alert'
-import Modal from '../../../components/Modal'
-import TagInput from '../../../components/TagInput'
-import { OutstaticContext } from '../../../context'
-import { useCreateCommitMutation } from '../../../graphql/generated'
-import { CustomField, CustomFields, customFieldTypes } from '../../../types'
-import { createCommitApi } from '../../../utils/createCommitApi'
-import useFileQuery from '../../../utils/hooks/useFileQuery'
-import useOid from '../../../utils/hooks/useOid'
 
 type AddCustomFieldProps = {
   collection: string
@@ -36,11 +36,11 @@ export default function AddCustomField({ collection }: AddCustomFieldProps) {
     session,
     repoSlug,
     repoBranch,
-    repoOwner
-  } = useContext(OutstaticContext)
+    repoOwner,
+    setHasChanges
+  } = useOutstatic()
   const [createCommit] = useCreateCommitMutation()
   const fetchOid = useOid()
-  const { setHasChanges } = useContext(OutstaticContext)
   const [customFields, setCustomFields] = useState<CustomFields>({})
   const yupSchema = yup.object().shape({
     title: yup

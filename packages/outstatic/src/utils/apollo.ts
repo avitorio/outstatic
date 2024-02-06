@@ -1,14 +1,14 @@
+import { Session } from '@/types'
 import {
   ApolloClient,
-  from,
-  createHttpLink,
   InMemoryCache,
-  NormalizedCacheObject
+  NormalizedCacheObject,
+  createHttpLink,
+  from
 } from '@apollo/client'
 import { setContext } from '@apollo/client/link/context'
 import fetch from 'cross-fetch'
 import { useMemo } from 'react'
-import { Session } from '../types'
 
 let apolloClient: ApolloClient<NormalizedCacheObject | null>
 

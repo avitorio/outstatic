@@ -1,12 +1,12 @@
-import { useContext, useState } from 'react'
+import { AdminLayout } from '@/components'
+import { MetadataBuilder } from '@/components/MetadataBuilder'
+import useOutstatic from '@/utils/hooks/useOutstatic'
 import { clsx } from 'clsx'
-import { AdminLayout } from '../../components'
-import { OutstaticContext } from '../../context'
-import { MetadataBuilder } from '../../components/MetadataBuilder'
+import { useState } from 'react'
 
 export default function Settings() {
   const [rebuild, setRebuilding] = useState(false)
-  const { repoSlug, repoBranch, contentPath } = useContext(OutstaticContext)
+  const { repoSlug, repoBranch, contentPath } = useOutstatic()
 
   return (
     <AdminLayout title="Settings">
