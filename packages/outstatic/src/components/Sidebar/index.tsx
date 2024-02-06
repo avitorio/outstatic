@@ -1,9 +1,9 @@
 import Link from '@/components/Link'
-import { OutstaticContext } from '@/context'
 import { OUTSTATIC_VERSION } from '@/utils/constants'
 import generateUniqueId from '@/utils/generateUniqueId'
+import useOutstatic from '@/utils/hooks/useOutstatic'
 import cookies from 'js-cookie'
-import { useContext, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 type SidebarProps = {
   isOpen: boolean
@@ -25,7 +25,7 @@ const Sidebar = ({ isOpen = false }: SidebarProps) => {
   const [broadcast, setBroadcast] = useState<Broadcast | null>(
     initialBroadcast()
   )
-  const { collections, repoOwner, repoSlug } = useContext(OutstaticContext)
+  const { collections, repoOwner, repoSlug } = useOutstatic()
 
   useEffect(() => {
     const fetchBroadcast = async () => {

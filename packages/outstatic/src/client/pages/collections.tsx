@@ -1,6 +1,5 @@
 import { AdminLayout } from '@/components'
 import Modal from '@/components/Modal'
-import { OutstaticContext } from '@/context'
 import {
   useCreateCommitMutation,
   useDocumentLazyQuery
@@ -8,10 +7,11 @@ import {
 import { createCommitApi } from '@/utils/createCommitApi'
 import { hashFromUrl } from '@/utils/hashFromUrl'
 import useOid from '@/utils/hooks/useOid'
+import useOutstatic from '@/utils/hooks/useOutstatic'
 import { stringifyMetadata } from '@/utils/metadata/stringify'
 import { MetadataSchema } from '@/utils/metadata/types'
 import Link from 'next/link'
-import { useContext, useState } from 'react'
+import { useState } from 'react'
 
 export default function Collections() {
   const {
@@ -23,7 +23,7 @@ export default function Collections() {
     contentPath,
     monorepoPath,
     removePage
-  } = useContext(OutstaticContext)
+  } = useOutstatic()
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [selectedCollection, setSelectedCollection] = useState('')
   const [deleting, setDeleting] = useState(false)

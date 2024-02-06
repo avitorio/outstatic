@@ -1,9 +1,8 @@
-import { OutstaticContext } from '@/context'
+import useOutstatic from '@/utils/hooks/useOutstatic'
 import { Editor, Range } from '@tiptap/react'
 import { useCompletion } from 'ai/react'
 import {
   useCallback,
-  useContext,
   useEffect,
   useLayoutEffect,
   useRef,
@@ -30,7 +29,7 @@ export const BaseCommandList = ({
   range: Range
 }) => {
   const [selectedIndex, setSelectedIndex] = useState(0)
-  const { hasOpenAIKey } = useContext(OutstaticContext)
+  const { hasOpenAIKey } = useOutstatic()
 
   const { complete, isLoading } = useCompletion({
     id: 'outstatic',
@@ -69,6 +68,7 @@ export const BaseCommandList = ({
         }
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [complete, isLoading, command, editor, items]
   )
 

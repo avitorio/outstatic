@@ -1,16 +1,16 @@
-import { OutstaticContext } from '@/context'
 import { TiptapExtensions } from '@/utils/editor/extensions'
 import { TiptapEditorProps } from '@/utils/editor/props'
 import { getPrevText } from '@/utils/editor/utils/getPrevText'
 import Placeholder from '@tiptap/extension-placeholder'
 import { Editor, useEditor } from '@tiptap/react'
 import { useCompletion } from 'ai/react'
-import { useContext, useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { toast } from 'sonner'
 import { useDebouncedCallback } from 'use-debounce'
+import useOutstatic from './useOutstatic'
 
 const useTipTap = ({ ...rhfMethods }) => {
-  const { hasOpenAIKey } = useContext(OutstaticContext)
+  const { hasOpenAIKey } = useOutstatic()
   const { setValue, trigger } = rhfMethods
   // Define editorRef to hold the current reference to the editor.
   const editorRef = useRef<Editor | null>(null)

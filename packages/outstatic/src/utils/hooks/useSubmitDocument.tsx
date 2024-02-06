@@ -1,4 +1,3 @@
-import { OutstaticContext } from '@/context'
 import { useCreateCommitMutation } from '@/graphql/generated'
 import {
   CustomFieldArrayValue,
@@ -18,10 +17,11 @@ import { MetadataSchema } from '@/utils/metadata/types'
 import { Editor } from '@tiptap/react'
 import matter from 'gray-matter'
 import MurmurHash3 from 'imurmurhash'
-import { useCallback, useContext } from 'react'
+import { useCallback } from 'react'
 import { UseFormReturn } from 'react-hook-form'
 import useFileQuery from './useFileQuery'
 import useOid from './useOid'
+import useOutstatic from './useOutstatic'
 
 type SubmitDocumentProps = {
   session: Session | null
@@ -54,7 +54,7 @@ function useSubmitDocument({
 }: SubmitDocumentProps) {
   const [createCommit] = useCreateCommitMutation()
   const { repoOwner, repoSlug, repoBranch, contentPath, monorepoPath } =
-    useContext(OutstaticContext)
+    useOutstatic()
   const fetchOid = useOid()
   const { data: metadata } = useFileQuery({
     file: `metadata.json`

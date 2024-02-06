@@ -4,13 +4,14 @@ import {
   DocumentTitleInput,
   MDEditor
 } from '@/components'
-import { DocumentContext, OutstaticContext } from '@/context'
+import { DocumentContext } from '@/context'
 import { CustomFields, Document } from '@/types'
 import { useOstSession } from '@/utils/auth/hooks'
 import { deepReplace } from '@/utils/deepReplace'
 import { useDocumentUpdateEffect } from '@/utils/hooks/useDocumentUpdateEffect'
 import useFileQuery from '@/utils/hooks/useFileQuery'
 import { useFileStore } from '@/utils/hooks/useFileStore'
+import useOutstatic from '@/utils/hooks/useOutstatic'
 import useSubmitDocument from '@/utils/hooks/useSubmitDocument'
 import useTipTap from '@/utils/hooks/useTipTap'
 import { convertSchemaToYup, editDocumentSchema } from '@/utils/yup'
@@ -18,7 +19,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import Head from 'next/head'
 import { usePathname } from 'next/navigation'
 import { singular } from 'pluralize'
-import { useContext, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 
 export default function EditDocument({ collection }: { collection: string }) {
@@ -28,7 +29,7 @@ export default function EditDocument({ collection }: { collection: string }) {
   )
   const { session } = useOstSession()
   const [loading, setLoading] = useState(false)
-  const { hasChanges, setHasChanges } = useContext(OutstaticContext)
+  const { hasChanges, setHasChanges } = useOutstatic()
   const [showDelete, setShowDelete] = useState(false)
   const [documentSchema, setDocumentSchema] = useState(editDocumentSchema)
   const methods = useForm<Document>({ resolver: yupResolver(documentSchema) })

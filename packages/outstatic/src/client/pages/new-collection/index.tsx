@@ -1,15 +1,15 @@
 'use client'
 import { AdminLayout, Input } from '@/components'
 import Alert from '@/components/Alert'
-import { OutstaticContext } from '@/context'
 import { useCreateCommitMutation } from '@/graphql/generated'
 import { Collection } from '@/types'
 import { collectionCommitInput } from '@/utils/collectionCommitInput'
 import useOid from '@/utils/hooks/useOid'
+import useOutstatic from '@/utils/hooks/useOutstatic'
 import { yupResolver } from '@hookform/resolvers/yup'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { useContext, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form'
 import { slugify } from 'transliteration'
 import * as yup from 'yup'
@@ -23,12 +23,13 @@ export default function NewCollection() {
     repoSlug,
     repoBranch,
     repoOwner,
-    addPage
-  } = useContext(OutstaticContext)
+    addPage,
+    hasChanges,
+    setHasChanges
+  } = useOutstatic()
   const router = useRouter()
   const [createCommit] = useCreateCommitMutation()
   const fetchOid = useOid()
-  const { hasChanges, setHasChanges } = useContext(OutstaticContext)
   const [collectionName, setCollectionName] = useState('')
   const pagesRegex = new RegExp(`^(?!${pages.join('$|')}$)`, 'i')
   const createCollection: yup.SchemaOf<Collection> = yup.object().shape({
