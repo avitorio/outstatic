@@ -3,16 +3,16 @@ import cookies from 'js-cookie'
 import { Settings } from 'lucide-react'
 import Link from 'next/link'
 import { useState } from 'react'
-import Select from 'react-select'
 import { OstDocument } from '../../types/public'
 import DeleteDocumentButton from '../DeleteDocumentButton'
+import SortableSelect from '../SortableSelect'
 
 type DocumentsTableProps = {
   documents: OstDocument[]
   collection: string
 }
 
-type Column = {
+export type Column = {
   label: string
   value: string
 }
@@ -29,7 +29,7 @@ const DocumentsTable = (props: DocumentsTableProps) => {
     value: column
   }))
   const [documents, setDocuments] = useState(props.documents)
-  const [columns, setColumns] = useState<Column[]>(
+  const [columns, setColumns] = useState<readonly Column[]>(
     JSON.parse(cookies.get(`ost_${props.collection}_fields`) || 'null') ??
       defaultColumns
   )
@@ -85,18 +85,14 @@ const DocumentsTable = (props: DocumentsTableProps) => {
         <div
           className={`absolute -top-12 max-w-full min-w-min capitalize right-0`}
         >
-          <Select
-            isMulti
-            isClearable={false}
-            escapeClearsValue={false}
-            defaultValue={defaultColumns}
-            value={columns}
-            options={allColumns}
+          <SortableSelect
+            selected={columns}
+            allOptions={allColumns}
+            defaultValues={defaultColumns}
             onChange={(e: any) => {
               setColumns(e)
               cookies.set(`ost_${props.collection}_fields`, JSON.stringify(e))
             }}
-            // menuIsOpen={showColumnOptions}
             onBlur={() => setShowColumnOptions(false)}
           />
         </div>
