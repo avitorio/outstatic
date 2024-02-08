@@ -129,7 +129,10 @@ const cellSwitch = (
       )
     default:
       return (
-        <td className="px-6 py-4 text-base font-semibold text-gray-900">
+        <td
+          key={columnValue}
+          className="px-6 py-4 text-base font-semibold text-gray-900"
+        >
           {typeof item === 'object' && item !== null
             ? item.map((item: { label: string }) => (
                 <span className="bg-gray-100 text-gray-800 font-medium me-2 px-2.5 py-0.5 rounded">
