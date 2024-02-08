@@ -1,8 +1,7 @@
 import { act, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import React from 'react'
-import { Document } from '../../types'
-import { dateToString } from '../../utils/tests/utils'
+import { OstDocument } from '../../types/public'
 import DocumentsTable from './'
 
 jest.mock(
@@ -22,17 +21,18 @@ jest.mock('../DeleteDocumentButton', () => {
 })
 
 describe('DocumentsTable', () => {
-  const date1 = new Date('2023-01-01T00:00:00Z')
-  const date2 = new Date('2023-02-01T00:00:00Z')
+  const date1 = 'July 14, 2022'
+  const date2 = 'August 15, 2023'
 
-  const mockDocuments: Document[] = [
+  const mockDocuments: OstDocument[] = [
     {
       slug: 'doc1',
       title: 'Document 1',
       status: 'published',
       publishedAt: date1,
       author: { name: 'Andre' },
-      content: 'Test content'
+      content: 'Test content',
+      collection: 'testCollection'
     },
     {
       slug: 'doc2',
@@ -40,7 +40,8 @@ describe('DocumentsTable', () => {
       status: 'draft',
       publishedAt: date2,
       author: { name: 'Filipe' },
-      content: 'Test content'
+      content: 'Test content',
+      collection: 'testCollection'
     }
   ]
 
@@ -51,11 +52,11 @@ describe('DocumentsTable', () => {
 
     expect(screen.getByText('Document 1')).toBeInTheDocument()
     expect(screen.getByText('published')).toBeInTheDocument()
-    expect(screen.getByText(dateToString(date1))).toBeInTheDocument()
+    expect(screen.getByText(date1)).toBeInTheDocument()
 
     expect(screen.getByText('Document 2')).toBeInTheDocument()
     expect(screen.getByText('draft')).toBeInTheDocument()
-    expect(screen.getByText(dateToString(date2))).toBeInTheDocument()
+    expect(screen.getByText(date2)).toBeInTheDocument()
   })
 
   it('removes a document from the table when the Delete button is clicked', async () => {
