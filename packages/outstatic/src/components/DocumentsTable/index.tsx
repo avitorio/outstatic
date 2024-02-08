@@ -13,23 +13,25 @@ type DocumentsTableProps = {
 }
 
 export type Column = {
+  id: string
   label: string
   value: string
 }
 
 const defaultColumns: Column[] = [
-  { label: 'Title', value: 'title' },
-  { label: 'Status', value: 'status' },
-  { label: 'Published at', value: 'publishedAt' }
+  { id: 'title', label: 'Title', value: 'title' },
+  { id: 'status', label: 'Status', value: 'status' },
+  { id: 'publishedAt', label: 'Published at', value: 'publishedAt' }
 ]
 
 const DocumentsTable = (props: DocumentsTableProps) => {
   const allColumns = Object.keys(props.documents[0]).map((column: string) => ({
+    id: column,
     label: sentenceCase(column),
     value: column
   }))
   const [documents, setDocuments] = useState(props.documents)
-  const [columns, setColumns] = useState<readonly Column[]>(
+  const [columns, setColumns] = useState<Column[]>(
     JSON.parse(cookies.get(`ost_${props.collection}_fields`) || 'null') ??
       defaultColumns
   )
@@ -87,10 +89,10 @@ const DocumentsTable = (props: DocumentsTableProps) => {
         >
           <SortableSelect
             selected={columns}
+            setSelected={setColumns}
             allOptions={allColumns}
             defaultValues={defaultColumns}
-            onChange={(e: any) => {
-              setColumns(e)
+            onChangeList={(e: any) => {
               cookies.set(`ost_${props.collection}_fields`, JSON.stringify(e))
             }}
             onBlur={() => setShowColumnOptions(false)}
@@ -135,7 +137,10 @@ const cellSwitch = (
         >
           {typeof item === 'object' && item !== null
             ? item.map((item: { label: string }) => (
-                <span className="bg-gray-100 text-gray-800 font-medium me-2 px-2.5 py-0.5 rounded">
+                <span
+                  key={item.label}
+                  className="bg-gray-100 text-gray-800 font-medium me-2 px-2.5 py-0.5 rounded"
+                >
                   {item.label}
                 </span>
               ))
