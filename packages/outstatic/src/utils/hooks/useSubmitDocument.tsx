@@ -1,10 +1,4 @@
-import { Editor } from '@tiptap/react'
-import matter from 'gray-matter'
-import MurmurHash3 from 'imurmurhash'
-import { useCallback, useContext } from 'react'
-import { UseFormReturn } from 'react-hook-form'
-import { OutstaticContext } from '../../context'
-import { useCreateCommitMutation } from '../../graphql/generated'
+import { useCreateCommitMutation } from '@/graphql/generated'
 import {
   CustomFieldArrayValue,
   CustomFields,
@@ -12,16 +6,22 @@ import {
   FileType,
   Session,
   isArrayCustomField
-} from '../../types'
-import { assertUnreachable } from '../assertUnreachable'
-import { IMAGES_PATH } from '../constants'
-import { createCommitApi } from '../createCommitApi'
-import { hashFromUrl } from '../hashFromUrl'
-import { mergeMdMeta } from '../mergeMdMeta'
-import { stringifyMetadata } from '../metadata/stringify'
-import { MetadataSchema } from '../metadata/types'
+} from '@/types'
+import { assertUnreachable } from '@/utils/assertUnreachable'
+import { IMAGES_PATH } from '@/utils/constants'
+import { createCommitApi } from '@/utils/createCommitApi'
+import { hashFromUrl } from '@/utils/hashFromUrl'
+import { mergeMdMeta } from '@/utils/mergeMdMeta'
+import { stringifyMetadata } from '@/utils/metadata/stringify'
+import { MetadataSchema } from '@/utils/metadata/types'
+import { Editor } from '@tiptap/react'
+import matter from 'gray-matter'
+import MurmurHash3 from 'imurmurhash'
+import { useCallback } from 'react'
+import { UseFormReturn } from 'react-hook-form'
 import useFileQuery from './useFileQuery'
 import useOid from './useOid'
+import useOutstatic from './useOutstatic'
 
 type SubmitDocumentProps = {
   session: Session | null
@@ -54,7 +54,7 @@ function useSubmitDocument({
 }: SubmitDocumentProps) {
   const [createCommit] = useCreateCommitMutation()
   const { repoOwner, repoSlug, repoBranch, contentPath, monorepoPath } =
-    useContext(OutstaticContext)
+    useOutstatic()
   const fetchOid = useOid()
   const { data: metadata } = useFileQuery({
     file: `metadata.json`

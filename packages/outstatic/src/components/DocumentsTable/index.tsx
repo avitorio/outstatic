@@ -1,11 +1,11 @@
+import DeleteDocumentButton from '@/components/DeleteDocumentButton'
+import SortableSelect from '@/components/SortableSelect'
+import { OstDocument } from '@/types/public'
 import { sentenceCase } from 'change-case'
 import cookies from 'js-cookie'
 import { Settings } from 'lucide-react'
 import Link from 'next/link'
 import { useState } from 'react'
-import { OstDocument } from '../../types/public'
-import DeleteDocumentButton from '../DeleteDocumentButton'
-import SortableSelect from '../SortableSelect'
 
 type DocumentsTableProps = {
   documents: OstDocument[]

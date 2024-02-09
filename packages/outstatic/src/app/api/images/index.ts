@@ -1,6 +1,6 @@
+import { getLoginSession } from '@/utils/auth/auth'
+import { IMAGES_PATH } from '@/utils/constants'
 import { NextRequest, NextResponse } from 'next/server'
-import { getLoginSession } from '../../../utils/auth/auth'
-import { IMAGES_PATH } from '../../../utils/constants'
 
 const REPO_SLUG = process.env.OST_REPO_SLUG || process.env.VERCEL_GIT_REPO_SLUG
 const REPO_BRANCH = process.env.OST_REPO_BRANCH || 'main'

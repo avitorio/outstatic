@@ -1,5 +1,31 @@
 # outstatic
 
+## 1.2.0
+
+### Minor Changes
+
+- 2a45807: Editor now works on mobile (for the most part)
+
+### Patch Changes
+
+- 61c35ff: Fix slugs not being saved properly
+
+## 1.1.0
+
+### Minor Changes
+
+- Fix AI Completion deleting itself
+
+### Patch Changes
+
+- 11a297f: Add exit intercept for links inside the admin
+
+## 1.0.6-canary.0
+
+### Patch Changes
+
+- 11a297f: Add exit intercept for links inside the admin
+
 ## 1.0.5
 
 ### Patch Changes

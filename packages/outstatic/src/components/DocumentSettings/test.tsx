@@ -1,14 +1,14 @@
-import { render, screen } from '@testing-library/react'
-import DocumentSettings from '.'
 import {
   TestProviders,
   TestWrapper,
   documentExample
-} from '../../utils/TestWrapper'
-import { useOstSession } from '../../utils/auth/hooks'
-import { dateToString } from '../../utils/tests/utils'
+} from '@/utils/TestWrapper'
+import { useOstSession } from '@/utils/auth/hooks'
+import { dateToString } from '@/utils/tests/utils'
+import { render, screen } from '@testing-library/react'
+import DocumentSettings from '.'
 
-jest.mock('../../utils/auth/hooks')
+jest.mock('@/utils/auth/hooks')
 jest.mock('next/navigation', () => require('next-router-mock'))
 
 jest.mock('react-hook-form', () => ({

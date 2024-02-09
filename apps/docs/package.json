@@ -1,6 +1,6 @@
 {
-  "name": "web",
-  "version": "1.0.3-canary.1",
+  "name": "docs",
+  "version": "1.0.5",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -10,20 +10,17 @@
     "typecheck": "tsc --project tsconfig.json --noEmit"
   },
   "dependencies": {
-    "countries-and-timezones": "^3.5.1",
     "date-fns": "^2.28.0",
     "gray-matter": "^4.0.3",
     "next": "^13.5.4",
     "outstatic": "workspace:*",
     "react": "^18",
     "react-dom": "^18",
-    "react-youtube": "^10.0.0",
     "remark": "^14.0.2",
     "remark-html": "^15.0.1"
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.4",
-    "@types/gtag.js": "^0.0.12",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",

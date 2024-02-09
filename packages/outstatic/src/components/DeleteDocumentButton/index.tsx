@@ -1,16 +1,14 @@
-import { useContext, useState } from 'react'
-import { OutstaticContext } from '../../context'
-import {
-  useCreateCommitMutation,
-  useDocumentQuery
-} from '../../graphql/generated'
-import { useOstSession } from '../../utils/auth/hooks'
-import { createCommitApi } from '../../utils/createCommitApi'
-import { hashFromUrl } from '../../utils/hashFromUrl'
-import useOid from '../../utils/hooks/useOid'
-import { stringifyMetadata } from '../../utils/metadata/stringify'
-import { MetadataSchema } from '../../utils/metadata/types'
-import Modal from '../Modal'
+import Modal from '@/components/Modal'
+import { useCreateCommitMutation, useDocumentQuery } from '@/graphql/generated'
+import { useOstSession } from '@/utils/auth/hooks'
+import { createCommitApi } from '@/utils/createCommitApi'
+import { hashFromUrl } from '@/utils/hashFromUrl'
+import useOid from '@/utils/hooks/useOid'
+import useOutstatic from '@/utils/hooks/useOutstatic'
+import { stringifyMetadata } from '@/utils/metadata/stringify'
+import { MetadataSchema } from '@/utils/metadata/types'
+import { Trash2 } from 'lucide-react'
+import { useState } from 'react'
 
 type DeleteDocumentButtonProps = {
   slug: string
@@ -32,7 +30,7 @@ const DeleteDocumentButton = ({
   const { session } = useOstSession()
   const [createCommit] = useCreateCommitMutation()
   const { repoOwner, repoSlug, repoBranch, contentPath, monorepoPath } =
-    useContext(OutstaticContext)
+    useOutstatic()
   const fetchOid = useOid()
 
   const { data: metadata } = useDocumentQuery({
@@ -103,15 +101,7 @@ const DeleteDocumentButton = ({
         title="Delete document"
       >
         <span className="sr-only">Delete document</span>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          width="24"
-          height="24"
-        >
-          <path fill="none" d="M0 0h24v24H0z" />
-          <path d="M17 6h5v2h-2v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V8H2V6h5V3a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v3zm1 2H6v12h12V8zm-9 3h2v6H9v-6zm4 0h2v6h-2v-6zM9 4v2h6V4H9z" />
-        </svg>
+        <Trash2 />
       </button>
       {showDeleteModal && (
         <Modal title="Delete Document" close={() => setShowDeleteModal(false)}>

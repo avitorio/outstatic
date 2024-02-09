@@ -1,8 +1,8 @@
+import { mockRequests } from '@/mocks/network'
 import { Outstatic } from '.'
-import { mockRequests } from '../mocks/network'
 
 // mock getLoginSession return
-jest.mock('../utils/auth/auth', () => ({
+jest.mock('@/utils/auth/auth', () => ({
   getLoginSession: jest.fn().mockReturnValue({
     user: {
       email: 'test@example.com'

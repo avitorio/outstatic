@@ -26,7 +26,7 @@ Before diving in, it's essential to configure GitHub Authentication for your pro
 
 - **GitHub Apps:** setup is generally more complex, providing a refined level of access and control.
 
-For those opting for GitHub Apps, please refer to the relevant [GitHub Apps Authentication](/docs/github-apps-authentication) documentation.
+For those opting for GitHub Apps, please refer to the relevant [GitHub Apps Authentication](/github-apps-authentication) documentation.
 
 #### Setting up a GitHub OAuth Application:
 
@@ -86,15 +86,15 @@ Example: `https://myblog.vercel.app/outstatic`
 
 Congratulations! Now you have a website with a full-featured dashboard to edit your content.
 
-To develop your Vercel deployed website locally, please check the [Local Development](/docs/local-development) page.
+To develop your Vercel deployed website locally, please check the [Local Development](/local-development) page.
 
-We recommend you learn how [Outstatic manages content](/docs/introduction) and also how to [fetch content](/docs/fetching-data) from your front end.
+We recommend you learn how [Outstatic manages content](/introduction) and also how to [fetch content](/fetching-data) from your front end.
 
 ## Adding Outstatic to a Next.js website
 
-If you want to use Outstatic with Next.js 12, you can [continue here](/docs/using-with-next-js-12).
+If you want to use Outstatic with Next.js 12, you can [continue here](/using-with-next-js-12).
 
-Before we start, you should know Outstatic saves content as markdown files to your GitHub repository. To understand how this works please read our [introduction](https://outstatic.com/docs/introduction) article.
+Before we start, you should know Outstatic saves content as markdown files to your GitHub repository. To understand how this works please read our [introduction](https://outstatic.com/introduction) article.
 
 First install the Outstatic package and dependencies:
 
@@ -168,7 +168,7 @@ If everything is setup correctly, then you'll see a login page and will be able 
 
 Congratulations! Your Outstatic installation is ready and you can now start creating content.
 
-If you already have a Markdown Next.js blog and want to start editing your files with Outstatic, follow the [steps here](/docs/faqs#i-already-have-a-nextjs-markdown-blog-how-do-i-start-using-outstatic) to move your content to the `outstatic/content` folder.
+If you already have a Markdown Next.js blog and want to start editing your files with Outstatic, follow the [steps here](/faqs#i-already-have-a-nextjs-markdown-blog-how-do-i-start-using-outstatic) to move your content to the `outstatic/content` folder.
 
 **Next.js 13 Warning:** In case your Outstatic Dashboard throws errors while trying to create new pages. Either update Next.js to a version above `13.4.8` or add the option `swcMinify: false` to your `next.config.js` file. Example:
 
@@ -178,7 +178,7 @@ const nextConfig = {
 }
 ```
 
-We recommend you learn how Outstatic [manages content](/docs/introduction) and also how to [fetch data](/docs/fetching-data) from your front end.
+We recommend you learn how Outstatic [manages content](/introduction) and also how to [fetch data](/fetching-data) from your front end.
 
 ### Access the Outstatic dashboard from your live site
 
@@ -195,4 +195,4 @@ OST_GITHUB_SECRET=YOUR_GITHUB_OAUTH_APP_SECRET
 OST_TOKEN_SECRET=A_RANDOM_TOKEN
 ```
 
-To learn more about all the available environment variables, see the [Environment Variables ](https://outstatic.com/docs/environment-variables)section of the docs.
+To learn more about all the available environment variables, see the [Environment Variables ](https://outstatic.com/environment-variables)section of the docs.

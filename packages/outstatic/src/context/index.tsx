@@ -1,5 +1,5 @@
-import { createContext } from 'react'
-import { DocumentContextType, Session } from '../types'
+import { DocumentContextType, Session } from '@/types'
+import { Dispatch, SetStateAction, createContext } from 'react'
 
 type OutstaticProviderProps = {
   children?: React.ReactNode
@@ -15,17 +15,13 @@ type OutstaticProviderProps = {
   addPage: (page: string) => void
   removePage: (page: string) => void
   hasOpenAIKey: boolean
+  hasChanges: boolean
+  setHasChanges: Dispatch<SetStateAction<boolean>>
 }
 
-export const OutstaticContext = createContext({
-  repoOwner: '',
-  repoSlug: '',
-  repoBranch: '',
-  contentPath: '',
-  monorepoPath: '',
-  session: null,
-  hasOpenAIKey: false
-} as Omit<OutstaticProviderProps, 'client'>)
+export const OutstaticContext = createContext<OutstaticProviderProps>(
+  {} as OutstaticProviderProps
+)
 
 export const OutstaticProvider = ({
   children,
@@ -39,7 +35,9 @@ export const OutstaticProvider = ({
   pages,
   addPage,
   removePage,
-  hasOpenAIKey
+  hasOpenAIKey,
+  hasChanges,
+  setHasChanges
 }: OutstaticProviderProps) => {
   return (
     <OutstaticContext.Provider
@@ -54,7 +52,9 @@ export const OutstaticProvider = ({
         pages,
         addPage,
         removePage,
-        hasOpenAIKey: hasOpenAIKey || false
+        hasOpenAIKey,
+        hasChanges,
+        setHasChanges
       }}
     >
       {children}

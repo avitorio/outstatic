@@ -10,7 +10,9 @@ const mockProviderProps = {
   pages: [],
   addPage: (page: string) => {},
   removePage: (page: string) => {},
-  hasOpenAIKey: false
+  hasOpenAIKey: false,
+  hasChanges: false,
+  setHasChanges: () => {}
 }
 
 export default mockProviderProps

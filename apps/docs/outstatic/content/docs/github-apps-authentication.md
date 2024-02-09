@@ -32,7 +32,7 @@ Enter any valid URL as the Homepage URL. This can be updated later to your actua
 
 Set the Callback URL to `https://my-website-name.com/api/outstatic/callback`. For local development, you can use `http://localhost:3000/api/outstatic/callback`.
 
-*Optional*: You can set multiple callbacks in case you want to use the same GitHub App for different environments (ex: production vs local development). You will need to set the `OST_GITHUB_CALLBACK_URL` environment variable to the corresponding callback url on the environment.
+_Optional_: You can set multiple callbacks in case you want to use the same GitHub App for different environments (ex: production vs local development). You will need to set the `OST_GITHUB_CALLBACK_URL` environment variable to the corresponding callback url on the environment.
 
 #### 5\. Disable Webhooks
 
@@ -66,4 +66,4 @@ Go to "Install App" in your application settings and click "Install" for the acc
 
 Although providing permission to all repositories is possible, it is recommended to choose "Only select repositories" and add your desired repository. This permission can be modified later in the account/organization settings.
 
-Then you only need to follow the [Getting Started Guide](/docs/getting-started) to configure your application with the GitHub Apps **Client ID** and **Client Secret** values.
+Then you only need to follow the [Getting Started Guide](/getting-started) to configure your application with the GitHub Apps **Client ID** and **Client Secret** values.

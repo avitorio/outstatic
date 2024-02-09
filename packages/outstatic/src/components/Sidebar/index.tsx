@@ -1,9 +1,9 @@
-import Link from 'next/link'
-import { useContext, useEffect, useState } from 'react'
+import Link from '@/components/Link'
+import { OUTSTATIC_VERSION } from '@/utils/constants'
+import generateUniqueId from '@/utils/generateUniqueId'
+import useOutstatic from '@/utils/hooks/useOutstatic'
 import cookies from 'js-cookie'
-import { OutstaticContext } from '../../context'
-import generateUniqueId from '../../utils/generateUniqueId'
-import { OUTSTATIC_VERSION } from '../../utils/constants'
+import { useEffect, useState } from 'react'
 
 type SidebarProps = {
   isOpen: boolean
@@ -25,7 +25,7 @@ const Sidebar = ({ isOpen = false }: SidebarProps) => {
   const [broadcast, setBroadcast] = useState<Broadcast | null>(
     initialBroadcast()
   )
-  const { collections, repoOwner, repoSlug } = useContext(OutstaticContext)
+  const { collections, repoOwner, repoSlug } = useOutstatic()
 
   useEffect(() => {
     const fetchBroadcast = async () => {
@@ -59,7 +59,7 @@ const Sidebar = ({ isOpen = false }: SidebarProps) => {
 
   return (
     <aside
-      className={`absolute top-[53px] z-20 h-full w-full md:relative md:top-0 md:block md:w-64 md:min-w-[16rem]${
+      className={`absolute top-[53px] z-20 h-full w-full md:relative md:top-0 lg:block md:w-64 md:min-w-[16rem] ${
         isOpen ? 'block' : 'hidden'
       }`}
       aria-label="Sidebar"

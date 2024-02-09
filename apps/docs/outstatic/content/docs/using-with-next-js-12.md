@@ -93,9 +93,9 @@ If everything is setup correctly, then you'll see a login page and will be able 
 
 Congratulations! Your Outstatic installation is ready and you can now start creating content.
 
-If you already have a Markdown Next.js blog and want to start editing your files with Outstatic, follow the [steps here](/docs/faqs#i-already-have-a-nextjs-markdown-blog-how-do-i-start-using-outstatic) to move your content to the `outstatic/content` folder.
+If you already have a Markdown Next.js blog and want to start editing your files with Outstatic, follow the [steps here](/faqs#i-already-have-a-nextjs-markdown-blog-how-do-i-start-using-outstatic) to move your content to the `outstatic/content` folder.
 
-We recommend you learn how Outstatic [manages content](/docs/introduction) and also how to [fetch data](/docs/fetching-data) from your front end.
+We recommend you learn how Outstatic [manages content](/introduction) and also how to [fetch data](/fetching-data) from your front end.
 
 ### Access the Outstatic dashboard from your live site
 
@@ -112,5 +112,4 @@ OST_GITHUB_SECRET=YOUR_GITHUB_OAUTH_APP_SECRET
 OST_TOKEN_SECRET=A_RANDOM_TOKEN
 ```
 
-To learn more about all the available environment variables, see the [Environment Variables ](https://outstatic.com/docs/environment-variables)section of the docs.
-
+To learn more about all the available environment variables, see the [Environment Variables ](https://outstatic.com/environment-variables)section of the docs.

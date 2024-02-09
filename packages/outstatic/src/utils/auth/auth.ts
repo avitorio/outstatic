@@ -1,10 +1,7 @@
+import { Session } from '@/types'
 import * as Iron from '@hapi/iron'
 import { cookies } from 'next/headers'
-import { NextApiRequest, NextApiResponse } from 'next'
-import { NextIncomingMessage } from 'next/dist/server/request-meta'
-import { Session } from '../../types'
-import { MAX_AGE, setTokenCookie, getTokenCookie } from './auth-cookies'
-import { NextFetchEvent } from 'next/server'
+import { MAX_AGE, setTokenCookie } from './auth-cookies'
 
 export type LoginSession = {
   user: {

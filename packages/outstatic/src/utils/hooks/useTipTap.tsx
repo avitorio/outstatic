@@ -1,16 +1,16 @@
+import { TiptapExtensions } from '@/utils/editor/extensions'
+import { TiptapEditorProps } from '@/utils/editor/props'
+import { getPrevText } from '@/utils/editor/utils/getPrevText'
 import Placeholder from '@tiptap/extension-placeholder'
 import { Editor, useEditor } from '@tiptap/react'
 import { useCompletion } from 'ai/react'
-import { useContext, useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { toast } from 'sonner'
 import { useDebouncedCallback } from 'use-debounce'
-import { OutstaticContext } from '../../context'
-import { TiptapExtensions } from '../editor/extensions'
-import { TiptapEditorProps } from '../editor/props'
-import { getPrevText } from '../editor/utils/getPrevText'
+import useOutstatic from './useOutstatic'
 
 const useTipTap = ({ ...rhfMethods }) => {
-  const { hasOpenAIKey } = useContext(OutstaticContext)
+  const { hasOpenAIKey } = useOutstatic()
   const { setValue, trigger } = rhfMethods
   // Define editorRef to hold the current reference to the editor.
   const editorRef = useRef<Editor | null>(null)
@@ -91,10 +91,7 @@ const useTipTap = ({ ...rhfMethods }) => {
     const diff = completion.slice(prev.current.length)
     prev.current = completion
     try {
-      // Temp fix for this issue: https://github.com/ueberdosis/tiptap/issues/3580
-      queueMicrotask(() => {
-        editor?.commands.insertContent(diff)
-      })
+      editor?.commands.insertContent(diff)
     } catch (e) {
       console.log(`error adding content: ${diff}`)
     }

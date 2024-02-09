@@ -1,21 +1,23 @@
+import { OutstaticProvider } from '@/context'
+import mockProviderProps from '@/utils/tests/mockProviderProps'
 import { render, screen } from '@testing-library/react'
-import { OutstaticProvider } from '../../context'
-import Sidebar from './'
 import { act } from 'react-dom/test-utils'
-import mockProviderProps from '../../utils/tests/mockProviderProps'
+import Sidebar from './'
 
-jest.mock('next/link', () => {
-  return ({ children }: any) => {
-    return children
+jest.mock('next/navigation', () => ({
+  useRouter() {
+    return {
+      prefetch: () => null
+    }
   }
-})
+}))
 
 jest.mock('js-cookie', () => ({
   get: jest.fn(() => null),
   set: jest.fn()
 }))
 
-jest.mock('../../utils/generateUniqueId', () => jest.fn())
+jest.mock('@/utils/generateUniqueId', () => jest.fn())
 
 describe('<Sidebar />', () => {
   const mockCollections = ['collection1', 'collection2', 'collection3']

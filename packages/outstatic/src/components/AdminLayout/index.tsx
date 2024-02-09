@@ -1,10 +1,9 @@
+import AdminHeader from '@/components/AdminHeader'
+import Sidebar from '@/components/Sidebar'
+import { useOstSession } from '@/utils/auth/hooks'
 import { ApolloError } from '@apollo/client'
-import Head from 'next/head'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
-import { useOstSession } from '../../utils/auth/hooks'
-import AdminHeader from '../AdminHeader'
-import Sidebar from '../Sidebar'
+import { useEffect, useState } from 'react'
 import { Toaster } from 'sonner'
 
 export type AdminLayoutProps = {
@@ -27,6 +26,11 @@ export default function AdminLayout({
     setOpenSidebar(!openSidebar)
   }
 
+  useEffect(() => {
+    const pageTitle = title ? `${title} | Outstatic` : 'Outstatic'
+    document.title = pageTitle
+  }, [title])
+
   if (status === 'unauthenticated') {
     if (typeof window !== 'undefined') {
       push(`/outstatic`)
@@ -36,9 +40,6 @@ export default function AdminLayout({
 
   return (
     <>
-      <Head>
-        <title>{title ? `${title} | Outstatic` : 'Outstatic'}</title>
-      </Head>
       <div id="outstatic">
         <Toaster richColors />
         {status === 'loading' ? null : (
@@ -48,9 +49,9 @@ export default function AdminLayout({
               status={status}
               toggleSidebar={toggleSidebar}
             />
-            <div className="flex grow flex-col-reverse justify-between md:flex-row">
+            <div className="flex md:grow flex-col-reverse justify-between md:flex-row">
               <Sidebar isOpen={openSidebar} />
-              <main className="w-auto flex-auto p-5 md:p-10 bg-white max-h-[calc(100vh-53px)] overflow-y-scroll scrollbar-hide">
+              <main className="w-auto flex-auto p-5 md:p-10 bg-white h-dvh max-h-[calc(100vh-128px)] md:max-h-[calc(100vh-53px)] overflow-y-scroll scrollbar-hide">
                 {error && (
                   <div className="mb-6 border border-red-500 p-2">
                     Something went wrong{' '}

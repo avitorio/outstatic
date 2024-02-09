@@ -64,7 +64,7 @@ export const getStaticProps = async () => {
 
 ### Fetching documents by slug
 
-Documents can be fetched by slug, this is usually helpful when using Next.js' [Dynamic Routes](https://nextjs.org/docs/app/building-your-application/routing/dynamic-routes). The function `getDocumentBySlug` takes three parameters: the name of the collection as a string, the slug of the document, and an array with the fields to be retrieved.
+Documents can be fetched by slug, this is usually helpful when using Next.js' [Dynamic Routes](https://nextjs.org/app/building-your-application/routing/dynamic-routes). The function `getDocumentBySlug` takes three parameters: the name of the collection as a string, the slug of the document, and an array with the fields to be retrieved.
 
 **App directory example:**
 
@@ -192,7 +192,7 @@ db.find(query).project(['title', 'collection', 'publishedAt', 'slug'])
 
 ### Sorting Results
 
-Outstatic supports [mongo-like sorting](https://www.mongodb.com/docs/drivers/node/current/fundamentals/crud/read-operations/sort/). When sorting, you can pass:
+Outstatic supports [mongo-like sorting](https://www.mongodb.com/drivers/node/current/fundamentals/crud/read-operations/sort/). When sorting, you can pass:
 
 - a string, which will sort the field ascending: `"title"`
 
@@ -312,4 +312,3 @@ export async function getStaticPaths() {
 ## Usage examples:
 
 If you'd like to check out examples of how to use these functions, please refer to our [Example Blog](https://github.com/avitorio/outstatic/tree/main/examples/blog) repository.
-

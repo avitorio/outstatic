@@ -1,13 +1,12 @@
+import { AdminLayout, DocumentsTable } from '@/components'
+import { useDocumentsQuery } from '@/graphql/generated'
+import { OstDocument } from '@/types/public'
+import useOutstatic from '@/utils/hooks/useOutstatic'
 import { GraphQLError } from 'graphql'
 import matter from 'gray-matter'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { singular } from 'pluralize'
-import { useContext } from 'react'
-import { AdminLayout, DocumentsTable } from '../../components'
-import { OutstaticContext } from '../../context'
-import { useDocumentsQuery } from '../../graphql/generated'
-import { OstDocument } from '../../types/public'
 
 type GQLErrorExtended = GraphQLError & { type: string }
 
@@ -31,7 +30,7 @@ export default function List({ collection }: ListProps) {
     contentPath,
     monorepoPath,
     session
-  } = useContext(OutstaticContext)
+  } = useOutstatic()
   const { data, error, loading } = useDocumentsQuery({
     variables: {
       owner: repoOwner || session?.user?.login || '',

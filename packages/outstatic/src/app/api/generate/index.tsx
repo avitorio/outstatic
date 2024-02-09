@@ -1,6 +1,6 @@
+import { getLoginSession } from '@/utils/auth/auth'
 import { OpenAIStream, StreamingTextResponse } from 'ai'
 import OpenAI from 'openai'
-import { getLoginSession } from '../../../utils/auth/auth'
 
 // Create an OpenAI API client (that's edge friendly!)
 const openai = new OpenAI({

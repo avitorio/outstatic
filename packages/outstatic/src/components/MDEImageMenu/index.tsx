@@ -1,7 +1,7 @@
+import MDEMenuButton from '@/components/MDEMenuButton'
+import { useFileStore } from '@/utils/hooks/useFileStore'
 import { Editor } from '@tiptap/react'
 import { useCallback, useState } from 'react'
-import MDEMenuButton from '../MDEMenuButton'
-import { useFileStore } from '../../utils/hooks/useFileStore'
 
 type MDEUImageMenuProps = {
   editor: Editor

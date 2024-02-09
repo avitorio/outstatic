@@ -1,10 +1,10 @@
+import { DocumentContext } from '@/context'
 import { useContext } from 'react'
 import { useFormContext } from 'react-hook-form'
 import TextareaAutosize, {
   TextareaAutosizeProps
 } from 'react-textarea-autosize'
 import { slugify } from 'transliteration'
-import { DocumentContext } from '../../context'
 
 export type DocumentTitleProps = {
   label?: string
@@ -44,7 +44,10 @@ export default function DocumentTitle({
               )
               const last = segments.pop() || segments.pop()
               if (last === 'new') {
-                setValue('slug', slugify(e.target.value))
+                setValue(
+                  'slug',
+                  slugify(e.target.value, { allowedChars: 'a-zA-Z0-9' })
+                )
               }
             }
           })}

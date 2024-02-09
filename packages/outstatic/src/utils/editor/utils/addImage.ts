@@ -1,5 +1,5 @@
+import { useFileStore } from '@/utils/hooks/useFileStore'
 import { toast } from 'sonner'
-import { useFileStore } from '../../hooks/useFileStore'
 
 export const addImage = (file: Blob) => {
   // check if the file is an image
