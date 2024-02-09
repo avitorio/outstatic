@@ -1,5 +1,16 @@
 # outstatic
 
+## 1.3.0
+
+### Minor Changes
+
+- 7e1405c: Use @ for imports and refactor Outstatic context
+- d7165a6: Adds column sorting on list page
+
+### Patch Changes
+
+- 8fd6ea7: Add title to Outstatic pages
+
 ## 1.2.0
 
 ### Minor Changes
