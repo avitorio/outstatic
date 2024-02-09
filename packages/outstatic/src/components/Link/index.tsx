@@ -21,7 +21,6 @@ const Link: React.FC<LinkProps> = ({
   const handleLinkClick = useCallback(
     (e: MouseEvent<HTMLAnchorElement>) => {
       e.preventDefault()
-      console.log({ hasChanges })
       if (onClick) {
         onClick(e)
       }
