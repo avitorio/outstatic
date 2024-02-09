@@ -1,5 +1,4 @@
 import { Editor } from '@tiptap/react'
-import { Dispatch, SetStateAction } from 'react'
 
 export type Document = {
   author: {
