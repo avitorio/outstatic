@@ -68,7 +68,7 @@ There are a few particularities to how Outstatic works. Since most editor action
    ```
 1. Start developing and watch for code changes:
    ```
-   pnpm dev --filter outstatic-dev-blog --filter outstatic
+   pnpm dev
    ```
    The above command will tell turborepo to only load the `outstatic` library and the `outstatic-dev-blog` project.
 1. When your changes are finished, commit them to the branch:
