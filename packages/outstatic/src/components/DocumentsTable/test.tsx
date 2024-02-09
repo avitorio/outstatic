@@ -11,6 +11,12 @@ jest.mock(
       children
 )
 
+jest.mock('change-case', () => {
+  return {
+    sentenceCase: (str: string) => str
+  }
+})
+
 // Mock the DeleteDocumentButton component
 jest.mock('@/components/DeleteDocumentButton', () => {
   return jest.fn(({ onComplete }) => (

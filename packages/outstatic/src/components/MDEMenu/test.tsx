@@ -4,6 +4,12 @@ import StarterKit from '@tiptap/starter-kit'
 
 import MDEMenu from '.'
 
+jest.mock('change-case', () => {
+  return {
+    sentenceCase: (str: string) => str
+  }
+})
+
 describe('<MDEMenu />', () => {
   it('should render the heading', () => {
     const { result } = renderHook(() =>
