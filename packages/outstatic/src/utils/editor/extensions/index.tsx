@@ -84,6 +84,7 @@ export const TiptapExtensions = [
   }),
   Markdown.configure({
     html: false,
+    linkify: false,
     transformPastedText: true
   }),
   Image.extend({
