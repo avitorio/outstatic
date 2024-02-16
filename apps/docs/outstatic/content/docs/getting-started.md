@@ -54,7 +54,7 @@ Awesome, with your GitHub Oauth keys in hand select how you want to use Outstati
 
 To deploy with Vercel, start by clicking the button below and follow the setup steps:
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Favitorio%2Foutstatic%2Ftree%2Fmain%2Fexamples%2Fblog&env=OST_GITHUB_ID,OST_GITHUB_SECRET,OST_TOKEN_SECRET&project-name=outstatic-blog&repo-name=outstatic-blog&demo-title=Outstatic%20Blog%20Demo&demo-description=A%20statically%20generated%20blog%20example%20using%20Outstatic&demo-url=https%3A%2F%2Foutstatic-dev-blog.vercel.app%2F&demo-image=https%3A%2F%2Foutstatic.com%2Fimages%2Foutstatic-demo.png&envDescription=API%20Keys%20needed%20for%20installation&envLink=https%3A%2F%2Foutstatic.com%2Fdocs%2Fenvironment-variables)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/avitorio/outstatic/tree/main/examples/basic-blog&env=OST_GITHUB_ID,OST_GITHUB_SECRET,OST_TOKEN_SECRET&project-name=outstatic-blog&repo-name=outstatic-basic-blog&demo-title=Outstatic%20Basic%20Blog%20Demo&demo-description=A%20statically%20generated%20blog%20example%20using%20Outstatic&demo-url=https://outstatic-dev-blog.vercel.app/&demo-image=https://outstatic.com/images/outstatic-demo.png&envDescription=API%20Keys%20needed%20for%20installation&envLink=https://outstatic.com/docs/environment-variables)
 
 Select GitHub as your git service. Then, type the name of your repository (ex: `outstatic-blog`) and click **create**.
 
