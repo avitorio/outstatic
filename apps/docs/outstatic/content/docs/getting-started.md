@@ -7,7 +7,7 @@ author:
 slug: 'getting-started'
 description: 'Get started with Outstatic'
 coverImage: ''
-publishedAt: '2023-09-23T18:34:15.000Z'
+publishedAt: '2024-02-16T18:34:15.000Z'
 ---
 
 Here's how you can get started with Outstatic.
@@ -109,9 +109,23 @@ yarn add outstatic
 pnpm install outstatic
 ```
 
-Once installed, you'll need to add two files to your `/app` folder:
+Once installed, you'll need to add three files to your `/app` folder. We'll create a [route group](https://nextjs.org/docs/app/building-your-application/routing/route-groups) so that your site's styles won't interfere with the Outstatic dashboard. Here we've named the route group `(cms)`:
 
-`/app/outstatic/[[...ost]]/page.tsx`
+`/app/(cms)/layout.tsx`
+
+```
+export default function RootLayout({
+  children
+}) {
+  return (
+    <html lang="en">
+      <body>{children}</body>
+    </html>
+  )
+}
+```
+
+`/app/(cms)/outstatic/[[...ost]]/page.tsx`
 
 ```javascript
 import 'outstatic/outstatic.css'
@@ -124,7 +138,7 @@ export default async function Page({ params }: { params: { ost: string[] } }) {
 }
 ```
 
-And `/app/api/outstatic/[[...ost]]/route.ts`
+And lastly, the api route (outside of the route group): `/app/api/outstatic/[[...ost]]/route.ts`
 
 ```javascript
 import { OutstaticApi } from 'outstatic'

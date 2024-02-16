@@ -1,6 +1,6 @@
 {
-  "commit": "28229851a2eed6b7d565c7e96de476bc6c0795ed",
-  "generated": "2023-11-26T22:15:49.702Z",
+  "commit": "ae12f061604601f4f36c9d6766e49b45545b13e1",
+  "generated": "2024-02-16T15:10:57.152Z",
   "metadata": [
     {
       "__outstatic": {
@@ -147,24 +147,6 @@
     },
     {
       "__outstatic": {
-        "commit": "f8f14edc5fdfa0c113a2ad64f7b542efceb062de",
-        "hash": "2908528600",
-        "path": "outstatic/content/docs/getting-started.md"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "docs",
-      "coverImage": "",
-      "description": "Get started with Outstatic",
-      "publishedAt": "2023-09-23T18:34:15.000Z",
-      "slug": "getting-started",
-      "status": "published",
-      "title": "Getting started"
-    },
-    {
-      "__outstatic": {
         "commit": "bbdd4ea46504b696b0af71adafc8bbf6b2e4b809",
         "hash": "85927068",
         "path": "outstatic/content/docs/migrating-to-v1.md"
@@ -252,6 +234,24 @@
       "slug": "github-apps-authentication",
       "status": "published",
       "title": "GitHub Apps Authentication"
+    },
+    {
+      "__outstatic": {
+        "commit": "ae12f061604601f4f36c9d6766e49b45545b13e1",
+        "hash": "1712247272",
+        "path": "outstatic/content/docs/getting-started.md"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "coverImage": "",
+      "description": "Get started with Outstatic",
+      "publishedAt": "2024-02-16T18:34:15.000Z",
+      "slug": "getting-started",
+      "status": "published",
+      "title": "Getting started"
     }
   ]
 }
