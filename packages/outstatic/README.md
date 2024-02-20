@@ -46,7 +46,7 @@ The project is constantly improving with new changes being implemented on a dail
 
 ## Tech Stack
 
-Novel is built on the following stack:
+Outstatic is built on the following stack:
 
 - [Next.js](https://nextjs.org/) – framework
 - [GitHub](https://github.com/) – content storage and auth
