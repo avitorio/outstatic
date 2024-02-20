@@ -67,13 +67,14 @@ export default function List({ collection }: ListProps) {
             ? document?.object?.text
             : ''
         )
-        delete data.content
-        delete data.coverImage
+
+        const listData = { ...data }
+        delete listData.coverImage
 
         documents.push({
-          ...(data as OstDocument),
-          author: data.author.name || '',
-          publishedAt: new Date(data.publishedAt).toLocaleDateString(
+          ...(listData as OstDocument),
+          author: listData.author.name || '',
+          publishedAt: new Date(listData.publishedAt).toLocaleDateString(
             'en-US',
             options
           ),
