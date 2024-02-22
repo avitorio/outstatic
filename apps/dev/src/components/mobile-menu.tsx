@@ -9,9 +9,13 @@ import {
 import { Menu, XIcon } from 'lucide-react'
 import Link from 'next/link'
 import { useState } from 'react'
-import { MenuProps } from './header'
 import { ThemeToggle } from './theme-toggle'
 import { Button, buttonVariants } from './ui/button'
+
+type MenuProps = {
+  pages: { title: string; slug: string }[]
+  collections: string[]
+}
 
 export const MobileMenu = ({ pages, collections }: MenuProps) => {
   const [open, setOpen] = useState(false)
