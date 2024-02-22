@@ -1,6 +1,5 @@
 import { BuiltWithOutstatic } from '@/components/built-with-outstatic'
 import Footer from '@/components/footer'
-import Header from '@/components/header'
 import { ThemeProvider } from '@/components/theme-provider'
 import { absoluteUrl, ogUrl } from '@/lib/utils'
 import '@/styles/index.css'
@@ -50,7 +49,6 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <Header />
           <div className="relative max-w-6xl mx-auto px-5 h-full pt-8 md:py-24">
             {children}
           </div>
