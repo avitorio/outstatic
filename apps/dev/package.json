@@ -18,7 +18,7 @@
     "gray-matter": "^4.0.3",
     "lucide-react": "^0.303.0",
     "mdx-bundler": "^10.0.1",
-    "next": "14.0.4-canary.25",
+    "next": "14.0.4-canary.40",
     "next-themes": "^0.2.1",
     "outstatic": "workspace:*",
     "react": "^18",
