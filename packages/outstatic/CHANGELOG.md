@@ -1,5 +1,16 @@
 # outstatic
 
+## 1.4.0
+
+### Minor Changes
+
+- a509ad3: Fixes coverImage bug
+- 70650b7: Add discord server to dashboard footer
+
+### Patch Changes
+
+- 3b2eb5d: fix: don't auto create links from 'https://'
+
 ## 1.3.0
 
 ### Minor Changes
