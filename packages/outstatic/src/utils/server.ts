@@ -79,9 +79,12 @@ export function getDocuments(collection: string, fields: string[] = []) {
           ...fields,
           'publishedAt',
           'status'
-        ]) as OstDocument
+        ]) as OstDocument | null
     )
-    .filter((document) => document.status === 'published')
+    .filter(
+      (document): document is OstDocument =>
+        document !== null && document.status === 'published'
+    )
     // sort documents by date in descending order
     .sort((document1, document2) =>
       document1.publishedAt > document2.publishedAt ? -1 : 1
