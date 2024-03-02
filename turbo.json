@@ -41,7 +41,8 @@
         "OST_TOKEN_SECRET",
         "VERCEL_GIT_REPO_SLUG",
         "OPENAI_API_KEY",
-        "OST_GITHUB_CALLBACK_URL"
+        "OST_GITHUB_CALLBACK_URL",
+        "OST_BASE_PATH"
       ]
     }
   }
