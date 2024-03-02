@@ -9,31 +9,33 @@ export default async function Index() {
     <>
       <section className="mb-16 md:min-h-[calc(100vh-256px)] items-center flex">
         <div
-          className="prose lg:prose-2xl home-intro prose-outstatic"
+          className="prose lg:prose-2xl home-intro prose-outstatic home-hero-fade"
           dangerouslySetInnerHTML={{ __html: content }}
         />
       </section>
-      {allPosts.length > 0 && (
-        <ContentGrid
-          title="posts"
-          items={allPosts}
-          collection="posts"
-          priority
-          viewAll
-        />
-      )}
-      {Object.keys(otherCollections).map((collection) => {
-        if (!collection.length) return null
-        return (
+      <div className="animate-fade-in delay-1000 opacity-0 duration-500">
+        {allPosts.length > 0 && (
           <ContentGrid
-            key={collection}
-            title={collection}
-            items={otherCollections[collection]}
-            collection={collection}
+            title="posts"
+            items={allPosts}
+            collection="posts"
+            priority
             viewAll
           />
-        )
-      })}
+        )}
+        {Object.keys(otherCollections).map((collection) => {
+          if (!collection.length) return null
+          return (
+            <ContentGrid
+              key={collection}
+              title={collection}
+              items={otherCollections[collection]}
+              collection={collection}
+              viewAll
+            />
+          )
+        })}
+      </div>
     </>
   )
 }
