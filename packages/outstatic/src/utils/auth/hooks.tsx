@@ -2,6 +2,7 @@ import { Session } from '@/types'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 import useSWR from 'swr'
+import useOutstatic from '../hooks/useOutstatic'
 
 type useOstSessionProps = {
   redirectTo?: string
@@ -26,7 +27,11 @@ export const useOstSession = ({
   redirectTo,
   redirectIfFound
 }: useOstSessionProps = {}): useOstSessionReturn => {
-  const { data, error } = useSWR('/api/outstatic/user', fetcher)
+  const { basePath } = useOutstatic()
+  const { data, error } = useSWR(
+    (basePath || '') + '/api/outstatic/user',
+    fetcher
+  )
   const session = data?.session as Session
   const finished = Boolean(data)
   const hasUser = Boolean(session)

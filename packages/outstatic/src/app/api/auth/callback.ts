@@ -94,7 +94,7 @@ router
     const response = await next()
     if (response) {
       const url = req.nextUrl.clone()
-      url.pathname = '/outstatic'
+      url.pathname = (process.env.OST_BASE_PATH || '') + '/outstatic'
       url.search = ''
       if (response.status !== 200) {
         const data = await response.json()

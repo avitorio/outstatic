@@ -8,6 +8,6 @@ export default async function GET(req: NextRequest) {
     path: '/'
   })
 
-  const homeUrl = new URL('/', req.url)
+  const homeUrl = new URL(process.env.OST_BASE_PATH || '/', req.url)
   return NextResponse.redirect(homeUrl)
 }
