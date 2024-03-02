@@ -17,7 +17,9 @@ const apolloCache = new InMemoryCache({
 })
 
 async function getSession() {
-  const response = await fetch('/api/outstatic/user')
+  const response = await fetch(
+    (process.env.OST_BASE_PATH || '') + '/api/outstatic/user'
+  )
   return response.json()
 }
 
