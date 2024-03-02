@@ -7,9 +7,6 @@
     "lint": {
       "outputs": []
     },
-    "start": {
-      "cache": false
-    },
     "dev": {
       "cache": false,
       "env": ["NEXT_PUBLIC_APP_URL"]
