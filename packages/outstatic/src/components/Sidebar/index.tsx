@@ -59,16 +59,16 @@ const Sidebar = ({ isOpen = false }: SidebarProps) => {
 
   return (
     <aside
-      className={`absolute top-[53px] z-20 h-full w-full md:relative md:top-0 lg:block md:w-64 md:min-w-[16rem] ${
+      className={`absolute top-[53px] z-20 h-full w-full md:relative md:top-0 md:w-64 md:min-w-[16rem] lg:block ${
         isOpen ? 'block' : 'hidden'
       }`}
       aria-label="Sidebar"
     >
-      <div className="flex flex-col py-4 px-3 h-full max-h-[calc(100vh-96px)] overflow-y-scroll scrollbar-hide bg-gray-50 justify-between">
+      <div className="scrollbar-hide flex h-full max-h-[calc(100vh-96px)] flex-col justify-between overflow-y-scroll bg-gray-50 py-4 px-3">
         <ul className="space-y-2">
           <li>
             <Link href="/outstatic">
-              <div className="flex items-center rounded-lg p-2 text-base font-normal text-gray-900 hover:bg-gray-100 cursor-pointer">
+              <div className="flex cursor-pointer items-center rounded-lg p-2 text-base font-normal text-gray-900 hover:bg-gray-100">
                 <svg
                   className="h-6 w-6 shrink-0 text-gray-500 transition duration-75 group-hover:text-gray-900"
                   xmlns="http://www.w3.org/2000/svg"
@@ -90,7 +90,7 @@ const Sidebar = ({ isOpen = false }: SidebarProps) => {
             {collections.map((collection) => (
               <li key={collection}>
                 <Link href={`/outstatic/${collection}`}>
-                  <div className="flex items-center rounded-lg p-2 text-base font-normal text-gray-900 hover:bg-gray-100 cursor-pointer">
+                  <div className="flex cursor-pointer items-center rounded-lg p-2 text-base font-normal text-gray-900 hover:bg-gray-100">
                     <svg
                       className="h-6 w-6 shrink-0 text-gray-500 transition duration-75 group-hover:text-gray-900"
                       fill="none"
@@ -113,7 +113,7 @@ const Sidebar = ({ isOpen = false }: SidebarProps) => {
           </>
           <li>
             <Link href="/outstatic/settings">
-              <div className="flex items-center rounded-lg p-2 text-base font-normal text-gray-900 hover:bg-gray-100 cursor-pointer">
+              <div className="flex cursor-pointer items-center rounded-lg p-2 text-base font-normal text-gray-900 hover:bg-gray-100">
                 <svg
                   className="h-6 w-6 shrink-0 text-gray-500 transition duration-75 group-hover:text-gray-900"
                   fill="none"
@@ -135,18 +135,18 @@ const Sidebar = ({ isOpen = false }: SidebarProps) => {
         </ul>
         {broadcast ? (
           <div
-            className="p-4 mt-6 rounded-lg bg-white border border-gray"
+            className="border-gray mt-6 rounded-lg border bg-white p-4"
             role="alert"
           >
-            <div className="flex items-center mb-3">
-              <span className="bg-blue-100 text-blue-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full">
+            <div className="mb-3 flex items-center">
+              <span className="mr-2 rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800">
                 {broadcast.title}
               </span>
             </div>
             <p className="text-sm">{broadcast.content}</p>
             {broadcast?.link ? (
               <a href={broadcast.link} target="_blank" rel="noreferrer">
-                <span className="mt-3 text-xs underline font-medium">
+                <span className="mt-3 text-xs font-medium underline">
                   Learn more
                 </span>
               </a>
@@ -155,16 +155,16 @@ const Sidebar = ({ isOpen = false }: SidebarProps) => {
         ) : null}
       </div>
 
-      <div className="h-10 bg-gray-50 py-2 px-4 border-t text-xs flex justify-between items-center w-full">
+      <div className="flex h-10 w-full items-center justify-between border-t bg-gray-50 py-2 px-4 text-xs">
         <a
-          className="font-semibold text-gray-500 hover:underline hover:text-gray-900"
+          className="font-semibold text-gray-500 hover:text-gray-900 hover:underline"
           href="https://outstatic.com/docs"
           target="_blank"
           rel="noreferrer"
         >
           Documentation
         </a>
-        <div className="gap-2 flex items-center justify-center">
+        <div className="flex items-center justify-center gap-2">
           <a
             href="https://github.com/avitorio/outstatic"
             target="_blank"
@@ -193,7 +193,7 @@ const Sidebar = ({ isOpen = false }: SidebarProps) => {
             target="_blank"
             aria-label="X.com"
             rel="noreferrer"
-            className="group w-5 h-5 flex items-center justify-center"
+            className="group flex h-5 w-5 items-center justify-center"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -213,7 +213,7 @@ const Sidebar = ({ isOpen = false }: SidebarProps) => {
             target="_blank"
             aria-label="Discord"
             rel="noreferrer"
-            className="group w-5 h-5 flex items-center justify-center"
+            className="group flex h-5 w-5 items-center justify-center"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
