@@ -33,8 +33,9 @@ export async function Outstatic() {
   }
 
   const session = await getLoginSession()
-
-  const apolloClient = session ? initializeApollo(null, session) : null
+  const apolloClient = session
+    ? initializeApollo(null, session, process.env.OST_BASE_PATH)
+    : null
 
   let collections: String[] = []
 

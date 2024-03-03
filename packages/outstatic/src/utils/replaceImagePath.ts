@@ -1,9 +1,9 @@
 import { API_IMAGES_PATH, IMAGES_PATH } from './constants'
 
 // Function to replace the API image paths with the production paths.
-function replaceImagePath(markdownContent: string): string {
+function replaceImagePath(markdownContent: string, basePath = ''): string {
   const regex = new RegExp(
-    `!\\[([^\\]]*?)\\]\\((/${API_IMAGES_PATH})([^\\)]+?)\\)`,
+    `!\\[([^\\]]*?)\\]\\((${basePath}/${API_IMAGES_PATH})([^\\)]+?)\\)`,
     'g'
   )
 
@@ -11,7 +11,7 @@ function replaceImagePath(markdownContent: string): string {
   let updatedMarkdown = markdownContent.replace(
     regex,
     (match, altText, apiPath, filename) =>
-      `![${altText}](/${IMAGES_PATH}${filename})`
+      `![${altText}](${basePath}/${IMAGES_PATH}${filename})`
   )
 
   return updatedMarkdown

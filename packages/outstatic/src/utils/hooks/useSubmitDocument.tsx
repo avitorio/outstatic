@@ -53,8 +53,14 @@ function useSubmitDocument({
   editor
 }: SubmitDocumentProps) {
   const [createCommit] = useCreateCommitMutation()
-  const { repoOwner, repoSlug, repoBranch, contentPath, monorepoPath } =
-    useOutstatic()
+  const {
+    repoOwner,
+    repoSlug,
+    repoBranch,
+    contentPath,
+    monorepoPath,
+    basePath
+  } = useOutstatic()
   const fetchOid = useOid()
   const { data: metadata } = useFileQuery({
     file: `metadata.json`
@@ -67,7 +73,7 @@ function useSubmitDocument({
       try {
         const document = methods.getValues()
         const mdContent = editor.storage.markdown.getMarkdown()
-        let content = mergeMdMeta({ ...data, content: mdContent })
+        let content = mergeMdMeta({ ...data, content: mdContent }, basePath)
         const oid = await fetchOid()
         const owner = repoOwner || session?.user?.login || ''
         const newSlug = document.slug
@@ -123,7 +129,10 @@ function useSubmitDocument({
               )
 
               // replace blob in content with path
-              content = content.replace(blob, `/${filePath}${newFilename}`)
+              content = content.replace(
+                blob,
+                `${basePath}/${filePath}${newFilename}`
+              )
             }
           })
         }

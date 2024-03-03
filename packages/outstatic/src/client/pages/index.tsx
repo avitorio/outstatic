@@ -27,7 +27,11 @@ const defaultPages: { [key: string]: ReactElement | undefined } = {
 export const OstClient = ({ ostData, params }: ProviderDataProps) => {
   const [pages, setPages] = useState(ostData?.pages || [])
   const [collections, setCollections] = useState(ostData?.collections || [])
-  const client = useApollo(ostData?.initialApolloState)
+  const client = useApollo(
+    ostData?.initialApolloState,
+    undefined,
+    ostData?.basePath
+  )
   const [hasChanges, setHasChanges] = useState(false)
 
   useEffect(() => {
