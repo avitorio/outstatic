@@ -6,7 +6,6 @@ import {
 } from '@/components'
 import { DocumentContext } from '@/context'
 import { CustomFields, Document } from '@/types'
-import { useOstSession } from '@/utils/auth/hooks'
 import { deepReplace } from '@/utils/deepReplace'
 import { useDocumentUpdateEffect } from '@/utils/hooks/useDocumentUpdateEffect'
 import useFileQuery from '@/utils/hooks/useFileQuery'
@@ -27,9 +26,8 @@ export default function EditDocument({ collection }: { collection: string }) {
   const [slug, setSlug] = useState(
     pathname.split('/').pop() || `/${collection}/new`
   )
-  const { session } = useOstSession()
   const [loading, setLoading] = useState(false)
-  const { hasChanges, setHasChanges } = useOutstatic()
+  const { hasChanges, setHasChanges, basePath, session } = useOutstatic()
   const [showDelete, setShowDelete] = useState(false)
   const [documentSchema, setDocumentSchema] = useState(editDocumentSchema)
   const methods = useForm<Document>({ resolver: yupResolver(documentSchema) })
@@ -63,7 +61,11 @@ export default function EditDocument({ collection }: { collection: string }) {
   })
 
   useEffect(() => {
-    window.history.replaceState({}, '', `/outstatic/${collection}/${slug}`)
+    window.history.replaceState(
+      {},
+      '',
+      `${basePath}/outstatic/${collection}/${slug}`
+    )
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [slug])
 
