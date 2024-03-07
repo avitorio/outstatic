@@ -1,25 +1,7 @@
 {
-  "commit": "ae12f061604601f4f36c9d6766e49b45545b13e1",
-  "generated": "2024-02-16T15:17:00.500Z",
+  "commit": "111f3c49a77c3bad8cb20d1a3bae7e22c39317cb",
+  "generated": "2024-03-07T00:29:24.213Z",
   "metadata": [
-    {
-      "__outstatic": {
-        "commit": "28fb2f86179c26f5063364ced8395466b6f7985c",
-        "hash": "25742991",
-        "path": "/outstatic/content/docs/custom-fields.md"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "docs",
-      "coverImage": "",
-      "description": "",
-      "publishedAt": "2023-05-26T20:01:41.000Z",
-      "slug": "custom-fields",
-      "status": "published",
-      "title": "Custom Fields"
-    },
     {
       "__outstatic": {
         "commit": "3bbf1f134c75554e5c13021122ec22f45cc34718",
@@ -252,6 +234,24 @@
       "slug": "getting-started",
       "status": "published",
       "title": "Getting started"
+    },
+    {
+      "__outstatic": {
+        "commit": "111f3c49a77c3bad8cb20d1a3bae7e22c39317cb",
+        "hash": "259082607",
+        "path": "outstatic/content/docs/custom-fields.md"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "coverImage": "",
+      "description": "",
+      "publishedAt": "2024-03-06T20:01:41.000Z",
+      "slug": "custom-fields",
+      "status": "published",
+      "title": "Custom Fields"
     }
   ]
 }
