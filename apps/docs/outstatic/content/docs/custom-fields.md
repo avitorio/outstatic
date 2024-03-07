@@ -7,7 +7,7 @@ author:
 slug: 'custom-fields'
 description: ''
 coverImage: ''
-publishedAt: '2023-05-26T20:01:41.000Z'
+publishedAt: '2024-03-06T20:01:41.000Z'
 ---
 
 ## Custom fields
@@ -18,7 +18,9 @@ If you're looking to add some extra data to your content in a more structured wa
 
 ### Step 1: Access the Add Custom Fields Page
 
-![](/images/cleanshot-2023-05-26-at-21.42.44-M5MT.gif)First, head over to the Collections page and click on the Collection you want to add custom fields to.
+![](/images/custom-fields-part-1-E5NT.gif)\
+\
+First, head over to the Collections page and click the pencil icon on the Collection you want to add custom fields to.
 
 ### Step 2: Create a new Custom Field
 
