@@ -1,4 +1,4 @@
-import Header from '@/components/Header'
+import Header from '@/components/header'
 import formatDate from '@/lib/formatDate'
 import { Metadata } from 'next'
 import { getDocumentBySlug, getDocumentSlugs, load } from 'outstatic/server'
