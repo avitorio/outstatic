@@ -104,15 +104,11 @@
   @apply border;
 }
 
-.sidebar .prose-base :where(ul):not(:where([class~='not-prose'] *)) {
+.sidebar .prose :where(ul):not(:where([class~='not-prose'] *)) {
   padding-left: 0;
 }
 
-.sidebar .prose-base :where(li):not(:where([class~='not-prose'] *)) {
+.sidebar .prose :where(li):not(:where([class~='not-prose'] *)) {
   list-style: none;
   padding-left: 1rem;
-}
-
-.sidebar .prose-base a {
-  @apply no-underline hover:underline;
 }

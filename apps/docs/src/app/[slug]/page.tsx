@@ -49,11 +49,7 @@ export default async function Post(params: Params) {
     <>
       <Header />
       <div className="bg-white flex w-full">
-        <aside className="border-r px-4 py-4 w-full max-w-xs sticky top-16 h-[calc(100vh-4rem)] overflow-y-scroll no-scrollbar sidebar">
-          <div className="prose prose-base">
-            <MDXComponent content={menu.content} />
-          </div>
-        </aside>
+        <SidebarNav content={menu.content} />
         <div className="w-full ml-10 sm:px-2 lg:px-8 xl:px-12 py-12">
           <article className="mb-32 w-full">
             <h1 className="font-primary text-2xl font-bold md:text-4xl mb-2">
@@ -77,6 +73,7 @@ export default async function Post(params: Params) {
 }
 
 import MDXComponent from '@/components/mdx/mdx-component'
+import { SidebarNav } from '@/components/sidebar-nav'
 import MDXServer from '@/lib/mdx-server'
 
 async function getData({ params }: Params) {
