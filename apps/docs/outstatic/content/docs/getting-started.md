@@ -7,7 +7,7 @@ author:
 slug: 'getting-started'
 description: 'Get started with Outstatic'
 coverImage: ''
-publishedAt: '2024-02-16T18:34:15.000Z'
+publishedAt: '2024-03-16T18:34:15.000Z'
 ---
 
 Here's how you can get started with Outstatic.
@@ -99,14 +99,19 @@ Before we start, you should know Outstatic saves content as markdown files to yo
 First install the Outstatic package and dependencies:
 
 ```bash
-# npm
 npm install outstatic
+```
 
-# yarn
+```bash
 yarn add outstatic
+```
 
-#pnpm
+```bash
 pnpm install outstatic
+```
+
+```bash
+bun add outstatic
 ```
 
 Once installed, you'll need to add three files to your `/app` folder. We'll create a [route group](https://nextjs.org/docs/app/building-your-application/routing/route-groups) so that your site's styles won't interfere with the Outstatic dashboard. Here we've named the route group `(cms)`:
