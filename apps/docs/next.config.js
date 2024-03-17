@@ -2,6 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   transpilePackages: ['outstatic'],
+  basePath: '/docs',
   async redirects() {
     return [
       {
