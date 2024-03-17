@@ -17,6 +17,7 @@ type OutstaticProviderProps = {
   hasOpenAIKey: boolean
   hasChanges: boolean
   setHasChanges: Dispatch<SetStateAction<boolean>>
+  basePath: string
 }
 
 export const OutstaticContext = createContext<OutstaticProviderProps>(
@@ -37,7 +38,8 @@ export const OutstaticProvider = ({
   removePage,
   hasOpenAIKey,
   hasChanges,
-  setHasChanges
+  setHasChanges,
+  basePath
 }: OutstaticProviderProps) => {
   return (
     <OutstaticContext.Provider
@@ -54,7 +56,8 @@ export const OutstaticProvider = ({
         removePage,
         hasOpenAIKey,
         hasChanges,
-        setHasChanges
+        setHasChanges,
+        basePath: basePath || ''
       }}
     >
       {children}

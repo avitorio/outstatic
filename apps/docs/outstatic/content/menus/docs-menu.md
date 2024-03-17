@@ -7,7 +7,7 @@ author:
 slug: 'docs-menu'
 description: ''
 coverImage: ''
-publishedAt: '2023-11-20T15:18:37.000Z'
+publishedAt: '2024-03-16T15:18:37.000Z'
 ---
 
 - [Introduction](/introduction)
@@ -26,11 +26,11 @@ publishedAt: '2023-11-20T15:18:37.000Z'
 
 - [The Content Editor](/the-content-editor)
 
-  - [AI Completion ](/the-content-editor#ai-completion)🤖
+  - [AI Completion 🤖 ](/the-content-editor#ai-completion)
 
 - [Fetching data](/fetching-data)
 
-- [Custom Fields](/custom-fields) ⚡︎
+- [Custom Fields ⚡︎](/custom-fields)
 
 - [Environment Variables](/environment-variables)
 

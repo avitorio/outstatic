@@ -1,5 +1,13 @@
 # outstatic
 
+## 1.4.2
+
+### Patch Changes
+
+- 116171b: feat: add base path functionality
+- 7215826: Update fillRule tag
+- 6e7b37d: fix: Remove double border in aside
+
 ## 1.4.1
 
 ### Patch Changes

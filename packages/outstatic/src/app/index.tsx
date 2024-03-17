@@ -20,6 +20,7 @@ export type OutstaticData = {
   pages: string[]
   missingEnvVars: EnvVarsType | false
   hasOpenAIKey: boolean
+  basePath: string
 }
 
 export const defaultPages = ['settings', 'collections']
@@ -32,8 +33,9 @@ export async function Outstatic() {
   }
 
   const session = await getLoginSession()
-
-  const apolloClient = session ? initializeApollo(null, session) : null
+  const apolloClient = session
+    ? initializeApollo(null, session, process.env.OST_BASE_PATH)
+    : null
 
   let collections: String[] = []
 
@@ -81,6 +83,7 @@ export async function Outstatic() {
     collections,
     pages: [...defaultPages, ...collections],
     missingEnvVars: false,
-    hasOpenAIKey: !!process.env.OPENAI_API_KEY
+    hasOpenAIKey: !!process.env.OPENAI_API_KEY,
+    basePath: process.env.OST_BASE_PATH || ''
   } as OutstaticData
 }
