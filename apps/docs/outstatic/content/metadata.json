@@ -1,6 +1,6 @@
 {
-  "commit": "111f3c49a77c3bad8cb20d1a3bae7e22c39317cb",
-  "generated": "2024-03-07T00:29:24.213Z",
+  "commit": "1370bbb8a58cb2d150ada9d815ba1a6c94865d48",
+  "generated": "2024-03-17T04:11:25.996Z",
   "metadata": [
     {
       "__outstatic": {
@@ -55,23 +55,6 @@
       "slug": "fetching-data",
       "status": "published",
       "title": "Fetching data"
-    },
-    {
-      "__outstatic": {
-        "commit": "a36a42a309ed2ca9176c49ce0302bf005243b928",
-        "hash": "3142407191",
-        "path": "/outstatic/content/posts/how-to-create-a-blog-with-outstatic.md"
-      },
-      "author": {
-        "name": "Andre Vitorio"
-      },
-      "collection": "posts",
-      "coverImage": "/docs/images/outstatic-demo.png",
-      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.",
-      "publishedAt": "2022-07-14T02:34:02.322Z",
-      "slug": "how-to-create-a-blog-with-outstatic",
-      "status": "published",
-      "title": "Learn how to create your blog with Outstatic"
     },
     {
       "__outstatic": {
