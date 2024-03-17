@@ -18,7 +18,7 @@ If you're looking to add some extra data to your content in a more structured wa
 
 ### Step 1: Access the Add Custom Fields Page
 
-![](/images/custom-fields-part-1-E5NT.gif)
+![](/docs/images/custom-fields-part-1-E5NT.gif)
 
 First, head over to the Collections page and click the pencil icon on the Collection you want to add custom fields to.
 
