@@ -7,6 +7,7 @@
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev --filter=outstatic-dev-blog --filter=outstatic",
+    "dev:docs": "turbo run dev --filter=docs --filter=outstatic",
     "lint": "turbo run lint",
     "clean": "turbo run clean",
     "format": "prettier --write",
@@ -18,11 +19,11 @@
     "prepublish": "pnpm typecheck && pnpm test && pnpm build --filter='!outstatic-blog-example'"
   },
   "devDependencies": {
-    "@changesets/cli": "^2.26.2",
+    "@changesets/cli": "^2.27.1",
     "eslint": "8.42.0",
     "eslint-config-custom": "workspace:*",
     "husky": "^8.0.3",
-    "lint-staged": "^13.2.2",
+    "lint-staged": "^13.3.0",
     "prettier": "^2.8.8",
     "prettier-plugin-tailwindcss": "^0.1.13",
     "turbo": "latest"

@@ -16,12 +16,12 @@ const apolloCache = new InMemoryCache({
   typePolicies: {}
 })
 
-async function getSession() {
-  const response = await fetch('/api/outstatic/user')
+async function getSession(basePath = '') {
+  const response = await fetch(basePath + '/api/outstatic/user')
   return response.json()
 }
 
-function createApolloClient(session?: Session | null) {
+function createApolloClient(session?: Session | null, basePath?: string) {
   const httpLink = createHttpLink({
     uri: 'https://api.github.com/graphql',
     // Prefer explicit `window.fetch` when available so that outgoing requests
@@ -36,7 +36,7 @@ function createApolloClient(session?: Session | null) {
   const authLink = setContext(async (_, { headers }) => {
     const data: { session: Session } = session
       ? { session }
-      : await getSession()
+      : await getSession(basePath)
     const modifiedHeader = {
       headers: {
         ...headers,
@@ -57,29 +57,35 @@ function createApolloClient(session?: Session | null) {
 
 export function initializeApollo(
   initialState = null,
-  session?: Session | null
+  session?: Session | null,
+  basePath = ''
 ) {
-  // serve para verificar se já existe uma instância, para não criar outra
-  const apolloClientGlobal = apolloClient ?? createApolloClient(session)
+  // check if there is already an instance, so as not to create another
+  const apolloClientGlobal =
+    apolloClient ?? createApolloClient(session, basePath)
 
-  // se a página usar o apolloClient no lado client
-  // hidratamos o estado inicial aqui
+  // if the page uses apolloClient on the client side
+  // hydrate the initial state here
   if (initialState) {
     apolloClientGlobal.cache.restore(initialState)
   }
 
-  // sempre inicializando no SSR com cache limpo
+  // always initialize with a new cache on the server side
   if (typeof window === 'undefined') return apolloClientGlobal
-  // cria o apolloClient se estiver no client side
+  // creates apolloClient if it is on the client side
   apolloClient = apolloClient ?? apolloClientGlobal
 
   return apolloClient
 }
 
-export function useApollo(initialState = null, session?: Session) {
+export function useApollo(
+  initialState = null,
+  session?: Session,
+  basePath?: string
+) {
   const store = useMemo(
-    () => initializeApollo(initialState, session),
-    [initialState, session]
+    () => initializeApollo(initialState, session, basePath),
+    [initialState, session, basePath]
   )
   return store
 }

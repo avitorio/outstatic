@@ -12,7 +12,8 @@ const mockProviderProps = {
   removePage: (page: string) => {},
   hasOpenAIKey: false,
   hasChanges: false,
-  setHasChanges: () => {}
+  setHasChanges: () => {},
+  basePath: ''
 }
 
 export default mockProviderProps

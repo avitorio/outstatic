@@ -1,5 +1,5 @@
-import { ButtonHTMLAttributes, forwardRef, createElement } from 'react'
-import Datepicker from 'react-datepicker'
+import { ButtonHTMLAttributes, createElement, forwardRef } from 'react'
+import Datepicker, { ReactDatePickerCustomHeaderProps } from 'react-datepicker'
 
 type DateTimePickerProps = {
   date?: Date
@@ -86,7 +86,7 @@ const DateTimePicker = ({ date, setDate, id, label }: DateTimePickerProps) => {
             increaseMonth,
             prevMonthButtonDisabled,
             nextMonthButtonDisabled
-          }) => (
+          }: ReactDatePickerCustomHeaderProps): any => (
             <div className="react-datepicker__header">
               <select
                 className="react-datepicker__current-month appearance-none cursor-pointer hover:text-blue-500"
@@ -137,7 +137,7 @@ const DateTimePicker = ({ date, setDate, id, label }: DateTimePickerProps) => {
               </button>
             </div>
           )}
-          customInput={createElement(forwardRef(DatePickerButton))}
+          customInput={createElement(forwardRef(DatePickerButton)) as any}
           showTimeInput
           timeInputLabel="Time:"
           withPortal

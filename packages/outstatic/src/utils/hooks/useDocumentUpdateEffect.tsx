@@ -6,6 +6,7 @@ import matter from 'gray-matter'
 import { Dispatch, SetStateAction, useEffect } from 'react'
 import { UseFormReturn } from 'react-hook-form'
 import useFileQuery from './useFileQuery'
+import useOutstatic from './useOutstatic'
 
 interface UseDocumentUpdateEffectProps {
   collection: string
@@ -26,6 +27,7 @@ export const useDocumentUpdateEffect = ({
   setHasChanges,
   setShowDelete
 }: UseDocumentUpdateEffectProps) => {
+  const { basePath } = useOutstatic()
   const { data: documentQueryData } = useFileQuery({
     file: `${collection}/${slug}.md`,
     skip: slug === 'new' || !slug
@@ -38,7 +40,7 @@ export const useDocumentUpdateEffect = ({
       let mdContent = documentQueryObject.text as string
       const { data, content } = matter(mdContent)
 
-      const parsedContent = parseContent(content)
+      const parsedContent = parseContent(content, basePath)
 
       const newDate = data.publishedAt
         ? new Date(data.publishedAt)

@@ -1,0 +1,168 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
+
+    --radius: 0.5rem;
+  }
+}
+
+@layer utilities {
+  /* Chrome, Safari and Opera */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+}
+
+article img {
+  display: inline;
+}
+
+.prose-outstatic {
+  max-width: 50rem;
+}
+
+.prose-outstatic code:not(:where([data-code-type='code-block'])) {
+  @apply rounded-md border px-1 py-1 font-normal text-gray-800 bg-gray-100;
+}
+
+.prose-outstatic
+  :where(pre):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+  @apply px-4 pb-4 pt-6 border rounded-md bg-gray-800 dark:bg-gray-800 text-white dark:text-gray-800;
+}
+
+@media (min-width: 768px) {
+  .md\:prose-xl.prose-outstatic
+    :where(pre):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+    @apply pt-8;
+  }
+}
+
+.prose-outstatic
+  :where(code):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+  @apply px-0 py-1 border rounded-sm bg-gray-800 dark:bg-gray-800 text-white;
+}
+
+.prose-outstatic
+  pre
+  :where(code):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+  @apply bg-transparent dark:bg-transparent border-0 whitespace-break-spaces;
+}
+
+.prose-outstatic
+  pre
+  :where(code):not(
+    :where([class~='not-prose'], [class~='not-prose'] *)
+  )::before,
+.prose-outstatic
+  pre
+  :where(code):not(
+    :where([class~='not-prose'], [class~='not-prose'] *)
+  )::after {
+  content: '';
+}
+
+.prose-outstatic :where(code):not(:where([class~='not-prose'] *))::before,
+.prose-outstatic :where(code):not(:where([class~='not-prose'] *))::after {
+  color: transparent;
+  font-size: 0;
+  white-space: nowrap;
+}
+
+.prose-outstatic > ol > li > :last-child,
+.prose-outstatic > ul > li > :last-child {
+  margin-bottom: 0;
+}
+.prose-outstatic > ol > li > :first-child,
+.prose-outstatic > ul > li > :first-child {
+  margin-top: 0;
+}
+
+.prose-outstatic blockquote p:first-of-type::before,
+.prose-outstatic blockquote p:last-of-type::after {
+  content: '';
+}
+
+.prose-outstatic :where(pre code):not(:where([class~='not-prose'] *)) {
+  font-size: 1.1em;
+}
+
+.prose-outstatic :where(h1, h2, h3, h4) {
+  scroll-margin-top: 100px;
+  position: relative;
+  display: block;
+  margin-right: 0.5rem;
+  width: -moz-fit-content;
+  width: -webkit-fit-content;
+  width: fit-content;
+}
+
+.prose-outstatic:not(.home-intro) :where(h1, h2, h3, h4):hover {
+  text-decoration: underline;
+}
+
+/** HASH ANCHOR */
+.hash-anchor {
+  @apply inset-y-0 w-full absolute transition-none bg-none;
+}
+.hash-anchor:hover {
+  @apply underline;
+}
+
+.hash-anchor:hover:after,
+.hash-anchor:focus:after {
+  visibility: visible;
+}
+
+.hash-anchor:after {
+  @apply invisible absolute -right-5 top-1/2 -translate-y-1/2 text-lg;
+  content: '#';
+}
+
+/* Docs */
+.docs img {
+  @apply border;
+}
+
+.sidebar .prose :where(ul):not(:where([class~='not-prose'] *)) {
+  padding-left: 0;
+}
+
+.sidebar .prose :where(li):not(:where([class~='not-prose'] *)) {
+  list-style: none;
+  padding-left: 1rem;
+}

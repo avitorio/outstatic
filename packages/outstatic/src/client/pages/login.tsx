@@ -1,6 +1,7 @@
 import Alert from '@/components/Alert'
 import loginErrors from '@/utils/errors/loginErrors'
 import clsx from 'clsx'
+import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import { useState } from 'react'
 
@@ -16,7 +17,7 @@ export default function Login() {
   return (
     <>
       <div id="outstatic">
-        <div className="absolute w-full left-0 overflow-hidden z-0 md:-top-10 bg-white h-screen">
+        <div className="absolute left-0 z-0 h-screen w-full overflow-hidden bg-white md:-top-10">
           <svg
             width="100%"
             height="100%"
@@ -36,7 +37,7 @@ export default function Login() {
             />
           </svg>
         </div>
-        <main className="relative flex h-screen items-center justify-center z-10 p-4">
+        <main className="relative z-10 flex h-screen items-center justify-center p-4">
           <div className="relative flex flex-col items-center justify-center">
             {error && loginErrors[error] ? (
               <div className="absolute -top-4 -translate-y-full">
@@ -65,11 +66,11 @@ export default function Login() {
                 </g>
               </svg>
             </h1>
-            <div className="text-center mb-20 flex max-w-2xl flex-col items-center p-8 px-4 md:p-8 text-black bg-white rounded-lg border border-gray-200 shadow-md">
+            <div className="mb-20 flex max-w-2xl flex-col items-center rounded-lg border border-gray-200 bg-white p-8 px-4 text-center text-black shadow-md md:p-8">
               <p className="mb-5">
                 Sign in with GitHub to access your&nbsp;dashboard.
               </p>
-              <a
+              <Link
                 href="/api/outstatic/login"
                 onClick={() => setIsLoading(true)}
                 className={clsx(
@@ -93,7 +94,7 @@ export default function Login() {
                   ></path>
                 </svg>
                 Sign in with GitHub
-              </a>
+              </Link>
             </div>
           </div>
         </main>
