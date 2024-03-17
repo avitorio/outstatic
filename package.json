@@ -7,6 +7,7 @@
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev --filter=outstatic-dev-blog --filter=outstatic",
+    "dev:docs": "turbo run dev --filter=docs --filter=outstatic",
     "lint": "turbo run lint",
     "clean": "turbo run clean",
     "format": "prettier --write",
