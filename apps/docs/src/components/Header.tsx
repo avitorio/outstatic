@@ -6,7 +6,7 @@ const Header = () => {
     <nav className="bg-white flex justify-between items-center w-full px-4 py-2 border-b sticky top-0 z-10 h-16">
       <Link href="/">
         <Image
-          src="/images/outstatic-logo.svg"
+          src="/docs/images/outstatic-logo.svg"
           width={105.2}
           height={32}
           alt="Outstatic Logo"

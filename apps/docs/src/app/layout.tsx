@@ -1,6 +1,5 @@
 import '@/styles/globals.css'
-import '@/styles/prose.css'
-import '@/styles/dracula.css'
+import '@/styles/style.css'
 import { Metadata } from 'next'
 import Script from 'next/script'
 

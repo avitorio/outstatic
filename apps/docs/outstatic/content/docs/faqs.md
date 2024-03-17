@@ -16,7 +16,7 @@ Follow the [**Add to Next.js**](/getting-started#adding-outstatic-to-a-nextjs-we
 
 Don't forget to recreate the Metadata Database with your new posts by going to Settings &gt; Rebuild Metadata:
 
-![](/images/rebuild-metadata-Y4MT.png)
+![](/docs/images/rebuild-metadata-Y4MT.png)
 
 This will create a `metadata.json` file inside of `outstatic/content` in your GitHub repository. You should pull the changes to your local install to be able to use the Metadata DB.
 
