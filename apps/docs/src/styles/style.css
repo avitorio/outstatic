@@ -45,6 +45,8 @@
 .prose-outstatic :where(code):not(:where([class~='not-prose'] *))::before,
 .prose-outstatic :where(code):not(:where([class~='not-prose'] *))::after {
   color: transparent;
+  font-size: 0;
+  white-space: nowrap;
 }
 
 .prose-outstatic > ol > li > :last-child,
