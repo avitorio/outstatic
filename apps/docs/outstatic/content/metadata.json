@@ -1,6 +1,6 @@
 {
-  "commit": "1370bbb8a58cb2d150ada9d815ba1a6c94865d48",
-  "generated": "2024-03-17T04:11:25.996Z",
+  "commit": "ecebec55febdd719edffca438535f5a79be84a3e",
+  "generated": "2024-03-17T04:14:25.197Z",
   "metadata": [
     {
       "__outstatic": {
@@ -130,24 +130,6 @@
     },
     {
       "__outstatic": {
-        "commit": "5dae185dbcd98997cc9e0c925ebebf12823a9f86",
-        "hash": "3218713448",
-        "path": "outstatic/content/docs/environment-variables.md"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "docs",
-      "coverImage": "",
-      "description": "",
-      "publishedAt": "2022-10-26T12:36:25.000Z",
-      "slug": "environment-variables",
-      "status": "published",
-      "title": "Environment Variables"
-    },
-    {
-      "__outstatic": {
         "commit": "cdd3b81cdc002ee9f57b53f0f46bff42bbf79d19",
         "hash": "3433676299",
         "path": "outstatic/content/docs/faqs.md"
@@ -235,6 +217,24 @@
       "slug": "custom-fields",
       "status": "published",
       "title": "Custom Fields"
+    },
+    {
+      "__outstatic": {
+        "commit": "ecebec55febdd719edffca438535f5a79be84a3e",
+        "hash": "2164911617",
+        "path": "outstatic/content/docs/environment-variables.md"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "coverImage": "",
+      "description": "",
+      "publishedAt": "2024-03-17T12:36:25.000Z",
+      "slug": "environment-variables",
+      "status": "published",
+      "title": "Environment Variables"
     }
   ]
 }
