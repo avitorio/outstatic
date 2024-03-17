@@ -10,6 +10,7 @@ import { CSS } from '@dnd-kit/utilities'
 import { GripVertical } from 'lucide-react'
 import { MouseEventHandler } from 'react'
 import Select, {
+  CSSObjectWithLabel,
   ControlProps,
   MultiValueGenericProps,
   MultiValueProps,
@@ -144,14 +145,15 @@ const SortableSelect = ({
           autoFocus
           className="border border-gray-200 rounded-md"
           styles={{
-            control: (base) => ({
-              ...base,
-              border: 'none',
-              boxShadow: 'none',
-              '&:hover': {
-                border: 'none'
-              }
-            })
+            control: (base) =>
+              ({
+                ...base,
+                border: 'none',
+                boxShadow: 'none',
+                '&:hover': {
+                  border: 'none'
+                }
+              } as CSSObjectWithLabel)
           }}
         />
       </SortableContext>
