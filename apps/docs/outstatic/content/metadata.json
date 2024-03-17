@@ -1,6 +1,6 @@
 {
-  "commit": "74e3f096eab537f41e8f665ac344d0295d8cecf7",
-  "generated": "2024-03-17T08:26:05.568Z",
+  "commit": "34b59fbeaed760843a8c57f95bf996d62a460341",
+  "generated": "2024-03-17T08:27:23.294Z",
   "metadata": [
     {
       "__outstatic": {
@@ -235,24 +235,6 @@
       "slug": "getting-started",
       "status": "published",
       "title": "Getting started"
-    },
-    {
-      "__outstatic": {
-        "commit": "74e3f096eab537f41e8f665ac344d0295d8cecf7",
-        "hash": "2021075678",
-        "path": "outstatic/content/docs/this-is-a-new-doc.md"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "docs",
-      "coverImage": "",
-      "description": "",
-      "publishedAt": "2024-03-17T08:07:31.492Z",
-      "slug": "this-is-a-new-doc",
-      "status": "published",
-      "title": "This is a new doc"
     }
   ]
 }
