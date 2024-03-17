@@ -38,7 +38,7 @@ _Optional_: You can set multiple callbacks in case you want to use the same GitH
 
 Unselect the "Active" option on the Webhook section.\
 \
-![](/images/image-MzNT.png)
+![](/docs/images/image-MzNT.png)
 
 #### 6\. Set Permissions
 
@@ -60,7 +60,7 @@ Copy the Client ID from your application settings and generate a Client Secret b
 
 Go to "Install App" in your application settings and click "Install" for the account/organization where you want to add the repository.
 
-![](/images/cleanshot-2023-11-26-at-22.36.06-2x-E2OT.png)
+![](/docs/images/cleanshot-2023-11-26-at-22.36.06-2x-E2OT.png)
 
 #### 11\. Set Repository Permissions
 

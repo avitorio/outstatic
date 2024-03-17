@@ -2,6 +2,7 @@ import { CustomFieldArrayValue } from '@/types'
 import camelcase from 'camelcase'
 import { useState } from 'react'
 import { Controller, RegisterOptions, useFormContext } from 'react-hook-form'
+import { CSSObjectWithLabel } from 'react-select'
 import Creatable from 'react-select/creatable'
 import CreatableSelect from 'react-select/dist/declarations/src/Creatable'
 
@@ -83,15 +84,16 @@ const TagInput = ({
               isMulti
               className={errors.multiSelect ? 'is-invalid' : ''}
               styles={{
-                control: (baseStyles, state) => ({
-                  ...baseStyles,
-                  borderColor: state.isFocused
-                    ? 'focus:ring-blue-500'
-                    : 'border-gray-300 bg-gray-50',
-                  borderRadius: '0.375rem',
-                  backgroundColor: '#f9fafb',
-                  fontSize: '0.875rem'
-                })
+                control: (baseStyles, state) =>
+                  ({
+                    ...baseStyles,
+                    borderColor: state.isFocused
+                      ? 'focus:ring-blue-500'
+                      : 'border-gray-300 bg-gray-50',
+                    borderRadius: '0.375rem',
+                    backgroundColor: '#f9fafb',
+                    fontSize: '0.875rem'
+                  } as CSSObjectWithLabel)
               }}
               classNames={{
                 menu: () => (inputSize === 'small' ? 'text-sm' : 'text-base'),

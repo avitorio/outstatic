@@ -7,7 +7,7 @@ author:
 slug: 'custom-fields'
 description: ''
 coverImage: ''
-publishedAt: '2023-05-26T20:01:41.000Z'
+publishedAt: '2024-03-06T20:01:41.000Z'
 ---
 
 ## Custom fields
@@ -18,11 +18,13 @@ If you're looking to add some extra data to your content in a more structured wa
 
 ### Step 1: Access the Add Custom Fields Page
 
-![](/images/cleanshot-2023-05-26-at-21.42.44-M5MT.gif)First, head over to the Collections page and click on the Collection you want to add custom fields to.
+![](/docs/images/custom-fields-part-1-E5NT.gif)
+
+First, head over to the Collections page and click the pencil icon on the Collection you want to add custom fields to.
 
 ### Step 2: Create a new Custom Field
 
-![](/images/cleanshot-2023-05-26-at-21.31.00-Y2ND.gif)
+![](/docs/images/cleanshot-2023-05-26-at-21.31.00-Y2ND.gif)
 
 Once you've selected your Collection, click the Add Custom Field button. This will bring up a modal with a few options for you to fill out.
 
@@ -40,11 +42,11 @@ Step 5: Save the custom field Finally, save your new custom field by clicking th
 
 Once saved a new field will appear in the Editor Settings:
 
-![](/images/cleanshot-2023-05-26-at-21.38.36-I4Nj.gif)
+![](/docs/images/cleanshot-2023-05-26-at-21.38.36-I4Nj.gif)
 
 ## Editing Custom Fields
 
-![](/images/cleanshot-2023-05-26-at-21.49.55-A1OT.gif)
+![](/docs/images/cleanshot-2023-05-26-at-21.49.55-A1OT.gif)
 
 Editing is limited to the Description and Required fields. To avoid conflicts with already saved data, you will not be able to edit the Field name or Field type.
 
@@ -56,7 +58,7 @@ Just click on the field you want to edit, make your changes, and hit Edit.
 
 ## Deleting Custom Fields
 
-![](/images/cleanshot-2023-05-26-at-21.52.47-gyND.gif)
+![](/docs/images/cleanshot-2023-05-26-at-21.52.47-gyND.gif)
 
 To delete a field, simply click the trash icon next to the field you want to remove.
 

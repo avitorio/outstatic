@@ -1,9 +1,7 @@
-import { getDocumentBySlug, getDocumentSlugs, load } from 'outstatic/server'
-import { Metadata } from 'next'
-import markdownToHtml from '@/lib/markdownToHtml'
+import Header from '@/components/header'
 import formatDate from '@/lib/formatDate'
-import Header from '@/components/Header'
-import Mdx from '@/components/MDXComponent'
+import { Metadata } from 'next'
+import { getDocumentBySlug, getDocumentSlugs, load } from 'outstatic/server'
 
 interface Params {
   params: {
@@ -51,12 +49,7 @@ export default async function Post(params: Params) {
     <>
       <Header />
       <div className="bg-white flex w-full">
-        <aside className="border-r px-4 py-4 w-full max-w-xs sticky top-16 h-[calc(100vh-4rem)] overflow-y-scroll no-scrollbar sidebar">
-          <div
-            className="prose prose-base"
-            dangerouslySetInnerHTML={{ __html: menu.content }}
-          />
-        </aside>
+        <SidebarNav content={menu.content} />
         <div className="w-full ml-10 sm:px-2 lg:px-8 xl:px-12 py-12">
           <article className="mb-32 w-full">
             <h1 className="font-primary text-2xl font-bold md:text-4xl mb-2">
@@ -69,8 +62,8 @@ export default async function Post(params: Params) {
               </time>
             </div>
             <hr className="border-neutral-200 mt-10 mb-10" />
-            <div className="prose prose-base outstatic-content docs">
-              <Mdx content={doc.content} />
+            <div className="prose prose-base prose-outstatic outstatic-content">
+              <MDXComponent content={doc.content} />
             </div>
           </article>
         </div>
@@ -79,10 +72,9 @@ export default async function Post(params: Params) {
   )
 }
 
-import { bundleMDX } from 'mdx-bundler'
-import rehypeAutolinkHeadings from 'rehype-autolink-headings'
-import rehypePrism from 'rehype-prism-plus'
-import rehypeSlug from 'rehype-slug'
+import MDXComponent from '@/components/mdx/mdx-component'
+import { SidebarNav } from '@/components/sidebar-nav'
+import MDXServer from '@/lib/mdx-server'
 
 async function getData({ params }: Params) {
   const db = await load()
@@ -100,35 +92,17 @@ async function getData({ params }: Params) {
 
   const menu = getDocumentBySlug('menus', 'docs-menu', ['content'])
 
-  const menuContent = await markdownToHtml(menu?.content || '')
+  const docMdx = await MDXServer(doc?.content)
 
-  const result = await bundleMDX({
-    source: doc.content,
-    mdxOptions(options) {
-      options.rehypePlugins = [
-        ...(options.rehypePlugins ?? []),
-        rehypeSlug,
-        rehypePrism,
-        [
-          rehypeAutolinkHeadings,
-          {
-            properties: {
-              className: ['hash-anchor']
-            }
-          }
-        ]
-      ]
-      return options
-    }
-  })
+  const menuMdx = menu ? await MDXServer(menu?.content) : ''
 
   return {
     doc: {
       ...doc,
-      content: result.code
+      content: docMdx
     },
     menu: {
-      content: menuContent
+      content: menuMdx
     }
   }
 }

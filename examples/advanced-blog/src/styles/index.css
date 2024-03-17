@@ -91,42 +91,42 @@
   --tw-prose-code: #000;
 }
 
-.prose :where(pre):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
+.prose :where(pre):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
   @apply px-4 pb-4 pt-6 border rounded-sm bg-gray-800 dark:bg-gray-800 text-white dark:text-gray-800;
 }
 
 @media (min-width: 768px) {
   .md\:prose-xl.prose-outstatic
-    :where(pre):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
+    :where(pre):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
     @apply pt-8;
   }
 }
 
-.prose :where(code):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
+.prose :where(code):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
   @apply px-0 py-1 border rounded-sm bg-gray-800 dark:bg-gray-800 text-white;
 }
 
 .prose
   pre
-  :where(code):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
+  :where(code):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
   @apply bg-transparent dark:bg-transparent border-0 whitespace-break-spaces;
 }
 
 .prose
   pre
   :where(code):not(
-    :where([class~="not-prose"], [class~="not-prose"] *)
+    :where([class~='not-prose'], [class~='not-prose'] *)
   )::before,
 .prose
   pre
   :where(code):not(
-    :where([class~="not-prose"], [class~="not-prose"] *)
+    :where([class~='not-prose'], [class~='not-prose'] *)
   )::after {
-  content: "";
+  content: '';
 }
 
-.prose-outstatic :where(code):not(:where([class~="not-prose"] *))::before,
-.prose-outstatic :where(code):not(:where([class~="not-prose"] *))::after {
+.prose-outstatic :where(code):not(:where([class~='not-prose'] *))::before,
+.prose-outstatic :where(code):not(:where([class~='not-prose'] *))::after {
   color: transparent;
 }
 
@@ -141,10 +141,10 @@
 
 .prose-outstatic blockquote p:first-of-type::before,
 .prose-outstatic blockquote p:last-of-type::after {
-  content: "";
+  content: '';
 }
 
-.prose-outstatic :where(pre code):not(:where([class~="not-prose"] *)) {
+.prose-outstatic :where(pre code):not(:where([class~='not-prose'] *)) {
   font-size: 1.1em;
 }
 
@@ -177,5 +177,19 @@
 
 .hash-anchor:after {
   @apply invisible absolute -right-5 top-1/2 -translate-y-1/2 text-lg;
-  content: "#";
+  content: '#';
+}
+
+.home-hero-fade > * {
+  @apply animate-fade-up opacity-0;
+
+  &:nth-child(1) {
+    animation-delay: 0.1s;
+  }
+  &:nth-child(2) {
+    animation-delay: 0.3s;
+  }
+  &:nth-child(3) {
+    animation-delay: 0.5s;
+  }
 }

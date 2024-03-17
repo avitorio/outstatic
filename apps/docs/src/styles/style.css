@@ -34,65 +34,35 @@
 
     --radius: 0.5rem;
   }
+}
 
-  .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+@layer utilities {
+  /* Chrome, Safari and Opera */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
+  .no-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
   }
 }
 
-@layer base {
-  * {
-    @apply border-border;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
-}
-
-.home-intro p {
-  @apply text-3xl md:text-5xl font-thin md:leading-tight;
-
-  a {
-    @apply before:-z-10 relative before:bg-secondary font-normal no-underline transition-all inline-block before:content-normal before:absolute before:w-0 before:transition-all before:duration-300 before:h-full before:-left-1 before:top-1;
-  }
-
-  a:hover {
-    @apply before:w-[calc(100%+0.5rem)];
-  }
+article img {
+  display: inline;
 }
 
 .prose-outstatic {
-  --tw-prose-code: #000;
+  max-width: 50rem;
 }
 
-.prose :where(pre):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
-  @apply px-4 pb-4 pt-6 border rounded-sm bg-gray-800 dark:bg-gray-800 text-white dark:text-gray-800;
+.prose-outstatic code:not(:where([data-code-type='code-block'])) {
+  @apply rounded-md border px-1 py-1 font-normal text-gray-800 bg-gray-100;
+}
+
+.prose-outstatic
+  :where(pre):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+  @apply px-4 pb-4 pt-6 border rounded-md bg-gray-800 dark:bg-gray-800 text-white dark:text-gray-800;
 }
 
 @media (min-width: 768px) {
@@ -102,22 +72,23 @@
   }
 }
 
-.prose :where(code):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
+.prose-outstatic
+  :where(code):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
   @apply px-0 py-1 border rounded-sm bg-gray-800 dark:bg-gray-800 text-white;
 }
 
-.prose
+.prose-outstatic
   pre
   :where(code):not(:where([class~='not-prose'], [class~='not-prose'] *)) {
   @apply bg-transparent dark:bg-transparent border-0 whitespace-break-spaces;
 }
 
-.prose
+.prose-outstatic
   pre
   :where(code):not(
     :where([class~='not-prose'], [class~='not-prose'] *)
   )::before,
-.prose
+.prose-outstatic
   pre
   :where(code):not(
     :where([class~='not-prose'], [class~='not-prose'] *)
@@ -128,6 +99,8 @@
 .prose-outstatic :where(code):not(:where([class~='not-prose'] *))::before,
 .prose-outstatic :where(code):not(:where([class~='not-prose'] *))::after {
   color: transparent;
+  font-size: 0;
+  white-space: nowrap;
 }
 
 .prose-outstatic > ol > li > :last-child,
@@ -180,16 +153,16 @@
   content: '#';
 }
 
-.home-hero-fade > * {
-  @apply animate-fade-up opacity-0;
+/* Docs */
+.docs img {
+  @apply border;
+}
 
-  &:nth-child(1) {
-    animation-delay: 0.1s;
-  }
-  &:nth-child(2) {
-    animation-delay: 0.3s;
-  }
-  &:nth-child(3) {
-    animation-delay: 0.5s;
-  }
+.sidebar .prose :where(ul):not(:where([class~='not-prose'] *)) {
+  padding-left: 0;
+}
+
+.sidebar .prose :where(li):not(:where([class~='not-prose'] *)) {
+  list-style: none;
+  padding-left: 1rem;
 }

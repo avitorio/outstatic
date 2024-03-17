@@ -1,5 +1,11 @@
 # outstatic
 
+## 1.4.1
+
+### Patch Changes
+
+- Fix getDocuments null error
+
 ## 1.4.0
 
 ### Minor Changes

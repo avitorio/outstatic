@@ -1,6 +1,6 @@
 {
   "name": "outstatic",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "Static site CMS for Next.js",
   "author": "Andre Vitorio <andre@vitorio.net>",
   "repository": {
@@ -71,7 +71,7 @@
     "openai-edge": "^1.2.2",
     "pluralize": "^8.0.0",
     "postcss": "^8.4.26",
-    "react-datepicker": "^4.8.0",
+    "react-datepicker": "^6",
     "react-hook-form": "^7.31.3",
     "react-select": "^5.7.3",
     "react-textarea-autosize": "^8.3.4",
@@ -109,7 +109,7 @@
     "@types/node": "^20",
     "@types/pluralize": "^0.0.29",
     "@types/react": "^18",
-    "@types/react-datepicker": "^4.4.2",
+    "@types/react-datepicker": "^6",
     "@types/react-dom": "^18",
     "@types/testing-library__jest-dom": "^5.14.5",
     "concurrently": "^7.6.0",
