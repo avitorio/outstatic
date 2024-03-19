@@ -7,7 +7,7 @@ author:
 slug: 'getting-started'
 description: 'Get started with Outstatic'
 coverImage: ''
-publishedAt: '2024-03-16T18:34:15.000Z'
+publishedAt: '2024-03-18T18:34:15.000Z'
 ---
 
 Here's how you can get started with Outstatic.
@@ -54,7 +54,7 @@ Awesome, with your GitHub Oauth keys in hand select how you want to use Outstati
 
 To deploy with Vercel, start by clicking the button below and follow the setup steps:
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/avitorio/outstatic/tree/main/examples/basic-blog&env=OST_GITHUB_ID,OST_GITHUB_SECRET,OST_TOKEN_SECRET&project-name=outstatic-blog&repo-name=outstatic-basic-blog&demo-title=Outstatic%20Basic%20Blog%20Demo&demo-description=A%20statically%20generated%20blog%20example%20using%20Outstatic&demo-url=https://outstatic-dev-blog.vercel.app/&demo-image=https://outstatic.com/images/outstatic-demo.png&envDescription=API%20Keys%20needed%20for%20installation&envLink=https://outstatic.com/docs/environment-variables)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/avitorio/outstatic/tree/main/examples/basic-blog&env=OST_GITHUB_ID,OST_GITHUB_SECRET&project-name=outstatic-blog&repo-name=outstatic-basic-blog&demo-title=Outstatic%20Basic%20Blog%20Demo&demo-description=A%20statically%20generated%20blog%20example%20using%20Outstatic&demo-url=https://outstatic-dev-blog.vercel.app/&demo-image=https://outstatic.com/images/outstatic-demo.png&envDescription=API%20Keys%20needed%20for%20installation&envLink=https://outstatic.com/docs/environment-variables)
 
 Select GitHub as your git service. Then, type the name of your repository (ex: `outstatic-blog`) and click **create**.
 
@@ -63,8 +63,6 @@ Fill in the following environment variables:
 - `OST_GITHUB_ID` with your GitHub Client ID.
 
 - `OST_GITHUB_SECRET` with your GitHub Client secret.
-
-- `OST_TOKEN_SECRET` with a random string with at least 32 characters. You can generate a random string using [this service](https://onlinehashtools.com/generate-random-sha256-hash?&count=1).
 
 Click on Deploy and wait until it's done.
 
@@ -160,8 +158,6 @@ You should see this page:
 ```bash
 OST_GITHUB_ID=YOUR_GITHUB_OAUTH_APP_ID
 OST_GITHUB_SECRET=YOUR_GITHUB_OAUTH_APP_SECRET
-# random string min 32 chars
-OST_TOKEN_SECRET=A_RANDOM_TOKEN
 OST_REPO_SLUG=YOUR_GITHUB_REPOSITORY_SLUG
 
 # OPTIONAL
@@ -208,8 +204,6 @@ Don't forget to add the following environment variables to your Vercel project:
 ```bash
 OST_GITHUB_ID=YOUR_GITHUB_OAUTH_APP_ID
 OST_GITHUB_SECRET=YOUR_GITHUB_OAUTH_APP_SECRET
-# random string min 32 chars
-OST_TOKEN_SECRET=A_RANDOM_TOKEN
 ```
 
 To learn more about all the available environment variables, see the [Environment Variables ](https://outstatic.com/environment-variables)section of the docs.

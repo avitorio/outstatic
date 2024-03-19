@@ -23,7 +23,8 @@ export type Request = {
   }
 }
 
-const TOKEN_SECRET = process.env.OST_TOKEN_SECRET ?? ''
+const TOKEN_SECRET =
+  process.env.OST_TOKEN_SECRET || 'l1f3154n4dv3ntur3st4yS7r0n9s3cr3t'
 
 export async function setLoginSession(session: LoginSession) {
   // Create a session object with a max age that we can validate later
