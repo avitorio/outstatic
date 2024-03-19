@@ -53,7 +53,6 @@ There are a few particularities to how Outstatic works. Since most editor action
    ```
     OST_GITHUB_ID=YOUR_GITHUB_OAUTH_ID
     OST_GITHUB_SECRET=YOUR_GITHUB_OAUTH_SECRET
-    OST_TOKEN_SECRET=A_32CHAR_RANDOM_STRING_FOR_YOUR_TOKEN_SECRET
     OST_REPO_SLUG=outstatic
     OST_REPO_BRANCH=main
     OST_CONTENT_PATH=outstatic/content
@@ -109,7 +108,6 @@ You can deploy the `outstatic-dev-blog` to Vercel by adding a new project with t
    ```
     OST_GITHUB_ID=YOUR_GITHUB_OAUTH_ID
     OST_GITHUB_SECRET=YOUR_GITHUB_OAUTH_SECRET
-    OST_TOKEN_SECRET=A_32CHAR_RANDOM_STRING_FOR_YOUR_TOKEN_SECRET
     OST_REPO_SLUG=outstatic
     OST_REPO_BRANCH=main
     OST_CONTENT_PATH=outstatic/content
