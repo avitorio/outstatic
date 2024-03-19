@@ -7,7 +7,7 @@ author:
 slug: 'getting-started'
 description: 'Get started with Outstatic'
 coverImage: ''
-publishedAt: '2024-03-16T18:34:15.000Z'
+publishedAt: '2024-03-18T18:34:15.000Z'
 ---
 
 Here's how you can get started with Outstatic.
@@ -63,8 +63,6 @@ Fill in the following environment variables:
 - `OST_GITHUB_ID` with your GitHub Client ID.
 
 - `OST_GITHUB_SECRET` with your GitHub Client secret.
-
-- `OST_TOKEN_SECRET` with a random string with at least 32 characters. You can generate a random string using [this service](https://onlinehashtools.com/generate-random-sha256-hash?&count=1).
 
 Click on Deploy and wait until it's done.
 
@@ -160,8 +158,6 @@ You should see this page:
 ```bash
 OST_GITHUB_ID=YOUR_GITHUB_OAUTH_APP_ID
 OST_GITHUB_SECRET=YOUR_GITHUB_OAUTH_APP_SECRET
-# random string min 32 chars
-OST_TOKEN_SECRET=A_RANDOM_TOKEN
 OST_REPO_SLUG=YOUR_GITHUB_REPOSITORY_SLUG
 
 # OPTIONAL
@@ -208,8 +204,6 @@ Don't forget to add the following environment variables to your Vercel project:
 ```bash
 OST_GITHUB_ID=YOUR_GITHUB_OAUTH_APP_ID
 OST_GITHUB_SECRET=YOUR_GITHUB_OAUTH_APP_SECRET
-# random string min 32 chars
-OST_TOKEN_SECRET=A_RANDOM_TOKEN
 ```
 
 To learn more about all the available environment variables, see the [Environment Variables ](https://outstatic.com/environment-variables)section of the docs.
