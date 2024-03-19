@@ -9,11 +9,11 @@ type SidebarNavProps = {
   content: string
 }
 
-const Paragraph = ({ children }: CustomLinkProps) => {
+export const Paragraph = ({ children }: CustomLinkProps) => {
   return <p className="m-0">{children}</p>
 }
 
-const SidebarLink = ({
+export const SidebarLink = ({
   children,
   href,
   openNewTab,
@@ -39,7 +39,7 @@ const SidebarLink = ({
 
 export const SidebarNav = ({ content }: SidebarNavProps) => {
   return (
-    <aside className="border-r px-4 py-4 w-full max-w-xs sticky top-16 h-[calc(100vh-4rem)] overflow-y-scroll no-scrollbar sidebar">
+    <aside className="hidden lg:block border-r px-4 py-4 w-full max-w-xs sticky top-16 h-[calc(100vh-4rem)] overflow-y-scroll no-scrollbar sidebar">
       <div className="prose prose-sm">
         <MDXComponent
           content={content}

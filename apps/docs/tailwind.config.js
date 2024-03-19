@@ -8,6 +8,13 @@ module.exports = {
   ],
   theme: {
     extend: {
+      colors: {
+        border: 'hsl(var(--border))',
+        input: 'hsl(var(--input))',
+        ring: 'hsl(var(--ring))',
+        background: 'hsl(var(--background))',
+        foreground: 'hsl(var(--foreground))'
+      },
       borderRadius: {
         cartoon: '2% 95% 1% 95%/95% 3% 92% 3%',
         cartoon2: '95% 1% 90% 1%/5% 90% 2% 93%'

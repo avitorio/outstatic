@@ -50,29 +50,31 @@ export default async function Post(params: Params) {
       <Header />
       <div className="bg-white flex w-full">
         <SidebarNav content={menu.content} />
-        <div className="w-full ml-10 sm:px-2 lg:px-8 xl:px-12 py-12">
+        <div className="w-full ml-0 md:ml-10 px-4 lg:px-8 xl:px-12 py-12">
           <article className="mb-32 w-full">
             <h1 className="font-primary text-2xl font-bold md:text-4xl mb-2">
               {doc.title}
             </h1>
-            <div className="hidden md:block md:mb-12 text-slate-600">
+            <div className="md:mb-12 text-slate-600">
               Last updated on{' '}
               <time dateTime={doc.publishedAt}>
                 {formatDate(doc.publishedAt)}
               </time>
             </div>
             <hr className="border-neutral-200 mt-10 mb-10" />
-            <div className="prose prose-base prose-outstatic outstatic-content">
+            <div className="w-full prose prose-base prose-outstatic outstatic-content">
               <MDXComponent content={doc.content} />
             </div>
           </article>
         </div>
       </div>
+      <MobileMenu content={menu.content} />
     </>
   )
 }
 
 import MDXComponent from '@/components/mdx/mdx-component'
+import { MobileMenu } from '@/components/mobile-menu'
 import { SidebarNav } from '@/components/sidebar-nav'
 import MDXServer from '@/lib/mdx-server'
 
