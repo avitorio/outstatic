@@ -1,6 +1,6 @@
 {
-  "commit": "34b59fbeaed760843a8c57f95bf996d62a460341",
-  "generated": "2024-03-17T08:27:23.294Z",
+  "commit": "ba23a4a5a0350d09830a754d96718dc7d11d392e",
+  "generated": "2024-03-19T02:40:52.155Z",
   "metadata": [
     {
       "__outstatic": {
@@ -184,24 +184,6 @@
     },
     {
       "__outstatic": {
-        "commit": "ecebec55febdd719edffca438535f5a79be84a3e",
-        "hash": "2164911617",
-        "path": "outstatic/content/docs/environment-variables.md"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "docs",
-      "coverImage": "",
-      "description": "",
-      "publishedAt": "2024-03-17T12:36:25.000Z",
-      "slug": "environment-variables",
-      "status": "published",
-      "title": "Environment Variables"
-    },
-    {
-      "__outstatic": {
         "commit": "d82734a2f01415b553d15d1a46dfd9d334868ee5",
         "hash": "2170562214",
         "path": "outstatic/content/menus/docs-menu.md"
@@ -235,6 +217,24 @@
       "slug": "getting-started",
       "status": "published",
       "title": "Getting started"
+    },
+    {
+      "__outstatic": {
+        "commit": "ba23a4a5a0350d09830a754d96718dc7d11d392e",
+        "hash": "76324923",
+        "path": "outstatic/content/docs/environment-variables.md"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "coverImage": "",
+      "description": "",
+      "publishedAt": "2024-03-18T12:36:25.000Z",
+      "slug": "environment-variables",
+      "status": "published",
+      "title": "Environment Variables"
     }
   ]
 }
