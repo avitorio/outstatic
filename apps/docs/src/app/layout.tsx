@@ -38,12 +38,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <Script
-          defer
-          src="https://unpkg.com/@tinybirdco/flock.js"
-          data-host="https://api.tinybird.co"
-          data-token={process.env.NEXT_PUBLIC_TINYBIRD_TOKEN}
-        />
+        {process.env.NEXT_PUBLIC_TINYBIRD_TOKEN ? (
+          <Script
+            defer
+            src="https://unpkg.com/@tinybirdco/flock.js"
+            data-host="https://api.tinybird.co"
+            data-token={process.env.NEXT_PUBLIC_TINYBIRD_TOKEN}
+          />
+        ) : null}
       </head>
       <body>{children}</body>
     </html>
