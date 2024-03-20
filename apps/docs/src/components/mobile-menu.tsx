@@ -71,8 +71,6 @@ export const MobileMenu = ({ content }: MobileMenuProps) => {
             </div>
             <DrawerFooter>
               <div className="w-full justify-end flex gap-4">
-                {/* <ThemeToggle variant="outline" size="default" /> */}
-
                 <Button asChild variant="outline">
                   <DrawerClose>
                     <XIcon />
