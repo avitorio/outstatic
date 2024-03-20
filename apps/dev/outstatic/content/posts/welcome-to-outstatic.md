@@ -7,7 +7,11 @@ author:
 slug: 'welcome-to-outstatic'
 description: 'Thank you for choosing Outstatic to create your website! We look forward to helping you every step of the way.'
 coverImage: '/images/welcome-to-outstatic-g3Mz.png'
-tags: [{"value":"outstatic","label":"Outstatic"},{"value":"nextJs","label":"NextJs"}]
+tags:
+  [
+    { 'value': 'outstatic', 'label': 'Outstatic' },
+    { 'value': 'nextJs', 'label': 'NextJs' }
+  ]
 publishedAt: '2024-02-10T01:41:03.484Z'
 ---
 
@@ -42,4 +46,4 @@ Once you save your content, Outstatic will push changes to your GitHub repositor
 
 Now that you have your website set up, it is up to you to start writing and creating content for your audience. With the user-friendly content editor and AI completion tools, you can easily format and enhance your writing. Remember to save your drafts and review them before publishing to ensure the best quality for your readers. Outstatic will handle the rest, automatically pushing changes and keeping your website updated. Happy writing!
 
-If you have any questions or need assistance, don't hesitate to reach out on [Discord](https://discord.gg/gfbz74mX) or [GitHub](https://github.com/avitorio/outstatic/discussions). We're here to help!
+If you have any questions or need assistance, don't hesitate to reach out on [Discord](https://discord.gg/myn4qgfXaG) or [GitHub](https://github.com/avitorio/outstatic/discussions). We're here to help!

@@ -209,7 +209,7 @@ const Sidebar = ({ isOpen = false }: SidebarProps) => {
             </svg>
           </a>
           <a
-            href="https://discord.gg/cR33yCRY"
+            href="https://discord.gg/myn4qgfXaG"
             target="_blank"
             aria-label="Discord"
             rel="noreferrer"

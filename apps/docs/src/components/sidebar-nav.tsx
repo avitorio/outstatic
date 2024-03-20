@@ -25,10 +25,10 @@ export const SidebarLink = ({
   return (
     <Link
       href={href}
-      className={`font-normal -ml-2 block rounded-md px-2 py-1 no-underline hover:text-gray-900 text-gray-700 hover:bg-gray-100 ${className}${
+      className={`font-normal -ml-2 block rounded-md px-2 py-1 no-underline hover:bg-secondary hover:text-secondary-foreground ${className}${
         `${pathname}${hash || ''}` === href
-          ? 'bg-gray-200 text-black'
-          : ' text-gray-700'
+          ? 'bg-secondary text-foreground'
+          : ' text-foreground '
       }`}
       {...rest}
     >
@@ -39,7 +39,7 @@ export const SidebarLink = ({
 
 export const SidebarNav = ({ content }: SidebarNavProps) => {
   return (
-    <aside className="hidden lg:block border-r px-4 py-4 w-full max-w-xs sticky top-16 h-[calc(100vh-4rem)] overflow-y-scroll no-scrollbar sidebar">
+    <aside className="hidden lg:block border-r dark:border-secondary px-4 py-4 w-full max-w-xs sticky top-16 h-[calc(100vh-4rem)] overflow-y-scroll no-scrollbar sidebar">
       <div className="prose prose-sm">
         <MDXComponent
           content={content}
