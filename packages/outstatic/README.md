@@ -38,6 +38,24 @@ Visit <a aria-label="outstatic getting started" href="https://outstatic.com/lear
 
 Visit [https://outstatic.com/docs](https://outstatic.com/docs) to view the full documentation.
 
+## Financial Contributors
+
+With just $5 a month, you can keep the development and maintenance gears grinding! Every penny you pitch in fuels our mission to make Outstatic even more awesome.
+
+👉 View options and contribute at [GitHub Sponsors](https://github.com/sponsors/avitorio)
+
+### 🥈 Silver Sponsors
+
+<table>
+  <tr>
+  <td>
+<a aria-label="Puppetry" href="https://www.puppetry.com/?utm_source=Outstatic&utm_medium=sponsorship">
+<img alt="" src="https://raw.githubusercontent.com/avitorio/outstatic/canary/.github/puppetry.png" width="196px">
+</a>
+</td>
+  </tr>
+</table>
+
 ## Stay up-to-date
 
 The project is constantly improving with new changes being implemented on a daily basis. You can keep up by hitting the **Star** button! I really appreciate it.
