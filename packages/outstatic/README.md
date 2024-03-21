@@ -50,7 +50,7 @@ With just $5 a month, you can keep the development and maintenance gears grindin
   <tr>
   <td>
 <a aria-label="Puppetry" href="https://www.puppetry.com/?utm_source=Outstatic&utm_medium=sponsorship">
-<img alt="" src="https://raw.githubusercontent.com/avitorio/outstatic/canary/.github/puppetry.png" width="196px">
+<img alt="" src="https://raw.githubusercontent.com/avitorio/outstatic/canary/.github/images/puppetry.png" width="196px">
 </a>
 </td>
   </tr>
