@@ -15,8 +15,7 @@ type EnvVarsObjType = {
 const initialEnvVars: EnvVarsType = {
   required: {
     OST_GITHUB_ID: false,
-    OST_GITHUB_SECRET: false,
-    OST_TOKEN_SECRET: false
+    OST_GITHUB_SECRET: false
   },
   optional: {
     OST_CONTENT_PATH: false,

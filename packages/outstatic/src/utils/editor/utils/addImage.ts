@@ -1,7 +1,7 @@
 import { useFileStore } from '@/utils/hooks/useFileStore'
 import { toast } from 'sonner'
 
-export const addImage = (file: Blob) => {
+export const addImage = (file: File) => {
   // check if the file is an image
   if (!file.type.includes('image/')) {
     toast.error('File type not supported.')
