@@ -87,16 +87,17 @@ const DocumentSettings = ({
           <label htmlFor="status" className="sr-only">
             Status
           </label>
-          <select
-            {...register('status', registerOptions)}
-            name="status"
-            id="status"
-            defaultValue={document.status}
-            className="block cursor-pointer appearance-none rounded-lg border border-gray-300 bg-gray-50 p-2 py-2.5 text-sm text-gray-900 outline-none focus:border-blue-500 focus:ring-blue-500"
-          >
-            <option value="draft">Draft</option>
-            <option value="published">Published</option>
-          </select>
+          <Button asChild variant="select">
+            <select
+              {...register('status', registerOptions)}
+              name="status"
+              id="status"
+              defaultValue={document.status}
+            >
+              <option value="draft">Draft</option>
+              <option value="published">Published</option>
+            </select>
+          </Button>
           <Button onClick={saveFunc} disabled={loading || !hasChanges}>
             {loading ? (
               <>
@@ -148,16 +149,17 @@ const DocumentSettings = ({
           >
             Status
           </label>
-          <select
-            {...register('status', registerOptions)}
-            name="status"
-            id="status"
-            defaultValue={document.status}
-            className="block cursor-pointer appearance-none rounded-lg border border-gray-300 bg-gray-50 p-2 text-sm text-gray-900 outline-none focus:border-blue-500 focus:ring-blue-500"
-          >
-            <option value="draft">Draft</option>
-            <option value="published">Published</option>
-          </select>
+          <Button asChild variant="select">
+            <select
+              {...register('status', registerOptions)}
+              name="status"
+              id="status"
+              defaultValue={document.status}
+            >
+              <option value="draft">Draft</option>
+              <option value="published">Published</option>
+            </select>
+          </Button>
         </div>
         <div
           className={`flex w-full pb-4 px-4 ${

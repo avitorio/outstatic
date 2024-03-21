@@ -395,29 +395,31 @@ export default function AddCustomField({ collection }: AddCustomFieldProps) {
                   >
                     Field type
                   </label>
-                  <select
-                    {...methods.register('fieldType')}
-                    name="fieldType"
-                    id="fieldType"
-                    className="block cursor-pointer appearance-none rounded-lg border border-gray-300 bg-gray-50 p-2 text-sm text-gray-900 outline-none focus:border-blue-500 focus:ring-blue-500"
-                    defaultValue={
-                      selectedField
-                        ? customFields[selectedField].fieldType
-                        : 'String'
-                    }
-                  >
-                    {customFieldTypes.map((type) => {
-                      return (
-                        <option
-                          key={type}
-                          value={type}
-                          disabled={!!selectedField}
-                        >
-                          {type}
-                        </option>
-                      )
-                    })}
-                  </select>
+                  <Button asChild variant="select">
+                    <select
+                      {...methods.register('fieldType')}
+                      name="fieldType"
+                      id="fieldType"
+                      className="block cursor-pointer appearance-none rounded-lg border border-gray-300 bg-gray-50 p-2 text-sm text-gray-900 outline-none focus:border-blue-500 focus:ring-blue-500"
+                      defaultValue={
+                        selectedField
+                          ? customFields[selectedField].fieldType
+                          : 'String'
+                      }
+                    >
+                      {customFieldTypes.map((type) => {
+                        return (
+                          <option
+                            key={type}
+                            value={type}
+                            disabled={!!selectedField}
+                          >
+                            {type}
+                          </option>
+                        )
+                      })}
+                    </select>
+                  </Button>
                 </div>
               </div>
 
