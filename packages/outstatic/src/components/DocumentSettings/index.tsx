@@ -2,9 +2,9 @@ import Accordion from '@/components/Accordion'
 import DateTimePicker from '@/components/DateTimePicker'
 import DeleteDocumentButton from '@/components/DeleteDocumentButton'
 import DocumentSettingsImageSelection from '@/components/DocumentSettingsImageSelection'
-import Input from '@/components/Input'
 import TagInput from '@/components/TagInput'
-import TextArea from '@/components/TextArea'
+import Input from '@/components/ui/input'
+import TextArea from '@/components/ui/text-area'
 import { DocumentContext } from '@/context'
 import {
   CustomFieldArrayValue,

@@ -1,4 +1,4 @@
-import { useFormContext, RegisterOptions } from 'react-hook-form'
+import { RegisterOptions, useFormContext } from 'react-hook-form'
 
 export type TextAreaProps = {
   label?: string
@@ -46,7 +46,7 @@ export default function TextArea({
           readOnly={readOnly}
           placeholder={placeholder}
           aria-describedby={id}
-          className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2 text-sm text-gray-900 outline-none focus:border-blue-500 focus:ring-blue-500"
+          className="flex min-h-[60px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
         />
       </div>
       <div className="mt-1">

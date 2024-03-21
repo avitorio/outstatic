@@ -1,4 +1,4 @@
-import Input from '@/components/Input'
+import Input from '@/components/ui/input'
 import { DocumentContext } from '@/context'
 import { Document } from '@/types'
 import { API_IMAGES_PATH, IMAGES_PATH } from '@/utils/constants'
