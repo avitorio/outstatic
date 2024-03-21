@@ -19,7 +19,7 @@
     "lucide-react": "^0.358.0",
     "next": "^14.1.3",
     "next-themes": "^0.2.1",
-    "outstatic": "workspace:*",
+    "outstatic": "latest",
     "react": "^18",
     "react-dom": "^18",
     "rehype-pretty-code": "^0.12.6",
