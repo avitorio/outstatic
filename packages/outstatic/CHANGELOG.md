@@ -1,5 +1,12 @@
 # outstatic
 
+## 1.4.3
+
+### Patch Changes
+
+- f5b4ce0: fix: blob type error
+- 6507630: Remove OST_TOKEN_SECRET as requirement
+
 ## 1.4.2
 
 ### Patch Changes
