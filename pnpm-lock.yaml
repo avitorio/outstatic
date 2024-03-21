@@ -290,6 +290,75 @@ importers:
       postcss: 8.4.24
       typescript: 5.1.3
 
+  examples/docs:
+    specifiers:
+      '@radix-ui/react-slot': ^1.0.2
+      '@tailwindcss/typography': ^0.5.10
+      '@types/node': ^20
+      '@types/react': ^18
+      '@types/react-dom': ^18
+      autoprefixer: ^10.4.18
+      class-variance-authority: ^0.7.0
+      clsx: ^2.1.0
+      date-fns: ^2.30.0
+      esbuild: ^0.15.18
+      eslint: 8.42.0
+      eslint-config-next: ^14.1.3
+      gray-matter: ^4.0.3
+      lucide-react: ^0.358.0
+      mdx-bundler: ^10.0.1
+      next: ^14.1.3
+      next-themes: ^0.2.1
+      outstatic: workspace:*
+      postcss: ^8.4.35
+      react: ^18
+      react-dom: ^18
+      rehype-autolink-headings: ^6.1.1
+      rehype-pretty-code: ^0.12.6
+      rehype-prism-plus: ^1.6.3
+      rehype-slug: ^5.1.0
+      remark: ^14.0.3
+      remark-html: ^15.0.2
+      shikiji: ^0.9.19
+      tailwind-merge: ^2.2.2
+      tailwindcss: ^3.4.1
+      typescript: 5.1.3
+      vaul: ^0.8.0
+    dependencies:
+      '@radix-ui/react-slot': 1.0.2_plwvpmfwkh5xonezcq2rvxtefq
+      class-variance-authority: 0.7.0
+      clsx: 2.1.0
+      date-fns: 2.30.0
+      eslint-config-next: 14.1.3_tizxnkcvjrb4cldxgwq5h3lj5u
+      gray-matter: 4.0.3
+      lucide-react: 0.358.0_react@18.2.0
+      next: 14.1.3_biqbaboplfbrettd7655fr4n2y
+      next-themes: 0.2.1_6tqp36bm4r3alwpsonbjjpjz7y
+      outstatic: link:../../packages/outstatic
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+      rehype-pretty-code: 0.12.6_shikiji@0.9.19
+      remark: 14.0.3
+      remark-html: 15.0.2
+      shikiji: 0.9.19
+      tailwind-merge: 2.2.2
+      vaul: 0.8.9_tlgax2ub5hs2nenkb6shudrpfq
+    devDependencies:
+      '@tailwindcss/typography': 0.5.10_tailwindcss@3.4.1
+      '@types/node': 20.11.30
+      '@types/react': 18.2.67
+      '@types/react-dom': 18.2.22
+      autoprefixer: 10.4.18_postcss@8.4.37
+      esbuild: 0.15.18
+      eslint: 8.42.0
+      mdx-bundler: 10.0.1_esbuild@0.15.18
+      postcss: 8.4.37
+      rehype-autolink-headings: 6.1.1
+      rehype-prism-plus: 1.6.3
+      rehype-slug: 5.1.0
+      tailwindcss: 3.4.1
+      typescript: 5.1.3
+
   packages/eslint-config-custom:
     specifiers:
       eslint-config-next: 13.4.4
@@ -5345,7 +5414,7 @@ packages:
     resolution: {integrity: sha512-gxGWBrTT1JuMx6R+o5PTXMmUnhnVzLQ9SNutD4YqKtI6ap897t3tKECYla6gCWEkplXnlNybEkZg9GEGxKFCgw==}
     dependencies:
       pascal-case: 3.1.2
-      tslib: 2.4.1
+      tslib: 2.6.2
     dev: true
 
   /camelcase-css/2.0.1:
@@ -5381,7 +5450,7 @@ packages:
     resolution: {integrity: sha512-ds37W8CytHgwnhGGTi88pcPyR15qoNkOpYwmMMfnWqqWgESapLqvDx6huFjQ5vqWSn2Z06173XNA7LtMOeUh1A==}
     dependencies:
       no-case: 3.0.4
-      tslib: 2.4.1
+      tslib: 2.6.2
       upper-case-first: 2.0.2
     dev: true
 
@@ -5700,7 +5769,7 @@ packages:
     resolution: {integrity: sha512-I2hSBi7Vvs7BEuJDr5dDHfzb/Ruj3FyvFyh7KLilAjNQw3Be+xgqUBA2W6scVEcL0hL1dwPRtIqEPVUCKkSsyQ==}
     dependencies:
       no-case: 3.0.4
-      tslib: 2.4.1
+      tslib: 2.6.2
       upper-case: 2.0.2
     dev: true
 
@@ -6164,7 +6233,7 @@ packages:
     resolution: {integrity: sha512-Kv5nKlh6yRrdrGvxeJ2e5y2eRUpkUosIW4A2AS38zwSz27zu7ufDwQPi5Jhs3XAlGNetl3bmnGhQsMtkKJnj3w==}
     dependencies:
       no-case: 3.0.4
-      tslib: 2.4.1
+      tslib: 2.6.2
     dev: true
 
   /dotenv/16.0.3:
@@ -7955,7 +8024,7 @@ packages:
     resolution: {integrity: sha512-H/vuk5TEEVZwrR0lp2zed9OCo1uAILMlx0JEMgC26rzyJJ3N1v6XkwHHXJQdR2doSjcGPM6OKPYoJgf0plJ11Q==}
     dependencies:
       capital-case: 1.0.4
-      tslib: 2.4.1
+      tslib: 2.6.2
     dev: true
 
   /headers-polyfill/3.2.5:
@@ -10548,7 +10617,7 @@ packages:
     resolution: {integrity: sha512-fgAN3jGAh+RoxUGZHTSOLJIqUc2wmoBwGR4tbpNAKmmovFoWq0OdRkb0VkldReO2a2iBT/OEulG9XSUc10r3zg==}
     dependencies:
       lower-case: 2.0.2
-      tslib: 2.4.1
+      tslib: 2.6.2
     dev: true
 
   /node-domexception/1.0.0:
@@ -10876,7 +10945,7 @@ packages:
     resolution: {integrity: sha512-RXlj7zCYokReqWpOPH9oYivUzLYZ5vAPIfEmCTNViosC78F8F0H9y7T7gG2M39ymgutxF5gcFEsyZQSph9Bp3A==}
     dependencies:
       dot-case: 3.0.4
-      tslib: 2.4.1
+      tslib: 2.6.2
     dev: true
 
   /parent-module/1.0.1:
@@ -10942,14 +11011,14 @@ packages:
     resolution: {integrity: sha512-uWlGT3YSnK9x3BQJaOdcZwrnV6hPpd8jFH1/ucpiLRPh/2zCVJKS19E4GvYHvaCcACn3foXZ0cLB9Wrx1KGe5g==}
     dependencies:
       no-case: 3.0.4
-      tslib: 2.4.1
+      tslib: 2.6.2
     dev: true
 
   /path-case/3.0.4:
     resolution: {integrity: sha512-qO4qCFjXqVTrcbPt/hQfhTQ+VhFsqNKOPtytgNKkKxSoEp3XPUQ8ObFuePylOIok5gjn69ry8XiULxCwot3Wfg==}
     dependencies:
       dot-case: 3.0.4
-      tslib: 2.4.1
+      tslib: 2.6.2
     dev: true
 
   /path-exists/4.0.0:
@@ -12172,7 +12241,7 @@ packages:
     resolution: {integrity: sha512-8LS0JInaQMCRoQ7YUytAo/xUu5W2XnQxV2HI/6uM6U7CITS1RqPElr30V6uIqyMKM9lJGRVFy5/4CuzcixNYSg==}
     dependencies:
       no-case: 3.0.4
-      tslib: 2.4.1
+      tslib: 2.6.2
       upper-case-first: 2.0.2
     dev: true
 
@@ -12318,7 +12387,7 @@ packages:
     resolution: {integrity: sha512-LAOh4z89bGQvl9pFfNF8V146i7o7/CqFPbqzYgP+yYzDIDeS9HaNFtXABamRW+AQzEVODcvE79ljJ+8a9YSdMg==}
     dependencies:
       dot-case: 3.0.4
-      tslib: 2.4.1
+      tslib: 2.6.2
     dev: true
 
   /solid-swr-store/0.10.7_swr-store@0.10.6:
