@@ -1,3 +1,5 @@
+import { Button } from '../ui/button'
+
 type ModalProps = {
   close: () => void
   title: string
@@ -12,9 +14,9 @@ const Modal = ({ children, title, close }: ModalProps) => (
           <h3 className="text-xl font-semibold text-gray-900 capitalize">
             {title}
           </h3>
-          <button
-            type="button"
-            className="ml-auto inline-flex items-center rounded-lg bg-transparent p-1.5 text-sm text-gray-400 hover:bg-gray-200 hover:text-gray-900 dark:hover:bg-gray-600 dark:hover:text-white"
+          <Button
+            variant="ghost"
+            size="icon"
             data-modal-toggle="defaultModal"
             onClick={close}
           >
@@ -30,7 +32,7 @@ const Modal = ({ children, title, close }: ModalProps) => (
                 clipRule="evenodd"
               ></path>
             </svg>
-          </button>
+          </Button>
         </div>
         {children}
       </div>

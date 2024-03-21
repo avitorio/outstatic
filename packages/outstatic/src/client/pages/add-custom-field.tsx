@@ -2,6 +2,8 @@ import { AdminLayout, Input } from '@/components'
 import Alert from '@/components/Alert'
 import Modal from '@/components/Modal'
 import TagInput from '@/components/TagInput'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent } from '@/components/ui/card'
 import { useCreateCommitMutation } from '@/graphql/generated'
 import { CustomField, CustomFields, customFieldTypes } from '@/types'
 import { createCommitApi } from '@/utils/createCommitApi'
@@ -204,17 +206,14 @@ export default function AddCustomField({ collection }: AddCustomFieldProps) {
             <span className="capitalize">{collection}</span> Fields
           </h1>
           {Object.keys(customFields).length > 0 ? (
-            <button
-              type="button"
+            <Button
               onClick={() => {
                 methods.reset()
                 setShowAddModal(true)
               }}
             >
-              <div className="cursor-pointer rounded-lg border px-5 py-2.5 text-sm font-medium focus:outline-none focus:ring-4 border-gray-600 bg-gray-800 text-white hover:border-gray-600 hover:bg-gray-700 focus:ring-gray-700 no-underline">
-                Add Custom Field
-              </div>
-            </button>
+              Add Custom Field
+            </Button>
           ) : null}
         </div>
         {!loading ? (
@@ -236,18 +235,19 @@ export default function AddCustomField({ collection }: AddCustomFieldProps) {
                 </div>
                 <div className="relative">
                   <div className="mb-20 max-w-2xl p-8 px-4 md:p-8 text-black bg-white rounded-lg border border-gray-200 shadow-md prose prose-base">
-                    <p>Here you can add Custom Fields to your collections.</p>
+                    <h3>Add Custom Fields to your collections.</h3>
                     <p>
                       Create your first Custom Field by clicking the button
                       below.
                     </p>
 
-                    <div
-                      className="inline-block rounded-lg border px-5 py-2.5 text-sm font-medium focus:outline-none focus:ring-4 border-gray-600 bg-gray-800 text-white hover:border-gray-600 hover:bg-gray-700 focus:ring-gray-700 no-underline hover:cursor-pointer"
-                      onClick={() => setShowAddModal(true)}
+                    <Button
+                      onClick={() => {
+                        setShowAddModal(true)
+                      }}
                     >
                       Add Custom Field
-                    </div>
+                    </Button>
                     <p>
                       To learn more about how Custom Fields work checkout{' '}
                       <a
@@ -268,53 +268,57 @@ export default function AddCustomField({ collection }: AddCustomFieldProps) {
                   {customFields &&
                     Object.entries(customFields).map(([name, field]) => {
                       return (
-                        <div
+                        <Card
                           key={name}
-                          className="relative flex p-6 justify-between items-center max-w-sm bg-white rounded-lg border border-gray-200 shadow-md hover:bg-slate-100"
+                          // className="relative flex p-6 justify-between items-center max-w-sm bg-white rounded-lg border border-gray-200 shadow-md hover:bg-slate-100"
                         >
-                          <button
-                            type="button"
-                            onClick={() => {
-                              methods.reset()
-                              setSelectedField(name)
-                              setShowAddModal(true)
-                            }}
-                            className="text-left"
-                          >
-                            <span className="block text-xl cursor-pointer font-bold tracking-tight text-gray-900 capitalize hover:text-blue-500 mb-2">
-                              {field.title}
-                              {/* This span allows for full card click */}
-                              <span className="absolute top-0 bottom-0 left-0 right-16"></span>
-                            </span>
-                            <span className="bg-blue-100 text-blue-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded">
-                              {field.fieldType}
-                            </span>
-                            {field.required ? (
-                              <span className="bg-red-100 text-red-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded">
-                                required
-                              </span>
-                            ) : null}
-                          </button>
-                          <button
-                            className="z-10 inline-block text-gray-500 hover:bg-white focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg text-sm p-1.5"
-                            type="button"
-                            onClick={() => {
-                              setShowDeleteModal(true)
-                              setSelectedField(name)
-                            }}
-                          >
-                            <span className="sr-only">Delete content</span>
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              viewBox="0 0 24 24"
-                              width="24"
-                              height="24"
+                          <CardContent className="relative flex p-6 justify-between items-center max-w-sm">
+                            <button
+                              type="button"
+                              onClick={() => {
+                                methods.reset()
+                                setSelectedField(name)
+                                setShowAddModal(true)
+                              }}
+                              className="text-left"
                             >
-                              <path fill="none" d="M0 0h24v24H0z" />
-                              <path d="M17 6h5v2h-2v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V8H2V6h5V3a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v3zm1 2H6v12h12V8zm-9 3h2v6H9v-6zm4 0h2v6h-2v-6zM9 4v2h6V4H9z" />
-                            </svg>
-                          </button>
-                        </div>
+                              <span className="block text-xl cursor-pointer font-bold tracking-tight text-gray-900 capitalize hover:text-blue-500 mb-2">
+                                {field.title}
+                                {/* This span allows for full card click */}
+                                <span className="absolute top-0 bottom-0 left-0 right-16"></span>
+                              </span>
+                              <span className="bg-blue-100 text-blue-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded">
+                                {field.fieldType}
+                              </span>
+                              {field.required ? (
+                                <span className="bg-red-100 text-red-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded">
+                                  required
+                                </span>
+                              ) : null}
+                            </button>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="z-10"
+                              type="button"
+                              onClick={() => {
+                                setShowDeleteModal(true)
+                                setSelectedField(name)
+                              }}
+                            >
+                              <span className="sr-only">Delete content</span>
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24"
+                                width="24"
+                                height="24"
+                              >
+                                <path fill="none" d="M0 0h24v24H0z" />
+                                <path d="M17 6h5v2h-2v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V8H2V6h5V3a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v3zm1 2H6v12h12V8zm-9 3h2v6H9v-6zm4 0h2v6h-2v-6zM9 4v2h6V4H9z" />
+                              </svg>
+                            </Button>
+                          </CardContent>
+                        </Card>
                       )
                     })}
                 </div>
@@ -490,10 +494,10 @@ export default function AddCustomField({ collection }: AddCustomFieldProps) {
                 </code>
               </div>
               <div className="flex items-center space-x-2 rounded-b border-t p-6">
-                <button
+                <Button
                   type="submit"
                   disabled={adding}
-                  className="flex rounded-lg bg-red-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-red-800 focus:outline-none"
+                  // className="flex rounded-lg bg-red-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-red-800 focus:outline-none"
                 >
                   {adding ? (
                     <>
@@ -524,10 +528,11 @@ export default function AddCustomField({ collection }: AddCustomFieldProps) {
                   ) : (
                     'Add'
                   )}
-                </button>
-                <button
+                </Button>
+                <Button
                   type="button"
-                  className="rounded-lg border border-gray-200 px-5 py-2.5 text-sm font-medium focus:z-10 focus:outline-none focus:ring-4 order-gray-600 bg-gray-800 text-white hover:border-gray-600 hover:bg-gray-700 focus:ring-gray-700"
+                  variant="outline"
+                  // className="rounded-lg border border-gray-200 px-5 py-2.5 text-sm font-medium focus:z-10 focus:outline-none focus:ring-4 order-gray-600 bg-gray-800 text-white hover:border-gray-600 hover:bg-gray-700 focus:ring-gray-700"
                   onClick={() => {
                     setHasChanges(false)
                     setSelectedField('')
@@ -535,7 +540,7 @@ export default function AddCustomField({ collection }: AddCustomFieldProps) {
                   }}
                 >
                   Cancel
-                </button>
+                </Button>
               </div>
             </form>
           </Modal>
@@ -559,10 +564,9 @@ export default function AddCustomField({ collection }: AddCustomFieldProps) {
             </div>
 
             <div className="flex items-center space-x-2 rounded-b border-t p-6">
-              <button
-                type="button"
+              <Button
+                variant="destructive"
                 disabled={deleting}
-                className="flex rounded-lg bg-red-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-red-800 focus:outline-none"
                 onClick={() => {
                   setDeleting(true)
                   deleteField(selectedField)
@@ -595,17 +599,17 @@ export default function AddCustomField({ collection }: AddCustomFieldProps) {
                 ) : (
                   'Delete'
                 )}
-              </button>
-              <button
+              </Button>
+              <Button
+                variant="outline"
                 type="button"
-                className="rounded-lg border border-gray-200 px-5 py-2.5 text-sm font-medium focus:z-10 focus:outline-none focus:ring-4 order-gray-600 bg-gray-800 text-white hover:border-gray-600 hover:bg-gray-700 focus:ring-gray-700"
                 onClick={() => {
                   setShowDeleteModal(false)
                   setSelectedField('')
                 }}
               >
                 Cancel
-              </button>
+              </Button>
             </div>
           </Modal>
         )}

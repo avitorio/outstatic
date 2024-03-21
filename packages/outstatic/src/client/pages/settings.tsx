@@ -1,7 +1,7 @@
 import { AdminLayout } from '@/components'
 import { MetadataBuilder } from '@/components/MetadataBuilder'
+import { Button } from '@/components/ui/button'
 import useOutstatic from '@/utils/hooks/useOutstatic'
-import { clsx } from 'clsx'
 import { useState } from 'react'
 
 export default function Settings() {
@@ -17,17 +17,9 @@ export default function Settings() {
         <div className="mb-8 max-w-2xl p-8 px-4 md:p-8 text-black bg-white rounded-lg border border-gray-200 shadow-md prose prose-base">
           <h2>Metadata</h2>
           <div className="flex flex-row items-center">
-            <button
-              className={clsx(
-                'cursor-pointer rounded-lg border px-5 py-2.5 text-sm font-medium focus:outline-none focus:ring-4 focus:ring-gray-700 no-underline',
-                'text-white',
-                'border-gray-600 bg-gray-800',
-                rebuild && 'border-gray-400 bg-gray-500'
-              )}
-              onClick={() => setRebuilding(true)}
-            >
+            <Button disabled={rebuild} onClick={() => setRebuilding(true)}>
               {rebuild ? 'Rebuilding...' : 'Rebuild Metadata'}
-            </button>
+            </Button>
             <MetadataBuilder
               className="pl-2"
               rebuild={rebuild}

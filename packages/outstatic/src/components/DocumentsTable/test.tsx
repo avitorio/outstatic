@@ -2,6 +2,7 @@ import { OstDocument } from '@/types/public'
 import { act, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import React from 'react'
+import { Button } from '../ui/button'
 import DocumentsTable from './'
 
 jest.mock(
@@ -20,9 +21,9 @@ jest.mock('change-case', () => {
 // Mock the DeleteDocumentButton component
 jest.mock('@/components/DeleteDocumentButton', () => {
   return jest.fn(({ onComplete }) => (
-    <button onClick={onComplete} data-testid="delete-button">
+    <Button onClick={onComplete} data-testid="delete-button">
       Delete
-    </button>
+    </Button>
   ))
 })
 
