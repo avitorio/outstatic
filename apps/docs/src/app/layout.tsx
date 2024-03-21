@@ -1,3 +1,4 @@
+import { ThemeProvider } from '@/components/theme-provider'
 import '@/styles/style.css'
 import { Metadata } from 'next'
 import Script from 'next/script'
@@ -47,7 +48,16 @@ export default function RootLayout({
           />
         ) : null}
       </head>
-      <body>{children}</body>
+      <body className="bg-background">
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          {children}
+        </ThemeProvider>
+      </body>
     </html>
   )
 }
