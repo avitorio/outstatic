@@ -8,7 +8,6 @@ import {
 } from '@/components/ui/drawer'
 import { Menu, XIcon } from 'lucide-react'
 import { useState } from 'react'
-// import { ThemeToggle } from './theme-toggle'
 import useHash from '@/hooks/useHash'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
