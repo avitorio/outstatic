@@ -1,6 +1,8 @@
 'use client'
-import { AdminLayout, Input } from '@/components'
+import { AdminLayout } from '@/components'
 import Alert from '@/components/Alert'
+import { Button } from '@/components/ui/button'
+import Input from '@/components/ui/input'
 import { useCreateCommitMutation } from '@/graphql/generated'
 import { Collection } from '@/types'
 import { collectionCommitInput } from '@/utils/collectionCommitInput'
@@ -120,10 +122,10 @@ export default function NewCollection() {
               }
             }}
           />
-          <button
+          <Button
             type="submit"
             disabled={loading || !hasChanges}
-            className="flex rounded-lg border border-gray-600 bg-gray-800 px-5 py-2 text-sm font-medium text-white hover:border-gray-600 hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-700 disabled:cursor-not-allowed disabled:bg-gray-600 ml-2 mt-7 mb-5"
+            className="ml-1 mt-7 mb-5"
           >
             {loading ? (
               <>
@@ -152,7 +154,7 @@ export default function NewCollection() {
             ) : (
               'Save'
             )}
-          </button>
+          </Button>
         </form>
         {collectionName && (
           <Alert type="info">
