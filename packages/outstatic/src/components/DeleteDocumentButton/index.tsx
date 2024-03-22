@@ -9,6 +9,7 @@ import { stringifyMetadata } from '@/utils/metadata/stringify'
 import { MetadataSchema } from '@/utils/metadata/types'
 import { Trash2 } from 'lucide-react'
 import { useState } from 'react'
+import { Button } from '../ui/button'
 
 type DeleteDocumentButtonProps = {
   slug: string
@@ -93,16 +94,18 @@ const DeleteDocumentButton = ({
 
   return (
     <>
-      <button
+      <Button
         onClick={() => setShowDeleteModal(true)}
         type="button"
         disabled={disabled}
-        className={`z-10 inline-block text-gray-500 hover:bg-white focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg text-sm p-1.5 ${className}`}
+        className={className}
         title="Delete document"
+        size="icon"
+        variant="ghost"
       >
         <span className="sr-only">Delete document</span>
-        <Trash2 />
-      </button>
+        <Trash2 className="stroke-foreground" />
+      </Button>
       {showDeleteModal && (
         <Modal title="Delete Document" close={() => setShowDeleteModal(false)}>
           <div className="space-y-6 p-6 text-left">
@@ -113,11 +116,9 @@ const DeleteDocumentButton = ({
               This action cannot be undone.
             </p>
           </div>
-
           <div className="flex items-center space-x-2 rounded-b border-t p-6">
-            <button
-              type="button"
-              className="flex rounded-lg bg-red-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-red-800 focus:outline-none"
+            <Button
+              variant="destructive"
               onClick={() => {
                 deleteDocument(slug)
               }}
@@ -149,14 +150,10 @@ const DeleteDocumentButton = ({
               ) : (
                 'Delete'
               )}
-            </button>
-            <button
-              type="button"
-              className="rounded-lg border border-gray-200 px-5 py-2.5 text-sm font-medium focus:z-10 focus:outline-none focus:ring-4 order-gray-600 bg-gray-800 text-white hover:border-gray-600 hover:bg-gray-700 focus:ring-gray-700"
-              onClick={() => setShowDeleteModal(false)}
-            >
+            </Button>
+            <Button variant="outline" onClick={() => setShowDeleteModal(false)}>
               Cancel
-            </button>
+            </Button>
           </div>
         </Modal>
       )}

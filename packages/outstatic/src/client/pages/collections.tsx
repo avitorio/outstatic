@@ -1,5 +1,7 @@
 import { AdminLayout } from '@/components'
 import Modal from '@/components/Modal'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent } from '@/components/ui/card'
 import {
   useCreateCommitMutation,
   useDocumentLazyQuery
@@ -141,64 +143,61 @@ export default function Collections() {
         <>
           <div className="mb-8 flex h-12 items-center">
             <h1 className="mr-12 text-2xl">Collections</h1>
-            <Link href="/outstatic/collections/new">
-              <div className="cursor-pointer rounded-lg border px-5 py-2.5 text-sm font-medium focus:outline-none focus:ring-4 border-gray-600 bg-gray-800 text-white hover:border-gray-600 hover:bg-gray-700 focus:ring-gray-700 no-underline">
-                New Collection
-              </div>
-            </Link>
+            <Button asChild>
+              <Link href="/outstatic/collections/new">New Collection</Link>
+            </Button>
           </div>
           <div className="max-w-5xl w-full grid md:grid-cols-3 gap-6">
             {collections.map((collection) => (
-              <div
-                key={collection}
-                className="relative flex p-6 justify-between items-center max-w-sm bg-white rounded-lg border border-gray-200 shadow-md hover:bg-slate-100"
-              >
-                <Link
-                  href={`/outstatic/${collection}`}
-                  className="focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg"
-                >
-                  <h5 className="text-2xl cursor-pointer font-bold tracking-tight text-gray-900 capitalize hover:text-blue-500">
-                    {collection}
-                    <span className="absolute top-0 bottom-0 left-0 right-16"></span>
-                  </h5>
-                </Link>
-                <div className="z-10 flex gap-2">
+              <Card key={collection}>
+                <CardContent className="relative flex p-6 justify-between items-center">
                   <Link
-                    href={`/outstatic/collections/${collection}`}
-                    className="inline-block text-gray-500 hover:bg-white focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg text-sm p-1.5"
+                    href={`/outstatic/${collection}`}
+                    className="focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg"
                   >
-                    <span className="sr-only">Edit collection</span>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                      width="24"
-                      height="24"
-                    >
-                      <path fill="none" d="M0 0h24v24H0z" />
-                      <path d="M15.7279 9.57629L14.3137 8.16207L5 17.4758V18.89H6.41421L15.7279 9.57629ZM17.1421 8.16207L18.5563 6.74786L17.1421 5.33365L15.7279 6.74786L17.1421 8.16207ZM7.24264 20.89H3V16.6474L16.435 3.21233C16.8256 2.8218 17.4587 2.8218 17.8492 3.21233L20.6777 6.04075C21.0682 6.43128 21.0682 7.06444 20.6777 7.45497L7.24264 20.89Z"></path>
-                    </svg>
+                    <h5 className="text-2xl cursor-pointer font-bold tracking-tight text-gray-900 capitalize hover:text-blue-500">
+                      {collection}
+                      <span className="absolute top-0 bottom-0 left-0 right-16"></span>
+                    </h5>
                   </Link>
-                  <button
-                    className="z-10 inline-block text-gray-500 hover:bg-white focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg text-sm p-1.5"
-                    type="button"
-                    onClick={() => {
-                      setShowDeleteModal(true)
-                      setSelectedCollection(collection)
-                    }}
-                  >
-                    <span className="sr-only">Delete content</span>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                      width="24"
-                      height="24"
+                  <div className="z-10 flex gap-2">
+                    <Button asChild size="icon" variant="ghost">
+                      <Link href={`/outstatic/collections/${collection}`}>
+                        <span className="sr-only">Edit collection</span>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 24 24"
+                          width="24"
+                          height="24"
+                        >
+                          <path fill="none" d="M0 0h24v24H0z" />
+                          <path d="M15.7279 9.57629L14.3137 8.16207L5 17.4758V18.89H6.41421L15.7279 9.57629ZM17.1421 8.16207L18.5563 6.74786L17.1421 5.33365L15.7279 6.74786L17.1421 8.16207ZM7.24264 20.89H3V16.6474L16.435 3.21233C16.8256 2.8218 17.4587 2.8218 17.8492 3.21233L20.6777 6.04075C21.0682 6.43128 21.0682 7.06444 20.6777 7.45497L7.24264 20.89Z"></path>
+                        </svg>
+                      </Link>
+                    </Button>
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      type="button"
+                      onClick={() => {
+                        setShowDeleteModal(true)
+                        setSelectedCollection(collection)
+                      }}
                     >
-                      <path fill="none" d="M0 0h24v24H0z" />
-                      <path d="M17 6h5v2h-2v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V8H2V6h5V3a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v3zm1 2H6v12h12V8zm-9 3h2v6H9v-6zm4 0h2v6h-2v-6zM9 4v2h6V4H9z" />
-                    </svg>
-                  </button>
-                </div>
-              </div>
+                      <span className="sr-only">Delete content</span>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        width="24"
+                        height="24"
+                      >
+                        <path fill="none" d="M0 0h24v24H0z" />
+                        <path d="M17 6h5v2h-2v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V8H2V6h5V3a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v3zm1 2H6v12h12V8zm-9 3h2v6H9v-6zm4 0h2v6h-2v-6zM9 4v2h6V4H9z" />
+                      </svg>
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
             ))}
           </div>
         </>
@@ -221,9 +220,8 @@ export default function Collections() {
           </div>
 
           <div className="flex items-center space-x-2 rounded-b border-t p-6">
-            <button
-              type="button"
-              className="flex rounded-lg bg-red-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-red-800 focus:outline-none"
+            <Button
+              variant="destructive"
               onClick={() => {
                 setDeleting(true)
                 deleteCollection(selectedCollection)
@@ -256,17 +254,16 @@ export default function Collections() {
               ) : (
                 'Delete'
               )}
-            </button>
-            <button
-              type="button"
-              className="rounded-lg border border-gray-200 px-5 py-2.5 text-sm font-medium focus:z-10 focus:outline-none focus:ring-4 order-gray-600 bg-gray-800 text-white hover:border-gray-600 hover:bg-gray-700 focus:ring-gray-700"
+            </Button>
+            <Button
+              variant="outline"
               onClick={() => {
                 setShowDeleteModal(false)
                 setSelectedCollection('')
               }}
             >
               Cancel
-            </button>
+            </Button>
           </div>
         </Modal>
       )}

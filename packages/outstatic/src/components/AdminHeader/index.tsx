@@ -2,6 +2,7 @@ import Link from '@/components/Link'
 import { useOstSignOut } from '@/utils/auth/hooks'
 import { Menu } from 'lucide-react'
 import { useState } from 'react'
+import { Button } from '../ui/button'
 
 type AdminHeaderProps = {
   name?: string | null | undefined
@@ -25,17 +26,19 @@ const AdminHeader = ({
     <>
       <nav className="relative border-b border-gray-200 bg-white px-2 py-2.5 sm:px-4 h-14">
         <div className="mx-auto flex flex-wrap items-center justify-between">
-          <button
+          <Button
+            variant="ghost"
+            size="icon"
+            className="flex lg:hidden items-center justify-center"
             data-collapse-toggle="mobile-menu-2"
             type="button"
-            className="ml-1 inline-flex items-center rounded-lg p-2 text-sm text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 lg:hidden"
             aria-controls="mobile-menu-2"
             aria-expanded="false"
             onClick={toggleSidebar}
           >
             <span className="sr-only">Open main menu</span>
             <Menu />
-          </button>
+          </Button>
           <Link href="/outstatic" aria-label="Outstatic">
             <div className="cursor-pointer flex items-center">
               <svg

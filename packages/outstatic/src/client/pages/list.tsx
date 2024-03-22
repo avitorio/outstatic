@@ -1,4 +1,5 @@
 import { AdminLayout, DocumentsTable } from '@/components'
+import { Button } from '@/components/ui/button'
 import { useDocumentsQuery } from '@/graphql/generated'
 import { OstDocument } from '@/types/public'
 import useOutstatic from '@/utils/hooks/useOutstatic'
@@ -91,13 +92,13 @@ export default function List({ collection }: ListProps) {
       error={error}
       title={collection[0].toUpperCase() + collection.slice(1)}
     >
-      <div className="mb-8 flex h-12 items-center">
-        <h1 className="mr-12 text-2xl capitalize">{collection}</h1>
-        <Link href={`/outstatic/${collection}/new`}>
-          <div className="cursor-pointer rounded-lg border px-5 py-2.5 text-sm font-medium focus:outline-none focus:ring-4 border-gray-600 bg-gray-800 text-white hover:border-gray-600 hover:bg-gray-700 focus:ring-gray-700 capitalize">
+      <div className="mb-8 flex h-12 items-center capitalize">
+        <h1 className="mr-12 text-2xl">{collection}</h1>
+        <Button asChild>
+          <Link href={`/outstatic/${collection}/new`}>
             New {singular(collection)}
-          </div>
-        </Link>
+          </Link>
+        </Button>
       </div>
       {documents.length > 0 && (
         <div className="relative shadow-md sm:rounded-lg">
@@ -121,18 +122,23 @@ export default function List({ collection }: ListProps) {
           </div>
           <div className="relative">
             <div className="mb-20 max-w-2xl p-8 px-4 md:p-8 text-black bg-white rounded-lg border border-gray-200 shadow-md prose prose-base">
-              <p>This collection has no documents yet.</p>
+              <h3>This collection has no documents yet.</h3>
               <p>
                 Create your first{' '}
-                <span className="capitalize">{singular(collection)}</span> by
-                clicking the button below.
+                <span className="capitalize font-semibold">
+                  {singular(collection)}
+                </span>{' '}
+                by clicking the button below.
               </p>
 
-              <Link href={`/outstatic/${collection}/new`}>
-                <div className="inline-block cursor-pointer rounded-lg border px-5 py-2.5 text-sm font-medium focus:outline-none focus:ring-4 border-gray-600 bg-gray-800 text-white hover:border-gray-600 hover:bg-gray-700 focus:ring-gray-700 capitalize">
+              <Button asChild>
+                <Link
+                  href={`/outstatic/${collection}/new`}
+                  className="no-underline capitalize"
+                >
                   New {singular(collection)}
-                </div>
-              </Link>
+                </Link>
+              </Button>
               <p>
                 To learn more about how documents work{' '}
                 <a

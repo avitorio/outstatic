@@ -1,5 +1,11 @@
 # outstatic
 
+## 1.4.4
+
+### Patch Changes
+
+- 8f1bb44: Feat/add some shadcn
+
 ## 1.4.3
 
 ### Patch Changes

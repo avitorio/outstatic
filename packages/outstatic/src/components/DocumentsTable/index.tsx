@@ -6,6 +6,7 @@ import cookies from 'js-cookie'
 import { Settings } from 'lucide-react'
 import Link from 'next/link'
 import { useState } from 'react'
+import { Button } from '../ui/button'
 
 type DocumentsTableProps = {
   documents: OstDocument[]
@@ -49,11 +50,16 @@ const DocumentsTable = (props: DocumentsTableProps) => {
             ))}
             <th
               scope="col"
-              className="px-8 py-2 text-right flex justify-end items-center"
+              className="px-6 py-2 text-right flex justify-end items-center"
             >
-              <button onClick={() => setShowColumnOptions(!showColumnOptions)}>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setShowColumnOptions(!showColumnOptions)}
+              >
+                <span className="sr-only">Settings</span>
                 <Settings />
-              </button>
+              </Button>
             </th>
           </tr>
         </thead>
