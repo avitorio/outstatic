@@ -1,9 +1,13 @@
-import { InputRule } from '@tiptap/core'
+import { AnyExtension, InputRule } from '@tiptap/core'
 import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight'
 import Highlight from '@tiptap/extension-highlight'
 import HorizontalRule from '@tiptap/extension-horizontal-rule'
 import Image from '@tiptap/extension-image'
 import Link from '@tiptap/extension-link'
+import Table from '@tiptap/extension-table'
+import TableCell from '@tiptap/extension-table-cell'
+import TableHeader from '@tiptap/extension-table-header'
+import TableRow from '@tiptap/extension-table-row'
 import TiptapUnderline from '@tiptap/extension-underline'
 import { ReactNodeViewRenderer } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
@@ -47,8 +51,7 @@ export const TiptapExtensions = [
     dropcursor: {
       color: '#DBEAFE',
       width: 4
-    },
-    gapcursor: false
+    }
   }),
   ToggleClass,
   // patch to fix horizontal rule bug: https://github.com/ueberdosis/tiptap/pull/3859#issuecomment-1536799740
@@ -106,5 +109,11 @@ export const TiptapExtensions = [
     }
   }).configure({
     lowlight
-  })
-]
+  }),
+  Table.configure({
+    resizable: true
+  }),
+  TableRow,
+  TableHeader,
+  TableCell
+] as AnyExtension[] // TODO: fix this type
