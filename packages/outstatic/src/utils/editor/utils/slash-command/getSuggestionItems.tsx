@@ -7,6 +7,7 @@ import {
   Image as ImageIcon,
   List,
   ListOrdered,
+  TableIcon,
   Text,
   TextQuote
 } from 'lucide-react'
@@ -119,6 +120,19 @@ const items = [
     description: 'Upload or embed with a link.',
     searchTerms: ['photo', 'picture', 'media'],
     icon: <ImageIcon size={18} />
+  },
+  {
+    title: 'Table',
+    description: 'Insert a table.',
+    searchTerms: ['table', 'cell', 'row'],
+    icon: <TableIcon size={18} />,
+    command: ({ editor, range }: CommandProps) => {
+      editor
+        .chain()
+        .focus()
+        .insertTable({ rows: 3, cols: 3, withHeaderRow: true })
+        .run()
+    }
   }
 ] as CommandItemProps[]
 

@@ -1,4 +1,5 @@
 import MDEMenu from '@/components/MDEMenu'
+import MDETableMenu from '@/components/MDETableMenu'
 import { Editor, EditorContent } from '@tiptap/react'
 import { useFormContext } from 'react-hook-form'
 
@@ -18,6 +19,7 @@ const MDEditor = ({ id, editor }: MDEditorProps) => {
   return (
     <>
       {editor && <MDEMenu editor={editor} />}
+      {editor && <MDETableMenu editor={editor} />}
       <EditorContent name="content" value={watchContent} editor={editor} />
       <div className="mt-1">
         {errors[id]?.message && (
