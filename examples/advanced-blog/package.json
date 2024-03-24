@@ -23,6 +23,7 @@
     "outstatic": "^1.0.0",
     "react": "^18",
     "react-dom": "^18",
+    "rehype-pretty-code": "^0.13.0",
     "remark": "^14.0.3",
     "remark-html": "^15.0.2",
     "shikiji": "^0.9.0",
@@ -45,7 +46,6 @@
     "postcss-import": "^16.0.0",
     "postcss-nesting": "^12.0.2",
     "rehype-autolink-headings": "^6.1.1",
-    "rehype-pretty-code": "^0.12.3",
     "rehype-slug": "^5.1.0",
     "typescript": "5.1.3"
   }
