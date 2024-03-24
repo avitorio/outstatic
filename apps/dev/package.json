@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.0.5",
@@ -18,7 +19,7 @@
     "gray-matter": "^4.0.3",
     "lucide-react": "^0.303.0",
     "mdx-bundler": "^10.0.1",
-    "next": "14.0.0",
+    "next": "^14.0.0",
     "next-themes": "^0.2.1",
     "outstatic": "workspace:*",
     "react": "^18",
@@ -46,8 +47,7 @@
     "postcss-nesting": "^12.0.2",
     "rehype-autolink-headings": "^6.1.1",
     "rehype-pretty-code": "^0.12.3",
-    "rehype-prism-plus": "^1.5.0",
-    "rehype-slug": "^5.0.1",
+    "rehype-slug": "^5.1.0",
     "typescript": "5.1.3"
   }
 }
