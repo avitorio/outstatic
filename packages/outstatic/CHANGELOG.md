@@ -1,5 +1,11 @@
 # outstatic
 
+## 1.4.7
+
+### Patch Changes
+
+- cd43d9a: Add table to examples
+
 ## 1.4.6
 
 ### Patch Changes
