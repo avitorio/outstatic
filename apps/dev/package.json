@@ -24,6 +24,7 @@
     "react": "^18",
     "react-dom": "^18",
     "remark": "^14.0.3",
+    "remark-gfm": "^4.0.0",
     "remark-html": "^15.0.2",
     "shikiji": "^0.9.0",
     "tailwind-merge": "^2.2.0",
