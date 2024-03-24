@@ -1,4 +1,5 @@
 // @ts-ignore
+// test
 import { bundleMDX } from 'mdx-bundler'
 import rehypeAutolinkHeadings from 'rehype-autolink-headings'
 import rehypePrettyCode from 'rehype-pretty-code'
