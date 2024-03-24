@@ -25,10 +25,15 @@ const useTipTap = ({ ...rhfMethods }) => {
     extensions: [
       ...TiptapExtensions,
       Placeholder.configure({
-        placeholder: ({ node }) => {
+        placeholder: ({ editor, node }) => {
+          if (editor.isActive('tableCell') || editor.isActive('tableHeader')) {
+            return ''
+          }
+
           if (node.type.name === 'heading') {
             return `Heading ${node.attrs.level}`
           }
+
           return `Press '/' for commands${
             hasOpenAIKey ? ", or '++' for AI autocomplete..." : ''
           }`

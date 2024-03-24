@@ -1,5 +1,11 @@
 # outstatic
 
+## 1.4.5
+
+### Patch Changes
+
+- 5dc8e8f: feat: add table support
+
 ## 1.4.4
 
 ### Patch Changes
