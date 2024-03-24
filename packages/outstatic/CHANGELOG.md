@@ -1,5 +1,11 @@
 # outstatic
 
+## 1.4.6
+
+### Patch Changes
+
+- ignore .next on package build
+
 ## 1.4.5
 
 ### Patch Changes
