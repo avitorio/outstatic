@@ -116,26 +116,26 @@ router
     req.session.token = access_token
     const userData = await fetchGitHubUser(access_token || '')
 
-    const checks = Promise.all([
-      checkRepository(req.session.token, userData.login),
-      checkCollaborator(req.session.token, userData.login)
-    ])
+    // const checks = Promise.all([
+    //   checkRepository(req.session.token, userData.login),
+    //   checkCollaborator(req.session.token, userData.login)
+    // ])
 
-    const [repoExists, isCollaborator] = await checks
+    // const [repoExists, isCollaborator] = await checks
 
-    if (!repoExists) {
-      return NextResponse.json(
-        { error: 'repository-not-found' },
-        { status: 404, statusText: 'Repository not found' }
-      )
-    }
+    // if (!repoExists) {
+    //   return NextResponse.json(
+    //     { error: 'repository-not-found' },
+    //     { status: 404, statusText: 'Repository not found' }
+    //   )
+    // }
 
-    if (!isCollaborator) {
-      return NextResponse.json(
-        { error: 'not-collaborator' },
-        { status: 403, statusText: 'Forbidden' }
-      )
-    }
+    // if (!isCollaborator) {
+    //   return NextResponse.json(
+    //     { error: 'not-collaborator' },
+    //     { status: 403, statusText: 'Forbidden' }
+    //   )
+    // }
 
     if (!userData.email) {
       const emails = await (
