@@ -11,6 +11,7 @@ type OutstaticProviderProps = {
   session: Session | null
   initialApolloState?: null
   collections: string[]
+  setCollections: Dispatch<SetStateAction<string[]>>
   pages: string[]
   addPage: (page: string) => void
   removePage: (page: string) => void
@@ -33,6 +34,7 @@ export const OutstaticProvider = ({
   monorepoPath,
   session,
   collections,
+  setCollections,
   pages,
   addPage,
   removePage,
@@ -51,6 +53,7 @@ export const OutstaticProvider = ({
         monorepoPath: monorepoPath || '',
         session,
         collections,
+        setCollections,
         pages,
         addPage,
         removePage,

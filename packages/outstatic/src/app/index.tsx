@@ -25,8 +25,27 @@ export type OutstaticData = {
 
 export const defaultPages = ['settings', 'collections']
 
-export async function Outstatic() {
-  if (envVars.hasMissingEnvVars) {
+export async function Outstatic({
+  repoOwner = '',
+  repoSlug = '',
+  repoBranch = 'main'
+}: { repoOwner?: string; repoSlug?: string; repoBranch?: string } = {}) {
+  const ostConfig = {
+    OST_REPO_OWNER: repoOwner,
+    OST_REPO_SLUG:
+      repoSlug ||
+      process.env.OST_REPO_SLUG ||
+      process.env.VERCEL_GIT_REPO_SLUG ||
+      '',
+    OST_REPO_BRANCH: repoBranch || process.env.OST_REPO_BRANCH || 'main',
+    OST_CONTENT_PATH: `${process.env.OST_REPO_BRANCH || 'main'}:${
+      process.env.OST_MONOREPO_PATH ? process.env.OST_MONOREPO_PATH + '/' : ''
+    }${process.env.OST_CONTENT_PATH || 'outstatic/content'}`,
+    OST_MONOREPO_PATH: '',
+    OST_BASE_PATH: ''
+  }
+
+  if (envVars.hasMissingEnvVars && !ostConfig.OST_REPO_OWNER) {
     return {
       missingEnvVars: envVars.envVars
     } as OutstaticData
@@ -37,9 +56,12 @@ export async function Outstatic() {
     ? initializeApollo(null, session, process.env.OST_BASE_PATH)
     : null
 
+  ostConfig.OST_REPO_OWNER =
+    repoOwner || process.env.OST_REPO_OWNER || session?.user?.login || ''
+
   let collections: String[] = []
 
-  if (apolloClient) {
+  if (apolloClient && ostConfig.OST_REPO_SLUG) {
     try {
       const { data: documentQueryData } = await apolloClient.query<
         CollectionsQuery,
@@ -47,14 +69,9 @@ export async function Outstatic() {
       >({
         query: CollectionsDocument,
         variables: {
-          name:
-            process.env.OST_REPO_SLUG || process.env.VERCEL_GIT_REPO_SLUG || '',
-          contentPath: `${process.env.OST_REPO_BRANCH || 'main'}:${
-            process.env.OST_MONOREPO_PATH
-              ? process.env.OST_MONOREPO_PATH + '/'
-              : ''
-          }${process.env.OST_CONTENT_PATH || 'outstatic/content'}`,
-          owner: process.env.OST_REPO_OWNER || session?.user?.login || ''
+          name: ostConfig.OST_REPO_SLUG,
+          contentPath: ostConfig.OST_CONTENT_PATH,
+          owner: ostConfig.OST_REPO_OWNER
         },
         fetchPolicy: 'no-cache'
       })
@@ -72,10 +89,9 @@ export async function Outstatic() {
   }
 
   return {
-    repoOwner: process.env.OST_REPO_OWNER || session?.user?.login || '',
-    repoSlug:
-      process.env.OST_REPO_SLUG || process.env.VERCEL_GIT_REPO_SLUG || '',
-    repoBranch: process.env.OST_REPO_BRANCH || 'main',
+    repoOwner: ostConfig.OST_REPO_OWNER,
+    repoSlug: ostConfig.OST_REPO_SLUG,
+    repoBranch: ostConfig.OST_REPO_BRANCH,
     contentPath: process.env.OST_CONTENT_PATH || 'outstatic/content',
     monorepoPath: process.env.OST_MONOREPO_PATH || '',
     session: session || null,

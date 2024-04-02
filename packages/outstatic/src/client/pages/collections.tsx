@@ -3,6 +3,7 @@ import Modal from '@/components/Modal'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import {
+  useCollectionsQuery,
   useCreateCommitMutation,
   useDocumentLazyQuery
 } from '@/graphql/generated'
@@ -13,14 +14,14 @@ import useOutstatic from '@/utils/hooks/useOutstatic'
 import { stringifyMetadata } from '@/utils/metadata/stringify'
 import { MetadataSchema } from '@/utils/metadata/types'
 import Link from 'next/link'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 export default function Collections() {
   const {
     repoOwner,
-    collections,
     session,
     repoSlug,
+    collections,
     repoBranch,
     contentPath,
     monorepoPath,
