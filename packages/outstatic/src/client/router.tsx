@@ -19,17 +19,26 @@ export const Router = ({ params }: { params: { ost: string[] } }) => {
   const slug = params?.ost?.[0] || ''
   const slug2 = params?.ost?.[1] || ''
 
-  const isContent = slug && collections.includes(slug)
+  const isContent = slug && !['collections', 'settings', ''].includes(slug)
   return (
     <>
-      {!repoSlug && <Onboarding />}
-      {repoSlug && !slug && <Collections />}
-      {slug2 && isContent && <EditDocument collection={slug} />}
-      {!slug2 && isContent ? <List collection={slug} /> : defaultPages[slug]}
-      {(slug === 'collections' && collections.includes(slug2) && (
-        <AddCustomField collection={slug2} />
-      )) ||
-        (!!slug2 && !isContent && <NewCollection />)}
+      {!repoSlug ? (
+        <Onboarding />
+      ) : (
+        <>
+          {!slug && <Collections />}
+          {slug2 && isContent && <EditDocument collection={slug} />}
+          {!slug2 && isContent ? (
+            <List collection={slug} />
+          ) : (
+            defaultPages[slug]
+          )}
+          {(slug === 'collections' && collections.includes(slug2) && (
+            <AddCustomField collection={slug2} />
+          )) ||
+            (!!slug2 && !isContent && <NewCollection />)}
+        </>
+      )}
     </>
   )
 }
