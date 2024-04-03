@@ -14,7 +14,7 @@ import useOutstatic from '@/utils/hooks/useOutstatic'
 import { stringifyMetadata } from '@/utils/metadata/stringify'
 import { MetadataSchema } from '@/utils/metadata/types'
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 export default function Collections() {
   const {
@@ -27,6 +27,7 @@ export default function Collections() {
     monorepoPath,
     removePage
   } = useOutstatic()
+
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [selectedCollection, setSelectedCollection] = useState('')
   const [deleting, setDeleting] = useState(false)
