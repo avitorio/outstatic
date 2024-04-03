@@ -26,9 +26,7 @@ const initialBroadcast = () => {
 }
 
 const Sidebar = ({ isOpen = false, ostData }: SidebarProps) => {
-  const [broadcast, setBroadcast] = useState<Broadcast | null>(
-    initialBroadcast()
-  )
+  const [broadcast, setBroadcast] = useState<Broadcast | null>()
   const client = useApollo(
     ostData?.initialApolloState,
     undefined,
@@ -43,6 +41,10 @@ const Sidebar = ({ isOpen = false, ostData }: SidebarProps) => {
     repoBranch,
     monorepoPath
   } = useOutstatic()
+
+  useEffect(() => {
+    setBroadcast(initialBroadcast())
+  }, [])
 
   const { data, loading } = useCollectionsQuery({
     client,
