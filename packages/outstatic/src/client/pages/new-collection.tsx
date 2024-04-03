@@ -121,6 +121,7 @@ export default function NewCollection() {
                 methods.setValue('name', e.target.value)
               }
             }}
+            autoFocus
           />
           <Button
             type="submit"

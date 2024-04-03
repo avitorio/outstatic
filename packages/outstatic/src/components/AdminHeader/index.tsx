@@ -1,5 +1,5 @@
 import Link from '@/components/Link'
-import { useOstSignOut } from '@/utils/auth/hooks'
+import { useOstSession, useOstSignOut } from '@/utils/auth/hooks'
 import { Menu } from 'lucide-react'
 import { useState } from 'react'
 import { Button } from '../ui/button'
@@ -12,13 +12,8 @@ type AdminHeaderProps = {
   toggleSidebar: () => void
 }
 
-const AdminHeader = ({
-  name,
-  email,
-  image,
-  status,
-  toggleSidebar
-}: AdminHeaderProps) => {
+const AdminHeader = ({ toggleSidebar }: AdminHeaderProps) => {
+  const { session, status } = useOstSession()
   const [isOpen, setIsOpen] = useState(false)
   const { signOut } = useOstSignOut()
 
@@ -76,7 +71,7 @@ const AdminHeader = ({
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   className="h-8 w-8 rounded-full"
-                  src={image || ''}
+                  src={session?.user?.image || ''}
                   alt="user"
                 />
               </button>
@@ -91,9 +86,11 @@ const AdminHeader = ({
                 }}
               >
                 <div className="py-3 px-4">
-                  <span className="block text-sm text-gray-900">{name}</span>
+                  <span className="block text-sm text-gray-900">
+                    {session?.user?.name}
+                  </span>
                   <span className="block truncate text-sm font-medium text-gray-500">
-                    {email}
+                    {session?.user?.email}
                   </span>
                 </div>
                 <ul className="py-1" aria-labelledby="dropdown">

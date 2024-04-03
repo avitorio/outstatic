@@ -1,4 +1,7 @@
+import { OutstaticData } from '@/app'
 import Link from '@/components/Link'
+import { useCollectionsQuery } from '@/graphql/generated'
+import { useApollo } from '@/utils/apollo'
 import { OUTSTATIC_VERSION } from '@/utils/constants'
 import generateUniqueId from '@/utils/generateUniqueId'
 import useOutstatic from '@/utils/hooks/useOutstatic'
@@ -7,6 +10,7 @@ import { useEffect, useState } from 'react'
 
 type SidebarProps = {
   isOpen: boolean
+  ostData?: OutstaticData
 }
 
 type Broadcast = {
@@ -21,11 +25,48 @@ const initialBroadcast = () => {
   return broadcast ? JSON.parse(broadcast) : null
 }
 
-const Sidebar = ({ isOpen = false }: SidebarProps) => {
+const Sidebar = ({ isOpen = false, ostData }: SidebarProps) => {
   const [broadcast, setBroadcast] = useState<Broadcast | null>(
     initialBroadcast()
   )
-  const { collections, repoOwner, repoSlug } = useOutstatic()
+  const client = useApollo(
+    ostData?.initialApolloState,
+    undefined,
+    ostData?.basePath
+  )
+  const {
+    collections,
+    setCollections,
+    repoOwner,
+    repoSlug,
+    contentPath,
+    repoBranch,
+    monorepoPath
+  } = useOutstatic()
+
+  const { data, loading } = useCollectionsQuery({
+    client,
+    variables: {
+      owner: repoOwner,
+      name: repoSlug,
+      contentPath:
+        `${repoBranch}:${
+          monorepoPath ? monorepoPath + '/' : ''
+        }${contentPath}` || ''
+    }
+  })
+
+  useEffect(() => {
+    if (data) {
+      const documentQueryObject = data?.repository?.object
+      if (documentQueryObject?.__typename === 'Tree') {
+        const newCollections = documentQueryObject?.entries
+          ?.map((entry) => (entry.type === 'tree' ? entry.name : undefined))
+          .filter(Boolean) as string[]
+        setCollections(newCollections)
+      }
+    }
+  }, [data])
 
   useEffect(() => {
     const fetchBroadcast = async () => {
@@ -55,7 +96,7 @@ const Sidebar = ({ isOpen = false }: SidebarProps) => {
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [data])
 
   return (
     <aside
@@ -86,31 +127,31 @@ const Sidebar = ({ isOpen = false }: SidebarProps) => {
               </div>
             </Link>
           </li>
-          <>
-            {collections.map((collection) => (
-              <li key={collection}>
-                <Link href={`/outstatic/${collection}`}>
-                  <div className="flex cursor-pointer items-center rounded-lg p-2 text-base font-normal text-gray-900 hover:bg-gray-100">
-                    <svg
-                      className="h-6 w-6 shrink-0 text-gray-500 transition duration-75 group-hover:text-gray-900"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                      ></path>
-                    </svg>
-                    <span className="ml-3 capitalize">{collection}</span>
-                  </div>
-                </Link>
-              </li>
-            ))}
-          </>
+          {loading
+            ? null
+            : collections.map((collection) => (
+                <li key={collection}>
+                  <Link href={`/outstatic/${collection}`}>
+                    <div className="flex cursor-pointer items-center rounded-lg p-2 text-base font-normal text-gray-900 hover:bg-gray-100">
+                      <svg
+                        className="h-6 w-6 shrink-0 text-gray-500 transition duration-75 group-hover:text-gray-900"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                        ></path>
+                      </svg>
+                      <span className="ml-3 capitalize">{collection}</span>
+                    </div>
+                  </Link>
+                </li>
+              ))}
           <li>
             <Link href="/outstatic/settings">
               <div className="flex cursor-pointer items-center rounded-lg p-2 text-base font-normal text-gray-900 hover:bg-gray-100">
