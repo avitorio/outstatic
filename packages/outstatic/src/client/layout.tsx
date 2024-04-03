@@ -62,12 +62,10 @@ const Layout = ({
           setHasChanges={setHasChanges}
         >
           <AdminHeader toggleSidebar={toggleSidebar} />
-          <div className="flex h-screen flex-col bg-white text-black">
-            <div className="flex md:grow flex-col-reverse justify-between md:flex-row">
-              <div className="flex w-full">
-                <Sidebar isOpen={openSidebar} ostData={ostData} />
-                {children}
-              </div>
+          <div className="flex md:grow flex-col-reverse justify-between md:flex-row md:min-h-[calc(100vh-56px)]">
+            <div className="flex w-full">
+              <Sidebar isOpen={openSidebar} ostData={ostData} />
+              {children}
             </div>
           </div>
         </OutstaticProvider>
