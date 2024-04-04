@@ -1,14 +1,13 @@
 import { AdminLayout } from '@/components'
+import { AdminLoading } from '@/components/AdminLoading'
 import Modal from '@/components/Modal'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
-import {
-  useCollectionsQuery,
-  useCreateCommitMutation,
-  useDocumentLazyQuery
-} from '@/graphql/generated'
+import { useDocumentLazyQuery } from '@/graphql/generated'
 import { createCommitApi } from '@/utils/createCommitApi'
 import { hashFromUrl } from '@/utils/hashFromUrl'
+import { useCollections } from '@/utils/hooks/useCollections'
+import { useCreateCommit } from '@/utils/hooks/useCreateCommit'
 import useOid from '@/utils/hooks/useOid'
 import useOutstatic from '@/utils/hooks/useOutstatic'
 import { stringifyMetadata } from '@/utils/metadata/stringify'
@@ -17,21 +16,19 @@ import Link from 'next/link'
 import { useState } from 'react'
 
 export default function Collections() {
+  const { data: collections, isPending } = useCollections()
   const {
     repoOwner,
     session,
     repoSlug,
-    collections,
     repoBranch,
     contentPath,
-    monorepoPath,
-    removePage
+    monorepoPath
   } = useOutstatic()
 
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [selectedCollection, setSelectedCollection] = useState('')
   const [deleting, setDeleting] = useState(false)
-  const [createCommit] = useCreateCommitMutation()
   const fetchOid = useOid()
 
   const [loadMetadata] = useDocumentLazyQuery({
@@ -44,6 +41,8 @@ export default function Collections() {
     },
     fetchPolicy: 'network-only'
   })
+
+  const mutation = useCreateCommit()
 
   const deleteCollection = async (collection: string) => {
     loadMetadata().then(async ({ data: metadata }) => {
@@ -85,17 +84,21 @@ export default function Collections() {
 
         const input = capi.createInput()
 
-        await createCommit({ variables: { input } })
-        setShowDeleteModal(false)
-        setDeleting(false)
-        removePage(collection)
+        mutation.mutate(input, {
+          onSuccess: () => {
+            setDeleting(false)
+            setShowDeleteModal(false)
+          }
+        })
       } catch (error) {}
     })
   }
 
+  if (isPending) return <AdminLoading />
+
   return (
     <AdminLayout title="Collections">
-      {collections.length === 0 ? (
+      {!collections ? (
         <div className="max-w-2xl">
           <div className="absolute bottom-0 left-0 md:left-64 right-0 md:top-36">
             <svg
@@ -204,6 +207,7 @@ export default function Collections() {
           </div>
         </>
       )}
+
       {showDeleteModal && (
         <Modal
           title="Delete Collection"

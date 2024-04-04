@@ -7,6 +7,8 @@ import Settings from './pages/settings'
 import { ReactElement } from 'react'
 import AddCustomField from './pages/add-custom-field'
 import NewCollection from './pages/new-collection'
+import { useCollections } from '@/utils/hooks/useCollections'
+import { AdminLoading } from '@/components/AdminLoading'
 
 const defaultPages: { [key: string]: ReactElement | undefined } = {
   settings: <Settings />,
@@ -14,12 +16,15 @@ const defaultPages: { [key: string]: ReactElement | undefined } = {
 }
 
 export const Router = ({ params }: { params: { ost: string[] } }) => {
-  const { collections, repoSlug } = useOutstatic()
+  const { data: collections, isPending } = useCollections()
+  const { repoSlug, pages } = useOutstatic()
 
   const slug = params?.ost?.[0] || ''
   const slug2 = params?.ost?.[1] || ''
 
-  const isContent = slug && !['collections', 'settings', ''].includes(slug)
+  if (isPending) return <AdminLoading />
+
+  const isContent = slug && ![...pages].includes(slug)
   return (
     <>
       {!repoSlug ? (
@@ -33,7 +38,7 @@ export const Router = ({ params }: { params: { ost: string[] } }) => {
           ) : (
             defaultPages[slug]
           )}
-          {(slug === 'collections' && collections.includes(slug2) && (
+          {(slug === 'collections' && collections?.includes(slug2) && (
             <AddCustomField collection={slug2} />
           )) ||
             (!!slug2 && !isContent && <NewCollection />)}

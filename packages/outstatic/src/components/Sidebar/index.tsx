@@ -11,7 +11,6 @@ const CollectionsList = dynamic(() => import('./CollectionsList'), {
 
 type SidebarProps = {
   isOpen: boolean
-  loading: boolean
 }
 
 type Broadcast = {
@@ -20,9 +19,9 @@ type Broadcast = {
   link: string
 }
 
-const Sidebar = ({ isOpen = false, loading = false }: SidebarProps) => {
+const Sidebar = ({ isOpen = false }: SidebarProps) => {
   const [broadcast, setBroadcast] = useState<Broadcast | null>(null)
-  const { collections, repoOwner, repoSlug } = useOutstatic()
+  const { repoOwner, repoSlug } = useOutstatic()
 
   useEffect(() => {
     // Move the initial broadcast setup into useEffect
@@ -73,7 +72,7 @@ const Sidebar = ({ isOpen = false, loading = false }: SidebarProps) => {
       aria-label="Sidebar"
     >
       <div className="scrollbar-hide flex h-full max-h-[calc(100vh-96px)] flex-col justify-between overflow-y-scroll bg-gray-50 py-4 px-3">
-        <CollectionsList collections={collections} />
+        <CollectionsList />
         {broadcast ? (
           <div
             className="border-gray mt-6 rounded-lg border bg-white p-4"
