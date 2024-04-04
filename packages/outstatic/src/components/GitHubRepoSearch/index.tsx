@@ -3,7 +3,7 @@ import useOutstatic from '@/utils/hooks/useOutstatic'
 import debounce from 'lodash/debounce'
 import React, { useEffect, useState } from 'react'
 
-import { Combobox } from '@/components/ui/combobox'
+import { SearchCombobox } from '@/components/ui/search-combobox'
 import cookies from 'js-cookie'
 
 interface Repository {
@@ -50,7 +50,7 @@ const GitHubRepoSearch: React.FC = () => {
   }
 
   // Using lodash's debounce
-  const debouncedFetchRepositories = debounce(fetchRepositories, 500)
+  const debouncedFetchRepositories = debounce(fetchRepositories, 300)
 
   useEffect(() => {
     if (query) {
@@ -79,7 +79,7 @@ const GitHubRepoSearch: React.FC = () => {
 
   return (
     <div>
-      <Combobox
+      <SearchCombobox
         data={suggestions.map((repo) => ({
           value: repo.full_name,
           label: repo.full_name

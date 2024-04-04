@@ -16,7 +16,7 @@ import { ScrollArea } from './scroll-area'
 import { cn } from '@/utils/ui'
 import { Popover, PopoverContent, PopoverTrigger } from './popover'
 
-export function Combobox({
+export function SearchCombobox({
   data,
   value,
   setValue,
