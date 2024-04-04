@@ -32,6 +32,7 @@ export default function List({ collection }: ListProps) {
     monorepoPath,
     session
   } = useOutstatic()
+
   const { data, error, loading } = useDocumentsQuery({
     variables: {
       owner: repoOwner || session?.user?.login || '',

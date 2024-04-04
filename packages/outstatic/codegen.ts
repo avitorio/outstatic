@@ -1,0 +1,16 @@
+import { CodegenConfig } from '@graphql-codegen/cli'
+
+const config: CodegenConfig = {
+  schema: 'https://docs.github.com/public/schema.docs.graphql',
+  documents: ['src/**/*.tsx', '!src/graphql/gql/**/*'],
+  ignoreNoDocuments: true, // for better experience with the watcher
+  generates: {
+    './src/graphql/gql/': {
+      preset: 'client',
+      plugins: []
+    }
+  },
+  watch: true
+}
+
+export default config

@@ -8,8 +8,6 @@ const mockProviderProps = {
   initialApolloState: null,
   collections: ['collection1', 'collection2', 'collection3'],
   pages: [],
-  addPage: (page: string) => {},
-  removePage: (page: string) => {},
   hasOpenAIKey: false,
   hasChanges: false,
   setHasChanges: () => {},

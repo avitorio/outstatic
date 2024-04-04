@@ -10,11 +10,7 @@ type OutstaticProviderProps = {
   monorepoPath: string
   session: Session | null
   initialApolloState?: null
-  collections: string[]
-  setCollections: Dispatch<SetStateAction<string[]>>
   pages: string[]
-  addPage: (page: string) => void
-  removePage: (page: string) => void
   hasOpenAIKey: boolean
   hasChanges: boolean
   setHasChanges: Dispatch<SetStateAction<boolean>>
@@ -33,11 +29,7 @@ export const OutstaticProvider = ({
   contentPath,
   monorepoPath,
   session,
-  collections,
-  setCollections,
   pages,
-  addPage,
-  removePage,
   hasOpenAIKey,
   hasChanges,
   setHasChanges,
@@ -52,11 +44,7 @@ export const OutstaticProvider = ({
         contentPath: contentPath || 'outstatic/content',
         monorepoPath: monorepoPath || '',
         session,
-        collections,
-        setCollections,
         pages,
-        addPage,
-        removePage,
         hasOpenAIKey,
         hasChanges,
         setHasChanges,

@@ -3,9 +3,9 @@ import { AdminLayout } from '@/components'
 import Alert from '@/components/Alert'
 import { Button } from '@/components/ui/button'
 import Input from '@/components/ui/input'
-import { useCreateCommitMutation } from '@/graphql/generated'
 import { Collection } from '@/types'
-import { collectionCommitInput } from '@/utils/collectionCommitInput'
+import { createCommitApi } from '@/utils/createCommitApi'
+import { useCreateCommit } from '@/utils/hooks/useCreateCommit'
 import useOid from '@/utils/hooks/useOid'
 import useOutstatic from '@/utils/hooks/useOutstatic'
 import { yupResolver } from '@hookform/resolvers/yup'
@@ -25,12 +25,10 @@ export default function NewCollection() {
     repoSlug,
     repoBranch,
     repoOwner,
-    addPage,
     hasChanges,
     setHasChanges
   } = useOutstatic()
   const router = useRouter()
-  const [createCommit] = useCreateCommitMutation()
   const fetchOid = useOid()
   const [collectionName, setCollectionName] = useState('')
   const pagesRegex = new RegExp(`^(?!${pages.join('$|')}$)`, 'i')
@@ -46,6 +44,8 @@ export default function NewCollection() {
     resolver: yupResolver(createCollection)
   })
 
+  const mutation = useCreateCommit()
+
   const onSubmit: SubmitHandler<Collection> = async ({ name }: Collection) => {
     setLoading(true)
     setHasChanges(false)
@@ -54,22 +54,33 @@ export default function NewCollection() {
       const oid = await fetchOid()
       const owner = repoOwner || session?.user?.login || ''
       const collection = slugify(name, { allowedChars: 'a-zA-Z0-9' })
-      const commitInput = collectionCommitInput({
+
+      const capi = createCommitApi({
+        message: `feat(content): create ${collection}`,
         owner,
         oid,
-        repoSlug,
-        repoBranch,
-        contentPath,
-        monorepoPath,
-        collection
+        name: repoSlug,
+        branch: repoBranch
       })
 
-      const created = await createCommit({ variables: commitInput })
-      if (created) {
-        addPage(collection)
-        setLoading(false)
-        router.push(`/outstatic/${collection}`)
-      }
+      capi.replaceFile(
+        `${
+          monorepoPath ? monorepoPath + '/' : ''
+        }${contentPath}/${collection}/.gitkeep`,
+        ''
+      )
+
+      const input = capi.createInput()
+
+      mutation.mutate(input, {
+        onSuccess: () => {
+          setLoading(false)
+          router.push(`/outstatic/${collection}`)
+        },
+        onError: () => {
+          throw new Error('Failed to create collection')
+        }
+      })
     } catch (error) {
       // TODO: Better error treatment
       setLoading(false)

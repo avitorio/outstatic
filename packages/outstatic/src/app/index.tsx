@@ -16,7 +16,7 @@ export type OutstaticData = {
   monorepoPath: string
   session: Session | null
   initialApolloState?: null
-  collections: string[]
+  // collections: string[]
   pages: string[]
   missingEnvVars: EnvVarsType | false
   hasOpenAIKey: boolean
@@ -52,41 +52,41 @@ export async function Outstatic({
   }
 
   const session = await getLoginSession()
-  const apolloClient = session
-    ? initializeApollo(null, session, process.env.OST_BASE_PATH)
-    : null
+  // const apolloClient = session
+  //   ? initializeApollo(null, session, process.env.OST_BASE_PATH)
+  //   : null
 
   ostConfig.OST_REPO_OWNER =
     repoOwner || process.env.OST_REPO_OWNER || session?.user?.login || ''
 
   let collections: string[] = []
 
-  if (apolloClient && ostConfig.OST_REPO_SLUG) {
-    try {
-      const { data: documentQueryData } = await apolloClient.query<
-        CollectionsQuery,
-        CollectionsQueryVariables
-      >({
-        query: CollectionsDocument,
-        variables: {
-          name: ostConfig.OST_REPO_SLUG,
-          contentPath: ostConfig.OST_CONTENT_PATH,
-          owner: ostConfig.OST_REPO_OWNER
-        },
-        fetchPolicy: 'no-cache'
-      })
+  // if (apolloClient && ostConfig.OST_REPO_SLUG) {
+  //   try {
+  //     const { data: documentQueryData } = await apolloClient.query<
+  //       CollectionsQuery,
+  //       CollectionsQueryVariables
+  //     >({
+  //       query: CollectionsDocument,
+  //       variables: {
+  //         name: ostConfig.OST_REPO_SLUG,
+  //         contentPath: ostConfig.OST_CONTENT_PATH,
+  //         owner: ostConfig.OST_REPO_OWNER
+  //       },
+  //       fetchPolicy: 'no-cache'
+  //     })
 
-      const documentQueryObject = documentQueryData?.repository?.object
+  //     const documentQueryObject = documentQueryData?.repository?.object
 
-      if (documentQueryObject?.__typename === 'Tree') {
-        collections = documentQueryObject?.entries
-          ?.map((entry) => (entry.type === 'tree' ? entry.name : undefined))
-          .filter(Boolean) as string[]
-      }
-    } catch (error) {
-      console.log({ error })
-    }
-  }
+  //     if (documentQueryObject?.__typename === 'Tree') {
+  //       collections = documentQueryObject?.entries
+  //         ?.map((entry) => (entry.type === 'tree' ? entry.name : undefined))
+  //         .filter(Boolean) as string[]
+  //     }
+  //   } catch (error) {
+  //     console.log({ error })
+  //   }
+  // }
 
   return {
     repoOwner: ostConfig.OST_REPO_OWNER,
@@ -96,7 +96,6 @@ export async function Outstatic({
     monorepoPath: process.env.OST_MONOREPO_PATH || '',
     session: session || null,
     initialApolloState: null,
-    collections,
     pages: [...defaultPages, ...collections],
     missingEnvVars: false,
     hasOpenAIKey: !!process.env.OPENAI_API_KEY,
