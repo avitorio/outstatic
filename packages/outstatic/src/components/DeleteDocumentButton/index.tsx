@@ -1,5 +1,8 @@
 import Modal from '@/components/Modal'
-import { useCreateCommitMutation, useDocumentQuery } from '@/graphql/generated'
+import {
+  useCreateCommitMutation,
+  useDocumentLazyQuery
+} from '@/graphql/generated'
 import { useOstSession } from '@/utils/auth/hooks'
 import { createCommitApi } from '@/utils/createCommitApi'
 import { hashFromUrl } from '@/utils/hashFromUrl'
@@ -34,7 +37,7 @@ const DeleteDocumentButton = ({
     useOutstatic()
   const fetchOid = useOid()
 
-  const { data: metadata } = useDocumentQuery({
+  const [getMetadata] = useDocumentLazyQuery({
     variables: {
       owner: repoOwner || session?.user?.login || '',
       name: repoSlug,
@@ -48,6 +51,7 @@ const DeleteDocumentButton = ({
   const deleteDocument = async (slug: string) => {
     setDeleting(true)
     try {
+      const { data: metadata } = await getMetadata()
       const oid = await fetchOid()
       const owner = repoOwner || session?.user?.login || ''
 

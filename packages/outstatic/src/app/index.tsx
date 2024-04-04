@@ -59,7 +59,7 @@ export async function Outstatic({
   ostConfig.OST_REPO_OWNER =
     repoOwner || process.env.OST_REPO_OWNER || session?.user?.login || ''
 
-  let collections: String[] = []
+  let collections: string[] = []
 
   if (apolloClient && ostConfig.OST_REPO_SLUG) {
     try {
@@ -81,7 +81,7 @@ export async function Outstatic({
       if (documentQueryObject?.__typename === 'Tree') {
         collections = documentQueryObject?.entries
           ?.map((entry) => (entry.type === 'tree' ? entry.name : undefined))
-          .filter(Boolean) as String[]
+          .filter(Boolean) as string[]
       }
     } catch (error) {
       console.log({ error })
