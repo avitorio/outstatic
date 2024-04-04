@@ -1,7 +1,7 @@
 import Link from '@/components/Link'
 import { useOstSession, useOstSignOut } from '@/utils/auth/hooks'
 import { Menu } from 'lucide-react'
-import { useState } from 'react'
+import { memo, useState } from 'react'
 import { Button } from '../ui/button'
 
 type AdminHeaderProps = {
@@ -19,7 +19,7 @@ const AdminHeader = ({ toggleSidebar }: AdminHeaderProps) => {
 
   return (
     <>
-      <nav className="relative border-b border-gray-200 bg-white px-2 py-2.5 sm:px-4 h-14">
+      <nav className="relative border-b border-gray-200 bg-white px-2 py-2.5 sm:px-4 h-14 min-h-14">
         <div className="mx-auto flex flex-wrap items-center justify-between">
           <Button
             variant="ghost"
@@ -35,7 +35,7 @@ const AdminHeader = ({ toggleSidebar }: AdminHeaderProps) => {
             <Menu />
           </Button>
           <Link href="/outstatic" aria-label="Outstatic">
-            <div className="cursor-pointer flex items-center">
+            <div className="cursor-pointer flex items-center min-h-8">
               <svg
                 fill="none"
                 height="20"
@@ -112,4 +112,4 @@ const AdminHeader = ({ toggleSidebar }: AdminHeaderProps) => {
   )
 }
 
-export default AdminHeader
+export default memo(AdminHeader)
