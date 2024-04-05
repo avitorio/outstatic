@@ -19,7 +19,7 @@
   "license": "MIT",
   "scripts": {
     "build": "tsup && tailwindcss -i ./src/styles.css -o ./dist/outstatic.css",
-    "dev": "concurrently \"tsup --watch\" \"tailwindcss -i ./src/styles.css -o ./dist/outstatic.css --watch\" \"pnpm generate --watch\"",
+    "dev": "concurrently \"tsup --watch\" \"tailwindcss -i ./src/styles.css -o ./dist/outstatic.css --watch\"",
     "clean": "rm -rf dist",
     "test": "jest --passWithNoTests",
     "typecheck": "tsc --project tsconfig.json --noEmit",

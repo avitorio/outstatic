@@ -1,7 +1,8 @@
 import { GET_COLLECTIONS } from '@/graphql/queries/collections'
 import request from 'graphql-request'
-import useOutstatic from './useOutstatic'
+// import useOutstatic from './useOutstatic'
 import { useQuery } from '@tanstack/react-query'
+import { useOutstaticNew } from './useOstData'
 
 export const useCollections = () => {
   const {
@@ -10,28 +11,31 @@ export const useCollections = () => {
     repoBranch,
     monorepoPath,
     contentPath,
-    session
-  } = useOutstatic()
+    session,
+    isPending
+  } = useOutstaticNew()
 
-  const { isPending, error, data, isFetching } = useQuery({
+  return useQuery({
     queryKey: ['collections'],
     queryFn: async () => {
-      const data = await request(
-        'https://api.github.com/graphql',
-        GET_COLLECTIONS,
-        // variables are type-checked too!
-        {
-          owner: repoOwner,
-          name: repoSlug,
-          contentPath:
-            `${repoBranch}:${
-              monorepoPath ? monorepoPath + '/' : ''
-            }${contentPath}` || ''
-        },
-        {
-          authorization: `Bearer ${session?.access_token}`
-        }
-      )
+      const data = isPending
+        ? null
+        : await request(
+            'https://api.github.com/graphql',
+            GET_COLLECTIONS,
+            // variables are type-checked too!
+            {
+              owner: repoOwner,
+              name: repoSlug,
+              contentPath:
+                `${repoBranch}:${
+                  monorepoPath ? monorepoPath + '/' : ''
+                }${contentPath}` || ''
+            },
+            {
+              authorization: `Bearer ${session?.access_token}`
+            }
+          )
 
       //@ts-ignore
       let collections = data?.repository?.object?.entries
@@ -42,6 +46,4 @@ export const useCollections = () => {
       return collections
     }
   })
-
-  return { isPending, error, data, isFetching }
 }

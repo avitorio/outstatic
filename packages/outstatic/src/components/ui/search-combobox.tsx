@@ -21,16 +21,17 @@ export function SearchCombobox({
   value,
   setValue,
   onValueChange,
-  isLoading = false
+  isLoading = false,
+  disabled = false
 }: {
   data: { value: string; label: string }[]
   value: string
   setValue: (value: string) => void
   onValueChange: (value: string) => void
   isLoading?: boolean
+  disabled?: boolean
 }) {
   const [open, setOpen] = React.useState(false)
-
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
@@ -39,6 +40,7 @@ export function SearchCombobox({
           role="combobox"
           aria-expanded={open}
           className="w-[320px] font-normal justify-between"
+          disabled={disabled}
         >
           {value
             ? data.find((dataRecord) => dataRecord.value === value)?.label
