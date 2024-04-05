@@ -10,6 +10,7 @@ import { deepReplace } from '@/utils/deepReplace'
 import { useDocumentUpdateEffect } from '@/utils/hooks/useDocumentUpdateEffect'
 import useFileQuery from '@/utils/hooks/useFileQuery'
 import { useFileStore } from '@/utils/hooks/useFileStore'
+import { useOutstaticNew } from '@/utils/hooks/useOstData'
 import useOutstatic from '@/utils/hooks/useOutstatic'
 import useSubmitDocument from '@/utils/hooks/useSubmitDocument'
 import useTipTap from '@/utils/hooks/useTipTap'
@@ -27,7 +28,8 @@ export default function EditDocument({ collection }: { collection: string }) {
     pathname.split('/').pop() || `/${collection}/new`
   )
   const [loading, setLoading] = useState(false)
-  const { hasChanges, setHasChanges, basePath, session } = useOutstatic()
+  const { basePath, session } = useOutstaticNew()
+  const { hasChanges, setHasChanges } = useOutstatic()
   const [showDelete, setShowDelete] = useState(false)
   const [documentSchema, setDocumentSchema] = useState(editDocumentSchema)
   const methods = useForm<Document>({ resolver: yupResolver(documentSchema) })

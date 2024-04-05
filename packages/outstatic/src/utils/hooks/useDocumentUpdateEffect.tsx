@@ -6,7 +6,8 @@ import matter from 'gray-matter'
 import { Dispatch, SetStateAction, useEffect } from 'react'
 import { UseFormReturn } from 'react-hook-form'
 import useFileQuery from './useFileQuery'
-import useOutstatic from './useOutstatic'
+import { useOutstaticNew } from './useOstData'
+// import useOutstaticNew from './useOutstatic'
 
 interface UseDocumentUpdateEffectProps {
   collection: string
@@ -27,7 +28,7 @@ export const useDocumentUpdateEffect = ({
   setHasChanges,
   setShowDelete
 }: UseDocumentUpdateEffectProps) => {
-  const { basePath } = useOutstatic()
+  const { basePath } = useOutstaticNew()
   const { data: documentQueryData } = useFileQuery({
     file: `${collection}/${slug}.md`,
     skip: slug === 'new' || !slug

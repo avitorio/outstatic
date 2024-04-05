@@ -5,12 +5,14 @@ import { OutstaticProvider } from '@/context'
 import { useContentLock } from '@/utils/hooks/useContentLock'
 import { useApollo } from '@/utils/apollo'
 import { ApolloProvider } from '@apollo/client'
-import cookies from 'js-cookie'
 import { AdminHeader, Sidebar } from '@/components'
 import { Router } from '../router'
 import Welcome from './welcome'
 import Login from './login'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import Onboarding from './onboarding'
+import { AdminLoading } from '@/components/AdminLoading'
+import { useInitialData, useOutstaticNew } from '@/utils/hooks/useOstData'
 
 // Create a client
 const queryClient = new QueryClient()
@@ -22,6 +24,8 @@ export const Client = ({
   ostData: OutstaticData
   params: { ost: string[] }
 }) => {
+  useInitialData(ostData)
+  const { repoSlug, isPending } = useOutstaticNew()
   const [openSidebar, setOpenSidebar] = useState(false)
   const toggleSidebar = () => {
     setOpenSidebar(!openSidebar)
@@ -40,7 +44,13 @@ export const Client = ({
         <div className="flex md:grow flex-col-reverse justify-between md:flex-row md:min-h-[calc(100vh-56px)]">
           <div className="flex w-full">
             <Sidebar isOpen={openSidebar} />
-            <Router params={params} />
+            {isPending ? (
+              <AdminLoading />
+            ) : !repoSlug ? (
+              <Onboarding />
+            ) : (
+              <Router params={params} />
+            )}
           </div>
         </div>
       </ApolloProvider>
@@ -53,13 +63,6 @@ export const OstClient = (props: {
   params: { ost: string[] }
 }) => {
   const { ostData } = props
-  const ostSettings = JSON.parse(cookies.get('ost_settings') || '{}')
-
-  if (!ostData.repoSlug) {
-    if (ostSettings) {
-      ostData.repoSlug = ostSettings?.repoSlug
-    }
-  }
 
   const { hasChanges, setHasChanges } = useContentLock()
 

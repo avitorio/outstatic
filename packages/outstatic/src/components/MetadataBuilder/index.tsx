@@ -12,6 +12,7 @@ import { chunk } from '@/utils/chunk'
 import { createCommitApi } from '@/utils/createCommitApi'
 import { hashFromUrl } from '@/utils/hashFromUrl'
 import useOid from '@/utils/hooks/useOid'
+import { useOutstaticNew } from '@/utils/hooks/useOstData'
 import useOutstatic from '@/utils/hooks/useOutstatic'
 import { stringifyMetadata } from '@/utils/metadata/stringify'
 import { MetadataSchema, OutstaticSchema } from '@/utils/metadata/types'
@@ -47,7 +48,9 @@ export const MetadataBuilder: React.FC<MetadataBuilderProps> = ({
   const [commit] = useCreateCommitMutation()
 
   const { repoOwner, repoSlug, repoBranch, contentPath, monorepoPath } =
-    useOutstatic()
+    useOutstaticNew()
+
+  console.log({ repoOwner, repoSlug, repoBranch, contentPath, monorepoPath })
 
   const rootPath = [monorepoPath, contentPath].filter(Boolean).join('/')
 

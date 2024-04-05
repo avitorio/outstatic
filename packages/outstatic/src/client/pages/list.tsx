@@ -2,7 +2,8 @@ import { AdminLayout, DocumentsTable } from '@/components'
 import { Button } from '@/components/ui/button'
 import { useDocumentsQuery } from '@/graphql/generated'
 import { OstDocument } from '@/types/public'
-import useOutstatic from '@/utils/hooks/useOutstatic'
+import { useOutstaticNew } from '@/utils/hooks/useOstData'
+// import useOutstatic from '@/utils/hooks/useOutstatic'
 import { GraphQLError } from 'graphql'
 import matter from 'gray-matter'
 import Link from 'next/link'
@@ -31,7 +32,7 @@ export default function List({ collection }: ListProps) {
     contentPath,
     monorepoPath,
     session
-  } = useOutstatic()
+  } = useOutstaticNew()
 
   const { data, error, loading } = useDocumentsQuery({
     variables: {
@@ -48,7 +49,7 @@ export default function List({ collection }: ListProps) {
         graphQLErrors &&
         (graphQLErrors?.[0] as GQLErrorExtended)?.type === 'NOT_FOUND'
       ) {
-        router.push('/api/outstatic/signout')
+        // router.push('/api/outstatic/signout')
         return null
       }
       return null

@@ -5,7 +5,7 @@ const CollectionsList = () => {
   const { data: collections } = useCollections()
 
   return (
-    <ul className="space-y-2">
+    <>
       <li>
         <Link href="/outstatic">
           <div className="flex cursor-pointer items-center rounded-lg p-2 text-base font-normal text-gray-900 hover:bg-gray-100">
@@ -72,7 +72,7 @@ const CollectionsList = () => {
           </div>
         </Link>
       </li>
-    </ul>
+    </>
   )
 }
 

@@ -4,6 +4,8 @@ import useOutstatic from '@/utils/hooks/useOutstatic'
 import cookies from 'js-cookie'
 import { useEffect, useState } from 'react'
 import dynamic from 'next/dynamic'
+import { useCollections } from '@/utils/hooks/useCollections'
+import { Skeleton } from '../ui/skeleton'
 
 const CollectionsList = dynamic(() => import('./CollectionsList'), {
   ssr: false
@@ -20,6 +22,7 @@ type Broadcast = {
 }
 
 const Sidebar = ({ isOpen = false }: SidebarProps) => {
+  const { isPending } = useCollections()
   const [broadcast, setBroadcast] = useState<Broadcast | null>(null)
   const { repoOwner, repoSlug } = useOutstatic()
 
@@ -72,7 +75,17 @@ const Sidebar = ({ isOpen = false }: SidebarProps) => {
       aria-label="Sidebar"
     >
       <div className="scrollbar-hide flex h-full max-h-[calc(100vh-96px)] flex-col justify-between overflow-y-scroll bg-gray-50 py-4 px-3">
-        <CollectionsList />
+        <ul className="space-y-2">
+          {isPending ? (
+            Array.from({ length: 3 }).map((_, index) => (
+              <li key={index}>
+                <Skeleton className="w-full h-8" />
+              </li>
+            ))
+          ) : (
+            <CollectionsList />
+          )}
+        </ul>
         {broadcast ? (
           <div
             className="border-gray mt-6 rounded-lg border bg-white p-4"
