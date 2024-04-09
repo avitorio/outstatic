@@ -1,99 +1,23 @@
 import { AdminLayout, DocumentsTable } from '@/components'
+import { AdminLoading } from '@/components/AdminLoading'
 import { Button } from '@/components/ui/button'
-import { useDocumentsQuery } from '@/graphql/generated'
-import { OstDocument } from '@/types/public'
-import { useOutstaticNew } from '@/utils/hooks/useOstData'
-// import useOutstatic from '@/utils/hooks/useOutstatic'
-import { GraphQLError } from 'graphql'
-import matter from 'gray-matter'
+import { useGetDocuments } from '@/utils/hooks/useGetDocuments'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 import { singular } from 'pluralize'
-
-type GQLErrorExtended = GraphQLError & { type: string }
+import Collections from './collections'
 
 type ListProps = {
   collection: string
 }
 
-const options = {
-  year: 'numeric' as const,
-  month: 'long' as const,
-  day: 'numeric' as const
-}
-
 export default function List({ collection }: ListProps) {
-  const router = useRouter()
+  const { data: documents, isError, isPending } = useGetDocuments()
 
-  const {
-    repoOwner,
-    repoSlug,
-    repoBranch,
-    contentPath,
-    monorepoPath,
-    session
-  } = useOutstaticNew()
-
-  const { data, error, loading } = useDocumentsQuery({
-    variables: {
-      owner: repoOwner || session?.user?.login || '',
-      name: repoSlug || '',
-      contentPath:
-        `${repoBranch}:${
-          monorepoPath ? monorepoPath + '/' : ''
-        }${contentPath}/${collection}` || ''
-    },
-    fetchPolicy: 'network-only',
-    onError: ({ graphQLErrors }) => {
-      if (
-        graphQLErrors &&
-        (graphQLErrors?.[0] as GQLErrorExtended)?.type === 'NOT_FOUND'
-      ) {
-        // router.push('/api/outstatic/signout')
-        return null
-      }
-      return null
-    }
-  })
-
-  let documents: OstDocument[] = []
-
-  const entries =
-    data?.repository?.object?.__typename === 'Tree' &&
-    data?.repository?.object?.entries
-
-  if (entries) {
-    entries.forEach((document) => {
-      if (document.name.slice(-3) === '.md') {
-        const { data } = matter(
-          document?.object?.__typename === 'Blob' && document?.object?.text
-            ? document?.object?.text
-            : ''
-        )
-
-        const listData = { ...data }
-        delete listData.coverImage
-
-        documents.push({
-          ...(listData as OstDocument),
-          author: listData.author.name || '',
-          publishedAt: new Date(listData.publishedAt).toLocaleDateString(
-            'en-US',
-            options
-          ),
-          slug: document.name.replace('.md', '')
-        })
-      }
-    })
-
-    documents.sort((a, b) => Number(b.publishedAt) - Number(a.publishedAt))
-  }
+  if (isPending) return <AdminLoading />
+  if (isError) return <Collections />
 
   return (
-    <AdminLayout
-      error={error}
-      title={collection[0].toUpperCase() + collection.slice(1)}
-    >
+    <AdminLayout title={collection[0].toUpperCase() + collection.slice(1)}>
       <div className="mb-8 flex h-12 items-center capitalize">
         <h1 className="mr-12 text-2xl">{collection}</h1>
         <Button asChild>
@@ -107,7 +31,7 @@ export default function List({ collection }: ListProps) {
           <DocumentsTable documents={documents} collection={collection} />
         </div>
       )}
-      {documents.length === 0 && !loading && (
+      {documents.length === 0 && !isPending && (
         <div className="max-w-2xl">
           <div className="absolute bottom-0 left-0 md:left-64 right-0 md:top-36">
             <svg
