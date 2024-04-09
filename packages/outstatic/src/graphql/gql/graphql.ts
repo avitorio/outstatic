@@ -30764,6 +30764,38 @@ export type CollectionsQuery = {
   } | null
 }
 
+export type DocumentsQueryVariables = Exact<{
+  owner: Scalars['String']['input']
+  name: Scalars['String']['input']
+  contentPath: Scalars['String']['input']
+}>
+
+export type DocumentsQuery = {
+  __typename?: 'Query'
+  repository?: {
+    __typename?: 'Repository'
+    id: string
+    object?:
+      | { __typename?: 'Blob' }
+      | { __typename?: 'Commit' }
+      | { __typename?: 'Tag' }
+      | {
+          __typename?: 'Tree'
+          entries?: Array<{
+            __typename?: 'TreeEntry'
+            name: string
+            object?:
+              | { __typename?: 'Blob'; text?: string | null }
+              | { __typename?: 'Commit' }
+              | { __typename?: 'Tag' }
+              | { __typename?: 'Tree' }
+              | null
+          }> | null
+        }
+      | null
+  } | null
+}
+
 export const CreateCommitDocument = {
   kind: 'Document',
   definitions: [
@@ -30950,3 +30982,153 @@ export const CollectionsDocument = {
     }
   ]
 } as unknown as DocumentNode<CollectionsQuery, CollectionsQueryVariables>
+export const DocumentsDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'Documents' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'owner' }
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } }
+          }
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'name' } },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } }
+          }
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'contentPath' }
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } }
+          }
+        }
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'repository' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'owner' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'owner' }
+                }
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'name' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'name' }
+                }
+              }
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'object' },
+                  arguments: [
+                    {
+                      kind: 'Argument',
+                      name: { kind: 'Name', value: 'expression' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'contentPath' }
+                      }
+                    }
+                  ],
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'InlineFragment',
+                        typeCondition: {
+                          kind: 'NamedType',
+                          name: { kind: 'Name', value: 'Tree' }
+                        },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'entries' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'name' }
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'object' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'InlineFragment',
+                                          typeCondition: {
+                                            kind: 'NamedType',
+                                            name: {
+                                              kind: 'Name',
+                                              value: 'Blob'
+                                            }
+                                          },
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'text'
+                                                }
+                                              }
+                                            ]
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                ]
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+} as unknown as DocumentNode<DocumentsQuery, DocumentsQueryVariables>
