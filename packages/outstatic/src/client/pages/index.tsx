@@ -9,28 +9,12 @@ import { AdminHeader, Sidebar } from '@/components'
 import { Router } from '../router'
 import Welcome from './welcome'
 import Login from './login'
-import {
-  QueryCache,
-  QueryClient,
-  QueryClientProvider
-} from '@tanstack/react-query'
+import { QueryClientProvider } from '@tanstack/react-query'
 import Onboarding from './onboarding'
 import { AdminLoading } from '@/components/AdminLoading'
 import { useInitialData, useOutstaticNew } from '@/utils/hooks/useOstData'
-import { toast, Toaster } from 'sonner'
-
-// Create a client
-const queryClient = new QueryClient({
-  queryCache: new QueryCache({
-    onError: (error, query) => {
-      if (query.state.error !== undefined) {
-        toast.error(
-          (query?.meta?.errorMessage as string) || 'Something went wrong.'
-        )
-      }
-    }
-  })
-})
+import { Toaster } from 'sonner'
+import { queryClient } from '@/utils/react-query/queryClient'
 
 export const Client = ({
   ostData,

@@ -16,8 +16,11 @@ export const useCollections = () => {
   } = useOutstaticNew()
 
   return useQuery({
-    queryKey: ['collections'],
+    queryKey: ['collections', { repoOwner, repoSlug, repoBranch, contentPath }],
     queryFn: async () => {
+      if (!repoOwner || !repoSlug || !repoBranch || !contentPath) {
+        return []
+      }
       const data = isPending
         ? null
         : await request(

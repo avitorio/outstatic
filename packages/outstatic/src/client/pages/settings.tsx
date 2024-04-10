@@ -1,12 +1,13 @@
 import { AdminLayout } from '@/components'
+import GitHubRepoSearch from '@/components/GitHubRepoSearch'
 import { MetadataBuilder } from '@/components/MetadataBuilder'
 import { Button } from '@/components/ui/button'
-import useOutstatic from '@/utils/hooks/useOutstatic'
+import { useOutstaticNew } from '@/utils/hooks/useOstData'
 import { useState } from 'react'
 
 export default function Settings() {
   const [rebuild, setRebuilding] = useState(false)
-  const { repoOwner, repoSlug, repoBranch, contentPath } = useOutstatic()
+  const { repoBranch, contentPath } = useOutstaticNew()
 
   return (
     <AdminLayout title="Settings">
@@ -39,11 +40,7 @@ export default function Settings() {
             <label className="block mb-2 text-sm font-medium text-gray-900">
               Repository
             </label>
-            <input
-              className="cursor-not-allowed block p-2 w-full text-gray-900 bg-gray-50 rounded-lg border border-gray-300 sm:text-sm outline-none"
-              value={`${repoOwner}/${repoSlug}`}
-              readOnly
-            />
+            <GitHubRepoSearch />
           </div>
           <div className="mt-4">
             <label className="block mb-2 text-sm font-medium text-gray-900">

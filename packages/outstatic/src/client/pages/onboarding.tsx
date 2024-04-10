@@ -3,7 +3,7 @@ import GitHubRepoSearch from '@/components/GitHubRepoSearch'
 import useOutstatic from '@/utils/hooks/useOutstatic'
 
 export default function Onboarding() {
-  const { repoSlug, repoBranch, contentPath } = useOutstatic()
+  const { repoBranch, contentPath } = useOutstatic()
 
   return (
     <AdminLayout title="Onboarding">

@@ -42,9 +42,11 @@ export function SearchCombobox({
           className="w-[320px] font-normal justify-between"
           disabled={disabled}
         >
-          {value
-            ? data.find((dataRecord) => dataRecord.value === value)?.label
-            : 'Select a repository'}
+          <span className="block min-w-0 flex-1 text-left h-4">
+            {value
+              ? data.find((dataRecord) => dataRecord.value === value)?.label
+              : 'Select a repository'}
+          </span>
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>

@@ -372,7 +372,7 @@ importers:
     dependencies:
       eslint-config-next: 13.4.4
       eslint-config-prettier: 8.10.0
-      eslint-config-turbo: 1.13.0
+      eslint-config-turbo: 1.13.2
       eslint-plugin-react: 7.32.2
 
   packages/outstatic:
@@ -401,7 +401,9 @@ importers:
       '@radix-ui/react-tabs': ^1.0.4
       '@tailwindcss/typography': ^0.5.4
       '@tanstack/eslint-plugin-query': ^5.28.11
-      '@tanstack/react-query': ^5.28.14
+      '@tanstack/query-sync-storage-persister': ^5.29.0
+      '@tanstack/react-query': ^5.29.0
+      '@tanstack/react-query-persist-client': ^5.29.0
       '@testing-library/jest-dom': ^5.16.5
       '@testing-library/react': ^13.3.0
       '@testing-library/user-event': ^14.4.3
@@ -464,6 +466,7 @@ importers:
       lodash: ^4.17.21
       lowlight: ^1.0
       lucide-react: ^0.260.0
+      lz-string: ^1.5.0
       msw: ^1.0.0
       next: ^13.0.0
       next-connect: ^1.0.0-next.2
@@ -515,7 +518,9 @@ importers:
       '@radix-ui/react-scroll-area': 1.0.5_v3omkd3j3j4hvjwcwz3tjxjnne
       '@radix-ui/react-slot': 1.0.2_4aprenwzvd25d3zno6rr4bqbqq
       '@radix-ui/react-tabs': 1.0.4_v3omkd3j3j4hvjwcwz3tjxjnne
-      '@tanstack/react-query': 5.28.14_react@18.2.0
+      '@tanstack/query-sync-storage-persister': 5.29.0
+      '@tanstack/react-query': 5.29.0_react@18.2.0
+      '@tanstack/react-query-persist-client': 5.29.0_ev7rjbzjccklxjdbcb5mtaqtre
       '@tiptap/core': 2.1.10_@tiptap+pm@2.1.10
       '@tiptap/extension-bubble-menu': 2.1.10_mkj3vq75s4scmbo726flpoxg6y
       '@tiptap/extension-code-block': 2.1.10_mkj3vq75s4scmbo726flpoxg6y
@@ -556,6 +561,7 @@ importers:
       lodash: 4.17.21
       lowlight: 1.20.0
       lucide-react: 0.260.0_react@18.2.0
+      lz-string: 1.5.0
       next-connect: 1.0.0
       next-remove-imports: 1.0.12
       next-session: 4.0.5
@@ -4292,7 +4298,7 @@ packages:
       lodash.isplainobject: 4.0.6
       lodash.merge: 4.6.2
       postcss-selector-parser: 6.0.10
-      tailwindcss: 3.4.1_ts-node@10.9.2
+      tailwindcss: 3.4.1
     dev: true
 
   /@tanstack/eslint-plugin-query/5.28.11_kigkzfftsmftz3xok324pyvzui:
@@ -4307,16 +4313,40 @@ packages:
       - typescript
     dev: true
 
-  /@tanstack/query-core/5.28.13:
-    resolution: {integrity: sha512-C3+CCOcza+mrZ7LglQbjeYEOTEC3LV0VN0eYaIN6GvqAZ8Foegdgch7n6QYPtT4FuLae5ALy+m+ZMEKpD6tMCQ==}
+  /@tanstack/query-core/5.29.0:
+    resolution: {integrity: sha512-WgPTRs58hm9CMzEr5jpISe8HXa3qKQ8CxewdYZeVnA54JrPY9B1CZiwsCoLpLkf0dGRZq+LcX5OiJb0bEsOFww==}
     dev: false
 
-  /@tanstack/react-query/5.28.14_react@18.2.0:
-    resolution: {integrity: sha512-cZqt03Igb3I9tM72qNX5TAAmeYl75Z+k4Mv92VkXIXc2hCrv0fIywd7GN3JV1BBJl4mr7Cc+OOKKOPy8sNVOkA==}
+  /@tanstack/query-persist-client-core/5.29.0:
+    resolution: {integrity: sha512-aQpXqHQIg/GFtsQKUx/g3cMS/P9CFTWITXPlhrICW14E16gmQ+GMwnoXHAnu/kBV4MucfwUFKhVl4rzryltORQ==}
+    dependencies:
+      '@tanstack/query-core': 5.29.0
+    dev: false
+
+  /@tanstack/query-sync-storage-persister/5.29.0:
+    resolution: {integrity: sha512-22l1Sg8BY1nu0E97XZ/vnNwIUR6393g3j053AbC37bGdmVBmXxiVYlZsgXCPakgwk6ryCOKnIgLshumow/5jTw==}
+    dependencies:
+      '@tanstack/query-core': 5.29.0
+      '@tanstack/query-persist-client-core': 5.29.0
+    dev: false
+
+  /@tanstack/react-query-persist-client/5.29.0_ev7rjbzjccklxjdbcb5mtaqtre:
+    resolution: {integrity: sha512-oC0ZHO22znnv6K7ts5iAJQoJMjlyTQnB/952YFuKXKfTVVhmUBec0+tlCQNjdt8b1gY0EF6wixkbz4e3ezjDhg==}
+    peerDependencies:
+      '@tanstack/react-query': ^5.29.0
+      react: ^18.0.0
+    dependencies:
+      '@tanstack/query-persist-client-core': 5.29.0
+      '@tanstack/react-query': 5.29.0_react@18.2.0
+      react: 18.2.0
+    dev: false
+
+  /@tanstack/react-query/5.29.0_react@18.2.0:
+    resolution: {integrity: sha512-yxlhHB73jaBla6h5B6zPaGmQjokkzAhMHN4veotkPNiQ3Ac/mCxgABRZPsJJrgCTvhpcncBZcDBFxaR2B37vug==}
     peerDependencies:
       react: ^18.0.0
     dependencies:
-      '@tanstack/query-core': 5.28.13
+      '@tanstack/query-core': 5.29.0
       react: 18.2.0
     dev: false
 
@@ -7470,12 +7500,12 @@ packages:
       eslint: '>=7.0.0'
     dev: false
 
-  /eslint-config-turbo/1.13.0:
-    resolution: {integrity: sha512-xV13WrEjAJLeo6yqR1YEv5R5WPwNMyw8f4FlK2C4zWMr7e8ZiRg81jajltabEOZdeVboHIQ6gGn+FnSmgdVSSQ==}
+  /eslint-config-turbo/1.13.2:
+    resolution: {integrity: sha512-TzvsMwNJx/P4JYw79iFqbyQApnyT050gW7dBxnNeNVl3pVMnT2rwaFo9Q3Hc49Tp5NANxEwYN9RStF50P/IwGA==}
     peerDependencies:
       eslint: '>6.6.0'
     dependencies:
-      eslint-plugin-turbo: 1.13.0
+      eslint-plugin-turbo: 1.13.2
     dev: false
 
   /eslint-import-resolver-node/0.3.9:
@@ -7769,8 +7799,8 @@ packages:
       semver: 6.3.1
       string.prototype.matchall: 4.0.11
 
-  /eslint-plugin-turbo/1.13.0:
-    resolution: {integrity: sha512-y9YRXMSOc43SijAFFkDnrFpstV2k/w6Qmbr5mO/w7tUGzDWkHc87btLa0e/L2PJxod5bzNwsmzeyj8c/AsMMCQ==}
+  /eslint-plugin-turbo/1.13.2:
+    resolution: {integrity: sha512-QNaihF0hTRjfOBd1SLHrftm8V3pOU35CNS/C0/Z6qY1xxdL1PSv4IctEIldSMX7/A1jOPYwMPO7wYwPXgjgp/g==}
     peerDependencies:
       eslint: '>6.6.0'
     dependencies:
@@ -10194,7 +10224,6 @@ packages:
   /lz-string/1.5.0:
     resolution: {integrity: sha512-h5bgJWpxJNswbU7qCrV0tIKQCaS3blPDrqKWx+QxzuzL1zGUzij9XCWLrSLsJPu5t+eWA/ycetzYAO5IOMcWAQ==}
     hasBin: true
-    dev: true
 
   /make-dir/4.0.0:
     resolution: {integrity: sha512-hXdUTZYIVOt1Ex//jAQi+wTZZpUpwBj/0QsOzqegb3rGMMeJiSEu5xLHnYfBrRV4RH2+OCSOO95Is/7x1WJ4bw==}
