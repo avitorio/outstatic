@@ -285,7 +285,7 @@ importers:
         version: 0.2.1(next@14.2.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       outstatic:
         specifier: latest
-        version: 1.4.9(@types/react-dom@18.3.0)(@types/react@18.3.2)(graphql-ws@5.12.1(graphql@16.8.1))(next@14.2.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(solid-js@1.8.17)(svelte@4.2.16)(vue@3.4.27(typescript@5.1.3))
+        version: 1.4.9(@types/react-dom@18.3.0)(@types/react@18.3.2)(graphql-ws@5.12.1)(next@14.2.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(solid-js@1.8.17)(svelte@4.2.16)(vue@3.4.27(typescript@5.1.3))
       react:
         specifier: ^18
         version: 18.3.1
@@ -379,7 +379,7 @@ importers:
         version: 13.5.6(@babel/core@7.24.5)(babel-plugin-macros@3.1.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       outstatic:
         specifier: latest
-        version: 1.4.9(@types/react-dom@18.3.0)(@types/react@18.3.2)(graphql-ws@5.12.1)(next@13.5.6(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(solid-js@1.8.17)(svelte@4.2.16)(vue@3.4.27(typescript@5.1.3))
+        version: 1.4.9(@types/react-dom@18.3.0)(@types/react@18.3.2)(graphql-ws@5.12.1(graphql@16.8.1))(next@13.5.6(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(solid-js@1.8.17)(svelte@4.2.16)(vue@3.4.27(typescript@5.1.3))
       react:
         specifier: ^18
         version: 18.3.1
@@ -592,9 +592,15 @@ importers:
       '@radix-ui/react-tooltip':
         specifier: ^1.0.7
         version: 1.1.2(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@tanstack/query-sync-storage-persister':
+        specifier: ^5.29.0
+        version: 5.54.1
       '@tanstack/react-query':
-        specifier: ^5.28.14
+        specifier: ^5.29.0
         version: 5.55.0(react@18.3.1)
+      '@tanstack/react-query-persist-client':
+        specifier: ^5.29.0
+        version: 5.55.0(@tanstack/react-query@5.55.0(react@18.3.1))(react@18.3.1)
       '@tiptap/core':
         specifier: 2.1.10
         version: 2.1.10(@tiptap/pm@2.1.10)
@@ -715,6 +721,9 @@ importers:
       lucide-react:
         specifier: ^0.260.0
         version: 0.260.0(react@18.3.1)
+      lz-string:
+        specifier: ^1.5.0
+        version: 1.5.0
       next-connect:
         specifier: ^1.0.0-next.2
         version: 1.0.0
@@ -2919,6 +2928,18 @@ packages:
 
   '@tanstack/query-core@5.54.1':
     resolution: {integrity: sha512-hKS+WRpT5zBFip21pB6Jx1C0hranWQrbv5EJ7qPoiV5MYI3C8rTCqWC9DdBseiPT1JgQWh8Y55YthuYZNiw3Xw==}
+
+  '@tanstack/query-persist-client-core@5.54.1':
+    resolution: {integrity: sha512-qmBkrC5HA3XHwwrx/pWjegncQFcmuoAaffwbrXm07OrsOxxeTGLt8aFl8RYbWAs75a8+9uneqVFQfgv5QRqxBA==}
+
+  '@tanstack/query-sync-storage-persister@5.54.1':
+    resolution: {integrity: sha512-1c5JkmhUFe8rcZeY03dZpbHTPAMqmdZ/0FqM/eCUa4dnOFS+mFL2cifeV3dyDBe2uL4XdwLUi2SDzkqVcv4l5A==}
+
+  '@tanstack/react-query-persist-client@5.55.0':
+    resolution: {integrity: sha512-NvUcyc+MaaU/aV00Jnl+KYCMoYWx2s0ycuSkc+ZArvBlioy9NAqrKgyiWn8nXGzbew6bLxg82bgupOr+ivzuLA==}
+    peerDependencies:
+      '@tanstack/react-query': ^5.55.0
+      react: ^18 || ^19
 
   '@tanstack/react-query@5.55.0':
     resolution: {integrity: sha512-2uYuxEbRQD8TORUiTUacEOwt1e8aoSqUOJFGY5TUrh6rQ3U85zrMS2wvbNhBhXGh6Vj69QDCP2yv8tIY7joo6Q==}
@@ -11627,6 +11648,21 @@ snapshots:
 
   '@tanstack/query-core@5.54.1': {}
 
+  '@tanstack/query-persist-client-core@5.54.1':
+    dependencies:
+      '@tanstack/query-core': 5.54.1
+
+  '@tanstack/query-sync-storage-persister@5.54.1':
+    dependencies:
+      '@tanstack/query-core': 5.54.1
+      '@tanstack/query-persist-client-core': 5.54.1
+
+  '@tanstack/react-query-persist-client@5.55.0(@tanstack/react-query@5.55.0(react@18.3.1))(react@18.3.1)':
+    dependencies:
+      '@tanstack/query-persist-client-core': 5.54.1
+      '@tanstack/react-query': 5.55.0(react@18.3.1)
+      react: 18.3.1
+
   '@tanstack/react-query@5.55.0(react@18.3.1)':
     dependencies:
       '@tanstack/query-core': 5.54.1
@@ -16997,95 +17033,7 @@ snapshots:
       - vue
       - webpack
 
-  outstatic@1.4.9(@types/react-dom@18.3.0)(@types/react@18.3.2)(graphql-ws@5.12.1(graphql@16.8.1))(next@14.2.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(solid-js@1.8.17)(svelte@4.2.16)(vue@3.4.27(typescript@5.1.3)):
-    dependencies:
-      '@apollo/client': 3.10.3(@types/react@18.3.2)(graphql-ws@5.12.1(graphql@16.8.1))(graphql@16.8.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@dnd-kit/core': 6.1.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@dnd-kit/modifiers': 7.0.0(@dnd-kit/core@6.1.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)
-      '@dnd-kit/sortable': 8.0.0(@dnd-kit/core@6.1.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)
-      '@dnd-kit/utilities': 3.2.2(react@18.3.1)
-      '@hapi/iron': 7.0.1
-      '@hookform/resolvers': 2.9.11(react-hook-form@7.52.2(react@18.3.1))
-      '@radix-ui/react-checkbox': 1.1.1(@types/react-dom@18.3.0)(@types/react@18.3.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@radix-ui/react-icons': 1.3.0(react@18.3.1)
-      '@radix-ui/react-slot': 1.1.0(@types/react@18.3.2)(react@18.3.1)
-      '@radix-ui/react-tooltip': 1.1.2(@types/react-dom@18.3.0)(@types/react@18.3.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@tiptap/core': 2.1.10(@tiptap/pm@2.1.10)
-      '@tiptap/extension-bubble-menu': 2.1.10(@tiptap/core@2.1.10(@tiptap/pm@2.1.10))(@tiptap/pm@2.1.10)
-      '@tiptap/extension-code-block': 2.1.10(@tiptap/core@2.1.10(@tiptap/pm@2.1.10))(@tiptap/pm@2.1.10)
-      '@tiptap/extension-code-block-lowlight': 2.1.10(@tiptap/core@2.1.10(@tiptap/pm@2.1.10))(@tiptap/extension-code-block@2.1.10(@tiptap/core@2.1.10(@tiptap/pm@2.1.10))(@tiptap/pm@2.1.10))(@tiptap/pm@2.1.10)
-      '@tiptap/extension-gapcursor': 2.1.0(@tiptap/core@2.1.10(@tiptap/pm@2.1.10))(@tiptap/pm@2.1.10)
-      '@tiptap/extension-highlight': 2.1.10(@tiptap/core@2.1.10(@tiptap/pm@2.1.10))
-      '@tiptap/extension-horizontal-rule': 2.1.10(@tiptap/core@2.1.10(@tiptap/pm@2.1.10))(@tiptap/pm@2.1.10)
-      '@tiptap/extension-image': 2.1.10(@tiptap/core@2.1.10(@tiptap/pm@2.1.10))
-      '@tiptap/extension-link': 2.1.10(@tiptap/core@2.1.10(@tiptap/pm@2.1.10))(@tiptap/pm@2.1.10)
-      '@tiptap/extension-placeholder': 2.1.10(@tiptap/core@2.1.10(@tiptap/pm@2.1.10))(@tiptap/pm@2.1.10)
-      '@tiptap/extension-table': 2.1.0(@tiptap/core@2.1.10(@tiptap/pm@2.1.10))(@tiptap/pm@2.1.10)
-      '@tiptap/extension-table-cell': 2.1.0(@tiptap/core@2.1.10(@tiptap/pm@2.1.10))
-      '@tiptap/extension-table-header': 2.1.0(@tiptap/core@2.1.10(@tiptap/pm@2.1.10))
-      '@tiptap/extension-table-row': 2.1.0(@tiptap/core@2.1.10(@tiptap/pm@2.1.10))
-      '@tiptap/extension-underline': 2.1.10(@tiptap/core@2.1.10(@tiptap/pm@2.1.10))
-      '@tiptap/pm': 2.1.10
-      '@tiptap/react': 2.1.10(@tiptap/core@2.1.10(@tiptap/pm@2.1.10))(@tiptap/pm@2.1.10)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@tiptap/starter-kit': 2.1.10(@tiptap/pm@2.1.10)
-      '@tiptap/suggestion': 2.1.10(@tiptap/core@2.1.10(@tiptap/pm@2.1.10))(@tiptap/pm@2.1.10)
-      ai: 2.2.37(react@18.3.1)(solid-js@1.8.17)(svelte@4.2.16)(vue@3.4.27(typescript@5.1.3))
-      camelcase: 6.3.0
-      change-case: 5.4.4
-      class-variance-authority: 0.7.0
-      clsx: 1.2.1
-      cookie: 0.5.0
-      cross-fetch: 4.0.0(encoding@0.1.13)
-      dompurify: 2.5.3
-      encoding: 0.1.13
-      graphql: 16.8.1
-      gray-matter: 4.0.3
-      highlight.js: 11.9.0
-      imurmurhash: 0.1.4
-      js-base64: 3.7.7
-      js-cookie: 3.0.5
-      json-stable-stringify: 1.1.1
-      lowlight: 1.20.0
-      lucide-react: 0.260.0(react@18.3.1)
-      next: 14.2.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      next-connect: 1.0.0
-      next-remove-imports: 1.0.12(webpack@5.91.0(esbuild@0.17.19))
-      next-session: 4.0.5
-      openai: 4.45.0(encoding@0.1.13)
-      openai-edge: 1.2.2
-      pluralize: 8.0.0
-      postcss: 8.4.41
-      react: 18.3.1
-      react-datepicker: 6.9.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      react-dom: 18.3.1(react@18.3.1)
-      react-hook-form: 7.52.2(react@18.3.1)
-      react-select: 5.8.0(@types/react@18.3.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      react-textarea-autosize: 8.5.3(@types/react@18.3.2)(react@18.3.1)
-      sift: 16.0.1
-      sonner: 0.6.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      swr: 1.3.0(react@18.3.1)
-      tailwind-merge: 1.14.0
-      thenby: 1.3.4
-      tippy.js: 6.3.7
-      tiptap-markdown: 0.8.1(@tiptap/core@2.1.10(@tiptap/pm@2.1.10))
-      transliteration: 2.3.5
-      url-slug: 3.0.6
-      use-debounce: 9.0.4(react@18.3.1)
-      yup: 0.32.11
-      zustand: 4.5.2(@types/react@18.3.2)(react@18.3.1)
-    transitivePeerDependencies:
-      - '@types/react'
-      - '@types/react-dom'
-      - graphql-ws
-      - immer
-      - solid-js
-      - subscriptions-transport-ws
-      - supports-color
-      - svelte
-      - vue
-      - webpack
-
-  outstatic@1.4.9(@types/react-dom@18.3.0)(@types/react@18.3.2)(graphql-ws@5.12.1)(next@13.5.6(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(solid-js@1.8.17)(svelte@4.2.16)(vue@3.4.27(typescript@5.1.3)):
+  outstatic@1.4.9(@types/react-dom@18.3.0)(@types/react@18.3.2)(graphql-ws@5.12.1(graphql@16.8.1))(next@13.5.6(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(solid-js@1.8.17)(svelte@4.2.16)(vue@3.4.27(typescript@5.1.3)):
     dependencies:
       '@apollo/client': 3.10.3(@types/react@18.3.2)(graphql-ws@5.12.1(graphql@16.8.1))(graphql@16.8.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@dnd-kit/core': 6.1.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -17136,6 +17084,94 @@ snapshots:
       lowlight: 1.20.0
       lucide-react: 0.260.0(react@18.3.1)
       next: 13.5.6(@babel/core@7.24.5)(babel-plugin-macros@3.1.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      next-connect: 1.0.0
+      next-remove-imports: 1.0.12(webpack@5.91.0(esbuild@0.17.19))
+      next-session: 4.0.5
+      openai: 4.45.0(encoding@0.1.13)
+      openai-edge: 1.2.2
+      pluralize: 8.0.0
+      postcss: 8.4.41
+      react: 18.3.1
+      react-datepicker: 6.9.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      react-dom: 18.3.1(react@18.3.1)
+      react-hook-form: 7.52.2(react@18.3.1)
+      react-select: 5.8.0(@types/react@18.3.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      react-textarea-autosize: 8.5.3(@types/react@18.3.2)(react@18.3.1)
+      sift: 16.0.1
+      sonner: 0.6.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      swr: 1.3.0(react@18.3.1)
+      tailwind-merge: 1.14.0
+      thenby: 1.3.4
+      tippy.js: 6.3.7
+      tiptap-markdown: 0.8.1(@tiptap/core@2.1.10(@tiptap/pm@2.1.10))
+      transliteration: 2.3.5
+      url-slug: 3.0.6
+      use-debounce: 9.0.4(react@18.3.1)
+      yup: 0.32.11
+      zustand: 4.5.2(@types/react@18.3.2)(react@18.3.1)
+    transitivePeerDependencies:
+      - '@types/react'
+      - '@types/react-dom'
+      - graphql-ws
+      - immer
+      - solid-js
+      - subscriptions-transport-ws
+      - supports-color
+      - svelte
+      - vue
+      - webpack
+
+  outstatic@1.4.9(@types/react-dom@18.3.0)(@types/react@18.3.2)(graphql-ws@5.12.1)(next@14.2.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(solid-js@1.8.17)(svelte@4.2.16)(vue@3.4.27(typescript@5.1.3)):
+    dependencies:
+      '@apollo/client': 3.10.3(@types/react@18.3.2)(graphql-ws@5.12.1(graphql@16.8.1))(graphql@16.8.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@dnd-kit/core': 6.1.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@dnd-kit/modifiers': 7.0.0(@dnd-kit/core@6.1.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)
+      '@dnd-kit/sortable': 8.0.0(@dnd-kit/core@6.1.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)
+      '@dnd-kit/utilities': 3.2.2(react@18.3.1)
+      '@hapi/iron': 7.0.1
+      '@hookform/resolvers': 2.9.11(react-hook-form@7.52.2(react@18.3.1))
+      '@radix-ui/react-checkbox': 1.1.1(@types/react-dom@18.3.0)(@types/react@18.3.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@radix-ui/react-icons': 1.3.0(react@18.3.1)
+      '@radix-ui/react-slot': 1.1.0(@types/react@18.3.2)(react@18.3.1)
+      '@radix-ui/react-tooltip': 1.1.2(@types/react-dom@18.3.0)(@types/react@18.3.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@tiptap/core': 2.1.10(@tiptap/pm@2.1.10)
+      '@tiptap/extension-bubble-menu': 2.1.10(@tiptap/core@2.1.10(@tiptap/pm@2.1.10))(@tiptap/pm@2.1.10)
+      '@tiptap/extension-code-block': 2.1.10(@tiptap/core@2.1.10(@tiptap/pm@2.1.10))(@tiptap/pm@2.1.10)
+      '@tiptap/extension-code-block-lowlight': 2.1.10(@tiptap/core@2.1.10(@tiptap/pm@2.1.10))(@tiptap/extension-code-block@2.1.10(@tiptap/core@2.1.10(@tiptap/pm@2.1.10))(@tiptap/pm@2.1.10))(@tiptap/pm@2.1.10)
+      '@tiptap/extension-gapcursor': 2.1.0(@tiptap/core@2.1.10(@tiptap/pm@2.1.10))(@tiptap/pm@2.1.10)
+      '@tiptap/extension-highlight': 2.1.10(@tiptap/core@2.1.10(@tiptap/pm@2.1.10))
+      '@tiptap/extension-horizontal-rule': 2.1.10(@tiptap/core@2.1.10(@tiptap/pm@2.1.10))(@tiptap/pm@2.1.10)
+      '@tiptap/extension-image': 2.1.10(@tiptap/core@2.1.10(@tiptap/pm@2.1.10))
+      '@tiptap/extension-link': 2.1.10(@tiptap/core@2.1.10(@tiptap/pm@2.1.10))(@tiptap/pm@2.1.10)
+      '@tiptap/extension-placeholder': 2.1.10(@tiptap/core@2.1.10(@tiptap/pm@2.1.10))(@tiptap/pm@2.1.10)
+      '@tiptap/extension-table': 2.1.0(@tiptap/core@2.1.10(@tiptap/pm@2.1.10))(@tiptap/pm@2.1.10)
+      '@tiptap/extension-table-cell': 2.1.0(@tiptap/core@2.1.10(@tiptap/pm@2.1.10))
+      '@tiptap/extension-table-header': 2.1.0(@tiptap/core@2.1.10(@tiptap/pm@2.1.10))
+      '@tiptap/extension-table-row': 2.1.0(@tiptap/core@2.1.10(@tiptap/pm@2.1.10))
+      '@tiptap/extension-underline': 2.1.10(@tiptap/core@2.1.10(@tiptap/pm@2.1.10))
+      '@tiptap/pm': 2.1.10
+      '@tiptap/react': 2.1.10(@tiptap/core@2.1.10(@tiptap/pm@2.1.10))(@tiptap/pm@2.1.10)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@tiptap/starter-kit': 2.1.10(@tiptap/pm@2.1.10)
+      '@tiptap/suggestion': 2.1.10(@tiptap/core@2.1.10(@tiptap/pm@2.1.10))(@tiptap/pm@2.1.10)
+      ai: 2.2.37(react@18.3.1)(solid-js@1.8.17)(svelte@4.2.16)(vue@3.4.27(typescript@5.1.3))
+      camelcase: 6.3.0
+      change-case: 5.4.4
+      class-variance-authority: 0.7.0
+      clsx: 1.2.1
+      cookie: 0.5.0
+      cross-fetch: 4.0.0(encoding@0.1.13)
+      dompurify: 2.5.3
+      encoding: 0.1.13
+      graphql: 16.8.1
+      gray-matter: 4.0.3
+      highlight.js: 11.9.0
+      imurmurhash: 0.1.4
+      js-base64: 3.7.7
+      js-cookie: 3.0.5
+      json-stable-stringify: 1.1.1
+      lowlight: 1.20.0
+      lucide-react: 0.260.0(react@18.3.1)
+      next: 14.2.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       next-connect: 1.0.0
       next-remove-imports: 1.0.12(webpack@5.91.0(esbuild@0.17.19))
       next-session: 4.0.5

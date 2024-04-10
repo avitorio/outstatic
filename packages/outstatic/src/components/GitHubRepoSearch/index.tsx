@@ -4,22 +4,29 @@ import debounce from 'lodash/debounce'
 import React, { useEffect, useState } from 'react'
 
 import { SearchCombobox } from '@/components/ui/search-combobox'
-import cookies from 'js-cookie'
-import { useOstData } from '@/utils/hooks/useOstData'
+import {
+  useInitialData,
+  useLocalData,
+  useOutstaticNew
+} from '@/utils/hooks/useOstData'
 
 interface Repository {
-  id: number
-  html_url: string
   full_name: string
-  private: boolean
+  private?: boolean
 }
 
 const GitHubRepoSearch: React.FC = () => {
+  const { data: env } = useInitialData()
+  const { setData } = useLocalData()
+  const { repoOwner, repoSlug } = useOutstaticNew()
+  const repository = repoOwner && repoSlug ? `${repoOwner}/${repoSlug}` : ''
+  const initialSuggestion = repository ? [{ full_name: repository }] : []
   const { session } = useOutstatic()
   const [query, setQuery] = useState<string>('')
-  const [suggestions, setSuggestions] = useState<Repository[]>([])
+  const [suggestions, setSuggestions] =
+    useState<Repository[]>(initialSuggestion)
   const [isLoading, setIsLoading] = useState<boolean>(false)
-  const [value, setValue] = React.useState('')
+  const [value, setValue] = React.useState(repository)
 
   // Replace 'YOUR_TOKEN_HERE' with your actual GitHub Personal Access Token
   const githubToken = session?.access_token
@@ -70,25 +77,32 @@ const GitHubRepoSearch: React.FC = () => {
     if (value) {
       setQuery(value)
       const [repoOwner, repoSlug] = value.split('/')
-      const ostSettingsString = cookies.get('ost_settings') || '{}'
-      const ostSettings = JSON.parse(ostSettingsString)
-      ostSettings.repoSlug = repoSlug
-      ostSettings.repoOwner = repoOwner
-      cookies.set('ost_settings', JSON.stringify(ostSettings), { expires: 7 }) // Expires in 7 days
+      setData({ repoSlug, repoOwner })
+      // cookies.set('ost_settings', JSON.stringify(ostSettings), { expires: 7 }) // Expires in 7 days
     }
   }, [value])
 
   return (
     <div>
       <SearchCombobox
-        data={suggestions.map((repo) => ({
-          value: repo.full_name,
-          label: repo.full_name
-        }))}
-        value={value}
+        data={
+          !!env?.repoSlug
+            ? [
+                {
+                  value: `${repoOwner}/${repoSlug}`,
+                  label: `${repoOwner}/${repoSlug}`
+                }
+              ]
+            : suggestions.map((repo) => ({
+                value: repo.full_name,
+                label: repo.full_name
+              }))
+        }
+        value={!!env?.repoSlug ? `${repoOwner}/${repoSlug}` : value}
         setValue={setValue}
         onValueChange={setQuery}
         isLoading={isLoading}
+        disabled={!!env?.repoSlug}
       />
     </div>
   )

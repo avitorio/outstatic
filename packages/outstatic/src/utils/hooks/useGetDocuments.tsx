@@ -36,7 +36,10 @@ export const useGetDocuments = () => {
   const params = useParams<{ ost: string[] }>()
 
   return useQuery({
-    queryKey: [`documents-${params?.ost}`],
+    queryKey: [
+      `documents-${params?.ost}`,
+      { repoOwner, repoSlug, repoBranch, contentPath }
+    ],
     queryFn: async () => {
       const { repository } = await request(
         'https://api.github.com/graphql',

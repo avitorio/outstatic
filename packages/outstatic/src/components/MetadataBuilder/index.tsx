@@ -50,8 +50,6 @@ export const MetadataBuilder: React.FC<MetadataBuilderProps> = ({
   const { repoOwner, repoSlug, repoBranch, contentPath, monorepoPath } =
     useOutstaticNew()
 
-  console.log({ repoOwner, repoSlug, repoBranch, contentPath, monorepoPath })
-
   const rootPath = [monorepoPath, contentPath].filter(Boolean).join('/')
 
   const { data } = useGetFileInformationQuery({
