@@ -41,6 +41,24 @@ export const useLocalData = () => {
 
       return {}
     },
+    initialData: () => {
+      const cachedData = queryClient.getQueryData<OutstaticData>([
+        'ost_local_data'
+      ])
+      if (cachedData) {
+        return cachedData
+      }
+
+      return {
+        pages: [],
+        contentPath: 'content',
+        monorepoPath: '',
+        repoSlug: '',
+        repoBranch: 'main',
+        repoOwner: '',
+        basePath: ''
+      }
+    },
     meta: { persist: true }
   })
 

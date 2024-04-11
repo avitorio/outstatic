@@ -21,7 +21,7 @@ import { useCallback } from 'react'
 import { UseFormReturn } from 'react-hook-form'
 import useFileQuery from './useFileQuery'
 import useOid from './useOid'
-import useOutstatic from './useOutstatic'
+import { useOutstaticNew } from '@/utils/hooks/useOstData'
 
 type SubmitDocumentProps = {
   session: Session | null
@@ -60,7 +60,7 @@ function useSubmitDocument({
     contentPath,
     monorepoPath,
     basePath
-  } = useOutstatic()
+  } = useOutstaticNew()
   const fetchOid = useOid()
   const { data: metadata } = useFileQuery({
     file: `metadata.json`
@@ -275,7 +275,8 @@ function useSubmitDocument({
       repoBranch,
       metadata,
       setHasChanges,
-      editor
+      editor,
+      basePath
     ]
   )
 

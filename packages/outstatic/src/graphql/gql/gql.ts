@@ -17,6 +17,8 @@ const documents = {
     types.CreateCommitDocument,
   '\n  query Collections($owner: String!, $name: String!, $contentPath: String!) {\n    repository(owner: $owner, name: $name) {\n      id\n      object(expression: $contentPath) {\n        ... on Tree {\n          entries {\n            name\n            type\n          }\n        }\n      }\n    }\n  }\n':
     types.CollectionsDocument,
+  '\n  query Document($owner: String!, $name: String!, $filePath: String!) {\n    repository(owner: $owner, name: $name) {\n      id\n      object(expression: $filePath) {\n        ... on Blob {\n          text\n          commitUrl\n        }\n      }\n    }\n  }\n':
+    types.DocumentDocument,
   '\n  query Documents($owner: String!, $name: String!, $contentPath: String!) {\n    repository(owner: $owner, name: $name) {\n      id\n      object(expression: $contentPath) {\n        ... on Tree {\n          entries {\n            name\n            object {\n              ... on Blob {\n                text\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n':
     types.DocumentsDocument
 }
@@ -47,6 +49,12 @@ export function graphql(
 export function graphql(
   source: '\n  query Collections($owner: String!, $name: String!, $contentPath: String!) {\n    repository(owner: $owner, name: $name) {\n      id\n      object(expression: $contentPath) {\n        ... on Tree {\n          entries {\n            name\n            type\n          }\n        }\n      }\n    }\n  }\n'
 ): (typeof documents)['\n  query Collections($owner: String!, $name: String!, $contentPath: String!) {\n    repository(owner: $owner, name: $name) {\n      id\n      object(expression: $contentPath) {\n        ... on Tree {\n          entries {\n            name\n            type\n          }\n        }\n      }\n    }\n  }\n']
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+  source: '\n  query Document($owner: String!, $name: String!, $filePath: String!) {\n    repository(owner: $owner, name: $name) {\n      id\n      object(expression: $filePath) {\n        ... on Blob {\n          text\n          commitUrl\n        }\n      }\n    }\n  }\n'
+): (typeof documents)['\n  query Document($owner: String!, $name: String!, $filePath: String!) {\n    repository(owner: $owner, name: $name) {\n      id\n      object(expression: $filePath) {\n        ... on Blob {\n          text\n          commitUrl\n        }\n      }\n    }\n  }\n']
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

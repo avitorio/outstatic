@@ -28,7 +28,7 @@ export default function List({ collection }: ListProps) {
       </div>
       {documents.length > 0 && (
         <div className="relative shadow-md sm:rounded-lg">
-          <DocumentsTable documents={documents} collection={collection} />
+          <DocumentsTable />
         </div>
       )}
       {documents.length === 0 && !isPending && (

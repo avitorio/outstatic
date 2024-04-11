@@ -1,18 +1,16 @@
 import Modal from '@/components/Modal'
-import {
-  useCreateCommitMutation,
-  useDocumentLazyQuery
-} from '@/graphql/generated'
 import { useOstSession } from '@/utils/auth/hooks'
 import { createCommitApi } from '@/utils/createCommitApi'
 import { hashFromUrl } from '@/utils/hashFromUrl'
 import useOid from '@/utils/hooks/useOid'
-import useOutstatic from '@/utils/hooks/useOutstatic'
 import { stringifyMetadata } from '@/utils/metadata/stringify'
 import { MetadataSchema } from '@/utils/metadata/types'
 import { Trash2 } from 'lucide-react'
 import { useState } from 'react'
 import { Button } from '../ui/button'
+import { useGetDocument } from '@/utils/hooks/useGetDocument'
+import { useOutstaticNew } from '@/utils/hooks/useOstData'
+import { useCreateCommit } from '@/utils/hooks/useCreateCommit'
 
 type DeleteDocumentButtonProps = {
   slug: string
@@ -32,26 +30,22 @@ const DeleteDocumentButton = ({
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const { session } = useOstSession()
-  const [createCommit] = useCreateCommitMutation()
   const { repoOwner, repoSlug, repoBranch, contentPath, monorepoPath } =
-    useOutstatic()
+    useOutstaticNew()
   const fetchOid = useOid()
 
-  const [getMetadata] = useDocumentLazyQuery({
-    variables: {
-      owner: repoOwner || session?.user?.login || '',
-      name: repoSlug,
-      filePath: `${repoBranch}:${
-        monorepoPath ? monorepoPath + '/' : ''
-      }${contentPath}/metadata.json`
-    },
-    fetchPolicy: 'network-only'
+  const mutation = useCreateCommit()
+
+  const { refetch } = useGetDocument({
+    filePath: `${repoBranch}:${
+      monorepoPath ? monorepoPath + '/' : ''
+    }${contentPath}/metadata.json`
   })
 
   const deleteDocument = async (slug: string) => {
     setDeleting(true)
     try {
-      const { data: metadata } = await getMetadata()
+      const { data: metadata } = await refetch()
       const oid = await fetchOid()
       const owner = repoOwner || session?.user?.login || ''
 
@@ -70,13 +64,16 @@ const DeleteDocumentButton = ({
         }${contentPath}/${collection}/${slug}.md`
       )
 
+      const object = metadata?.repository?.object as {
+        text?: string | null | undefined
+        commitUrl: any
+      }
+
       // remove post from metadata.json
-      if (metadata?.repository?.object?.__typename === 'Blob') {
-        const m = JSON.parse(
-          metadata.repository.object.text ?? '{}'
-        ) as MetadataSchema
+      if (object?.text) {
+        const m = JSON.parse(object.text) as MetadataSchema
         m.generated = new Date().toISOString()
-        m.commit = hashFromUrl(metadata.repository.object.commitUrl)
+        m.commit = hashFromUrl(object.commitUrl)
         const newMeta = (m.metadata ?? []).filter((post) => post.slug !== slug)
         capi.replaceFile(
           `${
@@ -88,7 +85,7 @@ const DeleteDocumentButton = ({
 
       const input = capi.createInput()
 
-      await createCommit({ variables: { input } })
+      mutation.mutate(input)
       setShowDeleteModal(false)
       if (onComplete) onComplete()
     } catch (error) {

@@ -10,6 +10,9 @@ const config: CodegenConfig = {
       plugins: []
     }
   },
+  config: {
+    skipTypename: true
+  },
   watch: true
 }
 

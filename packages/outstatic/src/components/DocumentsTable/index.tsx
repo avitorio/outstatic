@@ -5,8 +5,8 @@ import { sentenceCase } from 'change-case'
 import cookies from 'js-cookie'
 import { Settings } from 'lucide-react'
 import Link from 'next/link'
-import { useState, useCallback, useEffect, ReactNode } from 'react'
-import { Button } from '../ui/button'
+import { useState, useCallback, ReactNode } from 'react'
+import { Button } from '@/components/ui/button'
 import {
   CaretSortIcon,
   CaretDownIcon,
@@ -21,6 +21,8 @@ type DocumentsTableProps = {
   documents: OstDocument[]
   collection: string
 }
+import { useParams } from 'next/navigation'
+import { useGetDocuments } from '@/utils/hooks/useGetDocuments'
 
 export type Column = {
   id: string
@@ -34,15 +36,12 @@ const defaultColumns: Column[] = [
   { id: 'publishedAt', label: 'Published at', value: 'publishedAt' }
 ]
 
-const DocumentsTable = (props: DocumentsTableProps) => {
-  const allColumns = Object.keys(props.documents[0]).map((column: string) => ({
-    id: column,
-    label: sentenceCase(column),
-    value: column
-  }))
-  const [documents, setDocuments] = useState(props.documents)
+const DocumentsTable = () => {
+  const { data: documents, refetch } = useGetDocuments()
+
+  const params = useParams<{ ost: string[] }>()
   const [columns, setColumns] = useState<Column[]>(
-    JSON.parse(cookies.get(`ost_${props.collection}_fields`) || 'null') ??
+    JSON.parse(cookies.get(`ost_${params.ost[0]}_fields`) || 'null') ??
       defaultColumns
   )
   const [showColumnOptions, setShowColumnOptions] = useState(false)
@@ -52,7 +51,7 @@ const DocumentsTable = (props: DocumentsTableProps) => {
     direction: 'descending'
   })
 
-  const sortedDocuments = useSortedDocuments(documents, sortConfig)
+  const sortedDocuments = useSortedDocuments(documents || [], sortConfig)
 
   const requestSort = useCallback((key: keyof OstDocument) => {
     setSortConfig((prevConfig) => ({
@@ -64,15 +63,13 @@ const DocumentsTable = (props: DocumentsTableProps) => {
     }))
   }, [])
 
-  const handleDelete = useCallback((slug: string) => {
-    setDocuments((prevDocuments) =>
-      prevDocuments.filter((doc) => doc.slug !== slug)
-    )
-  }, [])
-
-  useEffect(() => {
-    setDocuments(props.documents)
-  }, [props.documents])
+  const allColumns = Object.keys(documents ? documents[0] : []).map(
+    (column: string) => ({
+      id: column,
+      label: sentenceCase(column),
+      value: column
+    })
+  )
 
   return (
     <div className="overflow-x-auto">
@@ -134,14 +131,14 @@ const DocumentsTable = (props: DocumentsTableProps) => {
                 className="border-b bg-white hover:bg-gray-50"
               >
                 {columns.map((column) => {
-                  return cellSwitch(column.value, document, props.collection)
+                  return cellSwitch(column.value, document, params.ost[0])
                 })}
                 <td className="pr-6 py-4 text-right">
                   <DeleteDocumentButton
                     slug={document.slug}
                     disabled={false}
-                    onComplete={() => handleDelete(document.slug)}
-                    collection={props.collection}
+                    onComplete={() => refetch()}
+                    collection={params.ost[0]}
                   />
                 </td>
               </tr>
@@ -158,7 +155,7 @@ const DocumentsTable = (props: DocumentsTableProps) => {
             allOptions={allColumns}
             defaultValues={defaultColumns}
             onChangeList={(e: any) => {
-              cookies.set(`ost_${props.collection}_fields`, JSON.stringify(e))
+              cookies.set(`ost_${params.ost[0]}_fields`, JSON.stringify(e))
             }}
             onBlur={() => setShowColumnOptions(false)}
           />

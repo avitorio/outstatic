@@ -13,7 +13,6 @@ export const useCreateCommit = () => {
       request(
         'https://api.github.com/graphql',
         CREATE_COMMIT,
-        // variables are type-checked too!
         { input },
         {
           authorization: `Bearer ${session?.access_token}`

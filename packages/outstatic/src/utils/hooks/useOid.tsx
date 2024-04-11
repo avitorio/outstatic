@@ -1,10 +1,10 @@
 import { useOidLazyQuery } from '@/graphql/generated'
 import { useOstSession } from '@/utils/auth/hooks'
 import { useCallback } from 'react'
-import useOutstatic from './useOutstatic'
+import { useOutstaticNew } from './useOstData'
 
 const useOid = () => {
-  const { repoSlug, repoBranch, repoOwner } = useOutstatic()
+  const { repoSlug, repoBranch, repoOwner } = useOutstaticNew()
   const { session } = useOstSession()
   const [oidQuery] = useOidLazyQuery({
     variables: {
