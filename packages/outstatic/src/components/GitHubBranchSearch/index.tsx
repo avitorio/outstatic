@@ -10,23 +10,22 @@ import {
   useOutstaticNew
 } from '@/utils/hooks/useOstData'
 
-interface Repository {
-  full_name: string
-  private?: boolean
+interface Branch {
+  name: string
 }
 
-const GitHubRepoSearch: React.FC = () => {
+const GitHubBranchSearch: React.FC = () => {
   const { data: env } = useInitialData()
   const { setData } = useLocalData()
-  const { repoOwner, repoSlug } = useOutstaticNew()
-  const repository = repoOwner && repoSlug ? `${repoOwner}/${repoSlug}` : ''
-  const initialSuggestion = repository ? [{ full_name: repository }] : []
+  const { repoOwner, repoSlug, repoBranch } = useOutstaticNew()
+  const initialSuggestion = repoBranch
+    ? [{ name: repoBranch }]
+    : [{ name: 'main' }]
   const { session } = useOutstatic()
   const [query, setQuery] = useState<string>('')
-  const [suggestions, setSuggestions] =
-    useState<Repository[]>(initialSuggestion)
+  const [suggestions, setSuggestions] = useState<Branch[]>(initialSuggestion)
   const [isLoading, setIsLoading] = useState<boolean>(false)
-  const [value, setValue] = React.useState(repository)
+  const [value, setValue] = React.useState(repoBranch)
 
   // Replace 'YOUR_TOKEN_HERE' with your actual GitHub Personal Access Token
   const githubToken = session?.access_token
@@ -38,7 +37,7 @@ const GitHubRepoSearch: React.FC = () => {
     }
     try {
       const response = await fetch(
-        `https://api.github.com/search/repositories?q=${searchQuery}&per_page=100&timestamp=${Date.now()}`,
+        `https://api.github.com/repos/${repoOwner}/${repoSlug}/branches?per_page=100&timestamp=${Date.now()}`,
         {
           headers: new Headers({
             Authorization: `token ${githubToken}`
@@ -49,7 +48,7 @@ const GitHubRepoSearch: React.FC = () => {
         throw new Error('Network response was not ok')
       }
       const data = await response.json()
-      setSuggestions(data.items)
+      setSuggestions(data)
     } catch (error) {
       console.error('There was a problem with the fetch operation:', error)
     } finally {
@@ -76,8 +75,7 @@ const GitHubRepoSearch: React.FC = () => {
   useEffect(() => {
     if (value) {
       setQuery(value)
-      const [repoOwner, repoSlug] = value.split('/')
-      setData({ repoSlug, repoOwner })
+      setData({ repoBranch: value })
     }
   }, [value])
 
@@ -85,26 +83,26 @@ const GitHubRepoSearch: React.FC = () => {
     <div>
       <SearchCombobox
         data={
-          !!env?.repoSlug
+          !!env?.repoBranch
             ? [
                 {
-                  value: `${repoOwner}/${repoSlug}`,
-                  label: `${repoOwner}/${repoSlug}`
+                  value: `${repoBranch}`,
+                  label: `${repoBranch}`
                 }
               ]
-            : suggestions.map((repo) => ({
-                value: repo.full_name,
-                label: repo.full_name
+            : suggestions.map((branch) => ({
+                value: branch.name,
+                label: branch.name
               }))
         }
-        value={!!env?.repoSlug ? `${repoOwner}/${repoSlug}` : value}
+        value={!!env?.repoBranch ? `${repoBranch}` : value}
         setValue={setValue}
         onValueChange={setQuery}
         isLoading={isLoading}
-        disabled={!!env?.repoSlug}
+        disabled={!!env?.repoBranch || !repoSlug || !repoOwner}
       />
     </div>
   )
 }
 
-export default GitHubRepoSearch
+export default GitHubBranchSearch

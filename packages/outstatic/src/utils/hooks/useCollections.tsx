@@ -3,6 +3,7 @@ import request from 'graphql-request'
 // import useOutstatic from './useOutstatic'
 import { useQuery } from '@tanstack/react-query'
 import { useOutstaticNew } from './useOstData'
+import { toast } from 'sonner'
 
 export const useCollections = () => {
   const {
@@ -18,9 +19,6 @@ export const useCollections = () => {
   return useQuery({
     queryKey: ['collections', { repoOwner, repoSlug, repoBranch, contentPath }],
     queryFn: async () => {
-      if (!repoOwner || !repoSlug || !repoBranch || !contentPath) {
-        return []
-      }
       const data = isPending
         ? null
         : await request(
@@ -40,13 +38,21 @@ export const useCollections = () => {
             }
           )
 
-      //@ts-ignore
-      let collections = data?.repository?.object?.entries
+      if (data?.repository?.object === null) {
+        toast.error(
+          'No collections found. Please check your content path and try again.'
+        )
+        return []
+      } else {
         //@ts-ignore
-        ?.map((entry) => (entry.type === 'tree' ? entry.name : undefined))
-        .filter(Boolean) as string[]
+        let collections = data?.repository?.object?.entries
+          //@ts-ignore
+          ?.map((entry) => (entry.type === 'tree' ? entry.name : undefined))
+          .filter(Boolean) as string[]
 
-      return collections
-    }
+        return collections
+      }
+    },
+    enabled: !!repoOwner && !!repoSlug && !!repoBranch && !!contentPath
   })
 }

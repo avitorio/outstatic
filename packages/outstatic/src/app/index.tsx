@@ -19,17 +19,17 @@ export type OutstaticData = {
 export async function Outstatic({
   repoOwner = '',
   repoSlug = '',
-  repoBranch = 'main'
+  repoBranch = ''
 }: { repoOwner?: string; repoSlug?: string; repoBranch?: string } = {}) {
   const ostConfig = {
-    OST_REPO_OWNER: repoOwner,
+    OST_REPO_OWNER: repoOwner || process.env.OST_REPO_OWNER || '',
     OST_REPO_SLUG:
       repoSlug ||
       process.env.OST_REPO_SLUG ||
       process.env.VERCEL_GIT_REPO_SLUG ||
       '',
-    OST_REPO_BRANCH: repoBranch || process.env.OST_REPO_BRANCH || 'main',
-    OST_CONTENT_PATH: `${process.env.OST_REPO_BRANCH || 'main'}:${
+    OST_REPO_BRANCH: repoBranch || process.env.OST_REPO_BRANCH,
+    OST_CONTENT_PATH: `${repoBranch || process.env.OST_REPO_BRANCH}:${
       process.env.OST_MONOREPO_PATH ? process.env.OST_MONOREPO_PATH + '/' : ''
     }${process.env.OST_CONTENT_PATH || 'outstatic/content'}`,
     OST_MONOREPO_PATH: '',
@@ -43,9 +43,6 @@ export async function Outstatic({
   }
 
   const session = await getLoginSession()
-
-  ostConfig.OST_REPO_OWNER =
-    repoOwner || process.env.OST_REPO_OWNER || session?.user?.login || ''
 
   return {
     repoOwner: ostConfig.OST_REPO_OWNER,
