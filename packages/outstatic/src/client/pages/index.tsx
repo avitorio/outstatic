@@ -24,7 +24,7 @@ export const Client = ({
   params: { ost: string[] }
 }) => {
   useInitialData(ostData)
-  const { repoSlug, isPending } = useOutstaticNew()
+  const { repoSlug, repoOwner, repoBranch, isPending } = useOutstaticNew()
   const [openSidebar, setOpenSidebar] = useState(false)
   const toggleSidebar = () => {
     setOpenSidebar(!openSidebar)
@@ -45,7 +45,7 @@ export const Client = ({
             <Sidebar isOpen={openSidebar} />
             {isPending ? (
               <AdminLoading />
-            ) : !repoSlug ? (
+            ) : !repoSlug || !repoOwner || !repoBranch ? (
               <Onboarding />
             ) : (
               <Router params={params} />

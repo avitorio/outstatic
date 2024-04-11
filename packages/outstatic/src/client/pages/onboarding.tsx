@@ -1,9 +1,10 @@
 import { AdminLayout } from '@/components'
+import GitHubBranchSearch from '@/components/GitHubBranchSearch'
 import GitHubRepoSearch from '@/components/GitHubRepoSearch'
 import useOutstatic from '@/utils/hooks/useOutstatic'
 
 export default function Onboarding() {
-  const { repoBranch, contentPath } = useOutstatic()
+  const { contentPath } = useOutstatic()
 
   return (
     <AdminLayout title="Onboarding">
@@ -21,11 +22,7 @@ export default function Onboarding() {
             <label className="block mb-2 text-sm font-medium text-gray-900">
               Branch
             </label>
-            <input
-              className="cursor-not-allowed block p-2 w-full text-gray-900 bg-gray-50 rounded-lg border border-gray-300 sm:text-sm outline-none"
-              value={repoBranch}
-              readOnly
-            />
+            <GitHubBranchSearch />
           </div>
           <div className="mt-4">
             <label className="block mb-2 text-sm font-medium text-gray-900">

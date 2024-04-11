@@ -51,10 +51,10 @@ export const useLocalData = () => {
 
       return {
         pages: [],
-        contentPath: 'content',
+        contentPath: '',
         monorepoPath: '',
         repoSlug: '',
-        repoBranch: 'main',
+        repoBranch: '',
         repoOwner: '',
         basePath: ''
       }
