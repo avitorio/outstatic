@@ -54,7 +54,7 @@ describe('DocumentsTable', () => {
   const collection = 'testCollection'
 
   it('renders a table with provided documents', () => {
-    render(<DocumentsTable documents={mockDocuments} collection={collection} />)
+    render(<DocumentsTable />)
 
     expect(screen.getByText('Document 1')).toBeInTheDocument()
     expect(screen.getByText('published')).toBeInTheDocument()
@@ -66,7 +66,7 @@ describe('DocumentsTable', () => {
   })
 
   it('removes a document from the table when the Delete button is clicked', async () => {
-    render(<DocumentsTable documents={mockDocuments} collection={collection} />)
+    render(<DocumentsTable />)
 
     expect(screen.getByText('Document 1')).toBeInTheDocument()
 

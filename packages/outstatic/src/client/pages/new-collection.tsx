@@ -7,6 +7,7 @@ import { Collection } from '@/types'
 import { createCommitApi } from '@/utils/createCommitApi'
 import { useCreateCommit } from '@/utils/hooks/useCreateCommit'
 import useOid from '@/utils/hooks/useOid'
+import { useOutstaticNew } from '@/utils/hooks/useOstData'
 import useOutstatic from '@/utils/hooks/useOutstatic'
 import { yupResolver } from '@hookform/resolvers/yup'
 import Link from 'next/link'
@@ -17,17 +18,16 @@ import { slugify } from 'transliteration'
 import * as yup from 'yup'
 
 export default function NewCollection() {
+  const { pages, hasChanges, setHasChanges } = useOutstatic()
   const {
-    pages,
     contentPath,
     monorepoPath,
     session,
     repoSlug,
     repoBranch,
-    repoOwner,
-    hasChanges,
-    setHasChanges
-  } = useOutstatic()
+    repoOwner
+  } = useOutstaticNew()
+
   const router = useRouter()
   const fetchOid = useOid()
   const [collectionName, setCollectionName] = useState('')

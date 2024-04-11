@@ -44,7 +44,6 @@ export const useGetDocuments = () => {
       const { repository } = await request(
         'https://api.github.com/graphql',
         GET_DOCUMENTS,
-        // variables are type-checked too!
         {
           owner: repoOwner,
           name: repoSlug,

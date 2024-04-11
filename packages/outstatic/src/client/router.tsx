@@ -23,7 +23,8 @@ export const Router = ({ params }: { params: { ost: string[] } }) => {
 
   if (isPending) return <AdminLoading />
 
-  const isContent = slug && ![...pages].includes(slug)
+  const isContent =
+    slug && ![...pages, ...[collections ? collections : []]].includes(slug)
 
   return (
     <>

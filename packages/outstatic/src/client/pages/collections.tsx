@@ -3,13 +3,13 @@ import { AdminLoading } from '@/components/AdminLoading'
 import Modal from '@/components/Modal'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
-import { useDocumentLazyQuery } from '@/graphql/generated'
 import { createCommitApi } from '@/utils/createCommitApi'
 import { hashFromUrl } from '@/utils/hashFromUrl'
 import { useCollections } from '@/utils/hooks/useCollections'
 import { useCreateCommit } from '@/utils/hooks/useCreateCommit'
+import { useGetDocument } from '@/utils/hooks/useGetDocument'
 import useOid from '@/utils/hooks/useOid'
-import useOutstatic from '@/utils/hooks/useOutstatic'
+import { useOutstaticNew } from '@/utils/hooks/useOstData'
 import { stringifyMetadata } from '@/utils/metadata/stringify'
 import { MetadataSchema } from '@/utils/metadata/types'
 import Link from 'next/link'
@@ -24,74 +24,70 @@ export default function Collections() {
     repoBranch,
     contentPath,
     monorepoPath
-  } = useOutstatic()
+  } = useOutstaticNew()
 
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [selectedCollection, setSelectedCollection] = useState('')
   const [deleting, setDeleting] = useState(false)
   const fetchOid = useOid()
 
-  const [loadMetadata] = useDocumentLazyQuery({
-    variables: {
-      owner: repoOwner || session?.user?.login || '',
-      name: repoSlug,
-      filePath: `${repoBranch}:${
-        monorepoPath ? monorepoPath + '/' : ''
-      }${contentPath}/metadata.json`
-    },
-    fetchPolicy: 'network-only'
+  const { refetch } = useGetDocument({
+    filePath: `${repoBranch}:${
+      monorepoPath ? monorepoPath + '/' : ''
+    }${contentPath}/metadata.json`
   })
 
   const mutation = useCreateCommit()
 
   const deleteCollection = async (collection: string) => {
-    loadMetadata().then(async ({ data: metadata }) => {
-      try {
-        const oid = await fetchOid()
-        const owner = repoOwner || session?.user?.login || ''
+    const { data: metadata } = await refetch()
 
-        const capi = createCommitApi({
-          message: `feat(${collection}): remove ${collection}`,
-          owner,
-          oid: oid ?? '',
-          name: repoSlug,
-          branch: repoBranch
-        })
+    try {
+      const oid = await fetchOid()
+      const owner = repoOwner || session?.user?.login || ''
 
-        capi.removeFile(
+      const capi = createCommitApi({
+        message: `feat(${collection}): remove ${collection}`,
+        owner,
+        oid: oid ?? '',
+        name: repoSlug,
+        branch: repoBranch
+      })
+
+      capi.removeFile(
+        `${monorepoPath ? monorepoPath + '/' : ''}${contentPath}/${collection}`
+      )
+
+      const object = metadata?.repository?.object as {
+        text?: string | null | undefined
+        commitUrl: any
+      }
+
+      // remove collection from metadata.json
+      if (object?.text) {
+        const m = JSON.parse(object?.text) as MetadataSchema
+        m.generated = new Date().toISOString()
+        m.commit = hashFromUrl(object.commitUrl)
+        const newMeta = (m.metadata ?? []).filter(
+          (post) => post.collection !== collection
+        )
+        capi.replaceFile(
           `${
             monorepoPath ? monorepoPath + '/' : ''
-          }${contentPath}/${collection}`
+          }${contentPath}/metadata.json`,
+          stringifyMetadata({ ...m, metadata: newMeta })
         )
+      }
 
-        // remove collection from metadata.json
-        if (metadata?.repository?.object?.__typename === 'Blob') {
-          const m = JSON.parse(
-            metadata.repository.object.text ?? '{}'
-          ) as MetadataSchema
-          m.generated = new Date().toISOString()
-          m.commit = hashFromUrl(metadata.repository.object.commitUrl)
-          const newMeta = (m.metadata ?? []).filter(
-            (post) => post.collection !== collection
-          )
-          capi.replaceFile(
-            `${
-              monorepoPath ? monorepoPath + '/' : ''
-            }${contentPath}/metadata.json`,
-            stringifyMetadata({ ...m, metadata: newMeta })
-          )
+      const input = capi.createInput()
+
+      mutation.mutate(input, {
+        onSuccess: () => {
+          setDeleting(false)
+          setShowDeleteModal(false)
         }
-
-        const input = capi.createInput()
-
-        mutation.mutate(input, {
-          onSuccess: () => {
-            setDeleting(false)
-            setShowDeleteModal(false)
-          }
-        })
-      } catch (error) {}
-    })
+      })
+    } catch (error) {}
   }
 
   if (isPending) return <AdminLoading />
