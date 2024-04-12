@@ -22,9 +22,21 @@ export async function generateMetadata(params: Params): Promise<Metadata> {
   const { doc, moreDocs } = await getData(params)
 
   if (!doc) {
-    return {
-      title: `All ${moreDocs.collection}`,
-      description: `All ${moreDocs.collection}`
+    // Check if moreDocs is an array
+    if (Array.isArray(moreDocs)) {
+      // Handle the case when moreDocs is an array.
+      // Since we don't have a 'collection' property here,
+      // you need to decide what to return in this case.
+      return {
+        title: 'Title when moreDocs is an array',
+        description: 'Description when moreDocs is an array'
+      };
+    } else {
+      // When moreDocs is not an array, we can safely access the 'collection' property
+      return {
+        title: `All ${moreDocs.collection}`,
+        description: `All ${moreDocs.collection}`
+      };
     }
   }
 
