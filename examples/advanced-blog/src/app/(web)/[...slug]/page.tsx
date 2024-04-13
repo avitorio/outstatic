@@ -127,6 +127,7 @@ async function getData({ params }: Params) {
       // if we have docs, we are on a collection archive
       if (docs.length) {
         return {
+          doc: undefined,
           moreDocs: {
             docs,
             collection
