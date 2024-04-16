@@ -31,7 +31,7 @@ export async function Outstatic({
     OST_REPO_BRANCH: repoBranch || process.env.OST_REPO_BRANCH,
     OST_CONTENT_PATH: `${repoBranch || process.env.OST_REPO_BRANCH}:${
       process.env.OST_MONOREPO_PATH ? process.env.OST_MONOREPO_PATH + '/' : ''
-    }${process.env.OST_CONTENT_PATH || 'outstatic/content'}`,
+    }${process.env.OST_CONTENT_PATH || ''}`,
     OST_MONOREPO_PATH: '',
     OST_BASE_PATH: ''
   }
@@ -48,7 +48,7 @@ export async function Outstatic({
     repoOwner: ostConfig.OST_REPO_OWNER,
     repoSlug: ostConfig.OST_REPO_SLUG,
     repoBranch: ostConfig.OST_REPO_BRANCH,
-    contentPath: process.env.OST_CONTENT_PATH || 'outstatic/content',
+    contentPath: process.env.OST_CONTENT_PATH || '',
     monorepoPath: process.env.OST_MONOREPO_PATH || '',
     session: session || null,
     initialApolloState: null,

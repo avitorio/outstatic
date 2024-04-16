@@ -1,11 +1,8 @@
 import { AdminLayout } from '@/components'
 import GitHubBranchSearch from '@/components/GitHubBranchSearch'
 import GitHubRepoSearch from '@/components/GitHubRepoSearch'
-import useOutstatic from '@/utils/hooks/useOutstatic'
 
 export default function Onboarding() {
-  const { contentPath } = useOutstatic()
-
   return (
     <AdminLayout title="Onboarding">
       <div className="mb-8 flex h-12 items-center">
@@ -23,16 +20,6 @@ export default function Onboarding() {
               Branch
             </label>
             <GitHubBranchSearch />
-          </div>
-          <div className="mt-4">
-            <label className="block mb-2 text-sm font-medium text-gray-900">
-              Content Path
-            </label>
-            <input
-              className="cursor-not-allowed block p-2 w-full text-gray-900 bg-gray-50 rounded-lg border border-gray-300 sm:text-sm outline-none"
-              value={`${contentPath}`}
-              readOnly
-            />
           </div>
           <p className="text-sm">
             These values come from your Outstatic environment. To learn more
