@@ -22,7 +22,6 @@ type Broadcast = {
 }
 
 const Sidebar = ({ isOpen = false }: SidebarProps) => {
-  const { isPending } = useCollections()
   const [broadcast, setBroadcast] = useState<Broadcast | null>(null)
   const { repoOwner, repoSlug } = useOutstatic()
 
@@ -76,15 +75,7 @@ const Sidebar = ({ isOpen = false }: SidebarProps) => {
     >
       <div className="scrollbar-hide flex h-full max-h-[calc(100vh-96px)] flex-col justify-between overflow-y-scroll bg-gray-50 py-4 px-3">
         <ul className="space-y-2">
-          {isPending ? (
-            Array.from({ length: 3 }).map((_, index) => (
-              <li key={index}>
-                <Skeleton className="w-full h-8" />
-              </li>
-            ))
-          ) : (
-            <CollectionsList />
-          )}
+          <CollectionsList />
         </ul>
         {broadcast ? (
           <div

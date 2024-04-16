@@ -15,17 +15,16 @@ const defaultPages: { [key: string]: ReactElement | undefined } = {
 }
 
 export const Router = ({ params }: { params: { ost: string[] } }) => {
-  const { data: collections, isPending } = useCollections()
+  const { data: collections, isPending, fetchStatus } = useCollections()
   const { pages } = useOutstatic()
 
   const slug = params?.ost?.[0] || ''
   const slug2 = params?.ost?.[1] || ''
 
-  if (isPending) return <AdminLoading />
+  if (isPending && fetchStatus !== 'idle') return <AdminLoading />
 
   const isContent =
     slug && ![...pages, ...[collections ? collections : []]].includes(slug)
-
   return (
     <>
       {!slug && <Collections />}
