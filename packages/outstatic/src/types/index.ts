@@ -42,6 +42,7 @@ export type Session = {
 
 export type Collection = {
   name: string
+  contentPath?: string
 }
 
 export type DeepNonNullable<T> = {
