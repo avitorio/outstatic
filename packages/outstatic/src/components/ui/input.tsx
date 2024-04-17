@@ -1,4 +1,5 @@
 import { RegisterOptions, useFormContext } from 'react-hook-form'
+import { Label } from './label'
 
 export type InputProps = {
   label?: string
@@ -47,12 +48,12 @@ const Input = ({
   return (
     <div className={wrapperClass}>
       {label && (
-        <label
+        <Label
           htmlFor={id}
           className={`${sizes[inputSize].label} first-letter:capitalize`}
         >
           {label}
-        </label>
+        </Label>
       )}
       <div className="relative">
         <input

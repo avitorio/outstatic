@@ -1,5 +1,6 @@
 'use client'
 
+// Based on https://github.com/shadcn-ui/ui/issues/355#issuecomment-1703767574 by @WangLarry (https://github.com/WangLarry)
 import React from 'react'
 import * as AccordionPrimitive from '@radix-ui/react-accordion'
 import { cn } from '@/utils/ui'
