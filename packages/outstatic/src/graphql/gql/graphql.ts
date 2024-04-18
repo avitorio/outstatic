@@ -11048,7 +11048,10 @@ export type Mutation = {
   removeAssigneesFromAssignable?: Maybe<RemoveAssigneesFromAssignablePayload>
   /** Removes an administrator from the enterprise. */
   removeEnterpriseAdmin?: Maybe<RemoveEnterpriseAdminPayload>
-  /** Removes the identity provider from an enterprise */
+  /**
+   * Removes the identity provider from an enterprise. Owners of enterprises both
+   * with and without Enterprise Managed Users may use this mutation.
+   */
   removeEnterpriseIdentityProvider?: Maybe<RemoveEnterpriseIdentityProviderPayload>
   /** Removes a user from all organizations within the enterprise */
   removeEnterpriseMember?: Maybe<RemoveEnterpriseMemberPayload>
@@ -25304,7 +25307,7 @@ export type StartRepositoryMigrationInput = {
   /** The ID of the migration source. */
   sourceId: Scalars['ID']['input']
   /** The URL of the source repository. */
-  sourceRepositoryUrl?: InputMaybe<Scalars['URI']['input']>
+  sourceRepositoryUrl: Scalars['URI']['input']
   /** The visibility of the imported repository. */
   targetRepoVisibility?: InputMaybe<Scalars['String']['input']>
 }
@@ -29889,13 +29892,14 @@ export type CollectionsQuery = {
 export type DocumentQueryVariables = Exact<{
   owner: Scalars['String']['input']
   name: Scalars['String']['input']
-  filePath: Scalars['String']['input']
+  mdPath: Scalars['String']['input']
+  mdxPath: Scalars['String']['input']
 }>
 
 export type DocumentQuery = {
   repository?: {
-    id: string
-    object?: { text?: string | null; commitUrl: any } | {} | null
+    fileMD?: { text?: string | null } | {} | null
+    fileMDX?: { text?: string | null } | {} | null
   } | null
 }
 
@@ -29917,6 +29921,19 @@ export type DocumentsQuery = {
         }
       | {}
       | null
+  } | null
+}
+
+export type FileQueryVariables = Exact<{
+  owner: Scalars['String']['input']
+  name: Scalars['String']['input']
+  filePath: Scalars['String']['input']
+}>
+
+export type FileQuery = {
+  repository?: {
+    id: string
+    object?: { text?: string | null; commitUrl: any } | {} | null
   } | null
 }
 
@@ -30169,7 +30186,18 @@ export const DocumentDocument = {
           kind: 'VariableDefinition',
           variable: {
             kind: 'Variable',
-            name: { kind: 'Name', value: 'filePath' }
+            name: { kind: 'Name', value: 'mdPath' }
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } }
+          }
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'mdxPath' }
           },
           type: {
             kind: 'NonNullType',
@@ -30204,9 +30232,9 @@ export const DocumentDocument = {
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
                 {
                   kind: 'Field',
+                  alias: { kind: 'Name', value: 'fileMD' },
                   name: { kind: 'Name', value: 'object' },
                   arguments: [
                     {
@@ -30214,7 +30242,7 @@ export const DocumentDocument = {
                       name: { kind: 'Name', value: 'expression' },
                       value: {
                         kind: 'Variable',
-                        name: { kind: 'Name', value: 'filePath' }
+                        name: { kind: 'Name', value: 'mdPath' }
                       }
                     }
                   ],
@@ -30233,10 +30261,42 @@ export const DocumentDocument = {
                             {
                               kind: 'Field',
                               name: { kind: 'Name', value: 'text' }
-                            },
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  kind: 'Field',
+                  alias: { kind: 'Name', value: 'fileMDX' },
+                  name: { kind: 'Name', value: 'object' },
+                  arguments: [
+                    {
+                      kind: 'Argument',
+                      name: { kind: 'Name', value: 'expression' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'mdxPath' }
+                      }
+                    }
+                  ],
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'InlineFragment',
+                        typeCondition: {
+                          kind: 'NamedType',
+                          name: { kind: 'Name', value: 'Blob' }
+                        },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
                             {
                               kind: 'Field',
-                              name: { kind: 'Name', value: 'commitUrl' }
+                              name: { kind: 'Name', value: 'text' }
                             }
                           ]
                         }
@@ -30402,6 +30462,120 @@ export const DocumentsDocument = {
     }
   ]
 } as unknown as DocumentNode<DocumentsQuery, DocumentsQueryVariables>
+export const FileDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'File' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'owner' }
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } }
+          }
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'name' } },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } }
+          }
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'filePath' }
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } }
+          }
+        }
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'repository' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'owner' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'owner' }
+                }
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'name' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'name' }
+                }
+              }
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'object' },
+                  arguments: [
+                    {
+                      kind: 'Argument',
+                      name: { kind: 'Name', value: 'expression' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'filePath' }
+                      }
+                    }
+                  ],
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'InlineFragment',
+                        typeCondition: {
+                          kind: 'NamedType',
+                          name: { kind: 'Name', value: 'Blob' }
+                        },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'text' }
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'commitUrl' }
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+} as unknown as DocumentNode<FileQuery, FileQueryVariables>
 export const FilesDocument = {
   kind: 'Document',
   definitions: [

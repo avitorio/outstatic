@@ -5,7 +5,7 @@ import { useQuery } from '@tanstack/react-query'
 import { useOutstaticNew } from './useOstData'
 import matter from 'gray-matter'
 import { OstDocument } from '@/types/public'
-import { useGetDocument } from './useGetDocument'
+import { useGetCollectionSchema } from './useGetCollectionSchema'
 
 const dateFormatOptions = {
   year: 'numeric' as const,
@@ -26,33 +26,17 @@ type TreeEntry = {
 }
 
 export const useGetDocuments = () => {
-  const {
-    repoOwner,
-    repoSlug,
-    repoBranch,
-    monorepoPath,
-    contentPath,
-    session
-  } = useOutstaticNew()
+  const { repoOwner, repoSlug, repoBranch, session, ostContent } =
+    useOutstaticNew()
 
   const params = useParams<{ ost: string[] }>()
 
-  const ostContent = `${repoBranch}:${
-    monorepoPath ? monorepoPath + '/' : ''
-  }${contentPath}/${params?.ost[0]}`
-
-  const { data: schema, isPending } = useGetDocument({
-    filePath: `${ostContent}/schema.json`,
-    enabled: true
-  })
-
+  const { data: schema, isPending } = useGetCollectionSchema()
+  console.log({ schema })
   return useQuery({
     queryKey: [`documents-${params?.ost}`, { repoOwner, repoSlug, repoBranch }],
     queryFn: async () => {
-      const object = schema
-        ? (schema?.repository?.object as { text: string })
-        : null
-      const { path } = object ? JSON.parse(object?.text) : { path: '' }
+      const path = schema ? schema?.path : ''
 
       const { repository } = await request(
         'https://api.github.com/graphql',
@@ -60,7 +44,9 @@ export const useGetDocuments = () => {
         {
           owner: repoOwner,
           name: repoSlug,
-          contentPath: path ? `${repoBranch}:${path}` : ostContent
+          contentPath: path
+            ? `${repoBranch}:${path}`
+            : `${repoBranch}:${ostContent}/${params?.ost[0]}`
         },
         {
           authorization: `Bearer ${session?.access_token}`

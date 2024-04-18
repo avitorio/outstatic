@@ -15,13 +15,21 @@ export const useOutstaticNew = () => {
     }
   }
 
-  return {
+  const outstaticData = {
     ...localData,
     ...initialData,
     isPending: localPending || isPending
   } as OutstaticData & {
     isPending: boolean
   }
+
+  const { monorepoPath, contentPath } = outstaticData
+
+  outstaticData.ostContent = `${
+    monorepoPath ? monorepoPath + '/' : ''
+  }${contentPath}`
+
+  return outstaticData
 }
 
 export const useLocalData = () => {

@@ -15,6 +15,7 @@ export type OutstaticData = {
   hasOpenAIKey: boolean
   basePath: string
   ostDetach: boolean
+  ostContent: string
 }
 
 export async function Outstatic({

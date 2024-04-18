@@ -8,9 +8,9 @@ import { MetadataSchema } from '@/utils/metadata/types'
 import { Trash2 } from 'lucide-react'
 import { useState } from 'react'
 import { Button } from '../ui/button'
-import { useGetDocument } from '@/utils/hooks/useGetDocument'
 import { useOutstaticNew } from '@/utils/hooks/useOstData'
 import { useCreateCommit } from '@/utils/hooks/useCreateCommit'
+import { useGetFile } from '@/utils/hooks/useGetFile'
 
 type DeleteDocumentButtonProps = {
   slug: string
@@ -36,7 +36,7 @@ const DeleteDocumentButton = ({
 
   const mutation = useCreateCommit()
 
-  const { refetch } = useGetDocument({
+  const { refetch } = useGetFile({
     filePath: `${repoBranch}:${
       monorepoPath ? monorepoPath + '/' : ''
     }${contentPath}/metadata.json`
