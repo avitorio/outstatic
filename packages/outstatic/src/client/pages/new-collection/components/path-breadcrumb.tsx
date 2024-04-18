@@ -9,21 +9,25 @@ import { Slash } from 'lucide-react'
 
 function PathBreadcrumbs({ path }: { path: string }) {
   return (
-    <div className="p-2 bg-gray-50 border-md">
+    <div className="flex items-center p-2 bg-gray-50 rounded-md h-10">
       <Breadcrumb>
         <BreadcrumbList>
-          {path.split('/').map((folder, index) => (
-            <>
-              <BreadcrumbSeparator>
-                <Slash />
-              </BreadcrumbSeparator>
-              {index !== path.split('/').length - 1 ? (
-                <BreadcrumbItem>{folder}</BreadcrumbItem>
-              ) : (
-                <BreadcrumbPage>{folder}</BreadcrumbPage>
-              )}
-            </>
-          ))}
+          {path
+            ? path.split('/').map((folder, index) => (
+                <>
+                  {index > 0 ? (
+                    <BreadcrumbSeparator>
+                      <Slash />
+                    </BreadcrumbSeparator>
+                  ) : null}
+                  {index !== path.split('/').length - 1 ? (
+                    <BreadcrumbItem>{folder}</BreadcrumbItem>
+                  ) : (
+                    <BreadcrumbPage>{folder}</BreadcrumbPage>
+                  )}
+                </>
+              ))
+            : null}
         </BreadcrumbList>
       </Breadcrumb>
     </div>
