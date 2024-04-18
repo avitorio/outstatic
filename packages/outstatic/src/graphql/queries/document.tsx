@@ -1,13 +1,21 @@
 import { graphql } from '../gql/gql'
 
 export const GET_DOCUMENT = graphql(`
-  query Document($owner: String!, $name: String!, $filePath: String!) {
+  query Document(
+    $owner: String!
+    $name: String!
+    $mdPath: String!
+    $mdxPath: String!
+  ) {
     repository(owner: $owner, name: $name) {
-      id
-      object(expression: $filePath) {
+      fileMD: object(expression: $mdPath) {
         ... on Blob {
           text
-          commitUrl
+        }
+      }
+      fileMDX: object(expression: $mdxPath) {
+        ... on Blob {
+          text
         }
       }
     }

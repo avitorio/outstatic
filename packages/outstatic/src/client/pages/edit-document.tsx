@@ -10,6 +10,7 @@ import { deepReplace } from '@/utils/deepReplace'
 import { useDocumentUpdateEffect } from '@/utils/hooks/useDocumentUpdateEffect'
 import useFileQuery from '@/utils/hooks/useFileQuery'
 import { useFileStore } from '@/utils/hooks/useFileStore'
+import { useGetCollectionSchema } from '@/utils/hooks/useGetCollectionSchema'
 import { useOutstaticNew } from '@/utils/hooks/useOstData'
 import useOutstatic from '@/utils/hooks/useOutstatic'
 import useSubmitDocument from '@/utils/hooks/useSubmitDocument'
@@ -36,6 +37,7 @@ export default function EditDocument({ collection }: { collection: string }) {
   const { editor } = useTipTap({ ...methods })
   const [customFields, setCustomFields] = useState<CustomFields>({})
   const files = useFileStore((state) => state.files)
+  const [extension, setExtension] = useState<'md' | 'mdx'>('mdx')
 
   const editDocument = (property: string, value: any) => {
     const formValues = methods.getValues()
@@ -43,9 +45,7 @@ export default function EditDocument({ collection }: { collection: string }) {
     methods.reset(newValue)
   }
 
-  const { data: schemaQueryData } = useFileQuery({
-    file: `${collection}/schema.json`
-  })
+  const { data: schema } = useGetCollectionSchema()
 
   const onSubmit = useSubmitDocument({
     session,
@@ -59,7 +59,8 @@ export default function EditDocument({ collection }: { collection: string }) {
     customFields,
     setCustomFields,
     setHasChanges,
-    editor
+    editor,
+    extension
   })
 
   useEffect(() => {
@@ -78,19 +79,18 @@ export default function EditDocument({ collection }: { collection: string }) {
     editor,
     session,
     setHasChanges,
-    setShowDelete
+    setShowDelete,
+    setExtension
   })
 
   // Add custom fields
   useEffect(() => {
-    const documentQueryObject = schemaQueryData?.repository?.object
-    if (documentQueryObject?.__typename === 'Blob') {
-      const schema = JSON.parse(documentQueryObject?.text || '{}')
+    if (schema) {
       const yupSchema = convertSchemaToYup(schema)
       setDocumentSchema(yupSchema)
       setCustomFields(schema.properties)
     }
-  }, [schemaQueryData])
+  }, [schema])
 
   return (
     <>

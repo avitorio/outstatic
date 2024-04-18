@@ -17,10 +17,12 @@ const documents = {
     types.CreateCommitDocument,
   '\n  query Collections($owner: String!, $name: String!, $contentPath: String!) {\n    repository(owner: $owner, name: $name) {\n      id\n      object(expression: $contentPath) {\n        ... on Tree {\n          entries {\n            name\n            type\n          }\n        }\n      }\n    }\n  }\n':
     types.CollectionsDocument,
-  '\n  query Document($owner: String!, $name: String!, $filePath: String!) {\n    repository(owner: $owner, name: $name) {\n      id\n      object(expression: $filePath) {\n        ... on Blob {\n          text\n          commitUrl\n        }\n      }\n    }\n  }\n':
+  '\n  query Document(\n    $owner: String!\n    $name: String!\n    $mdPath: String!\n    $mdxPath: String!\n  ) {\n    repository(owner: $owner, name: $name) {\n      fileMD: object(expression: $mdPath) {\n        ... on Blob {\n          text\n        }\n      }\n      fileMDX: object(expression: $mdxPath) {\n        ... on Blob {\n          text\n        }\n      }\n    }\n  }\n':
     types.DocumentDocument,
   '\n  query Documents($owner: String!, $name: String!, $contentPath: String!) {\n    repository(owner: $owner, name: $name) {\n      id\n      object(expression: $contentPath) {\n        ... on Tree {\n          entries {\n            name\n            object {\n              ... on Blob {\n                text\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n':
     types.DocumentsDocument,
+  '\n  query File($owner: String!, $name: String!, $filePath: String!) {\n    repository(owner: $owner, name: $name) {\n      id\n      object(expression: $filePath) {\n        ... on Blob {\n          text\n          commitUrl\n        }\n      }\n    }\n  }\n':
+    types.FileDocument,
   '\n  query Files($owner: String!, $name: String!, $contentPath: String!) {\n    repository(owner: $owner, name: $name) {\n      id\n      object(expression: $contentPath) {\n        ... on Tree {\n          entries {\n            path\n            name\n            type\n            object {\n              ... on Tree {\n                entries {\n                  path\n                  name\n                  type\n                }\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n':
     types.FilesDocument
 }
@@ -55,14 +57,20 @@ export function graphql(
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-  source: '\n  query Document($owner: String!, $name: String!, $filePath: String!) {\n    repository(owner: $owner, name: $name) {\n      id\n      object(expression: $filePath) {\n        ... on Blob {\n          text\n          commitUrl\n        }\n      }\n    }\n  }\n'
-): (typeof documents)['\n  query Document($owner: String!, $name: String!, $filePath: String!) {\n    repository(owner: $owner, name: $name) {\n      id\n      object(expression: $filePath) {\n        ... on Blob {\n          text\n          commitUrl\n        }\n      }\n    }\n  }\n']
+  source: '\n  query Document(\n    $owner: String!\n    $name: String!\n    $mdPath: String!\n    $mdxPath: String!\n  ) {\n    repository(owner: $owner, name: $name) {\n      fileMD: object(expression: $mdPath) {\n        ... on Blob {\n          text\n        }\n      }\n      fileMDX: object(expression: $mdxPath) {\n        ... on Blob {\n          text\n        }\n      }\n    }\n  }\n'
+): (typeof documents)['\n  query Document(\n    $owner: String!\n    $name: String!\n    $mdPath: String!\n    $mdxPath: String!\n  ) {\n    repository(owner: $owner, name: $name) {\n      fileMD: object(expression: $mdPath) {\n        ... on Blob {\n          text\n        }\n      }\n      fileMDX: object(expression: $mdxPath) {\n        ... on Blob {\n          text\n        }\n      }\n    }\n  }\n']
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
   source: '\n  query Documents($owner: String!, $name: String!, $contentPath: String!) {\n    repository(owner: $owner, name: $name) {\n      id\n      object(expression: $contentPath) {\n        ... on Tree {\n          entries {\n            name\n            object {\n              ... on Blob {\n                text\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n'
 ): (typeof documents)['\n  query Documents($owner: String!, $name: String!, $contentPath: String!) {\n    repository(owner: $owner, name: $name) {\n      id\n      object(expression: $contentPath) {\n        ... on Tree {\n          entries {\n            name\n            object {\n              ... on Blob {\n                text\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n']
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+  source: '\n  query File($owner: String!, $name: String!, $filePath: String!) {\n    repository(owner: $owner, name: $name) {\n      id\n      object(expression: $filePath) {\n        ... on Blob {\n          text\n          commitUrl\n        }\n      }\n    }\n  }\n'
+): (typeof documents)['\n  query File($owner: String!, $name: String!, $filePath: String!) {\n    repository(owner: $owner, name: $name) {\n      id\n      object(expression: $filePath) {\n        ... on Blob {\n          text\n          commitUrl\n        }\n      }\n    }\n  }\n']
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
