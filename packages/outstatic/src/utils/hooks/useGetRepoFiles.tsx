@@ -51,7 +51,6 @@ function filterFolders(entries: TreeEntry[]) {
   const result = []
 
   for (const entry of entries) {
-    console.log({ entry })
     // Check if the entry is a folder (type 'tree')
     if (entry.type === 'tree' && entry.name !== '.github') {
       const folder = {

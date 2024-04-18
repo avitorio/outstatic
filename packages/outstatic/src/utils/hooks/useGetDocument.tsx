@@ -3,7 +3,13 @@ import { useQuery } from '@tanstack/react-query'
 import { useOutstaticNew } from './useOstData'
 import { GET_DOCUMENT } from '@/graphql/queries/document'
 
-export const useGetDocument = ({ filePath }: { filePath: string }) => {
+export const useGetDocument = ({
+  filePath,
+  enabled = false
+}: {
+  filePath: string
+  enabled?: boolean
+}) => {
   const { repoOwner, repoSlug, session } = useOutstaticNew()
 
   return useQuery({
@@ -21,6 +27,6 @@ export const useGetDocument = ({ filePath }: { filePath: string }) => {
           authorization: `Bearer ${session?.access_token}`
         }
       ),
-    enabled: false
+    enabled
   })
 }

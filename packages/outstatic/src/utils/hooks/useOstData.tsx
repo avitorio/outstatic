@@ -51,12 +51,13 @@ export const useLocalData = () => {
 
       return {
         pages: [],
-        contentPath: '',
+        contentPath: 'outstatic/content',
         monorepoPath: '',
         repoSlug: '',
         repoBranch: '',
         repoOwner: '',
-        basePath: ''
+        basePath: '',
+        ostDetach: false
       }
     },
     meta: { persist: true }
