@@ -7,11 +7,11 @@ export const useOutstaticNew = () => {
 
   for (let key in initialData) {
     if (
-      initialData[key] === '' ||
-      initialData[key] === null ||
-      initialData[key] === undefined
+      initialData[key as keyof OutstaticData] === '' ||
+      initialData[key as keyof OutstaticData] === null ||
+      initialData[key as keyof OutstaticData] === undefined
     ) {
-      delete initialData[key]
+      delete initialData[key as keyof OutstaticData]
     }
   }
 
@@ -51,12 +51,13 @@ export const useLocalData = () => {
 
       return {
         pages: [],
-        contentPath: '',
+        contentPath: 'outstatic/content',
         monorepoPath: '',
         repoSlug: '',
         repoBranch: '',
         repoOwner: '',
-        basePath: ''
+        basePath: '',
+        ostDetach: false
       }
     },
     meta: { persist: true }

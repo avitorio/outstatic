@@ -5,6 +5,7 @@ import { useQuery } from '@tanstack/react-query'
 import { useOutstaticNew } from './useOstData'
 import matter from 'gray-matter'
 import { OstDocument } from '@/types/public'
+import { useGetDocument } from './useGetDocument'
 
 const dateFormatOptions = {
   year: 'numeric' as const,
@@ -20,6 +21,7 @@ type TreeEntry = {
   name: string
   object: {
     text: string
+    commitUrl: string
   }
 }
 
@@ -35,28 +37,37 @@ export const useGetDocuments = () => {
 
   const params = useParams<{ ost: string[] }>()
 
+  const ostContent = `${repoBranch}:${
+    monorepoPath ? monorepoPath + '/' : ''
+  }${contentPath}/${params?.ost[0]}`
+
+  const { data: schema, isPending } = useGetDocument({
+    filePath: `${ostContent}/schema.json`,
+    enabled: true
+  })
+
   return useQuery({
-    queryKey: [
-      `documents-${params?.ost}`,
-      { repoOwner, repoSlug, repoBranch, contentPath }
-    ],
+    queryKey: [`documents-${params?.ost}`, { repoOwner, repoSlug, repoBranch }],
     queryFn: async () => {
+      const object = schema
+        ? (schema?.repository?.object as { text: string })
+        : null
+      const { path } = object ? JSON.parse(object?.text) : { path: '' }
+
       const { repository } = await request(
         'https://api.github.com/graphql',
         GET_DOCUMENTS,
         {
           owner: repoOwner,
           name: repoSlug,
-          contentPath: `${repoBranch}:${
-            monorepoPath ? monorepoPath + '/' : ''
-          }${contentPath}/${params?.ost[0]}`
+          contentPath: path ? `${repoBranch}:${path}` : ostContent
         },
         {
           authorization: `Bearer ${session?.access_token}`
         }
       )
 
-      if (repository?.object === null) throw new Error('Ouch.')
+      if (repository?.object === null) return []
 
       let documents: OstDocument[] = []
 
@@ -74,6 +85,7 @@ export const useGetDocuments = () => {
               // Format document details
               const formattedData = {
                 ...(listData as OstDocument),
+                title: listData.title || name,
                 author: listData.author?.name || '',
                 publishedAt: new Date(listData.publishedAt).toLocaleDateString(
                   'en-US',
@@ -97,6 +109,7 @@ export const useGetDocuments = () => {
     },
     meta: {
       errorMessage: `Failed to fetch collection: ${params?.ost[0]}`
-    }
+    },
+    enabled: !isPending
   })
 }

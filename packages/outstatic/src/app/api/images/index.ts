@@ -6,7 +6,10 @@ const REPO_SLUG = process.env.OST_REPO_SLUG || process.env.VERCEL_GIT_REPO_SLUG
 const REPO_BRANCH = process.env.OST_REPO_BRANCH || 'main'
 const MONOREPO_PATH = process.env.OST_MONOREPO_PATH
 
-export default async function GET(req: NextRequest, res: NextResponse) {
+export default async function GET(
+  req: NextRequest,
+  res: NextResponse
+): Promise<Response> {
   const session = await getLoginSession()
 
   const REPO_OWNER = process.env.OST_REPO_OWNER || session?.user?.login

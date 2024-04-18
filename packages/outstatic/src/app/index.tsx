@@ -14,6 +14,7 @@ export type OutstaticData = {
   missingEnvVars: EnvVarsType | false
   hasOpenAIKey: boolean
   basePath: string
+  ostDetach: boolean
 }
 
 export async function Outstatic({
@@ -31,7 +32,7 @@ export async function Outstatic({
     OST_REPO_BRANCH: repoBranch || process.env.OST_REPO_BRANCH,
     OST_CONTENT_PATH: `${repoBranch || process.env.OST_REPO_BRANCH}:${
       process.env.OST_MONOREPO_PATH ? process.env.OST_MONOREPO_PATH + '/' : ''
-    }${process.env.OST_CONTENT_PATH || 'outstatic/content'}`,
+    }${process.env.OST_CONTENT_PATH || ''}`,
     OST_MONOREPO_PATH: '',
     OST_BASE_PATH: ''
   }
@@ -54,6 +55,7 @@ export async function Outstatic({
     initialApolloState: null,
     missingEnvVars: false,
     hasOpenAIKey: !!process.env.OPENAI_API_KEY,
-    basePath: process.env.OST_BASE_PATH || ''
+    basePath: process.env.OST_BASE_PATH || '',
+    ostDetach: process.env.OST_DETACH || false
   } as OutstaticData
 }
