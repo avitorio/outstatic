@@ -7,7 +7,7 @@ import { createCommitApi } from '@/utils/createCommitApi'
 import { hashFromUrl } from '@/utils/hashFromUrl'
 import { useCollections } from '@/utils/hooks/useCollections'
 import { useCreateCommit } from '@/utils/hooks/useCreateCommit'
-import { useGetDocument } from '@/utils/hooks/useGetDocument'
+import { useGetFile } from '@/utils/hooks/useGetFile'
 import useOid from '@/utils/hooks/useOid'
 import { useOutstaticNew } from '@/utils/hooks/useOstData'
 import { stringifyMetadata } from '@/utils/metadata/stringify'
@@ -31,7 +31,7 @@ export default function Collections() {
   const [deleting, setDeleting] = useState(false)
   const fetchOid = useOid()
 
-  const { refetch } = useGetDocument({
+  const { refetch } = useGetFile({
     filePath: `${repoBranch}:${
       monorepoPath ? monorepoPath + '/' : ''
     }${contentPath}/metadata.json`

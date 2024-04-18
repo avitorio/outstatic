@@ -13,15 +13,15 @@ import { createCommitApi } from '@/utils/createCommitApi'
 import { hashFromUrl } from '@/utils/hashFromUrl'
 import { mergeMdMeta } from '@/utils/mergeMdMeta'
 import { stringifyMetadata } from '@/utils/metadata/stringify'
-import { MetadataSchema } from '@/utils/metadata/types'
 import { Editor } from '@tiptap/react'
 import matter from 'gray-matter'
 import MurmurHash3 from 'imurmurhash'
 import { useCallback } from 'react'
 import { UseFormReturn } from 'react-hook-form'
-import useFileQuery from './useFileQuery'
 import useOid from './useOid'
 import { useOutstaticNew } from '@/utils/hooks/useOstData'
+import { useGetMetadata } from './useGetMetadata'
+import { useGetCollectionSchema } from './useGetCollectionSchema'
 
 type SubmitDocumentProps = {
   session: Session | null
@@ -36,6 +36,7 @@ type SubmitDocumentProps = {
   setCustomFields: (customFields: CustomFields) => void
   setHasChanges: (hasChanges: boolean) => void
   editor: Editor
+  extension: 'md' | 'mdx'
 }
 
 function useSubmitDocument({
@@ -50,20 +51,24 @@ function useSubmitDocument({
   customFields,
   setCustomFields,
   setHasChanges,
-  editor
+  editor,
+  extension
 }: SubmitDocumentProps) {
   const [createCommit] = useCreateCommitMutation()
   const {
     repoOwner,
     repoSlug,
     repoBranch,
-    contentPath,
     monorepoPath,
+    ostContent,
+    contentPath,
     basePath
   } = useOutstaticNew()
   const fetchOid = useOid()
-  const { data: metadata } = useFileQuery({
-    file: `metadata.json`
+
+  const { refetch: refetchSchema } = useGetCollectionSchema({ enabled: false })
+  const { refetch: refetchMetadata } = useGetMetadata({
+    enabled: false
   })
 
   const onSubmit = useCallback(
@@ -71,6 +76,13 @@ function useSubmitDocument({
       setLoading(true)
 
       try {
+        const [{ data: schema }, { data: metadata }] = await Promise.all([
+          refetchSchema(),
+          refetchMetadata()
+        ])
+
+        const collectionPath = schema?.path ?? `${ostContent}/${collection}`
+
         const document = methods.getValues()
         const mdContent = editor.storage.markdown.getMarkdown()
         let content = mergeMdMeta({ ...data, content: mdContent }, basePath)
@@ -92,11 +104,7 @@ function useSubmitDocument({
         })
 
         if (oldSlug) {
-          capi.removeFile(
-            `${
-              monorepoPath ? monorepoPath + '/' : ''
-            }${contentPath}/${collection}/${oldSlug}.md`
-          )
+          capi.removeFile(`${collectionPath}/${oldSlug}.${extension}`)
         }
 
         if (files.length > 0) {
@@ -139,12 +147,7 @@ function useSubmitDocument({
 
         const { data: matterData } = matter(content)
 
-        capi.replaceFile(
-          `${
-            monorepoPath ? monorepoPath + '/' : ''
-          }${contentPath}/${collection}/${newSlug}.md`,
-          content
-        )
+        capi.replaceFile(`${collectionPath}/${newSlug}.${extension}`, content)
 
         // Check if a new tag value was added
         let hasNewTag = false
@@ -193,21 +196,17 @@ function useSubmitDocument({
           )
 
           capi.replaceFile(
-            `${
-              monorepoPath ? monorepoPath + '/' : ''
-            }${contentPath}/${collection}/schema.json`,
+            `${ostContent}/${collection}/schema.json`,
             customFieldsJSON + '\n'
           )
         }
 
         // update metadata for this post
         // requires final content for hashing
-        if (metadata?.repository?.object?.__typename === 'Blob') {
-          const m = JSON.parse(
-            metadata.repository.object.text ?? '{}'
-          ) as MetadataSchema
+        if (metadata?.metadata) {
+          const m = metadata.metadata
           m.generated = new Date().toISOString()
-          m.commit = hashFromUrl(metadata.repository.object.commitUrl)
+          m.commit = hashFromUrl(metadata.commitUrl)
           const newMeta = (m.metadata ?? []).filter(
             (c) =>
               !(
@@ -226,14 +225,12 @@ function useSubmitDocument({
             __outstatic: {
               hash: `${state.result()}`,
               commit: m.commit,
-              path: `${contentPath}/${collection}/${newSlug}.md`
+              path: `${contentPath}/${collection}/${newSlug}.${extension}`
             }
           })
 
           capi.replaceFile(
-            `${
-              monorepoPath ? monorepoPath + '/' : ''
-            }${contentPath}/metadata.json`,
+            `${ostContent}/metadata.json`,
             stringifyMetadata({ ...m, metadata: newMeta })
           )
         }
@@ -268,15 +265,16 @@ function useSubmitDocument({
       methods,
       monorepoPath,
       contentPath,
+      ostContent,
       collection,
       customFields,
       setCustomFields,
       repoSlug,
       repoBranch,
-      metadata,
       setHasChanges,
       editor,
-      basePath
+      basePath,
+      extension
     ]
   )
 
