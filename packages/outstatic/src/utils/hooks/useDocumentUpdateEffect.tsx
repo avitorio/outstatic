@@ -8,7 +8,6 @@ import { UseFormReturn } from 'react-hook-form'
 import { useOutstaticNew } from './useOstData'
 import { useGetDocument } from './useGetDocument'
 import { useGetCollectionSchema } from './useGetCollectionSchema'
-// import useOutstaticNew from './useOutstatic'
 
 interface UseDocumentUpdateEffectProps {
   collection: string
@@ -45,7 +44,7 @@ export const useDocumentUpdateEffect = ({
   })
 
   useEffect(() => {
-    if (document) {
+    if (document && editor) {
       const { mdDocument } = document
       const { data, content } = matter(mdDocument)
 
