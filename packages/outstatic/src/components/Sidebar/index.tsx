@@ -3,6 +3,7 @@ import { OUTSTATIC_VERSION } from '@/utils/constants'
 import generateUniqueId from '@/utils/generateUniqueId'
 import useOutstatic from '@/utils/hooks/useOutstatic'
 import cookies from 'js-cookie'
+import { Plus } from 'lucide-react'
 import { useEffect, useState } from 'react'
 
 type SidebarProps = {
@@ -89,8 +90,11 @@ const Sidebar = ({ isOpen = false }: SidebarProps) => {
           <>
             {collections.map((collection) => (
               <li key={collection}>
-                <Link href={`/outstatic/${collection}`}>
-                  <div className="flex cursor-pointer items-center rounded-lg p-2 text-base font-normal text-gray-900 hover:bg-gray-100">
+                <div className="w-full flex cursor-pointer items-center rounded-lg p-2 text-base font-normal text-gray-900 hover:bg-gray-100">
+                  <Link
+                    href={`/outstatic/${collection}`}
+                    className="flex flex-grow items-center"
+                  >
                     <svg
                       className="h-6 w-6 shrink-0 text-gray-500 transition duration-75 group-hover:text-gray-900"
                       fill="none"
@@ -106,8 +110,14 @@ const Sidebar = ({ isOpen = false }: SidebarProps) => {
                       ></path>
                     </svg>
                     <span className="ml-3 capitalize">{collection}</span>
-                  </div>
-                </Link>
+                  </Link>
+                  <Link
+                    href={`/outstatic/${collection}/new`}
+                    className="bg-white p-1 border border-gray-200 text-gray-500 rounded-sm hover:text-gray-700"
+                  >
+                    <Plus strokeWidth={3} size={14} />
+                  </Link>
+                </div>
               </li>
             ))}
           </>
