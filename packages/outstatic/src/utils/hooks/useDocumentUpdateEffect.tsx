@@ -41,7 +41,7 @@ export const useDocumentUpdateEffect = ({
         ? `${repoBranch}:${schema.path}`
         : `${repoBranch}:${ostContent}/${collection}`
     }/${slug}`,
-    enabled: slug !== 'new' && !!schema
+    enabled: slug !== 'new' && schema !== undefined
   })
 
   useEffect(() => {
