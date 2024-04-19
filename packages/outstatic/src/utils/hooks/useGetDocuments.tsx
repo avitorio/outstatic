@@ -26,17 +26,18 @@ type TreeEntry = {
 }
 
 export const useGetDocuments = () => {
-  const { repoOwner, repoSlug, repoBranch, session, ostContent } =
+  const { repoOwner, repoSlug, repoBranch, session, ostContent, ostDetach } =
     useOutstaticNew()
 
   const params = useParams<{ ost: string[] }>()
 
-  const { data: schema, isPending } = useGetCollectionSchema()
-  console.log({ schema })
+  const { refetch } = useGetCollectionSchema({ enabled: false })
+
   return useQuery({
     queryKey: [`documents-${params?.ost}`, { repoOwner, repoSlug, repoBranch }],
     queryFn: async () => {
-      const path = schema ? schema?.path : ''
+      const schemaResponse = ostDetach ? await refetch() : null
+      const path = schemaResponse?.data?.schema?.spath
 
       const { repository } = await request(
         'https://api.github.com/graphql',
@@ -95,7 +96,6 @@ export const useGetDocuments = () => {
     },
     meta: {
       errorMessage: `Failed to fetch collection: ${params?.ost[0]}`
-    },
-    enabled: !isPending
+    }
   })
 }
