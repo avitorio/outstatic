@@ -4,6 +4,11 @@ import { useOutstaticNew } from './useOstData'
 import { GET_FILE } from '@/graphql/queries/file'
 import { MetadataSchema } from '../metadata/types'
 
+export type GetMetadataType = {
+  metadata: MetadataSchema
+  commitUrl: string
+} | null
+
 export const useGetMetadata = ({
   enabled = true
 }: {
@@ -16,7 +21,7 @@ export const useGetMetadata = ({
 
   return useQuery({
     queryKey: ['metadata', { filePath }],
-    queryFn: async () => {
+    queryFn: async (): Promise<GetMetadata> => {
       const { repository } = await request(
         'https://api.github.com/graphql',
         GET_FILE,
@@ -30,7 +35,7 @@ export const useGetMetadata = ({
         }
       )
 
-      if (repository?.object === null) throw new Error('No metadata found')
+      if (repository?.object === null) return null
 
       const { text, commitUrl } = repository?.object as {
         text: string

@@ -4,21 +4,31 @@ import { useOutstaticNew } from './useOstData'
 import { useParams } from 'next/navigation'
 import { GET_FILE } from '@/graphql/queries/file'
 
+export type SchemaType = {
+  title: string
+  type: string
+  properties: Record<string, unknown>
+  path: string
+} | null
+
 export const useGetCollectionSchema = ({
+  collection,
   enabled = true
 }: {
+  collection?: string
   enabled?: boolean
 } = {}) => {
   const { repoOwner, repoSlug, repoBranch, ostContent, session } =
     useOutstaticNew()
 
   const params = useParams<{ ost: string[] }>()
+  const collectionSlug = collection || params?.ost[0]
 
-  const filePath = `${repoBranch}:${ostContent}/${params?.ost[0]}/schema.json`
+  const filePath = `${repoBranch}:${ostContent}/${collectionSlug}/schema.json`
 
   return useQuery({
     queryKey: ['collection-schema', { filePath }],
-    queryFn: async () => {
+    queryFn: async (): Promise<SchemaType> => {
       try {
         const { repository } = await request(
           'https://api.github.com/graphql',
@@ -43,7 +53,7 @@ export const useGetCollectionSchema = ({
       }
     },
     meta: {
-      errorMessage: `Failed to fetch schema for: ${params?.ost[0]}`
+      errorMessage: `Failed to fetch schema for: ${collectionSlug}`
     },
     enabled
   })
