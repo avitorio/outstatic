@@ -5,6 +5,13 @@ import useOutstatic from '@/utils/hooks/useOutstatic'
 import cookies from 'js-cookie'
 import { Plus } from 'lucide-react'
 import { useEffect, useState } from 'react'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger
+} from '@/components/ui/tooltip'
+import { singular } from 'pluralize'
 
 type SidebarProps = {
   isOpen: boolean
@@ -90,7 +97,7 @@ const Sidebar = ({ isOpen = false }: SidebarProps) => {
           <>
             {collections.map((collection) => (
               <li key={collection}>
-                <div className="w-full flex cursor-pointer items-center rounded-lg p-2 text-base font-normal text-gray-900 hover:bg-gray-100">
+                <div className="group w-full flex cursor-pointer items-center rounded-lg p-2 text-base font-normal text-gray-900 hover:bg-gray-100">
                   <Link
                     href={`/outstatic/${collection}`}
                     className="flex flex-grow items-center"
@@ -111,12 +118,29 @@ const Sidebar = ({ isOpen = false }: SidebarProps) => {
                     </svg>
                     <span className="ml-3 capitalize">{collection}</span>
                   </Link>
-                  <Link
-                    href={`/outstatic/${collection}/new`}
-                    className="bg-white p-1 border border-gray-200 text-gray-500 rounded-sm hover:text-gray-700"
-                  >
-                    <Plus strokeWidth={3} size={14} />
-                  </Link>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <div className="z-10">
+                          <Link
+                            href={`/outstatic/${collection}/new`}
+                            className="hidden group-hover:block bg-white p-1 border border-gray-200 text-gray-500 rounded-sm hover:text-gray-700"
+                            aria-label='Create new item in collection "collection"'
+                          >
+                            <Plus strokeWidth={3} size={14} />
+                          </Link>
+                        </div>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>
+                          Create new{' '}
+                          <span className="inline-block first-letter:uppercase">
+                            {singular(collection)}
+                          </span>
+                        </p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
                 </div>
               </li>
             ))}
