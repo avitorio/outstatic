@@ -1,5 +1,11 @@
 # outstatic
 
+## 1.4.8
+
+### Patch Changes
+
+- 506a070: Add new post button to sidebar
+
 ## 1.4.7
 
 ### Patch Changes
