@@ -22,7 +22,10 @@ export function SearchCombobox({
   setValue,
   onValueChange,
   isLoading = false,
-  disabled = false
+  disabled = false,
+  selectPlaceholder = 'Select',
+  searchPlaceholder = 'Search',
+  resultsPlaceholder = 'No results found'
 }: {
   data: { value: string; label: string }[]
   value: string
@@ -30,6 +33,9 @@ export function SearchCombobox({
   onValueChange: (value: string) => void
   isLoading?: boolean
   disabled?: boolean
+  selectPlaceholder?: string
+  searchPlaceholder?: string
+  resultsPlaceholder?: string
 }) {
   const [open, setOpen] = React.useState(false)
   return (
@@ -45,7 +51,7 @@ export function SearchCombobox({
           <span className="block min-w-0 flex-1 text-left h-4">
             {value
               ? data.find((dataRecord) => dataRecord.value === value)?.label
-              : 'Select a repository'}
+              : selectPlaceholder}
           </span>
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
@@ -53,11 +59,11 @@ export function SearchCombobox({
       <PopoverContent className="w-[320px] p-0">
         <Command>
           <CommandInput
-            placeholder="Search repository"
+            placeholder={searchPlaceholder}
             onValueChange={onValueChange}
             isLoading={isLoading}
           />
-          <CommandEmpty>No repository selected</CommandEmpty>
+          <CommandEmpty>{resultsPlaceholder}</CommandEmpty>
           <ScrollArea className="h-[200px]">
             <CommandList>
               <CommandGroup>

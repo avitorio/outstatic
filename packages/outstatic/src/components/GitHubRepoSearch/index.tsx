@@ -1,6 +1,5 @@
 'use client'
 import useOutstatic from '@/utils/hooks/useOutstatic'
-import debounce from 'lodash/debounce'
 import React, { useEffect, useState } from 'react'
 
 import { SearchCombobox } from '@/components/ui/search-combobox'
@@ -9,11 +8,7 @@ import {
   useLocalData,
   useOutstaticNew
 } from '@/utils/hooks/useOstData'
-
-interface Repository {
-  full_name: string
-  private?: boolean
-}
+import { useDebouncedCallback } from 'use-debounce'
 
 const GitHubRepoSearch: React.FC = () => {
   const { data: env } = useInitialData()
@@ -23,13 +18,9 @@ const GitHubRepoSearch: React.FC = () => {
   const initialSuggestion = repository ? [{ full_name: repository }] : []
   const { session } = useOutstatic()
   const [query, setQuery] = useState<string>('')
-  const [suggestions, setSuggestions] =
-    useState<Repository[]>(initialSuggestion)
+  const [suggestions, setSuggestions] = useState(initialSuggestion)
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [value, setValue] = React.useState(repository)
-
-  // Replace 'YOUR_TOKEN_HERE' with your actual GitHub Personal Access Token
-  const githubToken = session?.access_token
 
   const fetchRepositories = async (searchQuery: string) => {
     if (!searchQuery) {
@@ -41,7 +32,7 @@ const GitHubRepoSearch: React.FC = () => {
         `https://api.github.com/search/repositories?q=${searchQuery}&per_page=100&timestamp=${Date.now()}`,
         {
           headers: new Headers({
-            Authorization: `token ${githubToken}`
+            Authorization: `token ${session?.access_token}`
           })
         }
       )
@@ -49,7 +40,9 @@ const GitHubRepoSearch: React.FC = () => {
         throw new Error('Network response was not ok')
       }
       const data = await response.json()
-      setSuggestions(data.items)
+      setSuggestions((oldData) =>
+        data.items.length > 0 ? data.items : oldData
+      )
     } catch (error) {
       console.error('There was a problem with the fetch operation:', error)
     } finally {
@@ -58,10 +51,13 @@ const GitHubRepoSearch: React.FC = () => {
   }
 
   // Using lodash's debounce
-  const debouncedFetchRepositories = debounce(fetchRepositories, 300)
+  const debouncedFetchRepositories = useDebouncedCallback(
+    fetchRepositories,
+    300
+  )
 
   useEffect(() => {
-    if (query) {
+    if (query && query !== `${repoOwner}/${repoSlug}`) {
       setIsLoading(true)
       debouncedFetchRepositories(`${query} in:name fork:true`)
     } else {
@@ -77,7 +73,7 @@ const GitHubRepoSearch: React.FC = () => {
     if (value) {
       setQuery(value)
       const [repoOwner, repoSlug] = value.split('/')
-      setData({ repoSlug, repoOwner })
+      setData({ repoSlug, repoOwner, repoBranch: '' })
     }
   }, [value])
 
@@ -92,7 +88,9 @@ const GitHubRepoSearch: React.FC = () => {
                   label: `${repoOwner}/${repoSlug}`
                 }
               ]
-            : suggestions.map((repo) => ({
+            : [
+                ...(suggestions.length > 0 ? suggestions : initialSuggestion)
+              ].map((repo) => ({
                 value: repo.full_name,
                 label: repo.full_name
               }))
@@ -102,6 +100,9 @@ const GitHubRepoSearch: React.FC = () => {
         onValueChange={setQuery}
         isLoading={isLoading}
         disabled={!!env?.repoSlug}
+        searchPlaceholder="Ex: avitorio/outstatic"
+        selectPlaceholder="Search for a repository"
+        resultsPlaceholder="No repositories found"
       />
     </div>
   )

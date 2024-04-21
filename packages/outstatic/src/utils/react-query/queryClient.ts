@@ -10,7 +10,8 @@ export const queryClient = new QueryClient({
     onError: (error, query) => {
       if (query.state.error !== undefined) {
         toast.error(
-          (query?.meta?.errorMessage as string) || 'Something went wrong.'
+          (query?.meta?.errorMessage as string) ||
+            `Something went wrong: ${error.message}`
         )
       }
     }
