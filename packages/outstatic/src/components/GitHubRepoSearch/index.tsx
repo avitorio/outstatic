@@ -50,7 +50,6 @@ const GitHubRepoSearch: React.FC = () => {
     }
   }
 
-  // Using lodash's debounce
   const debouncedFetchRepositories = useDebouncedCallback(
     fetchRepositories,
     300

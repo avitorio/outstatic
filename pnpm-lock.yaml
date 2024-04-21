@@ -436,7 +436,6 @@ importers:
       '@types/jest': ^29.0.0
       '@types/js-cookie': ^3.0.3
       '@types/json-stable-stringify': ^1.0.34
-      '@types/lodash': ^4.17.0
       '@types/lowlight': ^0.0.3
       '@types/node': ^20
       '@types/pluralize': ^0.0.29
@@ -467,7 +466,6 @@ importers:
       js-base64: ^3.7.2
       js-cookie: ^3.0.5
       json-stable-stringify: ^1.0.2
-      lodash: ^4.17.21
       lowlight: ^1.0
       lucide-react: ^0.370.0
       lz-string: ^1.5.0
@@ -568,7 +566,6 @@ importers:
       js-base64: 3.7.7
       js-cookie: 3.0.5
       json-stable-stringify: 1.1.1
-      lodash: 4.17.21
       lowlight: 1.20.0
       lucide-react: 0.370.0_react@18.2.0
       lz-string: 1.5.0
@@ -617,7 +614,6 @@ importers:
       '@types/jest': 29.5.12
       '@types/js-cookie': 3.0.6
       '@types/json-stable-stringify': 1.0.36
-      '@types/lodash': 4.17.0
       '@types/lowlight': 0.0.3
       '@types/node': 20.11.30
       '@types/pluralize': 0.0.29
@@ -4515,7 +4511,7 @@ packages:
       lodash.isplainobject: 4.0.6
       lodash.merge: 4.6.2
       postcss-selector-parser: 6.0.10
-      tailwindcss: 3.4.1
+      tailwindcss: 3.4.1_ts-node@10.9.2
     dev: true
 
   /@tanstack/eslint-plugin-query/5.28.11_kigkzfftsmftz3xok324pyvzui:
@@ -5176,6 +5172,7 @@ packages:
 
   /@types/lodash/4.17.0:
     resolution: {integrity: sha512-t7dhREVv6dbNj0q17X12j7yDG4bD/DHYX7o5/DbDxobP0HnGPgpRz2Ej77aL7TZT3DSw13fqUTj8J4mMnqa7WA==}
+    dev: false
 
   /@types/lowlight/0.0.3:
     resolution: {integrity: sha512-R83q/yPX2nIlo9D3WtSjyUDd57t8s+GVLaL8YIv3k7zMMWpYpOXqjJgrWp80qXUJB/a1t76nTyBpxrv0JNYaEg==}
