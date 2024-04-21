@@ -1,6 +1,5 @@
 'use client'
 import useOutstatic from '@/utils/hooks/useOutstatic'
-import debounce from 'lodash/debounce'
 import React, { useEffect, useState } from 'react'
 
 import { SearchCombobox } from '@/components/ui/search-combobox'
