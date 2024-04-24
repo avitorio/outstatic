@@ -29969,6 +29969,632 @@ export type FilesQuery = {
   } | null
 }
 
+export type GetFileInformationQueryVariables = Exact<{
+  owner: Scalars['String']['input']
+  name: Scalars['String']['input']
+  expression: Scalars['String']['input']
+}>
+
+export type GetFileInformationQuery = {
+  repository?: {
+    id: string
+    object?:
+      | ({ commitUrl: any } & {
+          ' $fragmentRefs'?: {
+            RecursiveTreeDetailsFragment: RecursiveTreeDetailsFragment
+          }
+        })
+      | {}
+      | null
+  } | null
+}
+
+export type TreeDetailsFragment = { path?: string | null; type: string } & {
+  ' $fragmentName'?: 'TreeDetailsFragment'
+}
+
+export type BlobDetailsFragment = { oid: any; commitUrl: any } & {
+  ' $fragmentName'?: 'BlobDetailsFragment'
+}
+
+export type RecursiveTreeDetailsFragment = {
+  entries?: Array<
+    {
+      object?:
+        | { ' $fragmentRefs'?: { BlobDetailsFragment: BlobDetailsFragment } }
+        | {
+            entries?: Array<
+              {
+                object?:
+                  | {
+                      ' $fragmentRefs'?: {
+                        BlobDetailsFragment: BlobDetailsFragment
+                      }
+                    }
+                  | {
+                      entries?: Array<
+                        {
+                          object?:
+                            | {
+                                ' $fragmentRefs'?: {
+                                  BlobDetailsFragment: BlobDetailsFragment
+                                }
+                              }
+                            | {
+                                entries?: Array<
+                                  {
+                                    object?:
+                                      | {
+                                          ' $fragmentRefs'?: {
+                                            BlobDetailsFragment: BlobDetailsFragment
+                                          }
+                                        }
+                                      | {
+                                          entries?: Array<
+                                            {
+                                              object?:
+                                                | {
+                                                    ' $fragmentRefs'?: {
+                                                      BlobDetailsFragment: BlobDetailsFragment
+                                                    }
+                                                  }
+                                                | {
+                                                    entries?: Array<
+                                                      {
+                                                        object?:
+                                                          | {
+                                                              ' $fragmentRefs'?: {
+                                                                BlobDetailsFragment: BlobDetailsFragment
+                                                              }
+                                                            }
+                                                          | {}
+                                                          | null
+                                                      } & {
+                                                        ' $fragmentRefs'?: {
+                                                          TreeDetailsFragment: TreeDetailsFragment
+                                                        }
+                                                      }
+                                                    > | null
+                                                  }
+                                                | {}
+                                                | null
+                                            } & {
+                                              ' $fragmentRefs'?: {
+                                                TreeDetailsFragment: TreeDetailsFragment
+                                              }
+                                            }
+                                          > | null
+                                        }
+                                      | {}
+                                      | null
+                                  } & {
+                                    ' $fragmentRefs'?: {
+                                      TreeDetailsFragment: TreeDetailsFragment
+                                    }
+                                  }
+                                > | null
+                              }
+                            | {}
+                            | null
+                        } & {
+                          ' $fragmentRefs'?: {
+                            TreeDetailsFragment: TreeDetailsFragment
+                          }
+                        }
+                      > | null
+                    }
+                  | {}
+                  | null
+              } & {
+                ' $fragmentRefs'?: { TreeDetailsFragment: TreeDetailsFragment }
+              }
+            > | null
+          }
+        | {}
+        | null
+    } & { ' $fragmentRefs'?: { TreeDetailsFragment: TreeDetailsFragment } }
+  > | null
+} & { ' $fragmentName'?: 'RecursiveTreeDetailsFragment' }
+
+export const TreeDetailsFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'TreeDetails' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'TreeEntry' }
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'path' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } }
+        ]
+      }
+    }
+  ]
+} as unknown as DocumentNode<TreeDetailsFragment, unknown>
+export const BlobDetailsFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'BlobDetails' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Blob' }
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'oid' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'commitUrl' } }
+        ]
+      }
+    }
+  ]
+} as unknown as DocumentNode<BlobDetailsFragment, unknown>
+export const RecursiveTreeDetailsFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'RecursiveTreeDetails' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Tree' }
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'entries' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'TreeDetails' }
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'object' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'InlineFragment',
+                        typeCondition: {
+                          kind: 'NamedType',
+                          name: { kind: 'Name', value: 'Blob' }
+                        },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'FragmentSpread',
+                              name: { kind: 'Name', value: 'BlobDetails' }
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        kind: 'InlineFragment',
+                        typeCondition: {
+                          kind: 'NamedType',
+                          name: { kind: 'Name', value: 'Tree' }
+                        },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'entries' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'FragmentSpread',
+                                    name: { kind: 'Name', value: 'TreeDetails' }
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'object' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'InlineFragment',
+                                          typeCondition: {
+                                            kind: 'NamedType',
+                                            name: {
+                                              kind: 'Name',
+                                              value: 'Blob'
+                                            }
+                                          },
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'FragmentSpread',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'BlobDetails'
+                                                }
+                                              }
+                                            ]
+                                          }
+                                        },
+                                        {
+                                          kind: 'InlineFragment',
+                                          typeCondition: {
+                                            kind: 'NamedType',
+                                            name: {
+                                              kind: 'Name',
+                                              value: 'Tree'
+                                            }
+                                          },
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'entries'
+                                                },
+                                                selectionSet: {
+                                                  kind: 'SelectionSet',
+                                                  selections: [
+                                                    {
+                                                      kind: 'FragmentSpread',
+                                                      name: {
+                                                        kind: 'Name',
+                                                        value: 'TreeDetails'
+                                                      }
+                                                    },
+                                                    {
+                                                      kind: 'Field',
+                                                      name: {
+                                                        kind: 'Name',
+                                                        value: 'object'
+                                                      },
+                                                      selectionSet: {
+                                                        kind: 'SelectionSet',
+                                                        selections: [
+                                                          {
+                                                            kind: 'InlineFragment',
+                                                            typeCondition: {
+                                                              kind: 'NamedType',
+                                                              name: {
+                                                                kind: 'Name',
+                                                                value: 'Blob'
+                                                              }
+                                                            },
+                                                            selectionSet: {
+                                                              kind: 'SelectionSet',
+                                                              selections: [
+                                                                {
+                                                                  kind: 'FragmentSpread',
+                                                                  name: {
+                                                                    kind: 'Name',
+                                                                    value:
+                                                                      'BlobDetails'
+                                                                  }
+                                                                }
+                                                              ]
+                                                            }
+                                                          },
+                                                          {
+                                                            kind: 'InlineFragment',
+                                                            typeCondition: {
+                                                              kind: 'NamedType',
+                                                              name: {
+                                                                kind: 'Name',
+                                                                value: 'Tree'
+                                                              }
+                                                            },
+                                                            selectionSet: {
+                                                              kind: 'SelectionSet',
+                                                              selections: [
+                                                                {
+                                                                  kind: 'Field',
+                                                                  name: {
+                                                                    kind: 'Name',
+                                                                    value:
+                                                                      'entries'
+                                                                  },
+                                                                  selectionSet:
+                                                                    {
+                                                                      kind: 'SelectionSet',
+                                                                      selections:
+                                                                        [
+                                                                          {
+                                                                            kind: 'FragmentSpread',
+                                                                            name: {
+                                                                              kind: 'Name',
+                                                                              value:
+                                                                                'TreeDetails'
+                                                                            }
+                                                                          },
+                                                                          {
+                                                                            kind: 'Field',
+                                                                            name: {
+                                                                              kind: 'Name',
+                                                                              value:
+                                                                                'object'
+                                                                            },
+                                                                            selectionSet:
+                                                                              {
+                                                                                kind: 'SelectionSet',
+                                                                                selections:
+                                                                                  [
+                                                                                    {
+                                                                                      kind: 'InlineFragment',
+                                                                                      typeCondition:
+                                                                                        {
+                                                                                          kind: 'NamedType',
+                                                                                          name: {
+                                                                                            kind: 'Name',
+                                                                                            value:
+                                                                                              'Blob'
+                                                                                          }
+                                                                                        },
+                                                                                      selectionSet:
+                                                                                        {
+                                                                                          kind: 'SelectionSet',
+                                                                                          selections:
+                                                                                            [
+                                                                                              {
+                                                                                                kind: 'FragmentSpread',
+                                                                                                name: {
+                                                                                                  kind: 'Name',
+                                                                                                  value:
+                                                                                                    'BlobDetails'
+                                                                                                }
+                                                                                              }
+                                                                                            ]
+                                                                                        }
+                                                                                    },
+                                                                                    {
+                                                                                      kind: 'InlineFragment',
+                                                                                      typeCondition:
+                                                                                        {
+                                                                                          kind: 'NamedType',
+                                                                                          name: {
+                                                                                            kind: 'Name',
+                                                                                            value:
+                                                                                              'Tree'
+                                                                                          }
+                                                                                        },
+                                                                                      selectionSet:
+                                                                                        {
+                                                                                          kind: 'SelectionSet',
+                                                                                          selections:
+                                                                                            [
+                                                                                              {
+                                                                                                kind: 'Field',
+                                                                                                name: {
+                                                                                                  kind: 'Name',
+                                                                                                  value:
+                                                                                                    'entries'
+                                                                                                },
+                                                                                                selectionSet:
+                                                                                                  {
+                                                                                                    kind: 'SelectionSet',
+                                                                                                    selections:
+                                                                                                      [
+                                                                                                        {
+                                                                                                          kind: 'FragmentSpread',
+                                                                                                          name: {
+                                                                                                            kind: 'Name',
+                                                                                                            value:
+                                                                                                              'TreeDetails'
+                                                                                                          }
+                                                                                                        },
+                                                                                                        {
+                                                                                                          kind: 'Field',
+                                                                                                          name: {
+                                                                                                            kind: 'Name',
+                                                                                                            value:
+                                                                                                              'object'
+                                                                                                          },
+                                                                                                          selectionSet:
+                                                                                                            {
+                                                                                                              kind: 'SelectionSet',
+                                                                                                              selections:
+                                                                                                                [
+                                                                                                                  {
+                                                                                                                    kind: 'InlineFragment',
+                                                                                                                    typeCondition:
+                                                                                                                      {
+                                                                                                                        kind: 'NamedType',
+                                                                                                                        name: {
+                                                                                                                          kind: 'Name',
+                                                                                                                          value:
+                                                                                                                            'Blob'
+                                                                                                                        }
+                                                                                                                      },
+                                                                                                                    selectionSet:
+                                                                                                                      {
+                                                                                                                        kind: 'SelectionSet',
+                                                                                                                        selections:
+                                                                                                                          [
+                                                                                                                            {
+                                                                                                                              kind: 'FragmentSpread',
+                                                                                                                              name: {
+                                                                                                                                kind: 'Name',
+                                                                                                                                value:
+                                                                                                                                  'BlobDetails'
+                                                                                                                              }
+                                                                                                                            }
+                                                                                                                          ]
+                                                                                                                      }
+                                                                                                                  },
+                                                                                                                  {
+                                                                                                                    kind: 'InlineFragment',
+                                                                                                                    typeCondition:
+                                                                                                                      {
+                                                                                                                        kind: 'NamedType',
+                                                                                                                        name: {
+                                                                                                                          kind: 'Name',
+                                                                                                                          value:
+                                                                                                                            'Tree'
+                                                                                                                        }
+                                                                                                                      },
+                                                                                                                    selectionSet:
+                                                                                                                      {
+                                                                                                                        kind: 'SelectionSet',
+                                                                                                                        selections:
+                                                                                                                          [
+                                                                                                                            {
+                                                                                                                              kind: 'Field',
+                                                                                                                              name: {
+                                                                                                                                kind: 'Name',
+                                                                                                                                value:
+                                                                                                                                  'entries'
+                                                                                                                              },
+                                                                                                                              selectionSet:
+                                                                                                                                {
+                                                                                                                                  kind: 'SelectionSet',
+                                                                                                                                  selections:
+                                                                                                                                    [
+                                                                                                                                      {
+                                                                                                                                        kind: 'FragmentSpread',
+                                                                                                                                        name: {
+                                                                                                                                          kind: 'Name',
+                                                                                                                                          value:
+                                                                                                                                            'TreeDetails'
+                                                                                                                                        }
+                                                                                                                                      },
+                                                                                                                                      {
+                                                                                                                                        kind: 'Field',
+                                                                                                                                        name: {
+                                                                                                                                          kind: 'Name',
+                                                                                                                                          value:
+                                                                                                                                            'object'
+                                                                                                                                        },
+                                                                                                                                        selectionSet:
+                                                                                                                                          {
+                                                                                                                                            kind: 'SelectionSet',
+                                                                                                                                            selections:
+                                                                                                                                              [
+                                                                                                                                                {
+                                                                                                                                                  kind: 'InlineFragment',
+                                                                                                                                                  typeCondition:
+                                                                                                                                                    {
+                                                                                                                                                      kind: 'NamedType',
+                                                                                                                                                      name: {
+                                                                                                                                                        kind: 'Name',
+                                                                                                                                                        value:
+                                                                                                                                                          'Blob'
+                                                                                                                                                      }
+                                                                                                                                                    },
+                                                                                                                                                  selectionSet:
+                                                                                                                                                    {
+                                                                                                                                                      kind: 'SelectionSet',
+                                                                                                                                                      selections:
+                                                                                                                                                        [
+                                                                                                                                                          {
+                                                                                                                                                            kind: 'FragmentSpread',
+                                                                                                                                                            name: {
+                                                                                                                                                              kind: 'Name',
+                                                                                                                                                              value:
+                                                                                                                                                                'BlobDetails'
+                                                                                                                                                            }
+                                                                                                                                                          }
+                                                                                                                                                        ]
+                                                                                                                                                    }
+                                                                                                                                                }
+                                                                                                                                              ]
+                                                                                                                                          }
+                                                                                                                                      }
+                                                                                                                                    ]
+                                                                                                                                }
+                                                                                                                            }
+                                                                                                                          ]
+                                                                                                                      }
+                                                                                                                  }
+                                                                                                                ]
+                                                                                                            }
+                                                                                                        }
+                                                                                                      ]
+                                                                                                  }
+                                                                                              }
+                                                                                            ]
+                                                                                        }
+                                                                                    }
+                                                                                  ]
+                                                                              }
+                                                                          }
+                                                                        ]
+                                                                    }
+                                                                }
+                                                              ]
+                                                            }
+                                                          }
+                                                        ]
+                                                      }
+                                                    }
+                                                  ]
+                                                }
+                                              }
+                                            ]
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                ]
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'TreeDetails' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'TreeEntry' }
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'path' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } }
+        ]
+      }
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'BlobDetails' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Blob' }
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'oid' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'commitUrl' } }
+        ]
+      }
+    }
+  ]
+} as unknown as DocumentNode<RecursiveTreeDetailsFragment, unknown>
 export const CreateCommitDocument = {
   kind: 'Document',
   definitions: [
@@ -30760,3 +31386,577 @@ export const FilesDocument = {
     }
   ]
 } as unknown as DocumentNode<FilesQuery, FilesQueryVariables>
+export const GetFileInformationDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'GetFileInformation' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'owner' }
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } }
+          }
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'name' } },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } }
+          }
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'expression' }
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } }
+          }
+        }
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'repository' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'owner' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'owner' }
+                }
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'name' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'name' }
+                }
+              }
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'object' },
+                  arguments: [
+                    {
+                      kind: 'Argument',
+                      name: { kind: 'Name', value: 'expression' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'expression' }
+                      }
+                    }
+                  ],
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'InlineFragment',
+                        typeCondition: {
+                          kind: 'NamedType',
+                          name: { kind: 'Name', value: 'Tree' }
+                        },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'commitUrl' }
+                            },
+                            {
+                              kind: 'FragmentSpread',
+                              name: {
+                                kind: 'Name',
+                                value: 'RecursiveTreeDetails'
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'TreeDetails' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'TreeEntry' }
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'path' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } }
+        ]
+      }
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'BlobDetails' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Blob' }
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'oid' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'commitUrl' } }
+        ]
+      }
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'RecursiveTreeDetails' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Tree' }
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'entries' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'TreeDetails' }
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'object' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'InlineFragment',
+                        typeCondition: {
+                          kind: 'NamedType',
+                          name: { kind: 'Name', value: 'Blob' }
+                        },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'FragmentSpread',
+                              name: { kind: 'Name', value: 'BlobDetails' }
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        kind: 'InlineFragment',
+                        typeCondition: {
+                          kind: 'NamedType',
+                          name: { kind: 'Name', value: 'Tree' }
+                        },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'entries' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'FragmentSpread',
+                                    name: { kind: 'Name', value: 'TreeDetails' }
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'object' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'InlineFragment',
+                                          typeCondition: {
+                                            kind: 'NamedType',
+                                            name: {
+                                              kind: 'Name',
+                                              value: 'Blob'
+                                            }
+                                          },
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'FragmentSpread',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'BlobDetails'
+                                                }
+                                              }
+                                            ]
+                                          }
+                                        },
+                                        {
+                                          kind: 'InlineFragment',
+                                          typeCondition: {
+                                            kind: 'NamedType',
+                                            name: {
+                                              kind: 'Name',
+                                              value: 'Tree'
+                                            }
+                                          },
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'entries'
+                                                },
+                                                selectionSet: {
+                                                  kind: 'SelectionSet',
+                                                  selections: [
+                                                    {
+                                                      kind: 'FragmentSpread',
+                                                      name: {
+                                                        kind: 'Name',
+                                                        value: 'TreeDetails'
+                                                      }
+                                                    },
+                                                    {
+                                                      kind: 'Field',
+                                                      name: {
+                                                        kind: 'Name',
+                                                        value: 'object'
+                                                      },
+                                                      selectionSet: {
+                                                        kind: 'SelectionSet',
+                                                        selections: [
+                                                          {
+                                                            kind: 'InlineFragment',
+                                                            typeCondition: {
+                                                              kind: 'NamedType',
+                                                              name: {
+                                                                kind: 'Name',
+                                                                value: 'Blob'
+                                                              }
+                                                            },
+                                                            selectionSet: {
+                                                              kind: 'SelectionSet',
+                                                              selections: [
+                                                                {
+                                                                  kind: 'FragmentSpread',
+                                                                  name: {
+                                                                    kind: 'Name',
+                                                                    value:
+                                                                      'BlobDetails'
+                                                                  }
+                                                                }
+                                                              ]
+                                                            }
+                                                          },
+                                                          {
+                                                            kind: 'InlineFragment',
+                                                            typeCondition: {
+                                                              kind: 'NamedType',
+                                                              name: {
+                                                                kind: 'Name',
+                                                                value: 'Tree'
+                                                              }
+                                                            },
+                                                            selectionSet: {
+                                                              kind: 'SelectionSet',
+                                                              selections: [
+                                                                {
+                                                                  kind: 'Field',
+                                                                  name: {
+                                                                    kind: 'Name',
+                                                                    value:
+                                                                      'entries'
+                                                                  },
+                                                                  selectionSet:
+                                                                    {
+                                                                      kind: 'SelectionSet',
+                                                                      selections:
+                                                                        [
+                                                                          {
+                                                                            kind: 'FragmentSpread',
+                                                                            name: {
+                                                                              kind: 'Name',
+                                                                              value:
+                                                                                'TreeDetails'
+                                                                            }
+                                                                          },
+                                                                          {
+                                                                            kind: 'Field',
+                                                                            name: {
+                                                                              kind: 'Name',
+                                                                              value:
+                                                                                'object'
+                                                                            },
+                                                                            selectionSet:
+                                                                              {
+                                                                                kind: 'SelectionSet',
+                                                                                selections:
+                                                                                  [
+                                                                                    {
+                                                                                      kind: 'InlineFragment',
+                                                                                      typeCondition:
+                                                                                        {
+                                                                                          kind: 'NamedType',
+                                                                                          name: {
+                                                                                            kind: 'Name',
+                                                                                            value:
+                                                                                              'Blob'
+                                                                                          }
+                                                                                        },
+                                                                                      selectionSet:
+                                                                                        {
+                                                                                          kind: 'SelectionSet',
+                                                                                          selections:
+                                                                                            [
+                                                                                              {
+                                                                                                kind: 'FragmentSpread',
+                                                                                                name: {
+                                                                                                  kind: 'Name',
+                                                                                                  value:
+                                                                                                    'BlobDetails'
+                                                                                                }
+                                                                                              }
+                                                                                            ]
+                                                                                        }
+                                                                                    },
+                                                                                    {
+                                                                                      kind: 'InlineFragment',
+                                                                                      typeCondition:
+                                                                                        {
+                                                                                          kind: 'NamedType',
+                                                                                          name: {
+                                                                                            kind: 'Name',
+                                                                                            value:
+                                                                                              'Tree'
+                                                                                          }
+                                                                                        },
+                                                                                      selectionSet:
+                                                                                        {
+                                                                                          kind: 'SelectionSet',
+                                                                                          selections:
+                                                                                            [
+                                                                                              {
+                                                                                                kind: 'Field',
+                                                                                                name: {
+                                                                                                  kind: 'Name',
+                                                                                                  value:
+                                                                                                    'entries'
+                                                                                                },
+                                                                                                selectionSet:
+                                                                                                  {
+                                                                                                    kind: 'SelectionSet',
+                                                                                                    selections:
+                                                                                                      [
+                                                                                                        {
+                                                                                                          kind: 'FragmentSpread',
+                                                                                                          name: {
+                                                                                                            kind: 'Name',
+                                                                                                            value:
+                                                                                                              'TreeDetails'
+                                                                                                          }
+                                                                                                        },
+                                                                                                        {
+                                                                                                          kind: 'Field',
+                                                                                                          name: {
+                                                                                                            kind: 'Name',
+                                                                                                            value:
+                                                                                                              'object'
+                                                                                                          },
+                                                                                                          selectionSet:
+                                                                                                            {
+                                                                                                              kind: 'SelectionSet',
+                                                                                                              selections:
+                                                                                                                [
+                                                                                                                  {
+                                                                                                                    kind: 'InlineFragment',
+                                                                                                                    typeCondition:
+                                                                                                                      {
+                                                                                                                        kind: 'NamedType',
+                                                                                                                        name: {
+                                                                                                                          kind: 'Name',
+                                                                                                                          value:
+                                                                                                                            'Blob'
+                                                                                                                        }
+                                                                                                                      },
+                                                                                                                    selectionSet:
+                                                                                                                      {
+                                                                                                                        kind: 'SelectionSet',
+                                                                                                                        selections:
+                                                                                                                          [
+                                                                                                                            {
+                                                                                                                              kind: 'FragmentSpread',
+                                                                                                                              name: {
+                                                                                                                                kind: 'Name',
+                                                                                                                                value:
+                                                                                                                                  'BlobDetails'
+                                                                                                                              }
+                                                                                                                            }
+                                                                                                                          ]
+                                                                                                                      }
+                                                                                                                  },
+                                                                                                                  {
+                                                                                                                    kind: 'InlineFragment',
+                                                                                                                    typeCondition:
+                                                                                                                      {
+                                                                                                                        kind: 'NamedType',
+                                                                                                                        name: {
+                                                                                                                          kind: 'Name',
+                                                                                                                          value:
+                                                                                                                            'Tree'
+                                                                                                                        }
+                                                                                                                      },
+                                                                                                                    selectionSet:
+                                                                                                                      {
+                                                                                                                        kind: 'SelectionSet',
+                                                                                                                        selections:
+                                                                                                                          [
+                                                                                                                            {
+                                                                                                                              kind: 'Field',
+                                                                                                                              name: {
+                                                                                                                                kind: 'Name',
+                                                                                                                                value:
+                                                                                                                                  'entries'
+                                                                                                                              },
+                                                                                                                              selectionSet:
+                                                                                                                                {
+                                                                                                                                  kind: 'SelectionSet',
+                                                                                                                                  selections:
+                                                                                                                                    [
+                                                                                                                                      {
+                                                                                                                                        kind: 'FragmentSpread',
+                                                                                                                                        name: {
+                                                                                                                                          kind: 'Name',
+                                                                                                                                          value:
+                                                                                                                                            'TreeDetails'
+                                                                                                                                        }
+                                                                                                                                      },
+                                                                                                                                      {
+                                                                                                                                        kind: 'Field',
+                                                                                                                                        name: {
+                                                                                                                                          kind: 'Name',
+                                                                                                                                          value:
+                                                                                                                                            'object'
+                                                                                                                                        },
+                                                                                                                                        selectionSet:
+                                                                                                                                          {
+                                                                                                                                            kind: 'SelectionSet',
+                                                                                                                                            selections:
+                                                                                                                                              [
+                                                                                                                                                {
+                                                                                                                                                  kind: 'InlineFragment',
+                                                                                                                                                  typeCondition:
+                                                                                                                                                    {
+                                                                                                                                                      kind: 'NamedType',
+                                                                                                                                                      name: {
+                                                                                                                                                        kind: 'Name',
+                                                                                                                                                        value:
+                                                                                                                                                          'Blob'
+                                                                                                                                                      }
+                                                                                                                                                    },
+                                                                                                                                                  selectionSet:
+                                                                                                                                                    {
+                                                                                                                                                      kind: 'SelectionSet',
+                                                                                                                                                      selections:
+                                                                                                                                                        [
+                                                                                                                                                          {
+                                                                                                                                                            kind: 'FragmentSpread',
+                                                                                                                                                            name: {
+                                                                                                                                                              kind: 'Name',
+                                                                                                                                                              value:
+                                                                                                                                                                'BlobDetails'
+                                                                                                                                                            }
+                                                                                                                                                          }
+                                                                                                                                                        ]
+                                                                                                                                                    }
+                                                                                                                                                }
+                                                                                                                                              ]
+                                                                                                                                          }
+                                                                                                                                      }
+                                                                                                                                    ]
+                                                                                                                                }
+                                                                                                                            }
+                                                                                                                          ]
+                                                                                                                      }
+                                                                                                                  }
+                                                                                                                ]
+                                                                                                            }
+                                                                                                        }
+                                                                                                      ]
+                                                                                                  }
+                                                                                              }
+                                                                                            ]
+                                                                                        }
+                                                                                    }
+                                                                                  ]
+                                                                              }
+                                                                          }
+                                                                        ]
+                                                                    }
+                                                                }
+                                                              ]
+                                                            }
+                                                          }
+                                                        ]
+                                                      }
+                                                    }
+                                                  ]
+                                                }
+                                              }
+                                            ]
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                ]
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+} as unknown as DocumentNode<
+  GetFileInformationQuery,
+  GetFileInformationQueryVariables
+>

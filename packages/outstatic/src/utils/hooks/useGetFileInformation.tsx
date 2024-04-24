@@ -1,15 +1,29 @@
-import { GET_FILE } from '@/graphql/queries/file'
+import { GET_FILE_INFORMATION } from '@/graphql/queries/metadata'
 import { useQuery } from '@tanstack/react-query'
 import request from 'graphql-request'
-import { MetadataSchema } from '../metadata/types'
 import { useOutstaticNew } from './useOstData'
 
-export type GetMetadataType = {
-  metadata: MetadataSchema
+type RepoObject = {
+  oid: string
+  text: string
   commitUrl: string
-} | null
+  entries: TreeEntry[]
+}
 
-export const useGetMetadata = ({
+type FileInformationDataType = {
+  repository: {
+    object: RepoObject
+  }
+}
+
+type TreeEntry = {
+  name: string
+  object: RepoObject
+  type: 'tree' | 'blob'
+  path: string
+}
+
+export const useGetFileInformation = ({
   enabled = true
 }: {
   enabled?: boolean
@@ -21,10 +35,10 @@ export const useGetMetadata = ({
 
   return useQuery({
     queryKey: ['metadata', { filePath }],
-    queryFn: async (): Promise<GetMetadataType> => {
-      const { repository } = await request(
+    queryFn: async () =>
+      await request<FileInformationDataType>(
         'https://api.github.com/graphql',
-        GET_FILE,
+        GET_FILE_INFORMATION,
         {
           owner: repoOwner || session?.user?.login || '',
           name: repoSlug,
@@ -33,19 +47,7 @@ export const useGetMetadata = ({
         {
           authorization: `Bearer ${session?.access_token}`
         }
-      )
-
-      if (repository?.object === null) return null
-
-      const { text, commitUrl } = repository?.object as {
-        text: string
-        commitUrl: string
-      }
-
-      const metadata = JSON.parse(text) as MetadataSchema
-
-      return { metadata, commitUrl }
-    },
+      ),
     meta: {
       errorMessage: `Failed to fetch metadata.`
     },
