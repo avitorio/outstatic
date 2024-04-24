@@ -15,7 +15,22 @@ jest.mock('@/utils/auth/hooks', () => ({
 }))
 
 // Mock useOid hook
-jest.mock('@/utils/hooks/useOid', () => () => jest.fn())
+jest.mock('@/utils/hooks/useOid', () => () => jest.fn().mockReturnValue('123'))
+// Mock useGetMetadata hook
+jest.mock('@/utils/hooks/useGetMetadata', () => ({
+  useGetMetadata: () => ({
+    refetch: async () =>
+      Promise.resolve({
+        data: { metadata: { metadata: [{ slug: 'a-post' }] }, commitUrl: '' }
+      })
+  })
+}))
+
+jest.mock('@/utils/hooks/useCreateCommit', () => ({
+  useCreateCommit: () => ({
+    mutate: async () => Promise.resolve(true)
+  })
+}))
 
 // Mock createCommitApi
 jest.mock('@/utils/createCommitApi', () => ({
@@ -33,6 +48,7 @@ test('DeleteDocumentButton renders and operates correctly', async () => {
     <TestWrapper>
       <DeleteDocumentButton
         slug={'a-post'}
+        extension={'md'}
         disabled={false}
         collection="posts"
         onComplete={onComplete}
