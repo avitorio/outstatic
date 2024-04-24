@@ -8,15 +8,10 @@ import {
   SchemaType,
   useGetCollectionSchema
 } from '@/utils/hooks/useGetCollectionSchema'
-import {
-  GetMetadata,
-  GetMetadataType,
-  useGetMetadata
-} from '@/utils/hooks/useGetMetadata'
+import { GetMetadataType, useGetMetadata } from '@/utils/hooks/useGetMetadata'
 import useOid from '@/utils/hooks/useOid'
 import { useOutstaticNew } from '@/utils/hooks/useOstData'
 import { stringifyMetadata } from '@/utils/metadata/stringify'
-import { MetadataSchema } from '@/utils/metadata/types'
 import { Label } from '@radix-ui/react-label'
 import { useState } from 'react'
 

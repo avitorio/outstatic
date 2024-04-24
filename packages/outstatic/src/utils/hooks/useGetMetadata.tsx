@@ -1,8 +1,8 @@
-import request from 'graphql-request'
-import { useQuery } from '@tanstack/react-query'
-import { useOutstaticNew } from './useOstData'
 import { GET_FILE } from '@/graphql/queries/file'
+import { useQuery } from '@tanstack/react-query'
+import request from 'graphql-request'
 import { MetadataSchema } from '../metadata/types'
+import { useOutstaticNew } from './useOstData'
 
 export type GetMetadataType = {
   metadata: MetadataSchema
@@ -21,7 +21,7 @@ export const useGetMetadata = ({
 
   return useQuery({
     queryKey: ['metadata', { filePath }],
-    queryFn: async (): Promise<GetMetadata> => {
+    queryFn: async (): Promise<GetMetadataType> => {
       const { repository } = await request(
         'https://api.github.com/graphql',
         GET_FILE,
