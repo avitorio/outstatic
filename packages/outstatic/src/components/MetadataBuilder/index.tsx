@@ -54,8 +54,7 @@ export const MetadataBuilder: React.FC<MetadataBuilderProps> = ({
 
   const files = useMemo(() => {
     if (!data) return []
-    // strip object freeze to work with mutable data
-    // https://github.com/apollographql/apollo-client/issues/5987#issuecomment-590938556
+
     const o = data?.repository?.object
 
     const output: FileData[] = []
@@ -74,7 +73,7 @@ export const MetadataBuilder: React.FC<MetadataBuilderProps> = ({
         })
       }
     }
-    // clone out of Apollo's forced read-only
+
     return output
   }, [data])
 

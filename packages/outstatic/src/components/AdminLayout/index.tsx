@@ -1,10 +1,9 @@
 import { useOstSession } from '@/utils/auth/hooks'
-import { ApolloError } from '@apollo/client'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 
 export type AdminLayoutProps = {
-  error?: string | ApolloError
+  error?: string
   children: React.ReactNode
   settings?: React.ReactNode
   title?: string

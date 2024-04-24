@@ -7,6 +7,7 @@ process.env.OST_TOKEN_SECRET = 'TEST_OST_TOKEN_SECRET'
 process.env.OST_CONTENT_PATH = 'TEST_OST_CONTENT_PATH'
 process.env.OST_REPO_OWNER = 'TEST_OST_REPO_OWNER'
 process.env.OST_REPO_SLUG = 'TEST_OST_REPO_SLUG'
+process.env.OST_REPO_BRANCH = 'TEST_OST_REPO_BRANCH'
 
 // required by Iron
 process.env.OST_TOKEN_SECRET = '32characterstringtestrequirement'
