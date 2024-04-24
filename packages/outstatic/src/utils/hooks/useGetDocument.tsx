@@ -1,7 +1,8 @@
-import request from 'graphql-request'
-import { useQuery } from '@tanstack/react-query'
-import { useOutstaticNew } from './useOstData'
 import { GET_DOCUMENT } from '@/graphql/queries/document'
+import { MDExtensions } from '@/types'
+import { useQuery } from '@tanstack/react-query'
+import request from 'graphql-request'
+import { useOutstaticNew } from './useOstData'
 
 type Repository = {
   fileMD: { text: string } | null
@@ -14,7 +15,7 @@ export type GetDocumentData = {
 
 type DocumentData = {
   mdDocument: string
-  extension: 'md' | 'mdx'
+  extension: MDExtensions
 } | null
 
 export const useGetDocument = ({

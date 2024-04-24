@@ -3,6 +3,7 @@ import {
   CustomFields,
   Document,
   FileType,
+  MDExtensions,
   Session,
   isArrayCustomField
 } from '@/types'
@@ -36,7 +37,7 @@ type SubmitDocumentProps = {
   setCustomFields: (customFields: CustomFields) => void
   setHasChanges: (hasChanges: boolean) => void
   editor: Editor
-  extension: 'md' | 'mdx'
+  extension: MDExtensions
 }
 
 function useSubmitDocument({

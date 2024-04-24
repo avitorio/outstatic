@@ -42,7 +42,6 @@ const useOid = () => {
   })
 
   const fetchOid = useCallback(async () => {
-    console.log('yo')
     const { data } = await oidQuery()
     return data
   }, [oidQuery])

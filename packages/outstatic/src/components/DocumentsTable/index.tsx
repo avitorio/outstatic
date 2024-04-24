@@ -1,14 +1,14 @@
 import DeleteDocumentButton from '@/components/DeleteDocumentButton'
 import SortableSelect from '@/components/SortableSelect'
 import { OstDocument } from '@/types/public'
+import { useGetDocuments } from '@/utils/hooks/useGetDocuments'
 import { sentenceCase } from 'change-case'
 import cookies from 'js-cookie'
 import { Settings } from 'lucide-react'
 import Link from 'next/link'
+import { useParams } from 'next/navigation'
 import { useState } from 'react'
 import { Button } from '../ui/button'
-import { useParams } from 'next/navigation'
-import { useGetDocuments } from '@/utils/hooks/useGetDocuments'
 
 export type Column = {
   id: string
@@ -78,6 +78,7 @@ const DocumentsTable = () => {
                   <td className="pr-6 py-4 text-right">
                     <DeleteDocumentButton
                       slug={document.slug}
+                      extension={document.extension}
                       disabled={false}
                       onComplete={() => refetch()}
                       collection={params.ost[0]}
