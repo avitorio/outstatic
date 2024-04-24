@@ -1,20 +1,15 @@
-import {
-  DocumentDocument,
-  DocumentQuery,
-  DocumentQueryVariables,
-  GetFileInformationQuery,
-  useCreateCommitMutation,
-  useGetFileInformationQuery
-} from '@/graphql/generated'
-import { DeepNonNullable } from '@/types'
-import { useApollo } from '@/utils/apollo'
+import { GET_DOCUMENT } from '@/graphql/queries/document'
 import { chunk } from '@/utils/chunk'
 import { createCommitApi } from '@/utils/createCommitApi'
 import { hashFromUrl } from '@/utils/hashFromUrl'
+import { useCreateCommit } from '@/utils/hooks/useCreateCommit'
+import { GetDocumentData } from '@/utils/hooks/useGetDocument'
+import { useGetFileInformation } from '@/utils/hooks/useGetFileInformation'
 import useOid from '@/utils/hooks/useOid'
 import { useOutstaticNew } from '@/utils/hooks/useOstData'
 import { stringifyMetadata } from '@/utils/metadata/stringify'
 import { MetadataSchema, OutstaticSchema } from '@/utils/metadata/types'
+import request from 'graphql-request'
 import matter from 'gray-matter'
 import MurmurHash3 from 'imurmurhash'
 import React, { HTMLAttributes, useEffect, useMemo, useState } from 'react'
@@ -42,43 +37,44 @@ export const MetadataBuilder: React.FC<MetadataBuilderProps> = ({
 }) => {
   const [total, setTotal] = useState(0)
   const [processed, setProcessed] = useState(0)
-  const client = useApollo()
   const fetchOid = useOid()
-  const [commit] = useCreateCommitMutation()
 
-  const { repoOwner, repoSlug, repoBranch, contentPath, monorepoPath } =
-    useOutstaticNew()
+  const mutation = useCreateCommit()
+
+  const {
+    repoOwner,
+    repoSlug,
+    repoBranch,
+    contentPath,
+    monorepoPath,
+    session
+  } = useOutstaticNew()
 
   const rootPath = [monorepoPath, contentPath].filter(Boolean).join('/')
 
-  const { data } = useGetFileInformationQuery({
-    variables: {
-      owner: repoOwner,
-      name: repoSlug,
-      expression: `${repoBranch}:${rootPath}`
-    },
-    skip: !rebuild
-  })
+  const { refetch, data } = useGetFileInformation({ enabled: false })
+
+  useEffect(() => {
+    if (rebuild) {
+      refetch()
+    }
+  }, [rebuild, refetch])
 
   const files = useMemo(() => {
+    if (!data) return []
     // strip object freeze to work with mutable data
     // https://github.com/apollographql/apollo-client/issues/5987#issuecomment-590938556
-    const o = JSON.parse(
-      JSON.stringify(data?.repository?.object ?? {})
-    ) as DeepNonNullable<GetFileInformationQuery>['repository']['object']
+    const o = data?.repository?.object
 
     const output: FileData[] = []
-    const queue = 'entries' in o ? o.entries ?? [] : []
-
+    const queue = o?.entries ? [...o.entries] : []
     while (queue.length > 0) {
       const next = queue.pop()
-      if (next?.object?.__typename === 'Tree') {
+      console.log(next)
+      if (next?.type === 'tree') {
         // subdir - add entries to queue
         queue.push(...(next.object.entries ?? []))
-      } else if (
-        next?.object?.__typename === 'Blob' &&
-        isIndexable(next.path)
-      ) {
+      } else if (next?.type === 'blob' && isIndexable(next.path)) {
         // file - add to output
         output.push({
           path: next.path,
@@ -93,19 +89,27 @@ export const MetadataBuilder: React.FC<MetadataBuilderProps> = ({
 
   // using useEffect ensures we run a single processing loop
   useEffect(() => {
+    console.log({ data })
     const takeAndProcess = async (o: FileData) => {
-      const res = await client.query<DocumentQuery, DocumentQueryVariables>({
-        query: DocumentDocument,
-        variables: {
-          owner: repoOwner,
+      const filePath = o.path.replace(/\.mdx?$/, '')
+      const { repository } = await request<GetDocumentData>(
+        'https://api.github.com/graphql',
+        GET_DOCUMENT,
+        {
+          owner: repoOwner || session?.user?.login || '',
           name: repoSlug,
-          filePath: `${repoBranch}:${o.path}`
+          mdPath: `${repoBranch}:${filePath}.md`,
+          mdxPath: `${repoBranch}:${filePath}.mdx`
+        },
+        {
+          authorization: `Bearer ${session?.access_token}`
         }
-      })
+      )
 
-      if (res.data.repository?.object?.__typename === 'Blob') {
-        const m = matter(res.data.repository.object.text ?? '')
-        const state = MurmurHash3(res.data.repository.object.text ?? '')
+      if (repository?.fileMD || repository?.fileMDX) {
+        const text = repository?.fileMD?.text ?? repository?.fileMDX?.text ?? ''
+        const m = matter(text)
+        const state = MurmurHash3(text)
         const fmd: Partial<OutstaticSchema> = {
           ...m.data,
           slug:
@@ -155,9 +159,8 @@ export const MetadataBuilder: React.FC<MetadataBuilderProps> = ({
 
       if (docs.length > 0 && oid) {
         const parentHash = hashFromUrl(
-          data?.repository?.object?.__typename === 'Tree'
-            ? data.repository.object.commitUrl
-            : ''
+          // @ts-ignore
+          data?.repository?.object?.commitUrl ?? ''
         )
         const db: MetadataSchema = {
           commit: parentHash,
@@ -180,12 +183,10 @@ export const MetadataBuilder: React.FC<MetadataBuilderProps> = ({
         )
         const payload = capi.createInput()
 
+        // console.log({payload});
+        // return;
         try {
-          await commit({
-            variables: {
-              input: payload
-            }
-          })
+          mutation.mutate(payload)
         } catch (e) {
           console.error(e)
         }
@@ -193,19 +194,8 @@ export const MetadataBuilder: React.FC<MetadataBuilderProps> = ({
     }
 
     fn().catch(console.error)
-  }, [
-    client,
-    data?.repository?.object,
-    files,
-    repoBranch,
-    repoOwner,
-    repoSlug,
-    rootPath,
-    fetchOid,
-    contentPath,
-    monorepoPath,
-    commit
-  ])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [files])
 
   useEffect(() => {
     if (processed === total && onComplete) {

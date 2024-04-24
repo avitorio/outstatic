@@ -30,15 +30,13 @@ export const useDocumentUpdateEffect = ({
   setShowDelete,
   setExtension
 }: UseDocumentUpdateEffectProps) => {
-  const { basePath, ostContent, repoBranch } = useOutstaticNew()
+  const { basePath, ostContent } = useOutstaticNew()
 
   const { data: schema } = useGetCollectionSchema({ enabled: slug !== 'new' })
 
   const { data: document } = useGetDocument({
     filePath: `${
-      schema?.path
-        ? `${repoBranch}:${schema.path}`
-        : `${repoBranch}:${ostContent}/${collection}`
+      schema?.path ? `${schema.path}` : `${ostContent}/${collection}`
     }/${slug}`,
     enabled: slug !== 'new' && schema !== undefined
   })
