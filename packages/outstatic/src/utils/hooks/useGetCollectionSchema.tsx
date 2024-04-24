@@ -1,13 +1,14 @@
-import request from 'graphql-request'
-import { useQuery } from '@tanstack/react-query'
-import { useOutstaticNew } from './useOstData'
-import { useParams } from 'next/navigation'
 import { GET_FILE } from '@/graphql/queries/file'
+import { CustomFields } from '@/types'
+import { useQuery } from '@tanstack/react-query'
+import request from 'graphql-request'
+import { useParams } from 'next/navigation'
+import { useOutstaticNew } from './useOstData'
 
 export type SchemaType = {
   title: string
   type: string
-  properties: Record<string, unknown>
+  properties: CustomFields
   path: string
 } | null
 
