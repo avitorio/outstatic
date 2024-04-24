@@ -30096,6 +30096,24 @@ export type RecursiveTreeDetailsFragment = {
   > | null
 } & { ' $fragmentName'?: 'RecursiveTreeDetailsFragment' }
 
+export type OidQueryVariables = Exact<{
+  owner: Scalars['String']['input']
+  name: Scalars['String']['input']
+  branch: Scalars['String']['input']
+}>
+
+export type OidQuery = {
+  repository?: {
+    id: string
+    ref?: {
+      target?:
+        | { history: { nodes?: Array<{ oid: any } | null> | null } }
+        | {}
+        | null
+    } | null
+  } | null
+}
+
 export const TreeDetailsFragmentDoc = {
   kind: 'Document',
   definitions: [
@@ -31960,3 +31978,153 @@ export const GetFileInformationDocument = {
   GetFileInformationQuery,
   GetFileInformationQueryVariables
 >
+export const OidDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'Oid' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'owner' }
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } }
+          }
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'name' } },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } }
+          }
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'branch' }
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } }
+          }
+        }
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'repository' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'owner' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'owner' }
+                }
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'name' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'name' }
+                }
+              }
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'ref' },
+                  arguments: [
+                    {
+                      kind: 'Argument',
+                      name: { kind: 'Name', value: 'qualifiedName' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'branch' }
+                      }
+                    }
+                  ],
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'target' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'InlineFragment',
+                              typeCondition: {
+                                kind: 'NamedType',
+                                name: { kind: 'Name', value: 'Commit' }
+                              },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'history' },
+                                    arguments: [
+                                      {
+                                        kind: 'Argument',
+                                        name: { kind: 'Name', value: 'first' },
+                                        value: { kind: 'IntValue', value: '1' }
+                                      }
+                                    ],
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'nodes'
+                                          },
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'oid'
+                                                }
+                                              }
+                                            ]
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                ]
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+} as unknown as DocumentNode<OidQuery, OidQueryVariables>
