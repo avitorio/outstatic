@@ -17,11 +17,6 @@ import {
   useSortedDocuments,
   SortConfig
 } from '@/utils/hooks/useSortedDocuments'
-
-type DocumentsTableProps = {
-  documents: OstDocument[]
-  collection: string
-}
 import { useParams } from 'next/navigation'
 
 export type Column = {
@@ -63,7 +58,7 @@ const DocumentsTable = () => {
     }))
   }, [])
 
-  const allColumns = Object.keys(documents ? documents[0] : []).map(
+  const allColumns = Object.keys(sortedDocuments ? sortedDocuments[0] : []).map(
     (column: string) => ({
       id: column,
       label: sentenceCase(column),
