@@ -3,7 +3,7 @@ import {
   CreateCommitDocument,
   DocumentDocument,
   OidDocument
-} from '@/graphql/generated'
+} from '@/graphql/gql/graphql'
 import { Document, DocumentContextType } from '@/types'
 import { MockedProvider } from '@apollo/client/testing'
 import { Editor, useEditor } from '@tiptap/react'

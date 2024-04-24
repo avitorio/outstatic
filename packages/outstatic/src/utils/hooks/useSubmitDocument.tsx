@@ -1,4 +1,3 @@
-import { useCreateCommitMutation } from '@/graphql/generated'
 import {
   CustomFieldArrayValue,
   CustomFields,
@@ -11,6 +10,7 @@ import { assertUnreachable } from '@/utils/assertUnreachable'
 import { IMAGES_PATH } from '@/utils/constants'
 import { createCommitApi } from '@/utils/createCommitApi'
 import { hashFromUrl } from '@/utils/hashFromUrl'
+import { useOutstaticNew } from '@/utils/hooks/useOstData'
 import { mergeMdMeta } from '@/utils/mergeMdMeta'
 import { stringifyMetadata } from '@/utils/metadata/stringify'
 import { Editor } from '@tiptap/react'
@@ -18,10 +18,10 @@ import matter from 'gray-matter'
 import MurmurHash3 from 'imurmurhash'
 import { useCallback } from 'react'
 import { UseFormReturn } from 'react-hook-form'
-import useOid from './useOid'
-import { useOutstaticNew } from '@/utils/hooks/useOstData'
-import { useGetMetadata } from './useGetMetadata'
+import { useCreateCommit } from './useCreateCommit'
 import { useGetCollectionSchema } from './useGetCollectionSchema'
+import { useGetMetadata } from './useGetMetadata'
+import useOid from './useOid'
 
 type SubmitDocumentProps = {
   session: Session | null
@@ -54,7 +54,7 @@ function useSubmitDocument({
   editor,
   extension
 }: SubmitDocumentProps) {
-  const [createCommit] = useCreateCommitMutation()
+  const createCommit = useCreateCommit()
   const {
     repoOwner,
     repoSlug,
@@ -237,11 +237,7 @@ function useSubmitDocument({
 
         const input = capi.createInput()
 
-        await createCommit({
-          variables: {
-            input
-          }
-        })
+        createCommit.mutate(input)
         setLoading(false)
         setHasChanges(false)
         setSlug(newSlug)

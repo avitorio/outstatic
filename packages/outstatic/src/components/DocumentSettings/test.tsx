@@ -52,21 +52,19 @@ describe('<DocumentSettings />', () => {
     })
 
     render(
-      <TestProviders.Apollo>
-        <TestProviders.DocumentContext
-          value={{
-            document: { ...documentExample, author: { name: undefined } }
-          }}
-        >
-          <TestProviders.Form>
-            <DocumentSettings
-              saveFunc={() => {}}
-              loading={false}
-              showDelete={false}
-            />
-          </TestProviders.Form>
-        </TestProviders.DocumentContext>
-      </TestProviders.Apollo>
+      <TestProviders.DocumentContext
+        value={{
+          document: { ...documentExample, author: { name: undefined } }
+        }}
+      >
+        <TestProviders.Form>
+          <DocumentSettings
+            saveFunc={() => {}}
+            loading={false}
+            showDelete={false}
+          />
+        </TestProviders.Form>
+      </TestProviders.DocumentContext>
     )
     expect(screen.getByLabelText('Name')).toHaveValue('')
     expect(screen.getByLabelText('Name')).not.toBeUndefined()

@@ -9,7 +9,6 @@ export type OutstaticData = {
   contentPath: string
   monorepoPath: string
   session: Session | null
-  initialApolloState?: null
   pages: string[]
   missingEnvVars: EnvVarsType | false
   hasOpenAIKey: boolean
@@ -53,7 +52,6 @@ export async function Outstatic({
     contentPath: process.env.OST_CONTENT_PATH || 'outstatic/content',
     monorepoPath: process.env.OST_MONOREPO_PATH || '',
     session: session || null,
-    initialApolloState: null,
     missingEnvVars: false,
     hasOpenAIKey: !!process.env.OPENAI_API_KEY,
     basePath: process.env.OST_BASE_PATH || '',
