@@ -8,7 +8,6 @@ import { DocumentContext } from '@/context'
 import { CustomFields, Document } from '@/types'
 import { deepReplace } from '@/utils/deepReplace'
 import { useDocumentUpdateEffect } from '@/utils/hooks/useDocumentUpdateEffect'
-import useFileQuery from '@/utils/hooks/useFileQuery'
 import { useFileStore } from '@/utils/hooks/useFileStore'
 import { useGetCollectionSchema } from '@/utils/hooks/useGetCollectionSchema'
 import { useOutstaticNew } from '@/utils/hooks/useOstData'
@@ -45,7 +44,7 @@ export default function EditDocument({ collection }: { collection: string }) {
     methods.reset(newValue)
   }
 
-  const { data: schema } = useGetCollectionSchema()
+  const { data: schema } = useGetCollectionSchema({ collection })
 
   const onSubmit = useSubmitDocument({
     session,

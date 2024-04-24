@@ -5,16 +5,18 @@ import TagInput from '@/components/TagInput'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import Input from '@/components/ui/input'
-import { useCreateCommitMutation } from '@/graphql/generated'
 import { CustomField, CustomFields, customFieldTypes } from '@/types'
 import { createCommitApi } from '@/utils/createCommitApi'
-import useFileQuery from '@/utils/hooks/useFileQuery'
+import { useCreateCommit } from '@/utils/hooks/useCreateCommit'
+import { useGetCollectionSchema } from '@/utils/hooks/useGetCollectionSchema'
 import useOid from '@/utils/hooks/useOid'
+import { useOutstaticNew } from '@/utils/hooks/useOstData'
 import useOutstatic from '@/utils/hooks/useOutstatic'
 import { yupResolver } from '@hookform/resolvers/yup'
 import camelCase from 'camelcase'
 import { useEffect, useState } from 'react'
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form'
+import { toast } from 'sonner'
 import * as yup from 'yup'
 
 type AddCustomFieldProps = {
@@ -34,16 +36,10 @@ const fieldDataMap = {
 } as const
 
 export default function AddCustomField({ collection }: AddCustomFieldProps) {
-  const {
-    contentPath,
-    monorepoPath,
-    session,
-    repoSlug,
-    repoBranch,
-    repoOwner,
-    setHasChanges
-  } = useOutstatic()
-  const [createCommit] = useCreateCommitMutation()
+  const { session, repoSlug, repoBranch, repoOwner, ostContent } =
+    useOutstaticNew()
+  const { setHasChanges } = useOutstatic()
+  const createCommit = useCreateCommit()
   const fetchOid = useOid()
   const [customFields, setCustomFields] = useState<CustomFields>({})
   const yupSchema = yup.object().shape({
@@ -67,9 +63,8 @@ export default function AddCustomField({ collection }: AddCustomFieldProps) {
   const [showAddModal, setShowAddModal] = useState(false)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [deleting, setDeleting] = useState(false)
-  const { data: schemaQueryData, loading } = useFileQuery({
-    file: `${collection}/schema.json`
-  })
+
+  const { data: schema, isLoading } = useGetCollectionSchema({ collection })
   const [selectedField, setSelectedField] = useState('')
   const [fieldName, setFieldName] = useState('')
 
@@ -102,15 +97,26 @@ export default function AddCustomField({ collection }: AddCustomFieldProps) {
     })
 
     capi.replaceFile(
-      `${
-        monorepoPath ? monorepoPath + '/' : ''
-      }${contentPath}/${collection}/schema.json`,
+      `${ostContent}/${collection}/schema.json`,
       customFieldsJSON + '\n'
     )
 
     const input = capi.createInput()
 
-    return await createCommit({ variables: { input } })
+    createCommit.mutate(input)
+
+    if (createCommit.isError) {
+      toast.error(
+        deleteField ? 'Failed to delete field' : 'Failed to add field'
+      )
+      return false
+    }
+
+    if (createCommit.isSuccess) {
+      return true
+    }
+
+    return false
   }
 
   const onSubmit: SubmitHandler<CustomFieldForm> = async (
@@ -188,12 +194,10 @@ export default function AddCustomField({ collection }: AddCustomFieldProps) {
   }
 
   useEffect(() => {
-    const documentQueryObject = schemaQueryData?.repository?.object
-    if (documentQueryObject?.__typename === 'Blob') {
-      const schema = JSON.parse(documentQueryObject?.text || '{}')
+    if (schema) {
       setCustomFields(schema.properties)
     }
-  }, [schemaQueryData])
+  }, [schema])
 
   useEffect(() => {
     const subscription = methods.watch(() => setHasChanges(true))
@@ -218,7 +222,7 @@ export default function AddCustomField({ collection }: AddCustomFieldProps) {
             </Button>
           ) : null}
         </div>
-        {!loading ? (
+        {!isLoading ? (
           <>
             {Object.keys(customFields).length === 0 ? (
               <div className="max-w-2xl">
