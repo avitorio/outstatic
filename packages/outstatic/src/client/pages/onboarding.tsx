@@ -22,8 +22,9 @@ export default function Onboarding() {
             <GitHubBranchSearch />
           </div>
           <p className="text-sm">
-            These values come from your Outstatic environment. To learn more
-            about how to update these values,{' '}
+            <span className="font-semibold">Optional:</span> You can set default
+            repository and branch variables directly on your .env files. To
+            learn more{' '}
             <a
               href="https://outstatic.com/docs/environment-variables"
               target="_blank"

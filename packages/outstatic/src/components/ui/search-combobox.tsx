@@ -22,7 +22,10 @@ export function SearchCombobox({
   setValue,
   onValueChange,
   isLoading = false,
-  disabled = false
+  disabled = false,
+  selectPlaceholder = 'Select',
+  searchPlaceholder = 'Search',
+  resultsPlaceholder = 'No results found'
 }: {
   data: { value: string; label: string }[]
   value: string
@@ -30,6 +33,9 @@ export function SearchCombobox({
   onValueChange: (value: string) => void
   isLoading?: boolean
   disabled?: boolean
+  selectPlaceholder?: string
+  searchPlaceholder?: string
+  resultsPlaceholder?: string
 }) {
   const [open, setOpen] = React.useState(false)
   return (
@@ -39,25 +45,25 @@ export function SearchCombobox({
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-[320px] font-normal justify-between"
+          className="w-[320px] font-normal justify-between md:w-[400px]"
           disabled={disabled}
         >
-          <span className="block min-w-0 flex-1 text-left h-4">
+          <span className="block min-w-0 flex-1 text-left h-4 w-[320px] truncate md:w-[400px] overflow-visible">
             {value
               ? data.find((dataRecord) => dataRecord.value === value)?.label
-              : 'Select a repository'}
+              : selectPlaceholder}
           </span>
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[320px] p-0">
+      <PopoverContent className="w-[320px] p-0 md:w-[400px]">
         <Command>
           <CommandInput
-            placeholder="Search repository"
+            placeholder={searchPlaceholder}
             onValueChange={onValueChange}
             isLoading={isLoading}
           />
-          <CommandEmpty>No repository selected</CommandEmpty>
+          <CommandEmpty>{resultsPlaceholder}</CommandEmpty>
           <ScrollArea className="h-[200px]">
             <CommandList>
               <CommandGroup>
