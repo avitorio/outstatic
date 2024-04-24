@@ -1,11 +1,12 @@
 import { GET_DOCUMENTS } from '@/graphql/queries/documents'
-import { useParams } from 'next/navigation'
-import request from 'graphql-request'
-import { useQuery } from '@tanstack/react-query'
-import { useOutstaticNew } from './useOstData'
-import matter from 'gray-matter'
+import { MDExtensions } from '@/types'
 import { OstDocument } from '@/types/public'
+import { useQuery } from '@tanstack/react-query'
+import request from 'graphql-request'
+import matter from 'gray-matter'
+import { useParams } from 'next/navigation'
 import { useGetCollectionSchema } from './useGetCollectionSchema'
+import { useOutstaticNew } from './useOstData'
 
 const dateFormatOptions = {
   year: 'numeric' as const,
@@ -23,6 +24,10 @@ type TreeEntry = {
     text: string
     commitUrl: string
   }
+}
+
+type Document = OstDocument & {
+  extension: MDExtensions
 }
 
 export const useGetDocuments = () => {
@@ -57,7 +62,7 @@ export const useGetDocuments = () => {
 
       if (repository?.object === null) return []
 
-      let documents: OstDocument[] = []
+      let documents: Document[] = []
 
       const { entries } = repository?.object as Tree
 
@@ -72,14 +77,15 @@ export const useGetDocuments = () => {
 
               // Format document details
               const formattedData = {
-                ...(listData as OstDocument),
+                ...(listData as Document),
                 title: listData.title || name,
                 author: listData.author?.name || '',
                 publishedAt: new Date(listData.publishedAt).toLocaleDateString(
                   'en-US',
                   dateFormatOptions
                 ),
-                slug: name.replace(/\.mdx?$/, '') // Handles both .md and .mdx
+                slug: name.replace(/\.mdx?$/, ''), // Handles both .md and .mdx
+                extension: name.split('.').pop() as MDExtensions
               }
 
               documents.push(formattedData)

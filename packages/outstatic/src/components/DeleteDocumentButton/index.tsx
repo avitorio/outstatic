@@ -1,19 +1,20 @@
 import Modal from '@/components/Modal'
+import { MDExtensions } from '@/types'
 import { useOstSession } from '@/utils/auth/hooks'
 import { createCommitApi } from '@/utils/createCommitApi'
 import { hashFromUrl } from '@/utils/hashFromUrl'
+import { useCreateCommit } from '@/utils/hooks/useCreateCommit'
+import { useGetMetadata } from '@/utils/hooks/useGetMetadata'
 import useOid from '@/utils/hooks/useOid'
+import { useOutstaticNew } from '@/utils/hooks/useOstData'
 import { stringifyMetadata } from '@/utils/metadata/stringify'
-import { MetadataSchema } from '@/utils/metadata/types'
 import { Trash2 } from 'lucide-react'
 import { useState } from 'react'
 import { Button } from '../ui/button'
-import { useOutstaticNew } from '@/utils/hooks/useOstData'
-import { useCreateCommit } from '@/utils/hooks/useCreateCommit'
-import { useGetFile } from '@/utils/hooks/useGetFile'
 
 type DeleteDocumentButtonProps = {
   slug: string
+  extension: MDExtensions
   disabled?: boolean
   onComplete?: () => void
   collection: string
@@ -22,6 +23,7 @@ type DeleteDocumentButtonProps = {
 
 const DeleteDocumentButton = ({
   slug,
+  extension,
   disabled = false,
   onComplete = () => {},
   collection,
@@ -30,23 +32,19 @@ const DeleteDocumentButton = ({
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const { session } = useOstSession()
-  const { repoOwner, repoSlug, repoBranch, contentPath, monorepoPath } =
-    useOutstaticNew()
+  const { repoOwner, repoSlug, repoBranch, ostContent } = useOutstaticNew()
   const fetchOid = useOid()
 
   const mutation = useCreateCommit()
 
-  const { refetch } = useGetFile({
-    filePath: `${repoBranch}:${
-      monorepoPath ? monorepoPath + '/' : ''
-    }${contentPath}/metadata.json`
-  })
+  const { refetch } = useGetMetadata({ enabled: false })
 
   const deleteDocument = async (slug: string) => {
     setDeleting(true)
     try {
-      const { data: metadata } = await refetch()
-      const oid = await fetchOid()
+      const [{ data }, oid] = await Promise.all([refetch(), fetchOid()])
+      if (!data || !oid) throw new Error('Failed to fetch metadata or oid')
+      const { metadata, commitUrl } = data
       const owner = repoOwner || session?.user?.login || ''
 
       const capi = createCommitApi({
@@ -58,30 +56,16 @@ const DeleteDocumentButton = ({
       })
 
       // remove post markdown file
-      capi.removeFile(
-        `${
-          monorepoPath ? monorepoPath + '/' : ''
-        }${contentPath}/${collection}/${slug}.md`
-      )
-
-      const object = metadata?.repository?.object as {
-        text?: string | null | undefined
-        commitUrl: any
-      }
+      capi.removeFile(`${ostContent}/${collection}/${slug}.${extension}`)
 
       // remove post from metadata.json
-      if (object?.text) {
-        const m = JSON.parse(object.text) as MetadataSchema
-        m.generated = new Date().toISOString()
-        m.commit = hashFromUrl(object.commitUrl)
-        const newMeta = (m.metadata ?? []).filter((post) => post.slug !== slug)
-        capi.replaceFile(
-          `${
-            monorepoPath ? monorepoPath + '/' : ''
-          }${contentPath}/metadata.json`,
-          stringifyMetadata({ ...m, metadata: newMeta })
-        )
-      }
+      metadata.generated = new Date().toISOString()
+      metadata.commit = hashFromUrl(commitUrl)
+      const newMeta = metadata.metadata.filter((post) => post.slug !== slug)
+      capi.replaceFile(
+        `${ostContent}/metadata.json`,
+        stringifyMetadata({ ...metadata, metadata: newMeta })
+      )
 
       const input = capi.createInput()
 

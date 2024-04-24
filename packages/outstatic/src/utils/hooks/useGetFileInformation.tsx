@@ -34,7 +34,7 @@ export const useGetFileInformation = ({
   const filePath = `${repoBranch}:${ostContent}/metadata.json`
 
   return useQuery({
-    queryKey: ['metadata', { filePath }],
+    queryKey: ['file-info', { filePath }],
     queryFn: async () =>
       await request<FileInformationDataType>(
         'https://api.github.com/graphql',

@@ -75,7 +75,7 @@ const DocumentSettings = ({
     formState: { errors }
   } = useFormContext()
   const router = useRouter()
-  const { document, editDocument, hasChanges, collection } =
+  const { document, extension, editDocument, hasChanges, collection } =
     useContext(DocumentContext)
   const [isOpen, setIsOpen] = useState(false)
 
@@ -177,6 +177,7 @@ const DocumentSettings = ({
             <DeleteDocumentButton
               disabled={loading}
               slug={document.slug}
+              extension={extension}
               onComplete={() => {
                 router.push(`/outstatic/${collection}`)
               }}

@@ -1,13 +1,13 @@
-import { Document, Session } from '@/types'
+import { Document, MDExtensions, Session } from '@/types'
 import { getLocalDate } from '@/utils/getLocalDate'
 import { parseContent } from '@/utils/parseContent'
 import { Editor } from '@tiptap/react'
 import matter from 'gray-matter'
 import { Dispatch, SetStateAction, useEffect } from 'react'
 import { UseFormReturn } from 'react-hook-form'
-import { useOutstaticNew } from './useOstData'
-import { useGetDocument } from './useGetDocument'
 import { useGetCollectionSchema } from './useGetCollectionSchema'
+import { useGetDocument } from './useGetDocument'
+import { useOutstaticNew } from './useOstData'
 
 interface UseDocumentUpdateEffectProps {
   collection: string
@@ -17,7 +17,7 @@ interface UseDocumentUpdateEffectProps {
   session: Session | null
   setHasChanges: Dispatch<SetStateAction<boolean>>
   setShowDelete: Dispatch<SetStateAction<boolean>>
-  setExtension: Dispatch<SetStateAction<'md' | 'mdx'>>
+  setExtension: Dispatch<SetStateAction<MDExtensions>>
 }
 
 export const useDocumentUpdateEffect = ({
