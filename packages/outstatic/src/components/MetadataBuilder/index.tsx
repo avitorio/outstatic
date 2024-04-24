@@ -41,16 +41,8 @@ export const MetadataBuilder: React.FC<MetadataBuilderProps> = ({
 
   const mutation = useCreateCommit()
 
-  const {
-    repoOwner,
-    repoSlug,
-    repoBranch,
-    contentPath,
-    monorepoPath,
-    session
-  } = useOutstaticNew()
-
-  const rootPath = [monorepoPath, contentPath].filter(Boolean).join('/')
+  const { repoOwner, repoSlug, repoBranch, monorepoPath, session, ostContent } =
+    useOutstaticNew()
 
   const { refetch, data } = useGetFileInformation({ enabled: false })
 
@@ -70,7 +62,6 @@ export const MetadataBuilder: React.FC<MetadataBuilderProps> = ({
     const queue = o?.entries ? [...o.entries] : []
     while (queue.length > 0) {
       const next = queue.pop()
-      console.log(next)
       if (next?.type === 'tree') {
         // subdir - add entries to queue
         queue.push(...(next.object.entries ?? []))
@@ -89,7 +80,6 @@ export const MetadataBuilder: React.FC<MetadataBuilderProps> = ({
 
   // using useEffect ensures we run a single processing loop
   useEffect(() => {
-    console.log({ data })
     const takeAndProcess = async (o: FileData) => {
       const filePath = o.path.replace(/\.mdx?$/, '')
       const { repository } = await request<GetDocumentData>(
@@ -144,7 +134,7 @@ export const MetadataBuilder: React.FC<MetadataBuilderProps> = ({
             docs.push({
               ...meta,
               collection: fd.path
-                .replace(rootPath, '') // strip root
+                .replace(ostContent, '') // strip root
                 .replace(/^\/+/, '') // strip leading slashes
                 .replace(/\/.+$/, '') // strip all after 1st slash
             })
@@ -175,16 +165,9 @@ export const MetadataBuilder: React.FC<MetadataBuilderProps> = ({
           oid
         })
 
-        capi.replaceFile(
-          `${
-            monorepoPath ? monorepoPath + '/' : ''
-          }${contentPath}/metadata.json`,
-          stringifyMetadata(db)
-        )
+        capi.replaceFile(`${ostContent}/metadata.json`, stringifyMetadata(db))
         const payload = capi.createInput()
 
-        // console.log({payload});
-        // return;
         try {
           mutation.mutate(payload)
         } catch (e) {
