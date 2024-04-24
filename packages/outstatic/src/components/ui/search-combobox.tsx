@@ -45,10 +45,10 @@ export function SearchCombobox({
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-[320px] font-normal justify-between"
+          className="w-[320px] font-normal justify-between md:w-[400px]"
           disabled={disabled}
         >
-          <span className="block min-w-0 flex-1 text-left h-4">
+          <span className="block min-w-0 flex-1 text-left h-4 w-[320px] truncate md:w-[400px] overflow-visible">
             {value
               ? data.find((dataRecord) => dataRecord.value === value)?.label
               : selectPlaceholder}
@@ -56,7 +56,7 @@ export function SearchCombobox({
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[320px] p-0">
+      <PopoverContent className="w-[320px] p-0 md:w-[400px]">
         <Command>
           <CommandInput
             placeholder={searchPlaceholder}

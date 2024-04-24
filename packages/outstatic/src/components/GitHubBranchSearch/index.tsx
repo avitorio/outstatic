@@ -1,24 +1,17 @@
 'use client'
 import useOutstatic from '@/utils/hooks/useOutstatic'
 import React, { useEffect, useState } from 'react'
-
 import { SearchCombobox } from '@/components/ui/search-combobox'
 import {
   useInitialData,
   useLocalData,
   useOutstaticNew
 } from '@/utils/hooks/useOstData'
+import { useCollections } from '@/utils/hooks/useCollections'
+import { useRouter } from 'next/navigation'
 
 interface Branch {
   name: string
-}
-
-function getLastPageNumber(headers: Headers): number {
-  const linkHeader = headers.get('Link')
-  if (!linkHeader) return 0
-
-  const matches = linkHeader.match(/&page=(\d+)>; rel="last"/)
-  return matches ? parseInt(matches[1], 10) : 1
 }
 
 const GitHubBranchSearch: React.FC = () => {
@@ -29,10 +22,11 @@ const GitHubBranchSearch: React.FC = () => {
     ? [{ name: repoBranch }]
     : [{ name: 'main' }]
   const { session } = useOutstatic()
-  const [query, setQuery] = useState<string>('')
   const [suggestions, setSuggestions] = useState<Branch[]>(initialSuggestion)
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [value, setValue] = React.useState(repoBranch)
+  const { refetch } = useCollections()
+  const router = useRouter()
 
   useEffect(() => {
     setIsLoading(true)
@@ -107,8 +101,19 @@ const GitHubBranchSearch: React.FC = () => {
 
   useEffect(() => {
     if (value) {
-      setQuery(value)
       setData({ repoBranch: value })
+
+      if (value !== repoBranch) {
+        const getCollections = async () => {
+          const { data } = await refetch()
+
+          if (data === null) {
+            console.log({ data })
+            router.push('/outstatic')
+          }
+        }
+        getCollections()
+      }
     }
   }, [value])
 
@@ -130,7 +135,7 @@ const GitHubBranchSearch: React.FC = () => {
         }
         value={!!env?.repoBranch ? `${repoBranch}` : value}
         setValue={setValue}
-        onValueChange={setQuery}
+        onValueChange={() => {}}
         isLoading={isLoading}
         disabled={!!env?.repoBranch || !repoSlug || !repoOwner}
         selectPlaceholder="Select a branch"
