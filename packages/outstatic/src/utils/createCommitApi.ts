@@ -1,7 +1,4 @@
-import {
-  type CreateCommitOnBranchInput,
-  type FileChanges
-} from '@/graphql/generated'
+import { CreateCommitOnBranchInput, FileChanges } from '@/graphql/gql/graphql'
 import { encode as toBase64 } from 'js-base64'
 
 export interface CommitAPI {
