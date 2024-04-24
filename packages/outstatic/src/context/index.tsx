@@ -9,7 +9,6 @@ type OutstaticProviderProps = {
   contentPath: string
   monorepoPath: string
   session: Session | null
-  initialApolloState?: null
   pages: string[]
   hasOpenAIKey: boolean
   hasChanges: boolean
