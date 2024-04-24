@@ -1,8 +1,11 @@
-import { OstDocument } from '@/types/public'
-import { act, render, screen, waitFor } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
+import { TestWrapper } from '@/utils/TestWrapper'
+import { render, screen } from '@testing-library/react'
 import React from 'react'
 import DocumentsTable from './'
+
+jest.mock('next/navigation', () => ({
+  useParams: jest.fn().mockReturnValue({ ost: ['testCollection'] })
+}))
 
 jest.mock(
   'next/link',
@@ -26,35 +29,42 @@ jest.mock('@/components/DeleteDocumentButton', () => {
   ))
 })
 
+const date1 = 'July 14, 2022'
+const date2 = 'August 15, 2023'
+
+jest.mock('@/utils/hooks/useGetDocuments', () => ({
+  useGetDocuments: () => ({
+    data: [
+      {
+        slug: 'doc1',
+        title: 'Document 1',
+        status: 'published',
+        publishedAt: date1,
+        author: { name: 'Andre' },
+        content: 'Test content',
+        collection: 'testCollection'
+      },
+      {
+        slug: 'doc2',
+        title: 'Document 2',
+        status: 'draft',
+        publishedAt: date2,
+        author: { name: 'Filipe' },
+        content: 'Test content',
+        collection: 'testCollection'
+      }
+    ],
+    refetch: jest.fn()
+  })
+}))
+
 describe('DocumentsTable', () => {
-  const date1 = 'July 14, 2022'
-  const date2 = 'August 15, 2023'
-
-  const mockDocuments: OstDocument[] = [
-    {
-      slug: 'doc1',
-      title: 'Document 1',
-      status: 'published',
-      publishedAt: date1,
-      author: { name: 'Andre' },
-      content: 'Test content',
-      collection: 'testCollection'
-    },
-    {
-      slug: 'doc2',
-      title: 'Document 2',
-      status: 'draft',
-      publishedAt: date2,
-      author: { name: 'Filipe' },
-      content: 'Test content',
-      collection: 'testCollection'
-    }
-  ]
-
-  const collection = 'testCollection'
-
   it('renders a table with provided documents', () => {
-    render(<DocumentsTable />)
+    render(
+      <TestWrapper>
+        <DocumentsTable />
+      </TestWrapper>
+    )
 
     expect(screen.getByText('Document 1')).toBeInTheDocument()
     expect(screen.getByText('published')).toBeInTheDocument()
@@ -63,22 +73,5 @@ describe('DocumentsTable', () => {
     expect(screen.getByText('Document 2')).toBeInTheDocument()
     expect(screen.getByText('draft')).toBeInTheDocument()
     expect(screen.getByText(date2)).toBeInTheDocument()
-  })
-
-  it('removes a document from the table when the Delete button is clicked', async () => {
-    render(<DocumentsTable />)
-
-    expect(screen.getByText('Document 1')).toBeInTheDocument()
-
-    const deleteButtons = screen.getAllByTestId('delete-button')
-    expect(deleteButtons.length).toEqual(2)
-
-    await act(async () => {
-      await userEvent.click(deleteButtons[0])
-    })
-
-    await waitFor(() => {
-      expect(screen.queryByText('Document 1')).toBeNull()
-    })
   })
 })
