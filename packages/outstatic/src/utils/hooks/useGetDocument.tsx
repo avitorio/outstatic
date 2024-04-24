@@ -8,7 +8,7 @@ type Repository = {
   fileMDX: { text: string } | null
 }
 
-type DataObject = {
+export type GetDocumentData = {
   repository: Repository
 }
 
@@ -24,19 +24,19 @@ export const useGetDocument = ({
   filePath: string
   enabled?: boolean
 }) => {
-  const { repoOwner, repoSlug, session } = useOutstaticNew()
+  const { repoOwner, repoSlug, repoBranch, session } = useOutstaticNew()
 
   return useQuery({
     queryKey: ['document', { filePath }],
     queryFn: async (): Promise<DocumentData> => {
-      const { repository } = await request<DataObject>(
+      const { repository } = await request<GetDocumentData>(
         'https://api.github.com/graphql',
         GET_DOCUMENT,
         {
           owner: repoOwner || session?.user?.login || '',
           name: repoSlug,
-          mdPath: `${filePath}.md`,
-          mdxPath: `${filePath}.mdx`
+          mdPath: `${repoBranch}:${filePath}.md`,
+          mdxPath: `${repoBranch}:${filePath}.mdx`
         },
         {
           authorization: `Bearer ${session?.access_token}`

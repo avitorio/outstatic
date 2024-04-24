@@ -25,9 +25,9 @@ export const useOutstaticNew = () => {
 
   const { monorepoPath, contentPath } = outstaticData
 
-  outstaticData.ostContent = `${
-    monorepoPath ? monorepoPath + '/' : ''
-  }${contentPath}`
+  outstaticData.ostContent = [monorepoPath, contentPath]
+    .filter(Boolean)
+    .join('/')
 
   return outstaticData
 }
