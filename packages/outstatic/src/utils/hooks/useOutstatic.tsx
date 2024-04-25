@@ -107,8 +107,6 @@ export const useInitialData = (initialData?: OutstaticData) => {
     'ost_initial_data'
   ])
 
-  console.log({ cachedData })
-
   const { data, isLoading, isError, error, isPending } = useQuery<
     Partial<OutstaticData>
   >({
