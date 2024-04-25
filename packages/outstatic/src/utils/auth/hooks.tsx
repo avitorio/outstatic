@@ -1,8 +1,8 @@
 import { Session } from '@/types'
+import { useInitialData } from '@/utils/hooks/useInitialData'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 import useSWR from 'swr'
-import { useInitialData } from '../hooks/useOutstatic'
 
 type useOstSessionProps = {
   redirectTo?: string
@@ -27,8 +27,7 @@ export const useOstSession = ({
   redirectTo,
   redirectIfFound
 }: useOstSessionProps = {}): useOstSessionReturn => {
-  const { data: initialData } = useInitialData()
-  const basePath = initialData?.basePath || ''
+  const { basePath } = useInitialData()
   const { data, error } = useSWR(
     (basePath || '') + '/api/outstatic/user',
     fetcher

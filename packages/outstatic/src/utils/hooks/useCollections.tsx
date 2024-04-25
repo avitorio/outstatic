@@ -1,6 +1,6 @@
 import { GET_COLLECTIONS } from '@/graphql/queries/collections'
+import useOutstatic from '@/utils/hooks/useOutstatic'
 import { useQuery } from '@tanstack/react-query'
-import useOutstatic from './useOutstatic'
 
 export const useCollections = () => {
   const {
@@ -10,8 +10,7 @@ export const useCollections = () => {
     monorepoPath,
     contentPath,
     isPending,
-    gqlClient,
-    session
+    gqlClient
   } = useOutstatic()
 
   return useQuery({

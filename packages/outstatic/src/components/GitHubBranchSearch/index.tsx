@@ -1,10 +1,8 @@
 'use client'
 import { SearchCombobox } from '@/components/ui/search-combobox'
 import { useCollections } from '@/utils/hooks/useCollections'
-import useOutstatic, {
-  useInitialData,
-  useLocalData
-} from '@/utils/hooks/useOutstatic'
+import { useInitialData } from '@/utils/hooks/useInitialData'
+import useOutstatic, { useLocalData } from '@/utils/hooks/useOutstatic'
 import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 
@@ -13,7 +11,7 @@ interface Branch {
 }
 
 const GitHubBranchSearch: React.FC = () => {
-  const { data: env } = useInitialData()
+  const initialData = useInitialData()
   const { setData } = useLocalData()
   const { repoOwner, repoSlug, repoBranch, session } = useOutstatic()
   const initialSuggestion = repoBranch
@@ -118,7 +116,7 @@ const GitHubBranchSearch: React.FC = () => {
     <div>
       <SearchCombobox
         data={
-          !!env?.repoBranch
+          !!initialData?.repoBranch
             ? [
                 {
                   value: `${repoBranch}`,
@@ -130,11 +128,11 @@ const GitHubBranchSearch: React.FC = () => {
                 label: branch.name
               }))
         }
-        value={!!env?.repoBranch ? `${repoBranch}` : value}
+        value={!!initialData?.repoBranch ? `${repoBranch}` : value}
         setValue={setValue}
         onValueChange={() => {}}
         isLoading={isLoading}
-        disabled={!!env?.repoBranch || !repoSlug || !repoOwner}
+        disabled={!!initialData?.repoBranch || !repoSlug || !repoOwner}
         selectPlaceholder="Select a branch"
         searchPlaceholder="Search for a branch. Ex: main"
         resultsPlaceholder="No branches found"

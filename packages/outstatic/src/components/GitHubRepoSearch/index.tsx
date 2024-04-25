@@ -1,14 +1,12 @@
 'use client'
 import { SearchCombobox } from '@/components/ui/search-combobox'
-import useOutstatic, {
-  useInitialData,
-  useLocalData
-} from '@/utils/hooks/useOutstatic'
+import { useInitialData } from '@/utils/hooks/useInitialData'
+import useOutstatic, { useLocalData } from '@/utils/hooks/useOutstatic'
 import React, { useEffect, useState } from 'react'
 import { useDebouncedCallback } from 'use-debounce'
 
 const GitHubRepoSearch: React.FC = () => {
-  const { data: env } = useInitialData()
+  const initialData = useInitialData()
   const { setData } = useLocalData()
   const { repoOwner, repoSlug, session } = useOutstatic()
   const repository = repoOwner && repoSlug ? `${repoOwner}/${repoSlug}` : ''
@@ -76,7 +74,7 @@ const GitHubRepoSearch: React.FC = () => {
     <div>
       <SearchCombobox
         data={
-          !!env?.repoSlug
+          !!initialData?.repoSlug
             ? [
                 {
                   value: `${repoOwner}/${repoSlug}`,
@@ -90,11 +88,11 @@ const GitHubRepoSearch: React.FC = () => {
                 label: repo.full_name
               }))
         }
-        value={!!env?.repoSlug ? `${repoOwner}/${repoSlug}` : value}
+        value={!!initialData?.repoSlug ? `${repoOwner}/${repoSlug}` : value}
         setValue={setValue}
         onValueChange={setQuery}
         isLoading={isLoading}
-        disabled={!!env?.repoSlug}
+        disabled={!!initialData?.repoSlug}
         searchPlaceholder="Ex: avitorio/outstatic"
         selectPlaceholder="Search for a repository"
         resultsPlaceholder="No repositories found"

@@ -1,11 +1,12 @@
 import { OutstaticData } from '@/app'
+import { useContentLock } from '@/utils/hooks/useContentLock'
+import { useInitialData } from '@/utils/hooks/useInitialData'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { GraphQLClient } from 'graphql-request'
-import { useContentLock } from './useContentLock'
 
 const useOutstatic = () => {
   const { hasChanges, setHasChanges } = useContentLock()
-  const { data: initialData, isPending } = useInitialData()
+  const initialData = useInitialData()
   const { data: localData, isPending: localPending } = useLocalData()
   const graphQLClient = new GraphQLClient('https://api.github.com/graphql', {
     headers: {
@@ -28,7 +29,7 @@ const useOutstatic = () => {
   const outstaticData = {
     ...localData,
     ...initialData,
-    isPending: localPending || isPending
+    isPending: localPending
   } as OutstaticData & {
     isPending: boolean
     gqlClient: GraphQLClient
@@ -98,49 +99,4 @@ export const useLocalData = () => {
   }
 
   return { data, setData, isLoading, isError, error, isPending }
-}
-
-export const useInitialData = (initialData?: OutstaticData) => {
-  const queryClient = useQueryClient()
-
-  const cachedData = queryClient.getQueryData<OutstaticData>([
-    'ost_initial_data'
-  ])
-
-  const { data, isLoading, isError, error, isPending } = useQuery<
-    Partial<OutstaticData>
-  >({
-    queryKey: ['ost_initial_data'],
-    queryFn: () => {
-      const cachedData = queryClient.getQueryData<OutstaticData>([
-        'ost_initial_data'
-      ])
-
-      if (cachedData) {
-        return cachedData
-      }
-
-      return {}
-    },
-    initialData: () => {
-      // Check if we have anything in cache and return that, otherwise get initial data
-      const cachedData = queryClient.getQueryData<OutstaticData>([
-        'ost_initial_data'
-      ])
-
-      if (cachedData) {
-        queryClient.setQueryData(['ost_initial_data'], () => initialData)
-        return cachedData
-      }
-
-      return initialData
-    },
-    staleTime: Infinity,
-    gcTime: Infinity,
-    enabled: !cachedData
-  })
-
-  if (cachedData) return { data: cachedData, isPending: false }
-
-  return { data, isLoading, isError, error, isPending }
 }
