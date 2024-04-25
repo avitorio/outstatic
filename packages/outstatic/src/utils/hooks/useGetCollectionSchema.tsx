@@ -1,7 +1,6 @@
 import { GET_FILE } from '@/graphql/queries/file'
 import { CustomFields } from '@/types'
 import { useQuery } from '@tanstack/react-query'
-import request from 'graphql-request'
 import { useParams } from 'next/navigation'
 import { useOutstaticNew } from './useOstData'
 
@@ -19,7 +18,7 @@ export const useGetCollectionSchema = ({
   collection?: string
   enabled?: boolean
 } = {}) => {
-  const { repoOwner, repoSlug, repoBranch, ostContent, session } =
+  const { repoOwner, repoSlug, repoBranch, ostContent, session, gqlClient } =
     useOutstaticNew()
 
   const params = useParams<{ ost: string[] }>()
@@ -31,18 +30,11 @@ export const useGetCollectionSchema = ({
     queryKey: ['collection-schema', { filePath }],
     queryFn: async (): Promise<SchemaType> => {
       try {
-        const { repository } = await request(
-          'https://api.github.com/graphql',
-          GET_FILE,
-          {
-            owner: repoOwner || session?.user?.login || '',
-            name: repoSlug,
-            filePath
-          },
-          {
-            authorization: `Bearer ${session?.access_token}`
-          }
-        )
+        const { repository } = await gqlClient.request(GET_FILE, {
+          owner: repoOwner || session?.user?.login || '',
+          name: repoSlug,
+          filePath
+        })
 
         if (repository?.object === null) return null
 

@@ -1,8 +1,7 @@
-import request from 'graphql-request'
+import { TreeDataItem } from '@/components/ui/file-tree'
+import { GET_FILES } from '@/graphql/queries/files'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useOutstaticNew } from './useOstData'
-import { GET_FILES } from '@/graphql/queries/files'
-import { TreeDataItem } from '@/components/ui/file-tree'
 
 type Tree = {
   path: string
@@ -75,7 +74,8 @@ function filterFolders(entries: TreeEntry[]) {
 
 export const useGetRepoFiles = ({ path = '' }: { path?: string } = {}) => {
   const queryClient = useQueryClient()
-  const { repoOwner, repoSlug, repoBranch, session } = useOutstaticNew()
+  const { repoOwner, repoSlug, repoBranch, session, gqlClient } =
+    useOutstaticNew()
 
   return useQuery({
     queryKey: [
@@ -99,18 +99,11 @@ export const useGetRepoFiles = ({ path = '' }: { path?: string } = {}) => {
         { path: parentPath }
       ])
 
-      const { repository } = await request(
-        'https://api.github.com/graphql',
-        GET_FILES,
-        {
-          owner: repoOwner,
-          name: repoSlug,
-          contentPath: `${repoBranch}:${path}`
-        },
-        {
-          authorization: `Bearer ${session?.access_token}`
-        }
-      )
+      const { repository } = await gqlClient.request(GET_FILES, {
+        owner: repoOwner || session?.user?.login || '',
+        name: repoSlug,
+        contentPath: `${repoBranch}:${path}`
+      })
 
       if (repository?.object === null) throw new Error('Ouch.')
 
