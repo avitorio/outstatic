@@ -1,6 +1,5 @@
 import { GET_FILE } from '@/graphql/queries/file'
 import { useQuery } from '@tanstack/react-query'
-import request from 'graphql-request'
 import { MetadataSchema } from '../metadata/types'
 import { useOutstaticNew } from './useOstData'
 
@@ -14,7 +13,7 @@ export const useGetMetadata = ({
 }: {
   enabled?: boolean
 } = {}) => {
-  const { repoOwner, repoSlug, repoBranch, ostContent, session } =
+  const { repoOwner, repoSlug, repoBranch, ostContent, session, gqlClient } =
     useOutstaticNew()
 
   const filePath = `${repoBranch}:${ostContent}/metadata.json`
@@ -22,18 +21,11 @@ export const useGetMetadata = ({
   return useQuery({
     queryKey: ['metadata', { filePath }],
     queryFn: async (): Promise<GetMetadataType> => {
-      const { repository } = await request(
-        'https://api.github.com/graphql',
-        GET_FILE,
-        {
-          owner: repoOwner || session?.user?.login || '',
-          name: repoSlug,
-          filePath
-        },
-        {
-          authorization: `Bearer ${session?.access_token}`
-        }
-      )
+      const { repository } = await gqlClient.request(GET_FILE, {
+        owner: repoOwner || session?.user?.login || '',
+        name: repoSlug,
+        filePath
+      })
 
       if (repository?.object === null) return null
 

@@ -2,7 +2,6 @@ import { GET_DOCUMENTS } from '@/graphql/queries/documents'
 import { MDExtensions } from '@/types'
 import { OstDocument } from '@/types/public'
 import { useQuery } from '@tanstack/react-query'
-import request from 'graphql-request'
 import matter from 'gray-matter'
 import { useParams } from 'next/navigation'
 import { useGetCollectionSchema } from './useGetCollectionSchema'
@@ -31,8 +30,15 @@ type Document = OstDocument & {
 }
 
 export const useGetDocuments = () => {
-  const { repoOwner, repoSlug, repoBranch, session, ostContent, ostDetach } =
-    useOutstaticNew()
+  const {
+    repoOwner,
+    repoSlug,
+    repoBranch,
+    session,
+    ostContent,
+    ostDetach,
+    gqlClient
+  } = useOutstaticNew()
 
   const params = useParams<{ ost: string[] }>()
 
@@ -45,20 +51,13 @@ export const useGetDocuments = () => {
 
       const path = schema?.data?.path
 
-      const { repository } = await request(
-        'https://api.github.com/graphql',
-        GET_DOCUMENTS,
-        {
-          owner: repoOwner,
-          name: repoSlug,
-          contentPath: path
-            ? `${repoBranch}:${path}`
-            : `${repoBranch}:${ostContent}/${params?.ost[0]}`
-        },
-        {
-          authorization: `Bearer ${session?.access_token}`
-        }
-      )
+      const { repository } = await gqlClient.request(GET_DOCUMENTS, {
+        owner: repoOwner || session?.user?.login || '',
+        name: repoSlug,
+        contentPath: path
+          ? `${repoBranch}:${path}`
+          : `${repoBranch}:${ostContent}/${params?.ost[0]}`
+      })
 
       if (repository?.object === null) return []
 

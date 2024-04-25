@@ -1,7 +1,6 @@
 import { GET_DOCUMENT } from '@/graphql/queries/document'
 import { MDExtensions } from '@/types'
 import { useQuery } from '@tanstack/react-query'
-import request from 'graphql-request'
 import { useOutstaticNew } from './useOstData'
 
 type Repository = {
@@ -25,22 +24,19 @@ export const useGetDocument = ({
   filePath: string
   enabled?: boolean
 }) => {
-  const { repoOwner, repoSlug, repoBranch, session } = useOutstaticNew()
+  const { repoOwner, repoSlug, repoBranch, session, gqlClient } =
+    useOutstaticNew()
 
   return useQuery({
     queryKey: ['document', { filePath }],
     queryFn: async (): Promise<DocumentData> => {
-      const { repository } = await request<GetDocumentData>(
-        'https://api.github.com/graphql',
+      const { repository } = await gqlClient.request<GetDocumentData>(
         GET_DOCUMENT,
         {
           owner: repoOwner || session?.user?.login || '',
           name: repoSlug,
           mdPath: `${repoBranch}:${filePath}.md`,
           mdxPath: `${repoBranch}:${filePath}.mdx`
-        },
-        {
-          authorization: `Bearer ${session?.access_token}`
         }
       )
 

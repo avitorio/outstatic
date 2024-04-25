@@ -1,9 +1,15 @@
 import { OutstaticData } from '@/app'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { GraphQLClient } from 'graphql-request'
 
 export const useOutstaticNew = () => {
   const { data: initialData, isPending } = useInitialData()
   const { data: localData, isPending: localPending } = useLocalData()
+  const graphQLClient = new GraphQLClient('https://api.github.com/graphql', {
+    headers: {
+      authorization: `Bearer ${initialData?.session?.access_token}`
+    }
+  })
 
   for (let key in initialData) {
     if (
@@ -21,6 +27,7 @@ export const useOutstaticNew = () => {
     isPending: localPending || isPending
   } as OutstaticData & {
     isPending: boolean
+    gqlClient: GraphQLClient
   }
 
   const { monorepoPath, contentPath } = outstaticData
@@ -28,6 +35,8 @@ export const useOutstaticNew = () => {
   outstaticData.ostContent = [monorepoPath, contentPath]
     .filter(Boolean)
     .join('/')
+
+  outstaticData.gqlClient = graphQLClient
 
   return outstaticData
 }

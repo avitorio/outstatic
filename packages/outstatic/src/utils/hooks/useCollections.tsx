@@ -1,5 +1,4 @@
 import { GET_COLLECTIONS } from '@/graphql/queries/collections'
-import request from 'graphql-request'
 import { useQuery } from '@tanstack/react-query'
 import { useOutstaticNew } from './useOstData'
 
@@ -10,8 +9,8 @@ export const useCollections = () => {
     repoBranch,
     monorepoPath,
     contentPath,
-    session,
-    isPending
+    isPending,
+    gqlClient
   } = useOutstaticNew()
 
   return useQuery({
@@ -20,22 +19,14 @@ export const useCollections = () => {
       const data =
         isPending || !repoOwner || !repoSlug || !repoBranch
           ? null
-          : await request(
-              'https://api.github.com/graphql',
-              GET_COLLECTIONS,
-              // variables are type-checked too!
-              {
-                owner: repoOwner,
-                name: repoSlug,
-                contentPath:
-                  `${repoBranch}:${
-                    monorepoPath ? monorepoPath + '/' : ''
-                  }${contentPath}` || ''
-              },
-              {
-                authorization: `Bearer ${session?.access_token}`
-              }
-            )
+          : await gqlClient.request(GET_COLLECTIONS, {
+              owner: repoOwner,
+              name: repoSlug,
+              contentPath:
+                `${repoBranch}:${
+                  monorepoPath ? monorepoPath + '/' : ''
+                }${contentPath}` || ''
+            })
 
       let collections: string[] | null = null
 

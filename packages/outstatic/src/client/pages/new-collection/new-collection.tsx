@@ -1,8 +1,9 @@
 import { AdminLayout } from '@/components'
 import Alert from '@/components/Alert'
 import { Button } from '@/components/ui/button'
-import GithubExplorer from './components/github-explorer'
 import Input from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Collection } from '@/types'
 import { createCommitApi } from '@/utils/createCommitApi'
 import { useCreateCommit } from '@/utils/hooks/useCreateCommit'
@@ -10,16 +11,16 @@ import useOid from '@/utils/hooks/useOid'
 import { useOutstaticNew } from '@/utils/hooks/useOstData'
 import useOutstatic from '@/utils/hooks/useOutstatic'
 import { yupResolver } from '@hookform/resolvers/yup'
+import { kebabCase } from 'change-case'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form'
+import { toast } from 'sonner'
 import { slugify } from 'transliteration'
 import * as yup from 'yup'
+import GithubExplorer from './components/github-explorer'
 import PathBreadcrumbs from './components/path-breadcrumb'
-import { Label } from '@/components/ui/label'
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
-import { kebabCase } from 'change-case'
 
 export default function NewCollection() {
   const { pages, hasChanges, setHasChanges } = useOutstatic()
@@ -64,6 +65,10 @@ export default function NewCollection() {
       const oid = await fetchOid()
       const owner = repoOwner || session?.user?.login || ''
       const collection = slugify(name, { allowedChars: 'a-zA-Z0-9' })
+
+      if (!oid) {
+        throw new Error('Failed to fetch oid')
+      }
 
       const collectionPath = !ostDetach
         ? `${ostContent}/${collection}`
@@ -112,6 +117,7 @@ export default function NewCollection() {
       })
     } catch (error) {
       // TODO: Better error treatment
+      toast.error('Failed to create collection.')
       setLoading(false)
       setHasChanges(false)
       setError(true)
