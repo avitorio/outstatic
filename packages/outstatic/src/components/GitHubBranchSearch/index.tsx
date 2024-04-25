@@ -1,14 +1,12 @@
 'use client'
-import useOutstatic from '@/utils/hooks/useOutstatic'
-import React, { useEffect, useState } from 'react'
 import { SearchCombobox } from '@/components/ui/search-combobox'
-import {
-  useInitialData,
-  useLocalData,
-  useOutstaticNew
-} from '@/utils/hooks/useOstData'
 import { useCollections } from '@/utils/hooks/useCollections'
+import useOutstatic, {
+  useInitialData,
+  useLocalData
+} from '@/utils/hooks/useOutstatic'
 import { useRouter } from 'next/navigation'
+import React, { useEffect, useState } from 'react'
 
 interface Branch {
   name: string
@@ -17,11 +15,10 @@ interface Branch {
 const GitHubBranchSearch: React.FC = () => {
   const { data: env } = useInitialData()
   const { setData } = useLocalData()
-  const { repoOwner, repoSlug, repoBranch } = useOutstaticNew()
+  const { repoOwner, repoSlug, repoBranch, session } = useOutstatic()
   const initialSuggestion = repoBranch
     ? [{ name: repoBranch }]
     : [{ name: 'main' }]
-  const { session } = useOutstatic()
   const [suggestions, setSuggestions] = useState<Branch[]>(initialSuggestion)
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [value, setValue] = React.useState(repoBranch)

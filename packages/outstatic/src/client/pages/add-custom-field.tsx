@@ -10,7 +10,6 @@ import { createCommitApi } from '@/utils/createCommitApi'
 import { useCreateCommit } from '@/utils/hooks/useCreateCommit'
 import { useGetCollectionSchema } from '@/utils/hooks/useGetCollectionSchema'
 import useOid from '@/utils/hooks/useOid'
-import { useOutstaticNew } from '@/utils/hooks/useOstData'
 import useOutstatic from '@/utils/hooks/useOutstatic'
 import { yupResolver } from '@hookform/resolvers/yup'
 import camelCase from 'camelcase'
@@ -36,9 +35,14 @@ const fieldDataMap = {
 } as const
 
 export default function AddCustomField({ collection }: AddCustomFieldProps) {
-  const { session, repoSlug, repoBranch, repoOwner, ostContent } =
-    useOutstaticNew()
-  const { setHasChanges } = useOutstatic()
+  const {
+    session,
+    repoSlug,
+    repoBranch,
+    repoOwner,
+    ostContent,
+    setHasChanges
+  } = useOutstatic()
   const createCommit = useCreateCommit()
   const fetchOid = useOid()
   const [customFields, setCustomFields] = useState<CustomFields>({})

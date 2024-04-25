@@ -1,8 +1,8 @@
 import { GET_FILE } from '@/graphql/queries/file'
 import { CustomFields } from '@/types'
+import useOutstatic from '@/utils/hooks/useOutstatic'
 import { useQuery } from '@tanstack/react-query'
 import { useParams } from 'next/navigation'
-import { useOutstaticNew } from './useOstData'
 
 export type SchemaType = {
   title: string
@@ -19,7 +19,7 @@ export const useGetCollectionSchema = ({
   enabled?: boolean
 } = {}) => {
   const { repoOwner, repoSlug, repoBranch, ostContent, session, gqlClient } =
-    useOutstaticNew()
+    useOutstatic()
 
   const params = useParams<{ ost: string[] }>()
   const collectionSlug = collection || params?.ost[0]

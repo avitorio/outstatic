@@ -2,10 +2,8 @@ import { OUTSTATIC_VERSION } from '@/utils/constants'
 import generateUniqueId from '@/utils/generateUniqueId'
 import useOutstatic from '@/utils/hooks/useOutstatic'
 import cookies from 'js-cookie'
-import { useEffect, useState } from 'react'
 import dynamic from 'next/dynamic'
-import { useCollections } from '@/utils/hooks/useCollections'
-import { Skeleton } from '../ui/skeleton'
+import { useEffect, useState } from 'react'
 
 const CollectionsList = dynamic(() => import('./CollectionsList'), {
   ssr: false

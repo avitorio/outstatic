@@ -7,7 +7,7 @@ import { Dispatch, SetStateAction, useEffect } from 'react'
 import { UseFormReturn } from 'react-hook-form'
 import { useGetCollectionSchema } from './useGetCollectionSchema'
 import { useGetDocument } from './useGetDocument'
-import { useOutstaticNew } from './useOstData'
+import useOutstatic from './useOutstatic'
 
 interface UseDocumentUpdateEffectProps {
   collection: string
@@ -30,7 +30,7 @@ export const useDocumentUpdateEffect = ({
   setShowDelete,
   setExtension
 }: UseDocumentUpdateEffectProps) => {
-  const { basePath, ostContent } = useOutstaticNew()
+  const { basePath, ostContent } = useOutstatic()
 
   const { data: schema } = useGetCollectionSchema({ enabled: slug !== 'new' })
 
