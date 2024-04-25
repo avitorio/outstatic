@@ -1,12 +1,11 @@
 import { Commit, Repository } from '@/graphql/gql/graphql'
 import { OID } from '@/graphql/queries/oid'
+import useOutstatic from '@/utils/hooks/useOutstatic'
 import { useQuery } from '@tanstack/react-query'
 import { useCallback } from 'react'
-import { useOutstaticNew } from './useOstData'
 
 const useOid = () => {
-  const { repoSlug, repoBranch, repoOwner, gqlClient, session } =
-    useOutstaticNew()
+  const { repoSlug, repoBranch, repoOwner, gqlClient, session } = useOutstatic()
   const { refetch: oidQuery } = useQuery({
     queryKey: ['oid'],
     queryFn: async () => {

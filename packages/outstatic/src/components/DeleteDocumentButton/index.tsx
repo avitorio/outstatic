@@ -1,12 +1,11 @@
 import Modal from '@/components/Modal'
 import { MDExtensions } from '@/types'
-import { useOstSession } from '@/utils/auth/hooks'
 import { createCommitApi } from '@/utils/createCommitApi'
 import { hashFromUrl } from '@/utils/hashFromUrl'
 import { useCreateCommit } from '@/utils/hooks/useCreateCommit'
 import { useGetMetadata } from '@/utils/hooks/useGetMetadata'
 import useOid from '@/utils/hooks/useOid'
-import { useOutstaticNew } from '@/utils/hooks/useOstData'
+import useOutstatic from '@/utils/hooks/useOutstatic'
 import { stringifyMetadata } from '@/utils/metadata/stringify'
 import { Trash2 } from 'lucide-react'
 import { useState } from 'react'
@@ -31,8 +30,8 @@ const DeleteDocumentButton = ({
 }: DeleteDocumentButtonProps) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [deleting, setDeleting] = useState(false)
-  const { session } = useOstSession()
-  const { repoOwner, repoSlug, repoBranch, ostContent } = useOutstaticNew()
+  const { repoOwner, repoSlug, repoBranch, ostContent, session } =
+    useOutstatic()
   const fetchOid = useOid()
 
   const mutation = useCreateCommit()

@@ -2,9 +2,7 @@
 import { OutstaticData } from '@/app'
 import { AdminHeader, Sidebar } from '@/components'
 import { AdminLoading } from '@/components/AdminLoading'
-import { OutstaticProvider } from '@/context'
-import { useContentLock } from '@/utils/hooks/useContentLock'
-import { useInitialData, useOutstaticNew } from '@/utils/hooks/useOstData'
+import useOutstatic, { useInitialData } from '@/utils/hooks/useOutstatic'
 import { queryClient } from '@/utils/react-query/queryClient'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { useState } from 'react'
@@ -22,7 +20,7 @@ export const Client = ({
   params: { ost: string[] }
 }) => {
   useInitialData(ostData)
-  const { repoSlug, repoOwner, repoBranch, isPending } = useOutstaticNew()
+  const { repoSlug, repoOwner, repoBranch, isPending } = useOutstatic()
   const [openSidebar, setOpenSidebar] = useState(false)
   const toggleSidebar = () => {
     setOpenSidebar(!openSidebar)
@@ -53,8 +51,6 @@ export const OstClient = (props: {
 }) => {
   const { ostData } = props
 
-  const { hasChanges, setHasChanges } = useContentLock()
-
   if (ostData.missingEnvVars) {
     return <Welcome variables={ostData.missingEnvVars} />
   }
@@ -63,15 +59,11 @@ export const OstClient = (props: {
     return <Login />
   }
   return (
-    <OutstaticProvider
-      {...ostData}
-      hasChanges={hasChanges}
-      setHasChanges={setHasChanges}
-    >
+    <>
       <Toaster richColors />
       <QueryClientProvider client={queryClient}>
         <Client {...props} />
       </QueryClientProvider>
-    </OutstaticProvider>
+    </>
   )
 }

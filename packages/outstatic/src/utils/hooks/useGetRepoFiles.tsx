@@ -1,7 +1,7 @@
 import { TreeDataItem } from '@/components/ui/file-tree'
 import { GET_FILES } from '@/graphql/queries/files'
+import useOutstatic from '@/utils/hooks/useOutstatic'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { useOutstaticNew } from './useOstData'
 
 type Tree = {
   path: string
@@ -74,8 +74,7 @@ function filterFolders(entries: TreeEntry[]) {
 
 export const useGetRepoFiles = ({ path = '' }: { path?: string } = {}) => {
   const queryClient = useQueryClient()
-  const { repoOwner, repoSlug, repoBranch, session, gqlClient } =
-    useOutstaticNew()
+  const { repoOwner, repoSlug, repoBranch, session, gqlClient } = useOutstatic()
 
   return useQuery({
     queryKey: [

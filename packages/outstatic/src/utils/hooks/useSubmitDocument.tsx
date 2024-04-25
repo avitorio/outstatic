@@ -11,7 +11,7 @@ import { assertUnreachable } from '@/utils/assertUnreachable'
 import { IMAGES_PATH } from '@/utils/constants'
 import { createCommitApi } from '@/utils/createCommitApi'
 import { hashFromUrl } from '@/utils/hashFromUrl'
-import { useOutstaticNew } from '@/utils/hooks/useOstData'
+import useOutstatic from '@/utils/hooks/useOutstatic'
 import { mergeMdMeta } from '@/utils/mergeMdMeta'
 import { stringifyMetadata } from '@/utils/metadata/stringify'
 import { Editor } from '@tiptap/react'
@@ -64,7 +64,7 @@ function useSubmitDocument({
     ostContent,
     contentPath,
     basePath
-  } = useOutstaticNew()
+  } = useOutstatic()
   const fetchOid = useOid()
 
   const { refetch: refetchSchema } = useGetCollectionSchema({ enabled: false })

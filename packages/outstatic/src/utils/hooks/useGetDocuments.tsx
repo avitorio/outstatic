@@ -5,7 +5,7 @@ import { useQuery } from '@tanstack/react-query'
 import matter from 'gray-matter'
 import { useParams } from 'next/navigation'
 import { useGetCollectionSchema } from './useGetCollectionSchema'
-import { useOutstaticNew } from './useOstData'
+import useOutstatic from './useOutstatic'
 
 const dateFormatOptions = {
   year: 'numeric' as const,
@@ -38,7 +38,7 @@ export const useGetDocuments = () => {
     ostContent,
     ostDetach,
     gqlClient
-  } = useOutstaticNew()
+  } = useOutstatic()
 
   const params = useParams<{ ost: string[] }>()
 

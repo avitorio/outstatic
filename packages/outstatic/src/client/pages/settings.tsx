@@ -4,7 +4,6 @@ import GitHubRepoSearch from '@/components/GitHubRepoSearch'
 import { MetadataBuilder } from '@/components/MetadataBuilder'
 import { Button } from '@/components/ui/button'
 import { useCollections } from '@/utils/hooks/useCollections'
-import { useOutstaticNew } from '@/utils/hooks/useOstData'
 import { useState } from 'react'
 
 export default function Settings() {

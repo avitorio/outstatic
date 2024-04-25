@@ -1,6 +1,6 @@
 import { GET_FILE } from '@/graphql/queries/file'
+import useOutstatic from '@/utils/hooks/useOutstatic'
 import { useQuery } from '@tanstack/react-query'
-import { useOutstaticNew } from './useOstData'
 
 export const useGetFile = ({
   filePath,
@@ -9,7 +9,7 @@ export const useGetFile = ({
   filePath: string
   enabled?: boolean
 }) => {
-  const { repoOwner, repoSlug, session, gqlClient } = useOutstaticNew()
+  const { repoOwner, repoSlug, session, gqlClient } = useOutstatic()
 
   return useQuery({
     queryKey: ['document', { filePath }],
