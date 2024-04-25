@@ -1,6 +1,5 @@
 import { GET_FILE_INFORMATION } from '@/graphql/queries/metadata'
 import { useQuery } from '@tanstack/react-query'
-import request from 'graphql-request'
 import { useOutstaticNew } from './useOstData'
 
 type RepoObject = {
@@ -28,7 +27,7 @@ export const useGetFileInformation = ({
 }: {
   enabled?: boolean
 } = {}) => {
-  const { repoOwner, repoSlug, repoBranch, ostContent, session } =
+  const { repoOwner, repoSlug, repoBranch, ostContent, session, gqlClient } =
     useOutstaticNew()
 
   const filePath = `${repoBranch}:${ostContent}/metadata.json`
@@ -36,18 +35,11 @@ export const useGetFileInformation = ({
   return useQuery({
     queryKey: ['file-info', { filePath }],
     queryFn: async () =>
-      await request<FileInformationDataType>(
-        'https://api.github.com/graphql',
-        GET_FILE_INFORMATION,
-        {
-          owner: repoOwner || session?.user?.login || '',
-          name: repoSlug,
-          filePath
-        },
-        {
-          authorization: `Bearer ${session?.access_token}`
-        }
-      ),
+      await gqlClient.request<FileInformationDataType>(GET_FILE_INFORMATION, {
+        owner: repoOwner || session?.user?.login || '',
+        name: repoSlug,
+        filePath
+      }),
     meta: {
       errorMessage: `Failed to fetch metadata.`
     },
