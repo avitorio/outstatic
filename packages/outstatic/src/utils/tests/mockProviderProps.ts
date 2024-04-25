@@ -11,7 +11,10 @@ const mockProviderProps = {
   hasOpenAIKey: false,
   hasChanges: false,
   setHasChanges: () => {},
-  basePath: ''
+  basePath: '',
+  missingEnvVars: { required: {}, optional: {} },
+  ostDetach: false,
+  ostContent: 'anything'
 }
 
 export default mockProviderProps
