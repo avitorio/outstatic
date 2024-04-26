@@ -1,6 +1,6 @@
+import { createSyncStoragePersister } from '@tanstack/query-sync-storage-persister'
 import { QueryCache, QueryClient } from '@tanstack/react-query'
 import { persistQueryClient } from '@tanstack/react-query-persist-client'
-import { createSyncStoragePersister } from '@tanstack/query-sync-storage-persister'
 import { compress, decompress } from 'lz-string'
 import { toast } from 'sonner'
 

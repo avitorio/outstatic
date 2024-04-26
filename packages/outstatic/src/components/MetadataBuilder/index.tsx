@@ -6,7 +6,7 @@ import { useCreateCommit } from '@/utils/hooks/useCreateCommit'
 import { GetDocumentData } from '@/utils/hooks/useGetDocument'
 import { useGetFileInformation } from '@/utils/hooks/useGetFileInformation'
 import useOid from '@/utils/hooks/useOid'
-import { useOutstaticNew } from '@/utils/hooks/useOstData'
+import useOutstatic from '@/utils/hooks/useOutstatic'
 import { stringifyMetadata } from '@/utils/metadata/stringify'
 import { MetadataSchema, OutstaticSchema } from '@/utils/metadata/types'
 import request from 'graphql-request'
@@ -42,7 +42,7 @@ export const MetadataBuilder: React.FC<MetadataBuilderProps> = ({
   const mutation = useCreateCommit()
 
   const { repoOwner, repoSlug, repoBranch, monorepoPath, session, ostContent } =
-    useOutstaticNew()
+    useOutstatic()
 
   const { refetch, data } = useGetFileInformation({ enabled: false })
 

@@ -1,6 +1,6 @@
 import { GET_COLLECTIONS } from '@/graphql/queries/collections'
+import useOutstatic from '@/utils/hooks/useOutstatic'
 import { useQuery } from '@tanstack/react-query'
-import { useOutstaticNew } from './useOstData'
 
 export const useCollections = () => {
   const {
@@ -11,7 +11,7 @@ export const useCollections = () => {
     contentPath,
     isPending,
     gqlClient
-  } = useOutstaticNew()
+  } = useOutstatic()
 
   return useQuery({
     queryKey: ['collections', { repoOwner, repoSlug, repoBranch, contentPath }],

@@ -8,7 +8,6 @@ import { Collection } from '@/types'
 import { createCommitApi } from '@/utils/createCommitApi'
 import { useCreateCommit } from '@/utils/hooks/useCreateCommit'
 import useOid from '@/utils/hooks/useOid'
-import { useOutstaticNew } from '@/utils/hooks/useOstData'
 import useOutstatic from '@/utils/hooks/useOutstatic'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { kebabCase } from 'change-case'
@@ -32,7 +31,7 @@ export default function NewCollection() {
     repoBranch,
     repoOwner,
     ostDetach
-  } = useOutstaticNew()
+  } = useOutstatic()
 
   const router = useRouter()
   const fetchOid = useOid()

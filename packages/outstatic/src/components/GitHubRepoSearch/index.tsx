@@ -1,22 +1,16 @@
 'use client'
-import useOutstatic from '@/utils/hooks/useOutstatic'
-import React, { useEffect, useState } from 'react'
-
 import { SearchCombobox } from '@/components/ui/search-combobox'
-import {
-  useInitialData,
-  useLocalData,
-  useOutstaticNew
-} from '@/utils/hooks/useOstData'
+import { useInitialData } from '@/utils/hooks/useInitialData'
+import useOutstatic, { useLocalData } from '@/utils/hooks/useOutstatic'
+import React, { useEffect, useState } from 'react'
 import { useDebouncedCallback } from 'use-debounce'
 
 const GitHubRepoSearch: React.FC = () => {
-  const { data: env } = useInitialData()
+  const initialData = useInitialData()
   const { setData } = useLocalData()
-  const { repoOwner, repoSlug } = useOutstaticNew()
+  const { repoOwner, repoSlug, session } = useOutstatic()
   const repository = repoOwner && repoSlug ? `${repoOwner}/${repoSlug}` : ''
   const initialSuggestion = repository ? [{ full_name: repository }] : []
-  const { session } = useOutstatic()
   const [query, setQuery] = useState<string>('')
   const [suggestions, setSuggestions] = useState(initialSuggestion)
   const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -80,7 +74,7 @@ const GitHubRepoSearch: React.FC = () => {
     <div>
       <SearchCombobox
         data={
-          !!env?.repoSlug
+          !!initialData?.repoSlug
             ? [
                 {
                   value: `${repoOwner}/${repoSlug}`,
@@ -94,11 +88,11 @@ const GitHubRepoSearch: React.FC = () => {
                 label: repo.full_name
               }))
         }
-        value={!!env?.repoSlug ? `${repoOwner}/${repoSlug}` : value}
+        value={!!initialData?.repoSlug ? `${repoOwner}/${repoSlug}` : value}
         setValue={setValue}
         onValueChange={setQuery}
         isLoading={isLoading}
-        disabled={!!env?.repoSlug}
+        disabled={!!initialData?.repoSlug}
         searchPlaceholder="Ex: avitorio/outstatic"
         selectPlaceholder="Search for a repository"
         resultsPlaceholder="No repositories found"

@@ -1,4 +1,4 @@
-import { OutstaticProvider } from '@/context'
+import { InitialDataContext } from '@/utils/hooks/useInitialData'
 import mockProviderProps from '@/utils/tests/mockProviderProps'
 import { TestWrapper } from '@/utils/TestWrapper'
 import { render, screen } from '@testing-library/react'
@@ -46,9 +46,9 @@ describe('<Sidebar />', () => {
     await act(async () => {
       render(
         <TestWrapper>
-          <OutstaticProvider {...mockProviderProps}>
+          <InitialDataContext.Provider value={mockProviderProps}>
             <Sidebar isOpen={true} />
-          </OutstaticProvider>
+          </InitialDataContext.Provider>
         </TestWrapper>
       )
     })
@@ -67,9 +67,9 @@ describe('<Sidebar />', () => {
     await act(async () => {
       render(
         <TestWrapper>
-          <OutstaticProvider {...mockProviderProps}>
+          <InitialDataContext.Provider value={mockProviderProps}>
             <Sidebar isOpen={true} />
-          </OutstaticProvider>
+          </InitialDataContext.Provider>
         </TestWrapper>
       )
     })

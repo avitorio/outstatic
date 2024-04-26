@@ -55,6 +55,7 @@ export async function Outstatic({
     missingEnvVars: false,
     hasOpenAIKey: !!process.env.OPENAI_API_KEY,
     basePath: process.env.OST_BASE_PATH || '',
-    ostDetach: process.env.OST_DETACH || false
+    ostDetach: process.env.OST_DETACH || false,
+    pages: ['collections', 'settings']
   } as OutstaticData
 }

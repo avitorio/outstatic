@@ -1,7 +1,7 @@
 import { GET_FILE } from '@/graphql/queries/file'
+import useOutstatic from '@/utils/hooks/useOutstatic'
 import { useQuery } from '@tanstack/react-query'
 import { MetadataSchema } from '../metadata/types'
-import { useOutstaticNew } from './useOstData'
 
 export type GetMetadataType = {
   metadata: MetadataSchema
@@ -14,7 +14,7 @@ export const useGetMetadata = ({
   enabled?: boolean
 } = {}) => {
   const { repoOwner, repoSlug, repoBranch, ostContent, session, gqlClient } =
-    useOutstaticNew()
+    useOutstatic()
 
   const filePath = `${repoBranch}:${ostContent}/metadata.json`
 

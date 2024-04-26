@@ -1,8 +1,7 @@
 import { GET_DOCUMENT } from '@/graphql/queries/document'
 import { MDExtensions } from '@/types'
+import useOutstatic from '@/utils/hooks/useOutstatic'
 import { useQuery } from '@tanstack/react-query'
-import { useOutstaticNew } from './useOstData'
-
 type Repository = {
   fileMD: { text: string } | null
   fileMDX: { text: string } | null
@@ -24,8 +23,7 @@ export const useGetDocument = ({
   filePath: string
   enabled?: boolean
 }) => {
-  const { repoOwner, repoSlug, repoBranch, session, gqlClient } =
-    useOutstaticNew()
+  const { repoOwner, repoSlug, repoBranch, session, gqlClient } = useOutstatic()
 
   return useQuery({
     queryKey: ['document', { filePath }],

@@ -10,7 +10,7 @@ import {
 } from '@/utils/hooks/useGetCollectionSchema'
 import { GetMetadataType, useGetMetadata } from '@/utils/hooks/useGetMetadata'
 import useOid from '@/utils/hooks/useOid'
-import { useOutstaticNew } from '@/utils/hooks/useOstData'
+import useOutstatic from '@/utils/hooks/useOutstatic'
 import { stringifyMetadata } from '@/utils/metadata/stringify'
 import { Label } from '@radix-ui/react-label'
 import { useState } from 'react'
@@ -27,7 +27,7 @@ function DeleteCollectionModal({
   collection
 }: DeleteCollectionModalProps) {
   const { repoOwner, session, repoSlug, repoBranch, ostContent, ostDetach } =
-    useOutstaticNew()
+    useOutstatic()
   const [deleting, setDeleting] = useState(false)
   const [keepFiles, setKeepFiles] = useState(false)
   const fetchOid = useOid()
@@ -63,8 +63,13 @@ function DeleteCollectionModal({
         branch: repoBranch
       })
 
-      if (schema?.path) capi.removeFile(schema.path)
-      capi.removeFile(`${ostContent}/${collection}`)
+      const collectionPath = `${ostContent}/${collection}`
+
+      if (schema?.path && schema.path !== collectionPath) {
+        capi.removeFile(schema.path)
+      }
+
+      capi.removeFile(collectionPath)
 
       // remove collection from metadata.json
       if (metadata) {

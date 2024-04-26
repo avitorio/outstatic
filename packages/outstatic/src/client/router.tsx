@@ -1,13 +1,13 @@
+import { AdminLoading } from '@/components/AdminLoading'
+import { useCollections } from '@/utils/hooks/useCollections'
 import useOutstatic from '@/utils/hooks/useOutstatic'
+import { ReactElement } from 'react'
+import AddCustomField from './pages/add-custom-field'
 import Collections from './pages/collections'
 import EditDocument from './pages/edit-document'
 import List from './pages/list'
-import Settings from './pages/settings'
-import { ReactElement } from 'react'
-import AddCustomField from './pages/add-custom-field'
 import NewCollection from './pages/new-collection'
-import { useCollections } from '@/utils/hooks/useCollections'
-import { AdminLoading } from '@/components/AdminLoading'
+import Settings from './pages/settings'
 
 const defaultPages: { [key: string]: ReactElement | undefined } = {
   settings: <Settings />,
@@ -23,8 +23,8 @@ export const Router = ({ params }: { params: { ost: string[] } }) => {
 
   if (isPending && fetchStatus !== 'idle') return <AdminLoading />
 
-  const isContent =
-    slug && ![...pages, ...[collections ? collections : []]].includes(slug)
+  const isContent = slug && ![...pages].includes(slug)
+
   return (
     <>
       {!slug && <Collections />}
