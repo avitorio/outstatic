@@ -14,13 +14,14 @@ const useOutstatic = () => {
     }
   })
 
-  for (let key in initialData) {
+  const cleanInitialData = { ...initialData }
+  for (let key in cleanInitialData) {
     if (
-      initialData[key as keyof OutstaticData] === '' ||
-      initialData[key as keyof OutstaticData] === null ||
-      initialData[key as keyof OutstaticData] === undefined
+      cleanInitialData[key as keyof OutstaticData] === '' ||
+      cleanInitialData[key as keyof OutstaticData] === null ||
+      cleanInitialData[key as keyof OutstaticData] === undefined
     ) {
-      delete initialData[key as keyof OutstaticData]
+      delete cleanInitialData[key as keyof OutstaticData]
     }
   }
 
@@ -28,7 +29,7 @@ const useOutstatic = () => {
   // initialData (.ENV variables) over localData (local storage)
   const outstaticData = {
     ...localData,
-    ...initialData,
+    ...cleanInitialData,
     isPending: localPending
   } as OutstaticData & {
     isPending: boolean
