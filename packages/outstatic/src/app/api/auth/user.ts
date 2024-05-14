@@ -1,5 +1,4 @@
 import { getLoginSession } from '@/utils/auth/auth'
-import { NextResponse } from 'next/server'
 
 export type Request = {
   cookies: Partial<{
@@ -10,11 +9,11 @@ export type Request = {
   }
 }
 
-export default async function user() {
+export default async function user(): Promise<Response> {
   try {
     const session = await getLoginSession()
-    return NextResponse.json({ session })
+    return Response.json({ session })
   } catch (error) {
-    return NextResponse.json({ error })
+    return Response.json({ error })
   }
 }
