@@ -9,7 +9,8 @@ export default defineConfig((options) => {
     entry: [
       './src/index.tsx',
       './src/client/client.tsx',
-      './src/utils/server.ts'
+      './src/utils/server.ts',
+      './src/utils/auth/auth.ts'
     ],
     external: ['react', 'react-dom', 'next', 'tsup'],
     format: ['cjs', 'esm'],
