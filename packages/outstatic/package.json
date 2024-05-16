@@ -9,12 +9,29 @@
   },
   "homepage": "https://outstatic.com",
   "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "module": "./dist/index.mjs",
+  "typings": "./dist/index.d.ts",
   "exports": {
-    ".": "./dist/index.js",
-    "./client": "./dist/client/client.js",
-    "./server": "./dist/utils/server.js",
-    "./utils": "./dist/utils/auth/auth.js",
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./client": {
+      "import": "./dist/client/client.mjs",
+      "require": "./dist/client/client.js",
+      "types": "./dist/client/client.d.ts"
+    },
+    "./server": {
+      "import": "./dist/utils/server.mjs",
+      "require": "./dist/utils/server.js",
+      "types": "./dist/utils/server.d.ts"
+    },
+    "./utils": {
+      "import": "./dist/utils/index.mjs",
+      "require": "./dist/utils/index.js",
+      "types": "./dist/utils/index.d.ts"
+    },
     "./outstatic.css": "./dist/outstatic.css"
   },
   "license": "MIT",
@@ -47,8 +64,8 @@
     "@radix-ui/react-slot": "^1.0.2",
     "@radix-ui/react-tabs": "^1.0.4",
     "@tanstack/query-sync-storage-persister": "^5.29.0",
-    "@tanstack/react-query": "^5.29.0",
-    "@tanstack/react-query-persist-client": "^5.29.0",
+    "@tanstack/react-query": "5.35.5",
+    "@tanstack/react-query-persist-client": "5.35.5",
     "@tiptap/core": "2.1.10",
     "@tiptap/extension-bubble-menu": "2.1.10",
     "@tiptap/extension-code-block": "2.1.10",
@@ -73,7 +90,7 @@
     "change-case": "^5.4.2",
     "class-variance-authority": "^0.7.0",
     "clsx": "^1.2.1",
-    "cmdk": "^1.0.0",
+    "cmdk": "1.0.0",
     "cookie": "^0.5.0",
     "cross-fetch": "^4.0.0",
     "dompurify": "^2.3.9",

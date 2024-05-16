@@ -13,13 +13,7 @@ import Login from './login'
 import Onboarding from './onboarding'
 import Welcome from './welcome'
 
-export const Client = ({
-  params
-}: {
-  ostData: OutstaticData
-  params: { ost: string[] }
-}) => {
-  const { repoSlug, repoOwner, repoBranch, isPending } = useOutstatic()
+export const AdminArea = ({ params }: { params: { ost: string[] } }) => {
   const [openSidebar, setOpenSidebar] = useState(false)
   const toggleSidebar = () => {
     setOpenSidebar(!openSidebar)
@@ -29,28 +23,37 @@ export const Client = ({
     <div id="outstatic">
       <AdminHeader toggleSidebar={toggleSidebar} />
       <div className="flex md:grow flex-col-reverse justify-between md:flex-row md:min-h-[calc(100vh-56px)]">
-        {' '}
         <div className="flex w-full">
           <Sidebar isOpen={openSidebar} />
-          {isPending ? (
-            <AdminLoading />
-          ) : !repoSlug || !repoOwner || !repoBranch ? (
-            <Onboarding />
-          ) : (
-            <Router params={params} />
-          )}
+          <Dashboard params={params} />
         </div>
       </div>
     </div>
   )
 }
 
-export const OstClient = (props: {
+export const Dashboard = ({ params }: { params: { ost: string[] } }) => {
+  const { repoSlug, repoOwner, repoBranch, isPending } = useOutstatic()
+
+  return (
+    <>
+      {isPending ? (
+        <AdminLoading />
+      ) : !repoSlug || !repoOwner || !repoBranch ? (
+        <Onboarding />
+      ) : (
+        <Router params={params} />
+      )}
+    </>
+  )
+}
+
+type OstClientProps = {
   ostData: OutstaticData
   params: { ost: string[] }
-}) => {
-  const { ostData } = props
+}
 
+export const OstClient = ({ ostData, params }: OstClientProps) => {
   if (ostData.missingEnvVars) {
     return <Welcome variables={ostData.missingEnvVars} />
   }
@@ -63,7 +66,7 @@ export const OstClient = (props: {
     <InitialDataContext.Provider value={ostData}>
       <Toaster richColors />
       <QueryClientProvider client={queryClient}>
-        <Client {...props} />
+        <AdminArea params={params} />
       </QueryClientProvider>
     </InitialDataContext.Provider>
   )
