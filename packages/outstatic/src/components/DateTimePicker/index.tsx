@@ -2,6 +2,9 @@ import { ButtonHTMLAttributes, createElement, forwardRef } from 'react'
 import Datepicker, { ReactDatePickerCustomHeaderProps } from 'react-datepicker'
 import { Button } from '../ui/button'
 
+// @ts-ignore
+const RDPC = (Datepicker.default ?? Datepicker) as typeof Datepicker.default
+
 type DateTimePickerProps = {
   date?: Date
   setDate: (date: Date) => void
@@ -58,7 +61,7 @@ const DateTimePicker = ({ date, setDate, id, label }: DateTimePickerProps) => {
       {date ? date.toLocaleDateString('en-US', options) : 'Loading'}
     </Button>
   )
-
+  console.log(Datepicker)
   return (
     <>
       {label && (
@@ -68,7 +71,7 @@ const DateTimePicker = ({ date, setDate, id, label }: DateTimePickerProps) => {
       )}
       {/* The outter div serves as a referrence to positioning the DatePicker */}
       <div>
-        <Datepicker
+        <RDPC
           name={id}
           selected={date}
           onChange={(date: Date) => {
