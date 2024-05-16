@@ -748,9 +748,15 @@ importers:
       postcss:
         specifier: ^8.4.26
         version: 8.4.41
+      react:
+        specifier: ^17.0.2 || ^18
+        version: 18.3.1
       react-datepicker:
         specifier: ^6
         version: 6.9.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      react-dom:
+        specifier: ^17.0.2 || ^18
+        version: 18.3.1(react@18.3.1)
       react-hook-form:
         specifier: ^7.31.3
         version: 7.52.2(react@18.3.1)
@@ -911,12 +917,6 @@ importers:
       postcss-import:
         specifier: ^15.1.0
         version: 15.1.0(postcss@8.4.41)
-      react:
-        specifier: ^18.2.0
-        version: 18.3.1
-      react-dom:
-        specifier: ^18.2.0
-        version: 18.3.1(react@18.3.1)
       react-test-renderer:
         specifier: ^18.2.0
         version: 18.3.1(react@18.3.1)
