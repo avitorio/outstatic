@@ -602,11 +602,11 @@ importers:
         specifier: ^5.29.0
         version: 5.54.1
       '@tanstack/react-query':
-        specifier: ^5.29.0
-        version: 5.55.0(react@18.3.1)
+        specifier: 5.35.5
+        version: 5.35.5(react@18.3.1)
       '@tanstack/react-query-persist-client':
-        specifier: ^5.29.0
-        version: 5.55.0(@tanstack/react-query@5.55.0(react@18.3.1))(react@18.3.1)
+        specifier: 5.35.5
+        version: 5.35.5(@tanstack/react-query@5.35.5(react@18.3.1))(react@18.3.1)
       '@tiptap/core':
         specifier: 2.1.10
         version: 2.1.10(@tiptap/pm@2.1.10)
@@ -680,7 +680,7 @@ importers:
         specifier: ^1.2.1
         version: 1.2.1
       cmdk:
-        specifier: ^1.0.0
+        specifier: 1.0.0
         version: 1.0.0(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       cookie:
         specifier: ^0.5.0
@@ -2969,8 +2969,14 @@ packages:
     peerDependencies:
       eslint: ^8.57.0 || ^9.0.0
 
+  '@tanstack/query-core@5.35.5':
+    resolution: {integrity: sha512-OMWvlEqG01RfGj+XZb/piDzPp0eZkkHWSDHt2LvE/fd1zWburP/xwm0ghk6Iv8cuPlP+ACFkZviKXK0OVt6lhg==}
+
   '@tanstack/query-core@5.54.1':
     resolution: {integrity: sha512-hKS+WRpT5zBFip21pB6Jx1C0hranWQrbv5EJ7qPoiV5MYI3C8rTCqWC9DdBseiPT1JgQWh8Y55YthuYZNiw3Xw==}
+
+  '@tanstack/query-persist-client-core@5.35.5':
+    resolution: {integrity: sha512-ILWDPB0p/KLe7LkaNkMZpqS9t50R+jBYnAqB5dZUVgpLMbUmL8Nf4n9uLoyzJ8L4j3+hBEmcEJXaahixdViyIQ==}
 
   '@tanstack/query-persist-client-core@5.54.1':
     resolution: {integrity: sha512-qmBkrC5HA3XHwwrx/pWjegncQFcmuoAaffwbrXm07OrsOxxeTGLt8aFl8RYbWAs75a8+9uneqVFQfgv5QRqxBA==}
@@ -2978,16 +2984,16 @@ packages:
   '@tanstack/query-sync-storage-persister@5.54.1':
     resolution: {integrity: sha512-1c5JkmhUFe8rcZeY03dZpbHTPAMqmdZ/0FqM/eCUa4dnOFS+mFL2cifeV3dyDBe2uL4XdwLUi2SDzkqVcv4l5A==}
 
-  '@tanstack/react-query-persist-client@5.55.0':
-    resolution: {integrity: sha512-NvUcyc+MaaU/aV00Jnl+KYCMoYWx2s0ycuSkc+ZArvBlioy9NAqrKgyiWn8nXGzbew6bLxg82bgupOr+ivzuLA==}
+  '@tanstack/react-query-persist-client@5.35.5':
+    resolution: {integrity: sha512-WRnbUH9c47/i12KsNBKVmCFqeGCxvRUEo1VVWQFu9A8AfulYczSVTDsLAfC6VGzeAUyp0uPow03OUUpAIZhDFQ==}
     peerDependencies:
-      '@tanstack/react-query': ^5.55.0
-      react: ^18 || ^19
+      '@tanstack/react-query': ^5.35.5
+      react: ^18.0.0
 
-  '@tanstack/react-query@5.55.0':
-    resolution: {integrity: sha512-2uYuxEbRQD8TORUiTUacEOwt1e8aoSqUOJFGY5TUrh6rQ3U85zrMS2wvbNhBhXGh6Vj69QDCP2yv8tIY7joo6Q==}
+  '@tanstack/react-query@5.35.5':
+    resolution: {integrity: sha512-sppX7L+PVn5GBV3In6zzj0zcKfnZRKhXbX1MfIfKo1OjIq2GMaopvAFOP0x1bRYTUk2ikrdYcQYOozX7PWkb8A==}
     peerDependencies:
-      react: ^18 || ^19
+      react: ^18.0.0
 
   '@testing-library/dom@8.20.1':
     resolution: {integrity: sha512-/DiOQ5xBxgdYRC8LNk7U+RWat0S3qRLeIw3ZIkMQ9kkVlRmwD/Eg8k8CqIpD6GW7u20JIUOfMKbxtiLutpjQ4g==}
@@ -11722,7 +11728,13 @@ snapshots:
       - supports-color
       - typescript
 
+  '@tanstack/query-core@5.35.5': {}
+
   '@tanstack/query-core@5.54.1': {}
+
+  '@tanstack/query-persist-client-core@5.35.5':
+    dependencies:
+      '@tanstack/query-core': 5.35.5
 
   '@tanstack/query-persist-client-core@5.54.1':
     dependencies:
@@ -11733,15 +11745,15 @@ snapshots:
       '@tanstack/query-core': 5.54.1
       '@tanstack/query-persist-client-core': 5.54.1
 
-  '@tanstack/react-query-persist-client@5.55.0(@tanstack/react-query@5.55.0(react@18.3.1))(react@18.3.1)':
+  '@tanstack/react-query-persist-client@5.35.5(@tanstack/react-query@5.35.5(react@18.3.1))(react@18.3.1)':
     dependencies:
-      '@tanstack/query-persist-client-core': 5.54.1
-      '@tanstack/react-query': 5.55.0(react@18.3.1)
+      '@tanstack/query-persist-client-core': 5.35.5
+      '@tanstack/react-query': 5.35.5(react@18.3.1)
       react: 18.3.1
 
-  '@tanstack/react-query@5.55.0(react@18.3.1)':
+  '@tanstack/react-query@5.35.5(react@18.3.1)':
     dependencies:
-      '@tanstack/query-core': 5.54.1
+      '@tanstack/query-core': 5.35.5
       react: 18.3.1
 
   '@testing-library/dom@8.20.1':

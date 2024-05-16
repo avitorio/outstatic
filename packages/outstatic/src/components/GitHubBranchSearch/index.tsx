@@ -4,13 +4,13 @@ import { useCollections } from '@/utils/hooks/useCollections'
 import { useInitialData } from '@/utils/hooks/useInitialData'
 import useOutstatic, { useLocalData } from '@/utils/hooks/useOutstatic'
 import { useRouter } from 'next/navigation'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 interface Branch {
   name: string
 }
 
-const GitHubBranchSearch: React.FC = () => {
+const GitHubBranchSearch = () => {
   const initialData = useInitialData()
   const { setData } = useLocalData()
   const { repoOwner, repoSlug, repoBranch, session } = useOutstatic()
@@ -19,7 +19,7 @@ const GitHubBranchSearch: React.FC = () => {
     : [{ name: 'main' }]
   const [suggestions, setSuggestions] = useState<Branch[]>(initialSuggestion)
   const [isLoading, setIsLoading] = useState<boolean>(false)
-  const [value, setValue] = React.useState(repoBranch)
+  const [value, setValue] = useState(repoBranch)
   const { refetch } = useCollections()
   const router = useRouter()
 
@@ -103,7 +103,6 @@ const GitHubBranchSearch: React.FC = () => {
           const { data } = await refetch()
 
           if (data === null) {
-            console.log({ data })
             router.push('/outstatic')
           }
         }
