@@ -11,7 +11,8 @@ export default defineConfig((options) => {
       './src/index.tsx',
       './src/client/client.tsx',
       './src/utils/server.ts',
-      './src/utils/index.ts'
+      './src/utils/auth/auth.ts',
+      './src/utils/hooks/index.tsx'
     ],
     external: ['react', 'react-dom', 'next', 'tsup'],
     format: ['cjs', 'esm'],
