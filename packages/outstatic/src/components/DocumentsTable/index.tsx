@@ -17,6 +17,7 @@ import {
   useSortedDocuments,
   SortConfig
 } from '@/utils/hooks/useSortedDocuments'
+import useOutstatic from '@/utils/hooks/useOutstatic'
 import { useParams } from 'next/navigation'
 
 export type Column = {
@@ -33,6 +34,7 @@ const defaultColumns: Column[] = [
 
 const DocumentsTable = () => {
   const { data: documents, refetch } = useGetDocuments()
+  const { dashboardRoute } = useOutstatic()
 
   const params = useParams<{ ost: string[] }>()
   const [columns, setColumns] = useState<Column[]>(
@@ -119,26 +121,32 @@ const DocumentsTable = () => {
           </tr>
         </thead>
         <tbody>
-          {sortedDocuments &&
-            sortedDocuments.map((document) => (
-              <tr
-                key={document.slug}
-                className="border-b bg-white hover:bg-gray-50"
-              >
-                {columns.map((column) => {
-                  return cellSwitch(column.value, document, params.ost[0])
-                })}
-                <td className="pr-6 py-4 text-right">
-                  <DeleteDocumentButton
-                    extension={document.extension}
-                    slug={document.slug}
-                    disabled={false}
-                    onComplete={() => refetch()}
-                    collection={params.ost[0]}
-                  />
-                </td>
-              </tr>
-            ))}
+          {sortedDocuments
+            ? sortedDocuments.map((document) => (
+                <tr
+                  key={document.slug}
+                  className="border-b bg-white hover:bg-gray-50"
+                >
+                  {columns.map((column) => {
+                    return cellSwitch(
+                      column.value,
+                      document,
+                      dashboardRoute,
+                      params.ost[0]
+                    )
+                  })}
+                  <td className="pr-6 py-4 text-right">
+                    <DeleteDocumentButton
+                      slug={document.slug}
+                      extension={document.extension}
+                      disabled={false}
+                      onComplete={() => refetch()}
+                      collection={params.ost[0]}
+                    />
+                  </td>
+                </tr>
+              ))
+            : null}
         </tbody>
       </table>
       {showColumnOptions && (
@@ -164,6 +172,7 @@ const DocumentsTable = () => {
 const cellSwitch = (
   columnValue: string,
   document: OstDocument,
+  dashboard: string,
   collection: string
 ) => {
   const item = document[columnValue] as
@@ -179,7 +188,7 @@ const cellSwitch = (
           scope="row"
           className="relative whitespace-nowrap px-6 py-4 text-base font-semibold text-gray-900 group"
         >
-          <Link href={`/outstatic/${collection}/${document.slug}`}>
+          <Link href={`${dashboard}/${collection}/${document.slug}`}>
             <div className="group-hover:text-blue-500">
               {item as string}
               <div className="absolute top-0 bottom-0 left-0 right-40 cursor-pointer" />

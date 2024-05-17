@@ -15,6 +15,7 @@ export type OutstaticData = {
   basePath: string
   ostDetach: boolean
   ostContent: string
+  dashboardRoute: string
 }
 
 export async function Outstatic({
@@ -56,6 +57,7 @@ export async function Outstatic({
     hasOpenAIKey: !!process.env.OPENAI_API_KEY,
     basePath: process.env.OST_BASE_PATH || '',
     ostDetach: process.env.OST_DETACH || false,
-    pages: ['collections', 'settings']
+    pages: ['collections', 'settings'],
+    dashboardRoute: '/outstatic'
   } as OutstaticData
 }

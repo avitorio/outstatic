@@ -18,6 +18,7 @@ import { RegisterOptions, useFormContext } from 'react-hook-form'
 import { slugify } from 'transliteration'
 import { Button } from '../ui/button'
 import { CheckboxWithLabel } from '../ui/checkbox-with-label'
+import useOutstatic from '@/utils/hooks/useOutstatic'
 
 type DocumentSettingsProps = {
   saveFunc: () => void
@@ -75,8 +76,12 @@ const DocumentSettings = ({
     formState: { errors }
   } = useFormContext()
   const router = useRouter()
+
   const { document, extension, editDocument, hasChanges, collection } =
     useContext(DocumentContext)
+
+  const { dashboardRoute } = useOutstatic()
+
   const [isOpen, setIsOpen] = useState(false)
 
   return (
@@ -179,7 +184,7 @@ const DocumentSettings = ({
               slug={document.slug}
               extension={extension}
               onComplete={() => {
-                router.push(`/outstatic/${collection}`)
+                router.push(`${dashboardRoute}/${collection}`)
               }}
               collection={collection}
               className="hover:bg-slate-200 max-h-[2.25rem]"
