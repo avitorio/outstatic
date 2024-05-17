@@ -7,9 +7,11 @@ import { useCollections } from '@/utils/hooks/useCollections'
 import Link from 'next/link'
 import { useState } from 'react'
 import DeleteCollectionModal from './components/delete-collection-modal'
+import useOutstatic from '@/utils/hooks/useOutstatic'
 
 export default function Collections() {
   const { data: collections, isPending } = useCollections()
+  const { dashboardRoute } = useOutstatic()
 
   const [selectedCollection, setSelectedCollection] = useState('')
   const [showDeleteModal, setShowDeleteModal] = useState(false)
@@ -45,7 +47,7 @@ export default function Collections() {
               </p>
               <p>Create your first Collection by clicking the button below.</p>
 
-              <Link href="/outstatic/collections/new">
+              <Link href={`${dashboardRoute}/collections/new`}>
                 <div className="inline-block rounded-lg border px-5 py-2.5 text-sm font-medium focus:outline-none focus:ring-4 border-gray-600 bg-gray-800 text-white hover:border-gray-600 hover:bg-gray-700 focus:ring-gray-700 no-underline">
                   New Collection
                 </div>
@@ -69,7 +71,9 @@ export default function Collections() {
           <div className="mb-8 flex h-12 items-center">
             <h1 className="mr-12 text-2xl">Collections</h1>
             <Button asChild>
-              <Link href="/outstatic/collections/new">New Collection</Link>
+              <Link href={`${dashboardRoute}/collections/new`}>
+                New Collection
+              </Link>
             </Button>
           </div>
           <div className="max-w-5xl w-full grid md:grid-cols-3 gap-6">
@@ -77,7 +81,7 @@ export default function Collections() {
               <Card key={collection}>
                 <CardContent className="relative flex p-6 justify-between items-center">
                   <Link
-                    href={`/outstatic/${collection}`}
+                    href={`${dashboardRoute}/${collection}`}
                     className="focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg"
                   >
                     <h5 className="text-2xl cursor-pointer font-bold tracking-tight text-gray-900 capitalize hover:text-blue-500">
@@ -87,7 +91,9 @@ export default function Collections() {
                   </Link>
                   <div className="z-10 flex gap-2">
                     <Button asChild size="icon" variant="ghost">
-                      <Link href={`/outstatic/collections/${collection}`}>
+                      <Link
+                        href={`${dashboardRoute}/collections/${collection}`}
+                      >
                         <span className="sr-only">Edit collection</span>
                         <svg
                           xmlns="http://www.w3.org/2000/svg"

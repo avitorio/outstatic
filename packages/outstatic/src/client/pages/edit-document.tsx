@@ -27,7 +27,8 @@ export default function EditDocument({ collection }: { collection: string }) {
     pathname.split('/').pop() || `/${collection}/new`
   )
   const [loading, setLoading] = useState(false)
-  const { basePath, session, hasChanges, setHasChanges } = useOutstatic()
+  const { basePath, session, hasChanges, setHasChanges, dashboardRoute } =
+    useOutstatic()
   const [showDelete, setShowDelete] = useState(false)
   const [documentSchema, setDocumentSchema] = useState(editDocumentSchema)
   const methods = useForm<Document>({ resolver: yupResolver(documentSchema) })
@@ -64,7 +65,7 @@ export default function EditDocument({ collection }: { collection: string }) {
     window.history.replaceState(
       {},
       '',
-      `${basePath}/outstatic/${collection}/${slug}`
+      `${basePath}${dashboardRoute}/${collection}/${slug}`
     )
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [slug])

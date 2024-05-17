@@ -1,13 +1,15 @@
 import { useCollections } from '@/utils/hooks/useCollections'
+import useOutstatic from '@/utils/hooks/useOutstatic'
 import Link from 'next/link'
 
 const CollectionsList = () => {
   const { data: collections } = useCollections()
+  const { dashboardRoute } = useOutstatic()
 
   return (
     <>
       <li>
-        <Link href="/outstatic">
+        <Link href={dashboardRoute}>
           <div className="flex cursor-pointer items-center rounded-lg p-2 text-base font-normal text-gray-900 hover:bg-gray-100">
             <svg
               className="h-6 w-6 shrink-0 text-gray-500 transition duration-75 group-hover:text-gray-900"
@@ -29,7 +31,7 @@ const CollectionsList = () => {
       {collections
         ? collections.map((collection) => (
             <li key={collection}>
-              <Link href={`/outstatic/${collection}`}>
+              <Link href={`${dashboardRoute}/${collection}`}>
                 <div className="flex cursor-pointer items-center rounded-lg p-2 text-base font-normal text-gray-900 hover:bg-gray-100">
                   <svg
                     className="h-6 w-6 shrink-0 text-gray-500 transition duration-75 group-hover:text-gray-900"
@@ -52,7 +54,7 @@ const CollectionsList = () => {
           ))
         : null}
       <li>
-        <Link href="/outstatic/settings">
+        <Link href={`${dashboardRoute}/settings`}>
           <div className="flex cursor-pointer items-center rounded-lg p-2 text-base font-normal text-gray-900 hover:bg-gray-100">
             <svg
               className="h-6 w-6 shrink-0 text-gray-500 transition duration-75 group-hover:text-gray-900"

@@ -5,6 +5,7 @@ import { useGetDocuments } from '@/utils/hooks/useGetDocuments'
 import Link from 'next/link'
 import { singular } from 'pluralize'
 import Collections from './collections'
+import useOutstatic from '@/utils/hooks/useOutstatic'
 
 type ListProps = {
   collection: string
@@ -12,6 +13,7 @@ type ListProps = {
 
 export default function List({ collection }: ListProps) {
   const { data: documents, isError, isPending } = useGetDocuments()
+  const { dashboardRoute } = useOutstatic()
 
   if (isPending) return <AdminLoading />
   if (isError) return <Collections />
@@ -21,7 +23,7 @@ export default function List({ collection }: ListProps) {
       <div className="mb-8 flex h-12 items-center capitalize">
         <h1 className="mr-12 text-2xl">{collection}</h1>
         <Button asChild>
-          <Link href={`/outstatic/${collection}/new`}>
+          <Link href={`${dashboardRoute}/${collection}/new`}>
             New {singular(collection)}
           </Link>
         </Button>
@@ -59,7 +61,7 @@ export default function List({ collection }: ListProps) {
 
               <Button asChild>
                 <Link
-                  href={`/outstatic/${collection}/new`}
+                  href={`${dashboardRoute}/${collection}/new`}
                   className="no-underline capitalize"
                 >
                   New {singular(collection)}

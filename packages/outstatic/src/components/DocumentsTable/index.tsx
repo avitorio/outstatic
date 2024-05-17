@@ -9,6 +9,7 @@ import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import { useState } from 'react'
 import { Button } from '../ui/button'
+import useOutstatic from '@/utils/hooks/useOutstatic'
 
 export type Column = {
   id: string
@@ -24,6 +25,7 @@ const defaultColumns: Column[] = [
 
 const DocumentsTable = () => {
   const { data: documents, refetch } = useGetDocuments()
+  const { dashboardRoute } = useOutstatic()
 
   const params = useParams<{ ost: string[] }>()
   const [columns, setColumns] = useState<Column[]>(
@@ -73,7 +75,12 @@ const DocumentsTable = () => {
                   className="border-b bg-white hover:bg-gray-50"
                 >
                   {columns.map((column) => {
-                    return cellSwitch(column.value, document, params.ost[0])
+                    return cellSwitch(
+                      column.value,
+                      document,
+                      dashboardRoute,
+                      params.ost[0]
+                    )
                   })}
                   <td className="pr-6 py-4 text-right">
                     <DeleteDocumentButton
@@ -112,6 +119,7 @@ const DocumentsTable = () => {
 const cellSwitch = (
   columnValue: string,
   document: OstDocument,
+  dashboard: string,
   collection: string
 ) => {
   const item = document[columnValue] as
@@ -127,7 +135,7 @@ const cellSwitch = (
           scope="row"
           className="relative whitespace-nowrap px-6 py-4 text-base font-semibold text-gray-900 group"
         >
-          <Link href={`/outstatic/${collection}/${document.slug}`}>
+          <Link href={`${dashboard}/${collection}/${document.slug}`}>
             <div className="group-hover:text-blue-500">
               {item as string}
               <div className="absolute top-0 bottom-0 left-0 right-40 cursor-pointer" />
