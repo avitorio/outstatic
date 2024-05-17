@@ -30,7 +30,8 @@ export default function NewCollection() {
     repoSlug,
     repoBranch,
     repoOwner,
-    ostDetach
+    ostDetach,
+    dashboardRoute
   } = useOutstatic()
 
   const router = useRouter()
@@ -108,7 +109,7 @@ export default function NewCollection() {
       mutation.mutate(input, {
         onSuccess: () => {
           setLoading(false)
-          router.push(`/outstatic/${collection}`)
+          router.push(`${dashboardRoute}/${collection}`)
         },
         onError: () => {
           throw new Error('Failed to create collection')
@@ -140,7 +141,7 @@ export default function NewCollection() {
           <Alert type="error">
             <span className="font-medium">Oops!</span> We couldn&apos;t create
             your collection. Please, make sure your settings are correct by{' '}
-            <Link href="/outstatic/settings">
+            <Link href={`${dashboardRoute}/settings`}>
               <span className="underline">clicking here</span>
             </Link>{' '}
             .

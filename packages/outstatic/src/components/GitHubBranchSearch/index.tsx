@@ -13,7 +13,8 @@ interface Branch {
 const GitHubBranchSearch = () => {
   const initialData = useInitialData()
   const { setData } = useLocalData()
-  const { repoOwner, repoSlug, repoBranch, session } = useOutstatic()
+  const { repoOwner, repoSlug, repoBranch, session, dashboardRoute } =
+    useOutstatic()
   const initialSuggestion = repoBranch
     ? [{ name: repoBranch }]
     : [{ name: 'main' }]
@@ -103,7 +104,7 @@ const GitHubBranchSearch = () => {
           const { data } = await refetch()
 
           if (data === null) {
-            router.push('/outstatic')
+            router.push(dashboardRoute)
           }
         }
         getCollections()
