@@ -4,7 +4,7 @@ import { useInitialData } from '@/utils/hooks/useInitialData'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { GraphQLClient } from 'graphql-request'
 
-const useOutstatic = () => {
+export const useOutstatic = () => {
   const { hasChanges, setHasChanges } = useContentLock()
   const initialData = useInitialData()
   const { data: localData, isPending: localPending } = useLocalData()
@@ -51,15 +51,14 @@ export default useOutstatic
 
 export const useLocalData = () => {
   const queryClient = useQueryClient()
-
+  const { repoOwner, repoSlug, repoBranch } = useInitialData()
+  const queryKey = ['ost_local_data', { repoOwner, repoSlug, repoBranch }]
   const { data, isLoading, isError, error, isPending } = useQuery<
     Partial<OutstaticData>
   >({
-    queryKey: ['ost_local_data'],
+    queryKey: queryKey,
     queryFn: () => {
-      const cachedData = queryClient.getQueryData<OutstaticData>([
-        'ost_local_data'
-      ])
+      const cachedData = queryClient.getQueryData<OutstaticData>(queryKey)
       if (cachedData) {
         return cachedData
       }
@@ -67,9 +66,7 @@ export const useLocalData = () => {
       return {}
     },
     initialData: () => {
-      const cachedData = queryClient.getQueryData<OutstaticData>([
-        'ost_local_data'
-      ])
+      const cachedData = queryClient.getQueryData<OutstaticData>(queryKey)
       if (cachedData) {
         return cachedData
       }
@@ -89,7 +86,7 @@ export const useLocalData = () => {
   })
 
   const setData = (newData: Partial<OutstaticData>) => {
-    queryClient.setQueryData(['ost_local_data'], (oldData: OutstaticData) => ({
+    queryClient.setQueryData(queryKey, (oldData: OutstaticData) => ({
       ...oldData,
       ...newData
     }))
