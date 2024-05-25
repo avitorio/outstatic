@@ -61,7 +61,6 @@ const DateTimePicker = ({ date, setDate, id, label }: DateTimePickerProps) => {
       {date ? date.toLocaleDateString('en-US', options) : 'Loading'}
     </Button>
   )
-  console.log(Datepicker)
   return (
     <>
       {label && (
