@@ -1,5 +1,5 @@
 import { setLoginSession } from '@/utils/auth/auth'
-import { MAX_AGE } from '@/utils/auth/auth-cookies'
+import { MAX_AGE } from '@/utils/auth/auth'
 import { createEdgeRouter } from 'next-connect'
 import nextSession from 'next-session'
 import { Session } from 'next-session/lib/types'
