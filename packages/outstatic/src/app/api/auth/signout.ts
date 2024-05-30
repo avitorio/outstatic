@@ -1,4 +1,4 @@
-import { TOKEN_NAME } from '@/utils/auth/auth-cookies'
+import { TOKEN_NAME } from '@/utils/auth/auth'
 import { cookies } from 'next/headers'
 import { NextRequest, NextResponse } from 'next/server'
 
