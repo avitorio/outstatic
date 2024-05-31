@@ -42,6 +42,8 @@ export async function setLoginSession(session: LoginSession) {
     path: '/',
     sameSite: 'lax'
   })
+
+  return true
 }
 
 export async function getLoginSession(): Promise<Session | null> {
