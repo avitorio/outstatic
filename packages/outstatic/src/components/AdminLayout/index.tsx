@@ -1,4 +1,5 @@
 import { useOstSession } from '@/utils/auth/hooks'
+import { useOutstatic } from '@/utils/hooks'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 
@@ -15,6 +16,7 @@ export default function AdminLayout({
   settings,
   title
 }: AdminLayoutProps) {
+  const { dashboardRoute } = useOutstatic()
   const { status } = useOstSession()
   const { push } = useRouter()
 
@@ -25,7 +27,7 @@ export default function AdminLayout({
 
   if (status === 'unauthenticated') {
     if (typeof window !== 'undefined') {
-      push(`/outstatic`)
+      push(dashboardRoute)
     }
     return null
   }
