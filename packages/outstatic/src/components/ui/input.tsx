@@ -17,12 +17,16 @@ const sizes = {
   small: {
     label: 'mb-1 block text-sm font-medium text-gray-900',
     input:
-      '"flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50'
+      '"flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50',
+    checkbox:
+      'h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500'
   },
   medium: {
     label: 'block mb-2 text-sm font-medium text-gray-900',
     input:
-      '"flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50'
+      '"flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50',
+    checkbox:
+      'h-5 w-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500'
   }
 }
 
@@ -44,6 +48,8 @@ const Input = ({
     formState: { errors }
   } = useFormContext()
 
+  const isCheckbox = type === 'checkbox'
+
   return (
     <div className={wrapperClass}>
       {label && (
@@ -58,7 +64,9 @@ const Input = ({
         <input
           {...register(id, registerOptions)}
           {...rest}
-          className={`${sizes[inputSize].input} ${className}`}
+          className={`${
+            isCheckbox ? sizes[inputSize].checkbox : sizes[inputSize].input
+          } ${className}`}
           type={type}
           name={id}
           id={id}

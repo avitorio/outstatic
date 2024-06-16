@@ -27,7 +27,7 @@ type DocumentSettingsProps = {
 }
 
 interface CustomInputProps {
-  type?: 'text' | 'number'
+  type?: 'text' | 'number' | 'checkbox'
   suggestions?: CustomFieldArrayValue[]
   registerOptions?: RegisterOptions
 }
@@ -42,6 +42,7 @@ type FieldDataMapType = {
   Text: ComponentType
   Number: ComponentType
   Tags: ComponentType
+  Boolean: ComponentType
 }
 
 const FieldDataMap: FieldDataMapType = {
@@ -53,7 +54,8 @@ const FieldDataMap: FieldDataMapType = {
     props: {
       suggestions: []
     }
-  }
+  },
+  Boolean: { component: Input, props: { type: 'checkbox' } }
 }
 
 const DocumentSettings = ({
