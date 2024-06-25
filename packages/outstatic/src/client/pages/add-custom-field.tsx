@@ -21,15 +21,16 @@ type AddCustomFieldProps = {
   collection: string
 }
 
-type CustomFieldForm = CustomField<'string' | 'number' | 'array'> & {
-  name: string
-}
+type CustomFieldForm = CustomField<
+  'string' | 'number' | 'array' | 'boolean'
+> & { name: string }
 
 const fieldDataMap = {
   Text: 'string',
   String: 'string',
   Number: 'number',
-  Tags: 'array'
+  Tags: 'array',
+  Boolean: 'boolean'
 } as const
 
 export default function AddCustomField({ collection }: AddCustomFieldProps) {

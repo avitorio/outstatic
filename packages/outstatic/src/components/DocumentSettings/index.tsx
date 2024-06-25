@@ -17,6 +17,7 @@ import { useContext, useState } from 'react'
 import { RegisterOptions, useFormContext } from 'react-hook-form'
 import { slugify } from 'transliteration'
 import { Button } from '../ui/button'
+import { CheckboxWithLabel } from '../ui/checkbox-with-label'
 
 type DocumentSettingsProps = {
   saveFunc: () => void
@@ -27,13 +28,17 @@ type DocumentSettingsProps = {
 }
 
 interface CustomInputProps {
-  type?: 'text' | 'number'
+  type?: 'text' | 'number' | 'checkbox'
   suggestions?: CustomFieldArrayValue[]
   registerOptions?: RegisterOptions
 }
 
 type ComponentType = {
-  component: typeof Input | typeof TextArea | typeof TagInput
+  component:
+    | typeof Input
+    | typeof TextArea
+    | typeof TagInput
+    | typeof CheckboxWithLabel
   props: CustomInputProps
 }
 
@@ -42,6 +47,7 @@ type FieldDataMapType = {
   Text: ComponentType
   Number: ComponentType
   Tags: ComponentType
+  Boolean: ComponentType
 }
 
 const FieldDataMap: FieldDataMapType = {
@@ -53,7 +59,8 @@ const FieldDataMap: FieldDataMapType = {
     props: {
       suggestions: []
     }
-  }
+  },
+  Boolean: { component: CheckboxWithLabel, props: { type: 'checkbox' } }
 }
 
 const DocumentSettings = ({
