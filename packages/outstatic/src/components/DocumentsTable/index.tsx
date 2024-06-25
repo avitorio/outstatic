@@ -5,7 +5,7 @@ import { sentenceCase } from 'change-case'
 import cookies from 'js-cookie'
 import { Settings } from 'lucide-react'
 import Link from 'next/link'
-import { useState, useCallback, useEffect } from 'react'
+import { useState, useCallback, useEffect, ReactNode } from 'react'
 import { Button } from '../ui/button'
 import {
   CaretSortIcon,
@@ -201,7 +201,7 @@ const cellSwitch = (
           className="px-6 py-4 text-base font-semibold text-gray-900"
           data-testid="status-cell"
         >
-          {item}
+          {item as ReactNode}
         </td>
       )
     default:

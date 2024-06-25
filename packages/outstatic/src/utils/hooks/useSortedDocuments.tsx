@@ -3,7 +3,7 @@ import { OstDocument } from '@/types/public'
 
 type SortDirection = 'ascending' | 'descending'
 
-type SortConfig = {
+export type SortConfig = {
   key: keyof OstDocument
   direction: SortDirection
 }
@@ -27,18 +27,21 @@ export const useSortedDocuments = (
         if (a.status === b.status) {
           return a.title.localeCompare(b.title) * multiplier
         }
-        return (a.status === 'published' ? 1 : -1) * multiplier // Fix the sorting logic here
+        return (a.status === 'published' ? 1 : -1) * multiplier
       }
 
-      const valueA = a[key]
-      const valueB = b[key]
+      const valueA = a[key] as string | number
+      const valueB = b[key] as string | number
 
       if (typeof valueA === 'string' && typeof valueB === 'string') {
         return valueA.localeCompare(valueB) * multiplier
       }
 
-      if (valueA < valueB) return -1 * multiplier
-      if (valueA > valueB) return 1 * multiplier
+      if (typeof valueA === 'number' && typeof valueB === 'number') {
+        return (valueA - valueB) * multiplier
+      }
+
+      // Fallback for other types
       return 0
     },
     [sortConfig]

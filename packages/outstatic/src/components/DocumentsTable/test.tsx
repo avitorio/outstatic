@@ -103,7 +103,7 @@ describe('DocumentsTable', () => {
 
     const sortedAsc = screen
       .getAllByTestId('status-cell')
-      .map((node) => node.textContent.trim())
+      .map((node) => (node.textContent as string).trim())
     expect(sortedAsc).toEqual(['draft', 'published'])
 
     // Click the status column header again to sort descending
@@ -111,7 +111,7 @@ describe('DocumentsTable', () => {
 
     const sortedDesc = screen
       .getAllByTestId('status-cell')
-      .map((node) => node.textContent.trim())
+      .map((node) => (node.textContent as string).trim())
     expect(sortedDesc).toEqual(['published', 'draft'])
   })
 

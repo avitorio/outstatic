@@ -6,9 +6,9 @@ import { Controller, useFormContext, RegisterOptions } from 'react-hook-form'
 import { cn } from '@/utils/ui'
 
 interface CheckboxWithLabelProps
-  extends React.ComponentPropsWithoutRef<typeof Checkbox> {
+  extends Omit<React.ComponentPropsWithoutRef<typeof Checkbox>, 'type'> {
   id: string
-  label: string
+  label?: string
   registerOptions?: RegisterOptions
   helperText?: string
 }
