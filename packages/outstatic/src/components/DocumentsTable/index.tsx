@@ -5,8 +5,17 @@ import { sentenceCase } from 'change-case'
 import cookies from 'js-cookie'
 import { Settings } from 'lucide-react'
 import Link from 'next/link'
-import { useState } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { Button } from '../ui/button'
+import {
+  CaretSortIcon,
+  CaretDownIcon,
+  CaretUpIcon
+} from '@radix-ui/react-icons'
+import {
+  useSortedDocuments,
+  SortConfig
+} from '@/utils/hooks/useSortedDocuments'
 
 type DocumentsTableProps = {
   documents: OstDocument[]
@@ -38,20 +47,74 @@ const DocumentsTable = (props: DocumentsTableProps) => {
   )
   const [showColumnOptions, setShowColumnOptions] = useState(false)
 
+  const [sortConfig, setSortConfig] = useState<SortConfig>({
+    key: 'publishedAt',
+    direction: 'descending'
+  })
+
+  const sortedDocuments = useSortedDocuments(documents, sortConfig)
+
+  const requestSort = useCallback((key: keyof OstDocument) => {
+    setSortConfig((prevConfig) => ({
+      key,
+      direction:
+        prevConfig.key === key && prevConfig.direction === 'ascending'
+          ? 'descending'
+          : 'ascending'
+    }))
+  }, [])
+
+  const handleDelete = useCallback((slug: string) => {
+    setDocuments((prevDocuments) =>
+      prevDocuments.filter((doc) => doc.slug !== slug)
+    )
+  }, [])
+
+  useEffect(() => {
+    setDocuments(props.documents)
+  }, [props.documents])
+
   return (
-    <div>
+    <div className="overflow-x-auto">
       <table className="w-full text-left text-sm text-gray-500">
         <thead className="bg-gray-50 text-xs uppercase text-gray-700 border-b">
           <tr>
             {columns.map((column) => (
-              <th key={column.value} scope="col" className="px-6 py-3">
-                {column.label}
+              <th
+                key={column.value}
+                scope="col"
+                className="px-6 py-3 cursor-pointer"
+                onClick={() => requestSort(column.value)}
+              >
+                <div className="flex items-center">
+                  <span>{column.label}</span>
+                  <span
+                    className="ml-2"
+                    data-testid={`sort-icon-${column.value}`}
+                  >
+                    {sortConfig.key === column.value ? (
+                      sortConfig.direction === 'ascending' ? (
+                        <CaretUpIcon
+                          className="h-4 w-4"
+                          data-testid="caret-up-icon"
+                        />
+                      ) : (
+                        <CaretDownIcon
+                          className="h-4 w-4"
+                          data-testid="caret-down-icon"
+                        />
+                      )
+                    ) : (
+                      <CaretSortIcon
+                        className="h-4 w-4"
+                        data-testid="caret-sort-icon"
+                      />
+                    )}
+                  </span>
+                </div>
               </th>
             ))}
-            <th
-              scope="col"
-              className="px-6 py-2 text-right flex justify-end items-center"
-            >
+            <th scope="col" className="px-6 py-3 text-right">
               <Button
                 variant="ghost"
                 size="icon"
@@ -64,8 +127,8 @@ const DocumentsTable = (props: DocumentsTableProps) => {
           </tr>
         </thead>
         <tbody>
-          {documents &&
-            documents.map((document) => (
+          {sortedDocuments &&
+            sortedDocuments.map((document) => (
               <tr
                 key={document.slug}
                 className="border-b bg-white hover:bg-gray-50"
@@ -77,11 +140,7 @@ const DocumentsTable = (props: DocumentsTableProps) => {
                   <DeleteDocumentButton
                     slug={document.slug}
                     disabled={false}
-                    onComplete={() =>
-                      setDocuments(
-                        documents.filter((p) => p.slug !== document.slug)
-                      )
-                    }
+                    onComplete={() => handleDelete(document.slug)}
                     collection={props.collection}
                   />
                 </td>
@@ -134,6 +193,16 @@ const cellSwitch = (
             </div>
           </Link>
         </th>
+      )
+    case 'status':
+      return (
+        <td
+          key="status"
+          className="px-6 py-4 text-base font-semibold text-gray-900"
+          data-testid="status-cell"
+        >
+          {item}
+        </td>
       )
     default:
       return (
