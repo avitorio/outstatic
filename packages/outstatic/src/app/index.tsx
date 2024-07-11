@@ -14,8 +14,10 @@ export type OutstaticData = {
   hasOpenAIKey: boolean
   basePath: string
   ostDetach: boolean
-  ostContent: string
+  ostContent?: string
   dashboardRoute: string
+  githubGql: string
+  csrfToken?: string | null
 }
 
 export async function Outstatic({
@@ -58,6 +60,8 @@ export async function Outstatic({
     basePath: process.env.OST_BASE_PATH || '',
     ostDetach: process.env.OST_DETACH || false,
     pages: ['collections', 'settings'],
-    dashboardRoute: '/outstatic'
+    dashboardRoute: '/outstatic',
+    githubGql: 'https://api.github.com/graphql',
+    csrfToken: null
   } as OutstaticData
 }
