@@ -41,8 +41,15 @@ export const MetadataBuilder: React.FC<MetadataBuilderProps> = ({
 
   const mutation = useCreateCommit()
 
-  const { repoOwner, repoSlug, repoBranch, monorepoPath, session, ostContent } =
-    useOutstatic()
+  const {
+    repoOwner,
+    repoSlug,
+    repoBranch,
+    monorepoPath,
+    session,
+    ostContent,
+    githubGql
+  } = useOutstatic()
 
   const { refetch, data } = useGetFileInformation({ enabled: false })
 
@@ -82,7 +89,7 @@ export const MetadataBuilder: React.FC<MetadataBuilderProps> = ({
     const takeAndProcess = async (o: FileData) => {
       const filePath = o.path.replace(/\.mdx?$/, '')
       const { repository } = await request<GetDocumentData>(
-        'https://api.github.com/graphql',
+        githubGql,
         GET_DOCUMENT,
         {
           owner: repoOwner || session?.user?.login || '',
