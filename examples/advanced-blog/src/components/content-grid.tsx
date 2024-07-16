@@ -1,8 +1,14 @@
+"use client";
+
+import { useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import type { OstDocument } from "outstatic";
+import Search from "./search";
+import metadb from "@/../outstatic/content/metadata.json";
+import { Suspense } from "react";
 
 type Item = {
   tags?: { value: string; label: string }[];
@@ -11,9 +17,10 @@ type Item = {
 type Props = {
   collection: string;
   title?: string;
-  items: Item[];
+  items: Item[] | typeof metadb.metadata;
   priority?: boolean;
   viewAll?: boolean;
+  search?: boolean;
 };
 
 const ContentGrid = ({
@@ -22,7 +29,26 @@ const ContentGrid = ({
   collection,
   priority = false,
   viewAll = false,
+  search = false,
 }: Props) => {
+  const searchParams = useSearchParams();
+
+  const searchQuery = searchParams.get("q")?.toLowerCase();
+  const posts = metadb.metadata;
+  const searchResults: typeof metadb.metadata = [];
+
+  if (searchQuery) {
+    posts.forEach((post) => {
+      if (post.status === "published" && post.collection === collection) {
+        if (
+          post.title.toLowerCase().includes(searchQuery) ||
+          post.description.toLowerCase().includes(searchQuery)
+        ) {
+          searchResults.push(post);
+        }
+      }
+    });
+  }
   return (
     <section id={collection} className="mb-24">
       <div className="flex gap-4 md:gap-6 items-end">
@@ -37,8 +63,11 @@ const ContentGrid = ({
           </Button>
         ) : null}
       </div>
+
+      <div className="my-8">{search ? <Search /> : null}</div>
+
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 sm:gap-x-6 lg:gap-x-8 gap-y-5 sm:gap-y-6 lg:gap-y-8 mt-4 md:mt-8">
-        {items.map((item, id) => (
+        {(searchResults.length > 0 ? searchResults : items).map((item, id) => (
           <Link key={item.slug} href={`/${collection}/${item.slug}`}>
             <div className="cursor-pointer border rounded-md md:w-full scale-100 hover:scale-[1.02] active:scale-[0.97] motion-safe:transform-gpu transition duration-100 motion-reduce:hover:scale-100 hover:shadow overflow-hidden h-full">
               <Image
@@ -86,4 +115,12 @@ const ContentGrid = ({
   );
 };
 
-export default ContentGrid;
+function ContentGridWrapper(props: Props) {
+  return (
+    <Suspense>
+      <ContentGrid {...props} />
+    </Suspense>
+  );
+}
+
+export default ContentGridWrapper;
