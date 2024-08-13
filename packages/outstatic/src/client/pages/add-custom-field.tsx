@@ -61,6 +61,7 @@ export default function AddCustomField({ collection }: AddCustomFieldProps) {
   const [error, setError] = useState('')
   const methods = useForm<CustomFieldForm>({
     mode: 'onChange',
+    // @ts-ignore
     resolver: yupResolver(yupSchema)
   })
   const [showAddModal, setShowAddModal] = useState(false)

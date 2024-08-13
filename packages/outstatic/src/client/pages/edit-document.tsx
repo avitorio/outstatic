@@ -31,6 +31,7 @@ export default function EditDocument({ collection }: { collection: string }) {
     useOutstatic()
   const [showDelete, setShowDelete] = useState(false)
   const [documentSchema, setDocumentSchema] = useState(editDocumentSchema)
+  //@ts-ignore
   const methods = useForm<Document>({ resolver: yupResolver(documentSchema) })
   const { editor } = useTipTap({ ...methods })
   const [customFields, setCustomFields] = useState<CustomFields>({})
