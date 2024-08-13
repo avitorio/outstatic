@@ -120,7 +120,7 @@
     "pluralize": "^8.0.0",
     "postcss": "8.4.41",
     "react-datepicker": "^6",
-    "react-hook-form": "^7.31.3",
+    "react-hook-form": "^7.52.2",
     "react-select": "^5.7.3",
     "react-textarea-autosize": "^8.3.4",
     "sift": "^16.0.1",
