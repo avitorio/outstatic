@@ -14,7 +14,10 @@ const mockProviderProps = {
   basePath: '',
   missingEnvVars: { required: {}, optional: {} },
   ostDetach: false,
-  ostContent: 'anything'
+  ostContent: 'anything',
+  dashboardRoute: '/outstatic',
+  githubGql: 'https://api.github.com/graphql',
+  csrfToken: null
 }
 
 export default mockProviderProps
