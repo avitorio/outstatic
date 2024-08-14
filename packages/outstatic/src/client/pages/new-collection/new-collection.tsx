@@ -50,6 +50,7 @@ export default function NewCollection() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(false)
   const methods = useForm<Collection>({
+    // @ts-ignore
     resolver: yupResolver(createCollection)
   })
 
