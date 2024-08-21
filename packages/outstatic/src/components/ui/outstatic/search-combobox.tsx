@@ -3,18 +3,18 @@
 import { Check, ChevronsUpDown } from 'lucide-react'
 import * as React from 'react'
 
-import { Button } from './button'
+import { Button } from '../shadcn/button'
 import {
   Command,
   CommandEmpty,
   CommandGroup,
   CommandInput,
   CommandItem
-} from './command'
+} from '../shadcn/command'
 import { CommandList } from 'cmdk'
-import { ScrollArea } from './scroll-area'
+import { ScrollArea } from '../shadcn/scroll-area'
 import { cn } from '@/utils/ui'
-import { Popover, PopoverContent, PopoverTrigger } from './popover'
+import { Popover, PopoverContent, PopoverTrigger } from '../shadcn/popover'
 
 export function SearchCombobox({
   data,

@@ -8,13 +8,13 @@ import { usePathname } from 'next/navigation'
 import { cva } from 'class-variance-authority'
 import { ChevronDown } from 'lucide-react'
 
-import { Button } from './button'
+import { Button } from '@/components/ui/shadcn/button'
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger
-} from './tooltip'
+} from '@/components/ui/shadcn/tooltip'
 import { cn, isRouteActive } from '@/utils/ui'
 import { SidebarContext } from '@/context/sidebar.context'
 import { If } from './if'

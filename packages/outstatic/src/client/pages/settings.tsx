@@ -2,7 +2,7 @@ import { AdminLayout } from '@/components'
 import GitHubBranchSearch from '@/components/GitHubBranchSearch'
 import GitHubRepoSearch from '@/components/GitHubRepoSearch'
 import { MetadataBuilder } from '@/components/MetadataBuilder'
-import { Button } from '@/components/ui/button'
+import { Button } from '@/components/ui/shadcn/button'
 import { useCollections } from '@/utils/hooks/useCollections'
 import { useState } from 'react'
 

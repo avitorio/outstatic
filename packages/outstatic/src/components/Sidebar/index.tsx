@@ -6,7 +6,7 @@ import {
   SidebarGroup,
   SidebarItem,
   Sidebar as SidebarUI
-} from '../ui/sidebar'
+} from '@/components/ui/outstatic/sidebar'
 import { Settings } from 'lucide-react'
 import { SidebarFooter } from './sidebar-footer'
 

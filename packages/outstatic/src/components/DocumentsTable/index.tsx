@@ -8,7 +8,7 @@ import { Settings } from 'lucide-react'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import { useState } from 'react'
-import { Button } from '../ui/button'
+import { Button } from '@/components/ui/shadcn/button'
 import useOutstatic from '@/utils/hooks/useOutstatic'
 
 export type Column = {
