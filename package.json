@@ -1,4 +1,5 @@
 {
+  "name": "outstatic-monorepo",
   "private": true,
   "workspaces": [
     "apps/*",
@@ -27,5 +28,6 @@
     "prettier": "^2.8.8",
     "prettier-plugin-tailwindcss": "^0.1.13",
     "turbo": "latest"
-  }
+  },
+  "packageManager": "pnpm@9.1.4"
 }
