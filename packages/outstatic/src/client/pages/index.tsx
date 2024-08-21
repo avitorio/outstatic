@@ -22,7 +22,7 @@ export const AdminArea = ({ params }: { params: { ost: string[] } }) => {
   return (
     <div id="outstatic">
       <AdminHeader toggleSidebar={toggleSidebar} />
-      <div className="flex md:grow flex-col-reverse justify-between md:flex-row md:min-h-[calc(100vh-56px)]">
+      <div className="flex md:grow flex-col-reverse justify-between md:flex-row md:min-h-[calc(100vh-64px)]">
         <div className="flex w-full">
           <Sidebar isOpen={openSidebar} />
           <Dashboard params={params} />

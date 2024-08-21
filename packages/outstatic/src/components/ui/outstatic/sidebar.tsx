@@ -230,7 +230,7 @@ export function SidebarItem({
 
 function getClassNameBuilder(className: string) {
   return cva(
-    [cn('flex box-content h-[calc(100vh-56px)] flex-col relative', className)],
+    [cn('flex box-content h-[calc(100vh-64px)] flex-col relative', className)],
     {
       variants: {
         collapsed: {
