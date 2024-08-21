@@ -4,7 +4,7 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator
-} from '@/components/ui/breadcrumb'
+} from '@/components/ui/shadcn/breadcrumb'
 import { Slash } from 'lucide-react'
 import { Fragment } from 'react/jsx-runtime'
 

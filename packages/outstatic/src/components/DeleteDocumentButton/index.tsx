@@ -9,7 +9,7 @@ import useOutstatic from '@/utils/hooks/useOutstatic'
 import { stringifyMetadata } from '@/utils/metadata/stringify'
 import { Trash2 } from 'lucide-react'
 import { useState } from 'react'
-import { Button } from '../ui/button'
+import { Button } from '@/components/ui/shadcn/button'
 
 type DeleteDocumentButtonProps = {
   slug: string

@@ -1,6 +1,6 @@
 import { AdminLayout, DocumentsTable } from '@/components'
 import { AdminLoading } from '@/components/AdminLoading'
-import { Button } from '@/components/ui/button'
+import { Button } from '@/components/ui/shadcn/button'
 import { useGetDocuments } from '@/utils/hooks/useGetDocuments'
 import Link from 'next/link'
 import { singular } from 'pluralize'

@@ -18,7 +18,6 @@ import {
   SortConfig
 } from '@/utils/hooks/useSortedDocuments'
 import useOutstatic from '@/utils/hooks/useOutstatic'
-import { useParams } from 'next/navigation'
 
 export type Column = {
   id: string

@@ -1,13 +1,17 @@
 import { useCollections } from '@/utils/hooks/useCollections'
 import useOutstatic from '@/utils/hooks/useOutstatic'
-import { SidebarContent, SidebarGroup, SidebarItem } from '../ui/sidebar'
+import {
+  SidebarContent,
+  SidebarGroup,
+  SidebarItem
+} from '@/components/ui/outstatic/sidebar'
 import { Folder, LayoutDashboard, Plus } from 'lucide-react'
 import {
   Tooltip,
   TooltipProvider,
   TooltipTrigger,
   TooltipContent
-} from '../ui/tooltip'
+} from '@/components/ui/shadcn/tooltip'
 import Link from 'next/link'
 import { singular } from 'pluralize'
 
