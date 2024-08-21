@@ -36,7 +36,7 @@ export default function AdminLayout({
     <>
       {status === 'loading' ? null : (
         <>
-          <main className="w-auto flex-auto p-5 md:p-10 bg-white h-dvh max-h-[calc(100vh-128px)] md:max-h-[calc(100vh-56px)] overflow-y-scroll scrollbar-hide">
+          <main className="w-auto flex-auto bg-white h-dvh max-h-[calc(100vh-128px)] md:max-h-[calc(100vh-56px)] overflow-y-scroll scrollbar-hide">
             {error && (
               <div className="mb-6 border border-red-500 p-2">
                 Something went wrong{' '}
