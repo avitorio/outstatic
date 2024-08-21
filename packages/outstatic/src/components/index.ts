@@ -7,7 +7,7 @@ import MDEImageMenu from './MDEImageMenu'
 import MDEMenu from './MDEMenu'
 import MDEMenuButton from './MDEMenuButton'
 import MDEditor from './MDEditor'
-import Sidebar from './Sidebar'
+import { Sidebar } from './Sidebar'
 
 export {
   AdminHeader,
