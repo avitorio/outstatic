@@ -26,7 +26,7 @@ const AdminHeader = ({ toggleSidebar }: AdminHeaderProps) => {
           'flex h-14 items-center justify-between border-b border-gray-200 bg-white px-4 dark:border-border dark:bg-background dark:shadow-primary/10 lg:justify-start'
         )}
       >
-        <div className={'hidden w-full flex-1 items-center space-x-8 lg:flex'}>
+        <div className={'flex w-full flex-1 items-center space-x-8'}>
           <div className={'flex w-full flex-1 justify-between'}>
             <Button
               variant="ghost"
