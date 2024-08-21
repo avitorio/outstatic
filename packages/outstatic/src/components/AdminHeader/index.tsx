@@ -23,7 +23,7 @@ const AdminHeader = ({ toggleSidebar }: AdminHeaderProps) => {
     <>
       <nav
         className={cn(
-          'flex h-14 items-center justify-between border-b border-gray-200 bg-white px-4 dark:border-border dark:bg-background dark:shadow-primary/10 lg:justify-start lg:shadow-sm'
+          'flex h-14 items-center justify-between border-b border-gray-200 bg-white px-4 dark:border-border dark:bg-background dark:shadow-primary/10 lg:justify-start'
         )}
       >
         <div className={'hidden w-full flex-1 items-center space-x-8 lg:flex'}>
