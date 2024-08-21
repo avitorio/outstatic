@@ -207,7 +207,7 @@ export function SidebarItem({
           href={path}
           className={action ? 'justify-between' : ''}
         >
-          <div className="flex justify-start space-x-2.5">
+          <div className="flex justify-start items-center space-x-2.5">
             <If condition={collapsed} fallback={Icon}>
               <TooltipProvider>
                 <Tooltip>
