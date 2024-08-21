@@ -24,7 +24,8 @@ export const Sidebar = ({ isOpen = false }: SidebarProps) => {
   return (
     <div
       className={cn(
-        'flex flex-col justify-between bg-gray-50 dark:bg-background'
+        'flex-col justify-between bg-gray-50 dark:bg-background lg:flex',
+        isOpen ? 'flex absolute z-10 w-full' : 'hidden'
       )}
     >
       <SidebarUI className="flex flex-col justify-between">
