@@ -36,7 +36,7 @@ export const Dashboard = ({ params }: { params: { ost: string[] } }) => {
   const { repoSlug, repoOwner, repoBranch, isPending } = useOutstatic()
 
   return (
-    <>
+    <div className="w-full pt-2 px-4">
       {isPending ? (
         <AdminLoading />
       ) : !repoSlug || !repoOwner || !repoBranch ? (
@@ -44,7 +44,7 @@ export const Dashboard = ({ params }: { params: { ost: string[] } }) => {
       ) : (
         <Router params={params} />
       )}
-    </>
+    </div>
   )
 }
 
