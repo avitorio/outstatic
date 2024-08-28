@@ -3,6 +3,7 @@ import { useContentLock } from '@/utils/hooks/useContentLock'
 import { useInitialData } from '@/utils/hooks/useInitialData'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { GraphQLClient } from 'graphql-request'
+import { useCreateGraphQLClient } from '@/graphql/utils/useCreateGraphQLClient'
 
 type HeadersType = {
   authorization: string
@@ -13,15 +14,12 @@ export const useOutstatic = () => {
   const { hasChanges, setHasChanges } = useContentLock()
   const initialData = useInitialData()
   const { data: localData, isPending: localPending } = useLocalData()
+
   const headers: HeadersType = {
     authorization: `Bearer ${initialData?.session?.access_token}`
   }
 
-  if (initialData.csrfToken) {
-    headers['X-CSRF-Token'] = initialData.csrfToken
-  }
-
-  const graphQLClient = new GraphQLClient(initialData.githubGql, { headers })
+  const graphQLClient = useCreateGraphQLClient(initialData.githubGql, headers)
 
   const cleanInitialData = { ...initialData }
   for (let key in cleanInitialData) {
