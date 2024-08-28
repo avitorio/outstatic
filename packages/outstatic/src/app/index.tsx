@@ -1,5 +1,6 @@
 import { Session } from '@/types'
 import { getLoginSession } from '@/utils/auth/auth'
+import { GITHUB_GQL_API_URL } from '@/utils/constants'
 import { EnvVarsType, envVars } from '@/utils/envVarsCheck'
 
 export type OutstaticData = {
@@ -17,7 +18,6 @@ export type OutstaticData = {
   ostContent?: string
   dashboardRoute: string
   githubGql: string
-  csrfToken?: string | null
 }
 
 export async function Outstatic({
@@ -61,7 +61,6 @@ export async function Outstatic({
     ostDetach: process.env.OST_DETACH || false,
     pages: ['collections', 'settings'],
     dashboardRoute: '/outstatic',
-    githubGql: 'https://api.github.com/graphql',
-    csrfToken: null
+    githubGql: GITHUB_GQL_API_URL
   } as OutstaticData
 }
