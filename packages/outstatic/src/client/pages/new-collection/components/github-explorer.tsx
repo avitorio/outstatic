@@ -1,6 +1,6 @@
 import { useGetRepoFiles } from '@/utils/hooks/useGetRepoFiles'
 import { useEffect, useState } from 'react'
-import { Tree, TreeDataItem } from '@/components/ui/file-tree'
+import { Tree, TreeDataItem } from '@/components/ui/outstatic/file-tree'
 import { Folder } from 'lucide-react'
 
 type GithubExplorerProps = {

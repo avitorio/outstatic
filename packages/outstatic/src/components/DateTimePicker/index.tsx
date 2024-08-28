@@ -1,6 +1,6 @@
 import { ButtonHTMLAttributes, createElement, forwardRef } from 'react'
 import Datepicker, { ReactDatePickerCustomHeaderProps } from 'react-datepicker'
-import { Button } from '../ui/button'
+import { Button } from '@/components/ui/shadcn/button'
 
 // @ts-ignore
 const RDPC = (Datepicker.default ?? Datepicker) as typeof Datepicker.default

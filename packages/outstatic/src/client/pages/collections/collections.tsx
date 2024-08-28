@@ -1,7 +1,7 @@
 import { AdminLayout } from '@/components'
 import { AdminLoading } from '@/components/AdminLoading'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
+import { Button } from '@/components/ui/shadcn/button'
+import { Card, CardContent } from '@/components/ui/shadcn/card'
 import { useCollections } from '@/utils/hooks/useCollections'
 
 import Link from 'next/link'

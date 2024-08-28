@@ -2,7 +2,8 @@ import { GET_COLLECTIONS } from '@/graphql/queries/collections'
 import useOutstatic from '@/utils/hooks/useOutstatic'
 import { useQuery } from '@tanstack/react-query'
 
-export const useCollections = () => {
+export const useCollections = (options?: { enabled?: boolean }) => {
+  const enabled = options?.enabled ?? true
   const {
     repoOwner,
     repoSlug,
@@ -42,6 +43,7 @@ export const useCollections = () => {
 
       return collections
     },
-    enabled: !!repoOwner && !!repoSlug && !!repoBranch && !!contentPath
+    enabled:
+      enabled && !!repoOwner && !!repoSlug && !!repoBranch && !!contentPath
   })
 }

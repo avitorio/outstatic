@@ -3,8 +3,8 @@ import DateTimePicker from '@/components/DateTimePicker'
 import DeleteDocumentButton from '@/components/DeleteDocumentButton'
 import DocumentSettingsImageSelection from '@/components/DocumentSettingsImageSelection'
 import TagInput from '@/components/TagInput'
-import Input from '@/components/ui/input'
-import TextArea from '@/components/ui/text-area'
+import Input from '@/components/ui/shadcn/input'
+import TextArea from '@/components/ui/shadcn/text-area'
 import { DocumentContext } from '@/context'
 import {
   CustomFieldArrayValue,
@@ -16,7 +16,7 @@ import { useRouter } from 'next/navigation'
 import { useContext, useState } from 'react'
 import { RegisterOptions, useFormContext } from 'react-hook-form'
 import { slugify } from 'transliteration'
-import { Button } from '../ui/button'
+import { Button } from '@/components/ui/shadcn/button'
 import useOutstatic from '@/utils/hooks/useOutstatic'
 
 type DocumentSettingsProps = {
