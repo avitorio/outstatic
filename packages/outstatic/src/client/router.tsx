@@ -26,7 +26,7 @@ export const Router = ({ params }: { params: { ost: string[] } }) => {
   const isContent = slug && ![...pages].includes(slug)
 
   return (
-    <div className="w-full pt-2 px-4">
+    <>
       {!slug && <Collections />}
       {slug2 && isContent && <EditDocument collection={slug} />}
       {!slug2 && isContent ? <List collection={slug} /> : defaultPages[slug]}
@@ -34,6 +34,6 @@ export const Router = ({ params }: { params: { ost: string[] } }) => {
         <AddCustomField collection={slug2} />
       )) ||
         (!!slug2 && !isContent && <NewCollection />)}
-    </div>
+    </>
   )
 }
