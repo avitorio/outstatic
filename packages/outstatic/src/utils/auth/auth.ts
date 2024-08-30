@@ -23,12 +23,7 @@ export type Request = {
   }
 }
 
-export const TOKEN_NAME = 'ost_token'
-
-export const MAX_AGE = 60 * 60 * 24 * 30 // 30 days hours
-
-const TOKEN_SECRET =
-  process.env.OST_TOKEN_SECRET || 'l1f3154n4dv3ntur3st4yS7r0n9s3cr3t'
+import { TOKEN_SECRET, MAX_AGE, TOKEN_NAME } from '@/utils/constants'
 
 export async function setLoginSession(session: LoginSession) {
   // Create a session object with a max age that we can validate later
