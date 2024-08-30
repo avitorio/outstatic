@@ -48,7 +48,7 @@ export async function getLoginSession(): Promise<Session | null> {
 
   try {
     const session = await Iron.unseal(token, TOKEN_SECRET, Iron.defaults)
-    const expires = session.expires
+    const expires = new Date(session.expires).getTime()
     // Validate the expiration date of the session
     if (Date.now() > expires) {
       throw new Error('Session expired')
