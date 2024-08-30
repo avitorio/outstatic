@@ -38,6 +38,7 @@ export type Session = {
     image: string
   }
   access_token: string
+  refresh_token?: string
   expires: Date
 }
 
