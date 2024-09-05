@@ -14,6 +14,8 @@ import {
   updateScrollView
 } from '../../extensions/SlashCommand'
 import { getPrevText } from '../getPrevText'
+import { OUTSTATIC_API_PATH } from '@/utils/constants'
+import { useCsrfToken } from '@/utils/hooks/useCsrfToken'
 
 export const BaseCommandList = ({
   items,
@@ -30,10 +32,12 @@ export const BaseCommandList = ({
 }) => {
   const [selectedIndex, setSelectedIndex] = useState(0)
   const { hasOpenAIKey } = useOutstatic()
+  const csrfToken = useCsrfToken()
 
   const { complete, isLoading } = useCompletion({
     id: 'outstatic',
-    api: '/api/outstatic/generate',
+    api: OUTSTATIC_API_PATH + '/generate',
+    headers: csrfToken ? { 'X-CSRF-Token': csrfToken } : undefined,
     onResponse: () => {
       editor.chain().focus().deleteRange(range).run()
     },

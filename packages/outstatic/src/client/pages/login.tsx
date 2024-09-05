@@ -1,4 +1,5 @@
 import Alert from '@/components/Alert'
+import { OUTSTATIC_API_PATH } from '@/utils/constants'
 import loginErrors from '@/utils/errors/loginErrors'
 import clsx from 'clsx'
 import Link from 'next/link'
@@ -71,7 +72,7 @@ export default function Login() {
                 Sign in with GitHub to access your&nbsp;dashboard.
               </p>
               <Link
-                href="/api/outstatic/login"
+                href={`${OUTSTATIC_API_PATH}/login`}
                 onClick={() => setIsLoading(true)}
                 className={clsx(
                   'mr-2 mb-2 inline-flex items-center rounded-lg bg-[#24292F] px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-[#24292F]/90 focus:outline-none focus:ring-4 focus:ring-[#24292F]/50',
