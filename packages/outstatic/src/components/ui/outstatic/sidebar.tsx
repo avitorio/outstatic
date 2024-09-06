@@ -205,22 +205,20 @@ export function SidebarItem({
         <Link
           key={path}
           href={path}
-          className={action ? 'justify-between' : ''}
+          className="flex justify-start items-center space-x-2.5 w-full"
         >
-          <div className="flex justify-start items-center space-x-2.5">
-            <If condition={collapsed} fallback={Icon}>
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>{Icon}</TooltipTrigger>
+          <If condition={collapsed} fallback={Icon}>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>{Icon}</TooltipTrigger>
 
-                  <TooltipContent side={'right'} sideOffset={20}>
-                    {children}
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            </If>
-            <span className={cn({ hidden: collapsed })}>{children}</span>
-          </div>
+                <TooltipContent side={'right'} sideOffset={20}>
+                  {children}
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </If>
+          <span className={cn({ hidden: collapsed })}>{children}</span>
         </Link>
         <div className="absolute top-1/2 -translate-y-1/2 right-3">
           {action ? action : null}
