@@ -188,20 +188,20 @@ export function SidebarItem({
   const variant = active ? 'secondary' : 'ghost'
   const size = collapsed ? 'icon' : 'sm'
   return (
-    <>
-      <Button
-        asChild
-        size={size}
-        variant={variant}
-        className={cn(
-          'flex w-full text-sm shadow-none active:bg-secondary/60 capitalize',
-          {
-            'justify-start space-x-2.5': !collapsed,
-            'hover:bg-initial': active,
-            group: action
-          }
-        )}
-      >
+    <Button
+      asChild
+      size={size}
+      variant={variant}
+      className={cn(
+        'relative flex w-full text-sm shadow-none active:bg-secondary/60 capitalize',
+        {
+          'justify-start space-x-2.5': !collapsed,
+          'hover:bg-initial': active,
+          group: action
+        }
+      )}
+    >
+      <div>
         <Link
           key={path}
           href={path}
@@ -221,10 +221,12 @@ export function SidebarItem({
             </If>
             <span className={cn({ hidden: collapsed })}>{children}</span>
           </div>
-          {action ? action : null}
         </Link>
-      </Button>
-    </>
+        <div className="absolute top-1/2 -translate-y-1/2 right-3">
+          {action ? action : null}
+        </div>
+      </div>
+    </Button>
   )
 }
 
