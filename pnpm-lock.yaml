@@ -595,15 +595,6 @@ importers:
       '@radix-ui/react-tooltip':
         specifier: ^1.1.2
         version: 1.1.2(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@tanstack/query-sync-storage-persister':
-        specifier: ^5.29.0
-        version: 5.54.1
-      '@tanstack/react-query':
-        specifier: 5.51.21
-        version: 5.51.21(react@18.3.1)
-      '@tanstack/react-query-persist-client':
-        specifier: 5.51.21
-        version: 5.51.21(@tanstack/react-query@5.51.21(react@18.3.1))(react@18.3.1)
       '@tiptap/core':
         specifier: 2.1.10
         version: 2.1.10(@tiptap/pm@2.1.10)
@@ -827,6 +818,15 @@ importers:
       '@tanstack/eslint-plugin-query':
         specifier: ^5.28.11
         version: 5.53.0(eslint@8.57.0)(typescript@5.5.4)
+      '@tanstack/query-sync-storage-persister':
+        specifier: ^5.29.0
+        version: 5.54.1
+      '@tanstack/react-query':
+        specifier: 5.51.21
+        version: 5.51.21(react@18.3.1)
+      '@tanstack/react-query-persist-client':
+        specifier: 5.51.21
+        version: 5.51.21(@tanstack/react-query@5.51.21(react@18.3.1))(react@18.3.1)
       '@testing-library/jest-dom':
         specifier: ^5.16.5
         version: 5.17.0
