@@ -39,14 +39,16 @@ const AdminHeader = ({ toggleSidebar }: AdminHeaderProps) => {
               onClick={toggleSidebar}
             >
               <span className="sr-only">Open main menu</span>
-              <Menu />
+              <Menu className="lucide lucide-menu " />
             </Button>
             <Link href="/outstatic" aria-label="Outstatic">
               <div className="cursor-pointer flex items-center min-h-8">
                 <AppLogo />
               </div>
             </Link>
-            {status === 'loading' || (
+            {status === 'loading' ? (
+              <div className="flex items-center md:order-2" />
+            ) : (
               <div className="flex items-center md:order-2">
                 <button
                   type="button"
