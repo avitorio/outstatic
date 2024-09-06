@@ -117,7 +117,7 @@ export async function getStaticProps({ params }: Params) {
 }
 ```
 
-Keep in mind that the content is returned as Markdown. In order to convert it to HTML you should use a library such as [remark](https://www.npmjs.com/package/remark). To see an example of how you can use remark to convert Markdown to html, please take a look at our [Blog Example template](https://github.com/avitorio/outstatic/blob/main/examples/blog/src/lib/markdownToHtml.ts).
+Keep in mind that the content is returned as Markdown. In order to convert it to HTML you should use a library such as [remark](https://www.npmjs.com/package/remark). To see an example of how you can use remark to convert Markdown to html, please take a look at our [Blog Example template](https://github.com/avitorio/outstatic/blob/main/examples/basic-blog/src/lib/markdownToHtml.ts).
 
 ### Getting paths to use with `getStaticPaths` or `generateStaticParams`
 

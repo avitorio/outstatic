@@ -1,4 +1,4 @@
-export const OUTSTATIC_VERSION = '1.4.7'
+export const OUTSTATIC_VERSION = '1.4.9'
 export const OUTSTATIC_URL = 'https://outstatic.com'
 export const IMAGES_PATH = 'images/'
 export const OUTSTATIC_API_PATH = process.env.NEXT_PUBLIC_OST_API_PATH || '/api/outstatic'

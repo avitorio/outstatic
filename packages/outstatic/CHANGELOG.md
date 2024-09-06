@@ -1,5 +1,18 @@
 # outstatic
 
+## 1.4.9
+
+### Patch Changes
+
+- e8ea476: Fix document sorting
+- c3495a4: Add boolean custom field
+
+## 1.4.8
+
+### Patch Changes
+
+- 506a070: Add new post button to sidebar
+
 ## 1.4.7
 
 ### Patch Changes

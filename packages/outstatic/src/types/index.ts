@@ -51,15 +51,21 @@ export type DeepNonNullable<T> = {
   [P in keyof T]-?: DeepNonNullable<NonNullable<T[P]>>
 }
 
-export const customFieldTypes = ['String', 'Text', 'Number', 'Tags'] as const
-export const customFieldData = ['string', 'number', 'array'] as const
+export const customFieldTypes = [
+  'String',
+  'Text',
+  'Number',
+  'Tags',
+  'Boolean'
+] as const
+export const customFieldData = ['string', 'number', 'array', 'boolean'] as const
 
 export type CustomFieldArrayValue = {
   label: string
   value: string
 }
 
-export type CustomField<T extends 'string' | 'number' | 'array'> = {
+export type CustomField<T extends 'string' | 'number' | 'array' | 'boolean'> = {
   title: string
   fieldType: (typeof customFieldTypes)[number]
   dataType: T
@@ -68,7 +74,7 @@ export type CustomField<T extends 'string' | 'number' | 'array'> = {
 } & (T extends 'array' ? { values: CustomFieldArrayValue[] } : {})
 
 export type CustomFields = {
-  [key: string]: CustomField<'string' | 'number' | 'array'>
+  [key: string]: CustomField<'string' | 'number' | 'array' | 'boolean'>
 }
 
 export type SchemaShape =
