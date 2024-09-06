@@ -599,11 +599,11 @@ importers:
         specifier: ^5.29.0
         version: 5.54.1
       '@tanstack/react-query':
-        specifier: 5.35.5
-        version: 5.35.5(react@18.3.1)
+        specifier: 5.51.21
+        version: 5.51.21(react@18.3.1)
       '@tanstack/react-query-persist-client':
-        specifier: 5.35.5
-        version: 5.35.5(@tanstack/react-query@5.35.5(react@18.3.1))(react@18.3.1)
+        specifier: 5.51.21
+        version: 5.51.21(@tanstack/react-query@5.51.21(react@18.3.1))(react@18.3.1)
       '@tiptap/core':
         specifier: 2.1.10
         version: 2.1.10(@tiptap/pm@2.1.10)
@@ -3028,14 +3028,14 @@ packages:
     peerDependencies:
       eslint: ^8.57.0 || ^9.0.0
 
-  '@tanstack/query-core@5.35.5':
-    resolution: {integrity: sha512-OMWvlEqG01RfGj+XZb/piDzPp0eZkkHWSDHt2LvE/fd1zWburP/xwm0ghk6Iv8cuPlP+ACFkZviKXK0OVt6lhg==}
+  '@tanstack/query-core@5.51.21':
+    resolution: {integrity: sha512-POQxm42IUp6n89kKWF4IZi18v3fxQWFRolvBA6phNVmA8psdfB1MvDnGacCJdS+EOX12w/CyHM62z//rHmYmvw==}
 
   '@tanstack/query-core@5.54.1':
     resolution: {integrity: sha512-hKS+WRpT5zBFip21pB6Jx1C0hranWQrbv5EJ7qPoiV5MYI3C8rTCqWC9DdBseiPT1JgQWh8Y55YthuYZNiw3Xw==}
 
-  '@tanstack/query-persist-client-core@5.35.5':
-    resolution: {integrity: sha512-ILWDPB0p/KLe7LkaNkMZpqS9t50R+jBYnAqB5dZUVgpLMbUmL8Nf4n9uLoyzJ8L4j3+hBEmcEJXaahixdViyIQ==}
+  '@tanstack/query-persist-client-core@5.51.21':
+    resolution: {integrity: sha512-W/H3SFIMPjxgiwkrl511pG2JhvKnFWtLCgO+AlNqk9keyClMbm9tb3oLUHveLuzviCaROpmFShW+eSP5zYwk4g==}
 
   '@tanstack/query-persist-client-core@5.54.1':
     resolution: {integrity: sha512-qmBkrC5HA3XHwwrx/pWjegncQFcmuoAaffwbrXm07OrsOxxeTGLt8aFl8RYbWAs75a8+9uneqVFQfgv5QRqxBA==}
@@ -3043,14 +3043,14 @@ packages:
   '@tanstack/query-sync-storage-persister@5.54.1':
     resolution: {integrity: sha512-1c5JkmhUFe8rcZeY03dZpbHTPAMqmdZ/0FqM/eCUa4dnOFS+mFL2cifeV3dyDBe2uL4XdwLUi2SDzkqVcv4l5A==}
 
-  '@tanstack/react-query-persist-client@5.35.5':
-    resolution: {integrity: sha512-WRnbUH9c47/i12KsNBKVmCFqeGCxvRUEo1VVWQFu9A8AfulYczSVTDsLAfC6VGzeAUyp0uPow03OUUpAIZhDFQ==}
+  '@tanstack/react-query-persist-client@5.51.21':
+    resolution: {integrity: sha512-17lsKfUzuKOCxfuEVKZMs7tedE8+FIH+7vv16y1/Y3liIAFeEoU5W4ZhcsRJWM9Bcp3aEIB0hezJ+P4yc04Ucg==}
     peerDependencies:
-      '@tanstack/react-query': ^5.35.5
-      react: ^18.0.0
+      '@tanstack/react-query': ^5.51.21
+      react: ^18 || ^19
 
-  '@tanstack/react-query@5.35.5':
-    resolution: {integrity: sha512-sppX7L+PVn5GBV3In6zzj0zcKfnZRKhXbX1MfIfKo1OjIq2GMaopvAFOP0x1bRYTUk2ikrdYcQYOozX7PWkb8A==}
+  '@tanstack/react-query@5.51.21':
+    resolution: {integrity: sha512-Q/V81x3sAYgCsxjwOkfLXfrmoG+FmDhLeHH5okC/Bp8Aaw2c33lbEo/mMcMnkxUPVtB2FLpzHT0tq3c+OlZEbw==}
     peerDependencies:
       react: ^18.0.0
 
@@ -11852,13 +11852,13 @@ snapshots:
       - supports-color
       - typescript
 
-  '@tanstack/query-core@5.35.5': {}
+  '@tanstack/query-core@5.51.21': {}
 
   '@tanstack/query-core@5.54.1': {}
 
-  '@tanstack/query-persist-client-core@5.35.5':
+  '@tanstack/query-persist-client-core@5.51.21':
     dependencies:
-      '@tanstack/query-core': 5.35.5
+      '@tanstack/query-core': 5.51.21
 
   '@tanstack/query-persist-client-core@5.54.1':
     dependencies:
@@ -11869,15 +11869,15 @@ snapshots:
       '@tanstack/query-core': 5.54.1
       '@tanstack/query-persist-client-core': 5.54.1
 
-  '@tanstack/react-query-persist-client@5.35.5(@tanstack/react-query@5.35.5(react@18.3.1))(react@18.3.1)':
+  '@tanstack/react-query-persist-client@5.51.21(@tanstack/react-query@5.51.21(react@18.3.1))(react@18.3.1)':
     dependencies:
-      '@tanstack/query-persist-client-core': 5.35.5
-      '@tanstack/react-query': 5.35.5(react@18.3.1)
+      '@tanstack/query-persist-client-core': 5.51.21
+      '@tanstack/react-query': 5.51.21(react@18.3.1)
       react: 18.3.1
 
-  '@tanstack/react-query@5.35.5(react@18.3.1)':
+  '@tanstack/react-query@5.51.21(react@18.3.1)':
     dependencies:
-      '@tanstack/query-core': 5.35.5
+      '@tanstack/query-core': 5.51.21
       react: 18.3.1
 
   '@testing-library/dom@8.20.1':

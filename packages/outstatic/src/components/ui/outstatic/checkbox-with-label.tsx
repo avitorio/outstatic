@@ -1,7 +1,7 @@
 'use client'
 
 import React from 'react'
-import { Checkbox } from '@/components/ui/checkbox'
+import { Checkbox } from '@/components/ui/shadcn/checkbox'
 import { Controller, useFormContext, RegisterOptions } from 'react-hook-form'
 import { cn } from '@/utils/ui'
 

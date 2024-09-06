@@ -7,7 +7,7 @@ import cookies from 'js-cookie'
 import { Settings } from 'lucide-react'
 import Link from 'next/link'
 import { useState, useCallback, ReactNode } from 'react'
-import { Button } from '@/components/ui/button'
+import { Button } from '@/components/ui/shadcn/button'
 import {
   CaretSortIcon,
   CaretDownIcon,
@@ -18,6 +18,8 @@ import {
   SortConfig
 } from '@/utils/hooks/useSortedDocuments'
 import useOutstatic from '@/utils/hooks/useOutstatic'
+import { MDExtensions } from '@/types'
+import { useParams } from 'next/navigation'
 
 export type Column = {
   id: string
@@ -137,7 +139,7 @@ const DocumentsTable = () => {
                   <td className="pr-6 py-4 text-right">
                     <DeleteDocumentButton
                       slug={document.slug}
-                      extension={document.extension}
+                      extension={document.extension as MDExtensions}
                       disabled={false}
                       onComplete={() => refetch()}
                       collection={params.ost[0]}
