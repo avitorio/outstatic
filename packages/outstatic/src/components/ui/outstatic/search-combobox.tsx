@@ -55,18 +55,20 @@ export function SearchCombobox({
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-[287px] justify-between"
+          className="w-[20rem] justify-between w"
           disabled={disabled || isLoading}
         >
-          {isLoading
-            ? loadingPlaceholder
-            : value
-            ? data.find((dataRecord) => dataRecord.value === value)?.label
-            : selectPlaceholder}
+          <span className="w-[20rem] p-0 md:w-[20rem] truncate text-left">
+            {isLoading
+              ? loadingPlaceholder
+              : value
+              ? data.find((dataRecord) => dataRecord.value === value)?.label
+              : selectPlaceholder}
+          </span>
           <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[287px] p-0 md:w-[287px]">
+      <PopoverContent className="w-[20rem] p-0 md:w-[20rem]">
         <Command>
           <CommandInput
             placeholder={isLoading ? loadingPlaceholder : searchPlaceholder}
