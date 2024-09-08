@@ -1,9 +1,12 @@
 'use client'
 
-import { Check, ChevronsUpDown } from 'lucide-react'
 import * as React from 'react'
 
-import { Button } from '@/components/ui/shadcn/button'
+import { CaretSortIcon } from '@radix-ui/react-icons'
+import { CommandList } from 'cmdk'
+import { LucideIcon } from 'lucide-react'
+
+import { Button } from '../shadcn/button'
 import {
   Command,
   CommandEmpty,
@@ -11,10 +14,8 @@ import {
   CommandInput,
   CommandItem
 } from '../shadcn/command'
-import { CommandList } from 'cmdk'
-import { ScrollArea } from '../shadcn/scroll-area'
-import { cn } from '@/utils/ui'
 import { Popover, PopoverContent, PopoverTrigger } from '../shadcn/popover'
+import { ScrollArea } from '../shadcn/scroll-area'
 
 export function SearchCombobox({
   data,
@@ -25,19 +26,28 @@ export function SearchCombobox({
   disabled = false,
   selectPlaceholder = 'Select',
   searchPlaceholder = 'Search',
-  resultsPlaceholder = 'No results found'
+  resultsPlaceholder = 'No results found',
+  loadingPlaceholder = 'Loading...',
+  scrollFooter
 }: {
-  data: { value: string; label: string }[]
+  data: {
+    value: string
+    label: string
+    icon?: LucideIcon
+  }[]
   value: string
   setValue: (value: string) => void
-  onValueChange: (value: string) => void
+  onValueChange?: (value: string) => void
   isLoading?: boolean
   disabled?: boolean
   selectPlaceholder?: string
   searchPlaceholder?: string
   resultsPlaceholder?: string
+  loadingPlaceholder?: string
+  scrollFooter?: () => React.ReactNode
 }) {
   const [open, setOpen] = React.useState(false)
+
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
@@ -45,25 +55,26 @@ export function SearchCombobox({
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-[320px] font-normal justify-between md:w-[400px]"
-          disabled={disabled}
+          className="w-[287px] justify-between"
+          disabled={disabled || isLoading}
         >
-          <span className="block min-w-0 flex-1 text-left h-4 w-[320px] truncate md:w-[400px] overflow-visible">
-            {value
-              ? data.find((dataRecord) => dataRecord.value === value)?.label
-              : selectPlaceholder}
-          </span>
-          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+          {isLoading
+            ? loadingPlaceholder
+            : value
+            ? data.find((dataRecord) => dataRecord.value === value)?.label
+            : selectPlaceholder}
+          <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[320px] p-0 md:w-[400px]">
+      <PopoverContent className="w-[287px] p-0 md:w-[287px]">
         <Command>
           <CommandInput
-            placeholder={searchPlaceholder}
+            placeholder={isLoading ? loadingPlaceholder : searchPlaceholder}
             onValueChange={onValueChange}
-            isLoading={isLoading}
           />
-          <CommandEmpty>{resultsPlaceholder}</CommandEmpty>
+          <CommandEmpty>
+            {isLoading ? loadingPlaceholder : resultsPlaceholder}
+          </CommandEmpty>
           <ScrollArea className="h-[200px]">
             <CommandList>
               <CommandGroup>
@@ -76,18 +87,16 @@ export function SearchCombobox({
                       setOpen(false)
                     }}
                   >
-                    <Check
-                      className={cn(
-                        'mr-2 h-4 w-4',
-                        value === dataRecord.value ? 'opacity-100' : 'opacity-0'
-                      )}
-                    />
+                    {dataRecord.icon && (
+                      <dataRecord.icon className="mr-2 h-4 w-4 shrink-0" />
+                    )}
                     <span>{dataRecord.label}</span>
                   </CommandItem>
                 ))}
               </CommandGroup>
             </CommandList>
           </ScrollArea>
+          {scrollFooter ? scrollFooter() : null}
         </Command>
       </PopoverContent>
     </Popover>
