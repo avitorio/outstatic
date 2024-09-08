@@ -11,6 +11,14 @@ interface Branch {
   name: string
 }
 
+const debounce = (func: Function, delay: number) => {
+  let timeoutId: NodeJS.Timeout | null = null
+  return (...args: any[]) => {
+    if (timeoutId) clearTimeout(timeoutId)
+    timeoutId = setTimeout(() => func(...args), delay)
+  }
+}
+
 const GitHubBranchSearch = () => {
   const initialData = useInitialData()
   const { setData } = useLocalData()
@@ -25,14 +33,6 @@ const GitHubBranchSearch = () => {
   const [value, setValue] = useState(repoBranch)
   const { refetch } = useCollections()
   const router = useRouter()
-
-  const debounce = (func: Function, delay: number) => {
-    let timeoutId: NodeJS.Timeout | null = null
-    return (...args: any[]) => {
-      if (timeoutId) clearTimeout(timeoutId)
-      timeoutId = setTimeout(() => func(...args), delay)
-    }
-  }
 
   const fetchBranches = useCallback(
     (keyword: string) => {
