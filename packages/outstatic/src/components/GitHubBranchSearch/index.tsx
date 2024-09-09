@@ -1,19 +1,29 @@
 'use client'
 import { SearchCombobox } from '@/components/ui/outstatic/search-combobox'
+import { GET_BRANCHES } from '@/graphql/queries/branches'
 import { useCollections } from '@/utils/hooks/useCollections'
 import { useInitialData } from '@/utils/hooks/useInitialData'
 import useOutstatic, { useLocalData } from '@/utils/hooks/useOutstatic'
 import { useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 interface Branch {
   name: string
 }
 
+const debounce = (func: Function, delay: number) => {
+  let timeoutId: NodeJS.Timeout | null = null
+  return (...args: any[]) => {
+    if (timeoutId) clearTimeout(timeoutId)
+    timeoutId = setTimeout(() => func(...args), delay)
+  }
+}
+
 const GitHubBranchSearch = () => {
   const initialData = useInitialData()
   const { setData } = useLocalData()
-  const { repoOwner, repoSlug, repoBranch, session, dashboardRoute } =
+  const [query, setQuery] = useState('')
+  const { repoOwner, repoSlug, repoBranch, dashboardRoute, gqlClient } =
     useOutstatic()
   const initialSuggestion = repoBranch
     ? [{ name: repoBranch }]
@@ -24,76 +34,48 @@ const GitHubBranchSearch = () => {
   const { refetch } = useCollections()
   const router = useRouter()
 
-  useEffect(() => {
-    setIsLoading(true)
+  const fetchBranches = useCallback(
+    (keyword: string) => {
+      const debouncedFetch = debounce(async (kw: string) => {
+        setIsLoading(true)
 
-    if (repoOwner && repoSlug) {
-      const baseUrl = `https://api.github.com/repos/${repoOwner}/${repoSlug}/branches`
-      const headers = {
-        headers: new Headers({
-          Authorization: `token ${session?.access_token}`
-        })
-      }
+        if (repoOwner && repoSlug && gqlClient) {
+          try {
+            const variables = {
+              owner: repoOwner,
+              name: repoSlug,
+              first: 100,
+              query: kw
+            }
 
-      try {
-        async function fetchAllBranches() {
-          // Function to parse the 'Link' header to find the number of pages
-          function getLastPageNumber(headers: Headers): number {
-            const linkHeader = headers.get('Link')
-            if (!linkHeader) return 0
+            const response = await gqlClient.request(GET_BRANCHES, variables)
 
-            const matches = linkHeader.match(/&page=(\d+)>; rel="last"/)
-            return matches ? parseInt(matches[1], 10) : 1
+            const branches: Branch[] =
+              response.repository?.refs?.nodes
+                ?.filter((node): node is { name: string } => node !== null)
+                .map((node) => ({
+                  name: node.name
+                })) ?? []
+
+            setSuggestions(branches)
+          } catch (error) {
+            console.error(
+              'There was a problem with the GraphQL operation:',
+              error
+            )
+          } finally {
+            setIsLoading(false)
           }
-
-          // Initial request to find out how many pages there are
-          const response = await fetch(`${baseUrl}?per_page=1`, headers)
-          const totalBranches = getLastPageNumber(response.headers)
-
-          // Function to fetch a single page of branches
-          const fetchPage = async (
-            perPage: number,
-            index: number = 100
-          ): Promise<Branch[]> => {
-            const url = `${baseUrl}?per_page=${perPage}&page=${index + 1}`
-            const response = await fetch(url, headers)
-            return response.json()
-          }
-
-          // Fetch all pages concurrently
-          const fullPages = Math.floor(totalBranches / 100)
-          const remainder = totalBranches % 100
-          const pageNumbers = [
-            ...Array(fullPages).fill(100),
-            ...(remainder > 0 ? [remainder] : [])
-          ]
-
-          const promises = pageNumbers.map((perPage, index) =>
-            fetchPage(perPage, index)
-          )
-
-          const pages = await Promise.all(promises)
-
-          // create a map with the pages array where each item's name is the key
-          // and the value is a bool with true
-          const pagesMap = new Map<string, boolean>()
-
-          pages.forEach((page) => {
-            page.forEach((branch) => {
-              pagesMap.set(branch.name, true)
-            })
-          })
-
-          setSuggestions(Array.from(pagesMap.keys()).map((name) => ({ name })))
         }
-        fetchAllBranches()
-      } catch (error) {
-        console.error('There was a problem with the fetch operation:', error)
-      } finally {
-        setIsLoading(false)
-      }
-    }
-  }, [repoOwner, repoSlug])
+      }, 300)
+      debouncedFetch(keyword)
+    },
+    [repoOwner, repoSlug, gqlClient]
+  )
+
+  useEffect(() => {
+    fetchBranches(query)
+  }, [query])
 
   useEffect(() => {
     if (value) {
@@ -130,7 +112,7 @@ const GitHubBranchSearch = () => {
         }
         value={!!initialData?.repoBranch ? `${repoBranch}` : value}
         setValue={setValue}
-        onValueChange={() => {}}
+        onValueChange={setQuery}
         isLoading={isLoading}
         disabled={!!initialData?.repoBranch || !repoSlug || !repoOwner}
         selectPlaceholder="Select a branch"
