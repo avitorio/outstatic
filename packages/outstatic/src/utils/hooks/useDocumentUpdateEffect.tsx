@@ -30,8 +30,14 @@ export const useDocumentUpdateEffect = ({
   setShowDelete,
   setExtension
 }: UseDocumentUpdateEffectProps) => {
-  const { basePath, ostContent, repoOwner, repoSlug, repoBranch, mediaPath } =
-    useOutstatic()
+  const {
+    basePath,
+    ostContent,
+    repoOwner,
+    repoSlug,
+    repoBranch,
+    publicMediaPath
+  } = useOutstatic()
 
   const { data: schema } = useGetCollectionSchema({ enabled: slug !== 'new' })
 
@@ -53,7 +59,7 @@ export const useDocumentUpdateEffect = ({
         repoOwner,
         repoSlug,
         repoBranch,
-        mediaPath
+        publicMediaPath
       })
 
       const newDate = data.publishedAt

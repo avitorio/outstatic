@@ -6,7 +6,7 @@ export const mergeMdMeta = (
   data: Document,
   basePath: string,
   repoInfo: string,
-  mediaPath: string
+  publicMediaPath: string
 ): string => {
   const meta = Object.entries(
     (({ content, publishedAt, ...meta }) => meta)(data)
@@ -44,7 +44,7 @@ export const mergeMdMeta = (
     markdownContent: data.content,
     basePath,
     repoInfo,
-    mediaPath
+    publicMediaPath
   })
 
   merged += newContent

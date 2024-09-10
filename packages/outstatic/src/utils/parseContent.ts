@@ -6,7 +6,7 @@ interface ParseContentParams {
   repoOwner: string
   repoSlug: string
   repoBranch: string
-  mediaPath: string
+  publicMediaPath: string
 }
 
 export const parseContent = ({
@@ -15,11 +15,11 @@ export const parseContent = ({
   repoOwner,
   repoSlug,
   repoBranch,
-  mediaPath
+  publicMediaPath
 }: ParseContentParams) => {
   // Prepare regex
-  let regex = new RegExp(
-    `(\\!\\[[^\\]]*\\]\\()${basePath}/${mediaPath.replace(
+  const regex = new RegExp(
+    `(\\!\\[[^\\]]*\\]\\()${basePath}/${publicMediaPath.replace(
       /\//g,
       '\\/'
     )}([^)]+)`,

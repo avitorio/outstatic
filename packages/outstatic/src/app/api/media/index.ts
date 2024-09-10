@@ -1,5 +1,5 @@
 import { getLoginSession } from '@/utils/auth/auth'
-import { MEDIA_PATH } from '@/utils/constants'
+import { REPO_MEDIA_PATH } from '@/utils/constants'
 import { NextRequest, NextResponse } from 'next/server'
 
 const MONOREPO_PATH = process.env.OST_MONOREPO_PATH
@@ -29,8 +29,8 @@ export default async function GET(
   if (session?.access_token) {
     const mediaUrl = `https://raw.githubusercontent.com/${repoOwner}/${repoSlug}/${repoBranch}/${
       MONOREPO_PATH ? MONOREPO_PATH + '/' : ''
-    }public/${MEDIA_PATH}${fileName.split('/').pop()}`
-
+    }${REPO_MEDIA_PATH}${fileName.split('/').pop()}`
+    console.log({ mediaUrl })
     const response = await fetch(mediaUrl, {
       headers: {
         authorization: `token ${session.access_token}`

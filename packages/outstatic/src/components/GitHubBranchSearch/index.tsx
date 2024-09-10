@@ -93,8 +93,6 @@ const GitHubBranchSearch = () => {
     }
   }, [value])
 
-  console.log({ isLoading })
-
   return (
     <div>
       <SearchCombobox

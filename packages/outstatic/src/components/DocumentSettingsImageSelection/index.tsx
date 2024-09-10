@@ -26,7 +26,7 @@ const DocumentSettingsImageSelection = ({
   description,
   label
 }: DocumentSettingsImageSelectionProps) => {
-  const { basePath, mediaPath } = useOutstatic()
+  const { basePath, publicMediaPath } = useOutstatic()
   const { document, editDocument } = useContext(DocumentContext)
   const [showImage, setShowImage] = useState(false)
   const [showImageOptions, setShowImageOptions] = useState(false)
@@ -38,7 +38,7 @@ const DocumentSettingsImageSelection = ({
 
   useEffect(() => {
     const image = resolvedImage?.replace(
-      `${basePath}${mediaPath}`,
+      `${basePath}${publicMediaPath}`,
       `${basePath}${API_MEDIA_PATH}`
     )
     setImage(image || '')

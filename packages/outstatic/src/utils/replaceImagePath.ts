@@ -6,14 +6,14 @@ interface ReplaceImagePathParams {
   markdownContent: string
   basePath: string
   repoInfo: string
-  mediaPath: string
+  publicMediaPath: string
 }
 
 function replaceImagePath({
   markdownContent,
   basePath,
   repoInfo,
-  mediaPath
+  publicMediaPath
 }: ReplaceImagePathParams): string {
   const apiMediaPath = `${basePath}${API_MEDIA_PATH}${repoInfo}/`
   const regex = new RegExp(
@@ -25,7 +25,7 @@ function replaceImagePath({
   let updatedMarkdown = markdownContent.replace(
     regex,
     (match, altText, apiPath, filename) => {
-      return `![${altText}](${basePath}/${mediaPath}${filename})`
+      return `![${altText}](${basePath}/${publicMediaPath}${filename})`
     }
   )
 

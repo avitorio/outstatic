@@ -1,0 +1,22 @@
+{
+  "commit": "5f6a88320da27c4d284996d498842939ad1d8d19",
+  "generated": "Sun, 11 Feb 2024 21:48:22 GMT",
+  "media": [
+    {
+      "commit": "375ca4629d57e6f05cb7f61debb7e258bf3947d4",
+      "hash": "2477969654",
+      "path": "public/media/darko-trajkovic-6etpleyjapg-unsplash-c4Mj.jpg",
+      "filename": "darko-trajkovic-6etpleyjapg-unsplash-c4Mj.jpg",
+      "publishedAt": "2023-12-28T18:49:02.348Z",
+      "type": "image"
+    },
+    {
+      "commit": "9637bcf0d7aa912e22e9e0031dd679244f9c9527",
+      "hash": "2309931423",
+      "path": "public/media/logo_nike-czMj.svg",
+      "filename": "logo_nike-czMj.svg",
+      "publishedAt": "2023-12-28T18:49:02.348Z",
+      "type": "image"
+    }
+  ]
+}

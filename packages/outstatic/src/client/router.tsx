@@ -8,9 +8,11 @@ import EditDocument from './pages/edit-document'
 import List from './pages/list'
 import NewCollection from './pages/new-collection'
 import Settings from './pages/settings'
+import MediaLibrary from './pages/media-library'
 
 const defaultPages: { [key: string]: ReactElement | undefined } = {
   settings: <Settings />,
+  'media-library': <MediaLibrary />,
   collections: undefined
 }
 

@@ -12,16 +12,18 @@ import { createCommitApi } from '@/utils/createCommitApi'
 import { hashFromUrl } from '@/utils/hashFromUrl'
 import useOutstatic from '@/utils/hooks/useOutstatic'
 import { mergeMdMeta } from '@/utils/mergeMdMeta'
-import { stringifyMetadata } from '@/utils/metadata/stringify'
+import { stringifyMedia, stringifyMetadata } from '@/utils/metadata/stringify'
 import { Editor } from '@tiptap/react'
 import matter from 'gray-matter'
 import MurmurHash3 from 'imurmurhash'
-import { useCallback } from 'react'
+import { useCallback, useState } from 'react'
 import { UseFormReturn } from 'react-hook-form'
 import { useCreateCommit } from './useCreateCommit'
 import { useGetCollectionSchema } from './useGetCollectionSchema'
 import { useGetMetadata } from './useGetMetadata'
 import useOid from './useOid'
+import { useGetMediaFiles } from './useGetMediaFiles'
+import { MediaItem, MediaSchema } from '../metadata/types'
 
 type SubmitDocumentProps = {
   session: Session | null
@@ -63,12 +65,16 @@ function useSubmitDocument({
     ostContent,
     contentPath,
     basePath,
-    mediaPath
+    publicMediaPath
   } = useOutstatic()
   const fetchOid = useOid()
+  let media: MediaItem[] = []
 
   const { refetch: refetchSchema } = useGetCollectionSchema({ enabled: false })
   const { refetch: refetchMetadata } = useGetMetadata({
+    enabled: false
+  })
+  const { refetch: refetchMedia } = useGetMediaFiles({
     enabled: false
   })
 
@@ -90,7 +96,7 @@ function useSubmitDocument({
           { ...data, content: mdContent },
           basePath,
           `${repoOwner}/${repoSlug}/${repoBranch}`,
-          mediaPath
+          publicMediaPath
         )
         const oid = await fetchOid()
         const owner = repoOwner || session?.user?.login || ''
@@ -128,7 +134,7 @@ function useSubmitDocument({
               const filePath = (() => {
                 switch (type) {
                   case 'image':
-                    return mediaPath
+                    return publicMediaPath
                   default:
                     assertUnreachable(type)
                 }
@@ -141,6 +147,18 @@ function useSubmitDocument({
                 fileContents,
                 false
               )
+
+              media.push({
+                __outstatic: {
+                  hash: `${MurmurHash3(fileContents).result()}`,
+                  commit: '',
+                  path: `${filePath}${newFilename}`
+                },
+                filename: newFilename,
+                type: type,
+                publishedAt: new Date().toISOString(),
+                alt: ''
+              })
 
               // replace blob in content with path
               content = content.replace(
@@ -239,6 +257,31 @@ function useSubmitDocument({
             `${ostContent}/metadata.json`,
             stringifyMetadata({ ...m, metadata: newMeta })
           )
+
+          // update media.json with new media
+          if (media.length > 0) {
+            const { data: mediaData } = await refetchMedia()
+
+            // loop throught newMedia and add a commit to each
+            media.forEach((media) => {
+              media.__outstatic.commit = m.commit
+            })
+
+            // The push() method modifies the original array and returns the new length
+            // We should create a new array instead
+            const newMedia = [...(mediaData?.media ?? []), ...media]
+
+            const mediaSchema = {
+              commit: m.commit,
+              generated: m.generated,
+              media: mediaData?.media ?? []
+            } as MediaSchema
+
+            capi.replaceFile(
+              `outstatic/media/media.json`,
+              stringifyMedia({ ...mediaSchema, media: newMedia })
+            )
+          }
         }
 
         const input = capi.createInput()
