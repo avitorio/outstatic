@@ -21,7 +21,7 @@ const debounce = (func: Function, delay: number) => {
 
 const GitHubBranchSearch = () => {
   const initialData = useInitialData()
-  const { setData } = useLocalData()
+  const { setData, data } = useLocalData()
   const [query, setQuery] = useState('')
   const { repoOwner, repoSlug, repoBranch, dashboardRoute, gqlClient } =
     useOutstatic()
@@ -37,9 +37,8 @@ const GitHubBranchSearch = () => {
   const fetchBranches = useCallback(
     (keyword: string) => {
       const debouncedFetch = debounce(async (kw: string) => {
-        setIsLoading(true)
-
         if (repoOwner && repoSlug && gqlClient) {
+          setIsLoading(true)
           try {
             const variables = {
               owner: repoOwner,
@@ -75,7 +74,7 @@ const GitHubBranchSearch = () => {
 
   useEffect(() => {
     fetchBranches(query)
-  }, [query])
+  }, [query, data])
 
   useEffect(() => {
     if (value) {
@@ -93,6 +92,8 @@ const GitHubBranchSearch = () => {
       }
     }
   }, [value])
+
+  console.log({ isLoading })
 
   return (
     <div>
