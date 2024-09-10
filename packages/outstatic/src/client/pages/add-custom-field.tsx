@@ -2,19 +2,21 @@ import { AdminLayout } from '@/components'
 import Alert from '@/components/Alert'
 import Modal from '@/components/Modal'
 import TagInput from '@/components/TagInput'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
-import Input from '@/components/ui/input'
-import { useCreateCommitMutation } from '@/graphql/generated'
+import LineBackground from '@/components/ui/outstatic/line-background'
+import { Button } from '@/components/ui/shadcn/button'
+import { Card, CardContent } from '@/components/ui/shadcn/card'
+import Input from '@/components/ui/shadcn/input'
 import { CustomField, CustomFields, customFieldTypes } from '@/types'
 import { createCommitApi } from '@/utils/createCommitApi'
-import useFileQuery from '@/utils/hooks/useFileQuery'
+import { useCreateCommit } from '@/utils/hooks/useCreateCommit'
+import { useGetCollectionSchema } from '@/utils/hooks/useGetCollectionSchema'
 import useOid from '@/utils/hooks/useOid'
 import useOutstatic from '@/utils/hooks/useOutstatic'
 import { yupResolver } from '@hookform/resolvers/yup'
 import camelCase from 'camelcase'
 import { useEffect, useState } from 'react'
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form'
+import { toast } from 'sonner'
 import * as yup from 'yup'
 
 type AddCustomFieldProps = {
@@ -35,15 +37,14 @@ const fieldDataMap = {
 
 export default function AddCustomField({ collection }: AddCustomFieldProps) {
   const {
-    contentPath,
-    monorepoPath,
     session,
     repoSlug,
     repoBranch,
     repoOwner,
+    ostContent,
     setHasChanges
   } = useOutstatic()
-  const [createCommit] = useCreateCommitMutation()
+  const createCommit = useCreateCommit()
   const fetchOid = useOid()
   const [customFields, setCustomFields] = useState<CustomFields>({})
   const yupSchema = yup.object().shape({
@@ -62,14 +63,14 @@ export default function AddCustomField({ collection }: AddCustomFieldProps) {
   const [error, setError] = useState('')
   const methods = useForm<CustomFieldForm>({
     mode: 'onChange',
+    // @ts-ignore
     resolver: yupResolver(yupSchema)
   })
   const [showAddModal, setShowAddModal] = useState(false)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [deleting, setDeleting] = useState(false)
-  const { data: schemaQueryData, loading } = useFileQuery({
-    file: `${collection}/schema.json`
-  })
+
+  const { data: schema, isLoading } = useGetCollectionSchema({ collection })
   const [selectedField, setSelectedField] = useState('')
   const [fieldName, setFieldName] = useState('')
 
@@ -102,15 +103,26 @@ export default function AddCustomField({ collection }: AddCustomFieldProps) {
     })
 
     capi.replaceFile(
-      `${
-        monorepoPath ? monorepoPath + '/' : ''
-      }${contentPath}/${collection}/schema.json`,
+      `${ostContent}/${collection}/schema.json`,
       customFieldsJSON + '\n'
     )
 
     const input = capi.createInput()
 
-    return await createCommit({ variables: { input } })
+    createCommit.mutate(input)
+
+    if (createCommit.isError) {
+      toast.error(
+        deleteField ? 'Failed to delete field' : 'Failed to add field'
+      )
+      return false
+    }
+
+    if (createCommit.isSuccess) {
+      return true
+    }
+
+    return false
   }
 
   const onSubmit: SubmitHandler<CustomFieldForm> = async (
@@ -188,12 +200,10 @@ export default function AddCustomField({ collection }: AddCustomFieldProps) {
   }
 
   useEffect(() => {
-    const documentQueryObject = schemaQueryData?.repository?.object
-    if (documentQueryObject?.__typename === 'Blob') {
-      const schema = JSON.parse(documentQueryObject?.text || '{}')
+    if (schema) {
       setCustomFields(schema.properties)
     }
-  }, [schemaQueryData])
+  }, [schema])
 
   useEffect(() => {
     const subscription = methods.watch(() => setHasChanges(true))
@@ -218,23 +228,10 @@ export default function AddCustomField({ collection }: AddCustomFieldProps) {
             </Button>
           ) : null}
         </div>
-        {!loading ? (
+        {!isLoading ? (
           <>
             {Object.keys(customFields).length === 0 ? (
-              <div className="max-w-2xl">
-                <div className="absolute bottom-0 left-0 md:left-64 right-0 md:top-36">
-                  <svg
-                    fill="none"
-                    className="h-full w-full"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="m1555.43 194.147c-100.14 46.518-204.72 78.763-313.64 96.841-78.16 12.972-282.29 0-291.79-143.988-1.58-23.948 1-89.4705 67-127 58-32.9805 115.15-13.36095 142.5 5.5 27.35 18.861 45.02 44.5 54 73 16.37 51.951-9.22 115.124-30.65 161.874-57.09 124.562-177.31 219.357-311.976 246.789-142.617 29.052-292.036-9.369-430.683-41.444-100.166-23.173-196.003-36.724-298.229-15.203-48.046 10.115-94.9295 24.91-139.962 44.112"
-                      className="stroke-slate-900"
-                      strokeWidth="2"
-                    />
-                  </svg>
-                </div>
+              <LineBackground>
                 <div className="relative">
                   <div className="mb-20 max-w-2xl p-8 px-4 md:p-8 text-black bg-white rounded-lg border border-gray-200 shadow-md prose prose-base">
                     <h3>Add Custom Fields to your collections.</h3>
@@ -263,7 +260,7 @@ export default function AddCustomField({ collection }: AddCustomFieldProps) {
                     </p>
                   </div>
                 </div>
-              </div>
+              </LineBackground>
             ) : (
               <>
                 <div className="max-w-5xl w-full grid grid-cols-3 gap-6">

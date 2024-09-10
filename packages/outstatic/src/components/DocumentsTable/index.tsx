@@ -1,12 +1,13 @@
 import DeleteDocumentButton from '@/components/DeleteDocumentButton'
 import SortableSelect from '@/components/SortableSelect'
 import { OstDocument } from '@/types/public'
+import { useGetDocuments } from '@/utils/hooks/useGetDocuments'
 import { sentenceCase } from 'change-case'
 import cookies from 'js-cookie'
 import { Settings } from 'lucide-react'
 import Link from 'next/link'
-import { useState, useCallback, useEffect, ReactNode } from 'react'
-import { Button } from '../ui/button'
+import { useState, useCallback, ReactNode } from 'react'
+import { Button } from '@/components/ui/shadcn/button'
 import {
   CaretSortIcon,
   CaretDownIcon,
@@ -16,11 +17,9 @@ import {
   useSortedDocuments,
   SortConfig
 } from '@/utils/hooks/useSortedDocuments'
-
-type DocumentsTableProps = {
-  documents: OstDocument[]
-  collection: string
-}
+import useOutstatic from '@/utils/hooks/useOutstatic'
+import { MDExtensions } from '@/types'
+import { useParams } from 'next/navigation'
 
 export type Column = {
   id: string
@@ -34,15 +33,13 @@ const defaultColumns: Column[] = [
   { id: 'publishedAt', label: 'Published at', value: 'publishedAt' }
 ]
 
-const DocumentsTable = (props: DocumentsTableProps) => {
-  const allColumns = Object.keys(props.documents[0]).map((column: string) => ({
-    id: column,
-    label: sentenceCase(column),
-    value: column
-  }))
-  const [documents, setDocuments] = useState(props.documents)
+const DocumentsTable = () => {
+  const { data: documents, refetch } = useGetDocuments()
+  const { dashboardRoute } = useOutstatic()
+
+  const params = useParams<{ ost: string[] }>()
   const [columns, setColumns] = useState<Column[]>(
-    JSON.parse(cookies.get(`ost_${props.collection}_fields`) || 'null') ??
+    JSON.parse(cookies.get(`ost_${params.ost[0]}_fields`) || 'null') ??
       defaultColumns
   )
   const [showColumnOptions, setShowColumnOptions] = useState(false)
@@ -52,7 +49,7 @@ const DocumentsTable = (props: DocumentsTableProps) => {
     direction: 'descending'
   })
 
-  const sortedDocuments = useSortedDocuments(documents, sortConfig)
+  const sortedDocuments = useSortedDocuments(documents || [], sortConfig)
 
   const requestSort = useCallback((key: keyof OstDocument) => {
     setSortConfig((prevConfig) => ({
@@ -64,15 +61,13 @@ const DocumentsTable = (props: DocumentsTableProps) => {
     }))
   }, [])
 
-  const handleDelete = useCallback((slug: string) => {
-    setDocuments((prevDocuments) =>
-      prevDocuments.filter((doc) => doc.slug !== slug)
-    )
-  }, [])
-
-  useEffect(() => {
-    setDocuments(props.documents)
-  }, [props.documents])
+  const allColumns = Object.keys(sortedDocuments ? sortedDocuments[0] : []).map(
+    (column: string) => ({
+      id: column,
+      label: sentenceCase(column),
+      value: column
+    })
+  )
 
   return (
     <div className="overflow-x-auto">
@@ -127,25 +122,32 @@ const DocumentsTable = (props: DocumentsTableProps) => {
           </tr>
         </thead>
         <tbody>
-          {sortedDocuments &&
-            sortedDocuments.map((document) => (
-              <tr
-                key={document.slug}
-                className="border-b bg-white hover:bg-gray-50"
-              >
-                {columns.map((column) => {
-                  return cellSwitch(column.value, document, props.collection)
-                })}
-                <td className="pr-6 py-4 text-right">
-                  <DeleteDocumentButton
-                    slug={document.slug}
-                    disabled={false}
-                    onComplete={() => handleDelete(document.slug)}
-                    collection={props.collection}
-                  />
-                </td>
-              </tr>
-            ))}
+          {sortedDocuments
+            ? sortedDocuments.map((document) => (
+                <tr
+                  key={document.slug}
+                  className="border-b bg-white hover:bg-gray-50"
+                >
+                  {columns.map((column) => {
+                    return cellSwitch(
+                      column.value,
+                      document,
+                      dashboardRoute,
+                      params.ost[0]
+                    )
+                  })}
+                  <td className="pr-6 py-4 text-right">
+                    <DeleteDocumentButton
+                      slug={document.slug}
+                      extension={document.extension as MDExtensions}
+                      disabled={false}
+                      onComplete={() => refetch()}
+                      collection={params.ost[0]}
+                    />
+                  </td>
+                </tr>
+              ))
+            : null}
         </tbody>
       </table>
       {showColumnOptions && (
@@ -158,7 +160,7 @@ const DocumentsTable = (props: DocumentsTableProps) => {
             allOptions={allColumns}
             defaultValues={defaultColumns}
             onChangeList={(e: any) => {
-              cookies.set(`ost_${props.collection}_fields`, JSON.stringify(e))
+              cookies.set(`ost_${params.ost[0]}_fields`, JSON.stringify(e))
             }}
             onBlur={() => setShowColumnOptions(false)}
           />
@@ -171,6 +173,7 @@ const DocumentsTable = (props: DocumentsTableProps) => {
 const cellSwitch = (
   columnValue: string,
   document: OstDocument,
+  dashboard: string,
   collection: string
 ) => {
   const item = document[columnValue] as
@@ -186,7 +189,7 @@ const cellSwitch = (
           scope="row"
           className="relative whitespace-nowrap px-6 py-4 text-base font-semibold text-gray-900 group"
         >
-          <Link href={`/outstatic/${collection}/${document.slug}`}>
+          <Link href={`${dashboard}/${collection}/${document.slug}`}>
             <div className="group-hover:text-blue-500">
               {item as string}
               <div className="absolute top-0 bottom-0 left-0 right-40 cursor-pointer" />

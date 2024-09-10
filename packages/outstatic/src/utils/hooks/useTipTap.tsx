@@ -8,9 +8,12 @@ import { useEffect, useRef } from 'react'
 import { toast } from 'sonner'
 import { useDebouncedCallback } from 'use-debounce'
 import useOutstatic from './useOutstatic'
+import { OUTSTATIC_API_PATH } from '../constants'
+import { useCsrfToken } from './useCsrfToken'
 
 const useTipTap = ({ ...rhfMethods }) => {
   const { hasOpenAIKey } = useOutstatic()
+  const csrfToken = useCsrfToken()
   const { setValue, trigger } = rhfMethods
   // Define editorRef to hold the current reference to the editor.
   const editorRef = useRef<Editor | null>(null)
@@ -71,7 +74,8 @@ const useTipTap = ({ ...rhfMethods }) => {
 
   const { complete, completion, isLoading, stop } = useCompletion({
     id: 'outstatic',
-    api: '/api/outstatic/generate',
+    headers: csrfToken ? { 'X-CSRF-Token': csrfToken } : undefined,
+    api: OUTSTATIC_API_PATH + '/generate',
     onFinish: (_prompt, completion) => {
       if (editorRef.current) {
         editorRef.current.commands.setTextSelection({

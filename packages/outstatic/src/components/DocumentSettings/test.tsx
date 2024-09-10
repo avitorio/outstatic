@@ -52,7 +52,7 @@ describe('<DocumentSettings />', () => {
     })
 
     render(
-      <TestProviders.Apollo>
+      <TestWrapper>
         <TestProviders.DocumentContext
           value={{
             document: { ...documentExample, author: { name: undefined } }
@@ -66,7 +66,7 @@ describe('<DocumentSettings />', () => {
             />
           </TestProviders.Form>
         </TestProviders.DocumentContext>
-      </TestProviders.Apollo>
+      </TestWrapper>
     )
     expect(screen.getByLabelText('Name')).toHaveValue('')
     expect(screen.getByLabelText('Name')).not.toBeUndefined()

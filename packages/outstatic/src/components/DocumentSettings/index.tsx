@@ -3,8 +3,8 @@ import DateTimePicker from '@/components/DateTimePicker'
 import DeleteDocumentButton from '@/components/DeleteDocumentButton'
 import DocumentSettingsImageSelection from '@/components/DocumentSettingsImageSelection'
 import TagInput from '@/components/TagInput'
-import Input from '@/components/ui/input'
-import TextArea from '@/components/ui/text-area'
+import Input from '@/components/ui/shadcn/input'
+import TextArea from '@/components/ui/shadcn/text-area'
 import { DocumentContext } from '@/context'
 import {
   CustomFieldArrayValue,
@@ -16,8 +16,9 @@ import { useRouter } from 'next/navigation'
 import { useContext, useState } from 'react'
 import { RegisterOptions, useFormContext } from 'react-hook-form'
 import { slugify } from 'transliteration'
-import { Button } from '../ui/button'
-import { CheckboxWithLabel } from '../ui/checkbox-with-label'
+import { CheckboxWithLabel } from '@/components/ui/outstatic/checkbox-with-label'
+import { Button } from '@/components/ui/shadcn/button'
+import useOutstatic from '@/utils/hooks/useOutstatic'
 
 type DocumentSettingsProps = {
   saveFunc: () => void
@@ -75,8 +76,12 @@ const DocumentSettings = ({
     formState: { errors }
   } = useFormContext()
   const router = useRouter()
-  const { document, editDocument, hasChanges, collection } =
+
+  const { document, extension, editDocument, hasChanges, collection } =
     useContext(DocumentContext)
+
+  const { dashboardRoute } = useOutstatic()
+
   const [isOpen, setIsOpen] = useState(false)
 
   return (
@@ -177,8 +182,9 @@ const DocumentSettings = ({
             <DeleteDocumentButton
               disabled={loading}
               slug={document.slug}
+              extension={extension}
               onComplete={() => {
-                router.push(`/outstatic/${collection}`)
+                router.push(`${dashboardRoute}/${collection}`)
               }}
               collection={collection}
               className="hover:bg-slate-200 max-h-[2.25rem]"

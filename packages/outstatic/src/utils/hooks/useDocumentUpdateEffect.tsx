@@ -1,11 +1,12 @@
-import { Document, Session } from '@/types'
+import { Document, MDExtensions, Session } from '@/types'
 import { getLocalDate } from '@/utils/getLocalDate'
 import { parseContent } from '@/utils/parseContent'
 import { Editor } from '@tiptap/react'
 import matter from 'gray-matter'
 import { Dispatch, SetStateAction, useEffect } from 'react'
 import { UseFormReturn } from 'react-hook-form'
-import useFileQuery from './useFileQuery'
+import { useGetCollectionSchema } from './useGetCollectionSchema'
+import { useGetDocument } from './useGetDocument'
 import useOutstatic from './useOutstatic'
 
 interface UseDocumentUpdateEffectProps {
@@ -16,6 +17,7 @@ interface UseDocumentUpdateEffectProps {
   session: Session | null
   setHasChanges: Dispatch<SetStateAction<boolean>>
   setShowDelete: Dispatch<SetStateAction<boolean>>
+  setExtension: Dispatch<SetStateAction<MDExtensions>>
 }
 
 export const useDocumentUpdateEffect = ({
@@ -25,36 +27,41 @@ export const useDocumentUpdateEffect = ({
   editor,
   session,
   setHasChanges,
-  setShowDelete
+  setShowDelete,
+  setExtension
 }: UseDocumentUpdateEffectProps) => {
-  const { basePath } = useOutstatic()
-  const { data: documentQueryData } = useFileQuery({
-    file: `${collection}/${slug}.md`,
-    skip: slug === 'new' || !slug
+  const { basePath, ostContent } = useOutstatic()
+
+  const { data: schema } = useGetCollectionSchema({ enabled: slug !== 'new' })
+
+  const { data: document } = useGetDocument({
+    filePath: `${
+      schema?.path ? `${schema.path}` : `${ostContent}/${collection}`
+    }/${slug}`,
+    enabled: slug !== 'new' && schema !== undefined
   })
 
   useEffect(() => {
-    const documentQueryObject = documentQueryData?.repository?.object
-
-    if (documentQueryObject?.__typename === 'Blob') {
-      let mdContent = documentQueryObject.text as string
-      const { data, content } = matter(mdContent)
+    if (document && editor) {
+      const { mdDocument } = document
+      const { data, content } = matter(mdDocument)
 
       const parsedContent = parseContent(content, basePath)
 
       const newDate = data.publishedAt
         ? new Date(data.publishedAt)
         : getLocalDate()
-      const document = {
+      const newDocument = {
         ...data,
         publishedAt: newDate,
         content: parsedContent,
         slug
       }
-      methods.reset(document)
+      methods.reset(newDocument)
       editor.commands.setContent(parsedContent)
       editor.commands.focus('start')
       setShowDelete(slug !== 'new')
+      setExtension(document.extension)
     } else {
       // Set publishedAt value on slug update to avoid undefined on first render
       if (slug) {
@@ -76,5 +83,5 @@ export const useDocumentUpdateEffect = ({
 
     return () => subscription.unsubscribe()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [documentQueryData, methods, slug, editor, session])
+  }, [document, methods, slug, editor, session])
 }

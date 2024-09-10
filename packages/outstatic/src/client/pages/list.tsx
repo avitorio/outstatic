@@ -1,125 +1,41 @@
 import { AdminLayout, DocumentsTable } from '@/components'
-import { Button } from '@/components/ui/button'
-import { useDocumentsQuery } from '@/graphql/generated'
-import { OstDocument } from '@/types/public'
-import useOutstatic from '@/utils/hooks/useOutstatic'
-import { GraphQLError } from 'graphql'
-import matter from 'gray-matter'
+import { AdminLoading } from '@/components/AdminLoading'
+import { Button } from '@/components/ui/shadcn/button'
+import { useGetDocuments } from '@/utils/hooks/useGetDocuments'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 import { singular } from 'pluralize'
-
-type GQLErrorExtended = GraphQLError & { type: string }
+import Collections from './collections'
+import useOutstatic from '@/utils/hooks/useOutstatic'
+import LineBackground from '@/components/ui/outstatic/line-background'
 
 type ListProps = {
   collection: string
 }
 
-const options = {
-  year: 'numeric' as const,
-  month: 'long' as const,
-  day: 'numeric' as const
-}
-
 export default function List({ collection }: ListProps) {
-  const router = useRouter()
+  const { data: documents, isError, isPending } = useGetDocuments()
+  const { dashboardRoute } = useOutstatic()
 
-  const {
-    repoOwner,
-    repoSlug,
-    repoBranch,
-    contentPath,
-    monorepoPath,
-    session
-  } = useOutstatic()
-  const { data, error, loading } = useDocumentsQuery({
-    variables: {
-      owner: repoOwner || session?.user?.login || '',
-      name: repoSlug || '',
-      contentPath:
-        `${repoBranch}:${
-          monorepoPath ? monorepoPath + '/' : ''
-        }${contentPath}/${collection}` || ''
-    },
-    fetchPolicy: 'network-only',
-    onError: ({ graphQLErrors }) => {
-      if (
-        graphQLErrors &&
-        (graphQLErrors?.[0] as GQLErrorExtended)?.type === 'NOT_FOUND'
-      ) {
-        router.push('/api/outstatic/signout')
-        return null
-      }
-      return null
-    }
-  })
-
-  let documents: OstDocument[] = []
-
-  const entries =
-    data?.repository?.object?.__typename === 'Tree' &&
-    data?.repository?.object?.entries
-
-  if (entries) {
-    entries.forEach((document) => {
-      if (document.name.slice(-3) === '.md') {
-        const { data } = matter(
-          document?.object?.__typename === 'Blob' && document?.object?.text
-            ? document?.object?.text
-            : ''
-        )
-
-        const listData = { ...data }
-        delete listData.coverImage
-
-        documents.push({
-          ...(listData as OstDocument),
-          author: listData.author.name || '',
-          publishedAt: new Date(listData.publishedAt).toLocaleDateString(
-            'en-US',
-            options
-          ),
-          slug: document.name.replace('.md', '')
-        })
-      }
-    })
-
-    documents.sort((a, b) => Number(b.publishedAt) - Number(a.publishedAt))
-  }
+  if (isPending) return <AdminLoading />
+  if (isError) return <Collections />
 
   return (
-    <AdminLayout
-      error={error}
-      title={collection[0].toUpperCase() + collection.slice(1)}
-    >
+    <AdminLayout title={collection[0].toUpperCase() + collection.slice(1)}>
       <div className="mb-8 flex h-12 items-center capitalize">
         <h1 className="mr-12 text-2xl">{collection}</h1>
         <Button asChild>
-          <Link href={`/outstatic/${collection}/new`}>
+          <Link href={`${dashboardRoute}/${collection}/new`}>
             New {singular(collection)}
           </Link>
         </Button>
       </div>
       {documents.length > 0 && (
         <div className="relative shadow-md sm:rounded-lg">
-          <DocumentsTable documents={documents} collection={collection} />
+          <DocumentsTable />
         </div>
       )}
-      {documents.length === 0 && !loading && (
-        <div className="max-w-2xl">
-          <div className="absolute bottom-0 left-0 md:left-64 right-0 md:top-36">
-            <svg
-              fill="none"
-              className="h-full w-full"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="m1555.43 194.147c-100.14 46.518-204.72 78.763-313.64 96.841-78.16 12.972-282.29 0-291.79-143.988-1.58-23.948 1-89.4705 67-127 58-32.9805 115.15-13.36095 142.5 5.5 27.35 18.861 45.02 44.5 54 73 16.37 51.951-9.22 115.124-30.65 161.874-57.09 124.562-177.31 219.357-311.976 246.789-142.617 29.052-292.036-9.369-430.683-41.444-100.166-23.173-196.003-36.724-298.229-15.203-48.046 10.115-94.9295 24.91-139.962 44.112"
-                className="stroke-slate-900"
-                strokeWidth="2"
-              />
-            </svg>
-          </div>
+      {documents.length === 0 && !isPending && (
+        <LineBackground>
           <div className="relative">
             <div className="mb-20 max-w-2xl p-8 px-4 md:p-8 text-black bg-white rounded-lg border border-gray-200 shadow-md prose prose-base">
               <h3>This collection has no documents yet.</h3>
@@ -133,7 +49,7 @@ export default function List({ collection }: ListProps) {
 
               <Button asChild>
                 <Link
-                  href={`/outstatic/${collection}/new`}
+                  href={`${dashboardRoute}/${collection}/new`}
                   className="no-underline capitalize"
                 >
                   New {singular(collection)}
@@ -152,7 +68,7 @@ export default function List({ collection }: ListProps) {
               </p>
             </div>
           </div>
-        </div>
+        </LineBackground>
       )}
     </AdminLayout>
   )

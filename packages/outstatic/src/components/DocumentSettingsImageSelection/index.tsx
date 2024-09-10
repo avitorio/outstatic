@@ -1,11 +1,11 @@
-import Input from '@/components/ui/input'
+import Input from '@/components/ui/shadcn/input'
 import { DocumentContext } from '@/context'
 import { Document } from '@/types'
 import { API_IMAGES_PATH, IMAGES_PATH } from '@/utils/constants'
 import { addImage } from '@/utils/editor/utils/addImage'
 import useOutstatic from '@/utils/hooks/useOutstatic'
 import { ChangeEvent, useContext, useEffect, useState } from 'react'
-import { Button } from '../ui/button'
+import { Button } from '@/components/ui/shadcn/button'
 
 type DocumentSettingsImageSelectionProps = {
   name: 'coverImage' | 'author.picture'

@@ -27,6 +27,7 @@ export type DocumentContextType = {
   editDocument: (property: string, value: any) => void
   hasChanges: boolean
   collection: string
+  extension: MDExtensions
 }
 
 export type Session = {
@@ -37,11 +38,13 @@ export type Session = {
     image: string
   }
   access_token: string
+  refresh_token?: string
   expires: Date
 }
 
 export type Collection = {
   name: string
+  contentPath?: string
 }
 
 export type DeepNonNullable<T> = {
@@ -83,3 +86,5 @@ export type SchemaShape =
 export function isArrayCustomField(obj: any): obj is CustomField<'array'> {
   return obj && obj.dataType === 'array' && Array.isArray(obj.values)
 }
+
+export type MDExtensions = 'md' | 'mdx'

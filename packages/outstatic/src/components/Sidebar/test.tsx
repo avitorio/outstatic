@@ -1,8 +1,9 @@
-import { OutstaticProvider } from '@/context'
+import { InitialDataContext } from '@/utils/hooks/useInitialData'
 import mockProviderProps from '@/utils/tests/mockProviderProps'
+import { TestWrapper } from '@/utils/TestWrapper'
 import { render, screen } from '@testing-library/react'
 import { act } from 'react-dom/test-utils'
-import Sidebar from './'
+import { Sidebar } from './'
 
 jest.mock('next/navigation', () => ({
   useRouter() {
@@ -18,6 +19,12 @@ jest.mock('js-cookie', () => ({
 }))
 
 jest.mock('@/utils/generateUniqueId', () => jest.fn())
+
+jest.mock('@/utils/hooks/useCollections', () => ({
+  useCollections: () => ({
+    data: ['collection1', 'collection2', 'collection3']
+  })
+}))
 
 describe('<Sidebar />', () => {
   const mockCollections = ['collection1', 'collection2', 'collection3']
@@ -38,9 +45,11 @@ describe('<Sidebar />', () => {
   it('should render the component correctly', async () => {
     await act(async () => {
       render(
-        <OutstaticProvider {...mockProviderProps}>
-          <Sidebar isOpen={true} />
-        </OutstaticProvider>
+        <TestWrapper>
+          <InitialDataContext.Provider value={mockProviderProps}>
+            <Sidebar isOpen={true} />
+          </InitialDataContext.Provider>
+        </TestWrapper>
       )
     })
 
@@ -57,9 +66,11 @@ describe('<Sidebar />', () => {
   it('should fetch broadcast data and set it as cookie', async () => {
     await act(async () => {
       render(
-        <OutstaticProvider {...mockProviderProps}>
-          <Sidebar isOpen={true} />
-        </OutstaticProvider>
+        <TestWrapper>
+          <InitialDataContext.Provider value={mockProviderProps}>
+            <Sidebar isOpen={true} />
+          </InitialDataContext.Provider>
+        </TestWrapper>
       )
     })
 

@@ -1,13 +1,10 @@
-import AdminHeader from '@/components/AdminHeader'
-import Sidebar from '@/components/Sidebar'
 import { useOstSession } from '@/utils/auth/hooks'
-import { ApolloError } from '@apollo/client'
+import { useOutstatic } from '@/utils/hooks'
 import { useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
-import { Toaster } from 'sonner'
+import { useEffect } from 'react'
 
 export type AdminLayoutProps = {
-  error?: string | ApolloError
+  error?: string
   children: React.ReactNode
   settings?: React.ReactNode
   title?: string
@@ -19,12 +16,9 @@ export default function AdminLayout({
   settings,
   title
 }: AdminLayoutProps) {
-  const { session, status } = useOstSession()
+  const { dashboardRoute } = useOutstatic()
+  const { status } = useOstSession()
   const { push } = useRouter()
-  const [openSidebar, setOpenSidebar] = useState(false)
-  const toggleSidebar = () => {
-    setOpenSidebar(!openSidebar)
-  }
 
   useEffect(() => {
     const pageTitle = title ? `${title} | Outstatic` : 'Outstatic'
@@ -33,40 +27,29 @@ export default function AdminLayout({
 
   if (status === 'unauthenticated') {
     if (typeof window !== 'undefined') {
-      push(`/outstatic`)
+      push(dashboardRoute)
     }
     return null
   }
 
   return (
     <>
-      <div id="outstatic">
-        <Toaster richColors />
-        {status === 'loading' ? null : (
-          <div className="flex h-screen flex-col bg-white text-black">
-            <AdminHeader
-              {...session?.user}
-              status={status}
-              toggleSidebar={toggleSidebar}
-            />
-            <div className="flex md:grow flex-col-reverse justify-between md:flex-row">
-              <Sidebar isOpen={openSidebar} />
-              <main className="w-auto flex-auto p-5 md:p-10 bg-white h-dvh max-h-[calc(100vh-128px)] md:max-h-[calc(100vh-53px)] overflow-y-scroll scrollbar-hide">
-                {error && (
-                  <div className="mb-6 border border-red-500 p-2">
-                    Something went wrong{' '}
-                    <span role="img" aria-label="sad face">
-                      😓
-                    </span>
-                  </div>
-                )}
-                {children}
-              </main>
-              {settings && settings}
-            </div>
-          </div>
-        )}
-      </div>
+      {status === 'loading' ? null : (
+        <>
+          <main className="w-auto flex-auto p-5 pb-0 md:p-10 bg-white h-dvh max-h-[calc(100vh-128px)] md:max-h-[calc(100vh-64px)] overflow-y-scroll scrollbar-hide">
+            {error && (
+              <div className="mb-6 border border-red-500 p-2">
+                Something went wrong{' '}
+                <span role="img" aria-label="sad face">
+                  😓
+                </span>
+              </div>
+            )}
+            {children}
+          </main>
+          {settings && settings}
+        </>
+      )}
     </>
   )
 }

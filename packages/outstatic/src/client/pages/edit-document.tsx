@@ -5,11 +5,11 @@ import {
   MDEditor
 } from '@/components'
 import { DocumentContext } from '@/context'
-import { CustomFields, Document } from '@/types'
+import { CustomFields, Document, MDExtensions } from '@/types'
 import { deepReplace } from '@/utils/deepReplace'
 import { useDocumentUpdateEffect } from '@/utils/hooks/useDocumentUpdateEffect'
-import useFileQuery from '@/utils/hooks/useFileQuery'
 import { useFileStore } from '@/utils/hooks/useFileStore'
+import { useGetCollectionSchema } from '@/utils/hooks/useGetCollectionSchema'
 import useOutstatic from '@/utils/hooks/useOutstatic'
 import useSubmitDocument from '@/utils/hooks/useSubmitDocument'
 import useTipTap from '@/utils/hooks/useTipTap'
@@ -27,13 +27,16 @@ export default function EditDocument({ collection }: { collection: string }) {
     pathname.split('/').pop() || `/${collection}/new`
   )
   const [loading, setLoading] = useState(false)
-  const { hasChanges, setHasChanges, basePath, session } = useOutstatic()
+  const { basePath, session, hasChanges, setHasChanges, dashboardRoute } =
+    useOutstatic()
   const [showDelete, setShowDelete] = useState(false)
   const [documentSchema, setDocumentSchema] = useState(editDocumentSchema)
+  //@ts-ignore
   const methods = useForm<Document>({ resolver: yupResolver(documentSchema) })
   const { editor } = useTipTap({ ...methods })
   const [customFields, setCustomFields] = useState<CustomFields>({})
   const files = useFileStore((state) => state.files)
+  const [extension, setExtension] = useState<MDExtensions>('mdx')
 
   const editDocument = (property: string, value: any) => {
     const formValues = methods.getValues()
@@ -41,9 +44,7 @@ export default function EditDocument({ collection }: { collection: string }) {
     methods.reset(newValue)
   }
 
-  const { data: schemaQueryData } = useFileQuery({
-    file: `${collection}/schema.json`
-  })
+  const { data: schema } = useGetCollectionSchema({ collection })
 
   const onSubmit = useSubmitDocument({
     session,
@@ -57,14 +58,15 @@ export default function EditDocument({ collection }: { collection: string }) {
     customFields,
     setCustomFields,
     setHasChanges,
-    editor
+    editor,
+    extension
   })
 
   useEffect(() => {
     window.history.replaceState(
       {},
       '',
-      `${basePath}/outstatic/${collection}/${slug}`
+      `${basePath}${dashboardRoute}/${collection}/${slug}`
     )
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [slug])
@@ -76,19 +78,18 @@ export default function EditDocument({ collection }: { collection: string }) {
     editor,
     session,
     setHasChanges,
-    setShowDelete
+    setShowDelete,
+    setExtension
   })
 
   // Add custom fields
   useEffect(() => {
-    const documentQueryObject = schemaQueryData?.repository?.object
-    if (documentQueryObject?.__typename === 'Blob') {
-      const schema = JSON.parse(documentQueryObject?.text || '{}')
+    if (schema) {
       const yupSchema = convertSchemaToYup(schema)
       setDocumentSchema(yupSchema)
       setCustomFields(schema.properties)
     }
-  }, [schemaQueryData])
+  }, [schema])
 
   return (
     <>
@@ -111,7 +112,8 @@ export default function EditDocument({ collection }: { collection: string }) {
           document: methods.getValues(),
           editDocument,
           hasChanges,
-          collection
+          collection,
+          extension
         }}
       >
         <FormProvider {...methods}>
