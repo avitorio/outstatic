@@ -2,7 +2,12 @@ import { Document } from '@/types'
 import DOMPurify from 'dompurify'
 import replaceImagePath from './replaceImagePath'
 
-export const mergeMdMeta = (data: Document, basePath: string): string => {
+export const mergeMdMeta = (
+  data: Document,
+  basePath: string,
+  repoInfo: string,
+  mediaPath: string
+): string => {
   const meta = Object.entries(
     (({ content, publishedAt, ...meta }) => meta)(data)
   )
@@ -35,7 +40,12 @@ export const mergeMdMeta = (data: Document, basePath: string): string => {
   merged += '---\n\n'
 
   // replace /api/outstatic/images/ references
-  const newContent = replaceImagePath(data.content, basePath)
+  const newContent = replaceImagePath({
+    markdownContent: data.content,
+    basePath,
+    repoInfo,
+    mediaPath
+  })
 
   merged += newContent
   return merged

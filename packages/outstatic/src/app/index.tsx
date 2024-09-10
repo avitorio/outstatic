@@ -18,6 +18,7 @@ export type OutstaticData = {
   ostContent?: string
   dashboardRoute: string
   githubGql: string
+  mediaPath: string
 }
 
 export async function Outstatic({
@@ -61,6 +62,7 @@ export async function Outstatic({
     ostDetach: process.env.OST_DETACH || false,
     pages: ['collections', 'settings'],
     dashboardRoute: '/outstatic',
-    githubGql: GITHUB_GQL_API_URL
+    githubGql: GITHUB_GQL_API_URL,
+    mediaPath: process.env.OST_MEDIA_PATH || 'images/'
   } as OutstaticData
 }

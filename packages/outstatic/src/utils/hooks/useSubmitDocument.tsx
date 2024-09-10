@@ -8,7 +8,6 @@ import {
   isArrayCustomField
 } from '@/types'
 import { assertUnreachable } from '@/utils/assertUnreachable'
-import { IMAGES_PATH } from '@/utils/constants'
 import { createCommitApi } from '@/utils/createCommitApi'
 import { hashFromUrl } from '@/utils/hashFromUrl'
 import useOutstatic from '@/utils/hooks/useOutstatic'
@@ -63,7 +62,8 @@ function useSubmitDocument({
     monorepoPath,
     ostContent,
     contentPath,
-    basePath
+    basePath,
+    mediaPath
   } = useOutstatic()
   const fetchOid = useOid()
 
@@ -86,7 +86,12 @@ function useSubmitDocument({
 
         const document = methods.getValues()
         const mdContent = editor.storage.markdown.getMarkdown()
-        let content = mergeMdMeta({ ...data, content: mdContent }, basePath)
+        let content = mergeMdMeta(
+          { ...data, content: mdContent },
+          basePath,
+          `${repoOwner}/${repoSlug}/${repoBranch}`,
+          mediaPath
+        )
         const oid = await fetchOid()
         const owner = repoOwner || session?.user?.login || ''
         const newSlug = document.slug
@@ -123,7 +128,7 @@ function useSubmitDocument({
               const filePath = (() => {
                 switch (type) {
                   case 'image':
-                    return IMAGES_PATH
+                    return mediaPath
                   default:
                     assertUnreachable(type)
                 }

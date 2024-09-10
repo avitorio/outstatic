@@ -1,7 +1,7 @@
 import Input from '@/components/ui/shadcn/input'
 import { DocumentContext } from '@/context'
 import { Document } from '@/types'
-import { API_IMAGES_PATH, IMAGES_PATH } from '@/utils/constants'
+import { API_MEDIA_PATH } from '@/utils/constants'
 import { addImage } from '@/utils/editor/utils/addImage'
 import useOutstatic from '@/utils/hooks/useOutstatic'
 import { ChangeEvent, useContext, useEffect, useState } from 'react'
@@ -26,7 +26,7 @@ const DocumentSettingsImageSelection = ({
   description,
   label
 }: DocumentSettingsImageSelectionProps) => {
-  const { basePath } = useOutstatic()
+  const { basePath, mediaPath } = useOutstatic()
   const { document, editDocument } = useContext(DocumentContext)
   const [showImage, setShowImage] = useState(false)
   const [showImageOptions, setShowImageOptions] = useState(false)
@@ -38,8 +38,8 @@ const DocumentSettingsImageSelection = ({
 
   useEffect(() => {
     const image = resolvedImage?.replace(
-      `${basePath}/${IMAGES_PATH}`,
-      `${basePath}/${API_IMAGES_PATH}`
+      `${basePath}${mediaPath}`,
+      `${basePath}${API_MEDIA_PATH}`
     )
     setImage(image || '')
     setShowImageOptions(!resolvedImage)

@@ -44,6 +44,7 @@
         "OST_GITHUB_CALLBACK_URL",
         "OST_BASE_PATH",
         "OST_DETACH",
+        "OST_MEDIA_PATH",
         "NEXT_PUBLIC_OST_API_PATH",
         "NEXT_PUBLIC_OST_TOKEN_NAME"
       ]
