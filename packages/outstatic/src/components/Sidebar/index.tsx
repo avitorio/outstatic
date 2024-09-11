@@ -27,6 +27,7 @@ export const Sidebar = ({ isOpen = false }: SidebarProps) => {
         'flex-col justify-between bg-gray-50 dark:bg-background lg:flex',
         isOpen ? 'flex absolute z-10 w-full' : 'hidden'
       )}
+      aria-label="Sidebar"
     >
       <SidebarUI className="flex flex-col justify-between">
         <div className="mt-5">
