@@ -3,7 +3,7 @@ import DateTimePicker from '@/components/DateTimePicker'
 import DeleteDocumentButton from '@/components/DeleteDocumentButton'
 import DocumentSettingsImageSelection from '@/components/DocumentSettingsImageSelection'
 import TagInput from '@/components/TagInput'
-import Input from '@/components/ui/shadcn/input'
+import Input from '@/components/ui/outstatic/input'
 import TextArea from '@/components/ui/shadcn/text-area'
 import { DocumentContext } from '@/context'
 import {

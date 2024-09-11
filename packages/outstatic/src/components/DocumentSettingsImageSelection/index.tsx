@@ -1,4 +1,4 @@
-import Input from '@/components/ui/shadcn/input'
+import Input from '@/components/ui/outstatic/input'
 import { DocumentContext } from '@/context'
 import { Document } from '@/types'
 import { API_MEDIA_PATH } from '@/utils/constants'

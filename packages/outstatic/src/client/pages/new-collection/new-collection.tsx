@@ -1,7 +1,7 @@
 import { AdminLayout } from '@/components'
 import Alert from '@/components/Alert'
 import { Button } from '@/components/ui/shadcn/button'
-import Input from '@/components/ui/shadcn/input'
+import Input from '@/components/ui/outstatic/input'
 import { Label } from '@/components/ui/shadcn/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/shadcn/radio-group'
 import { Collection } from '@/types'
