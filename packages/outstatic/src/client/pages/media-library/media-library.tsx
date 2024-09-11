@@ -14,7 +14,6 @@ import {
   SelectContent,
   SelectItem
 } from '@/components/ui/shadcn/select'
-import { MediaItem } from '@/utils/metadata/types'
 import { toast } from 'sonner'
 import useSubmitMedia from '@/utils/hooks/useSubmitMedia'
 import { FileType } from '@/types'
@@ -43,8 +42,10 @@ export default function MediaLibrary() {
       .sort((a, b) => {
         if (sortBy === 'date') {
           return sortDirection === 'asc'
-            ? new Date(a.publishedAt) - new Date(b.publishedAt)
-            : new Date(b.publishedAt) - new Date(a.publishedAt)
+            ? new Date(a.publishedAt).getTime() -
+                new Date(b.publishedAt).getTime()
+            : new Date(b.publishedAt).getTime() -
+                new Date(a.publishedAt).getTime()
         } else {
           return sortDirection === 'asc'
             ? a.filename.localeCompare(b.filename)

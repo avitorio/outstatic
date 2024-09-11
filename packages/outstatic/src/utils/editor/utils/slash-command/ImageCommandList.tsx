@@ -4,7 +4,7 @@ import {
   updateScrollView
 } from '@/utils/editor/extensions/SlashCommand'
 import { Editor, Range } from '@tiptap/react'
-import { Link, Upload } from 'lucide-react'
+import { Images, Link, Upload } from 'lucide-react'
 import {
   ChangeEvent,
   useEffect,
@@ -13,11 +13,14 @@ import {
   useState
 } from 'react'
 import { addImage } from '../addImage'
+import MediaLibrary from '@/client/pages/media-library/media-library'
+import { Dialog, DialogContent } from '@/components/ui/shadcn/dialog'
 
 type ImageCommandListProps = {
   editor: Editor
   setImageMenu: (value: boolean) => void
   range: Range
+  items: CommandItemProps[] // Add this line
 }
 
 const isValidUrl = (urlString: string) => {
@@ -31,15 +34,21 @@ const isValidUrl = (urlString: string) => {
 const items = [
   {
     title: 'Image Upload',
-    description: 'Upload or embed with a link.',
+    description: 'Upload image from file.',
     searchTerms: ['upload', 'picture', 'media'],
     icon: <Upload size={18} />
   },
   {
     title: 'Image from URL',
-    description: 'Upload or embed with a link.',
+    description: 'Embed with a link.',
     searchTerms: ['photo', 'picture', 'media'],
     icon: <Link size={18} />
+  },
+  {
+    title: 'Media Gallery',
+    description: 'Add image from media gallery.',
+    searchTerms: ['photo', 'picture', 'media'],
+    icon: <Images size={18} />
   }
 ]
 
@@ -50,8 +59,26 @@ const ImageCommandList = ({
 }: ImageCommandListProps) => {
   const [showLink, setShowLink] = useState(false)
   const [imageUrl, setImageUrl] = useState('')
+  const [showMediaGallery, setShowMediaGallery] = useState(false)
   const [errors, setErrors] = useState({ imageUrl: '', uploadImage: '' })
   const [selectedIndex, setSelectedIndex] = useState(0)
+
+  const handleItemAction = (title: string) => {
+    switch (title) {
+      case 'Image Upload':
+        addImageFile()
+        break
+      case 'Image from URL':
+        setShowLink(true)
+        break
+      case 'Media Gallery':
+        setShowMediaGallery(true)
+        break
+      // Add more cases for future actions
+      default:
+        console.warn(`Unhandled action: ${title}`)
+    }
+  }
 
   const addImageFile = async () => {
     editor.chain().focus().deleteRange(range).run()
@@ -109,11 +136,8 @@ const ImageCommandList = ({
           return true
         }
         if (e.key === 'Enter') {
-          if (items[selectedIndex].title === 'Image Upload') {
-            addImageFile()
-          } else {
-            showLink ? addImageUrl() : setShowLink(true)
-          }
+          const selectedItem = items[selectedIndex]
+          showLink ? addImageUrl() : handleItemAction(selectedItem.title)
           return true
         }
         if (e.key === 'Escape') {
@@ -133,7 +157,7 @@ const ImageCommandList = ({
     return () => {
       document.removeEventListener('keydown', onKeyDown)
     }
-  }, [selectedIndex, showLink])
+  }, [selectedIndex, showLink, items])
 
   useEffect(() => {
     editor.chain().blur().run()
@@ -181,6 +205,12 @@ const ImageCommandList = ({
             Done
           </MDEMenuButton>
         </div>
+      ) : showMediaGallery ? (
+        <Dialog open={showMediaGallery} onOpenChange={setShowMediaGallery}>
+          <DialogContent className="max-w-[96%] max-h-[96%]">
+            <MediaLibrary />
+          </DialogContent>
+        </Dialog>
       ) : (
         <div
           id="slash-command"
@@ -194,16 +224,10 @@ const ImageCommandList = ({
                   index === selectedIndex ? 'bg-stone-100 text-stone-900' : ''
                 }`}
                 key={index}
-                onClick={() =>
-                  item.title === 'Image Upload'
-                    ? addImageFile()
-                    : setShowLink(true)
-                }
+                onClick={() => handleItemAction(item.title)}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter') {
-                    item.title === 'Image Upload'
-                      ? addImageFile()
-                      : setShowLink(true)
+                    handleItemAction(item.title)
                   }
                 }}
               >
