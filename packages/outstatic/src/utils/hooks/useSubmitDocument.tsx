@@ -7,7 +7,6 @@ import {
   Session,
   isArrayCustomField
 } from '@/types'
-import { assertUnreachable } from '@/utils/assertUnreachable'
 import { createCommitApi } from '@/utils/createCommitApi'
 import { hashFromUrl } from '@/utils/hashFromUrl'
 import useOutstatic from '@/utils/hooks/useOutstatic'
@@ -16,7 +15,7 @@ import { stringifyMedia, stringifyMetadata } from '@/utils/metadata/stringify'
 import { Editor } from '@tiptap/react'
 import matter from 'gray-matter'
 import MurmurHash3 from 'imurmurhash'
-import { useCallback, useState } from 'react'
+import { useCallback } from 'react'
 import { UseFormReturn } from 'react-hook-form'
 import { useCreateCommit } from './useCreateCommit'
 import { useGetCollectionSchema } from './useGetCollectionSchema'
@@ -24,6 +23,7 @@ import { useGetMetadata } from './useGetMetadata'
 import useOid from './useOid'
 import { useGetMediaFiles } from './useGetMediaFiles'
 import { MediaItem, MediaSchema } from '../metadata/types'
+import { MEDIA_JSON_PATH } from '../constants'
 
 type SubmitDocumentProps = {
   session: Session | null
@@ -65,7 +65,8 @@ function useSubmitDocument({
     ostContent,
     contentPath,
     basePath,
-    publicMediaPath
+    publicMediaPath,
+    repoMediaPath
   } = useOutstatic()
   const fetchOid = useOid()
   let media: MediaItem[] = []
@@ -131,19 +132,10 @@ function useSubmitDocument({
                 .replace(/[^a-zA-Z0-9-_\.]/g, '-')
                 .replace(/(\.[^\.]*)?$/, `-${randString}$1`)
 
-              const filePath = (() => {
-                switch (type) {
-                  case 'image':
-                    return publicMediaPath
-                  default:
-                    assertUnreachable(type)
-                }
-              })()
-
               capi.replaceFile(
                 `${
                   monorepoPath ? monorepoPath + '/' : ''
-                }public/${filePath}${newFilename}`,
+                }${repoMediaPath}${newFilename}`,
                 fileContents,
                 false
               )
@@ -152,7 +144,9 @@ function useSubmitDocument({
                 __outstatic: {
                   hash: `${MurmurHash3(fileContents).result()}`,
                   commit: '',
-                  path: `${filePath}${newFilename}`
+                  path: `${
+                    monorepoPath ? monorepoPath + '/' : ''
+                  }${repoMediaPath}${newFilename}`
                 },
                 filename: newFilename,
                 type: type,
@@ -163,7 +157,7 @@ function useSubmitDocument({
               // replace blob in content with path
               content = content.replace(
                 blob,
-                `${basePath}/${filePath}${newFilename}`
+                `${basePath}/${publicMediaPath}${newFilename}`
               )
             }
           })
@@ -267,18 +261,16 @@ function useSubmitDocument({
               media.__outstatic.commit = m.commit
             })
 
-            // The push() method modifies the original array and returns the new length
-            // We should create a new array instead
-            const newMedia = [...(mediaData?.media ?? []), ...media]
+            const newMedia = [...(mediaData?.media?.media ?? []), ...media]
 
             const mediaSchema = {
               commit: m.commit,
               generated: m.generated,
-              media: mediaData?.media ?? []
+              media: mediaData?.media?.media ?? []
             } as MediaSchema
 
             capi.replaceFile(
-              `outstatic/media/media.json`,
+              MEDIA_JSON_PATH,
               stringifyMedia({ ...mediaSchema, media: newMedia })
             )
           }

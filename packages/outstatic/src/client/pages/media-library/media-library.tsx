@@ -27,6 +27,8 @@ import {
 import { MediaItem } from '@/utils/metadata/types'
 import { toast } from 'sonner'
 import { TrashIcon } from 'lucide-react'
+import useSubmitMedia from '@/utils/hooks/useSubmitMedia'
+import { FileType } from '@/types'
 
 export default function MediaLibrary() {
   const [searchTerm, setSearchTerm] = useState('')
@@ -42,7 +44,7 @@ export default function MediaLibrary() {
   const filteredFiles = useMemo(() => {
     if (!data) return []
 
-    return data.media
+    return data.media.media
       .filter((file) => {
         if (
           file.filename.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -97,15 +99,71 @@ export default function MediaLibrary() {
   const handleDeleteCancel = () => {
     setIsDeleteModalOpen(false)
   }
-  const handleFileUpload = (files) => {
-    console.log('Uploaded files:', files)
+
+  const [isUploading, setIsUploading] = useState(false)
+
+  const submitMedia = useSubmitMedia({
+    setLoading: setIsUploading,
+    file: {} as FileType
+  })
+
+  const handleFileUpload = async (files: FileList | null) => {
+    if (!files || files.length === 0) {
+      return
+    }
+
+    setIsUploading(true)
+
+    const file = files[0]
+    const reader = new FileReader()
+
+    reader.onload = async (e) => {
+      if (e.target && e.target.result) {
+        const fileContents = e.target.result as string
+        const fileType: FileType = {
+          filename: file.name,
+          type: 'image',
+          content: fileContents.split(',')[1] // Remove the data URL prefix
+        }
+
+        try {
+          await submitMedia(fileType)
+          toast.success(`${file.name} uploaded successfully`)
+        } catch (error) {
+          toast.error(`Failed to upload ${file.name}`)
+        }
+      }
+    }
+
+    reader.readAsDataURL(file)
+
+    setIsUploading(false)
   }
+
   return (
     <AdminLayout title="Media Library">
       <div className="flex items-center justify-between mb-6">
         <div className="mb-8 flex h-12 items-center capitalize gap-4">
           <h1 className="mr-12 text-2xl">Media Library</h1>
-          <Button size="sm">Add Media</Button>
+          <Button
+            asChild
+            className="hover:cursor-pointer"
+            disabled={isUploading}
+          >
+            <label htmlFor="fileInput">
+              {isUploading ? 'Uploading...' : 'Add Media'}
+            </label>
+          </Button>
+          <input
+            id="fileInput"
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={(e) => {
+              console.log('File input change detected')
+              handleFileUpload(e.target.files)
+            }}
+          />
         </div>
         <div className="flex items-center gap-4">
           <Input
@@ -166,7 +224,7 @@ export default function MediaLibrary() {
       >
         {filteredFiles.map((file) => (
           <div
-            key={file.id}
+            key={file.filename}
             className={`space-y-1 bg-card rounded-lg overflow-hidden cursor-pointer group relative ${
               selectedFiles.includes(file) ? 'border border-slate-200' : ''
             }`}
@@ -199,21 +257,6 @@ export default function MediaLibrary() {
                 <h3 className="font-semibold text-sm truncate">
                   {file.filename}
                 </h3>
-              </div>
-              <div className="flex items-center gap-2">
-                <input
-                  type="text"
-                  value={file.alt || 'No alt tag'}
-                  onFocus={(e) => {
-                    e.target.type = 'textarea'
-                    e.target.rows = 3
-                  }}
-                  onBlur={(e) => {
-                    e.target.type = 'text'
-                    handleAltEdit(file, e.target.value)
-                  }}
-                  className="flex-1 text-sm"
-                />
               </div>
             </div>
           </div>
