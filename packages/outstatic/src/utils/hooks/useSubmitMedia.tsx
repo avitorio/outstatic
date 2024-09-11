@@ -81,7 +81,7 @@ function useSubmitMedia({ setLoading, file }: SubmitDocumentProps) {
             __outstatic: {
               hash: `${MurmurHash3(fileContents).result()}`,
               commit,
-              path: `${filePath}${newFilename}`
+              path: `${filePath}`
             },
             filename: newFilename,
             type: type,

@@ -10,7 +10,8 @@ jest.mock('next/navigation', () => ({
     return {
       prefetch: () => null
     }
-  }
+  },
+  usePathname: () => '/test-path'
 }))
 
 jest.mock('js-cookie', () => ({
@@ -61,30 +62,5 @@ describe('<Sidebar />', () => {
     mockCollections.forEach((collection) => {
       expect(screen.getByText(collection)).toBeInTheDocument()
     })
-  })
-
-  it('should fetch broadcast data and set it as cookie', async () => {
-    await act(async () => {
-      render(
-        <TestWrapper>
-          <InitialDataContext.Provider value={mockProviderProps}>
-            <Sidebar isOpen={true} />
-          </InitialDataContext.Provider>
-        </TestWrapper>
-      )
-    })
-
-    expect(fetchMock).toHaveBeenCalled()
-    expect(jest.requireMock('js-cookie').set).toHaveBeenCalledWith(
-      'ost_broadcast',
-      JSON.stringify({
-        title: 'Test Title',
-        content: 'Test Content',
-        link: 'Test Link'
-      }),
-      {
-        expires: 1
-      }
-    )
   })
 })

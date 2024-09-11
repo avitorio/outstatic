@@ -14,33 +14,19 @@ import {
   SelectContent,
   SelectItem
 } from '@/components/ui/shadcn/select'
-import {
-  AlertDialog,
-  AlertDialogContent,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogCancel,
-  AlertDialogAction
-} from '@/components/ui/shadcn/alert-dialog'
 import { MediaItem } from '@/utils/metadata/types'
 import { toast } from 'sonner'
-import { TrashIcon } from 'lucide-react'
 import useSubmitMedia from '@/utils/hooks/useSubmitMedia'
 import { FileType } from '@/types'
+import DeleteMediaButton from '@/components/DeleteMediaButton'
 
 export default function MediaLibrary() {
   const [searchTerm, setSearchTerm] = useState('')
   const [sortBy, setSortBy] = useState('date')
   const [sortDirection, setSortDirection] = useState('desc')
-  const [fileType, setFileType] = useState('all')
-  const [selectedFiles, setSelectedFiles] = useState<MediaItem[]>([])
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
-  const { basePath, repoOwner, repoSlug, repoBranch, session, gqlClient } =
-    useOutstatic()
+  const { basePath, repoOwner, repoSlug, repoBranch } = useOutstatic()
   const apiPath = `${basePath}${API_MEDIA_PATH}${repoOwner}/${repoSlug}/${repoBranch}/`
-  const { data, isLoading, error } = useGetMediaFiles()
+  const { data, isLoading, error, refetch } = useGetMediaFiles()
   const filteredFiles = useMemo(() => {
     if (!data) return []
 
@@ -50,9 +36,7 @@ export default function MediaLibrary() {
           file.filename.toLowerCase().includes(searchTerm.toLowerCase()) ||
           file.alt.toLowerCase().includes(searchTerm.toLowerCase())
         ) {
-          if (fileType === 'all' || file.type === fileType) {
-            return true
-          }
+          return true
         }
         return false
       })
@@ -67,38 +51,7 @@ export default function MediaLibrary() {
             : b.filename.localeCompare(a.filename)
         }
       })
-  }, [data, searchTerm, sortBy, sortDirection, fileType])
-
-  const handleFileSelect = (file: MediaItem) => {
-    if (selectedFiles.includes(file)) {
-      setSelectedFiles(
-        selectedFiles.filter((f) => f.filename !== file.filename)
-      )
-    } else {
-      setSelectedFiles([...selectedFiles, file])
-    }
-  }
-
-  const handleAltEdit = (file, newAlt) => {
-    const updatedFiles = files.map((f) =>
-      f.filename === file.filename ? { ...f, alt: newAlt } : f
-    )
-    // setFiles(updatedFiles)
-    toast.success('Alt tag updated')
-  }
-  const handleFileDelete = () => {
-    setIsDeleteModalOpen(true)
-  }
-  const handleDeleteConfirm = () => {
-    const updatedFiles = files.filter((file) => !selectedFiles.includes(file))
-    // setFiles(updatedFiles)
-    setSelectedFiles([])
-    setIsDeleteModalOpen(false)
-    toast.success('Files deleted successfully')
-  }
-  const handleDeleteCancel = () => {
-    setIsDeleteModalOpen(false)
-  }
+  }, [data, searchTerm, sortBy, sortDirection])
 
   const [isUploading, setIsUploading] = useState(false)
 
@@ -143,8 +96,8 @@ export default function MediaLibrary() {
   return (
     <AdminLayout title="Media Library">
       <div className="flex items-center justify-between mb-6">
-        <div className="mb-8 flex h-12 items-center capitalize gap-4">
-          <h1 className="mr-12 text-2xl">Media Library</h1>
+        <div className="flex h-12 items-center capitalize gap-12">
+          <h1 className="text-2xl">Media Library</h1>
           <Button
             asChild
             className="hover:cursor-pointer"
@@ -198,24 +151,10 @@ export default function MediaLibrary() {
               <SelectItem value="desc">Descending</SelectItem>
             </SelectContent>
           </Select>
-          <Select
-            value={fileType}
-            className="w-40"
-            onValueChange={(value) => setFileType(value)}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="File type" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All</SelectItem>
-              <SelectItem value="image">Images</SelectItem>
-              <SelectItem value="video">Videos</SelectItem>
-            </SelectContent>
-          </Select>
         </div>
       </div>
       <div
-        className="grid gap-6 sm:grid-cols-4 md:grid-cols-8"
+        className="grid gap-6 sm:grid-cols-4 md:grid-cols-6 2xl:grid-cols-8"
         onDragOver={(e) => e.preventDefault()}
         onDrop={(e) => {
           e.preventDefault()
@@ -225,14 +164,7 @@ export default function MediaLibrary() {
         {filteredFiles.map((file) => (
           <div
             key={file.filename}
-            className={`space-y-1 bg-card rounded-lg overflow-hidden cursor-pointer group relative ${
-              selectedFiles.includes(file) ? 'border border-slate-200' : ''
-            }`}
-            onClick={(e) => {
-              if (e.target.tagName !== 'INPUT') {
-                handleFileSelect(file)
-              }
-            }}
+            className={`space-y-1 bg-card rounded-lg overflow-hidden cursor-pointer group relative`}
           >
             <div className="aspect-square">
               <img
@@ -240,17 +172,13 @@ export default function MediaLibrary() {
                 alt={file.alt}
                 className="w-full h-full object-cover object-center rounded-md"
               />
-              <Button
-                variant="ghost"
-                size="icon"
+              <DeleteMediaButton
+                path={file.__outstatic.path}
+                filename={file.filename}
+                disabled={false}
+                onComplete={() => refetch()}
                 className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 bg-white/50"
-                onClick={(e) => {
-                  e.stopPropagation()
-                  handleFileDelete()
-                }}
-              >
-                <TrashIcon className="w-5 h-5" />
-              </Button>
+              />
             </div>
             <div className="pb-4 relative">
               <div className="flex items-center justify-between">
@@ -262,46 +190,6 @@ export default function MediaLibrary() {
           </div>
         ))}
       </div>
-      {selectedFiles.length > 0 && (
-        <div className="fixed bottom-4 left-4 bg-card p-4 rounded-lg shadow-lg flex items-center gap-4">
-          <span>
-            {selectedFiles.length} file{selectedFiles.length > 1 ? 's' : ''}
-            selected
-          </span>
-          <Button
-            variant="destructive"
-            onClick={() => setIsDeleteModalOpen(true)}
-          >
-            Delete
-          </Button>
-        </div>
-      )}
-      <AlertDialog
-        open={isDeleteModalOpen}
-        onOpenChange={(open) => setIsDeleteModalOpen(open)}
-      >
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>
-              {selectedFiles.length > 1
-                ? 'Delete selected files?'
-                : 'Delete this file?'}
-            </AlertDialogTitle>
-            <AlertDialogDescription>
-              This action cannot be undone. The selected file(s) will be
-              permanently deleted.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel onClick={handleDeleteCancel}>
-              Cancel
-            </AlertDialogCancel>
-            <AlertDialogAction onClick={handleDeleteConfirm}>
-              Delete
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
     </AdminLayout>
   )
 }
