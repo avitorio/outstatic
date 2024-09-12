@@ -5,14 +5,6 @@ import { useOutstatic } from '@/utils/hooks'
 import { useGetMediaFiles } from '@/utils/hooks/useGetMediaFiles'
 import { useState, useMemo } from 'react'
 import { Button } from '@/components/ui/shadcn/button'
-import { Input } from '@/components/ui/shadcn/input'
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem
-} from '@/components/ui/shadcn/select'
 import { toast } from 'sonner'
 import useSubmitMedia from '@/utils/hooks/useSubmitMedia'
 import { FileType } from '@/types'
@@ -26,6 +18,7 @@ import {
 } from '@/components/ui/shadcn/dialog'
 import { MediaItem } from '@/utils/metadata/types'
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden'
+import { MediaLibraryHeader } from './media-library-header'
 
 export default function MediaLibraryModal({
   open,
@@ -119,68 +112,22 @@ export default function MediaLibraryModal({
           <VisuallyHidden.Root>
             <DialogTitle>Media Library</DialogTitle>
           </VisuallyHidden.Root>
-          <div className="flex items-center justify-between mt-6 px-[2px]">
-            <div className="flex h-12 items-center capitalize gap-12">
-              <h1 className="text-2xl">Media Library</h1>
-              <Button
-                asChild
-                className="hover:cursor-pointer"
-                disabled={isUploading}
-              >
-                <label htmlFor="fileInput">
-                  {isUploading ? 'Uploading...' : 'Add Media'}
-                </label>
-              </Button>
-              <input
-                id="fileInput"
-                type="file"
-                accept="image/*"
-                className="hidden"
-                onChange={(e) => {
-                  console.log('File input change detected')
-                  handleFileUpload(e.target.files)
-                }}
-              />
-            </div>
-            <div className="flex items-center gap-4">
-              <Input
-                placeholder="Search files..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-64"
-              />
-              <Select
-                value={sortBy}
-                className="w-40"
-                onValueChange={(value) => setSortBy(value)}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Sort by" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="date">Date</SelectItem>
-                  <SelectItem value="name">Name</SelectItem>
-                </SelectContent>
-              </Select>
-              <Select
-                value={sortDirection}
-                className="w-40"
-                onValueChange={(value) => setSortDirection(value)}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Sort direction" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="asc">Ascending</SelectItem>
-                  <SelectItem value="desc">Descending</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+          <div className="space-y-6 px-[2px] pt-2">
+            <MediaLibraryHeader
+              isUploading={isUploading}
+              searchTerm={searchTerm}
+              setSearchTerm={setSearchTerm}
+              sortBy={sortBy}
+              setSortBy={setSortBy}
+              sortDirection={sortDirection}
+              setSortDirection={setSortDirection}
+              handleFileUpload={handleFileUpload}
+            />
           </div>
         </DialogHeader>
-        <div className="flex flex-col justify-between h-full">
+        <div className="flex flex-col justify-between h-full max-h-[calc(100%-80px)]">
           <div
-            className="overflow-y-auto max-h-[calc(100vh-300px)] p-[2px]"
+            className="overflow-y-auto h-full p-[2px]"
             onDragOver={(e) => e.preventDefault()}
             onDrop={(e) => {
               e.preventDefault()
@@ -223,7 +170,7 @@ export default function MediaLibraryModal({
               ))}
             </div>
           </div>
-          <DialogFooter className="px-[2px] flex flex-end">
+          <DialogFooter className="px-[2px] flex flex-end pt-8">
             <Button variant="outline">Cancel</Button>
             <Button
               disabled={!selectedImage}

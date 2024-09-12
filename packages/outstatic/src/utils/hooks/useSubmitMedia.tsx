@@ -10,6 +10,7 @@ import useOid from './useOid'
 import { useGetMediaFiles } from './useGetMediaFiles'
 import { MediaSchema } from '../metadata/types'
 import { MEDIA_JSON_PATH } from '../constants'
+import { useQueryClient } from '@tanstack/react-query'
 
 type SubmitDocumentProps = {
   setLoading: (loading: boolean) => void
@@ -30,6 +31,7 @@ function useSubmitMedia({ setLoading, file }: SubmitDocumentProps) {
     session
   } = useOutstatic()
   const fetchOid = useOid()
+  const queryClient = useQueryClient()
 
   const { refetch: refetchMedia } = useGetMediaFiles({
     enabled: false
@@ -104,7 +106,9 @@ function useSubmitMedia({ setLoading, file }: SubmitDocumentProps) {
         const input = capi.createInput()
 
         createCommit.mutate(input)
-        await refetchMedia() // Refetch media to update the cache
+        queryClient.invalidateQueries({
+          queryKey: ['media', { filePath: `${repoBranch}:${MEDIA_JSON_PATH}` }]
+        })
         setLoading(false)
       } catch (error) {
         // TODO: Better error treatment

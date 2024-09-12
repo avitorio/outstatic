@@ -30,7 +30,7 @@ export default async function GET(
     const mediaUrl = `https://raw.githubusercontent.com/${repoOwner}/${repoSlug}/${repoBranch}/${
       MONOREPO_PATH ? MONOREPO_PATH + '/' : ''
     }${REPO_MEDIA_PATH}${fileName.split('/').pop()}`
-    console.log({ mediaUrl })
+
     const response = await fetch(mediaUrl, {
       headers: {
         authorization: `token ${session.access_token}`

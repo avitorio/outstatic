@@ -5,19 +5,11 @@ import { API_MEDIA_PATH } from '@/utils/constants'
 import { useOutstatic } from '@/utils/hooks'
 import { useGetMediaFiles } from '@/utils/hooks/useGetMediaFiles'
 import { useState, useMemo } from 'react'
-import { Button } from '@/components/ui/shadcn/button'
-import { Input } from '@/components/ui/shadcn/input'
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem
-} from '@/components/ui/shadcn/select'
 import { toast } from 'sonner'
 import useSubmitMedia from '@/utils/hooks/useSubmitMedia'
 import { FileType } from '@/types'
 import DeleteMediaButton from '@/components/DeleteMediaButton'
+import { MediaLibraryHeader } from '@/components/ui/outstatic/media-library-header'
 
 export default function MediaLibrary() {
   const [searchTerm, setSearchTerm] = useState('')
@@ -95,67 +87,21 @@ export default function MediaLibrary() {
   }
 
   return (
-    <AdminLayout title="Media Library">
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex h-12 items-center capitalize gap-12">
-          <h1 className="text-2xl">Media Library</h1>
-          <Button
-            asChild
-            className="hover:cursor-pointer"
-            disabled={isUploading}
-          >
-            <label htmlFor="fileInput">
-              {isUploading ? 'Uploading...' : 'Add Media'}
-            </label>
-          </Button>
-          <input
-            id="fileInput"
-            type="file"
-            accept="image/*"
-            className="hidden"
-            onChange={(e) => {
-              console.log('File input change detected')
-              handleFileUpload(e.target.files)
-            }}
-          />
-        </div>
-        <div className="flex items-center gap-4">
-          <Input
-            placeholder="Search files..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-64"
-          />
-          <Select
-            value={sortBy}
-            className="w-40"
-            onValueChange={(value) => setSortBy(value)}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Sort by" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="date">Date</SelectItem>
-              <SelectItem value="name">Name</SelectItem>
-            </SelectContent>
-          </Select>
-          <Select
-            value={sortDirection}
-            className="w-40"
-            onValueChange={(value) => setSortDirection(value)}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Sort direction" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="asc">Ascending</SelectItem>
-              <SelectItem value="desc">Descending</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+    <AdminLayout title="Media Library" className="pt-0 md:pt-0">
+      <div className="pb-6 pt-5 sticky top-0 z-10 bg-background">
+        <MediaLibraryHeader
+          isUploading={isUploading}
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+          sortBy={sortBy}
+          setSortBy={setSortBy}
+          sortDirection={sortDirection}
+          setSortDirection={setSortDirection}
+          handleFileUpload={handleFileUpload}
+        />
       </div>
       <div
-        className="grid gap-6 sm:grid-cols-4 md:grid-cols-6 2xl:grid-cols-8"
+        className="grid gap-4 grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-8 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent"
         onDragOver={(e) => e.preventDefault()}
         onDrop={(e) => {
           e.preventDefault()
