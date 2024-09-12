@@ -5,16 +5,10 @@ import {
 } from '@/utils/editor/extensions/SlashCommand'
 import { Editor, Range } from '@tiptap/react'
 import { Images, Link, Upload } from 'lucide-react'
-import {
-  ChangeEvent,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState
-} from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { addImage } from '../addImage'
-import MediaLibrary from '@/client/pages/media-library/media-library'
-import { Dialog, DialogContent } from '@/components/ui/shadcn/dialog'
+import MediaLibraryModal from '@/components/ui/outstatic/media-library-modal'
+import { API_MEDIA_PATH } from '@/utils/constants'
 
 type ImageCommandListProps = {
   editor: Editor
@@ -59,7 +53,7 @@ const ImageCommandList = ({
 }: ImageCommandListProps) => {
   const [showLink, setShowLink] = useState(false)
   const [imageUrl, setImageUrl] = useState('')
-  const [showMediaGallery, setShowMediaGallery] = useState(false)
+  const [showMediaLibrary, setShowMediaLibrary] = useState(false)
   const [errors, setErrors] = useState({ imageUrl: '', uploadImage: '' })
   const [selectedIndex, setSelectedIndex] = useState(0)
 
@@ -72,7 +66,7 @@ const ImageCommandList = ({
         setShowLink(true)
         break
       case 'Media Gallery':
-        setShowMediaGallery(true)
+        setShowMediaLibrary(true)
         break
       // Add more cases for future actions
       default:
@@ -98,13 +92,9 @@ const ImageCommandList = ({
     input.click()
   }
 
-  const handleImageInput = (e: ChangeEvent<HTMLInputElement>) => {
-    setImageUrl(e.target.value)
-  }
-
-  const addImageUrl = () => {
-    if (!isValidUrl(imageUrl)) {
-      setErrors((oldState) => ({ ...oldState, imageUrl: 'Invalid URL' }))
+  const addImageUrl = (imageUrl: string) => {
+    if (!imageUrl.startsWith(API_MEDIA_PATH) && !isValidUrl(imageUrl)) {
+      setErrors((prevErrors) => ({ ...prevErrors, imageUrl: 'Invalid URL' }))
       return null
     }
 
@@ -137,7 +127,9 @@ const ImageCommandList = ({
         }
         if (e.key === 'Enter') {
           const selectedItem = items[selectedIndex]
-          showLink ? addImageUrl() : handleItemAction(selectedItem.title)
+          showLink
+            ? addImageUrl(imageUrl)
+            : handleItemAction(selectedItem.title)
           return true
         }
         if (e.key === 'Escape') {
@@ -190,7 +182,7 @@ const ImageCommandList = ({
                 errors.imageUrl ? 'bg-red-50' : 'bg-white'
               }`}
               placeholder="Insert link here"
-              onChange={handleImageInput}
+              onChange={(e) => setImageUrl(e.target.value)}
               value={imageUrl}
               onFocus={() => setErrors({ ...errors, imageUrl: '' })}
               autoFocus
@@ -201,16 +193,20 @@ const ImageCommandList = ({
               </span>
             )}
           </div>
-          <MDEMenuButton onClick={addImageUrl} editor={editor} name="back">
+          <MDEMenuButton
+            onClick={() => addImageUrl(imageUrl)}
+            editor={editor}
+            name="back"
+          >
             Done
           </MDEMenuButton>
         </div>
-      ) : showMediaGallery ? (
-        <Dialog open={showMediaGallery} onOpenChange={setShowMediaGallery}>
-          <DialogContent className="max-w-[96%] max-h-[96%]">
-            <MediaLibrary />
-          </DialogContent>
-        </Dialog>
+      ) : showMediaLibrary ? (
+        <MediaLibraryModal
+          open={showMediaLibrary}
+          onOpenChange={setShowMediaLibrary}
+          onSelect={addImageUrl}
+        />
       ) : (
         <div
           id="slash-command"
