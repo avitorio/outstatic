@@ -19,6 +19,7 @@ import {
 import { MediaItem } from '@/utils/metadata/types'
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden'
 import { MediaLibraryHeader } from './media-library-header'
+import Image from 'next/image'
 
 export default function MediaLibraryModal({
   open,
@@ -146,10 +147,12 @@ export default function MediaLibraryModal({
                   onClick={() => setSelectedImage(file)}
                 >
                   <div className="aspect-square">
-                    <img
+                    <Image
                       src={`${apiPath}${file.filename}`}
                       alt={file.alt}
                       className="w-full h-full object-cover object-center rounded-md"
+                      width={288}
+                      height={288}
                     />
                     <DeleteMediaButton
                       path={file.__outstatic.path}
@@ -171,7 +174,9 @@ export default function MediaLibraryModal({
             </div>
           </div>
           <DialogFooter className="px-[2px] flex flex-end pt-8">
-            <Button variant="outline">Cancel</Button>
+            <Button variant="outline" onClick={() => onOpenChange(false)}>
+              Cancel
+            </Button>
             <Button
               disabled={!selectedImage}
               onClick={() => {

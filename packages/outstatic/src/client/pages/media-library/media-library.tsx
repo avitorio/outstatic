@@ -10,6 +10,7 @@ import useSubmitMedia from '@/utils/hooks/useSubmitMedia'
 import { FileType } from '@/types'
 import DeleteMediaButton from '@/components/DeleteMediaButton'
 import { MediaLibraryHeader } from '@/components/ui/outstatic/media-library-header'
+import Image from 'next/image'
 
 export default function MediaLibrary() {
   const [searchTerm, setSearchTerm] = useState('')
@@ -114,10 +115,12 @@ export default function MediaLibrary() {
             className={`space-y-1 bg-card rounded-lg overflow-hidden cursor-pointer group relative`}
           >
             <div className="aspect-square">
-              <img
+              <Image
                 src={`${apiPath}${file.filename}`}
                 alt={file.alt}
                 className="w-full h-full object-cover object-center rounded-md"
+                width={288}
+                height={288}
               />
               <DeleteMediaButton
                 path={file.__outstatic.path}
