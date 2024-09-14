@@ -7,7 +7,7 @@ import {
   SidebarItem,
   Sidebar as SidebarUI
 } from '@/components/ui/outstatic/sidebar'
-import { Images, Settings } from 'lucide-react'
+import { Image, Settings } from 'lucide-react'
 import { SidebarFooter } from './sidebar-footer'
 
 const CollectionsList = dynamic(() => import('./CollectionsList'), {
@@ -36,7 +36,7 @@ export const Sidebar = ({ isOpen = false }: SidebarProps) => {
             <SidebarGroup key="libraries" label="libraries" collapsible={false}>
               <SidebarItem
                 path={`${dashboardRoute}/media-library`}
-                Icon={<Images className="w-4" />}
+                Icon={<Image className="w-4" />}
               >
                 Media Library
               </SidebarItem>

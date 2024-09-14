@@ -7,6 +7,7 @@ interface ParseContentParams {
   repoSlug: string
   repoBranch: string
   publicMediaPath: string
+  repoMediaPath: string
 }
 
 export const parseContent = ({
@@ -15,7 +16,8 @@ export const parseContent = ({
   repoOwner,
   repoSlug,
   repoBranch,
-  publicMediaPath
+  publicMediaPath,
+  repoMediaPath
 }: ParseContentParams) => {
   // Prepare regex
   const regex = new RegExp(
@@ -29,7 +31,7 @@ export const parseContent = ({
   // Replace the path for image files in Markdown image syntax, regardless of file format
   let result = content.replace(
     regex,
-    `$1${basePath}${API_MEDIA_PATH}${repoOwner}/${repoSlug}/${repoBranch}/$2`
+    `$1${basePath}${API_MEDIA_PATH}${repoOwner}/${repoSlug}/${repoBranch}/${repoMediaPath}$2`
   )
   // fetch images from GitHub in case deploy is not done yet
   return result

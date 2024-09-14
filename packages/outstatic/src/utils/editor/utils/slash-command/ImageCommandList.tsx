@@ -4,7 +4,7 @@ import {
   updateScrollView
 } from '@/utils/editor/extensions/SlashCommand'
 import { Editor, Range } from '@tiptap/react'
-import { Images, Link, Upload } from 'lucide-react'
+import { Image, Link, Upload } from 'lucide-react'
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { addImage } from '../addImage'
 import MediaLibraryModal from '@/components/ui/outstatic/media-library-modal'
@@ -42,7 +42,7 @@ const items = [
     title: 'Media Gallery',
     description: 'Add image from media gallery.',
     searchTerms: ['photo', 'picture', 'media'],
-    icon: <Images size={18} />
+    icon: <Image size={18} />
   }
 ]
 

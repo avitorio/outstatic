@@ -139,7 +139,7 @@ export default function MediaLibraryModal({
               {filteredFiles.map((file) => (
                 <div
                   key={file.filename}
-                  className={`space-y-1 p-2 bg-card rounded-lg overflow-hidden cursor-pointer group relative ${
+                  className={`space-y-1 p-2 bg-card rounded-lg overflow-hidden cursor-pointer group relative  ${
                     selectedImage?.filename === file.filename
                       ? 'ring-1 ring-primary bg-slate-50'
                       : ''
@@ -148,7 +148,7 @@ export default function MediaLibraryModal({
                 >
                   <div className="aspect-square">
                     <Image
-                      src={`${apiPath}${file.filename}`}
+                      src={`${apiPath}${file.__outstatic.path}`}
                       alt={file.alt}
                       className="w-full h-full object-cover object-center rounded-md"
                       width={288}
@@ -180,12 +180,7 @@ export default function MediaLibraryModal({
             <Button
               disabled={!selectedImage}
               onClick={() => {
-                // Handle the selection here
-                if (selectedImage) {
-                  // Do something with the selected image
-                  console.log('Selected image:', selectedImage)
-                }
-                onSelect(`${apiPath}${selectedImage?.filename}`)
+                onSelect(`${apiPath}${selectedImage?.__outstatic.path}`)
                 onOpenChange(false)
               }}
             >

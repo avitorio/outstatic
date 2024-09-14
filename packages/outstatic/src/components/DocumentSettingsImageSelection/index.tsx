@@ -38,8 +38,8 @@ const DocumentSettingsImageSelection = ({
 
   useEffect(() => {
     const image = resolvedImage?.replace(
-      `${basePath}${publicMediaPath}`,
-      `${basePath}${API_MEDIA_PATH}`
+      `${basePath}/${publicMediaPath}`,
+      `${basePath}/${API_MEDIA_PATH}`
     )
     setImage(image || '')
     setShowImageOptions(!resolvedImage)

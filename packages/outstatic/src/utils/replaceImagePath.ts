@@ -1,4 +1,5 @@
 import { API_MEDIA_PATH } from './constants'
+import { useOutstatic } from './hooks'
 
 // Function to replace the API image paths with the production paths.
 // Used when saving the content.
@@ -15,7 +16,7 @@ function replaceImagePath({
   repoInfo,
   publicMediaPath
 }: ReplaceImagePathParams): string {
-  const apiMediaPath = `${basePath}${API_MEDIA_PATH}${repoInfo}/`
+  const apiMediaPath = `${basePath}${API_MEDIA_PATH}${repoInfo}`
   const regex = new RegExp(
     `!\\[([^\\]]*?)\\]\\((${apiMediaPath})([^\\)]+?)\\)`,
     'g'

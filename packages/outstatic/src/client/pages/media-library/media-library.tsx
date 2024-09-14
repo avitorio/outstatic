@@ -16,8 +16,9 @@ export default function MediaLibrary() {
   const [searchTerm, setSearchTerm] = useState('')
   const [sortBy, setSortBy] = useState('date')
   const [sortDirection, setSortDirection] = useState('desc')
-  const { basePath, repoOwner, repoSlug, repoBranch } = useOutstatic()
-  const apiPath = `${basePath}${API_MEDIA_PATH}${repoOwner}/${repoSlug}/${repoBranch}/`
+  const { basePath, repoOwner, repoSlug, repoBranch, repoMediaPath } =
+    useOutstatic()
+  const apiPath = `${basePath}${API_MEDIA_PATH}${repoOwner}/${repoSlug}/${repoBranch}`
   const { data, isLoading, error, refetch } = useGetMediaFiles()
   const filteredFiles = useMemo(() => {
     if (!data) return []
@@ -111,12 +112,12 @@ export default function MediaLibrary() {
       >
         {filteredFiles.map((file) => (
           <div
-            key={file.filename}
+            key={file.__outstatic.path}
             className={`space-y-1 bg-card rounded-lg overflow-hidden cursor-pointer group relative`}
           >
             <div className="aspect-square">
               <Image
-                src={`${apiPath}${file.filename}`}
+                src={`${apiPath}/${file.__outstatic.path}`}
                 alt={file.alt}
                 className="w-full h-full object-cover object-center rounded-md"
                 width={288}

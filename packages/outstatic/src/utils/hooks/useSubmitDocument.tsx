@@ -96,7 +96,7 @@ function useSubmitDocument({
         let content = mergeMdMeta(
           { ...data, content: mdContent },
           basePath,
-          `${repoOwner}/${repoSlug}/${repoBranch}`,
+          `${repoOwner}/${repoSlug}/${repoBranch}/${repoMediaPath}`,
           publicMediaPath
         )
         const oid = await fetchOid()

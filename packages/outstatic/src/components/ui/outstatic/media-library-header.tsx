@@ -44,7 +44,6 @@ export function MediaLibraryHeader({
           accept="image/*"
           className="hidden"
           onChange={(e) => {
-            console.log('File input change detected')
             handleFileUpload(e.target.files)
           }}
         />
@@ -57,11 +56,7 @@ export function MediaLibraryHeader({
           className="xl:w-64"
         />
         <div className="hidden md:block xl:w-40">
-          <Select
-            value={sortBy}
-            className="w-40"
-            onValueChange={(value) => setSortBy(value)}
-          >
+          <Select value={sortBy} onValueChange={(value) => setSortBy(value)}>
             <SelectTrigger>
               <SelectValue placeholder="Sort by" />
             </SelectTrigger>
@@ -74,7 +69,6 @@ export function MediaLibraryHeader({
         <div className="hidden md:block xl:w-40">
           <Select
             value={sortDirection}
-            className="w-40"
             onValueChange={(value) => setSortDirection(value)}
           >
             <SelectTrigger>

@@ -2,6 +2,7 @@ import { Session } from '@/types'
 import { getLoginSession } from '@/utils/auth/auth'
 import { GITHUB_GQL_API_URL } from '@/utils/constants'
 import { EnvVarsType, envVars } from '@/utils/envVarsCheck'
+import { useGetConfig } from '@/utils/hooks/useGetConfig'
 
 export type OutstaticData = {
   repoOwner: string
@@ -64,7 +65,7 @@ export async function Outstatic({
     pages: ['collections', 'settings', 'media-library'],
     dashboardRoute: '/outstatic',
     githubGql: GITHUB_GQL_API_URL,
-    publicMediaPath: process.env.OST_PUBLIC_MEDIA_PATH || 'images/',
-    repoMediaPath: process.env.OST_REPO_MEDIA_PATH || 'public/images/'
+    publicMediaPath: process.env.OST_PUBLIC_MEDIA_PATH,
+    repoMediaPath: process.env.OST_REPO_MEDIA_PATH
   } as OutstaticData
 }

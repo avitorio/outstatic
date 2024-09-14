@@ -64,3 +64,8 @@ export type MediaSchema = {
   generated: string
   media: MediaItem[]
 }
+
+export type ConfigType = {
+  publicMediaPath: string
+  repoMediaPath: string
+}

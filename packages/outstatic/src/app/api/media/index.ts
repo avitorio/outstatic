@@ -1,8 +1,5 @@
 import { getLoginSession } from '@/utils/auth/auth'
-import { REPO_MEDIA_PATH } from '@/utils/constants'
 import { NextRequest, NextResponse } from 'next/server'
-
-const MONOREPO_PATH = process.env.OST_MONOREPO_PATH
 
 export default async function GET(
   req: NextRequest,
@@ -16,20 +13,10 @@ export default async function GET(
     return new Response('Invalid media path', { status: 400 })
   }
 
-  const [repoOwner, repoSlug, ...remainingParts] = pathParts.slice(
-    mediaIndex + 1
-  )
-  const fileName = remainingParts.pop()
-  const repoBranch = remainingParts.join('/')
-
-  if (!repoSlug || !repoBranch || !fileName) {
-    return new Response('Invalid media path format', { status: 400 })
-  }
+  const mediaPath = pathParts.slice(mediaIndex + 1).join('/')
 
   if (session?.access_token) {
-    const mediaUrl = `https://raw.githubusercontent.com/${repoOwner}/${repoSlug}/${repoBranch}/${
-      MONOREPO_PATH ? MONOREPO_PATH + '/' : ''
-    }${REPO_MEDIA_PATH}${fileName.split('/').pop()}`
+    const mediaUrl = `https://raw.githubusercontent.com/${mediaPath}`
 
     const response = await fetch(mediaUrl, {
       headers: {
