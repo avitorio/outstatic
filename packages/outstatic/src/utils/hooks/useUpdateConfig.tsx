@@ -54,13 +54,16 @@ export function useUpdateConfig({ setLoading }: SubmitDocumentProps) {
 
         const input = capi.createInput()
 
-        createCommit.mutate(input)
+        toast.promise(createCommit.mutateAsync(input), {
+          loading: 'Updating config...',
+          success: 'Config updated successfully',
+          error: 'Failed to update config'
+        })
+
         setData({
           repoMediaPath: updatedConfig.repoMediaPath,
           publicMediaPath: updatedConfig.publicMediaPath
         })
-        toast.success('Updated successfully')
-        setLoading(false)
       } catch (error) {
         // TODO: Better error treatment
         setLoading(false)

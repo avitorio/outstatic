@@ -22,7 +22,7 @@ import {
   DialogTitle,
   DialogFooter
 } from '@/components/ui/shadcn/dialog'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useOutstatic } from '@/utils/hooks'
 import { Skeleton } from '@/components/ui/shadcn/skeleton'
 
@@ -49,10 +49,17 @@ export function MediaSettings() {
     onSubmit(form.getValues())
   }
 
+  useEffect(() => {
+    form.reset({
+      repoMediaPath: config?.repoMediaPath || '',
+      publicMediaPath: config?.publicMediaPath || ''
+    })
+  }, [config])
+
   return (
     <>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8">
+        <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
           <FormField
             control={form.control}
             name="repoMediaPath"
