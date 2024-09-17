@@ -18,6 +18,8 @@ export type OutstaticData = {
   ostContent?: string
   dashboardRoute: string
   githubGql: string
+  publicMediaPath: string
+  repoMediaPath: string
 }
 
 export async function Outstatic({
@@ -59,8 +61,10 @@ export async function Outstatic({
     hasOpenAIKey: !!process.env.OPENAI_API_KEY,
     basePath: process.env.OST_BASE_PATH || '',
     ostDetach: process.env.OST_DETACH || false,
-    pages: ['collections', 'settings'],
+    pages: ['collections', 'settings', 'media-library'],
     dashboardRoute: '/outstatic',
-    githubGql: GITHUB_GQL_API_URL
+    githubGql: GITHUB_GQL_API_URL,
+    publicMediaPath: process.env.OST_PUBLIC_MEDIA_PATH,
+    repoMediaPath: process.env.OST_REPO_MEDIA_PATH
   } as OutstaticData
 }

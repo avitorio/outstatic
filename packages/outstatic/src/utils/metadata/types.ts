@@ -46,3 +46,26 @@ export type FindAPI<T, P> = {
   /** Return the results as an array, populating additional data from the filesystem as needed */
   toArray: () => Promise<P[]>
 }
+
+export type MediaItem = {
+  __outstatic: {
+    hash: string
+    path: string
+    commit: string
+  }
+  filename: string
+  alt: string
+  publishedAt: string
+  type: string
+}
+
+export type MediaSchema = {
+  commit: string
+  generated: string
+  media: MediaItem[]
+}
+
+export type ConfigType = {
+  publicMediaPath: string
+  repoMediaPath: string
+}

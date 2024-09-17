@@ -5,6 +5,7 @@ import { MetadataBuilder } from '@/components/MetadataBuilder'
 import { Button } from '@/components/ui/shadcn/button'
 import { useCollections } from '@/utils/hooks/useCollections'
 import { useState } from 'react'
+import { MediaSettings } from './_components/media-settings'
 
 export default function Settings() {
   const [rebuild, setRebuilding] = useState(false)
@@ -17,7 +18,7 @@ export default function Settings() {
       </div>
       <div className="max-w-lg">
         <div className="mb-8 max-w-2xl p-8 px-4 md:p-8 text-black bg-white rounded-lg border border-gray-200 shadow-md prose prose-base">
-          <h2>Environment</h2>
+          <h2>Repository</h2>
           <div>
             <label className="block mb-2 text-sm font-medium text-gray-900">
               Repository
@@ -45,6 +46,13 @@ export default function Settings() {
             .
           </p>
         </div>
+        <div className="max-w-lg">
+          <div className="mb-8 max-w-2xl p-8 px-4 md:p-8 text-black bg-white rounded-lg border border-gray-200 shadow-md prose prose-base">
+            <h2>Media Library</h2>
+            <MediaSettings />
+          </div>
+        </div>
+
         {collections && collections.length > 0 ? (
           <div className="mb-8 max-w-2xl p-8 px-4 md:p-8 text-black bg-white rounded-lg border border-gray-200 shadow-md prose prose-base">
             <h2>Metadata</h2>

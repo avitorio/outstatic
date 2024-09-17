@@ -77,7 +77,7 @@ export type CustomFields = {
   [key: string]: CustomField<'string' | 'number' | 'array' | 'boolean'>
 }
 
-export type SchemaShape =
+export type DocumentSchemaShape =
   | Document
   | {
       [key: string]: any

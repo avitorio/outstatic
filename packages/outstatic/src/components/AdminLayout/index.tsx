@@ -8,13 +8,15 @@ export type AdminLayoutProps = {
   children: React.ReactNode
   settings?: React.ReactNode
   title?: string
+  className?: string
 }
 
 export default function AdminLayout({
   children,
   error,
   settings,
-  title
+  title,
+  className
 }: AdminLayoutProps) {
   const { dashboardRoute } = useOutstatic()
   const { status } = useOstSession()
@@ -36,7 +38,11 @@ export default function AdminLayout({
     <>
       {status === 'loading' ? null : (
         <>
-          <main className="w-auto flex-auto p-5 pb-0 md:p-10 bg-white h-dvh max-h-[calc(100vh-128px)] md:max-h-[calc(100vh-64px)] overflow-y-scroll scrollbar-hide">
+          <main
+            className={`w-auto flex-auto p-5 pb-0 md:p-10 bg-white h-dvh max-h-[calc(100vh-128px)] md:max-h-[calc(100vh-64px)] overflow-y-scroll scrollbar-hide ${
+              className || ''
+            }`}
+          >
             {error && (
               <div className="mb-6 border border-red-500 p-2">
                 Something went wrong{' '}

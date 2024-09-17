@@ -7,7 +7,7 @@ import {
   SidebarItem,
   Sidebar as SidebarUI
 } from '@/components/ui/outstatic/sidebar'
-import { Settings } from 'lucide-react'
+import { Image, Settings } from 'lucide-react'
 import { SidebarFooter } from './sidebar-footer'
 
 const CollectionsList = dynamic(() => import('./CollectionsList'), {
@@ -27,10 +27,21 @@ export const Sidebar = ({ isOpen = false }: SidebarProps) => {
         'flex-col justify-between bg-gray-50 dark:bg-background lg:flex',
         isOpen ? 'flex absolute z-10 w-full' : 'hidden'
       )}
+      aria-label="Sidebar"
     >
       <SidebarUI className="flex flex-col justify-between">
         <div className="mt-5">
           <CollectionsList />
+          <SidebarContent>
+            <SidebarGroup key="libraries" label="libraries" collapsible={false}>
+              <SidebarItem
+                path={`${dashboardRoute}/media-library`}
+                Icon={<Image className="w-4" />}
+              >
+                Media Library
+              </SidebarItem>
+            </SidebarGroup>
+          </SidebarContent>
           <SidebarContent>
             <SidebarGroup key="settings" label="settings" collapsible={false}>
               <SidebarItem

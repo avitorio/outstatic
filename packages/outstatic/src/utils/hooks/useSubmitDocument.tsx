@@ -7,13 +7,11 @@ import {
   Session,
   isArrayCustomField
 } from '@/types'
-import { assertUnreachable } from '@/utils/assertUnreachable'
-import { IMAGES_PATH } from '@/utils/constants'
 import { createCommitApi } from '@/utils/createCommitApi'
 import { hashFromUrl } from '@/utils/hashFromUrl'
 import useOutstatic from '@/utils/hooks/useOutstatic'
 import { mergeMdMeta } from '@/utils/mergeMdMeta'
-import { stringifyMetadata } from '@/utils/metadata/stringify'
+import { stringifyMedia, stringifyMetadata } from '@/utils/metadata/stringify'
 import { Editor } from '@tiptap/react'
 import matter from 'gray-matter'
 import MurmurHash3 from 'imurmurhash'
@@ -23,6 +21,9 @@ import { useCreateCommit } from './useCreateCommit'
 import { useGetCollectionSchema } from './useGetCollectionSchema'
 import { useGetMetadata } from './useGetMetadata'
 import useOid from './useOid'
+import { useGetMediaFiles } from './useGetMediaFiles'
+import { MediaItem, MediaSchema } from '../metadata/types'
+import { MEDIA_JSON_PATH } from '../constants'
 
 type SubmitDocumentProps = {
   session: Session | null
@@ -63,12 +64,18 @@ function useSubmitDocument({
     monorepoPath,
     ostContent,
     contentPath,
-    basePath
+    basePath,
+    publicMediaPath,
+    repoMediaPath
   } = useOutstatic()
   const fetchOid = useOid()
+  let media: MediaItem[] = []
 
   const { refetch: refetchSchema } = useGetCollectionSchema({ enabled: false })
   const { refetch: refetchMetadata } = useGetMetadata({
+    enabled: false
+  })
+  const { refetch: refetchMedia } = useGetMediaFiles({
     enabled: false
   })
 
@@ -86,7 +93,12 @@ function useSubmitDocument({
 
         const document = methods.getValues()
         const mdContent = editor.storage.markdown.getMarkdown()
-        let content = mergeMdMeta({ ...data, content: mdContent }, basePath)
+        let content = mergeMdMeta(
+          { ...data, content: mdContent },
+          basePath,
+          `${repoOwner}/${repoSlug}/${repoBranch}/${repoMediaPath}`,
+          publicMediaPath
+        )
         const oid = await fetchOid()
         const owner = repoOwner || session?.user?.login || ''
         const newSlug = document.slug
@@ -120,27 +132,32 @@ function useSubmitDocument({
                 .replace(/[^a-zA-Z0-9-_\.]/g, '-')
                 .replace(/(\.[^\.]*)?$/, `-${randString}$1`)
 
-              const filePath = (() => {
-                switch (type) {
-                  case 'image':
-                    return IMAGES_PATH
-                  default:
-                    assertUnreachable(type)
-                }
-              })()
-
               capi.replaceFile(
                 `${
                   monorepoPath ? monorepoPath + '/' : ''
-                }public/${filePath}${newFilename}`,
+                }${repoMediaPath}${newFilename}`,
                 fileContents,
                 false
               )
 
+              media.push({
+                __outstatic: {
+                  hash: `${MurmurHash3(fileContents).result()}`,
+                  commit: '',
+                  path: `${
+                    monorepoPath ? monorepoPath + '/' : ''
+                  }${repoMediaPath}${newFilename}`
+                },
+                filename: newFilename,
+                type: type,
+                publishedAt: new Date().toISOString(),
+                alt: ''
+              })
+
               // replace blob in content with path
               content = content.replace(
                 blob,
-                `${basePath}/${filePath}${newFilename}`
+                `${basePath}/${publicMediaPath}${newFilename}`
               )
             }
           })
@@ -234,6 +251,29 @@ function useSubmitDocument({
             `${ostContent}/metadata.json`,
             stringifyMetadata({ ...m, metadata: newMeta })
           )
+
+          // update media.json with new media
+          if (media.length > 0) {
+            const { data: mediaData } = await refetchMedia()
+
+            // loop throught newMedia and add a commit to each
+            media.forEach((media) => {
+              media.__outstatic.commit = m.commit
+            })
+
+            const newMedia = [...(mediaData?.media?.media ?? []), ...media]
+
+            const mediaSchema = {
+              commit: m.commit,
+              generated: m.generated,
+              media: mediaData?.media?.media ?? []
+            } as MediaSchema
+
+            capi.replaceFile(
+              MEDIA_JSON_PATH,
+              stringifyMedia({ ...mediaSchema, media: newMedia })
+            )
+          }
         }
 
         const input = capi.createInput()
