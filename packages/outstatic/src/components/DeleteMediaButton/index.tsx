@@ -17,6 +17,7 @@ type DeleteDocumentButtonProps = {
   path: string
   filename: string
   className?: string
+  notFound?: boolean
 }
 
 const DeleteMediaButton = ({
@@ -24,7 +25,8 @@ const DeleteMediaButton = ({
   onComplete = () => {},
   path,
   filename,
-  className
+  className,
+  notFound = false
 }: DeleteDocumentButtonProps) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [deleting, setDeleting] = useState(false)
@@ -52,8 +54,10 @@ const DeleteMediaButton = ({
         branch: repoBranch
       })
 
-      // remove post markdown file
-      capi.removeFile(`${path}`)
+      if (!notFound) {
+        // remove media file if found
+        capi.removeFile(`${path}`)
+      }
 
       // remove post from media.json
       media.generated = new Date().toISOString()

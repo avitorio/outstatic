@@ -11,6 +11,7 @@ import { FileType } from '@/types'
 import DeleteMediaButton from '@/components/DeleteMediaButton'
 import { MediaLibraryHeader } from '@/components/ui/outstatic/media-library-header'
 import Image from 'next/image'
+import { ImageOff, LoaderCircle } from 'lucide-react'
 
 export default function MediaLibrary() {
   const [searchTerm, setSearchTerm] = useState('')
@@ -19,6 +20,8 @@ export default function MediaLibrary() {
   const { basePath, repoOwner, repoSlug, repoBranch, repoMediaPath } =
     useOutstatic()
   const apiPath = `${basePath}${API_MEDIA_PATH}${repoOwner}/${repoSlug}/${repoBranch}`
+  const [notFoundFiles, setNotFoundFiles] = useState<Set<string>>(new Set())
+  const [loadingImages, setLoadingImages] = useState<Set<string>>(new Set())
   const { data, isLoading, error, refetch } = useGetMediaFiles()
   const filteredFiles = useMemo(() => {
     if (!data) return []
@@ -88,6 +91,21 @@ export default function MediaLibrary() {
     setIsUploading(false)
   }
 
+  const handleImageLoad = (path: string) => {
+    setLoadingImages((prev) => {
+      const newSet = new Set(prev)
+      newSet.delete(path)
+      return newSet
+    })
+  }
+
+  const handleImageError = (path: string) => {
+    if (!notFoundFiles.has(path)) {
+      setNotFoundFiles((prev) => new Set(prev).add(path))
+    }
+    handleImageLoad(path) // Remove from loading state
+  }
+
   return (
     <AdminLayout title="Media Library" className="pt-0 md:pt-0">
       <div className="pb-6 pt-5 sticky top-0 z-10 bg-background">
@@ -115,20 +133,40 @@ export default function MediaLibrary() {
             key={file.__outstatic.path}
             className={`space-y-1 bg-card rounded-lg overflow-hidden cursor-pointer group relative`}
           >
-            <div className="aspect-square">
-              <Image
-                src={`${apiPath}/${file.__outstatic.path}`}
-                alt={file.alt}
-                className="w-full h-full object-cover object-center rounded-md"
-                width={288}
-                height={288}
-              />
+            <div className="aspect-square relative flex items-center justify-center">
+              {!notFoundFiles.has(file.__outstatic.path) && (
+                <>
+                  {loadingImages.has(file.__outstatic.path) && (
+                    <div className="absolute inset-0 flex items-center justify-center bg-gray-50 rounded-md">
+                      <LoaderCircle className="animate-spin" />
+                    </div>
+                  )}
+                  <Image
+                    src={`${apiPath}/${file.__outstatic.path}`}
+                    alt={file.alt}
+                    className="w-full h-full object-cover object-center rounded-md bg-slate-50"
+                    width={288}
+                    height={288}
+                    onLoadingComplete={() =>
+                      handleImageLoad(file.__outstatic.path)
+                    }
+                    onError={() => handleImageError(file.__outstatic.path)}
+                    loading="lazy"
+                  />
+                </>
+              )}
+              {notFoundFiles.has(file.__outstatic.path) && (
+                <div className="absolute inset-0 flex items-center justify-center bg-red-100/50 rounded-md">
+                  <ImageOff className="w-12 h-12 text-red-500" />
+                </div>
+              )}
               <DeleteMediaButton
                 path={file.__outstatic.path}
                 filename={file.filename}
                 disabled={false}
                 onComplete={() => refetch()}
                 className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 bg-white/50"
+                notFound={notFoundFiles.has(file.__outstatic.path)}
               />
             </div>
             <div className="pb-4 relative">

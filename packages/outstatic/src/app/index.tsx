@@ -2,7 +2,6 @@ import { Session } from '@/types'
 import { getLoginSession } from '@/utils/auth/auth'
 import { GITHUB_GQL_API_URL } from '@/utils/constants'
 import { EnvVarsType, envVars } from '@/utils/envVarsCheck'
-import { useGetConfig } from '@/utils/hooks/useGetConfig'
 
 export type OutstaticData = {
   repoOwner: string
