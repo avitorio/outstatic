@@ -11,7 +11,7 @@ import { FileType } from '@/types'
 import DeleteMediaButton from '@/components/DeleteMediaButton'
 import { MediaLibraryHeader } from '@/components/ui/outstatic/media-library-header'
 import Image from 'next/image'
-import { ImageOff, LoaderCircle } from 'lucide-react'
+import { FileQuestion, ImageOff, LoaderCircle } from 'lucide-react'
 
 export default function MediaLibrary() {
   const [searchTerm, setSearchTerm] = useState('')
@@ -120,65 +120,80 @@ export default function MediaLibrary() {
           handleFileUpload={handleFileUpload}
         />
       </div>
-      <div
-        className="grid gap-4 grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-8 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent"
-        onDragOver={(e) => e.preventDefault()}
-        onDrop={(e) => {
-          e.preventDefault()
-          handleFileUpload(e.dataTransfer.files)
-        }}
-      >
-        {filteredFiles.map((file) => (
-          <div
-            key={file.__outstatic.path}
-            className={`space-y-1 bg-card rounded-lg overflow-hidden cursor-pointer group relative`}
-          >
-            <div className="aspect-square relative flex items-center justify-center">
-              {!notFoundFiles.has(file.__outstatic.path) && (
-                <>
-                  {loadingImages.has(file.__outstatic.path) && (
-                    <div className="absolute inset-0 flex items-center justify-center bg-gray-50 rounded-md">
-                      <LoaderCircle className="animate-spin" />
-                    </div>
-                  )}
-                  <Image
-                    src={`${apiPath}/${file.__outstatic.path}`}
-                    alt={file.alt}
-                    className="w-full h-full object-cover object-center rounded-md bg-slate-50"
-                    width={288}
-                    height={288}
-                    onLoadingComplete={() =>
-                      handleImageLoad(file.__outstatic.path)
-                    }
-                    onError={() => handleImageError(file.__outstatic.path)}
-                    loading="lazy"
-                  />
-                </>
-              )}
-              {notFoundFiles.has(file.__outstatic.path) && (
-                <div className="absolute inset-0 flex items-center justify-center bg-red-100/50 rounded-md">
-                  <ImageOff className="w-12 h-12 text-red-500" />
+      {isLoading ? (
+        <div className="flex items-center justify-center h-64">
+          <LoaderCircle className="w-8 h-8 animate-spin" />
+        </div>
+      ) : error ? (
+        <div className="flex items-center justify-center h-64 text-red-500">
+          Error loading media files. Please try again.
+        </div>
+      ) : filteredFiles.length === 0 ? (
+        <div className="flex flex-col items-center justify-center h-64 text-gray-500">
+          <FileQuestion className="w-16 h-16 mb-4" />
+          <p>No media files available. Upload some files to get started!</p>
+        </div>
+      ) : (
+        <div
+          className="grid gap-4 grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-8 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent"
+          onDragOver={(e) => e.preventDefault()}
+          onDrop={(e) => {
+            e.preventDefault()
+            handleFileUpload(e.dataTransfer.files)
+          }}
+        >
+          {filteredFiles.map((file) => (
+            <div
+              key={file.__outstatic.path}
+              className={`space-y-1 bg-card rounded-lg overflow-hidden cursor-pointer group relative`}
+            >
+              <div className="aspect-square relative flex items-center justify-center">
+                {!notFoundFiles.has(file.__outstatic.path) && (
+                  <>
+                    {loadingImages.has(file.__outstatic.path) && (
+                      <div className="absolute inset-0 flex items-center justify-center bg-gray-50 rounded-md">
+                        <LoaderCircle className="animate-spin" />
+                      </div>
+                    )}
+                    <Image
+                      src={`${apiPath}/${file.__outstatic.path}`}
+                      alt={file.alt}
+                      className="w-full h-full object-cover object-center rounded-md bg-slate-50"
+                      width={288}
+                      height={288}
+                      onLoadingComplete={() =>
+                        handleImageLoad(file.__outstatic.path)
+                      }
+                      onError={() => handleImageError(file.__outstatic.path)}
+                      loading="lazy"
+                    />
+                  </>
+                )}
+                {notFoundFiles.has(file.__outstatic.path) && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-red-100/50 rounded-md">
+                    <ImageOff className="w-12 h-12 text-red-500" />
+                  </div>
+                )}
+                <DeleteMediaButton
+                  path={file.__outstatic.path}
+                  filename={file.filename}
+                  disabled={false}
+                  onComplete={() => refetch()}
+                  className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 bg-white/50"
+                  notFound={notFoundFiles.has(file.__outstatic.path)}
+                />
+              </div>
+              <div className="pb-4 relative">
+                <div className="flex items-center justify-between">
+                  <h3 className="font-semibold text-sm truncate">
+                    {file.filename}
+                  </h3>
                 </div>
-              )}
-              <DeleteMediaButton
-                path={file.__outstatic.path}
-                filename={file.filename}
-                disabled={false}
-                onComplete={() => refetch()}
-                className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 bg-white/50"
-                notFound={notFoundFiles.has(file.__outstatic.path)}
-              />
-            </div>
-            <div className="pb-4 relative">
-              <div className="flex items-center justify-between">
-                <h3 className="font-semibold text-sm truncate">
-                  {file.filename}
-                </h3>
               </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </AdminLayout>
   )
 }
