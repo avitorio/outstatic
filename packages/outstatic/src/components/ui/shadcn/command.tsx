@@ -6,7 +6,7 @@ import { Command as CommandPrimitive } from 'cmdk'
 import * as React from 'react'
 
 import { Dialog, DialogContent } from './dialog'
-import { SpinnerIcon } from './spinner-icon'
+import { SpinnerIcon } from '@/components/ui/outstatic/spinner-icon'
 import { cn } from '@/utils/ui'
 
 const Command = React.forwardRef<
@@ -57,7 +57,7 @@ const CommandInput = React.forwardRef<
       )}
       {...props}
     />
-    {isLoading && <SpinnerIcon dark />}
+    {isLoading && <SpinnerIcon className="mr-3 -ml-1" />}
   </div>
 ))
 

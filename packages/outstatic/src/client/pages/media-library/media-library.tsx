@@ -11,14 +11,14 @@ import { FileType } from '@/types'
 import DeleteMediaButton from '@/components/DeleteMediaButton'
 import { MediaLibraryHeader } from '@/components/ui/outstatic/media-library-header'
 import Image from 'next/image'
-import { FileQuestion, ImageOff, LoaderCircle } from 'lucide-react'
+import { FileQuestion, ImageOff } from 'lucide-react'
+import { SpinnerIcon } from '@/components/ui/outstatic/spinner-icon'
 
 export default function MediaLibrary() {
   const [searchTerm, setSearchTerm] = useState('')
   const [sortBy, setSortBy] = useState('date')
   const [sortDirection, setSortDirection] = useState('desc')
-  const { basePath, repoOwner, repoSlug, repoBranch, repoMediaPath } =
-    useOutstatic()
+  const { basePath, repoOwner, repoSlug, repoBranch } = useOutstatic()
   const apiPath = `${basePath}${API_MEDIA_PATH}${repoOwner}/${repoSlug}/${repoBranch}`
   const [notFoundFiles, setNotFoundFiles] = useState<Set<string>>(new Set())
   const [loadingImages, setLoadingImages] = useState<Set<string>>(new Set())
@@ -122,7 +122,7 @@ export default function MediaLibrary() {
       </div>
       {isLoading ? (
         <div className="flex items-center justify-center h-64">
-          <LoaderCircle className="w-8 h-8 animate-spin" />
+          <SpinnerIcon size="2xl" />
         </div>
       ) : error ? (
         <div className="flex items-center justify-center h-64 text-red-500">
@@ -152,7 +152,7 @@ export default function MediaLibrary() {
                   <>
                     {loadingImages.has(file.__outstatic.path) && (
                       <div className="absolute inset-0 flex items-center justify-center bg-gray-50 rounded-md">
-                        <LoaderCircle className="animate-spin" />
+                        <SpinnerIcon />
                       </div>
                     )}
                     <Image
