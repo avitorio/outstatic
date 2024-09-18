@@ -24,13 +24,13 @@ export const stringifyMetadata = (m: MetadataSchema): string => {
  * Before any save of media, this ensures the file we write has minimal
  * change deltas by using a deterministic sort
  * Sort the media collection:
- *   - by `publishedAt`
+ *   - by `filename`
  *
  * Mutate:
  *   - order keys deterministically (json-stable-stringify)
  */
 export const stringifyMedia = (m: MediaSchema): string => {
-  m.media = m.media.sort(firstBy('__outstatic.path'))
+  m.media = m.media.sort(firstBy('filename'))
 
   const s = stringify(m, { space: 2 })
   return s
