@@ -19,6 +19,14 @@ import { slugify } from 'transliteration'
 import { CheckboxWithLabel } from '@/components/ui/outstatic/checkbox-with-label'
 import { Button } from '@/components/ui/shadcn/button'
 import useOutstatic from '@/utils/hooks/useOutstatic'
+import { FormField, FormItem, FormControl } from '@/components/ui/shadcn/form'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from '@/components/ui/shadcn/select'
 
 type DocumentSettingsProps = {
   saveFunc: () => void
@@ -73,7 +81,8 @@ const DocumentSettings = ({
 }: DocumentSettingsProps) => {
   const {
     register,
-    formState: { errors }
+    formState: { errors },
+    control
   } = useFormContext()
   const router = useRouter()
 
@@ -99,17 +108,28 @@ const DocumentSettings = ({
           <label htmlFor="status" className="sr-only">
             Status
           </label>
-          <Button asChild variant="select">
-            <select
-              {...register('status', registerOptions)}
-              name="status"
-              id="status"
-              defaultValue={document.status}
-            >
-              <option value="draft">Draft</option>
-              <option value="published">Published</option>
-            </select>
-          </Button>
+          <FormField
+            control={control}
+            name="status"
+            render={({ field }) => (
+              <FormItem>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select status" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="draft">Draft</SelectItem>
+                    <SelectItem value="published">Published</SelectItem>
+                  </SelectContent>
+                </Select>
+              </FormItem>
+            )}
+          />
           <Button onClick={saveFunc} disabled={loading || !hasChanges}>
             {loading ? (
               <>
@@ -161,17 +181,31 @@ const DocumentSettings = ({
           >
             Status
           </label>
-          <Button asChild variant="select">
-            <select
-              {...register('status', registerOptions)}
+
+          <div className="min-w-[128px]">
+            <FormField
+              control={control}
               name="status"
-              id="status"
-              defaultValue={document.status}
-            >
-              <option value="draft">Draft</option>
-              <option value="published">Published</option>
-            </select>
-          </Button>
+              render={({ field }) => (
+                <FormItem>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select status" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="draft">Draft</SelectItem>
+                      <SelectItem value="published">Published</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </FormItem>
+              )}
+            />
+          </div>
         </div>
         <div
           className={`flex w-full pb-4 px-4 ${
