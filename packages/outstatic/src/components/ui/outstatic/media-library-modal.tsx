@@ -20,6 +20,8 @@ import { MediaItem } from '@/utils/metadata/types'
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden'
 import { MediaLibraryHeader } from './media-library-header'
 import Image from 'next/image'
+import { SpinnerIcon } from './spinner-icon'
+import { FileQuestion } from 'lucide-react'
 
 export default function MediaLibraryModal({
   open,
@@ -126,68 +128,83 @@ export default function MediaLibraryModal({
             />
           </div>
         </DialogHeader>
-        <div className="flex flex-col justify-between h-full max-h-[calc(100%-80px)]">
-          <div
-            className="overflow-y-auto h-full p-[2px]"
-            onDragOver={(e) => e.preventDefault()}
-            onDrop={(e) => {
-              e.preventDefault()
-              handleFileUpload(e.dataTransfer.files)
-            }}
-          >
-            <div className="grid gap-4 grid-cols-2 sm:grid-cols-4 md:grid-cols-6 2xl:grid-cols-8 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent">
-              {filteredFiles.map((file) => (
-                <div
-                  key={file.filename}
-                  className={`space-y-1 p-2 bg-card rounded-lg overflow-hidden cursor-pointer group relative  ${
-                    selectedImage?.filename === file.filename
-                      ? 'ring-1 ring-primary bg-slate-50'
-                      : ''
-                  }`}
-                  onClick={() => setSelectedImage(file)}
-                >
-                  <div className="aspect-square">
-                    <Image
-                      src={`${apiPath}${file.__outstatic.path}`}
-                      alt={file.alt}
-                      className="w-full h-full object-cover object-center rounded-md"
-                      width={288}
-                      height={288}
-                    />
-                    <DeleteMediaButton
-                      path={file.__outstatic.path}
-                      filename={file.filename}
-                      disabled={false}
-                      onComplete={() => refetch()}
-                      className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 bg-white/50"
-                    />
-                  </div>
-                  <div className="pb-4 relative">
-                    <div className="flex items-center justify-between">
-                      <h3 className="font-semibold text-sm truncate">
-                        {file.filename}
-                      </h3>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
+        {isLoading ? (
+          <div className="flex items-center justify-center h-full">
+            <SpinnerIcon size="2xl" />
           </div>
-          <DialogFooter className="px-[2px] flex flex-end pt-8">
-            <Button variant="outline" onClick={() => onOpenChange(false)}>
-              Cancel
-            </Button>
-            <Button
-              disabled={!selectedImage}
-              onClick={() => {
-                onSelect(`${apiPath}${selectedImage?.__outstatic.path}`)
-                onOpenChange(false)
+        ) : error ? (
+          <div className="flex items-center justify-center text-red-500 h-full">
+            Error loading media files. Please try again.
+          </div>
+        ) : filteredFiles.length === 0 ? (
+          <div className="flex flex-col items-center justify-center text-gray-500 h-full">
+            <FileQuestion className="w-16 h-16 mb-4" />
+            <p>No media files available. Upload some files to get started!</p>
+          </div>
+        ) : (
+          <div className="flex flex-col justify-between h-full max-h-[calc(100%-80px)]">
+            <div
+              className="overflow-y-auto h-full p-[2px]"
+              onDragOver={(e) => e.preventDefault()}
+              onDrop={(e) => {
+                e.preventDefault()
+                handleFileUpload(e.dataTransfer.files)
               }}
             >
-              Select
-            </Button>
-          </DialogFooter>
-        </div>
+              <div className="grid gap-4 grid-cols-2 sm:grid-cols-4 md:grid-cols-6 2xl:grid-cols-8 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent">
+                {filteredFiles.map((file) => (
+                  <div
+                    key={file.filename}
+                    className={`space-y-1 p-2 bg-card rounded-lg overflow-hidden cursor-pointer group relative  ${
+                      selectedImage?.filename === file.filename
+                        ? 'ring-1 ring-primary bg-slate-50'
+                        : ''
+                    }`}
+                    onClick={() => setSelectedImage(file)}
+                  >
+                    <div className="aspect-square">
+                      <Image
+                        src={`${apiPath}${file.__outstatic.path}`}
+                        alt={file.alt}
+                        className="w-full h-full object-cover object-center rounded-md"
+                        width={288}
+                        height={288}
+                      />
+                      <DeleteMediaButton
+                        path={file.__outstatic.path}
+                        filename={file.filename}
+                        disabled={false}
+                        onComplete={() => refetch()}
+                        className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 bg-white/50"
+                      />
+                    </div>
+                    <div className="pb-4 relative">
+                      <div className="flex items-center justify-between">
+                        <h3 className="font-semibold text-sm truncate">
+                          {file.filename}
+                        </h3>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <DialogFooter className="px-[2px] flex flex-end pt-8">
+              <Button variant="outline" onClick={() => onOpenChange(false)}>
+                Cancel
+              </Button>
+              <Button
+                disabled={!selectedImage}
+                onClick={() => {
+                  onSelect(`${apiPath}${selectedImage?.__outstatic.path}`)
+                  onOpenChange(false)
+                }}
+              >
+                Select
+              </Button>
+            </DialogFooter>
+          </div>
+        )}
       </DialogContent>
     </Dialog>
   )
