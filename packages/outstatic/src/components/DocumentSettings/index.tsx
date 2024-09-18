@@ -13,13 +13,18 @@ import {
 } from '@/types'
 import { PanelRight, PanelRightClose } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import { useContext, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { RegisterOptions, useFormContext } from 'react-hook-form'
 import { slugify } from 'transliteration'
 import { CheckboxWithLabel } from '@/components/ui/outstatic/checkbox-with-label'
 import { Button } from '@/components/ui/shadcn/button'
 import useOutstatic from '@/utils/hooks/useOutstatic'
-import { FormField, FormItem, FormControl } from '@/components/ui/shadcn/form'
+import {
+  FormField,
+  FormItem,
+  FormControl,
+  FormMessage
+} from '@/components/ui/shadcn/form'
 import {
   Select,
   SelectContent,
@@ -27,6 +32,7 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/shadcn/select'
+import { SpinnerIcon } from '../ui/outstatic/spinner-icon'
 
 type DocumentSettingsProps = {
   saveFunc: () => void
@@ -80,6 +86,7 @@ const DocumentSettings = ({
   customFields = {}
 }: DocumentSettingsProps) => {
   const {
+    setValue,
     register,
     formState: { errors },
     control
@@ -92,7 +99,13 @@ const DocumentSettings = ({
   const { dashboardRoute } = useOutstatic()
 
   const [isOpen, setIsOpen] = useState(false)
-  console.log({ document })
+
+  useEffect(() => {
+    if (!document.status) {
+      setValue('status', 'draft')
+    }
+  }, [document.status])
+
   return (
     <>
       <div className="absolute w-full items-center justify-between flex p-4 border-t z-10 bottom-0 bg-white md:hidden">
@@ -109,13 +122,15 @@ const DocumentSettings = ({
             Status
           </label>
           <FormField
+            {...register('status', registerOptions)}
             control={control}
             name="status"
+            defaultValue={document.status}
             render={({ field }) => (
               <FormItem>
                 <Select
                   onValueChange={field.onChange}
-                  defaultValue={document?.status || 'draft'}
+                  defaultValue={field.value}
                 >
                   <FormControl>
                     <SelectTrigger>
@@ -132,29 +147,10 @@ const DocumentSettings = ({
           />
           <Button onClick={saveFunc} disabled={loading || !hasChanges}>
             {loading ? (
-              <>
-                <svg
-                  className="mr-3 -ml-1 h-5 w-5 animate-spin text-white"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <circle
-                    className="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    strokeWidth="4"
-                  ></circle>
-                  <path
-                    className="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                  ></path>
-                </svg>
+              <div className="flex gap-3">
+                <SpinnerIcon className="text-background" />
                 Saving
-              </>
+              </div>
             ) : (
               'Save'
             )}
@@ -182,29 +178,30 @@ const DocumentSettings = ({
             Status
           </label>
 
-          <div className="min-w-[128px]">
-            <FormField
-              control={control}
-              name="status"
-              render={({ field }) => (
-                <FormItem>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={document?.status || 'draft'}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select status" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value="draft">Draft</SelectItem>
-                      <SelectItem value="published">Published</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </FormItem>
-              )}
-            />
+          <div className="min-w-[128px] ">
+            {
+              <FormField
+                {...register('status', registerOptions)}
+                control={control}
+                name="status"
+                render={({ field }) => (
+                  <FormItem>
+                    <Select defaultValue={field.value} value={field.value}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select status" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="draft">Draft</SelectItem>
+                        <SelectItem value="published">Published</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            }
           </div>
         </div>
         <div
@@ -226,29 +223,10 @@ const DocumentSettings = ({
           )}
           <Button onClick={saveFunc} disabled={loading || !hasChanges}>
             {loading ? (
-              <>
-                <svg
-                  className="mr-3 -ml-1 h-5 w-5 animate-spin text-white"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <circle
-                    className="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    strokeWidth="4"
-                  ></circle>
-                  <path
-                    className="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                  ></path>
-                </svg>
+              <div className="flex gap-3">
+                <SpinnerIcon className="text-background" />
                 Saving
-              </>
+              </div>
             ) : (
               'Save'
             )}
