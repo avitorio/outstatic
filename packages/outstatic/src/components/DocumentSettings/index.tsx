@@ -27,7 +27,6 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/shadcn/select'
-import { Skeleton } from '../ui/shadcn/skeleton'
 
 type DocumentSettingsProps = {
   saveFunc: () => void
@@ -93,7 +92,7 @@ const DocumentSettings = ({
   const { dashboardRoute } = useOutstatic()
 
   const [isOpen, setIsOpen] = useState(false)
-
+  console.log({ document })
   return (
     <>
       <div className="absolute w-full items-center justify-between flex p-4 border-t z-10 bottom-0 bg-white md:hidden">
@@ -114,24 +113,20 @@ const DocumentSettings = ({
             name="status"
             render={({ field }) => (
               <FormItem>
-                {!document?.status ? (
-                  <Skeleton className="w-full h-10" />
-                ) : (
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={document.status}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select status" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value="draft">Draft</SelectItem>
-                      <SelectItem value="published">Published</SelectItem>
-                    </SelectContent>
-                  </Select>
-                )}
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={document?.status || 'draft'}
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select status" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="draft">Draft</SelectItem>
+                    <SelectItem value="published">Published</SelectItem>
+                  </SelectContent>
+                </Select>
               </FormItem>
             )}
           />
@@ -193,24 +188,20 @@ const DocumentSettings = ({
               name="status"
               render={({ field }) => (
                 <FormItem>
-                  {!document?.status ? (
-                    <Skeleton className="w-full h-10" />
-                  ) : (
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={document.status}
-                    >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select status" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="draft">Draft</SelectItem>
-                        <SelectItem value="published">Published</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  )}
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={document?.status || 'draft'}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select status" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="draft">Draft</SelectItem>
+                      <SelectItem value="published">Published</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </FormItem>
               )}
             />
