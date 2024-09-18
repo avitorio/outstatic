@@ -14,7 +14,6 @@ type ImageCommandListProps = {
   editor: Editor
   setImageMenu: (value: boolean) => void
   range: Range
-  items: CommandItemProps[] // Add this line
 }
 
 const isValidUrl = (urlString: string) => {
