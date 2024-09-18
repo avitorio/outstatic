@@ -21,7 +21,7 @@ export const AdminArea = ({ params }: { params: { ost: string[] } }) => {
   }
 
   return (
-    <div>
+    <div className="min-h-screen">
       <AdminHeader toggleSidebar={toggleSidebar} />
       <div className="flex md:grow flex-col-reverse justify-between md:flex-row md:min-h-[calc(100vh-56px)]">
         <div className="flex w-full">

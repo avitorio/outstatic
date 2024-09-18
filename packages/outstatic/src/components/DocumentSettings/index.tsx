@@ -27,6 +27,7 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/shadcn/select'
+import { Skeleton } from '../ui/shadcn/skeleton'
 
 type DocumentSettingsProps = {
   saveFunc: () => void
@@ -113,20 +114,24 @@ const DocumentSettings = ({
             name="status"
             render={({ field }) => (
               <FormItem>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select status" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectItem value="draft">Draft</SelectItem>
-                    <SelectItem value="published">Published</SelectItem>
-                  </SelectContent>
-                </Select>
+                {!document?.status ? (
+                  <Skeleton className="w-full h-10" />
+                ) : (
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={document.status}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select status" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="draft">Draft</SelectItem>
+                      <SelectItem value="published">Published</SelectItem>
+                    </SelectContent>
+                  </Select>
+                )}
               </FormItem>
             )}
           />
@@ -164,7 +169,7 @@ const DocumentSettings = ({
       <aside
         className={`${
           isOpen ? 'block absolute' : 'hidden relative'
-        } md:block w-full border-b border-gray-300 bg-white md:w-64 md:flex-none md:flex-col md:flex-wrap md:items-start md:justify-start md:border-b-0 md:border-l pt-6 pb-16 h-full max-h-[calc(100vh-128px)] md:max-h-[calc(100vh-53px)] scrollbar-hide overflow-scroll`}
+        } md:block w-full border-b border-gray-300 bg-white md:w-64 md:flex-none md:flex-col md:flex-wrap md:items-start md:justify-start md:border-b-0 md:border-l pt-6 pb-16 h-full max-h-[calc(100vh-128px)] md:max-h-[calc(100vh-56px)] scrollbar-hide overflow-scroll`}
       >
         <div className="relative w-full items-center justify-between mb-4 flex px-4">
           <DateTimePicker
@@ -188,20 +193,24 @@ const DocumentSettings = ({
               name="status"
               render={({ field }) => (
                 <FormItem>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select status" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value="draft">Draft</SelectItem>
-                      <SelectItem value="published">Published</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  {!document?.status ? (
+                    <Skeleton className="w-full h-10" />
+                  ) : (
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={document.status}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select status" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="draft">Draft</SelectItem>
+                        <SelectItem value="published">Published</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  )}
                 </FormItem>
               )}
             />
