@@ -6,6 +6,7 @@ import LineBackground from '@/components/ui/outstatic/line-background'
 import { Button } from '@/components/ui/shadcn/button'
 import { Card, CardContent } from '@/components/ui/shadcn/card'
 import Input from '@/components/ui/outstatic/input'
+import { Input as ShadInput } from '@/components/ui/shadcn/input'
 import { CustomField, CustomFields, customFieldTypes } from '@/types'
 import { createCommitApi } from '@/utils/createCommitApi'
 import { useCreateCommit } from '@/utils/hooks/useCreateCommit'
@@ -18,6 +19,21 @@ import { useEffect, useState } from 'react'
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import * as yup from 'yup'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from '@/components/ui/shadcn/select'
+import {
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormDescription,
+  FormMessage
+} from '@/components/ui/shadcn/form'
 
 type AddCustomFieldProps = {
   collection: string
@@ -267,10 +283,7 @@ export default function AddCustomField({ collection }: AddCustomFieldProps) {
                   {customFields &&
                     Object.entries(customFields).map(([name, field]) => {
                       return (
-                        <Card
-                          key={name}
-                          // className="relative flex p-6 justify-between items-center max-w-sm bg-white rounded-lg border border-gray-200 shadow-md hover:bg-slate-100"
-                        >
+                        <Card key={name}>
                           <CardContent className="relative flex p-6 justify-between items-center max-w-sm">
                             <button
                               type="button"
@@ -368,72 +381,94 @@ export default function AddCustomField({ collection }: AddCustomFieldProps) {
                     : ''
                 }`}
               >
-                <Input
-                  label="Field name"
-                  id="title"
-                  inputSize="medium"
-                  className="w-full max-w-sm md:w-80"
-                  placeholder="Ex: Category"
-                  type="text"
-                  helperText="The name of the field"
-                  readOnly={!!selectedField}
-                  autoFocus={!selectedField}
-                  defaultValue={
-                    selectedField ? customFields[selectedField].title : ''
-                  }
-                  registerOptions={{
-                    onChange: (e) => {
-                      setFieldName(camelCase(e.target.value))
-                    }
-                  }}
+                <FormField
+                  control={methods.control}
+                  name="title"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Field name</FormLabel>
+                      <FormControl>
+                        <ShadInput
+                          placeholder="Ex: Category"
+                          {...field}
+                          className="w-full max-w-sm md:w-80"
+                          readOnly={!!selectedField}
+                          autoFocus={!selectedField}
+                          onChange={(e) => {
+                            field.onChange(e)
+                            setFieldName(camelCase(e.target.value))
+                          }}
+                        />
+                      </FormControl>
+                      <FormDescription>The name of the field</FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
                 />
+
                 <div className="mb-5">
-                  <label
-                    htmlFor="status"
-                    className="block mb-2 text-sm font-medium text-gray-900"
-                  >
-                    Field type
-                  </label>
-                  <Button asChild variant="select">
-                    <select
-                      {...methods.register('fieldType')}
-                      name="fieldType"
-                      id="fieldType"
-                      className="block cursor-pointer appearance-none rounded-lg border border-gray-300 bg-gray-50 p-2 text-sm text-gray-900 outline-none focus:border-blue-500 focus:ring-blue-500"
-                      defaultValue={
-                        selectedField
-                          ? customFields[selectedField].fieldType
-                          : 'String'
-                      }
-                    >
-                      {customFieldTypes.map((type) => {
-                        return (
-                          <option
-                            key={type}
-                            value={type}
-                            disabled={!!selectedField}
-                          >
-                            {type}
-                          </option>
-                        )
-                      })}
-                    </select>
-                  </Button>
+                  <FormField
+                    control={methods.control}
+                    name="fieldType"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Field type</FormLabel>
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={
+                            selectedField
+                              ? customFields[selectedField].fieldType
+                              : 'String'
+                          }
+                        >
+                          <FormControl>
+                            <SelectTrigger className="w-[180px]">
+                              <SelectValue placeholder="Select field type" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {customFieldTypes.map((type) => (
+                              <SelectItem
+                                key={type}
+                                value={type}
+                                disabled={!!selectedField}
+                              >
+                                {type}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </FormItem>
+                    )}
+                  />
                 </div>
               </div>
 
               <div className="flex px-6 text-left gap-4 mb-4">
-                <Input
-                  label="description"
-                  id="description"
-                  inputSize="medium"
-                  className="w-full max-w-sm md:w-80"
-                  placeholder="Ex: Add a category"
-                  type="text"
-                  helperText="This will be the label of the field"
-                  defaultValue={
-                    selectedField ? customFields[selectedField].description : ''
-                  }
+                <FormField
+                  control={methods.control}
+                  name="description"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Description</FormLabel>
+                      <FormControl>
+                        <ShadInput
+                          placeholder="Ex: Add a category"
+                          {...field}
+                          className="w-full max-w-sm md:w-80"
+                          defaultValue={
+                            selectedField
+                              ? customFields[selectedField].description
+                              : ''
+                          }
+                        />
+                      </FormControl>
+                      <FormDescription>
+                        This will be the label of the field
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
                 />
                 <fieldset>
                   <div className="flex mt-7">
@@ -457,13 +492,9 @@ export default function AddCustomField({ collection }: AddCustomFieldProps) {
                       >
                         Required field
                       </label>
-                      <p
-                        id="helper-checkbox-text"
-                        className="text-xs font-normal text-gray-500"
-                      >
-                        <span className="capitalize">{collection}</span>{' '}
-                        documents will only be saved if this field is not empty
-                      </p>
+                      <FormDescription>
+                        This field must be filled out to save the document
+                      </FormDescription>
                     </div>
                   </div>
                 </fieldset>
@@ -494,7 +525,7 @@ export default function AddCustomField({ collection }: AddCustomFieldProps) {
                   {selectedField ? selectedField : fieldName}
                 </code>
               </div>
-              <div className="flex items-center space-x-2 rounded-b border-t p-6">
+              <div className="flex items-center justify-end space-x-2 rounded-b border-t p-6">
                 <Button
                   type="submit"
                   disabled={adding}
