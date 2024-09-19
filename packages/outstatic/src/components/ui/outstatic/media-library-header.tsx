@@ -17,6 +17,7 @@ interface MediaLibraryHeaderProps {
   sortDirection: string
   setSortDirection: (value: string) => void
   handleFileUpload: (files: FileList | null) => void
+  disableUpload?: boolean
 }
 
 export function MediaLibraryHeader({
@@ -27,16 +28,25 @@ export function MediaLibraryHeader({
   setSortBy,
   sortDirection,
   setSortDirection,
-  handleFileUpload
+  handleFileUpload,
+  disableUpload = false
 }: MediaLibraryHeaderProps) {
   return (
     <div className="flex items-center justify-between">
       <div className="flex h-12 items-center capitalize gap-4 xl:gap-12">
         <h1 className="text-xl md:text-2xl">Media Library</h1>
-        <Button asChild className="hover:cursor-pointer" disabled={isUploading}>
-          <label htmlFor="fileInput">
-            {isUploading ? 'Uploading...' : 'Add Media'}
-          </label>
+        <Button
+          asChild={!disableUpload}
+          className="hover:cursor-pointer"
+          disabled={isUploading || disableUpload}
+        >
+          {!disableUpload ? (
+            <label htmlFor="fileInput">
+              {isUploading ? 'Uploading...' : 'Add Media'}
+            </label>
+          ) : (
+            'Add Media'
+          )}
         </Button>
         <input
           id="fileInput"

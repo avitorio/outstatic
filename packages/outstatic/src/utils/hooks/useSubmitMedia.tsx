@@ -69,13 +69,15 @@ function useSubmitMedia({ setLoading, file }: SubmitDocumentProps) {
 
         capi.replaceFile(filePath, fileContents, false)
 
-        const { data: mediaData } = await refetchMedia()
+        const { data: mediaData, isError } = await refetchMedia()
 
-        if (!mediaData) throw new Error("Couldn't fetch media data")
+        if (isError) {
+          throw new Error('Error fetching media data')
+        }
 
-        const { media } = mediaData?.media
+        const { media } = mediaData?.media || { media: [] }
 
-        const commit = hashFromUrl(mediaData.commitUrl)
+        const commit = hashFromUrl(mediaData?.commitUrl ?? '')
 
         const newMedia = [
           ...(media ?? []),

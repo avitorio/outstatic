@@ -15,7 +15,7 @@ export const useGetConfig = ({
   const filePath = `${repoBranch}:${CONFIG_JSON_PATH}`
 
   return useQuery({
-    queryKey: ['config', { filePath }],
+    queryKey: ['config', { repoOwner, repoSlug, repoBranch, filePath }],
     queryFn: async (): Promise<ConfigType | null> => {
       const owner = repoOwner || session?.user?.login
       if (!owner) {

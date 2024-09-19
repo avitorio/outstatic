@@ -13,12 +13,27 @@ import { MediaLibraryHeader } from '@/components/ui/outstatic/media-library-head
 import Image from 'next/image'
 import { FileQuestion, ImageOff } from 'lucide-react'
 import { SpinnerIcon } from '@/components/ui/outstatic/spinner-icon'
+import { MediaSettings } from '@/client/client'
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent
+} from '@/components/ui/shadcn/card'
 
 export default function MediaLibrary() {
   const [searchTerm, setSearchTerm] = useState('')
   const [sortBy, setSortBy] = useState('date')
   const [sortDirection, setSortDirection] = useState('desc')
-  const { basePath, repoOwner, repoSlug, repoBranch } = useOutstatic()
+  const {
+    basePath,
+    repoOwner,
+    repoSlug,
+    repoBranch,
+    repoMediaPath,
+    publicMediaPath
+  } = useOutstatic()
   const apiPath = `${basePath}${API_MEDIA_PATH}${repoOwner}/${repoSlug}/${repoBranch}`
   const [notFoundFiles, setNotFoundFiles] = useState<Set<string>>(new Set())
   const [loadingImages, setLoadingImages] = useState<Set<string>>(new Set())
@@ -118,18 +133,34 @@ export default function MediaLibrary() {
           sortDirection={sortDirection}
           setSortDirection={setSortDirection}
           handleFileUpload={handleFileUpload}
+          disableUpload={!repoMediaPath || !publicMediaPath}
         />
       </div>
-      {isLoading ? (
-        <div className="flex items-center justify-center h-64">
+      {!repoMediaPath || !publicMediaPath ? (
+        <div className="max-w-lg">
+          <Card>
+            <CardHeader>
+              <CardTitle>First time here?</CardTitle>
+              <CardDescription>
+                It seems you haven&apos;t set up your media paths yet.
+                Let&apos;s do that!
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <MediaSettings />
+            </CardContent>
+          </Card>
+        </div>
+      ) : isLoading ? (
+        <div className="flex items-center justify-center h-[80%]">
           <SpinnerIcon size="2xl" />
         </div>
       ) : error ? (
-        <div className="flex items-center justify-center h-64 text-red-500">
+        <div className="flex items-center justify-center h-[80%] text-red-500">
           Error loading media files. Please try again.
         </div>
       ) : filteredFiles.length === 0 ? (
-        <div className="flex flex-col items-center justify-center h-64 text-gray-500">
+        <div className="flex flex-col items-center justify-center h-[80%] text-gray-500">
           <FileQuestion className="w-16 h-16 mb-4" />
           <p>No media files available. Upload some files to get started!</p>
         </div>

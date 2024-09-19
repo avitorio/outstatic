@@ -9,6 +9,8 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { addImage } from '../addImage'
 import MediaLibraryModal from '@/components/ui/outstatic/media-library-modal'
 import { API_MEDIA_PATH } from '@/utils/constants'
+import { useOutstatic } from '@/utils/hooks'
+import MediaSettingsDialog from '@/components/ui/outstatic/media-settings-dialog'
 
 type ImageCommandListProps = {
   editor: Editor
@@ -53,19 +55,32 @@ const ImageCommandList = ({
   const [showLink, setShowLink] = useState(false)
   const [imageUrl, setImageUrl] = useState('')
   const [showMediaLibrary, setShowMediaLibrary] = useState(false)
+  const [showMediaPathDialog, setShowMediaPathDialog] = useState(false)
   const [errors, setErrors] = useState({ imageUrl: '', uploadImage: '' })
   const [selectedIndex, setSelectedIndex] = useState(0)
+  const { repoMediaPath, publicMediaPath } = useOutstatic()
+  const [currentAction, setCurrentAction] = useState<() => void>(() => {})
 
   const handleItemAction = (title: string) => {
     switch (title) {
       case 'Image Upload':
-        addImageFile()
+        if (!repoMediaPath && !publicMediaPath) {
+          setCurrentAction(() => addImageFile)
+          setShowMediaPathDialog(true)
+        } else {
+          addImageFile()
+        }
         break
       case 'Image from URL':
         setShowLink(true)
         break
       case 'Media Gallery':
-        setShowMediaLibrary(true)
+        if (!repoMediaPath && !publicMediaPath) {
+          setCurrentAction(() => () => setShowMediaLibrary(true))
+          setShowMediaPathDialog(true)
+        } else {
+          setShowMediaLibrary(true)
+        }
         break
       // Add more cases for future actions
       default:
@@ -129,6 +144,7 @@ const ImageCommandList = ({
           showLink
             ? addImageUrl(imageUrl)
             : handleItemAction(selectedItem.title)
+          document.removeEventListener('keydown', onKeyDown)
           return true
         }
         if (e.key === 'Escape') {
@@ -205,6 +221,12 @@ const ImageCommandList = ({
           open={showMediaLibrary}
           onOpenChange={setShowMediaLibrary}
           onSelect={addImageUrl}
+        />
+      ) : showMediaPathDialog ? (
+        <MediaSettingsDialog
+          showMediaPathDialog={showMediaPathDialog}
+          setShowMediaPathDialog={setShowMediaPathDialog}
+          currentAction={currentAction}
         />
       ) : (
         <div

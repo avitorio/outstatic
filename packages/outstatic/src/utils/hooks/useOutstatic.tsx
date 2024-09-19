@@ -52,7 +52,9 @@ export const useOutstatic = () => {
     gqlClient: graphQLClient
   })
 
-  const cleanConfig = cleanOutstaticData(config || {})
+  const cleanConfig = config
+    ? cleanOutstaticData(config)
+    : { repoMediaPath: '', publicMediaPath: '' }
 
   // Merge local data with initial data, giving preference to
   // initialData (.ENV variables) over localData (local storage)
@@ -109,19 +111,21 @@ export const useLocalData = () => {
         repoBranch: '',
         repoOwner: '',
         basePath: '',
+        repoMediaPath: '',
+        publicMediaPath: '',
         ostDetach: false
       }
     },
     meta: { persist: true }
   })
 
-  const setData = (newData: Partial<OutstaticData>) => {
+  const setData = (newData: Partial<OutstaticData> | ConfigType) => {
     queryClient.setQueryData(queryKey, (oldData: OutstaticData) => ({
       ...oldData,
       ...newData
     }))
     queryClient.invalidateQueries({
-      queryKey: ['collections'],
+      queryKey: ['collections', 'config'],
       refetchType: 'all'
     })
   }
@@ -145,7 +149,7 @@ const useGetInitialConfig = ({
   const filePath = `${repoBranch}:${CONFIG_JSON_PATH}`
 
   return useQuery({
-    queryKey: ['config', { filePath }],
+    queryKey: ['config', { repoOwner, repoSlug, repoBranch, filePath }],
     queryFn: async (): Promise<ConfigType | null> => {
       const owner = repoOwner || session?.user?.login
       if (!owner) {

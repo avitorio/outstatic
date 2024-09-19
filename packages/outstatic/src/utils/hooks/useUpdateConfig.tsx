@@ -13,6 +13,11 @@ type SubmitDocumentProps = {
   setLoading: (loading: boolean) => void
 }
 
+type OnSubmitProps = {
+  configFields: Partial<ConfigType>
+  callbackFunction?: () => void
+}
+
 export function useUpdateConfig({ setLoading }: SubmitDocumentProps) {
   const createCommit = useCreateCommit()
   const { setData } = useLocalData()
@@ -24,7 +29,7 @@ export function useUpdateConfig({ setLoading }: SubmitDocumentProps) {
   })
 
   const onSubmit = useCallback(
-    async (configFields: ConfigType) => {
+    async ({ configFields, callbackFunction }: OnSubmitProps) => {
       setLoading(true)
       try {
         const oid = await fetchOid()
@@ -38,12 +43,14 @@ export function useUpdateConfig({ setLoading }: SubmitDocumentProps) {
           branch: repoBranch
         })
 
-        const { data: config } = await refetch()
+        const { data: config, isError } = await refetch()
 
-        if (!config) throw new Error("Couldn't fetch config data")
+        if (isError) {
+          throw new Error('Failed to fetch config')
+        }
 
         const updatedConfig = {
-          ...config,
+          ...(config ?? {}),
           ...configFields
         }
 
@@ -64,6 +71,10 @@ export function useUpdateConfig({ setLoading }: SubmitDocumentProps) {
           repoMediaPath: updatedConfig.repoMediaPath,
           publicMediaPath: updatedConfig.publicMediaPath
         })
+
+        if (callbackFunction) {
+          callbackFunction()
+        }
       } catch (error) {
         // TODO: Better error treatment
         setLoading(false)

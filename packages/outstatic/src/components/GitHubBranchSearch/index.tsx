@@ -4,6 +4,7 @@ import { GET_BRANCHES } from '@/graphql/queries/branches'
 import { useCollections } from '@/utils/hooks/useCollections'
 import { useInitialData } from '@/utils/hooks/useInitialData'
 import useOutstatic, { useLocalData } from '@/utils/hooks/useOutstatic'
+import { queryClient } from '@/utils/react-query/queryClient'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useState } from 'react'
 
@@ -82,6 +83,7 @@ const GitHubBranchSearch = () => {
 
       if (value !== repoBranch) {
         const getCollections = async () => {
+          queryClient.invalidateQueries()
           const { data } = await refetch()
 
           if (data === null) {

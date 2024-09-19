@@ -23,13 +23,18 @@ import {
   DialogFooter
 } from '@/components/ui/shadcn/dialog'
 import { useEffect, useState } from 'react'
-import { useOutstatic } from '@/utils/hooks'
+import { useLocalData, useOutstatic } from '@/utils/hooks'
 import { Skeleton } from '@/components/ui/shadcn/skeleton'
 
-export function MediaSettings() {
+type MediaSettingsProps = {
+  onSettingsUpdate?: () => void
+}
+
+export function MediaSettings({ onSettingsUpdate }: MediaSettingsProps) {
   const [loading, setLoading] = useState(false)
   const [showConfirmModal, setShowConfirmModal] = useState(false)
   const { data: config, isPending } = useGetConfig()
+  const { setData } = useLocalData()
   const { repoOwner, repoSlug } = useOutstatic()
   const onSubmit = useUpdateConfig({ setLoading })
   const form = useForm({
@@ -40,13 +45,23 @@ export function MediaSettings() {
     }
   })
 
-  const handleSubmit = () => {
-    setShowConfirmModal(true)
+  const handleSubmit = async () => {
+    if (!config) {
+      onSubmit({
+        configFields: form.getValues(),
+        callbackFunction: onSettingsUpdate
+      })
+    } else {
+      setShowConfirmModal(true)
+    }
   }
 
   const confirmSubmit = () => {
     setShowConfirmModal(false)
-    onSubmit(form.getValues())
+    onSubmit({
+      configFields: form.getValues(),
+      callbackFunction: onSettingsUpdate
+    })
   }
 
   useEffect(() => {
@@ -54,6 +69,7 @@ export function MediaSettings() {
       repoMediaPath: config?.repoMediaPath || '',
       publicMediaPath: config?.publicMediaPath || ''
     })
+    setData(config ?? {})
   }, [config])
 
   return (
@@ -90,7 +106,18 @@ export function MediaSettings() {
                   {isPending ? (
                     <Skeleton className="w-100 h-10" />
                   ) : (
-                    <Input placeholder="images/" {...field} />
+                    <div className="flex">
+                      <Input
+                        disabled
+                        value="https://yourwebsite.com/"
+                        className="bg-secondary rounded-r-none min-w-[186px] w-auto"
+                      />
+                      <Input
+                        placeholder="images/"
+                        className="rounded-l-none w-full"
+                        {...field}
+                      />
+                    </div>
                   )}
                 </FormControl>
                 <FormDescription>

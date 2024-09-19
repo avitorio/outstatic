@@ -64,7 +64,7 @@ export async function Outstatic({
     pages: ['collections', 'settings', 'media-library'],
     dashboardRoute: '/outstatic',
     githubGql: GITHUB_GQL_API_URL,
-    publicMediaPath: process.env.OST_PUBLIC_MEDIA_PATH,
-    repoMediaPath: process.env.OST_REPO_MEDIA_PATH
+    publicMediaPath: process.env.OST_PUBLIC_MEDIA_PATH || '',
+    repoMediaPath: process.env.OST_REPO_MEDIA_PATH || ''
   } as OutstaticData
 }

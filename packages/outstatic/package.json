@@ -72,6 +72,7 @@
     "@radix-ui/react-tabs": "^1.1.0",
     "@radix-ui/react-tooltip": "^1.1.2",
     "@radix-ui/react-visually-hidden": "^1.1.0",
+    "@tanstack/query-broadcast-client-experimental": "^5.56.2",
     "@tiptap/core": "2.1.10",
     "@tiptap/extension-bubble-menu": "2.1.10",
     "@tiptap/extension-code-block": "2.1.10",

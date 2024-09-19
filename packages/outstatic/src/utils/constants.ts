@@ -1,8 +1,5 @@
 export const OUTSTATIC_VERSION = '1.4.9'
 export const OUTSTATIC_URL = 'https://outstatic.com'
-export const MEDIA_PATH = process.env.OST_PUBLIC_MEDIA_PATH || 'images/'
-export const REPO_MEDIA_PATH =
-  process.env.OST_REPO_MEDIA_PATH || 'public/images/'
 export const MEDIA_JSON_PATH = 'outstatic/media/media.json'
 export const CONFIG_JSON_PATH = 'outstatic/config.json'
 export const OUTSTATIC_API_PATH =
