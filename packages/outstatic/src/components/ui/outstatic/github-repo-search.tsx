@@ -5,7 +5,7 @@ import useOutstatic, { useLocalData } from '@/utils/hooks/useOutstatic'
 import React, { useEffect, useState } from 'react'
 import { useDebouncedCallback } from 'use-debounce'
 
-const GitHubRepoSearch: React.FC = () => {
+export const GitHubRepoSearch: React.FC = () => {
   const initialData = useInitialData()
   const { setData } = useLocalData()
   const { repoOwner, repoSlug, session } = useOutstatic()
@@ -100,5 +100,3 @@ const GitHubRepoSearch: React.FC = () => {
     </div>
   )
 }
-
-export default GitHubRepoSearch

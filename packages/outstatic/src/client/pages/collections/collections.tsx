@@ -14,7 +14,7 @@ import { useState } from 'react'
 import DeleteCollectionModal from './components/delete-collection-modal'
 import useOutstatic from '@/utils/hooks/useOutstatic'
 import LineBackground from '@/components/ui/outstatic/line-background'
-import GitHubBranchSearch from '@/components/GitHubBranchSearch'
+import { GitHubBranchSearch } from '@/components/ui/outstatic/github-branch-search'
 
 export default function Collections() {
   const { data: collections, isPending } = useCollections()

@@ -1,6 +1,6 @@
 import { AdminLayout } from '@/components'
-import GitHubBranchSearch from '@/components/GitHubBranchSearch'
-import GitHubRepoSearch from '@/components/GitHubRepoSearch'
+import { GitHubBranchSearch } from '@/components/ui/outstatic/github-branch-search'
+import { GitHubRepoSearch } from '@/components/ui/outstatic/github-repo-search'
 
 export default function Onboarding() {
   return (

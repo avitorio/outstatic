@@ -14,7 +14,7 @@ interface CreateBranchDialogProps {
   callbackFunction?: ({ branchName }: { branchName: string }) => void
 }
 
-const CreateBranchDialog: React.FC<CreateBranchDialogProps> = ({
+export const CreateBranchDialog: React.FC<CreateBranchDialogProps> = ({
   showCreateBranchDialog,
   setShowCreateBranchDialog,
   callbackFunction
@@ -39,5 +39,3 @@ const CreateBranchDialog: React.FC<CreateBranchDialogProps> = ({
     </Dialog>
   )
 }
-
-export default CreateBranchDialog

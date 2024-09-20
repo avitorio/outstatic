@@ -1,6 +1,6 @@
 import { AdminLayout } from '@/components'
-import GitHubBranchSearch from '@/components/GitHubBranchSearch'
-import GitHubRepoSearch from '@/components/GitHubRepoSearch'
+import { GitHubBranchSearch } from '@/components/ui/outstatic/github-branch-search'
+import { GitHubRepoSearch } from '@/components/ui/outstatic/github-repo-search'
 import { MetadataBuilder } from '@/components/MetadataBuilder'
 import { Button } from '@/components/ui/shadcn/button'
 import { useCollections } from '@/utils/hooks/useCollections'

@@ -6,8 +6,8 @@ import useOutstatic, { useLocalData } from '@/utils/hooks/useOutstatic'
 import { queryClient } from '@/utils/react-query/queryClient'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useState } from 'react'
-import { CommandItem } from '../ui/shadcn/command'
-import CreateBranchDialog from '../ui/outstatic/create-branch-dialog'
+import { CommandItem } from '@/components/ui/shadcn/command'
+import { CreateBranchDialog } from '@/components/ui/outstatic/create-branch-dialog'
 import { PlusCircle } from 'lucide-react'
 
 interface Branch {
@@ -22,7 +22,7 @@ const debounce = (func: Function, delay: number) => {
   }
 }
 
-const GitHubBranchSearch = () => {
+export const GitHubBranchSearch = () => {
   const { setData } = useLocalData()
   const [query, setQuery] = useState('')
   const { repoOwner, repoSlug, repoBranch, dashboardRoute, gqlClient } =
@@ -148,5 +148,3 @@ const GitHubBranchSearch = () => {
     </div>
   )
 }
-
-export default GitHubBranchSearch
