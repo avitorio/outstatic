@@ -59,13 +59,13 @@ const ImageCommandList = ({
   const [errors, setErrors] = useState({ imageUrl: '', uploadImage: '' })
   const [selectedIndex, setSelectedIndex] = useState(0)
   const { repoMediaPath, publicMediaPath } = useOutstatic()
-  const [currentAction, setCurrentAction] = useState<() => void>(() => {})
+  const [callbackFunction, setCallbackFunction] = useState<() => void>(() => {})
 
   const handleItemAction = (title: string) => {
     switch (title) {
       case 'Image Upload':
         if (!repoMediaPath && !publicMediaPath) {
-          setCurrentAction(() => addImageFile)
+          setCallbackFunction(() => addImageFile)
           setShowMediaPathDialog(true)
         } else {
           addImageFile()
@@ -76,7 +76,7 @@ const ImageCommandList = ({
         break
       case 'Media Gallery':
         if (!repoMediaPath && !publicMediaPath) {
-          setCurrentAction(() => () => setShowMediaLibrary(true))
+          setCallbackFunction(() => () => setShowMediaLibrary(true))
           setShowMediaPathDialog(true)
         } else {
           setShowMediaLibrary(true)
@@ -226,7 +226,7 @@ const ImageCommandList = ({
         <MediaSettingsDialog
           showMediaPathDialog={showMediaPathDialog}
           setShowMediaPathDialog={setShowMediaPathDialog}
-          currentAction={currentAction}
+          callbackFunction={callbackFunction}
         />
       ) : (
         <div
