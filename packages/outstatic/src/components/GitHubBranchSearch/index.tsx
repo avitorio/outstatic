@@ -2,11 +2,13 @@
 import { SearchCombobox } from '@/components/ui/outstatic/search-combobox'
 import { GET_BRANCHES } from '@/graphql/queries/branches'
 import { useCollections } from '@/utils/hooks/useCollections'
-import { useInitialData } from '@/utils/hooks/useInitialData'
 import useOutstatic, { useLocalData } from '@/utils/hooks/useOutstatic'
 import { queryClient } from '@/utils/react-query/queryClient'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useState } from 'react'
+import { CommandItem } from '../ui/shadcn/command'
+import CreateBranchDialog from '../ui/outstatic/create-branch-dialog'
+import { PlusCircle } from 'lucide-react'
 
 interface Branch {
   name: string
@@ -21,8 +23,7 @@ const debounce = (func: Function, delay: number) => {
 }
 
 const GitHubBranchSearch = () => {
-  const initialData = useInitialData()
-  const { setData, data } = useLocalData()
+  const { setData } = useLocalData()
   const [query, setQuery] = useState('')
   const { repoOwner, repoSlug, repoBranch, dashboardRoute, gqlClient } =
     useOutstatic()
@@ -34,6 +35,8 @@ const GitHubBranchSearch = () => {
   const [value, setValue] = useState(repoBranch)
   const { refetch } = useCollections()
   const router = useRouter()
+  const [showCreateBranchDialog, setShowCreateBranchDialog] = useState(false)
+  const [isOpen, setIsOpen] = useState(false)
 
   const fetchBranches = useCallback(
     (keyword: string) => {
@@ -75,7 +78,7 @@ const GitHubBranchSearch = () => {
 
   useEffect(() => {
     fetchBranches(query)
-  }, [query, data])
+  }, [query])
 
   useEffect(() => {
     if (value) {
@@ -98,27 +101,49 @@ const GitHubBranchSearch = () => {
   return (
     <div>
       <SearchCombobox
-        data={
-          !!initialData?.repoBranch
-            ? [
-                {
-                  value: `${repoBranch}`,
-                  label: `${repoBranch}`
-                }
-              ]
-            : suggestions.map((branch) => ({
-                value: branch.name,
-                label: branch.name
-              }))
-        }
-        value={!!initialData?.repoBranch ? `${repoBranch}` : value}
+        data={suggestions.map((branch) => ({
+          value: branch.name,
+          label: branch.name
+        }))}
+        value={value}
         setValue={setValue}
         onValueChange={setQuery}
         isLoading={isLoading}
-        disabled={!!initialData?.repoBranch || !repoSlug || !repoOwner}
+        disabled={!repoSlug || !repoOwner}
         selectPlaceholder="Select a branch"
         searchPlaceholder="Search for a branch. Ex: main"
         resultsPlaceholder="No branches found"
+        scrollFooter={() => (
+          <CommandItem
+            key="create branch"
+            value="create branch"
+            className="rounded-t-none border border-t px-3 hover:cursor-pointer"
+            onSelect={() => {
+              setIsOpen(false)
+              setIsLoading(true)
+              setShowCreateBranchDialog(true)
+            }}
+          >
+            <div className="flex gap-2 items-center">
+              <PlusCircle className="h-4 w-4" />
+              <span>Create a new branch</span>
+            </div>
+          </CommandItem>
+        )}
+        isOpen={isOpen}
+        onOpenChange={setIsOpen}
+      />
+      <CreateBranchDialog
+        showCreateBranchDialog={showCreateBranchDialog}
+        setShowCreateBranchDialog={(value) => {
+          setShowCreateBranchDialog(value)
+          setIsLoading(value)
+        }}
+        callbackFunction={({ branchName }: { branchName: string }) => {
+          setSuggestions([{ name: branchName }])
+          setValue(branchName)
+          setIsLoading(false)
+        }}
       />
     </div>
   )

@@ -28,7 +28,9 @@ export function SearchCombobox({
   searchPlaceholder = 'Search',
   resultsPlaceholder = 'No results found',
   loadingPlaceholder = 'Loading...',
-  scrollFooter
+  scrollFooter,
+  isOpen,
+  onOpenChange
 }: {
   data: {
     value: string
@@ -45,8 +47,13 @@ export function SearchCombobox({
   resultsPlaceholder?: string
   loadingPlaceholder?: string
   scrollFooter?: () => React.ReactNode
+  isOpen?: boolean
+  onOpenChange?: (open: boolean) => void
 }) {
-  const [open, setOpen] = React.useState(false)
+  const [internalOpen, setInternalOpen] = React.useState(false)
+
+  const open = isOpen !== undefined ? isOpen : internalOpen
+  const setOpen = onOpenChange || setInternalOpen
 
   return (
     <Popover open={open} onOpenChange={setOpen} modal>

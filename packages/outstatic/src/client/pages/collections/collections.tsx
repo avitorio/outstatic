@@ -1,19 +1,25 @@
 import { AdminLayout } from '@/components'
 import { AdminLoading } from '@/components/AdminLoading'
 import { Button } from '@/components/ui/shadcn/button'
-import { Card, CardContent } from '@/components/ui/shadcn/card'
 import { useCollections } from '@/utils/hooks/useCollections'
-
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription
+} from '@/components/ui/shadcn/card'
 import Link from 'next/link'
 import { useState } from 'react'
 import DeleteCollectionModal from './components/delete-collection-modal'
 import useOutstatic from '@/utils/hooks/useOutstatic'
 import LineBackground from '@/components/ui/outstatic/line-background'
+import GitHubBranchSearch from '@/components/GitHubBranchSearch'
 
 export default function Collections() {
   const { data: collections, isPending } = useCollections()
   const { dashboardRoute } = useOutstatic()
-
+  const [confirmBranch, setConfirmBranch] = useState(false)
   const [selectedCollection, setSelectedCollection] = useState('')
   const [showDeleteModal, setShowDeleteModal] = useState(false)
 
@@ -27,30 +33,76 @@ export default function Collections() {
             <div className="mb-8 flex h-12 items-center">
               <h1 className="mr-12 text-2xl">Welcome to Outstatic!</h1>
             </div>
-            <div className="mb-20 max-w-2xl p-8 px-4 md:p-8 text-black bg-white rounded-lg border border-gray-200 shadow-md prose prose-base">
-              <p>
-                To get started you will need to create a new Collection.
-                Collections are the main building block of your Outstatic
-                website.
-              </p>
-              <p>Create your first Collection by clicking the button below.</p>
-
-              <Link href={`${dashboardRoute}/collections/new`}>
-                <div className="inline-block rounded-lg border px-5 py-2.5 text-sm font-medium focus:outline-none focus:ring-4 border-gray-600 bg-gray-800 text-white hover:border-gray-600 hover:bg-gray-700 focus:ring-gray-700 no-underline">
-                  New Collection
-                </div>
-              </Link>
-              <p>
-                To learn more about how Collections work{' '}
-                <a
-                  href="https://outstatic.com/docs/introduction#what-are-collections"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  click here
-                </a>
-                .
-              </p>
+            <div className="max-w-2xl">
+              <Card>
+                {confirmBranch ? (
+                  <>
+                    <CardHeader>
+                      <CardTitle>Create Collection</CardTitle>
+                      <CardDescription>
+                        Get started with your first Collection
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent className="prose prose-base">
+                      <p>
+                        To get started you will need to create a new Collection.
+                        Collections are the main building block of your
+                        Outstatic website.
+                      </p>
+                      <p>
+                        Create your first Collection by clicking the button
+                        below.
+                      </p>
+                      <Button asChild>
+                        <Link
+                          href="/outstatic/collections/new"
+                          className="no-underline"
+                        >
+                          New Collection
+                        </Link>
+                      </Button>
+                      <p>
+                        To learn more about how Collections work{' '}
+                        <a
+                          href="https://outstatic.com/docs/introduction#what-are-collections"
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          click here
+                        </a>
+                        .
+                      </p>
+                    </CardContent>
+                  </>
+                ) : (
+                  <>
+                    <CardHeader>
+                      <CardTitle>Confirm Branch</CardTitle>
+                      <CardDescription>
+                        Confirm the branch before creating your first Collection
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent className="prose prose-base">
+                      <p>
+                        All content in Outstatic is saved to GitHub. If this is
+                        your first time using Outstatic, we recommend creating a
+                        new branch to experiment with.
+                      </p>
+                      <p>
+                        This allows you to safely make changes and test features
+                        without affecting active branches. You can always select
+                        a different branch later.
+                      </p>
+                      <div className="flex gap-3">
+                        <GitHubBranchSearch />
+                        <Button onClick={() => setConfirmBranch(true)}>
+                          Confirm Branch
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </>
+                )}
+              </Card>
             </div>
           </div>
         </LineBackground>
