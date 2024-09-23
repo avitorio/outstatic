@@ -11,13 +11,13 @@ import { MediaSettings } from '@/client/pages/settings/_components/media-setting
 interface MediaSettingsDialogProps {
   showMediaPathDialog: boolean
   setShowMediaPathDialog: (show: boolean) => void
-  currentAction?: () => void
+  callbackFunction?: () => void
 }
 
 const MediaSettingsDialog: React.FC<MediaSettingsDialogProps> = ({
   showMediaPathDialog,
   setShowMediaPathDialog,
-  currentAction
+  callbackFunction
 }) => {
   return (
     <Dialog open={showMediaPathDialog} onOpenChange={setShowMediaPathDialog}>
@@ -32,7 +32,7 @@ const MediaSettingsDialog: React.FC<MediaSettingsDialogProps> = ({
         <MediaSettings
           onSettingsUpdate={() => {
             setShowMediaPathDialog(false)
-            if (currentAction) currentAction()
+            if (callbackFunction) callbackFunction()
           }}
         />
       </DialogContent>

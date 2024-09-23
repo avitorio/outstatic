@@ -1,10 +1,11 @@
-import Link from '@/components/Link'
 import { useOstSession, useOstSignOut } from '@/utils/auth/hooks'
-import { Menu } from 'lucide-react'
+import { Menu, SlashIcon } from 'lucide-react'
 import { memo, useState } from 'react'
 import { Button } from '@/components/ui/shadcn/button'
 import { AppLogo } from '../ui/outstatic/app-logo'
 import { cn } from '@/utils/ui'
+import { useOutstatic } from '@/utils/hooks'
+import { GitHubBranchSearch } from '@/components/ui/outstatic/github-branch-search'
 
 type AdminHeaderProps = {
   name?: string | null | undefined
@@ -16,6 +17,7 @@ type AdminHeaderProps = {
 
 const AdminHeader = ({ toggleSidebar }: AdminHeaderProps) => {
   const { session, status } = useOstSession()
+  const { repoOwner, repoSlug } = useOutstatic()
   const [isOpen, setIsOpen] = useState(false)
   const { signOut } = useOstSignOut()
 
@@ -41,11 +43,26 @@ const AdminHeader = ({ toggleSidebar }: AdminHeaderProps) => {
               <span className="sr-only">Open main menu</span>
               <Menu className="lucide lucide-menu " />
             </Button>
-            <Link href="/outstatic" aria-label="Outstatic">
-              <div className="cursor-pointer flex items-center min-h-8">
-                <AppLogo />
-              </div>
-            </Link>
+
+            <div className={'flex items-center space-x-4'}>
+              <AppLogo />
+              {repoOwner && repoSlug && (
+                <>
+                  <SlashIcon className="w-4 text-slate-300" />
+                  <span className="whitespace-nowrap text-sm font-medium lg:w-auto lg:max-w-fit justify-start truncate">
+                    {repoOwner}
+                  </span>
+                  <SlashIcon className="w-4 text-slate-300" />
+                  <span className="whitespace-nowrap text-sm font-medium lg:w-auto lg:max-w-fit justify-start truncate">
+                    {repoSlug}
+                  </span>
+                  <SlashIcon className="w-4 text-slate-300" />
+                  <span className="whitespace-nowrap text-sm font-medium lg:w-auto lg:max-w-fit justify-start truncate">
+                    <GitHubBranchSearch variant="ghost" size="sm" />
+                  </span>
+                </>
+              )}
+            </div>
             {status === 'loading' ? (
               <div className="flex items-center md:order-2" />
             ) : (

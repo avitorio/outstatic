@@ -26,11 +26,14 @@ import { useEffect, useState } from 'react'
 import { useLocalData, useOutstatic } from '@/utils/hooks'
 import { Skeleton } from '@/components/ui/shadcn/skeleton'
 
-type MediaSettingsProps = {
-  onSettingsUpdate?: () => void
-}
+type MediaSettingsProps =
+  | {
+      onSettingsUpdate?: () => void
+    }
+  | Record<string, never>
 
-export function MediaSettings({ onSettingsUpdate }: MediaSettingsProps) {
+export function MediaSettings(props: MediaSettingsProps) {
+  const onSettingsUpdate = props.onSettingsUpdate || (() => {})
   const [loading, setLoading] = useState(false)
   const [showConfirmModal, setShowConfirmModal] = useState(false)
   const { data: config, isPending } = useGetConfig()

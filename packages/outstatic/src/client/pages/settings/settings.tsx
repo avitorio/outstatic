@@ -1,6 +1,5 @@
 import { AdminLayout } from '@/components'
-import GitHubBranchSearch from '@/components/GitHubBranchSearch'
-import GitHubRepoSearch from '@/components/GitHubRepoSearch'
+import { GitHubRepoSearch } from '@/components/ui/outstatic/github-repo-search'
 import { MetadataBuilder } from '@/components/MetadataBuilder'
 import { Button } from '@/components/ui/shadcn/button'
 import { useCollections } from '@/utils/hooks/useCollections'
@@ -24,12 +23,6 @@ export default function Settings() {
               Repository
             </label>
             <GitHubRepoSearch />
-          </div>
-          <div className="mt-4">
-            <label className="block mb-2 text-sm font-medium text-gray-900">
-              Branch
-            </label>
-            <GitHubBranchSearch />
           </div>
           <p className="text-sm">
             <span className="font-semibold">Optional:</span> You can set default

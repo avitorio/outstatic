@@ -16,8 +16,10 @@ import {
 } from '../shadcn/command'
 import { Popover, PopoverContent, PopoverTrigger } from '../shadcn/popover'
 import { ScrollArea } from '../shadcn/scroll-area'
+import { cn } from '@/utils/ui'
 
 export function SearchCombobox({
+  className,
   data,
   value,
   setValue,
@@ -28,8 +30,13 @@ export function SearchCombobox({
   searchPlaceholder = 'Search',
   resultsPlaceholder = 'No results found',
   loadingPlaceholder = 'Loading...',
-  scrollFooter
+  scrollFooter,
+  isOpen,
+  onOpenChange,
+  variant = 'outline',
+  size = 'default'
 }: {
+  className?: string
   data: {
     value: string
     label: string
@@ -45,62 +52,131 @@ export function SearchCombobox({
   resultsPlaceholder?: string
   loadingPlaceholder?: string
   scrollFooter?: () => React.ReactNode
+  isOpen?: boolean
+  onOpenChange?: (open: boolean) => void
+  variant?: React.ComponentProps<typeof Button>['variant']
+  size?: React.ComponentProps<typeof Button>['size']
 }) {
-  const [open, setOpen] = React.useState(false)
+  const [internalOpen, setInternalOpen] = React.useState(false)
+
+  const open = isOpen !== undefined ? isOpen : internalOpen
+  const setOpen = onOpenChange || setInternalOpen
+
+  const buttonClassName = cn(
+    'justify-between',
+    size === 'sm' ? 'w-min px-1 ml-0.5' : 'w-[20rem]',
+    className
+  )
 
   return (
-    <Popover open={open} onOpenChange={setOpen} modal>
-      <PopoverTrigger asChild>
-        <Button
-          variant="outline"
-          role="combobox"
-          aria-expanded={open}
-          className="w-[20rem] justify-between w"
-          disabled={disabled || isLoading}
+    <div className="flex items-center">
+      {size === 'sm' ? (
+        <span
+          className={cn(
+            'truncate text-left',
+            size === 'sm' ? 'w-min text-sm font-medium' : 'w-[20rem]'
+          )}
         >
-          <span className="w-[20rem] p-0 md:w-[20rem] truncate text-left">
-            {isLoading
-              ? loadingPlaceholder
-              : value
-              ? data.find((dataRecord) => dataRecord.value === value)?.label
-              : selectPlaceholder}
-          </span>
-          <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-[20rem] p-0 md:w-[20rem]">
-        <Command>
-          <CommandInput
-            placeholder={isLoading ? loadingPlaceholder : searchPlaceholder}
-            onValueChange={onValueChange}
-          />
-          <CommandEmpty>
-            {isLoading ? loadingPlaceholder : resultsPlaceholder}
-          </CommandEmpty>
-          <ScrollArea className="h-[200px]">
-            <CommandList>
-              <CommandGroup>
-                {data.map((dataRecord) => (
-                  <CommandItem
-                    key={dataRecord.value}
-                    value={dataRecord.value}
-                    onSelect={(currentValue) => {
-                      setValue(currentValue === value ? '' : currentValue)
-                      setOpen(false)
-                    }}
-                  >
-                    {dataRecord.icon && (
-                      <dataRecord.icon className="mr-2 h-4 w-4 shrink-0" />
+          {isLoading
+            ? loadingPlaceholder
+            : value
+            ? (() => {
+                const selectedRecord = data.find(
+                  (dataRecord) => dataRecord.value === value
+                )
+                return (
+                  <>
+                    {selectedRecord?.icon && (
+                      <selectedRecord.icon className="mr-2 h-4 w-4 inline-block" />
                     )}
-                    <span>{dataRecord.label}</span>
-                  </CommandItem>
-                ))}
-              </CommandGroup>
-            </CommandList>
-          </ScrollArea>
-          {scrollFooter ? scrollFooter() : null}
-        </Command>
-      </PopoverContent>
-    </Popover>
+                    {selectedRecord?.label}
+                  </>
+                )
+              })()
+            : selectPlaceholder}
+        </span>
+      ) : null}
+      <Popover open={open} onOpenChange={setOpen} modal>
+        <PopoverTrigger asChild>
+          <Button
+            variant={variant}
+            role="combobox"
+            aria-expanded={open}
+            className={buttonClassName}
+            disabled={disabled || isLoading}
+            size={size}
+          >
+            <span
+              className={cn(
+                'truncate text-left',
+                size === 'sm' ? 'w-min' : 'w-[20rem]'
+              )}
+            >
+              {size !== 'sm'
+                ? isLoading
+                  ? loadingPlaceholder
+                  : value
+                  ? (() => {
+                      const selectedRecord = data.find(
+                        (dataRecord) => dataRecord.value === value
+                      )
+                      return (
+                        <>
+                          {selectedRecord?.icon && (
+                            <selectedRecord.icon className="mr-2 h-4 w-4 inline-block" />
+                          )}
+                          {selectedRecord?.label}
+                        </>
+                      )
+                    })()
+                  : selectPlaceholder
+                : null}
+            </span>
+            <CaretSortIcon
+              className={cn(
+                'h-4 w-4 shrink-0 opacity-50',
+                size !== 'sm' && 'ml-2'
+              )}
+            />
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent
+          className="w-[20rem] p-0 md:w-[20rem]"
+          align={size === 'sm' ? 'start' : 'center'}
+        >
+          <Command>
+            <CommandInput
+              placeholder={searchPlaceholder}
+              onValueChange={onValueChange}
+            />
+            <CommandEmpty>
+              {isLoading ? loadingPlaceholder : resultsPlaceholder}
+            </CommandEmpty>
+            <ScrollArea className="h-[200px]">
+              <CommandList>
+                <CommandGroup>
+                  {data.map((dataRecord) => (
+                    <CommandItem
+                      key={dataRecord.value}
+                      value={dataRecord.value}
+                      onSelect={(currentValue) => {
+                        setValue(currentValue === value ? '' : currentValue)
+                        setOpen(false)
+                      }}
+                    >
+                      {dataRecord.icon && (
+                        <dataRecord.icon className="mr-2 h-4 w-4 shrink-0" />
+                      )}
+                      <span>{dataRecord.label}</span>
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              </CommandList>
+            </ScrollArea>
+            {scrollFooter ? scrollFooter() : null}
+          </Command>
+        </PopoverContent>
+      </Popover>
+    </div>
   )
 }

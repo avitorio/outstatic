@@ -1,6 +1,5 @@
 import { AdminLayout } from '@/components'
-import GitHubBranchSearch from '@/components/GitHubBranchSearch'
-import GitHubRepoSearch from '@/components/GitHubRepoSearch'
+import { GitHubRepoSearch } from '@/components/ui/outstatic/github-repo-search'
 
 export default function Onboarding() {
   return (
@@ -15,12 +14,6 @@ export default function Onboarding() {
             Repository
           </label>
           <GitHubRepoSearch />
-          <div className="mt-4">
-            <label className="block mb-2 text-sm font-medium text-gray-900">
-              Branch
-            </label>
-            <GitHubBranchSearch />
-          </div>
           <p className="text-sm">
             <span className="font-semibold">Optional:</span> You can set default
             repository and branch variables directly on your .env files. To

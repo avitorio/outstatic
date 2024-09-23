@@ -3,7 +3,7 @@ import { OutstaticData } from '@/app'
 import { AdminHeader, Sidebar } from '@/components'
 import { AdminLoading } from '@/components/AdminLoading'
 import { InitialDataContext } from '@/utils/hooks/useInitialData'
-import useOutstatic from '@/utils/hooks/useOutstatic'
+import useOutstatic, { useLocalData } from '@/utils/hooks/useOutstatic'
 import { queryClient } from '@/utils/react-query/queryClient'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
@@ -13,6 +13,7 @@ import Login from './login'
 import Onboarding from './onboarding'
 import Welcome from './welcome'
 import LoadingBackground from '@/components/ui/outstatic/loading-background'
+import { useGetRepository } from '@/utils/hooks/useGetRepository'
 
 export const AdminArea = ({ params }: { params: { ost: string[] } }) => {
   const [openSidebar, setOpenSidebar] = useState(false)
@@ -35,12 +36,23 @@ export const AdminArea = ({ params }: { params: { ost: string[] } }) => {
 
 export const Dashboard = ({ params }: { params: { ost: string[] } }) => {
   const { repoSlug, repoOwner, repoBranch, isPending } = useOutstatic()
+  const { data: repository, isPending: repoPending } = useGetRepository()
+  const { setData, data, isPending: localPending } = useLocalData()
+
+  useEffect(() => {
+    if (repository && !repoBranch && !data.repoBranch) {
+      const defaultBranch = repository.defaultBranchRef?.name
+      if (defaultBranch) {
+        setData({ repoBranch: defaultBranch })
+      }
+    }
+  }, [repository, setData, data])
 
   return (
     <>
-      {isPending ? (
+      {isPending || repoPending || localPending ? (
         <AdminLoading />
-      ) : !repoSlug || !repoOwner || !repoBranch ? (
+      ) : !repoSlug || !repoOwner ? (
         <Onboarding />
       ) : (
         <Router params={params} />
