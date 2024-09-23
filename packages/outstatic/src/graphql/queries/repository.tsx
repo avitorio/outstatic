@@ -5,6 +5,7 @@ export const GET_REPOSITORY = graphql(`
     repository(owner: $owner, name: $name) {
       id
       defaultBranchRef {
+        name
         target {
           oid
         }

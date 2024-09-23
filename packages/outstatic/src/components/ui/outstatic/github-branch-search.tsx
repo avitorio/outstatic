@@ -1,7 +1,6 @@
 'use client'
 import { SearchCombobox } from '@/components/ui/outstatic/search-combobox'
 import { GET_BRANCHES } from '@/graphql/queries/branches'
-import { useCollections } from '@/utils/hooks/useCollections'
 import useOutstatic, { useLocalData } from '@/utils/hooks/useOutstatic'
 import { queryClient } from '@/utils/react-query/queryClient'
 import { useRouter } from 'next/navigation'
@@ -9,6 +8,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { CommandItem } from '@/components/ui/shadcn/command'
 import { CreateBranchDialog } from '@/components/ui/outstatic/create-branch-dialog'
 import { PlusCircle } from 'lucide-react'
+import { Button } from '../shadcn/button'
 
 interface Branch {
   name: string
@@ -22,8 +22,16 @@ const debounce = (func: Function, delay: number) => {
   }
 }
 
-export const GitHubBranchSearch = () => {
-  const { setData } = useLocalData()
+interface GitHubBranchSearchProps {
+  variant?: React.ComponentProps<typeof Button>['variant']
+  size?: React.ComponentProps<typeof Button>['size']
+}
+
+export const GitHubBranchSearch = ({
+  variant = 'outline',
+  size = 'default'
+}: GitHubBranchSearchProps) => {
+  const { setData, data } = useLocalData()
   const [query, setQuery] = useState('')
   const { repoOwner, repoSlug, repoBranch, dashboardRoute, gqlClient } =
     useOutstatic()
@@ -33,7 +41,6 @@ export const GitHubBranchSearch = () => {
   const [suggestions, setSuggestions] = useState<Branch[]>(initialSuggestion)
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [value, setValue] = useState(repoBranch)
-  const { refetch } = useCollections()
   const router = useRouter()
   const [showCreateBranchDialog, setShowCreateBranchDialog] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
@@ -47,7 +54,7 @@ export const GitHubBranchSearch = () => {
             const variables = {
               owner: repoOwner,
               name: repoSlug,
-              first: 100,
+              first: 10,
               query: kw
             }
 
@@ -59,6 +66,14 @@ export const GitHubBranchSearch = () => {
                 .map((node) => ({
                   name: node.name
                 })) ?? []
+
+            // Check if repoBranch is in the response, if not add it
+            if (
+              repoBranch &&
+              !branches.some((branch) => branch.name === repoBranch)
+            ) {
+              branches.unshift({ name: repoBranch })
+            }
 
             setSuggestions(branches)
           } catch (error) {
@@ -77,26 +92,26 @@ export const GitHubBranchSearch = () => {
   )
 
   useEffect(() => {
-    fetchBranches(query)
-  }, [query])
+    if (isOpen) {
+      fetchBranches(query === repoBranch ? '' : query)
+    }
+  }, [query, isOpen])
 
   useEffect(() => {
-    if (value) {
+    if (value && value !== repoBranch) {
       setData({ repoBranch: value })
-
-      if (value !== repoBranch) {
-        const getCollections = async () => {
-          queryClient.invalidateQueries()
-          const { data } = await refetch()
-
-          if (data === null) {
-            router.push(dashboardRoute)
-          }
-        }
-        getCollections()
-      }
+      queryClient.invalidateQueries()
+      router.push(dashboardRoute)
     }
   }, [value])
+
+  useEffect(() => {
+    if (repoOwner && repoSlug && repoBranch) {
+      setValue(repoBranch)
+      setQuery(repoBranch)
+      setSuggestions([{ name: repoBranch }])
+    }
+  }, [data])
 
   return (
     <div>
@@ -113,6 +128,9 @@ export const GitHubBranchSearch = () => {
         selectPlaceholder="Select a branch"
         searchPlaceholder="Search for a branch. Ex: main"
         resultsPlaceholder="No branches found"
+        loadingPlaceholder={size !== 'sm' ? 'loading...' : value}
+        variant={variant}
+        size={size}
         scrollFooter={() => (
           <CommandItem
             key="create branch"

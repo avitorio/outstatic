@@ -38,7 +38,7 @@ export default function Collections() {
                 {confirmBranch ? (
                   <>
                     <CardHeader>
-                      <CardTitle>Create Collection</CardTitle>
+                      <CardTitle>Create a Collection</CardTitle>
                       <CardDescription>
                         Get started with your first Collection
                       </CardDescription>
@@ -55,7 +55,7 @@ export default function Collections() {
                       </p>
                       <Button asChild>
                         <Link
-                          href="/outstatic/collections/new"
+                          href={`${dashboardRoute}/collections/new`}
                           className="no-underline"
                         >
                           New Collection

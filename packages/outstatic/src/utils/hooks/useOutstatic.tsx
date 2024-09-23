@@ -83,8 +83,8 @@ export default useOutstatic
 
 export const useLocalData = () => {
   const queryClient = useQueryClient()
-  const { repoOwner, repoSlug, repoBranch } = useInitialData()
-  const queryKey = ['ost_local_data', { repoOwner, repoSlug, repoBranch }]
+  const { repoOwner, repoSlug } = useInitialData()
+  const queryKey = ['ost_local_data', { repoOwner, repoSlug }]
   const { data, isLoading, isError, error, isPending } = useQuery<
     Partial<OutstaticData>
   >({
@@ -117,7 +117,13 @@ export const useLocalData = () => {
       }
     },
     meta: { persist: true }
-  })
+  }) as {
+    data: Partial<OutstaticData>
+    isLoading: boolean
+    isError: boolean
+    error: unknown
+    isPending: boolean
+  }
 
   const setData = (newData: Partial<OutstaticData> | ConfigType) => {
     queryClient.setQueryData(queryKey, (oldData: OutstaticData) => ({

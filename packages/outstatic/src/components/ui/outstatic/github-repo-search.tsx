@@ -8,9 +8,11 @@ import { useDebouncedCallback } from 'use-debounce'
 export const GitHubRepoSearch: React.FC = () => {
   const initialData = useInitialData()
   const { setData } = useLocalData()
-  const { repoOwner, repoSlug, session } = useOutstatic()
+  const { repoOwner, repoSlug, repoBranch, session } = useOutstatic()
   const repository = repoOwner && repoSlug ? `${repoOwner}/${repoSlug}` : ''
-  const initialSuggestion = repository ? [{ full_name: repository }] : []
+  const initialSuggestion = repository
+    ? [{ full_name: repository, default_branch: repoBranch }]
+    : []
   const [query, setQuery] = useState<string>('')
   const [suggestions, setSuggestions] = useState(initialSuggestion)
   const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -66,7 +68,13 @@ export const GitHubRepoSearch: React.FC = () => {
     if (value) {
       setQuery(value)
       const [repoOwner, repoSlug] = value.split('/')
-      setData({ repoSlug, repoOwner, repoBranch: '' })
+      setData({
+        repoSlug,
+        repoOwner,
+        repoBranch:
+          suggestions.find((repo) => repo.full_name === value)
+            ?.default_branch || ''
+      })
     }
   }, [value])
 
