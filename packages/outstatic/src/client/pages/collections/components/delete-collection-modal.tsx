@@ -130,7 +130,16 @@ function DeleteCollectionModal({
         </p>
       </div>
 
-      <div className="flex items-center space-x-2 rounded-b border-t p-6">
+      <div className="flex items-center space-x-2 rounded-b border-t p-6 justify-end">
+        <Button
+          variant="outline"
+          onClick={() => {
+            setShowDeleteModal(false)
+            setSelectedCollection('')
+          }}
+        >
+          Cancel
+        </Button>
         <Button
           variant="destructive"
           onClick={() => {
@@ -165,15 +174,6 @@ function DeleteCollectionModal({
           ) : (
             'Delete'
           )}
-        </Button>
-        <Button
-          variant="outline"
-          onClick={() => {
-            setShowDeleteModal(false)
-            setSelectedCollection('')
-          }}
-        >
-          Cancel
         </Button>
       </div>
     </Modal>

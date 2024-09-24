@@ -15,6 +15,7 @@ import DeleteCollectionModal from './components/delete-collection-modal'
 import useOutstatic from '@/utils/hooks/useOutstatic'
 import LineBackground from '@/components/ui/outstatic/line-background'
 import { GitHubBranchSearch } from '@/components/ui/outstatic/github-branch-search'
+import { Settings, Trash } from 'lucide-react'
 
 export default function Collections() {
   const { data: collections, isPending } = useCollections()
@@ -135,15 +136,7 @@ export default function Collections() {
                         href={`${dashboardRoute}/collections/${collection}`}
                       >
                         <span className="sr-only">Edit collection</span>
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 24 24"
-                          width="24"
-                          height="24"
-                        >
-                          <path fill="none" d="M0 0h24v24H0z" />
-                          <path d="M15.7279 9.57629L14.3137 8.16207L5 17.4758V18.89H6.41421L15.7279 9.57629ZM17.1421 8.16207L18.5563 6.74786L17.1421 5.33365L15.7279 6.74786L17.1421 8.16207ZM7.24264 20.89H3V16.6474L16.435 3.21233C16.8256 2.8218 17.4587 2.8218 17.8492 3.21233L20.6777 6.04075C21.0682 6.43128 21.0682 7.06444 20.6777 7.45497L7.24264 20.89Z"></path>
-                        </svg>
+                        <Settings className="w-6 h-6" />
                       </Link>
                     </Button>
                     <Button
@@ -156,15 +149,7 @@ export default function Collections() {
                       }}
                     >
                       <span className="sr-only">Delete content</span>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        width="24"
-                        height="24"
-                      >
-                        <path fill="none" d="M0 0h24v24H0z" />
-                        <path d="M17 6h5v2h-2v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V8H2V6h5V3a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v3zm1 2H6v12h12V8zm-9 3h2v6H9v-6zm4 0h2v6h-2v-6zM9 4v2h6V4H9z" />
-                      </svg>
+                      <Trash className="w-6 h-6" />
                     </Button>
                   </div>
                 </CardContent>
