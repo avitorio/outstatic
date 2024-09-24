@@ -21,7 +21,7 @@ function GithubExplorer({ path, setPath }: GithubExplorerProps) {
 
   useEffect(() => {
     if (data !== undefined && folders !== undefined) {
-      setFolders(data)
+      setFolders([{ id: '', name: '' }, ...data])
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [path, data])

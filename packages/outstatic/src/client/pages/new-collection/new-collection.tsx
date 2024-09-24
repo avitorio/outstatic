@@ -74,7 +74,9 @@ export default function NewCollection() {
       const collectionPath = !ostDetach
         ? `${ostContent}/${collection}`
         : createFolder
-        ? `${path}/${collection}`
+        ? path
+          ? `${path}/${collection}`
+          : collection
         : path
 
       const collectionJSON = JSON.stringify(
@@ -205,8 +207,8 @@ export default function NewCollection() {
               <PathBreadcrumbs
                 path={
                   createFolder
-                    ? path +
-                      '/' +
+                    ? '/' +
+                      (path ? path + '/' : '') +
                       kebabCase(methods.getValues('name') || 'your-collection')
                     : '/' + path
                 }
