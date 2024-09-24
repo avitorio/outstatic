@@ -119,28 +119,33 @@ const DocumentsTable = () => {
         <tbody>
           {sortedDocuments
             ? sortedDocuments.map((document) => (
-                <tr
+                <Link
                   key={document.slug}
-                  className="border-b bg-white hover:bg-gray-50"
+                  href={`${dashboardRoute}/${params.ost[0]}/${document.slug}`}
+                  legacyBehavior
+                  passHref
                 >
-                  {columns.map((column) => {
-                    return cellSwitch(
-                      column.value,
-                      document,
-                      dashboardRoute,
-                      params.ost[0]
-                    )
-                  })}
-                  <td className="pr-6 py-4 text-right">
-                    <DeleteDocumentButton
-                      slug={document.slug}
-                      extension={document.extension as MDExtensions}
-                      disabled={false}
-                      onComplete={() => refetch()}
-                      collection={params.ost[0]}
-                    />
-                  </td>
-                </tr>
+                  <tr className="border-b bg-white hover:bg-gray-50 cursor-pointer">
+                    {columns.map((column) => {
+                      return cellSwitch(
+                        column.value,
+                        document
+                      )
+                    })}
+                    <td
+                      className="pr-6 py-4 text-right"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <DeleteDocumentButton
+                        slug={document.slug}
+                        extension={document.extension as MDExtensions}
+                        disabled={false}
+                        onComplete={() => refetch()}
+                        collection={params.ost[0]}
+                      />
+                    </td>
+                  </tr>
+                </Link>
               ))
             : null}
         </tbody>
@@ -165,33 +170,13 @@ const DocumentsTable = () => {
   )
 }
 
-const cellSwitch = (
-  columnValue: string,
-  document: OstDocument,
-  dashboard: string,
-  collection: string
-) => {
+const cellSwitch = (columnValue: string, document: OstDocument) => {
   const item = document[columnValue] as
     | string
     | {
         label: string
       }[]
   switch (columnValue) {
-    case 'title':
-      return (
-        <th
-          key="title"
-          scope="row"
-          className="relative whitespace-nowrap px-6 py-4 text-base font-semibold text-gray-900 group"
-        >
-          <Link href={`${dashboard}/${collection}/${document.slug}`}>
-            <div className="group-hover:text-blue-500">
-              {item as string}
-              <div className="absolute top-0 bottom-0 left-0 right-40 cursor-pointer" />
-            </div>
-          </Link>
-        </th>
-      )
     case 'status':
       return (
         <td

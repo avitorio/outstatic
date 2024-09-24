@@ -29,6 +29,10 @@ type Document = OstDocument & {
   extension: MDExtensions
 }
 
+type FormattedData = Document & {
+  [key: string]: any
+}
+
 export const useGetDocuments = () => {
   const {
     repoOwner,
@@ -76,24 +80,31 @@ export const useGetDocuments = () => {
               const { coverImage, ...listData } = data
 
               // Format document details
-              const formattedData = {
+              const formattedData: FormattedData = {
                 ...(listData as Document),
                 title: listData.title || name,
                 slug: name.replace(/\.mdx?$/, '') // Handles both .md and .mdx
               }
 
-              if (listData.author?.name) {
-                formattedData.author = listData.author.name
+              // Add publishedAt or date only if it's a valid date
+              if (listData.publishedAt || listData.date) {
+                const dateKey = listData.publishedAt ? 'publishedAt' : 'date'
+                const dateValue = listData[dateKey]
+                const parsedDate = new Date(dateValue)
+                if (!isNaN(parsedDate.getTime())) {
+                  // It's a valid date
+                  formattedData[dateKey] = parsedDate.toLocaleDateString(
+                    'en-US',
+                    dateFormatOptions
+                  )
+                } else if (typeof dateValue === 'string') {
+                  // It might be a pre-formatted date string
+                  formattedData[dateKey] = dateValue
+                }
               }
 
-              // Add publishedAt only if it's a valid date
-              if (
-                listData.publishedAt &&
-                !isNaN(new Date(listData.publishedAt).getTime())
-              ) {
-                formattedData.publishedAt = new Date(
-                  listData.publishedAt
-                ).toLocaleDateString('en-US', dateFormatOptions)
+              if (listData.author?.name) {
+                formattedData.author = listData.author.name
               }
 
               for (const [key, value] of Object.entries(formattedData)) {
