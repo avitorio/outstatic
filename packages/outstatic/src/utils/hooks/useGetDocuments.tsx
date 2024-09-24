@@ -59,9 +59,10 @@ export const useGetDocuments = () => {
           : `${repoBranch}:${ostContent}/${params?.ost[0]}`
       })
 
-      if (repository?.object === null) return []
+      const documents: Document[] = []
+      const metadata = new Map<string, any>()
 
-      let documents: Document[] = []
+      if (repository?.object === null) return { documents, metadata }
 
       const { entries } = repository?.object as Tree
 
@@ -78,13 +79,27 @@ export const useGetDocuments = () => {
               const formattedData = {
                 ...(listData as Document),
                 title: listData.title || name,
-                author: listData.author?.name || '',
-                publishedAt: new Date(listData.publishedAt).toLocaleDateString(
-                  'en-US',
-                  dateFormatOptions
-                ),
-                slug: name.replace(/\.mdx?$/, ''), // Handles both .md and .mdx
-                extension: name.split('.').pop() as MDExtensions
+                slug: name.replace(/\.mdx?$/, '') // Handles both .md and .mdx
+              }
+
+              if (listData.author?.name) {
+                formattedData.author = listData.author.name
+              }
+
+              // Add publishedAt only if it's a valid date
+              if (
+                listData.publishedAt &&
+                !isNaN(new Date(listData.publishedAt).getTime())
+              ) {
+                formattedData.publishedAt = new Date(
+                  listData.publishedAt
+                ).toLocaleDateString('en-US', dateFormatOptions)
+              }
+
+              for (const [key, value] of Object.entries(formattedData)) {
+                if (!metadata.has(key)) {
+                  metadata.set(key, typeof value)
+                }
               }
 
               documents.push(formattedData)
@@ -98,7 +113,7 @@ export const useGetDocuments = () => {
         documents.sort((a, b) => Number(b.publishedAt) - Number(a.publishedAt))
       }
 
-      return documents
+      return { documents, metadata }
     },
     meta: {
       errorMessage: `Failed to fetch collection: ${params?.ost[0]}`

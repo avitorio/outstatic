@@ -13,7 +13,7 @@ type ListProps = {
 }
 
 export default function List({ collection }: ListProps) {
-  const { data: documents, isError, isPending } = useGetDocuments()
+  const { data, isError, isPending } = useGetDocuments()
   const { dashboardRoute } = useOutstatic()
 
   if (isPending) return <AdminLoading />
@@ -29,12 +29,12 @@ export default function List({ collection }: ListProps) {
           </Link>
         </Button>
       </div>
-      {documents.length > 0 && (
+      {data?.documents.length > 0 && (
         <div className="relative shadow-md sm:rounded-lg">
           <DocumentsTable />
         </div>
       )}
-      {documents.length === 0 && !isPending && (
+      {data?.documents.length === 0 && !isPending && (
         <LineBackground>
           <div className="relative">
             <div className="mb-20 max-w-2xl p-8 px-4 md:p-8 text-black bg-white rounded-lg border border-gray-200 shadow-md prose prose-base">

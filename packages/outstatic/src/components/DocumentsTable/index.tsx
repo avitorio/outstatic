@@ -4,7 +4,7 @@ import { OstDocument } from '@/types/public'
 import { useGetDocuments } from '@/utils/hooks/useGetDocuments'
 import { sentenceCase } from 'change-case'
 import cookies from 'js-cookie'
-import { Settings } from 'lucide-react'
+import { ListFilter } from 'lucide-react'
 import Link from 'next/link'
 import { useState, useCallback, ReactNode } from 'react'
 import { Button } from '@/components/ui/shadcn/button'
@@ -27,21 +27,11 @@ export type Column = {
   value: string
 }
 
-const defaultColumns: Column[] = [
-  { id: 'title', label: 'Title', value: 'title' },
-  { id: 'status', label: 'Status', value: 'status' },
-  { id: 'publishedAt', label: 'Published at', value: 'publishedAt' }
-]
-
 const DocumentsTable = () => {
-  const { data: documents, refetch } = useGetDocuments()
+  const { data, refetch } = useGetDocuments()
   const { dashboardRoute } = useOutstatic()
 
   const params = useParams<{ ost: string[] }>()
-  const [columns, setColumns] = useState<Column[]>(
-    JSON.parse(cookies.get(`ost_${params.ost[0]}_fields`) || 'null') ??
-      defaultColumns
-  )
   const [showColumnOptions, setShowColumnOptions] = useState(false)
 
   const [sortConfig, setSortConfig] = useState<SortConfig>({
@@ -49,7 +39,7 @@ const DocumentsTable = () => {
     direction: 'descending'
   })
 
-  const sortedDocuments = useSortedDocuments(documents || [], sortConfig)
+  const sortedDocuments = useSortedDocuments(data?.documents || [], sortConfig)
 
   const requestSort = useCallback((key: keyof OstDocument) => {
     setSortConfig((prevConfig) => ({
@@ -61,12 +51,17 @@ const DocumentsTable = () => {
     }))
   }, [])
 
-  const allColumns = Object.keys(sortedDocuments ? sortedDocuments[0] : []).map(
+  const allColumns = Array.from(data?.metadata?.keys() ?? []).map(
     (column: string) => ({
       id: column,
       label: sentenceCase(column),
       value: column
     })
+  )
+
+  const [columns, setColumns] = useState<Column[]>(
+    JSON.parse(cookies.get(`ost_${params.ost[0]}_fields`) || 'null') ??
+      allColumns.slice(0, 5)
   )
 
   return (
@@ -115,8 +110,8 @@ const DocumentsTable = () => {
                 size="icon"
                 onClick={() => setShowColumnOptions(!showColumnOptions)}
               >
-                <span className="sr-only">Settings</span>
-                <Settings />
+                <span className="sr-only">List Columns</span>
+                <ListFilter />
               </Button>
             </th>
           </tr>
@@ -158,7 +153,7 @@ const DocumentsTable = () => {
             selected={columns}
             setSelected={setColumns}
             allOptions={allColumns}
-            defaultValues={defaultColumns}
+            defaultValues={allColumns}
             onChangeList={(e: any) => {
               cookies.set(`ost_${params.ost[0]}_fields`, JSON.stringify(e))
             }}
@@ -213,7 +208,7 @@ const cellSwitch = (
           key={columnValue}
           className="px-6 py-4 text-base font-semibold text-gray-900"
         >
-          {typeof item === 'object' && item !== null
+          {typeof item === 'object' && item !== null && Array.isArray(item)
             ? item.map((item: { label: string }) => (
                 <span
                   key={item.label}
@@ -222,7 +217,9 @@ const cellSwitch = (
                   {item.label}
                 </span>
               ))
-            : item}
+            : typeof item === 'string'
+            ? item
+            : null}
         </td>
       )
   }
