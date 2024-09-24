@@ -35,10 +35,7 @@ export const GitHubBranchSearch = ({
   const [query, setQuery] = useState('')
   const { repoOwner, repoSlug, repoBranch, dashboardRoute, gqlClient } =
     useOutstatic()
-  const initialSuggestion = repoBranch
-    ? [{ name: repoBranch }]
-    : [{ name: 'main' }]
-  const [suggestions, setSuggestions] = useState<Branch[]>(initialSuggestion)
+  const [suggestions, setSuggestions] = useState<Branch[]>([])
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [value, setValue] = useState(repoBranch)
   const router = useRouter()
