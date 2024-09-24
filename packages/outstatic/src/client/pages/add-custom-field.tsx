@@ -5,8 +5,7 @@ import TagInput from '@/components/TagInput'
 import LineBackground from '@/components/ui/outstatic/line-background'
 import { Button } from '@/components/ui/shadcn/button'
 import { Card, CardContent } from '@/components/ui/shadcn/card'
-import Input from '@/components/ui/outstatic/input'
-import { Input as ShadInput } from '@/components/ui/shadcn/input'
+import { Input } from '@/components/ui/shadcn/input'
 import { CustomField, CustomFields, customFieldTypes } from '@/types'
 import { createCommitApi } from '@/utils/createCommitApi'
 import { useCreateCommit } from '@/utils/hooks/useCreateCommit'
@@ -34,6 +33,9 @@ import {
   FormDescription,
   FormMessage
 } from '@/components/ui/shadcn/form'
+import { SpinnerIcon } from '@/components/ui/outstatic/spinner-icon'
+import { Trash } from 'lucide-react'
+import { useQueryClient } from '@tanstack/react-query'
 
 type AddCustomFieldProps = {
   collection: string
@@ -60,6 +62,7 @@ export default function AddCustomField({ collection }: AddCustomFieldProps) {
     ostContent,
     setHasChanges
   } = useOutstatic()
+  const queryClient = useQueryClient()
   const createCommit = useCreateCommit()
   const fetchOid = useOid()
   const [customFields, setCustomFields] = useState<CustomFields>({})
@@ -97,48 +100,64 @@ export default function AddCustomField({ collection }: AddCustomFieldProps) {
     customFields: any
     deleteField?: boolean
   }) => {
-    const oid = await fetchOid()
-    const customFieldsJSON = JSON.stringify(
-      {
-        title: collection,
-        type: 'object',
-        properties: { ...customFields }
-      },
-      null,
-      2
-    )
-
-    const capi = createCommitApi({
-      message: `feat(${collection}): ${
-        deleteField ? 'delete' : 'add'
-      } ${fieldName} field`,
-      owner: repoOwner || session?.user?.login || '',
-      oid: oid ?? '',
-      name: repoSlug,
-      branch: repoBranch
-    })
-
-    capi.replaceFile(
-      `${ostContent}/${collection}/schema.json`,
-      customFieldsJSON + '\n'
-    )
-
-    const input = capi.createInput()
-
-    createCommit.mutate(input)
-
-    if (createCommit.isError) {
-      toast.error(
-        deleteField ? 'Failed to delete field' : 'Failed to add field'
+    try {
+      const oid = await fetchOid()
+      const customFieldsJSON = JSON.stringify(
+        {
+          title: collection,
+          type: 'object',
+          path: schema?.path,
+          properties: { ...customFields }
+        },
+        null,
+        2
       )
+
+      const capi = createCommitApi({
+        message: `feat(${collection}): ${
+          deleteField ? 'delete' : 'add'
+        } ${fieldName} field`,
+        owner: repoOwner || session?.user?.login || '',
+        oid: oid ?? '',
+        name: repoSlug,
+        branch: repoBranch
+      })
+
+      capi.replaceFile(
+        `${ostContent}/${collection}/schema.json`,
+        customFieldsJSON + '\n'
+      )
+
+      const input = capi.createInput()
+
+      toast.promise(createCommit.mutateAsync(input), {
+        loading: `${
+          deleteField ? 'Deleting' : selectedField ? 'Editing' : 'Adding'
+        } field...`,
+        success: `Field ${
+          deleteField ? 'deleted' : selectedField ? 'edited' : 'added'
+        } successfully`,
+        error: `Failed to ${
+          deleteField ? 'delete' : selectedField ? 'edit' : 'add'
+        } field`
+      })
+
+      if (createCommit.isError) {
+        throw new Error(
+          `Failed to ${
+            deleteField ? 'delete' : selectedField ? 'edit' : 'add'
+          } field`
+        )
+      }
+
+      const filePath = `${repoBranch}:${ostContent}/${collection}/schema.json`
+      await queryClient.invalidateQueries({
+        queryKey: ['collection-schema', { filePath }]
+      })
+    } catch (error) {
+      console.error('Error in capiHelper:', error)
       return false
     }
-
-    if (createCommit.isSuccess) {
-      return true
-    }
-
-    return false
   }
 
   const onSubmit: SubmitHandler<CustomFieldForm> = async (
@@ -173,11 +192,7 @@ export default function AddCustomField({ collection }: AddCustomFieldProps) {
         }
       }
 
-      const created = await capiHelper({ customFields })
-
-      if (created) {
-        setCustomFields({ ...customFields })
-      }
+      await capiHelper({ customFields })
     } catch (error) {
       // TODO: Better error treatment
       setError('add')
@@ -196,14 +211,11 @@ export default function AddCustomField({ collection }: AddCustomFieldProps) {
     try {
       let newCustomFields = { ...customFields }
       delete newCustomFields[name]
-      const deleted = await capiHelper({
+      await capiHelper({
         customFields: newCustomFields,
         deleteField: true
       })
-
-      if (deleted) {
-        setCustomFields(newCustomFields)
-      }
+      setCustomFields(newCustomFields)
     } catch (error) {
       // TODO: Better error treatment
       setError('delete')
@@ -319,15 +331,7 @@ export default function AddCustomField({ collection }: AddCustomFieldProps) {
                               }}
                             >
                               <span className="sr-only">Delete content</span>
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 24 24"
-                                width="24"
-                                height="24"
-                              >
-                                <path fill="none" d="M0 0h24v24H0z" />
-                                <path d="M17 6h5v2h-2v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V8H2V6h5V3a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v3zm1 2H6v12h12V8zm-9 3h2v6H9v-6zm4 0h2v6h-2v-6zM9 4v2h6V4H9z" />
-                              </svg>
+                              <Trash className="w-6 h-6" />
                             </Button>
                           </CardContent>
                         </Card>
@@ -384,11 +388,14 @@ export default function AddCustomField({ collection }: AddCustomFieldProps) {
                 <FormField
                   control={methods.control}
                   name="title"
+                  defaultValue={
+                    selectedField ? customFields[selectedField].title : ''
+                  }
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Field name</FormLabel>
                       <FormControl>
-                        <ShadInput
+                        <Input
                           placeholder="Ex: Category"
                           {...field}
                           className="w-full max-w-sm md:w-80"
@@ -410,6 +417,11 @@ export default function AddCustomField({ collection }: AddCustomFieldProps) {
                   <FormField
                     control={methods.control}
                     name="fieldType"
+                    defaultValue={
+                      selectedField
+                        ? customFields[selectedField].fieldType
+                        : 'String'
+                    }
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Field type</FormLabel>
@@ -452,7 +464,7 @@ export default function AddCustomField({ collection }: AddCustomFieldProps) {
                     <FormItem>
                       <FormLabel>Description</FormLabel>
                       <FormControl>
-                        <ShadInput
+                        <Input
                           placeholder="Ex: Add a category"
                           {...field}
                           className="w-full max-w-sm md:w-80"
@@ -527,44 +539,8 @@ export default function AddCustomField({ collection }: AddCustomFieldProps) {
               </div>
               <div className="flex items-center justify-end space-x-2 rounded-b border-t p-6">
                 <Button
-                  type="submit"
-                  disabled={adding}
-                  // className="flex rounded-lg bg-red-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-red-800 focus:outline-none"
-                >
-                  {adding ? (
-                    <>
-                      <svg
-                        className="mr-3 -ml-1 h-5 w-5 animate-spin text-white"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                      >
-                        <circle
-                          className="opacity-25"
-                          cx="12"
-                          cy="12"
-                          r="10"
-                          stroke="currentColor"
-                          strokeWidth="4"
-                        ></circle>
-                        <path
-                          className="opacity-75"
-                          fill="currentColor"
-                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                        ></path>
-                      </svg>
-                      {selectedField ? 'Editing' : 'Adding'}
-                    </>
-                  ) : selectedField ? (
-                    'Edit'
-                  ) : (
-                    'Add'
-                  )}
-                </Button>
-                <Button
                   type="button"
                   variant="outline"
-                  // className="rounded-lg border border-gray-200 px-5 py-2.5 text-sm font-medium focus:z-10 focus:outline-none focus:ring-4 order-gray-600 bg-gray-800 text-white hover:border-gray-600 hover:bg-gray-700 focus:ring-gray-700"
                   onClick={() => {
                     setHasChanges(false)
                     setSelectedField('')
@@ -572,6 +548,18 @@ export default function AddCustomField({ collection }: AddCustomFieldProps) {
                   }}
                 >
                   Cancel
+                </Button>
+                <Button type="submit" disabled={adding}>
+                  {adding ? (
+                    <>
+                      <SpinnerIcon className="text-background mr-2" />
+                      {selectedField ? 'Editing' : 'Adding'}
+                    </>
+                  ) : selectedField ? (
+                    'Edit'
+                  ) : (
+                    'Add'
+                  )}
                 </Button>
               </div>
             </form>
@@ -595,7 +583,17 @@ export default function AddCustomField({ collection }: AddCustomFieldProps) {
               </p>
             </div>
 
-            <div className="flex items-center space-x-2 rounded-b border-t p-6">
+            <div className="flex items-center space-x-2 rounded-b border-t p-6 justify-end">
+              <Button
+                variant="outline"
+                type="button"
+                onClick={() => {
+                  setShowDeleteModal(false)
+                  setSelectedField('')
+                }}
+              >
+                Cancel
+              </Button>
               <Button
                 variant="destructive"
                 disabled={deleting}
@@ -606,41 +604,12 @@ export default function AddCustomField({ collection }: AddCustomFieldProps) {
               >
                 {deleting ? (
                   <>
-                    <svg
-                      className="mr-3 -ml-1 h-5 w-5 animate-spin text-white"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                    >
-                      <circle
-                        className="opacity-25"
-                        cx="12"
-                        cy="12"
-                        r="10"
-                        stroke="currentColor"
-                        strokeWidth="4"
-                      ></circle>
-                      <path
-                        className="opacity-75"
-                        fill="currentColor"
-                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                      ></path>
-                    </svg>
+                    <SpinnerIcon className="text-background mr-2" />
                     Deleting
                   </>
                 ) : (
                   'Delete'
                 )}
-              </Button>
-              <Button
-                variant="outline"
-                type="button"
-                onClick={() => {
-                  setShowDeleteModal(false)
-                  setSelectedField('')
-                }}
-              >
-                Cancel
               </Button>
             </div>
           </Modal>
