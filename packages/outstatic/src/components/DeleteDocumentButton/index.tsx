@@ -10,6 +10,7 @@ import { stringifyMetadata } from '@/utils/metadata/stringify'
 import { Trash } from 'lucide-react'
 import { useState } from 'react'
 import { Button } from '@/components/ui/shadcn/button'
+import { SpinnerIcon } from '../ui/outstatic/spinner-icon'
 
 type DeleteDocumentButtonProps = {
   slug: string
@@ -112,7 +113,7 @@ const DeleteDocumentButton = ({
             >
               {deleting ? (
                 <>
-                  <Trash className="w-6 h-6" />
+                  <SpinnerIcon className="text-background mr-2" />
                   Deleting
                 </>
               ) : (
