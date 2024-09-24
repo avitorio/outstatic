@@ -20,6 +20,15 @@ import { slugify } from 'transliteration'
 import * as yup from 'yup'
 import GithubExplorer from './components/github-explorer'
 import PathBreadcrumbs from './components/path-breadcrumb'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter
+} from '@/components/ui/shadcn/dialog'
+import { SpinnerIcon } from '@/components/ui/outstatic/spinner-icon'
 
 export default function NewCollection() {
   const { pages, hasChanges, setHasChanges } = useOutstatic()
@@ -45,16 +54,19 @@ export default function NewCollection() {
       .required('Collection name is required.'),
     contentPath: yup.string()
   })
-  const [path, setPath] = useState('')
+  const ostContent = `${monorepoPath ? monorepoPath + '/' : ''}${contentPath}`
+  const [path, setPath] = useState(ostContent)
+  const [outstaticFolder, setOutstaticFolder] = useState(true)
   const [createFolder, setCreateFolder] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(false)
+  const [dialogOpen, setDialogOpen] = useState(false)
+  const [showSelectFolderButton, setShowSelectFolderButton] = useState(false)
+
   const methods = useForm<Collection>({
     // @ts-ignore
     resolver: yupResolver(createCollection)
   })
-
-  const ostContent = `${monorepoPath ? monorepoPath + '/' : ''}${contentPath}`
 
   const mutation = useCreateCommit()
 
@@ -184,77 +196,171 @@ export default function NewCollection() {
               </Alert>
             )}
           </div>
-
-          {ostDetach ? (
-            <div className="space-y-4">
-              <Label htmlFor="create-folder">Content Path</Label>
-              <Input id="contentPath" type="hidden" value={path} />
-              <RadioGroup
-                defaultValue="select-folder"
-                onValueChange={(value: string) =>
-                  setCreateFolder(value === 'create-folder')
-                }
-              >
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="select-folder" id="select-folder" />
-                  <Label htmlFor="select-folder">Select existing folder</Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="create-folder" id="create-folder" />
-                  <Label htmlFor="create-folder">Create new folder</Label>
-                </div>
-              </RadioGroup>
-              <PathBreadcrumbs
-                path={
-                  createFolder
-                    ? '/' +
-                      (path ? path + '/' : '') +
-                      kebabCase(methods.getValues('name') || 'your-collection')
-                    : '/' + path
-                }
-              />
-              <p className="text-xs text-gray-500">
-                This is where your .md(x) files will be stored and read from.
-              </p>
-
-              <GithubExplorer path={path} setPath={setPath} />
-            </div>
-          ) : null}
-          <Button
-            type="submit"
-            disabled={loading || !hasChanges}
-            className="ml-1 mt-7 mb-5"
-          >
-            {loading ? (
-              <>
-                <svg
-                  className="mr-3 -ml-1 h-5 w-5 animate-spin text-white"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
+          {collectionName && (
+            <>
+              <div className="space-y-4">
+                <Label>Content Path</Label>
+                <PathBreadcrumbs
+                  path={
+                    outstaticFolder
+                      ? ostContent +
+                        '/' +
+                        kebabCase(
+                          methods.getValues('name') || 'your-collection'
+                        )
+                      : createFolder
+                      ? '/' +
+                        (path ? path + '/' : '') +
+                        kebabCase(
+                          methods.getValues('name') || 'your-collection'
+                        )
+                      : '/' + path
+                  }
+                />
+                <p className="text-xs text-gray-500">
+                  This is where your .md(x) files will be stored and read from.
+                </p>
+                <Input id="contentPath" type="hidden" value={path} />
+                <RadioGroup
+                  defaultValue="outstatic-folder"
+                  onValueChange={(value: string) => {
+                    setOutstaticFolder(value === 'outstatic-folder')
+                    if (value === 'outstatic-folder') {
+                      setPath(ostContent)
+                      setShowSelectFolderButton(false)
+                    }
+                    if (value === 'select-or-create') {
+                      setPath('')
+                      setShowSelectFolderButton(true)
+                    }
+                  }}
                 >
-                  <circle
-                    className="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    strokeWidth="4"
-                  ></circle>
-                  <path
-                    className="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                  ></path>
-                </svg>
-                Saving
-              </>
-            ) : (
-              'Save'
-            )}
-          </Button>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem
+                      value="outstatic-folder"
+                      id="outstatic-folder"
+                    />
+                    <Label htmlFor="outstatic-folder">
+                      Use Outstatic&apos;s default structure
+                    </Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem
+                      value="select-or-create"
+                      id="select-or-create"
+                    />
+                    <Label htmlFor="select-or-create">
+                      Select or create a new folder
+                    </Label>
+                  </div>
+                </RadioGroup>
+              </div>
+
+              <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+                <DialogContent className="sm:max-w-lg">
+                  <DialogHeader>
+                    <DialogTitle>Content Path</DialogTitle>
+                    <DialogDescription>
+                      Choose where your .md(x) files will be stored and read
+                      from.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="space-y-4">
+                    <Input id="contentPath" type="hidden" value={path} />
+                    <RadioGroup
+                      defaultValue="select-folder"
+                      onValueChange={(value: string) =>
+                        setCreateFolder(value === 'create-folder')
+                      }
+                    >
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem
+                          value="select-folder"
+                          id="select-folder"
+                        />
+                        <Label htmlFor="select-folder">
+                          Select an existing folder
+                        </Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem
+                          value="create-folder"
+                          id="create-folder"
+                        />
+                        <Label htmlFor="create-folder">
+                          Create a new folder
+                        </Label>
+                      </div>
+                    </RadioGroup>
+                    <PathBreadcrumbs
+                      path={
+                        createFolder
+                          ? '/' +
+                            (path ? path + '/' : '') +
+                            kebabCase(
+                              methods.getValues('name') || 'your-collection'
+                            )
+                          : '/' + path
+                      }
+                    />
+                    <GithubExplorer path={path} setPath={setPath} />
+                  </div>
+                  <DialogFooter>
+                    <Button
+                      variant="outline"
+                      onClick={() => setDialogOpen(false)}
+                    >
+                      Cancel
+                    </Button>
+
+                    <SaveButton
+                      loading={loading}
+                      hasChanges={hasChanges}
+                      onClick={methods.handleSubmit(onSubmit)}
+                    />
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
+              {showSelectFolderButton ? (
+                <Button
+                  onClick={(e) => {
+                    e.preventDefault()
+                    setDialogOpen(true)
+                  }}
+                  className="mt-7 mb-5"
+                >
+                  Select or Create Folder
+                </Button>
+              ) : (
+                <SaveButton loading={loading} hasChanges={hasChanges} />
+              )}
+            </>
+          )}
         </form>
       </AdminLayout>
     </FormProvider>
+  )
+}
+
+const SaveButton = ({
+  loading,
+  hasChanges,
+  onClick
+}: {
+  loading: boolean
+  hasChanges: boolean
+  onClick?: () => void
+}) => {
+  return (
+    <Button type="submit" disabled={loading || !hasChanges} onClick={onClick}>
+      {loading ? (
+        <>
+          <SpinnerIcon className="text-background mr-2" />
+          Creating Collection
+        </>
+      ) : (
+        'Create Collection'
+      )}
+    </Button>
   )
 }
