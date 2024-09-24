@@ -160,7 +160,7 @@ export function SearchCombobox({
                       key={dataRecord.value}
                       value={dataRecord.value}
                       onSelect={(currentValue) => {
-                        setValue(currentValue === value ? '' : currentValue)
+                        setValue(currentValue)
                         setOpen(false)
                       }}
                     >
