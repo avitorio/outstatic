@@ -12,6 +12,7 @@ export type Document = {
   slug: string
   description?: string
   coverImage?: string
+  date?: Date
 }
 
 export type FileType = {

@@ -38,6 +38,7 @@ export default function EditDocument({ collection }: { collection: string }) {
   const [customFields, setCustomFields] = useState<CustomFields>({})
   const files = useFileStore((state) => state.files)
   const [extension, setExtension] = useState<MDExtensions>('mdx')
+  const [metadata, setMetadata] = useState<Record<string, any>>({})
 
   const editDocument = (property: string, value: any) => {
     const formValues = methods.getValues()
@@ -80,7 +81,8 @@ export default function EditDocument({ collection }: { collection: string }) {
     session,
     setHasChanges,
     setShowDelete,
-    setExtension
+    setExtension,
+    setMetadata
   })
 
   // Add custom fields
@@ -126,6 +128,7 @@ export default function EditDocument({ collection }: { collection: string }) {
                 saveFunc={methods.handleSubmit(onSubmit)}
                 showDelete={showDelete}
                 customFields={customFields}
+                metadata={metadata}
               />
             }
           >

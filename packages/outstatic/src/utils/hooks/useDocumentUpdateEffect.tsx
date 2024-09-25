@@ -18,6 +18,7 @@ interface UseDocumentUpdateEffectProps {
   setHasChanges: Dispatch<SetStateAction<boolean>>
   setShowDelete: Dispatch<SetStateAction<boolean>>
   setExtension: Dispatch<SetStateAction<MDExtensions>>
+  setMetadata: Dispatch<SetStateAction<Record<string, any>>>
 }
 
 export const useDocumentUpdateEffect = ({
@@ -28,7 +29,8 @@ export const useDocumentUpdateEffect = ({
   session,
   setHasChanges,
   setShowDelete,
-  setExtension
+  setExtension,
+  setMetadata
 }: UseDocumentUpdateEffectProps) => {
   const {
     basePath,
@@ -53,7 +55,7 @@ export const useDocumentUpdateEffect = ({
     if (document && editor) {
       const { mdDocument } = document
       const { data, content } = matter(mdDocument)
-
+      setMetadata(data)
       const parsedContent = parseContent({
         content,
         basePath,
@@ -64,14 +66,19 @@ export const useDocumentUpdateEffect = ({
         repoMediaPath
       })
 
-      const newDate = data.publishedAt
-        ? new Date(data.publishedAt)
-        : getLocalDate()
-      const newDocument = {
+      const dateField = data.publishedAt || data.date
+      const newDate = dateField ? new Date(dateField) : getLocalDate()
+      const newDocument: Record<string, any> = {
         ...data,
-        publishedAt: newDate,
         content: parsedContent,
         slug
+      }
+      if (data.publishedAt) {
+        newDocument.publishedAt = newDate
+      } else if (data.date) {
+        newDocument.date = newDate
+      } else {
+        newDocument.publishedAt = newDate
       }
       methods.reset(newDocument)
       editor.commands.setContent(parsedContent)

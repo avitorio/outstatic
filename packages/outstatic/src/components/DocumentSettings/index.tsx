@@ -11,7 +11,12 @@ import {
   CustomFields,
   isArrayCustomField
 } from '@/types'
-import { PanelRight, PanelRightClose } from 'lucide-react'
+import {
+  ArrowDown,
+  PanelRight,
+  PanelRightClose,
+  PlusCircle
+} from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useContext, useEffect, useState } from 'react'
 import { RegisterOptions, useFormContext } from 'react-hook-form'
@@ -32,7 +37,13 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/shadcn/select'
-import { SpinnerIcon } from '../ui/outstatic/spinner-icon'
+import { SpinnerIcon } from '@/components/ui/outstatic/spinner-icon'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger
+} from '@/components/ui/shadcn/tooltip'
 
 type DocumentSettingsProps = {
   saveFunc: () => void
@@ -40,6 +51,7 @@ type DocumentSettingsProps = {
   registerOptions?: RegisterOptions
   showDelete: boolean
   customFields?: CustomFields
+  metadata: Record<string, any>
 }
 
 interface CustomInputProps {
@@ -83,7 +95,8 @@ const DocumentSettings = ({
   loading,
   registerOptions,
   showDelete,
-  customFields = {}
+  customFields = {},
+  metadata
 }: DocumentSettingsProps) => {
   const {
     setValue,
@@ -105,6 +118,17 @@ const DocumentSettings = ({
       setValue('status', 'draft')
     }
   }, [document.status])
+
+  const missingCustomFields = Object.keys(metadata)
+    .filter((key) => !customFields.hasOwnProperty(key) && key !== 'date')
+    .reduce<Record<string, { title: string }>>((acc, key) => {
+      const title = key
+        .replace(/([A-Z])/g, ' $1')
+        .replace(/^./, (str) => str.toUpperCase())
+        .trim()
+      acc[key] = { title }
+      return acc
+    }, {})
 
   return (
     <>
@@ -164,12 +188,24 @@ const DocumentSettings = ({
         } md:block w-full border-b border-gray-300 bg-white md:w-64 md:flex-none md:flex-col md:flex-wrap md:items-start md:justify-start md:border-b-0 md:border-l pt-6 pb-16 h-full max-h-[calc(100vh-128px)] md:max-h-[calc(100vh-56px)] scrollbar-hide overflow-scroll`}
       >
         <div className="relative w-full items-center justify-between mb-4 flex px-4">
-          <DateTimePicker
-            id="publishedAt"
-            label="Date"
-            date={document.publishedAt}
-            setDate={(publishedAt) => editDocument('publishedAt', publishedAt)}
-          />
+          {document.publishedAt ? (
+            <DateTimePicker
+              id="publishedAt"
+              label="Date"
+              date={document.publishedAt}
+              setDate={(publishedAt) =>
+                editDocument('publishedAt', publishedAt)
+              }
+            />
+          ) : null}
+          {document?.date && !document.publishedAt ? (
+            <DateTimePicker
+              id="date"
+              label="Date"
+              date={document.date}
+              setDate={(date) => editDocument('date', date)}
+            />
+          ) : null}
         </div>
         <div className="hidden md:flex relative w-full items-center justify-between mb-4 px-4">
           <label
@@ -272,23 +308,7 @@ const DocumentSettings = ({
               }}
             />
           </Accordion>
-          <Accordion title="Description">
-            <TextArea
-              name="description"
-              type="textarea"
-              label="Write a description (optional)"
-              id="description"
-              rows={5}
-              className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2 text-sm text-gray-900 outline-none focus:border-blue-500 focus:ring-blue-500"
-            />
-          </Accordion>
 
-          <Accordion title="Cover Image">
-            <DocumentSettingsImageSelection
-              name="coverImage"
-              description="Cover Image"
-            />
-          </Accordion>
           {customFields &&
             Object.entries(customFields).map(([name, field]) => {
               const Field = FieldDataMap[field.fieldType]
@@ -320,6 +340,51 @@ const DocumentSettings = ({
                 </Accordion>
               )
             })}
+
+          {missingCustomFields &&
+            Object.keys(missingCustomFields).length > 0 && (
+              <>
+                <div className="w-full flex items-center justify-center py-4 gap-2">
+                  <ArrowDown className="h-4 w-4" />
+                  <p className="semiblod text-sm">Set up Custom Fields</p>
+                </div>
+                {Object.entries(missingCustomFields).map(([name, field]) => {
+                  return (
+                    <div
+                      key={name}
+                      className="w-full flex items-center justify-between px-4 py-2 gap-2"
+                    >
+                      <p className="semiblod text-sm truncate">{field.title}</p>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="text-xs flex gap-2"
+                      >
+                        <PlusCircle className="h-4 w-4" /> Create
+                      </Button>
+                    </div>
+                  )
+                })}
+              </>
+            )}
+          <div className="w-full flex items-center justify-center px-4 py-2 gap-2">
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="text-xs flex gap-2"
+                  >
+                    <PlusCircle className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Add Custom Field</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </div>
         </div>
       </aside>
     </>
