@@ -59,6 +59,7 @@ export const customFieldTypes = [
   'Tags',
   'Boolean'
 ] as const
+
 export const customFieldData = ['string', 'number', 'array', 'boolean'] as const
 
 export type CustomFieldArrayValue = {
@@ -66,7 +67,9 @@ export type CustomFieldArrayValue = {
   value: string
 }
 
-export type CustomField<T extends 'string' | 'number' | 'array' | 'boolean'> = {
+export type CustomFieldType<
+  T extends 'string' | 'number' | 'array' | 'boolean'
+> = {
   title: string
   fieldType: (typeof customFieldTypes)[number]
   dataType: T
@@ -74,8 +77,8 @@ export type CustomField<T extends 'string' | 'number' | 'array' | 'boolean'> = {
   required?: boolean
 } & (T extends 'array' ? { values: CustomFieldArrayValue[] } : {})
 
-export type CustomFields = {
-  [key: string]: CustomField<'string' | 'number' | 'array' | 'boolean'>
+export type CustomFieldsType = {
+  [key: string]: CustomFieldType<'string' | 'number' | 'array' | 'boolean'>
 }
 
 export type DocumentSchemaShape =
@@ -84,7 +87,7 @@ export type DocumentSchemaShape =
       [key: string]: any
     }
 
-export function isArrayCustomField(obj: any): obj is CustomField<'array'> {
+export function isArrayCustomField(obj: any): obj is CustomFieldType<'array'> {
   return obj && obj.dataType === 'array' && Array.isArray(obj.values)
 }
 

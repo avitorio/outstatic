@@ -16,6 +16,7 @@ import useOutstatic from '@/utils/hooks/useOutstatic'
 import LineBackground from '@/components/ui/outstatic/line-background'
 import { GitHubBranchSearch } from '@/components/ui/outstatic/github-branch-search'
 import { Settings, Trash } from 'lucide-react'
+import { capitalCase } from 'change-case'
 
 export default function Collections() {
   const { data: collections, isPending } = useCollections()
@@ -126,7 +127,7 @@ export default function Collections() {
                     className="focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg"
                   >
                     <h5 className="text-2xl cursor-pointer font-bold tracking-tight text-gray-900 capitalize hover:text-blue-500">
-                      {collection}
+                      {capitalCase(collection)}
                       <span className="absolute top-0 bottom-0 left-0 right-16"></span>
                     </h5>
                   </Link>

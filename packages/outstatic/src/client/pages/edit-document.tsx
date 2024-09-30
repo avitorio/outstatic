@@ -5,7 +5,7 @@ import {
   MDEditor
 } from '@/components'
 import { DocumentContext } from '@/context'
-import { CustomFields, Document, MDExtensions } from '@/types'
+import { CustomFieldsType, Document, MDExtensions } from '@/types'
 import { deepReplace } from '@/utils/deepReplace'
 import { useDocumentUpdateEffect } from '@/utils/hooks/useDocumentUpdateEffect'
 import { useFileStore } from '@/utils/hooks/useFileStore'
@@ -35,7 +35,7 @@ export default function EditDocument({ collection }: { collection: string }) {
   //@ts-ignore
   const methods = useForm<Document>({ resolver: yupResolver(documentSchema) })
   const { editor } = useTipTap({ ...methods })
-  const [customFields, setCustomFields] = useState<CustomFields>({})
+  const [customFields, setCustomFields] = useState<CustomFieldsType>({})
   const files = useFileStore((state) => state.files)
   const [extension, setExtension] = useState<MDExtensions>('mdx')
   const [metadata, setMetadata] = useState<Record<string, any>>({})

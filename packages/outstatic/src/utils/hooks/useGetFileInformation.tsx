@@ -30,7 +30,7 @@ export const useGetFileInformation = ({
   const { repoOwner, repoSlug, repoBranch, ostContent, session, gqlClient } =
     useOutstatic()
 
-  const filePath = `${repoBranch}:${ostContent}/metadata.json`
+  const filePath = `${repoBranch}:${ostContent}`
 
   return useQuery({
     queryKey: ['file-info', { filePath }],
@@ -38,7 +38,7 @@ export const useGetFileInformation = ({
       await gqlClient.request<FileInformationDataType>(GET_FILE_INFORMATION, {
         owner: repoOwner || session?.user?.login || '',
         name: repoSlug,
-        filePath
+        expression: filePath
       }),
     meta: {
       errorMessage: `Failed to fetch metadata.`

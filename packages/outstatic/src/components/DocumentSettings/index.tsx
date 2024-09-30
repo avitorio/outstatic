@@ -8,7 +8,7 @@ import TextArea from '@/components/ui/shadcn/text-area'
 import { DocumentContext } from '@/context'
 import {
   CustomFieldArrayValue,
-  CustomFields,
+  CustomFieldsType,
   isArrayCustomField
 } from '@/types'
 import {
@@ -50,7 +50,7 @@ type DocumentSettingsProps = {
   loading: boolean
   registerOptions?: RegisterOptions
   showDelete: boolean
-  customFields?: CustomFields
+  customFields?: CustomFieldsType
   metadata: Record<string, any>
 }
 

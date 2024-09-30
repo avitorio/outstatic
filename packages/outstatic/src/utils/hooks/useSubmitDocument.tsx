@@ -1,6 +1,6 @@
 import {
   CustomFieldArrayValue,
-  CustomFields,
+  CustomFieldsType,
   Document,
   FileType,
   MDExtensions,
@@ -34,8 +34,8 @@ type SubmitDocumentProps = {
   files: FileType[]
   methods: UseFormReturn<Document, any>
   collection: string
-  customFields: CustomFields
-  setCustomFields: (customFields: CustomFields) => void
+  customFields: CustomFieldsType
+  setCustomFields: (customFields: CustomFieldsType) => void
   setHasChanges: (hasChanges: boolean) => void
   editor: Editor
   extension: MDExtensions

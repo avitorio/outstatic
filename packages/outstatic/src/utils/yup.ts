@@ -1,11 +1,11 @@
-import { CustomFields, DocumentSchemaShape } from '@/types'
+import { CustomFieldsType, DocumentSchemaShape } from '@/types'
 import * as yup from 'yup'
 import { AssertsShape, TypeOfShape } from 'yup/lib/object'
 import { AnyObject } from 'yup/lib/types'
 import { documentShape } from './schemas/edit-document-schema'
 
 export const convertSchemaToYup = (customFields: {
-  properties: CustomFields
+  properties: CustomFieldsType
 }): yup.ObjectSchema<any, AnyObject, TypeOfShape<any>, AssertsShape<any>> => {
   const shape: DocumentSchemaShape = {}
 

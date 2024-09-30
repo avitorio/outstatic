@@ -1,5 +1,5 @@
 import { GET_FILE } from '@/graphql/queries/file'
-import { CustomFields } from '@/types'
+import { CustomFieldsType } from '@/types'
 import useOutstatic from '@/utils/hooks/useOutstatic'
 import { useQuery } from '@tanstack/react-query'
 import { useParams } from 'next/navigation'
@@ -7,7 +7,7 @@ import { useParams } from 'next/navigation'
 export type SchemaType = {
   title: string
   type: string
-  properties: CustomFields
+  properties: CustomFieldsType
   path: string
 } | null
 
