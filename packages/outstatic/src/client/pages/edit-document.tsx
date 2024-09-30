@@ -128,6 +128,7 @@ export default function EditDocument({ collection }: { collection: string }) {
                 saveFunc={methods.handleSubmit(onSubmit)}
                 showDelete={showDelete}
                 customFields={customFields}
+                setCustomFields={setCustomFields}
                 metadata={metadata}
               />
             }

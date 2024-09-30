@@ -44,13 +44,15 @@ import {
   TooltipProvider,
   TooltipTrigger
 } from '@/components/ui/shadcn/tooltip'
+import { AddCustomFieldDialog } from '@/client/pages/custom-fields/_components/add-custom-field-dialog'
 
 type DocumentSettingsProps = {
   saveFunc: () => void
   loading: boolean
   registerOptions?: RegisterOptions
   showDelete: boolean
-  customFields?: CustomFieldsType
+  customFields: CustomFieldsType
+  setCustomFields: (fields: CustomFieldsType) => void
   metadata: Record<string, any>
 }
 
@@ -95,7 +97,8 @@ const DocumentSettings = ({
   loading,
   registerOptions,
   showDelete,
-  customFields = {},
+  customFields,
+  setCustomFields,
   metadata
 }: DocumentSettingsProps) => {
   const {
@@ -109,6 +112,9 @@ const DocumentSettings = ({
   const { document, extension, editDocument, hasChanges, collection } =
     useContext(DocumentContext)
 
+  const [showAddModal, setShowAddModal] = useState(false)
+  const [fieldTitle, setFieldTitle] = useState('')
+
   const { dashboardRoute } = useOutstatic()
 
   const [isOpen, setIsOpen] = useState(false)
@@ -118,6 +124,13 @@ const DocumentSettings = ({
       setValue('status', 'draft')
     }
   }, [document.status])
+
+  const onModalChange = (value: boolean) => {
+    if (!value) {
+      setFieldTitle('')
+    }
+    setShowAddModal(value)
+  }
 
   const missingCustomFields = Object.keys(metadata)
     .filter((key) => !customFields.hasOwnProperty(key) && key !== 'date')
@@ -359,6 +372,10 @@ const DocumentSettings = ({
                         variant="outline"
                         size="sm"
                         className="text-xs flex gap-2"
+                        onClick={() => {
+                          setFieldTitle(field.title)
+                          setShowAddModal(true)
+                        }}
                       >
                         <PlusCircle className="h-4 w-4" /> Create
                       </Button>
@@ -375,6 +392,7 @@ const DocumentSettings = ({
                     variant="ghost"
                     size="icon"
                     className="text-xs flex gap-2"
+                    onClick={() => setShowAddModal(true)}
                   >
                     <PlusCircle className="h-4 w-4" />
                   </Button>
@@ -386,6 +404,16 @@ const DocumentSettings = ({
             </TooltipProvider>
           </div>
         </div>
+        {showAddModal ? (
+          <AddCustomFieldDialog
+            collection={collection}
+            showAddModal={showAddModal}
+            setShowAddModal={onModalChange}
+            customFields={customFields}
+            setCustomFields={setCustomFields}
+            fieldTitle={fieldTitle ?? ''}
+          />
+        ) : null}
       </aside>
     </>
   )

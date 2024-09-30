@@ -1,14 +1,16 @@
+import Alert from '@/components/Alert'
+import TagInput from '@/components/TagInput'
 import { Button } from '@/components/ui/shadcn/button'
 import { Input } from '@/components/ui/shadcn/input'
 import {
   CustomFieldArrayValue,
   CustomFieldType,
   CustomFieldsType,
-  customFieldTypes
+  customFieldTypes,
+  isArrayCustomField
 } from '@/types'
 import { useGetCollectionSchema } from '@/utils/hooks/useGetCollectionSchema'
 import useOutstatic from '@/utils/hooks/useOutstatic'
-import { camelCase, capitalCase } from 'change-case'
 import { useEffect, useState } from 'react'
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form'
 import {
@@ -36,44 +38,35 @@ import {
   DialogTitle
 } from '@/components/ui/shadcn/dialog'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { addCustomFieldSchema } from '@/utils/schemas/add-custom-field-schema'
+import { editCustomFieldSchema } from '@/utils/schemas/edit-custom-field-schema'
 
 type CustomFieldForm = CustomFieldType<
   'string' | 'number' | 'array' | 'boolean'
 > & { name: string; values?: CustomFieldArrayValue[] }
 
-const fieldDataMap = {
-  Text: 'string',
-  String: 'string',
-  Number: 'number',
-  Tags: 'array',
-  Boolean: 'boolean'
-} as const
-
-interface AddCustomFieldDialogProps {
+interface EditCustomFieldDialogProps {
   collection: string
-  showAddModal: boolean
-  setShowAddModal: (show: boolean) => void
+  showEditModal: boolean
+  setShowEditModal: (show: boolean) => void
+  selectedField: string
   customFields: CustomFieldsType
   setCustomFields: (fields: CustomFieldsType) => void
-  fieldTitle?: string
 }
 
-export const AddCustomFieldDialog: React.FC<AddCustomFieldDialogProps> = ({
+export const EditCustomFieldDialog: React.FC<EditCustomFieldDialogProps> = ({
   collection,
-  showAddModal,
-  setShowAddModal,
+  showEditModal,
+  setShowEditModal,
+  selectedField,
   customFields,
-  setCustomFields,
-  fieldTitle
+  setCustomFields
 }) => {
-  const [adding, setAdding] = useState(false)
+  const [editing, setEditing] = useState(false)
   const { setHasChanges } = useOutstatic()
   const [error, setError] = useState('')
-  const [fieldName, setFieldName] = useState(fieldTitle ?? '')
   const methods = useForm<CustomFieldForm>({
     mode: 'onChange',
-    resolver: zodResolver(addCustomFieldSchema)
+    resolver: zodResolver(editCustomFieldSchema)
   })
 
   const { data: schema, isLoading } = useGetCollectionSchema({ collection })
@@ -84,36 +77,25 @@ export const AddCustomFieldDialog: React.FC<AddCustomFieldDialogProps> = ({
     if (schema) {
       setCustomFields(schema.properties)
     }
-  }, [schema])
+  }, [schema, setCustomFields])
 
   const onSubmit: SubmitHandler<CustomFieldForm> = async (
     data: CustomFieldForm
   ) => {
-    setAdding(true)
-    const { title, fieldType, ...rest } = data
-    const fieldName = camelCase(title)
-
-    if (customFields[fieldName]) {
-      methods.setError('title', {
-        type: 'manual',
-        message: 'Field name is already taken.'
-      })
-      setAdding(false)
-      return
-    }
+    setEditing(true)
+    const { title, ...rest } = data
 
     try {
-      customFields[fieldName] = {
+      customFields[selectedField] = {
+        ...customFields[selectedField],
         ...rest,
-        fieldType,
-        dataType: fieldDataMap[fieldType],
         title: data.title
       }
 
-      if (fieldDataMap[fieldType] === 'array') {
-        customFields[fieldName] = {
-          ...customFields[fieldName],
-          values: data?.values || []
+      if (isArrayCustomField(customFields[selectedField])) {
+        customFields[selectedField] = {
+          ...customFields[selectedField],
+          values: data.values || []
         }
       }
 
@@ -122,12 +104,12 @@ export const AddCustomFieldDialog: React.FC<AddCustomFieldDialogProps> = ({
         deleteField: false,
         collection,
         schema,
-        fieldName,
-        selectedField: '',
+        fieldName: selectedField,
+        selectedField,
         setCustomFields
       })
     } catch (error) {
-      setError('add')
+      setError('edit')
       console.log({ error })
     }
 
@@ -137,45 +119,44 @@ export const AddCustomFieldDialog: React.FC<AddCustomFieldDialogProps> = ({
   const onOpenChange = (value: boolean) => {
     if (!value) {
       setHasChanges(false)
-      setFieldName('')
-      setAdding(false)
-      methods.reset()
+      setEditing(false)
     }
-    setShowAddModal(value)
+    setShowEditModal(value)
   }
 
   return (
-    <Dialog open={showAddModal} onOpenChange={onOpenChange}>
+    <Dialog open={showEditModal} onOpenChange={onOpenChange}>
       <DialogContent className="w-full max-w-2xl">
         <DialogHeader>
-          <DialogTitle>
-            Add Custom Field to {capitalCase(collection)}
-          </DialogTitle>
+          <DialogTitle>Edit {customFields[selectedField].title}</DialogTitle>
         </DialogHeader>
         <FormProvider {...methods}>
           <form
             onSubmit={methods.handleSubmit(onSubmit)}
             className="flex flex-col gap-4"
           >
-            <div className="flex pt-6 gap-4">
+            <div className="pt-6">
+              <Alert type="info">
+                <>
+                  <span className="font-medium">Field name</span> and{' '}
+                  <span className="font-medium">Field type</span> editing is
+                  disabled to avoid data conflicts.
+                </>
+              </Alert>
+            </div>
+            <div className="flex gap-4 mb-4">
               <FormField
                 control={methods.control}
                 name="title"
-                defaultValue={fieldTitle ?? ''}
+                defaultValue={customFields[selectedField].title}
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Field name</FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="Ex: Category"
                         {...field}
                         className="w-full max-w-sm md:w-80"
-                        autoFocus
-                        onChange={(e) => {
-                          field.onChange(e)
-                          setFieldName(camelCase(e.target.value))
-                        }}
-                        disabled={!!fieldTitle}
+                        readOnly
                       />
                     </FormControl>
                     <FormDescription>The name of the field</FormDescription>
@@ -188,13 +169,18 @@ export const AddCustomFieldDialog: React.FC<AddCustomFieldDialogProps> = ({
                 <FormField
                   control={methods.control}
                   name="fieldType"
+                  defaultValue={customFields[selectedField].fieldType}
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Field type</FormLabel>
-                      <Select onValueChange={field.onChange}>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={customFields[selectedField].fieldType}
+                        disabled
+                      >
                         <FormControl>
                           <SelectTrigger className="w-[180px]">
-                            <SelectValue placeholder="Select field type" />
+                            <SelectValue />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
@@ -215,15 +201,12 @@ export const AddCustomFieldDialog: React.FC<AddCustomFieldDialogProps> = ({
               <FormField
                 control={methods.control}
                 name="description"
+                defaultValue={customFields[selectedField].description}
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Description</FormLabel>
                     <FormControl>
-                      <Input
-                        placeholder="Ex: Add a category"
-                        {...field}
-                        className="w-full max-w-sm md:w-80"
-                      />
+                      <Input {...field} className="w-full max-w-sm md:w-80" />
                     </FormControl>
                     <FormDescription>
                       This will be the label of the field
@@ -240,6 +223,7 @@ export const AddCustomFieldDialog: React.FC<AddCustomFieldDialogProps> = ({
                       id="required"
                       type="checkbox"
                       className="cursor-pointer w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 focus:ring-2"
+                      defaultChecked={customFields[selectedField].required}
                     />
                   </div>
                   <div className="ml-2 text-sm">
@@ -256,12 +240,31 @@ export const AddCustomFieldDialog: React.FC<AddCustomFieldDialogProps> = ({
                 </div>
               </fieldset>
             </div>
+            {customFields[selectedField].fieldType === 'Tags' &&
+            customFields[selectedField].dataType === 'array' &&
+            isArrayCustomField(customFields[selectedField]) ? (
+              <div className="flex gap-4 mb-4">
+                <TagInput
+                  label="Your tags"
+                  id="values"
+                  helperText="Deleting tags will remove them from suggestions, not from existing documents."
+                  defaultValue={customFields[selectedField].values}
+                  noOptionsMessage={() => null}
+                  isClearable={false}
+                  isSearchable={false}
+                  components={{
+                    DropdownIndicator: () => null,
+                    IndicatorSeparator: () => null
+                  }}
+                />
+              </div>
+            ) : null}
 
             <DialogFooter className="flex sm:justify-between items-center pt-6 border-t">
               <div className="text-sm text-gray-700">
                 This field will be accessible on the frontend as:{' '}
                 <code className="bg-gray-200 font-semibold">
-                  {camelCase(fieldName)}
+                  {selectedField}
                 </code>
               </div>
               <div className="flex gap-2">
@@ -272,14 +275,14 @@ export const AddCustomFieldDialog: React.FC<AddCustomFieldDialogProps> = ({
                 >
                   Cancel
                 </Button>
-                <Button type="submit" disabled={adding}>
-                  {adding ? (
+                <Button type="submit" disabled={editing}>
+                  {editing ? (
                     <>
                       <SpinnerIcon className="text-background mr-2" />
-                      Adding
+                      Editing
                     </>
                   ) : (
-                    'Add'
+                    'Save Changes'
                   )}
                 </Button>
               </div>

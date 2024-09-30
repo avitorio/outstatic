@@ -14,6 +14,7 @@ import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { AddCustomFieldDialog } from './_components/add-custom-field-dialog'
 import { DeleteCustomFieldDialog } from './_components/delete-custom-field-dialog'
+import { EditCustomFieldDialog } from './_components/edit-custom-field-dialog'
 
 type CustomFieldsProps = {
   collection: string
@@ -33,6 +34,7 @@ export default function CustomFields({ collection }: CustomFieldsProps) {
   })
   const [showAddModal, setShowAddModal] = useState(false)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
+  const [showEditModal, setShowEditModal] = useState(false)
 
   const [selectedField, setSelectedField] = useState('')
   const [fieldName, setFieldName] = useState('')
@@ -116,7 +118,11 @@ export default function CustomFields({ collection }: CustomFieldsProps) {
                             onClick={() => {
                               methods.reset()
                               setSelectedField(name)
-                              setShowAddModal(true)
+                              if (customFields[name]) {
+                                setShowEditModal(true)
+                              } else {
+                                setShowAddModal(true)
+                              }
                             }}
                             className="text-left"
                           >
@@ -161,10 +167,16 @@ export default function CustomFields({ collection }: CustomFieldsProps) {
           collection={collection}
           showAddModal={showAddModal}
           setShowAddModal={setShowAddModal}
-          fieldName={fieldName}
-          setFieldName={setFieldName}
+          customFields={customFields}
+          setCustomFields={setCustomFields}
+        />
+      )}
+      {showEditModal && (
+        <EditCustomFieldDialog
+          collection={collection}
+          showEditModal={showEditModal}
+          setShowEditModal={setShowEditModal}
           selectedField={selectedField}
-          setSelectedField={setSelectedField}
           customFields={customFields}
           setCustomFields={setCustomFields}
         />

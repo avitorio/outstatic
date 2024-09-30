@@ -24,7 +24,8 @@ export const documentShape = {
     .max(200, 'Slugs can be a maximum of 200 characters.')
     .required(),
   description: yup.string(),
-  coverImage: yup.string()
+  coverImage: yup.string(),
+  date: yup.date()
 }
 
 export const editDocumentSchema: yup.SchemaOf<DocumentSchemaShape> = yup
