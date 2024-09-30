@@ -83,7 +83,8 @@ export const useGetDocuments = () => {
               const formattedData: FormattedData = {
                 ...(listData as Document),
                 title: listData.title || name,
-                slug: name.replace(/\.mdx?$/, '') // Handles both .md and .mdx
+                slug: name.replace(/\.mdx?$/, ''), // Handles both .md and .mdx
+                extension: name.split('.').pop() as MDExtensions
               }
 
               // Add publishedAt or date only if it's a valid date

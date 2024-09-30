@@ -11,6 +11,8 @@ import { Trash } from 'lucide-react'
 import { useState } from 'react'
 import { Button } from '@/components/ui/shadcn/button'
 import { SpinnerIcon } from '../ui/outstatic/spinner-icon'
+import { useGetCollectionSchema } from '@/utils/hooks/useGetCollectionSchema'
+import { toast } from 'sonner'
 
 type DeleteDocumentButtonProps = {
   slug: string
@@ -37,13 +39,23 @@ const DeleteDocumentButton = ({
 
   const mutation = useCreateCommit()
 
+  const { refetch: refetchSchema } = useGetCollectionSchema({
+    collection,
+    enabled: false
+  })
   const { refetch } = useGetMetadata({ enabled: false })
 
   const deleteDocument = async (slug: string) => {
     setDeleting(true)
     try {
-      const [{ data }, oid] = await Promise.all([refetch(), fetchOid()])
-      if (!data || !oid) throw new Error('Failed to fetch metadata or oid')
+      const [{ data }, oid, { data: schema }] = await Promise.all([
+        refetch(),
+        fetchOid(),
+        refetchSchema()
+      ])
+      if (!data) throw new Error('Failed to fetch metadata')
+      if (!oid) throw new Error('Failed to fetch oid')
+      if (!schema) throw new Error('Failed to fetch schema')
       const { metadata, commitUrl } = data
       const owner = repoOwner || session?.user?.login || ''
 
@@ -56,7 +68,7 @@ const DeleteDocumentButton = ({
       })
 
       // remove post markdown file
-      capi.removeFile(`${ostContent}/${collection}/${slug}.${extension}`)
+      capi.removeFile(`${schema.path}/${slug}.${extension}`)
 
       // remove post from metadata.json
       metadata.generated = new Date().toISOString()
@@ -69,7 +81,11 @@ const DeleteDocumentButton = ({
 
       const input = capi.createInput()
 
-      mutation.mutate(input)
+      toast.promise(mutation.mutateAsync(input), {
+        loading: 'Deleting document...',
+        success: 'Document deleted successfully',
+        error: 'Failed to delete document'
+      })
       setShowDeleteModal(false)
       if (onComplete) onComplete()
     } catch (error) {
