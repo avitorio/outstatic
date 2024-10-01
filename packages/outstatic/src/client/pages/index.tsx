@@ -14,6 +14,7 @@ import Onboarding from './onboarding'
 import Welcome from './welcome'
 import LoadingBackground from '@/components/ui/outstatic/loading-background'
 import { useGetRepository } from '@/utils/hooks/useGetRepository'
+import { useCollections } from '@/utils/hooks'
 
 export const AdminArea = ({ params }: { params: { ost: string[] } }) => {
   const [openSidebar, setOpenSidebar] = useState(false)
@@ -38,6 +39,7 @@ export const Dashboard = ({ params }: { params: { ost: string[] } }) => {
   const { repoSlug, repoOwner, repoBranch, isPending } = useOutstatic()
   const { data: repository, isPending: repoPending } = useGetRepository()
   const { setData, data, isPending: localPending } = useLocalData()
+  const { isPending: collectionsPending } = useCollections()
 
   useEffect(() => {
     if (repository && !repoBranch && !data.repoBranch) {
@@ -50,7 +52,7 @@ export const Dashboard = ({ params }: { params: { ost: string[] } }) => {
 
   return (
     <>
-      {isPending || repoPending || localPending ? (
+      {isPending || repoPending || localPending || collectionsPending ? (
         <AdminLoading />
       ) : !repoSlug || !repoOwner ? (
         <Onboarding />

@@ -132,8 +132,20 @@ const DocumentSettings = ({
     setShowAddModal(value)
   }
 
+  const defaultMetadata = [
+    'title',
+    'status',
+    'author',
+    'slug',
+    'publishedAt',
+    'date'
+  ]
+
   const missingCustomFields = Object.keys(metadata)
-    .filter((key) => !customFields.hasOwnProperty(key) && key !== 'date')
+    .filter(
+      (key) =>
+        !customFields.hasOwnProperty(key) && !defaultMetadata.includes(key)
+    )
     .reduce<Record<string, { title: string }>>((acc, key) => {
       const title = key
         .replace(/([A-Z])/g, ' $1')

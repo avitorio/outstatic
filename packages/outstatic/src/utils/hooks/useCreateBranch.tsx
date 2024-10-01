@@ -1,36 +1,37 @@
 import { useMutation } from '@tanstack/react-query'
 import { useOutstatic } from './useOutstatic'
-import { GET_REPOSITORY } from '../../graphql/queries/repository'
 import { CREATE_BRANCH } from '../../graphql/mutations/create-branch'
+import { OID } from '@/graphql/queries/oid'
+import { Commit } from '@/graphql/gql/graphql'
 
 export const useCreateBranch = () => {
-  const { repoOwner, repoSlug, gqlClient } = useOutstatic()
+  const { repoOwner, repoSlug, repoBranch, gqlClient, session } = useOutstatic()
 
   return useMutation({
     mutationFn: async ({ branchName }: { branchName: string }) => {
       try {
         // Get repository info
-        const { repository } = await gqlClient.request(GET_REPOSITORY, {
-          owner: repoOwner,
-          name: repoSlug
+        const { repository } = await gqlClient.request(OID, {
+          owner: repoOwner || session?.user?.login || '',
+          name: repoSlug,
+          branch: repoBranch
         })
 
-        if (!repository || !repository.defaultBranchRef?.target) {
-          throw new Error('Repository or default branch information not found')
+        if (!repository) {
+          throw new Error('Repository not found')
         }
 
-        const {
-          id: repositoryId,
-          defaultBranchRef: {
-            target: { oid }
-          }
-        } = repository
+        const target = repository.ref?.target as Commit
+
+        if (typeof target.history.nodes?.[0]?.oid !== 'string') {
+          throw new Error('Received a non-string oid')
+        }
 
         // Create the new branch
         const result = await gqlClient.request(CREATE_BRANCH, {
-          repositoryId,
+          repositoryId: repository.id,
           name: `refs/heads/${branchName}`,
-          oid
+          oid: target.history.nodes[0].oid
         })
 
         if (!result.createRef?.ref?.name) {

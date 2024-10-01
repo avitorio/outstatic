@@ -144,7 +144,7 @@ export function SearchCombobox({
           className="w-[20rem] p-0 md:w-[20rem]"
           align={size === 'sm' ? 'start' : 'center'}
         >
-          <Command>
+          <Command className="max-h-[275px]">
             <CommandInput
               placeholder={searchPlaceholder}
               onValueChange={onValueChange}

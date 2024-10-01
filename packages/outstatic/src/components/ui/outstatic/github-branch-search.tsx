@@ -3,9 +3,7 @@ import { SearchCombobox } from '@/components/ui/outstatic/search-combobox'
 import { GET_BRANCHES } from '@/graphql/queries/branches'
 import useOutstatic, { useLocalData } from '@/utils/hooks/useOutstatic'
 import { queryClient } from '@/utils/react-query/queryClient'
-import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useState } from 'react'
-import { CommandItem } from '@/components/ui/shadcn/command'
 import { CreateBranchDialog } from '@/components/ui/outstatic/create-branch-dialog'
 import { PlusCircle } from 'lucide-react'
 import { Button } from '../shadcn/button'
@@ -38,7 +36,6 @@ export const GitHubBranchSearch = ({
   const [suggestions, setSuggestions] = useState<Branch[]>([])
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [value, setValue] = useState(repoBranch)
-  const router = useRouter()
   const [showCreateBranchDialog, setShowCreateBranchDialog] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
 
@@ -98,7 +95,6 @@ export const GitHubBranchSearch = ({
     if (value && value !== repoBranch) {
       setData({ repoBranch: value })
       queryClient.invalidateQueries()
-      router.push(dashboardRoute)
     }
   }, [value])
 
@@ -129,26 +125,38 @@ export const GitHubBranchSearch = ({
         variant={variant}
         size={size}
         scrollFooter={() => (
-          <CommandItem
-            key="create branch"
-            value="create branch"
-            className="rounded-t-none border border-t px-3 hover:cursor-pointer"
-            onSelect={() => {
+          <div
+            className="rounded-t-none border border-t px-3 hover:cursor-pointer relative flex cursor-default select-none items-center rounded-sm py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground"
+            onClick={() => {
               setIsOpen(false)
               setIsLoading(true)
               setShowCreateBranchDialog(true)
             }}
           >
             <div className="flex gap-2 items-center">
-              <PlusCircle className="h-4 w-4" />
-              <span>Create a new branch</span>
+              {query !== repoBranch &&
+              query !== '' &&
+              !suggestions.some((branch) => branch.name === query) ? (
+                <span className="flex-grow font-normal break-words">
+                  <PlusCircle className="mr-2 h-4 w-4 min-w-[1rem] inline-block select-none align-text-bottom overflow-visible" />
+                  <span>Create branch&nbsp;</span>
+                  <span className="font-semibold">{query}</span> from{' '}
+                  <span className="font-semibold">{repoBranch}</span>
+                </span>
+              ) : (
+                <>
+                  <PlusCircle className="h-4 w-4 min-w-[1rem] inline-block select-none align-text-bottom overflow-visible" />
+                  <span>Create a new branch</span>
+                </>
+              )}
             </div>
-          </CommandItem>
+          </div>
         )}
         isOpen={isOpen}
         onOpenChange={setIsOpen}
       />
       <CreateBranchDialog
+        branchName={query !== repoBranch ? query : ''}
         showCreateBranchDialog={showCreateBranchDialog}
         setShowCreateBranchDialog={(value) => {
           setShowCreateBranchDialog(value)
