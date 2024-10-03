@@ -10,9 +10,6 @@ export type Document = {
   content: string
   status: 'published' | 'draft'
   slug: string
-  description?: string
-  coverImage?: string
-  date?: Date
 }
 
 export type FileType = {
@@ -57,10 +54,17 @@ export const customFieldTypes = [
   'Text',
   'Number',
   'Tags',
-  'Boolean'
+  'Boolean',
+  'Date'
 ] as const
 
-export const customFieldData = ['string', 'number', 'array', 'boolean'] as const
+export const customFieldData = [
+  'string',
+  'number',
+  'array',
+  'boolean',
+  'date'
+] as const
 
 export type CustomFieldArrayValue = {
   label: string
@@ -68,7 +72,7 @@ export type CustomFieldArrayValue = {
 }
 
 export type CustomFieldType<
-  T extends 'string' | 'number' | 'array' | 'boolean'
+  T extends 'string' | 'number' | 'array' | 'boolean' | 'date'
 > = {
   title: string
   fieldType: (typeof customFieldTypes)[number]
@@ -78,7 +82,9 @@ export type CustomFieldType<
 } & (T extends 'array' ? { values: CustomFieldArrayValue[] } : {})
 
 export type CustomFieldsType = {
-  [key: string]: CustomFieldType<'string' | 'number' | 'array' | 'boolean'>
+  [key: string]: CustomFieldType<
+    'string' | 'number' | 'array' | 'boolean' | 'date'
+  >
 }
 
 export type DocumentSchemaShape =

@@ -121,7 +121,7 @@ function DeleteCollectionModal({
               <div className="inline-block font-bold first-letter:uppercase">
                 {collection}
               </div>{' '}
-              from Outstatic but keep files in the repository.
+              from the Outstatic Dashboard but keep files in the repository.
             </Label>
           </div>
         ) : null}

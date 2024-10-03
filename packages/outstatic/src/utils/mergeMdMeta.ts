@@ -3,18 +3,19 @@ import DOMPurify from 'dompurify'
 import replaceImagePath from './replaceImagePath'
 
 export const mergeMdMeta = (
-  data: Document,
+  data: Document & Record<string, any>,
   basePath: string,
   repoInfo: string,
   publicMediaPath: string
 ): string => {
-  const meta = Object.entries(
-    (({ content, publishedAt, ...meta }) => meta)(data)
-  )
-
-  if (data.publishedAt) {
-    meta.push(['publishedAt', data.publishedAt.toISOString()])
-  }
+  const meta: Record<string, any> = Object.entries(
+    (({ content, ...meta }) => meta)(data)
+  ).map(([key, value]) => {
+    if (value instanceof Date) {
+      return [key, value.toISOString()]
+    }
+    return [key, value]
+  })
 
   let merged = '---\n'
 

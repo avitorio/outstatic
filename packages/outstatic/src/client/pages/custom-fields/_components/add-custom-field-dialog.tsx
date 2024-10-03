@@ -4,6 +4,7 @@ import {
   CustomFieldArrayValue,
   CustomFieldType,
   CustomFieldsType,
+  Document,
   customFieldTypes
 } from '@/types'
 import { useGetCollectionSchema } from '@/utils/hooks/useGetCollectionSchema'
@@ -37,9 +38,9 @@ import {
 } from '@/components/ui/shadcn/dialog'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { addCustomFieldSchema } from '@/utils/schemas/add-custom-field-schema'
-
+import { DEFAULT_FIELDS } from '@/utils/constants'
 type CustomFieldForm = CustomFieldType<
-  'string' | 'number' | 'array' | 'boolean'
+  'string' | 'number' | 'array' | 'boolean' | 'date'
 > & { name: string; values?: CustomFieldArrayValue[] }
 
 const fieldDataMap = {
@@ -47,7 +48,8 @@ const fieldDataMap = {
   String: 'string',
   Number: 'number',
   Tags: 'array',
-  Boolean: 'boolean'
+  Boolean: 'boolean',
+  Date: 'date'
 } as const
 
 interface AddCustomFieldDialogProps {
@@ -76,7 +78,7 @@ export const AddCustomFieldDialog: React.FC<AddCustomFieldDialogProps> = ({
     resolver: zodResolver(addCustomFieldSchema)
   })
 
-  const { data: schema, isLoading } = useGetCollectionSchema({ collection })
+  const { data: schema } = useGetCollectionSchema({ collection })
 
   const capiHelper = useCustomFieldCommit()
 
@@ -92,6 +94,15 @@ export const AddCustomFieldDialog: React.FC<AddCustomFieldDialogProps> = ({
     setAdding(true)
     const { title, fieldType, ...rest } = data
     const fieldName = camelCase(title)
+
+    if (DEFAULT_FIELDS.includes(fieldName as keyof Document)) {
+      methods.setError('title', {
+        type: 'manual',
+        message: 'This field name is reserved and cannot be used.'
+      })
+      setAdding(false)
+      return
+    }
 
     if (customFields[fieldName]) {
       methods.setError('title', {

@@ -14,13 +14,15 @@ import useOutstatic from '@/utils/hooks/useOutstatic'
 import useSubmitDocument from '@/utils/hooks/useSubmitDocument'
 import useTipTap from '@/utils/hooks/useTipTap'
 import { editDocumentSchema } from '@/utils/schemas/edit-document-schema'
-import { convertSchemaToYup } from '@/utils/yup'
-import { yupResolver } from '@hookform/resolvers/yup'
+import { zodResolver } from '@hookform/resolvers/zod'
 import Head from 'next/head'
 import { usePathname } from 'next/navigation'
 import { singular } from 'pluralize'
 import { useEffect, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
+import { convertSchemaToZod } from '@/utils/zod'
+import { FormMessage } from '@/components/ui/shadcn/form'
+import { toast } from 'sonner'
 
 export default function EditDocument({ collection }: { collection: string }) {
   const pathname = usePathname()
@@ -33,7 +35,7 @@ export default function EditDocument({ collection }: { collection: string }) {
   const [showDelete, setShowDelete] = useState(false)
   const [documentSchema, setDocumentSchema] = useState(editDocumentSchema)
   //@ts-ignore
-  const methods = useForm<Document>({ resolver: yupResolver(documentSchema) })
+  const methods = useForm<Document>({ resolver: zodResolver(documentSchema) })
   const { editor } = useTipTap({ ...methods })
   const [customFields, setCustomFields] = useState<CustomFieldsType>({})
   const files = useFileStore((state) => state.files)
@@ -61,7 +63,8 @@ export default function EditDocument({ collection }: { collection: string }) {
     setCustomFields,
     setHasChanges,
     editor,
-    extension
+    extension,
+    documentMetadata: metadata
   })
 
   useEffect(() => {
@@ -88,8 +91,9 @@ export default function EditDocument({ collection }: { collection: string }) {
   // Add custom fields
   useEffect(() => {
     if (schema) {
-      const yupSchema = convertSchemaToYup(schema)
-      setDocumentSchema(yupSchema)
+      const zodSchema = convertSchemaToZod(schema)
+
+      setDocumentSchema(zodSchema)
       setCustomFields(schema.properties)
     }
   }, [schema])
@@ -120,12 +124,24 @@ export default function EditDocument({ collection }: { collection: string }) {
         }}
       >
         <FormProvider {...methods}>
+          <FormMessage />
           <AdminLayout
             title={methods.getValues('title')}
             settings={
               <DocumentSettings
                 loading={loading}
-                saveFunc={methods.handleSubmit(onSubmit)}
+                saveFunc={methods.handleSubmit(
+                  (data) => {
+                    return onSubmit(data)
+                  },
+                  (data) => {
+                    const firstKey = Object.keys(data)[0] as keyof typeof data
+                    const errorMessage =
+                      (data[firstKey] as { message?: string })?.message ||
+                      'Unknown error'
+                    toast.error(`Error in ${firstKey}: ${errorMessage}`)
+                  }
+                )}
                 showDelete={showDelete}
                 customFields={customFields}
                 setCustomFields={setCustomFields}

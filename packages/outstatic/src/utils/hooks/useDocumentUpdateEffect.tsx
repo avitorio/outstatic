@@ -66,19 +66,15 @@ export const useDocumentUpdateEffect = ({
         repoMediaPath
       })
 
-      const dateField = data.publishedAt || data.date
-      const newDate = dateField ? new Date(dateField) : getLocalDate()
-      const newDocument: Record<string, any> = {
+      const newDate = data.publishedAt
+        ? new Date(data.publishedAt)
+        : getLocalDate()
+
+      const newDocument = {
         ...data,
+        publishedAt: newDate,
         content: parsedContent,
         slug
-      }
-      if (data.publishedAt) {
-        newDocument.publishedAt = newDate
-      } else if (data.date) {
-        newDocument.date = newDate
-      } else {
-        newDocument.publishedAt = newDate
       }
       methods.reset(newDocument)
       editor.commands.setContent(parsedContent)
@@ -96,7 +92,6 @@ export const useDocumentUpdateEffect = ({
             name: session?.user.name ?? '',
             picture: session?.user.image ?? ''
           },
-          coverImage: '',
           publishedAt: slug === 'new' ? getLocalDate() : formData.publishedAt
         })
       }

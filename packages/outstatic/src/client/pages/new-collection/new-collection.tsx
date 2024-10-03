@@ -83,13 +83,15 @@ export default function NewCollection() {
         throw new Error('Failed to fetch oid')
       }
 
-      const collectionPath = !ostDetach
-        ? `${ostContent}/${collection}`
-        : createFolder
-        ? path
-          ? `${path}/${collection}`
-          : collection
-        : path
+      let collectionPath = ''
+
+      if (!ostDetach || path === ostContent) {
+        collectionPath = `${ostContent}/${collection}`
+      } else if (createFolder) {
+        collectionPath = path ? `${path}/${collection}` : collection
+      } else {
+        collectionPath = path
+      }
 
       const collectionJSON = JSON.stringify(
         {

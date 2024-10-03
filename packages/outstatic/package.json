@@ -98,6 +98,7 @@
     "cmdk": "1.0.0",
     "cookie": "^0.5.0",
     "cross-fetch": "^4.0.0",
+    "date-fns": "^2.30.0",
     "dompurify": "^2.3.9",
     "encoding": "^0.1.13",
     "graphql": "^16.8.1",
@@ -119,6 +120,7 @@
     "pluralize": "^8.0.0",
     "postcss": "8.4.41",
     "react-datepicker": "^6",
+    "react-day-picker": "^8.10.1",
     "react-hook-form": "^7.52.2",
     "react-select": "^5.7.3",
     "react-textarea-autosize": "^8.3.4",
@@ -134,6 +136,7 @@
     "url-slug": "^3.0.4",
     "use-debounce": "^9.0.4",
     "use-resize-observer": "^9.1.0",
+    "yaml": "^2.5.1",
     "yup": "^0.32.11",
     "zod": "^3.23.8",
     "zustand": "^4.4.3"

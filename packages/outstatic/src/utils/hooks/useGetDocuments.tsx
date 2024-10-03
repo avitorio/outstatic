@@ -55,12 +55,20 @@ export const useGetDocuments = () => {
 
       const path = schema?.data?.path
 
+      let contentPath = `${repoBranch}:${ostContent}/${params?.ost[0]}`
+
+      if (path !== undefined) {
+        if (path !== '') {
+          contentPath = `${repoBranch}:${path}`
+        } else {
+          contentPath = `${repoBranch}:`
+        }
+      }
+
       const { repository } = await gqlClient.request(GET_DOCUMENTS, {
         owner: repoOwner || session?.user?.login || '',
         name: repoSlug,
-        contentPath: path
-          ? `${repoBranch}:${path}`
-          : `${repoBranch}:${ostContent}/${params?.ost[0]}`
+        contentPath
       })
 
       const documents: Document[] = []

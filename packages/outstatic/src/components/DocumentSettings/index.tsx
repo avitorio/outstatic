@@ -1,9 +1,8 @@
 import Accordion from '@/components/Accordion'
-import DateTimePicker from '@/components/DateTimePicker'
 import DeleteDocumentButton from '@/components/DeleteDocumentButton'
 import DocumentSettingsImageSelection from '@/components/DocumentSettingsImageSelection'
 import TagInput from '@/components/TagInput'
-import Input from '@/components/ui/outstatic/input'
+import { Input } from '@/components/ui/shadcn/input'
 import TextArea from '@/components/ui/shadcn/text-area'
 import { DocumentContext } from '@/context'
 import {
@@ -28,7 +27,9 @@ import {
   FormField,
   FormItem,
   FormControl,
-  FormMessage
+  FormMessage,
+  FormLabel,
+  FormDescription
 } from '@/components/ui/shadcn/form'
 import {
   Select,
@@ -45,6 +46,7 @@ import {
   TooltipTrigger
 } from '@/components/ui/shadcn/tooltip'
 import { AddCustomFieldDialog } from '@/client/pages/custom-fields/_components/add-custom-field-dialog'
+import { DateTimePickerForm } from '../ui/shadcn/date-time-picker-form'
 
 type DocumentSettingsProps = {
   saveFunc: () => void
@@ -57,7 +59,7 @@ type DocumentSettingsProps = {
 }
 
 interface CustomInputProps {
-  type?: 'text' | 'number' | 'checkbox'
+  type?: 'text' | 'number' | 'checkbox' | 'date'
   suggestions?: CustomFieldArrayValue[]
   registerOptions?: RegisterOptions
 }
@@ -68,6 +70,7 @@ type ComponentType = {
     | typeof TextArea
     | typeof TagInput
     | typeof CheckboxWithLabel
+    | typeof DateTimePickerForm
   props: CustomInputProps
 }
 
@@ -77,6 +80,7 @@ type FieldDataMapType = {
   Number: ComponentType
   Tags: ComponentType
   Boolean: ComponentType
+  Date: ComponentType
 }
 
 const FieldDataMap: FieldDataMapType = {
@@ -89,7 +93,8 @@ const FieldDataMap: FieldDataMapType = {
       suggestions: []
     }
   },
-  Boolean: { component: CheckboxWithLabel, props: { type: 'checkbox' } }
+  Boolean: { component: CheckboxWithLabel, props: { type: 'checkbox' } },
+  Date: { component: DateTimePickerForm, props: { type: 'date' } }
 }
 
 const DocumentSettings = ({
@@ -103,7 +108,6 @@ const DocumentSettings = ({
 }: DocumentSettingsProps) => {
   const {
     setValue,
-    register,
     formState: { errors },
     control
   } = useFormContext()
@@ -132,14 +136,7 @@ const DocumentSettings = ({
     setShowAddModal(value)
   }
 
-  const defaultMetadata = [
-    'title',
-    'status',
-    'author',
-    'slug',
-    'publishedAt',
-    'date'
-  ]
+  const defaultMetadata = ['title', 'status', 'author', 'slug', 'publishedAt']
 
   const missingCustomFields = Object.keys(metadata)
     .filter(
@@ -171,7 +168,6 @@ const DocumentSettings = ({
             Status
           </label>
           <FormField
-            {...register('status', registerOptions)}
             control={control}
             name="status"
             defaultValue={document.status}
@@ -213,24 +209,16 @@ const DocumentSettings = ({
         } md:block w-full border-b border-gray-300 bg-white md:w-64 md:flex-none md:flex-col md:flex-wrap md:items-start md:justify-start md:border-b-0 md:border-l pt-6 pb-16 h-full max-h-[calc(100vh-128px)] md:max-h-[calc(100vh-56px)] scrollbar-hide overflow-scroll`}
       >
         <div className="relative w-full items-center justify-between mb-4 flex px-4">
-          {document.publishedAt ? (
-            <DateTimePicker
-              id="publishedAt"
-              label="Date"
-              date={document.publishedAt}
-              setDate={(publishedAt) =>
-                editDocument('publishedAt', publishedAt)
-              }
-            />
-          ) : null}
-          {document?.date && !document.publishedAt ? (
-            <DateTimePicker
-              id="date"
-              label="Date"
-              date={document.date}
-              setDate={(date) => editDocument('date', date)}
-            />
-          ) : null}
+          <label
+            htmlFor="publishedAt"
+            className="block text-sm font-medium text-gray-900"
+          >
+            Date
+          </label>
+          <DateTimePickerForm
+            id="publishedAt"
+            registerOptions={registerOptions}
+          />
         </div>
         <div className="hidden md:flex relative w-full items-center justify-between mb-4 px-4">
           <label
@@ -242,7 +230,6 @@ const DocumentSettings = ({
 
           <div className="min-w-[128px] ">
             <FormField
-              {...register('status', registerOptions)}
               control={control}
               name="status"
               defaultValue={document.status}
@@ -299,38 +286,54 @@ const DocumentSettings = ({
         </div>
         <div className="w-full">
           <Accordion title="Author">
-            <Input
-              label="Name"
-              name="author.name"
-              id="author.name"
-              defaultValue={document.author?.name ?? ''}
-              inputSize="small"
-              wrapperClass="mb-4"
-            />
-            <DocumentSettingsImageSelection
-              label="Add an avatar"
-              name="author.picture"
-              description="Author Avatar"
-            />
+            <div className="flex flex-col gap-2">
+              <FormField
+                control={control}
+                name="author.name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Name</FormLabel>
+                    <FormControl>
+                      <Input {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <DocumentSettingsImageSelection
+                label="Add an avatar"
+                name="author.picture"
+                description="Author Avatar"
+              />
+            </div>
           </Accordion>
-          <Accordion title="URL Slug">
-            <Input
-              label="Write a slug (optional)"
+          <Accordion title="URL Slug*" error={!!errors['slug']?.message}>
+            <FormField
+              control={control}
               name="slug"
-              id="slug"
               defaultValue={document.slug}
-              inputSize="small"
-              registerOptions={{
-                onChange: (e) => {
-                  const lastChar = e.target.value.slice(-1)
-                  editDocument(
-                    'slug',
-                    lastChar === ' ' || lastChar === '-'
-                      ? e.target.value
-                      : slugify(e.target.value, { allowedChars: 'a-zA-Z0-9' })
-                  )
-                }
-              }}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Write a slug (optional)</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      onChange={(e) => {
+                        const lastChar = e.target.value.slice(-1)
+                        editDocument(
+                          'slug',
+                          lastChar === ' ' || lastChar === '-'
+                            ? e.target.value
+                            : slugify(e.target.value, {
+                                allowedChars: 'a-zA-Z0-9'
+                              })
+                        )
+                      }}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
           </Accordion>
 
@@ -351,6 +354,31 @@ const DocumentSettings = ({
                   }
                 }
               }
+
+              if (field.fieldType === 'String') {
+                return (
+                  <Accordion
+                    key={name}
+                    title={`${field.title}${field.required ? '*' : ''}`}
+                    error={!!errors[name]?.message}
+                  >
+                    <FormField
+                      control={control}
+                      name={name}
+                      render={({ field: formField }) => (
+                        <FormItem>
+                          <FormControl>
+                            <Input {...formField} />
+                          </FormControl>
+                          <FormDescription>{field.description}</FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </Accordion>
+                )
+              }
+
               return (
                 <Accordion
                   key={name}
