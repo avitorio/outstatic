@@ -54,7 +54,7 @@ export function SearchCombobox({
   scrollFooter?: () => React.ReactNode
   isOpen?: boolean
   onOpenChange?: (open: boolean) => void
-  variant?: React.ComponentProps<typeof Button>['variant']
+  variant?: React.ComponentProps<typeof Button>['variant'] | 'hidden'
   size?: React.ComponentProps<typeof Button>['size']
 }) {
   const [internalOpen, setInternalOpen] = React.useState(false)
@@ -65,6 +65,7 @@ export function SearchCombobox({
   const buttonClassName = cn(
     'justify-between',
     size === 'sm' ? 'w-min px-1 ml-0.5' : 'w-[20rem]',
+    variant === 'hidden' ? 'hidden' : '',
     className
   )
 

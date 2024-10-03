@@ -7,6 +7,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { CreateBranchDialog } from '@/components/ui/outstatic/create-branch-dialog'
 import { PlusCircle } from 'lucide-react'
 import { Button } from '../shadcn/button'
+import { useInitialData } from '@/utils/hooks'
 
 interface Branch {
   name: string
@@ -31,8 +32,8 @@ export const GitHubBranchSearch = ({
 }: GitHubBranchSearchProps) => {
   const { setData, data } = useLocalData()
   const [query, setQuery] = useState('')
-  const { repoOwner, repoSlug, repoBranch, dashboardRoute, gqlClient } =
-    useOutstatic()
+  const { repoBranch: initialRepoBranch } = useInitialData()
+  const { repoOwner, repoSlug, repoBranch, gqlClient } = useOutstatic()
   const [suggestions, setSuggestions] = useState<Branch[]>([])
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [value, setValue] = useState(repoBranch)
@@ -117,12 +118,12 @@ export const GitHubBranchSearch = ({
         setValue={setValue}
         onValueChange={setQuery}
         isLoading={isLoading}
-        disabled={!repoSlug || !repoOwner}
+        disabled={!repoSlug || !repoOwner || !!initialRepoBranch}
         selectPlaceholder="Select a branch"
         searchPlaceholder="Search for a branch. Ex: main"
         resultsPlaceholder="No branches found"
         loadingPlaceholder={size !== 'sm' ? 'loading...' : value}
-        variant={variant}
+        variant={initialRepoBranch ? 'hidden' : variant}
         size={size}
         scrollFooter={() => (
           <div
