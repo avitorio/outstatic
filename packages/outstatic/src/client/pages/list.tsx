@@ -7,6 +7,7 @@ import { singular } from 'pluralize'
 import Collections from './collections'
 import useOutstatic from '@/utils/hooks/useOutstatic'
 import LineBackground from '@/components/ui/outstatic/line-background'
+import { sentenceCase } from 'change-case'
 
 type ListProps = {
   collection: string
@@ -20,12 +21,12 @@ export default function List({ collection }: ListProps) {
   if (isError) return <Collections />
 
   return (
-    <AdminLayout title={collection[0].toUpperCase() + collection.slice(1)}>
+    <AdminLayout title={sentenceCase(collection)}>
       <div className="mb-8 flex h-12 items-center capitalize">
-        <h1 className="mr-12 text-2xl">{collection}</h1>
+        <h1 className="mr-12 text-2xl">{sentenceCase(collection)}</h1>
         <Button asChild>
           <Link href={`${dashboardRoute}/${collection}/new`}>
-            New {singular(collection)}
+            New {singular(sentenceCase(collection))}
           </Link>
         </Button>
       </div>
@@ -42,7 +43,7 @@ export default function List({ collection }: ListProps) {
               <p>
                 Create your first{' '}
                 <span className="capitalize font-semibold">
-                  {singular(collection)}
+                  {singular(sentenceCase(collection))}
                 </span>{' '}
                 by clicking the button below.
               </p>
@@ -52,7 +53,7 @@ export default function List({ collection }: ListProps) {
                   href={`${dashboardRoute}/${collection}/new`}
                   className="no-underline capitalize"
                 >
-                  New {singular(collection)}
+                  New {singular(sentenceCase(collection))}
                 </Link>
               </Button>
               <p>
