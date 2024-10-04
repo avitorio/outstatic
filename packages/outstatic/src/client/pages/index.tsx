@@ -10,11 +10,9 @@ import { useEffect, useState } from 'react'
 import { Toaster } from 'sonner'
 import { Router } from '../router'
 import Login from './login'
-import Onboarding from './onboarding'
 import Welcome from './welcome'
-import LoadingBackground from '@/components/ui/outstatic/loading-background'
 import { useGetRepository } from '@/utils/hooks/useGetRepository'
-import { useCollections } from '@/utils/hooks'
+import Onboarding from './onboarding'
 
 export const AdminArea = ({ params }: { params: { ost: string[] } }) => {
   const [openSidebar, setOpenSidebar] = useState(false)
@@ -68,20 +66,6 @@ type OstClientProps = {
 }
 
 export const OstClient = ({ ostData, params }: OstClientProps) => {
-  const [mounted, setMounted] = useState(false)
-
-  useEffect(() => {
-    setMounted(true)
-    document.body.id = 'outstatic'
-    return () => {
-      document.body.removeAttribute('id')
-    }
-  }, [])
-
-  if (!mounted) {
-    return <LoadingBackground />
-  }
-
   if (ostData.missingEnvVars) {
     return <Welcome variables={ostData.missingEnvVars} />
   }

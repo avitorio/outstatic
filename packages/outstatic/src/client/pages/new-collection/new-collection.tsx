@@ -29,6 +29,13 @@ import {
   DialogFooter
 } from '@/components/ui/shadcn/dialog'
 import { SpinnerIcon } from '@/components/ui/outstatic/spinner-icon'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle
+} from '@/components/ui/shadcn/card'
 
 export default function NewCollection() {
   const { pages, hasChanges, setHasChanges } = useOutstatic()
@@ -123,13 +130,18 @@ export default function NewCollection() {
 
       const input = capi.createInput()
 
-      mutation.mutate(input, {
-        onSuccess: () => {
+      toast.promise(mutation.mutateAsync(input), {
+        loading: 'Creating collection...',
+        success: () => {
           setLoading(false)
           router.push(`${dashboardRoute}/${collection}`)
+          return 'Collection created successfully'
         },
-        onError: () => {
-          throw new Error('Failed to create collection')
+        error: () => {
+          setLoading(false)
+          setHasChanges(false)
+          setError(true)
+          return 'Failed to create collection'
         }
       })
     } catch (error) {
@@ -151,9 +163,6 @@ export default function NewCollection() {
   return (
     <FormProvider {...methods}>
       <AdminLayout title="New Collection">
-        <div className="mb-8 flex h-12 items-center">
-          <h1 className="mr-12 text-2xl">Create a Collection</h1>
-        </div>
         {error ? (
           <Alert type="error">
             <span className="font-medium">Oops!</span> We couldn&apos;t create
@@ -164,181 +173,186 @@ export default function NewCollection() {
             .
           </Alert>
         ) : null}
-        <form
-          className="max-w-5xl w-full flex mb-4 items-start flex-col space-y-4"
-          onSubmit={methods.handleSubmit(onSubmit)}
-        >
-          <div className="space-y-4">
-            <Input
-              label="Collection Name"
-              id="name"
-              inputSize="medium"
-              className="w-full max-w-sm md:w-80"
-              placeholder="Ex: Posts"
-              type="text"
-              helperText="We suggest naming the collection in plural form, ex: Docs"
-              registerOptions={{
-                onChange: (e) => {
-                  setCollectionName(e.target.value)
-                },
-                onBlur: (e) => {
-                  methods.setValue('name', e.target.value)
-                }
-              }}
-              autoFocus
-            />
-
-            {collectionName && (
-              <Alert type="info">
-                The collection will appear as{' '}
-                <span className="font-semibold capitalize">
-                  {collectionName}
-                </span>{' '}
-                on the sidebar.
-              </Alert>
-            )}
-          </div>
-          {collectionName && (
-            <>
-              <div className="space-y-4">
-                <Label>Content Path</Label>
-                <PathBreadcrumbs
-                  path={
-                    outstaticFolder
-                      ? ostContent +
-                        '/' +
-                        kebabCase(
-                          methods.getValues('name') || 'your-collection'
-                        )
-                      : createFolder
-                      ? '/' +
-                        (path ? path + '/' : '') +
-                        kebabCase(
-                          methods.getValues('name') || 'your-collection'
-                        )
-                      : '/' + path
-                  }
-                />
-                <p className="text-xs text-gray-500">
-                  This is where your .md(x) files will be stored and read from.
-                </p>
-                <Input id="contentPath" type="hidden" value={path} />
-                <RadioGroup
-                  defaultValue="outstatic-folder"
-                  onValueChange={(value: string) => {
-                    setOutstaticFolder(value === 'outstatic-folder')
-                    if (value === 'outstatic-folder') {
-                      setPath(ostContent)
-                      setShowSelectFolderButton(false)
-                    }
-                    if (value === 'select-or-create') {
-                      setPath('')
-                      setShowSelectFolderButton(true)
-                    }
-                  }}
-                >
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem
-                      value="outstatic-folder"
-                      id="outstatic-folder"
-                    />
-                    <Label htmlFor="outstatic-folder">
-                      Use Outstatic&apos;s default structure
-                    </Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem
-                      value="select-or-create"
-                      id="select-or-create"
-                    />
-                    <Label htmlFor="select-or-create">
-                      Select or create a new folder
-                    </Label>
-                  </div>
-                </RadioGroup>
-              </div>
-
-              <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-                <DialogContent className="sm:max-w-lg">
-                  <DialogHeader>
-                    <DialogTitle>Content Path</DialogTitle>
-                    <DialogDescription>
-                      Choose where your .md(x) files will be stored and read
-                      from.
-                    </DialogDescription>
-                  </DialogHeader>
-                  <div className="space-y-4">
-                    <Input id="contentPath" type="hidden" value={path} />
-                    <RadioGroup
-                      defaultValue="select-folder"
-                      onValueChange={(value: string) =>
-                        setCreateFolder(value === 'create-folder')
+        <div className="max-w-2xl w-full">
+          <Card className="animate-fade-in">
+            <CardHeader>
+              <CardTitle>Create a Collection</CardTitle>
+              <CardDescription>
+                Create a new collection to store your content.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <form
+                className="max-w-5xl w-full flex mb-4 items-start flex-col space-y-4"
+                onSubmit={methods.handleSubmit(onSubmit)}
+              >
+                <div className="space-y-4">
+                  <Input
+                    label="Collection Name"
+                    id="name"
+                    inputSize="medium"
+                    className="w-full max-w-sm md:w-80"
+                    placeholder="Ex: Posts"
+                    type="text"
+                    helperText="We suggest naming the collection in plural form, ex: Docs"
+                    registerOptions={{
+                      onChange: (e) => {
+                        setCollectionName(e.target.value)
+                      },
+                      onBlur: (e) => {
+                        methods.setValue('name', e.target.value)
                       }
-                    >
-                      <div className="flex items-center space-x-2">
-                        <RadioGroupItem
-                          value="select-folder"
-                          id="select-folder"
-                        />
-                        <Label htmlFor="select-folder">
-                          Select an existing folder
-                        </Label>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <RadioGroupItem
-                          value="create-folder"
-                          id="create-folder"
-                        />
-                        <Label htmlFor="create-folder">
-                          Create a new folder
-                        </Label>
-                      </div>
-                    </RadioGroup>
-                    <PathBreadcrumbs
-                      path={
-                        createFolder
-                          ? '/' +
-                            (path ? path + '/' : '') +
-                            kebabCase(
-                              methods.getValues('name') || 'your-collection'
-                            )
-                          : '/' + path
+                    }}
+                    autoFocus
+                  />
+                </div>
+                <div className="space-y-4">
+                  <Label>Content Path</Label>
+                  <PathBreadcrumbs
+                    path={
+                      outstaticFolder
+                        ? ostContent +
+                          '/' +
+                          kebabCase(
+                            methods.getValues('name') || 'your-collection'
+                          )
+                        : createFolder
+                        ? '/' +
+                          (path ? path + '/' : '') +
+                          kebabCase(
+                            methods.getValues('name') || 'your-collection'
+                          )
+                        : '/' + path
+                    }
+                  />
+                  <p className="text-xs text-gray-500">
+                    This is where your .md(x) files will be stored and read
+                    from.
+                  </p>
+                  <Input id="contentPath" type="hidden" value={path} />
+                  <RadioGroup
+                    defaultValue="outstatic-folder"
+                    onValueChange={(value: string) => {
+                      setOutstaticFolder(value === 'outstatic-folder')
+                      if (value === 'outstatic-folder') {
+                        setPath(ostContent)
+                        setShowSelectFolderButton(false)
                       }
-                    />
-                    <GithubExplorer path={path} setPath={setPath} />
-                  </div>
-                  <DialogFooter>
-                    <Button
-                      variant="outline"
-                      onClick={() => setDialogOpen(false)}
-                    >
-                      Cancel
-                    </Button>
+                      if (value === 'select-or-create') {
+                        setPath('')
+                        setShowSelectFolderButton(true)
+                      }
+                    }}
+                  >
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem
+                        value="outstatic-folder"
+                        id="outstatic-folder"
+                      />
+                      <Label htmlFor="outstatic-folder">
+                        Use Outstatic&apos;s default structure
+                      </Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem
+                        value="select-or-create"
+                        id="select-or-create"
+                      />
+                      <Label htmlFor="select-or-create">
+                        Select or create a new folder
+                      </Label>
+                    </div>
+                  </RadioGroup>
+                </div>
 
-                    <SaveButton
-                      loading={loading}
-                      hasChanges={hasChanges}
-                      onClick={methods.handleSubmit(onSubmit)}
-                    />
-                  </DialogFooter>
-                </DialogContent>
-              </Dialog>
-              {showSelectFolderButton ? (
-                <Button
-                  onClick={(e) => {
-                    e.preventDefault()
-                    setDialogOpen(true)
-                  }}
-                  className="mt-7 mb-5"
-                >
-                  Select or Create Folder
-                </Button>
-              ) : (
-                <SaveButton loading={loading} hasChanges={hasChanges} />
-              )}
-            </>
-          )}
-        </form>
+                <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+                  <DialogContent className="sm:max-w-lg">
+                    <DialogHeader>
+                      <DialogTitle>Content Path</DialogTitle>
+                      <DialogDescription>
+                        Choose where your .md(x) files will be stored and read
+                        from.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <div className="space-y-4">
+                      <Input id="contentPath" type="hidden" value={path} />
+                      <RadioGroup
+                        defaultValue="select-folder"
+                        onValueChange={(value: string) =>
+                          setCreateFolder(value === 'create-folder')
+                        }
+                      >
+                        <div className="flex items-center space-x-2">
+                          <RadioGroupItem
+                            value="select-folder"
+                            id="select-folder"
+                          />
+                          <Label htmlFor="select-folder">
+                            Select an existing folder
+                          </Label>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <RadioGroupItem
+                            value="create-folder"
+                            id="create-folder"
+                          />
+                          <Label htmlFor="create-folder">
+                            Create a new folder
+                          </Label>
+                        </div>
+                      </RadioGroup>
+                      <PathBreadcrumbs
+                        path={
+                          createFolder
+                            ? '/' +
+                              (path ? path + '/' : '') +
+                              kebabCase(
+                                methods.getValues('name') || 'your-collection'
+                              )
+                            : '/' + path
+                        }
+                      />
+                      <GithubExplorer path={path} setPath={setPath} />
+                    </div>
+                    <DialogFooter>
+                      <Button
+                        variant="outline"
+                        onClick={() => setDialogOpen(false)}
+                      >
+                        Cancel
+                      </Button>
+
+                      <SaveButton
+                        loading={loading}
+                        hasChanges={hasChanges}
+                        onClick={methods.handleSubmit(onSubmit)}
+                        collectionName={collectionName}
+                      />
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
+                {showSelectFolderButton ? (
+                  <Button
+                    onClick={(e) => {
+                      e.preventDefault()
+                      setDialogOpen(true)
+                    }}
+                    className="mt-7 mb-5"
+                    disabled={loading || !collectionName}
+                  >
+                    Select or Create Folder
+                  </Button>
+                ) : (
+                  <SaveButton
+                    loading={loading}
+                    hasChanges={hasChanges}
+                    collectionName={collectionName}
+                  />
+                )}
+              </form>
+            </CardContent>
+          </Card>
+        </div>
       </AdminLayout>
     </FormProvider>
   )
@@ -347,14 +361,20 @@ export default function NewCollection() {
 const SaveButton = ({
   loading,
   hasChanges,
-  onClick
+  onClick,
+  collectionName
 }: {
   loading: boolean
   hasChanges: boolean
   onClick?: () => void
+  collectionName: string
 }) => {
   return (
-    <Button type="submit" disabled={loading || !hasChanges} onClick={onClick}>
+    <Button
+      type="submit"
+      disabled={loading || !hasChanges || !collectionName}
+      onClick={onClick}
+    >
       {loading ? (
         <>
           <SpinnerIcon className="text-background mr-2" />

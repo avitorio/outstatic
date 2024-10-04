@@ -16,7 +16,6 @@ import {
 import { useState } from 'react'
 import { toast } from 'sonner'
 import { kebabCase } from 'change-case'
-import { ClientError } from 'graphql-request'
 
 type CreateBranchFormProps = {
   branchName?: string

@@ -24,11 +24,13 @@ const debounce = (func: Function, delay: number) => {
 interface GitHubBranchSearchProps {
   variant?: React.ComponentProps<typeof Button>['variant']
   size?: React.ComponentProps<typeof Button>['size']
+  onboarding?: boolean
 }
 
 export const GitHubBranchSearch = ({
   variant = 'outline',
-  size = 'default'
+  size = 'default',
+  onboarding = false
 }: GitHubBranchSearchProps) => {
   const { setData, data } = useLocalData()
   const [query, setQuery] = useState('')
@@ -164,6 +166,12 @@ export const GitHubBranchSearch = ({
           setIsLoading(value)
         }}
         callbackFunction={({ branchName }: { branchName: string }) => {
+          if (onboarding) {
+            const currentUrl = new URL(window.location.href)
+            currentUrl.searchParams.set('confirmed', 'true')
+            window.history.pushState({}, '', currentUrl)
+          }
+
           setSuggestions([{ name: branchName }])
           setValue(branchName)
           setIsLoading(false)

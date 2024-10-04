@@ -1,17 +1,16 @@
 import useOutstatic from '@/utils/hooks/useOutstatic'
-import { useQueryClient } from '@tanstack/react-query'
 import { useCreateCommit } from '@/utils/hooks/useCreateCommit'
 import useOid from '@/utils/hooks/useOid'
 import { createCommitApi } from '@/utils/createCommitApi'
 import { toast } from 'sonner'
-import { CustomFieldsType } from '@/types'
+import { useGetCollectionSchema } from '@/utils/hooks/useGetCollectionSchema'
 
 export const useCustomFieldCommit = () => {
   const { session, repoSlug, repoBranch, repoOwner, ostContent } =
     useOutstatic()
-  const queryClient = useQueryClient()
   const createCommit = useCreateCommit()
   const fetchOid = useOid()
+  const { refetch: refetchSchema } = useGetCollectionSchema({ enabled: false })
 
   return async ({
     customFields,
@@ -19,8 +18,7 @@ export const useCustomFieldCommit = () => {
     collection,
     schema,
     fieldName,
-    selectedField,
-    setCustomFields
+    selectedField
   }: {
     customFields: any
     deleteField?: boolean
@@ -28,7 +26,6 @@ export const useCustomFieldCommit = () => {
     schema: any
     fieldName: string
     selectedField: string
-    setCustomFields: (fields: CustomFieldsType) => void
   }) => {
     try {
       const oid = await fetchOid()
@@ -64,9 +61,12 @@ export const useCustomFieldCommit = () => {
         loading: `${
           deleteField ? 'Deleting' : selectedField ? 'Editing' : 'Adding'
         } field...`,
-        success: `Field ${
-          deleteField ? 'deleted' : selectedField ? 'edited' : 'added'
-        } successfully`,
+        success: () => {
+          refetchSchema()
+          return `Field ${
+            deleteField ? 'deleted' : selectedField ? 'edited' : 'added'
+          } successfully`
+        },
         error: `Failed to ${
           deleteField ? 'delete' : selectedField ? 'edit' : 'add'
         } field`
@@ -79,15 +79,6 @@ export const useCustomFieldCommit = () => {
           } field`
         )
       }
-
-      const filePath = `${repoBranch}:${ostContent}/${collection}/schema.json`
-      await queryClient.invalidateQueries({
-        queryKey: ['collection-schema', { filePath }]
-      })
-
-      console.log({ customFields })
-
-      setCustomFields(customFields)
 
       return true
     } catch (error) {

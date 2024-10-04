@@ -23,6 +23,7 @@ import { FormProvider, useForm } from 'react-hook-form'
 import { convertSchemaToZod } from '@/utils/zod'
 import { FormMessage } from '@/components/ui/shadcn/form'
 import { toast } from 'sonner'
+import { noCase } from 'change-case'
 
 export default function EditDocument({ collection }: { collection: string }) {
   const pathname = usePathname()
@@ -153,7 +154,7 @@ export default function EditDocument({ collection }: { collection: string }) {
               <DocumentTitleInput
                 id="title"
                 className="w-full resize-none outline-none bg-white text-5xl scrollbar-hide min-h-[55px] overflow-hidden"
-                placeholder={`Your ${singular(collection)} title`}
+                placeholder={`Your ${singular(noCase(collection))} title`}
               />
               <div className="min-h-full prose prose-xl">
                 <MDEditor editor={editor} id="content" />
