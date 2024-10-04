@@ -13,6 +13,7 @@ import { Button } from '@/components/ui/shadcn/button'
 import { SpinnerIcon } from '../ui/outstatic/spinner-icon'
 import { useGetCollectionSchema } from '@/utils/hooks/useGetCollectionSchema'
 import { toast } from 'sonner'
+import { useGetDocuments } from '@/utils/hooks/useGetDocuments'
 
 type DeleteDocumentButtonProps = {
   slug: string
@@ -43,6 +44,7 @@ const DeleteDocumentButton = ({
     collection,
     enabled: false
   })
+  const { refetch: refetchDocuments } = useGetDocuments({ enabled: false })
   const { refetch } = useGetMetadata({ enabled: false })
 
   const deleteDocument = async (slug: string) => {
@@ -83,7 +85,10 @@ const DeleteDocumentButton = ({
 
       toast.promise(mutation.mutateAsync(input), {
         loading: 'Deleting document...',
-        success: 'Document deleted successfully',
+        success: () => {
+          refetchDocuments()
+          return 'Document deleted successfully'
+        },
         error: 'Failed to delete document'
       })
       setShowDeleteModal(false)

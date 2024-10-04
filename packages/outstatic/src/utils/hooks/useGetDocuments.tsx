@@ -33,7 +33,9 @@ type FormattedData = Document & {
   [key: string]: any
 }
 
-export const useGetDocuments = () => {
+export const useGetDocuments = ({
+  enabled = true
+}: { enabled?: boolean } = {}) => {
   const {
     repoOwner,
     repoSlug,
@@ -74,7 +76,7 @@ export const useGetDocuments = () => {
       const documents: Document[] = []
       const metadata = new Map<string, any>()
 
-      if (repository?.object === null) return { documents, metadata }
+      if (repository?.object === null) return { documents: null, metadata }
 
       const { entries } = repository?.object as Tree
 
@@ -137,6 +139,7 @@ export const useGetDocuments = () => {
     },
     meta: {
       errorMessage: `Failed to fetch collection: ${params?.ost[0]}`
-    }
+    },
+    enabled
   })
 }

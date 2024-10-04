@@ -1,13 +1,20 @@
 import { AdminLayout, DocumentsTable } from '@/components'
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+  CardFooter
+} from '@/components/ui/shadcn/card'
 import { AdminLoading } from '@/components/AdminLoading'
 import { Button } from '@/components/ui/shadcn/button'
 import { useGetDocuments } from '@/utils/hooks/useGetDocuments'
 import Link from 'next/link'
 import { singular } from 'pluralize'
-import Collections from './collections'
 import useOutstatic from '@/utils/hooks/useOutstatic'
 import LineBackground from '@/components/ui/outstatic/line-background'
 import { sentenceCase } from 'change-case'
+import { toast } from 'sonner'
 
 type ListProps = {
   collection: string
@@ -18,7 +25,30 @@ export default function List({ collection }: ListProps) {
   const { dashboardRoute } = useOutstatic()
 
   if (isPending) return <AdminLoading />
-  if (isError) return <Collections />
+  if (isError || data?.documents === null) {
+    return (
+      <AdminLayout title={sentenceCase(collection)}>
+        <Card className="max-w-2xl">
+          <CardHeader>
+            <CardTitle>This collection doesn&apos;t exist.</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p>You can create a new collection by clicking the button below.</p>
+          </CardContent>
+          <CardFooter>
+            <Button asChild>
+              <Link
+                href={`${dashboardRoute}/collections/new`}
+                className="no-underline"
+              >
+                Create New Collection
+              </Link>
+            </Button>
+          </CardFooter>
+        </Card>
+      </AdminLayout>
+    )
+  }
 
   return (
     <AdminLayout title={sentenceCase(collection)}>

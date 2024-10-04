@@ -264,7 +264,7 @@ function useSubmitDocument({
           __outstatic: {
             hash: `${state.result()}`,
             commit: m.commit,
-            path: `${contentPath}/${collection}/${newSlug}.${extension}`
+            path: `${collectionPath}${newSlug}.${extension}`
           }
         })
 
