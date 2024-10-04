@@ -11,7 +11,7 @@ type GithubExplorerProps = {
 function GithubExplorer({ path, setPath }: GithubExplorerProps) {
   const [folders, setFolders] = useState<TreeDataItem[]>([])
 
-  const { data } = useGetRepoFiles({ path })
+  const { data, refetch } = useGetRepoFiles({ path })
 
   const handleSelectChange = (item: TreeDataItem | undefined) => {
     if (path === item?.id) return

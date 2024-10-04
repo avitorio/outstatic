@@ -14,7 +14,6 @@ import { singular } from 'pluralize'
 import useOutstatic from '@/utils/hooks/useOutstatic'
 import LineBackground from '@/components/ui/outstatic/line-background'
 import { sentenceCase } from 'change-case'
-import { toast } from 'sonner'
 
 type ListProps = {
   collection: string
