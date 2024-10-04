@@ -4,7 +4,7 @@ import { ReactNode } from 'react'
 export default function LineBackground({ children }: { children?: ReactNode }) {
   return (
     <div className="max-w-2xl">
-      <div className="absolute bottom-0 left-0 md:left-[17rem] right-0 md:top-36 pointer-events-none">
+      <div className="absolute bottom-0 left-0 md:left-[16.8rem] right-0 md:top-36 pointer-events-none">
         <svg
           fill="none"
           className="h-full w-full"

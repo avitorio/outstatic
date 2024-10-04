@@ -24,7 +24,7 @@ export const Sidebar = ({ isOpen = false }: SidebarProps) => {
   return (
     <div
       className={cn(
-        'flex-col justify-between bg-gray-50 dark:bg-background lg:flex',
+        'flex-col justify-between bg-gray-50 dark:bg-background lg:flex z-10',
         isOpen ? 'flex absolute z-10 w-full' : 'hidden'
       )}
       aria-label="Sidebar"
