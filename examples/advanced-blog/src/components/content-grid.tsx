@@ -41,8 +41,8 @@ const ContentGrid = ({
     posts.forEach((post) => {
       if (post.status === "published" && post.collection === collection) {
         if (
-          post.title.toLowerCase().includes(searchQuery) ||
-          post.description.toLowerCase().includes(searchQuery)
+          post?.title?.toLowerCase().includes(searchQuery) ||
+          post?.description?.toLowerCase().includes(searchQuery)
         ) {
           searchResults.push(post);
         }

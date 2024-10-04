@@ -3,6 +3,7 @@ import DocHero from '@/components/doc-hero'
 import MDXComponent from '@/components/mdx/mdx-component'
 import MDXServer from '@/lib/mdx-server'
 import { absoluteUrl, ogUrl } from '@/lib/utils'
+import { sentenceCase } from 'change-case'
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { OstDocument } from 'outstatic'
@@ -23,8 +24,8 @@ export async function generateMetadata(params: Params): Promise<Metadata> {
 
   if (!doc) {
     return {
-      title: `All ${moreDocs.collection}`,
-      description: `All ${moreDocs.collection}`
+      title: `All ${sentenceCase(moreDocs.collection)}`,
+      description: `All ${sentenceCase(moreDocs.collection)}`
     }
   }
 
