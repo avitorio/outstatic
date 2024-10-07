@@ -20,7 +20,6 @@ type FileInformationDataType = {
 }
 
 type TreeEntry = {
-  name: string
   object: RepoObject
   type: 'tree' | 'blob'
   path: string
@@ -36,6 +35,12 @@ type ExternalPath = {
   id: number
   folder: string
   collection: string
+}
+
+export type SchemasQuery = {
+  repository?: {
+    [key: string]: { text?: string | null } | {} | null
+  } | null
 }
 
 export const useGetFileInformation = ({
@@ -63,7 +68,10 @@ export const useGetFileInformation = ({
       const externalPaths = processSchemaContents(schemaContents)
 
       // Fetch external files
-      const externalFilesData = await fetchExternalFiles(externalPaths)
+      const externalFilesData =
+        externalPaths.length > 0
+          ? await fetchExternalFiles(externalPaths)
+          : null
 
       // Combine all entries
       const finalEntries = combineEntries(
@@ -177,19 +185,29 @@ export const useGetFileInformation = ({
   function combineEntries(
     outstaticFolders: TreeEntry[],
     externalPaths: ExternalPath[],
-    externalFilesData: FileInformationDataType
+    externalFilesData: FileInformationDataType | null
   ): TreeEntry[] {
+    if (!externalFilesData || externalPaths.length === 0) {
+      return outstaticFolders
+    }
+
     return outstaticFolders.map((entry) => {
       const externalEntry = externalPaths.find((path) =>
         entry.path.endsWith(path.collection)
       )
       if (externalEntry) {
-        return {
-          path: externalEntry.folder,
-          type: 'tree',
-          object: {
-            entries:
-              externalFilesData.repository[`folder${externalEntry.id}`].entries
+        const externalFolder =
+          externalFilesData.repository[`folder${externalEntry.id}`]
+        if (externalFolder && 'entries' in externalFolder) {
+          return {
+            path: externalEntry.folder,
+            type: 'tree',
+            object: {
+              oid: '',
+              text: '',
+              commitUrl: '',
+              entries: externalFolder.entries as TreeEntry[]
+            }
           }
         }
       }

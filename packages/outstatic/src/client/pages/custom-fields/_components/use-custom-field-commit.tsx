@@ -16,14 +16,12 @@ export const useCustomFieldCommit = () => {
     customFields,
     deleteField = false,
     collection,
-    schema,
     fieldName,
     selectedField
   }: {
     customFields: any
     deleteField?: boolean
     collection: string
-    schema: any
     fieldName: string
     selectedField: string
   }) => {
@@ -33,7 +31,6 @@ export const useCustomFieldCommit = () => {
         {
           title: collection,
           type: 'object',
-          path: schema?.path,
           properties: { ...customFields }
         },
         null,

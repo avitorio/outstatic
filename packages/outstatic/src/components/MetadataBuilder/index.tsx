@@ -13,6 +13,7 @@ import request from 'graphql-request'
 import matter from 'gray-matter'
 import MurmurHash3 from 'imurmurhash'
 import React, { HTMLAttributes, useEffect, useMemo, useState } from 'react'
+import { toast } from 'sonner'
 
 interface MetadataBuilderProps extends HTMLAttributes<HTMLDivElement> {
   rebuild: boolean
@@ -60,7 +61,11 @@ export const MetadataBuilder: React.FC<MetadataBuilderProps> = ({
 
   useEffect(() => {
     if (rebuild) {
-      refetch()
+      toast.promise(refetch(), {
+        loading: 'Fetching repository files...',
+        success: 'Files fetched successfully',
+        error: 'Failed to fetch repository files'
+      })
     }
   }, [rebuild, refetch])
 
@@ -83,6 +88,10 @@ export const MetadataBuilder: React.FC<MetadataBuilderProps> = ({
           commit: hashFromUrl(`${nextEntry.object.commitUrl}`)
         })
       }
+    }
+
+    if (output.length === 0 && onComplete) {
+      onComplete()
     }
 
     return output
@@ -206,15 +215,23 @@ export const MetadataBuilder: React.FC<MetadataBuilderProps> = ({
       }
     }
 
-    processFiles().catch(console.error)
+    if (files.length > 0 && rebuild) {
+      toast.promise(processFiles(), {
+        loading: 'Processing files...',
+        success: 'Files processed successfully',
+        error: 'Error processing files'
+      })
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [files])
 
   useEffect(() => {
-    if (processed === total && onComplete) {
+    if (processed === total && onComplete && total > 0 && processed > 0) {
+      setTotal(0)
+      setProcessed(0)
       onComplete()
     }
-  }, [onComplete, processed, total])
+  }, [processed, total])
 
   if (!rebuild) {
     return <div {...rest} />

@@ -26,10 +26,10 @@ import {
   MediaItem,
   MediaSchema,
   MetadataSchema,
-  MetadataType,
-  OutstaticSchema
+  MetadataType
 } from '../metadata/types'
 import { MEDIA_JSON_PATH } from '../constants'
+import { useCollections } from './useCollections'
 
 type SubmitDocumentProps = {
   session: Session | null
@@ -86,6 +86,10 @@ function useSubmitDocument({
   const { refetch: refetchMedia } = useGetMediaFiles({
     enabled: false
   })
+  const { refetch: refetchCollections } = useCollections({
+    enabled: false,
+    detailed: true
+  })
 
   const onSubmit = useCallback(
     async (data: Document) => {
@@ -94,22 +98,25 @@ function useSubmitDocument({
       try {
         const [
           { data: schema, isError: schemaError },
-          { data: metadata, isError: metadataError }
-        ] = await Promise.all([refetchSchema(), refetchMetadata()])
+          { data: metadata, isError: metadataError },
+          { data: collections, isError: collectionsError }
+        ] = await Promise.all([
+          refetchSchema(),
+          refetchMetadata(),
+          refetchCollections()
+        ])
 
-        if (schemaError || metadataError) {
+        if (schemaError || metadataError || collectionsError) {
           throw new Error('Failed to fetch schema or metadata from GitHub')
         }
 
-        let collectionPath = `${ostContent}/${collection}/`
+        console.log('collections', collections)
 
-        if (schema?.path !== undefined) {
-          if (schema.path !== '') {
-            collectionPath = `${schema.path}/`
-          } else {
-            collectionPath = ''
-          }
-        }
+        const collectionPath =
+          collections?.fullData?.find(
+            (collectionInfo) => collectionInfo.name === collection
+          )?.path + '/'
+
         const document = methods.getValues()
         const mdContent = editor.storage.markdown.getMarkdown()
 

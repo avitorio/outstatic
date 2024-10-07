@@ -132,10 +132,8 @@ export const AddCustomFieldDialog: React.FC<AddCustomFieldDialogProps> = ({
         customFields,
         deleteField: false,
         collection,
-        schema,
         fieldName,
-        selectedField: '',
-        setCustomFields
+        selectedField: ''
       })
     } catch (error) {
       setError('add')

@@ -63,10 +63,8 @@ export const DeleteCustomFieldDialog: React.FC<
         customFields: newCustomFields,
         deleteField: true,
         collection,
-        schema,
         fieldName,
-        selectedField,
-        setCustomFields
+        selectedField
       })
       setCustomFields(newCustomFields)
     } catch (error) {

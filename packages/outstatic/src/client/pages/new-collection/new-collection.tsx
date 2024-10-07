@@ -36,6 +36,9 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/shadcn/card'
+import { MetadataBuilder } from '@/components/MetadataBuilder'
+import { useCollections } from '@/utils/hooks'
+import { useGetDocuments } from '@/utils/hooks/useGetDocuments'
 
 export default function NewCollection() {
   const { pages, hasChanges, setHasChanges } = useOutstatic()
@@ -69,6 +72,15 @@ export default function NewCollection() {
   const [error, setError] = useState(false)
   const [dialogOpen, setDialogOpen] = useState(false)
   const [showSelectFolderButton, setShowSelectFolderButton] = useState(false)
+  const [rebuild, setRebuild] = useState(false)
+  const { refetch: refetchCollections } = useCollections({
+    enabled: false,
+    detailed: true
+  })
+  const { refetch: refetchDocuments } = useGetDocuments({
+    enabled: false,
+    collection: collectionName
+  })
 
   const methods = useForm<Collection>({
     // @ts-ignore
@@ -82,12 +94,25 @@ export default function NewCollection() {
     setHasChanges(false)
 
     try {
-      const oid = await fetchOid()
+      const [collectionsJson, oid] = await Promise.all([
+        refetchCollections(),
+        fetchOid()
+      ])
       const owner = repoOwner || session?.user?.login || ''
       const collection = slugify(name, { allowedChars: 'a-zA-Z0-9' })
 
       if (!oid) {
         throw new Error('Failed to fetch oid')
+      }
+
+      if (!collectionsJson.data || !collectionsJson?.data?.fullData) {
+        throw new Error('Failed to fetch collections')
+      }
+
+      const { collections, fullData } = collectionsJson.data
+
+      if (collections.includes(collection)) {
+        throw new Error(`${collection} already exists.`)
       }
 
       let collectionPath = ''
@@ -100,16 +125,17 @@ export default function NewCollection() {
         collectionPath = path
       }
 
-      const collectionJSON = JSON.stringify(
-        {
-          title: collection,
-          type: 'object',
-          path: collectionPath,
-          properties: {}
-        },
-        null,
-        2
-      )
+      fullData.push({
+        name: collection,
+        path: collectionPath,
+        children: []
+      })
+
+      const collectionJSON = {
+        title: collection,
+        type: 'object',
+        properties: {}
+      }
 
       const capi = createCommitApi({
         message: `feat(content): create ${collection}`,
@@ -121,7 +147,12 @@ export default function NewCollection() {
 
       capi.replaceFile(
         `${ostContent}/${collection}/schema.json`,
-        collectionJSON + '\n'
+        JSON.stringify(collectionJSON, null, 2) + '\n'
+      )
+
+      capi.replaceFile(
+        `${ostContent}/collections.json`,
+        JSON.stringify(fullData, null, 2) + '\n'
       )
 
       if (createFolder) {
@@ -132,9 +163,15 @@ export default function NewCollection() {
 
       toast.promise(mutation.mutateAsync(input), {
         loading: 'Creating collection...',
-        success: () => {
-          setLoading(false)
-          router.push(`${dashboardRoute}/${collection}`)
+        success: async () => {
+          // check if the collection has md(x) files in it
+          const { data } = await refetchDocuments()
+
+          if (data?.documents && data.documents.length > 0) {
+            setRebuild(true)
+          }
+
+          await refetchCollections()
           return 'Collection created successfully'
         },
         error: () => {
@@ -354,6 +391,20 @@ export default function NewCollection() {
           </Card>
         </div>
       </AdminLayout>
+      <div className="hidden">
+        <MetadataBuilder
+          onComplete={() => {
+            setRebuild(false)
+            setLoading(false)
+            router.push(
+              `${dashboardRoute}/${slugify(collectionName, {
+                allowedChars: 'a-zA-Z0-9'
+              })}`
+            )
+          }}
+          rebuild={rebuild}
+        />
+      </div>
     </FormProvider>
   )
 }

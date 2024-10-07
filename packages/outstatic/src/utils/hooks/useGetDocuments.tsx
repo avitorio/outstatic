@@ -4,8 +4,8 @@ import { OstDocument } from '@/types/public'
 import { useQuery } from '@tanstack/react-query'
 import matter from 'gray-matter'
 import { useParams } from 'next/navigation'
-import { useGetCollectionSchema } from './useGetCollectionSchema'
 import useOutstatic from './useOutstatic'
+import { useCollections } from './useCollections'
 
 const dateFormatOptions = {
   year: 'numeric' as const,
@@ -34,8 +34,12 @@ type FormattedData = Document & {
 }
 
 export const useGetDocuments = ({
-  enabled = true
-}: { enabled?: boolean } = {}) => {
+  enabled = true,
+  collection
+}: {
+  enabled?: boolean
+  collection?: string
+} = {}) => {
   const {
     repoOwner,
     repoSlug,
@@ -48,16 +52,23 @@ export const useGetDocuments = ({
 
   const params = useParams<{ ost: string[] }>()
 
-  const { refetch } = useGetCollectionSchema({ enabled: false })
+  const { refetch } = useCollections({ enabled: false, detailed: true })
+
+  const collectionName = collection || params?.ost[0]
 
   return useQuery({
-    queryKey: [`documents-${params?.ost}`, { repoOwner, repoSlug, repoBranch }],
+    queryKey: [
+      `documents-${collectionName}`,
+      { repoOwner, repoSlug, repoBranch }
+    ],
     queryFn: async () => {
-      const schema = ostDetach ? await refetch() : null
+      const collections = ostDetach ? await refetch() : null
 
-      const path = schema?.data?.path
+      const path = collections?.data?.fullData?.find(
+        (col) => col.name === collectionName
+      )?.path
 
-      let contentPath = `${repoBranch}:${ostContent}/${params?.ost[0]}`
+      let contentPath = `${repoBranch}:${ostContent}/${collectionName}`
 
       if (path !== undefined) {
         if (path !== '') {
@@ -138,7 +149,7 @@ export const useGetDocuments = ({
       return { documents, metadata }
     },
     meta: {
-      errorMessage: `Failed to fetch collection: ${params?.ost[0]}`
+      errorMessage: `Failed to fetch collection: ${collectionName}`
     },
     enabled
   })

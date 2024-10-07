@@ -103,10 +103,8 @@ export const EditCustomFieldDialog: React.FC<EditCustomFieldDialogProps> = ({
         customFields,
         deleteField: false,
         collection,
-        schema,
         fieldName: selectedField,
-        selectedField,
-        setCustomFields
+        selectedField
       })
     } catch (error) {
       setError('edit')

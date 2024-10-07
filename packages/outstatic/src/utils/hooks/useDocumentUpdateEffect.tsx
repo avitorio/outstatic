@@ -5,9 +5,9 @@ import { Editor } from '@tiptap/react'
 import matter from 'gray-matter'
 import { Dispatch, SetStateAction, useEffect } from 'react'
 import { UseFormReturn } from 'react-hook-form'
-import { useGetCollectionSchema } from './useGetCollectionSchema'
 import { useGetDocument } from './useGetDocument'
 import useOutstatic from './useOutstatic'
+import { useCollections } from './useCollections'
 
 interface UseDocumentUpdateEffectProps {
   collection: string
@@ -42,13 +42,20 @@ export const useDocumentUpdateEffect = ({
     repoMediaPath
   } = useOutstatic()
 
-  const { data: schema } = useGetCollectionSchema({ enabled: slug !== 'new' })
+  const { data: collections } = useCollections({
+    enabled: slug !== 'new',
+    detailed: true
+  })
+
+  const collectionPath = collections?.fullData?.find(
+    (col) => col.name === collection
+  )?.path
 
   const { data: document } = useGetDocument({
     filePath: `${
-      schema?.path ? `${schema.path}` : `${ostContent}/${collection}`
+      collectionPath ? `${collectionPath}` : `${ostContent}/${collection}`
     }/${slug}`,
-    enabled: slug !== 'new' && schema !== undefined
+    enabled: slug !== 'new' && collectionPath !== undefined
   })
 
   useEffect(() => {

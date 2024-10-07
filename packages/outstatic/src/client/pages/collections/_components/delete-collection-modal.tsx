@@ -23,7 +23,7 @@ import useOutstatic from '@/utils/hooks/useOutstatic'
 import { stringifyMetadata } from '@/utils/metadata/stringify'
 import { sentenceCase } from 'change-case'
 import { toast } from 'sonner'
-import { useCollections } from '@/utils/hooks'
+import { DetailedReturnType, useCollections } from '@/utils/hooks'
 
 type DeleteCollectionModalProps = {
   setShowDeleteModal: (value: boolean) => void
@@ -43,23 +43,22 @@ function DeleteCollectionModal({
   const fetchOid = useOid()
 
   const { refetch: refetchMetadata } = useGetMetadata({ enabled: false })
-  const { refetch: refetchSchema } = useGetCollectionSchema({
-    collection,
-    enabled: false
+  const { refetch: refetchCollections } = useCollections({
+    enabled: false,
+    detailed: true
   })
-  const { refetch: refetchCollections } = useCollections({ enabled: false })
 
   const mutation = useCreateCommit()
 
   const deleteCollection = async (collection: string) => {
-    const refetchArray = [refetchMetadata] as any[]
-    if (!keepFiles) refetchArray.push(refetchSchema)
-    const refetched = await Promise.all(
-      refetchArray.map((refetch) => refetch())
-    )
+    const [
+      { data: metadata, isError: metadataError },
+      { data: collections, isError: collectionsError }
+    ] = await Promise.all([refetchMetadata(), refetchCollections()])
 
-    const metadata = refetched[0]?.data as GetMetadataType
-    const schema = refetched[1]?.data as SchemaType
+    if (!metadata || metadataError || !collections || collectionsError) {
+      throw new Error('Failed to fetch data')
+    }
 
     try {
       const oid = await fetchOid()
@@ -73,13 +72,26 @@ function DeleteCollectionModal({
         branch: repoBranch
       })
 
-      const collectionPath = `${ostContent}/${collection}`
+      let collectionPath = `${ostContent}/${collection}`
 
-      if (schema?.path && schema.path !== collectionPath) {
-        capi.removeFile(schema.path)
+      if (collections && collections.fullData) {
+        collectionPath = collections.fullData.find(
+          (col) => col.name === collection
+        )?.path as string
+
+        // remove collection from collections.json
+        const newCollections = collections.fullData.filter(
+          (collectionInfo) => collectionInfo.name !== collection
+        )
+        capi.replaceFile(
+          `${ostContent}/collections.json`,
+          JSON.stringify(newCollections, null, 2)
+        )
       }
 
-      capi.removeFile(collectionPath)
+      if (!keepFiles) {
+        capi.removeFile(collectionPath)
+      }
 
       // remove collection from metadata.json
       if (metadata) {
@@ -100,7 +112,6 @@ function DeleteCollectionModal({
       toast.promise(mutation.mutateAsync(input), {
         loading: 'Deleting collection...',
         success: () => {
-          refetchCollections()
           setDeleting(false)
           setShowDeleteModal(false)
           return 'Collection deleted successfully'
@@ -137,11 +148,11 @@ function DeleteCollectionModal({
                 className="mt-0.5"
               />
               <Label htmlFor="detached-delete" className="leading-normal">
-                Remove{' '}
+                Keep files in the repository. Only remove{' '}
                 <span className="inline-block font-bold first-letter:uppercase">
                   {sentenceCase(collection)}
                 </span>{' '}
-                from the Outstatic Dashboard but keep files in the repository.
+                from the Outstatic&nbsp;Dashboard.
               </Label>
             </div>
           ) : null}

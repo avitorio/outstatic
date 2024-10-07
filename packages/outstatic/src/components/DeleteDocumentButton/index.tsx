@@ -14,6 +14,7 @@ import { SpinnerIcon } from '../ui/outstatic/spinner-icon'
 import { useGetCollectionSchema } from '@/utils/hooks/useGetCollectionSchema'
 import { toast } from 'sonner'
 import { useGetDocuments } from '@/utils/hooks/useGetDocuments'
+import { useCollections } from '@/utils/hooks'
 
 type DeleteDocumentButtonProps = {
   slug: string
@@ -40,24 +41,25 @@ const DeleteDocumentButton = ({
 
   const mutation = useCreateCommit()
 
-  const { refetch: refetchSchema } = useGetCollectionSchema({
-    collection,
-    enabled: false
-  })
   const { refetch: refetchDocuments } = useGetDocuments({ enabled: false })
-  const { refetch } = useGetMetadata({ enabled: false })
+  const { refetch: refetchMetadata } = useGetMetadata({ enabled: false })
+  const { refetch: refetchCollections } = useCollections({
+    enabled: false,
+    detailed: true
+  })
 
   const deleteDocument = async (slug: string) => {
     setDeleting(true)
     try {
-      const [{ data }, oid, { data: schema }] = await Promise.all([
-        refetch(),
+      const [{ data }, oid, { data: collections }] = await Promise.all([
+        refetchMetadata(),
         fetchOid(),
-        refetchSchema()
+        refetchCollections()
       ])
+
       if (!data) throw new Error('Failed to fetch metadata')
       if (!oid) throw new Error('Failed to fetch oid')
-      if (!schema) throw new Error('Failed to fetch schema')
+      if (!collections) throw new Error('Failed to fetch schema')
       const { metadata, commitUrl } = data
       const owner = repoOwner || session?.user?.login || ''
 
@@ -69,8 +71,12 @@ const DeleteDocumentButton = ({
         branch: repoBranch
       })
 
+      const collectionPath = collections?.fullData?.find(
+        (col) => col.name === collection
+      )?.path
+
       // remove post markdown file
-      capi.removeFile(`${schema.path}/${slug}.${extension}`)
+      capi.removeFile(`${collectionPath}/${slug}.${extension}`)
 
       // remove post from metadata.json
       metadata.generated = new Date().toISOString()
