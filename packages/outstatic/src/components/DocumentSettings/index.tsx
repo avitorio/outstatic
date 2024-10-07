@@ -175,8 +175,8 @@ const DocumentSettings = ({
               <FormItem>
                 <Select
                   onValueChange={field.onChange}
-                  defaultValue={field.value}
-                  value={field.value}
+                  defaultValue={field.value ?? 'draft'}
+                  value={field.value ?? 'draft'}
                 >
                   <FormControl>
                     <SelectTrigger>
@@ -237,8 +237,8 @@ const DocumentSettings = ({
                 <FormItem>
                   <Select
                     onValueChange={field.onChange}
-                    defaultValue={field.value}
-                    value={field.value}
+                    defaultValue={field.value ?? 'draft'}
+                    value={field.value ?? 'draft'}
                   >
                     <FormControl>
                       <SelectTrigger>
@@ -290,11 +290,12 @@ const DocumentSettings = ({
               <FormField
                 control={control}
                 name="author.name"
+                defaultValue={document.author?.name || ''}
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Name</FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <Input {...field} value={field.value || ''} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -311,13 +312,14 @@ const DocumentSettings = ({
             <FormField
               control={control}
               name="slug"
-              defaultValue={document.slug}
+              defaultValue={document.slug || ''}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Write a slug (optional)</FormLabel>
                   <FormControl>
                     <Input
                       {...field}
+                      value={field.value ?? ''}
                       onChange={(e) => {
                         const lastChar = e.target.value.slice(-1)
                         editDocument(
@@ -368,7 +370,10 @@ const DocumentSettings = ({
                       render={({ field: formField }) => (
                         <FormItem>
                           <FormControl>
-                            <Input {...formField} />
+                            <Input
+                              {...formField}
+                              value={formField.value ?? ''}
+                            />
                           </FormControl>
                           <FormDescription>{field.description}</FormDescription>
                           <FormMessage />
