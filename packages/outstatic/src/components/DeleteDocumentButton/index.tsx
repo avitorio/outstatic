@@ -1,4 +1,3 @@
-import Modal from '@/components/Modal'
 import { MDExtensions } from '@/types'
 import { createCommitApi } from '@/utils/createCommitApi'
 import { hashFromUrl } from '@/utils/hashFromUrl'
@@ -11,10 +10,19 @@ import { Trash } from 'lucide-react'
 import { useState } from 'react'
 import { Button } from '@/components/ui/shadcn/button'
 import { SpinnerIcon } from '../ui/outstatic/spinner-icon'
-import { useGetCollectionSchema } from '@/utils/hooks/useGetCollectionSchema'
 import { toast } from 'sonner'
 import { useGetDocuments } from '@/utils/hooks/useGetDocuments'
 import { useCollections } from '@/utils/hooks'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle
+} from '@/components/ui/shadcn/alert-dialog'
 
 type DeleteDocumentButtonProps = {
   slug: string
@@ -118,25 +126,24 @@ const DeleteDocumentButton = ({
         <span className="sr-only">Delete document</span>
         <Trash className="stroke-foreground" />
       </Button>
-      {showDeleteModal && (
-        <Modal title="Delete Document" close={() => setShowDeleteModal(false)}>
-          <div className="space-y-6 p-6 text-left">
-            <p className="text-base leading-relaxed text-gray-500">
-              Are you sure you want to delete this document?
-            </p>
-            <p className="text-base leading-relaxed text-gray-500">
-              This action cannot be undone.
-            </p>
-          </div>
-          <div className="flex items-center space-x-2 rounded-b border-t p-6 justify-end">
-            <Button variant="outline" onClick={() => setShowDeleteModal(false)}>
+      <AlertDialog open={showDeleteModal} onOpenChange={setShowDeleteModal}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Document</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete this document? This action cannot
+              be&nbsp;undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setShowDeleteModal(false)}>
               Cancel
-            </Button>
-            <Button
-              variant="destructive"
+            </AlertDialogCancel>
+            <AlertDialogAction
               onClick={() => {
                 deleteDocument(slug)
               }}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
               {deleting ? (
                 <>
@@ -146,10 +153,10 @@ const DeleteDocumentButton = ({
               ) : (
                 'Delete'
               )}
-            </Button>
-          </div>
-        </Modal>
-      )}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   )
 }

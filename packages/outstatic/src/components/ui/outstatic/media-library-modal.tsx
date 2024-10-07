@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/shadcn/button'
 import { toast } from 'sonner'
 import useSubmitMedia from '@/utils/hooks/useSubmitMedia'
 import { FileType } from '@/types'
-import DeleteMediaButton from '@/components/DeleteMediaButton'
+import { DeleteMediaButton } from '@/components/DeleteMediaButton'
 import {
   Dialog,
   DialogFooter,
@@ -96,7 +96,6 @@ export default function MediaLibraryModal({
 
         try {
           await submitMedia(fileType)
-          toast.success(`${file.name} uploaded successfully`)
         } catch (error) {
           toast.error(`Failed to upload ${file.name}`)
         }
