@@ -2,6 +2,7 @@ import { GET_DOCUMENT } from '@/graphql/queries/document'
 import { chunk } from '@/utils/chunk'
 import { createCommitApi } from '@/utils/createCommitApi'
 import { hashFromUrl } from '@/utils/hashFromUrl'
+import { CollectionsType } from '@/utils/hooks/useCollections'
 import { useCreateCommit } from '@/utils/hooks/useCreateCommit'
 import { GetDocumentData } from '@/utils/hooks/useGetDocument'
 import { useGetFileInformation } from '@/utils/hooks/useGetFileInformation'
@@ -31,9 +32,15 @@ const isIndexable = (fileName: string) => {
   return /\.md(x|oc)?$/.test(fileName)
 }
 
-const getCollectionFromPath = (path: string): string => {
-  const parts = path.split('/')
-  return parts.length > 1 ? parts[parts.length - 2] : ''
+const getCollectionFromPath = (
+  path: string,
+  collections: CollectionsType | undefined
+): string => {
+  const folderPath = path.split('/').slice(0, -1).join('/')
+  const matchingCollection = collections?.find(
+    (collection) => collection.path === folderPath
+  )
+  return matchingCollection ? matchingCollection.name : ''
 }
 
 export const MetadataBuilder: React.FC<MetadataBuilderProps> = ({
@@ -155,7 +162,10 @@ export const MetadataBuilder: React.FC<MetadataBuilderProps> = ({
             const meta = await takeAndProcess(fileData)
             docs.push({
               ...meta,
-              collection: getCollectionFromPath(fileData.path)
+              collection: getCollectionFromPath(
+                fileData.path,
+                data?.collections
+              )
             })
             setProcessed((prev) => prev + 1)
           })
@@ -188,22 +198,6 @@ export const MetadataBuilder: React.FC<MetadataBuilderProps> = ({
           `${ostContent}/metadata.json`,
           stringifyMetadata(database)
         )
-
-        data?.foldersWithoutSchema.forEach((folder) => {
-          commitApi.replaceFile(
-            `${folder}/schema.json`,
-            JSON.stringify(
-              {
-                title: folder.split('/').pop(),
-                type: 'object',
-                path: folder,
-                properties: {}
-              },
-              null,
-              2
-            )
-          )
-        })
 
         const payload = commitApi.createInput()
 

@@ -6,6 +6,7 @@ import matter from 'gray-matter'
 import { useParams } from 'next/navigation'
 import useOutstatic from './useOutstatic'
 import { useCollections } from './useCollections'
+import { slugify } from 'transliteration'
 
 const dateFormatOptions = {
   year: 'numeric' as const,
@@ -65,7 +66,8 @@ export const useGetDocuments = ({
       const collections = ostDetach ? await refetch() : null
 
       const path = collections?.data?.fullData?.find(
-        (col) => col.name === collectionName
+        (col) =>
+          col.name === slugify(collectionName, { allowedChars: 'a-zA-Z0-9' })
       )?.path
 
       let contentPath = `${repoBranch}:${ostContent}/${collectionName}`

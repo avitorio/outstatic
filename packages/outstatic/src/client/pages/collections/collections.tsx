@@ -23,7 +23,7 @@ export default function Collections() {
 
   return (
     <AdminLayout title="Collections">
-      {!collections ? (
+      {!collections || collections.length === 0 ? (
         <LineBackground>
           <CollectionOnboarding />
         </LineBackground>

@@ -43,82 +43,8 @@ export function generateGetFileInformationQuery({
           ... on Blob {
             ...BlobDetails
           }
-          ... on Tree {
-            entries {
-              ...TreeDetails
-              object {
-                ... on Blob {
-                  ...BlobDetails
-                }
-                ... on Tree {
-                  entries {
-                    ...TreeDetails
-                    object {
-                      ... on Blob {
-                        ...BlobDetails
-                      }
-                      ... on Tree {
-                        entries {
-                          ...TreeDetails
-                          object {
-                            ... on Blob {
-                              ...BlobDetails
-                            }
-                            ... on Tree {
-                              entries {
-                                ...TreeDetails
-                                object {
-                                  ... on Blob {
-                                    ...BlobDetails
-                                  }
-                                  ... on Tree {
-                                    entries {
-                                      ...TreeDetails
-                                      object {
-                                        ... on Blob {
-                                          ...BlobDetails
-                                        }
-                                      }
-                                    }
-                                  }
-                                }
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
         }
       }
     }
   `
-}
-
-export function generateGetSchemasQuery({
-  paths,
-  branch
-}: {
-  paths: string[]
-  branch: string
-}) {
-  const queryParts = paths.map(
-    (path, index) => `
-    file${index}: object(expression: "${branch}:${path}") {
-      ... on Blob {
-        text
-      }
-    }`
-  )
-
-  return `
-query MultipleDocuments($owner: String!, $name: String!) {
-  repository(owner: $owner, name: $name) {
-    ${queryParts.join('\n')}
-  }
-}`
 }

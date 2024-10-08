@@ -13,7 +13,7 @@ type CollectionType = {
   children: CollectionType[]
 }
 
-type CollectionsType = CollectionType[] | null
+export type CollectionsType = CollectionType[] | null
 
 type UseCollectionsOptions = {
   enabled?: boolean
@@ -85,6 +85,18 @@ export const useCollections = <T extends boolean = false>(
 
           if (!data) {
             throw new Error('No collections data found')
+          }
+
+          if (data?.repository?.object === null) {
+            // We couldn't find the outstatic folder, so we return an empty array
+            const collections = detailed
+              ? {
+                  collections: [],
+                  fullData: []
+                }
+              : []
+
+            return collections as unknown as UseCollectionsReturnType<T>
           }
 
           const { entries } = data?.repository?.object as {
