@@ -37,10 +37,20 @@ const DocumentSettingsImageSelection = ({
   const resolvedImage = resolve(name, document)
 
   useEffect(() => {
+    if (!resolvedImage) return
+
+    if (resolvedImage?.startsWith('http')) {
+      setImage(resolvedImage)
+      setShowImageOptions(false)
+      setShowImage(true)
+      return
+    }
+
     const image = resolvedImage?.replace(
       `${basePath}/${publicMediaPath}`,
       `${basePath}/${API_MEDIA_PATH}`
     )
+
     setImage(image || '')
     setShowImageOptions(!resolvedImage)
     setShowImage(!!resolvedImage)
