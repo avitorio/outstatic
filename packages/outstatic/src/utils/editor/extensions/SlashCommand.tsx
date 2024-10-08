@@ -86,28 +86,6 @@ const CommandList = ({
   range: Range
 }) => {
   const [imageMenu, setImageMenu] = useState(false)
-  // const { repoMediaPath, publicMediaPath } = useOutstatic()
-
-  // const showMediaDialog = () => {
-  //   return (
-  //     <Dialog open={true} onOpenChange={() => {}}>
-  //       <DialogContent>
-  //         <DialogHeader>
-  //           <DialogTitle>Where should media be stored?</DialogTitle>
-  //           <DialogDescription>
-  //             Please provide the path to your media folder in your repository.
-  //           </DialogDescription>
-  //         </DialogHeader>
-  //         <MediaSettings />
-  //       </DialogContent>
-  //     </Dialog>
-  //   )
-  // }
-
-  // if (imageMenu && !repoMediaPath && !publicMediaPath) {
-  //   console.log('what')
-  //   return showMediaDialog()
-  // }
 
   return items.length > 0 ? (
     imageMenu ? (

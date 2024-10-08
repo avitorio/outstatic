@@ -110,8 +110,6 @@ function useSubmitDocument({
           throw new Error('Failed to fetch schema or metadata from GitHub')
         }
 
-        console.log('collections', collections)
-
         const collectionPath =
           collections?.fullData?.find(
             (collectionInfo) => collectionInfo.name === collection
