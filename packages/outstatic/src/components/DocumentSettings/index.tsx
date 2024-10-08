@@ -315,15 +315,14 @@ const DocumentSettings = ({
               defaultValue={document.slug || ''}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Write a slug (optional)</FormLabel>
+                  <FormLabel>Write a slug</FormLabel>
                   <FormControl>
                     <Input
                       {...field}
                       value={field.value ?? ''}
                       onChange={(e) => {
                         const lastChar = e.target.value.slice(-1)
-                        editDocument(
-                          'slug',
+                        field.onChange(
                           lastChar === ' ' || lastChar === '-'
                             ? e.target.value
                             : slugify(e.target.value, {
