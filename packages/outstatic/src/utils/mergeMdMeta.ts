@@ -24,7 +24,6 @@ export const mergeMdMeta = (
       )
     }
     if (typeof value === 'string' && value.startsWith(apiMediaPath)) {
-      console.log({ value })
       const regex = new RegExp(`(${apiMediaPath})([^\\s"'\\)]+)`, 'g')
       return value.replace(regex, (match, apiPath, filename) => {
         return `${basePath}/${publicMediaPath}${filename}`
