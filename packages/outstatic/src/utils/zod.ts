@@ -1,4 +1,4 @@
-import { CustomFieldsType, DocumentSchemaShape } from '@/types'
+import { CustomFieldsType } from '@/types'
 import { z } from 'zod'
 import { documentShape } from './schemas/edit-document-schema'
 
@@ -15,7 +15,7 @@ export const convertSchemaToZod = (customFields: {
         fieldSchema = z.string()
         break
       case 'number':
-        fieldSchema = z.number()
+        fieldSchema = z.coerce.number()
         break
       case 'boolean':
         fieldSchema = z.boolean()
@@ -34,7 +34,7 @@ export const convertSchemaToZod = (customFields: {
     }
 
     if (field.required) {
-      fieldSchema = fieldSchema.refine((val) => val === '', {
+      fieldSchema = fieldSchema.refine((val) => val !== '', {
         message: `${field.title} is a required field.`
       })
     } else {
@@ -56,10 +56,14 @@ export const convertSchemaToZod = (customFields: {
     shape[name] = fieldSchema
   }
 
-  const mergedSchema = z.object({
+  const schema = {
     ...documentShape,
     ...shape
-  })
+  }
+
+  console.log({ schema })
+
+  const mergedSchema = z.object(schema)
 
   return mergedSchema
 }

@@ -391,6 +391,39 @@ const DocumentSettings = ({
                 )
               }
 
+              if (field.fieldType === 'Number') {
+                return (
+                  <Accordion
+                    key={name}
+                    title={`${field.title}${field.required ? '*' : ''}`}
+                    error={!!errors[name]?.message}
+                  >
+                    <FormField
+                      control={control}
+                      name={name}
+                      render={({ field: formField }) => (
+                        <FormItem>
+                          <FormControl>
+                            <Input
+                              {...formField}
+                              type="number"
+                              value={formField.value ?? ''}
+                              onChange={(e) => {
+                                if (e.target.value === '')
+                                  return formField.onChange(undefined)
+                                formField.onChange(Number(e.target.value))
+                              }}
+                            />
+                          </FormControl>
+                          <FormDescription>{field.description}</FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </Accordion>
+                )
+              }
+
               return (
                 <Accordion
                   key={name}
