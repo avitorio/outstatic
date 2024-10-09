@@ -1,7 +1,7 @@
 import { Document } from '@/types'
-import DOMPurify from 'dompurify'
-import replaceImagePath from './replaceImagePath'
+import { convert } from '@catalystic/json-to-yaml'
 import { API_MEDIA_PATH } from './constants'
+import replaceImagePath from './replaceImagePath'
 
 export const mergeMdMeta = (
   data: Document & Record<string, any>,
@@ -16,6 +16,9 @@ export const mergeMdMeta = (
       return value.toISOString()
     }
     if (typeof value === 'object' && value !== null) {
+      if (Array.isArray(value)) {
+        return value.map(processValue)
+      }
       return Object.fromEntries(
         Object.entries(value).map(([subKey, subValue]) => [
           subKey,
@@ -32,36 +35,23 @@ export const mergeMdMeta = (
     return value
   }
 
-  const meta: Record<string, any> = Object.entries(
-    (({ content, ...meta }) => meta)(data)
-  ).map(([key, value]) => {
-    return [key, processValue(value)]
-  })
+  // Create a new object from data excluding the 'content' property
+  const metaData = Object.fromEntries(
+    Object.entries(data).filter(([key]) => key !== 'content')
+  )
+
+  // Modify the data object directly
+  for (const key in metaData) {
+    metaData[key] = processValue(metaData[key])
+  }
+
+  const converted = convert(metaData)
 
   let merged = '---\n'
 
-  Object.entries(meta).forEach(([_, value]) => {
-    if (Array.isArray(value[1])) {
-      merged += `${value[0]}: ${JSON.stringify(value[1])}\n`
-    } else if (value[1] instanceof Object) {
-      merged += `${value[0]}:\n`
-      Object.entries(value[1]).forEach(([key, value]) => {
-        merged += `  ${key}: '${DOMPurify.sanitize(value as string).replaceAll(
-          "'",
-          "''"
-        )}'\n`
-      })
-    } else {
-      merged += `${value[0]}: '${DOMPurify.sanitize(value[1]).replaceAll(
-        "'",
-        "''"
-      )}'\n`
-    }
-  })
+  merged += converted
 
   merged += '---\n\n'
-
-  console.log(merged)
 
   // replace /api/outstatic/images/ references
   const newContent = replaceImagePath({
@@ -72,5 +62,7 @@ export const mergeMdMeta = (
   })
 
   merged += newContent
+
+  console.log(merged)
   return merged
 }

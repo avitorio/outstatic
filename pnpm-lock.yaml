@@ -541,6 +541,9 @@ importers:
 
   packages/outstatic:
     dependencies:
+      '@catalystic/json-to-yaml':
+        specifier: ^1.0.0
+        version: 1.0.0
       '@dnd-kit/core':
         specifier: ^6.1.0
         version: 6.1.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -1353,6 +1356,9 @@ packages:
 
   '@bcoe/v8-coverage@0.2.3':
     resolution: {integrity: sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==}
+
+  '@catalystic/json-to-yaml@1.0.0':
+    resolution: {integrity: sha512-SsaxDB/JojD+bXv/UA1z5sUCfL0t2oP9qasyzIPhYHCh1JuFkd82Ip8D/81bjeaCFDsy2GiWqaVPcJD4+rXrqw==}
 
   '@changesets/apply-release-plan@7.0.0':
     resolution: {integrity: sha512-vfi69JR416qC9hWmFGSxj7N6wA5J222XNBmezSVATPWDVPIF7gkd4d8CpbEbXmRWbVrkoli3oerGS6dcL/BGsQ==}
@@ -9357,6 +9363,8 @@ snapshots:
       to-fast-properties: 2.0.0
 
   '@bcoe/v8-coverage@0.2.3': {}
+
+  '@catalystic/json-to-yaml@1.0.0': {}
 
   '@changesets/apply-release-plan@7.0.0':
     dependencies:
