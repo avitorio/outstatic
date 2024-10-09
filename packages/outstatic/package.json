@@ -99,7 +99,7 @@
     "cmdk": "1.0.0",
     "cookie": "^0.5.0",
     "cross-fetch": "^4.0.0",
-    "date-fns": "^2.30.0",
+    "date-fns": "^3.6.0",
     "dompurify": "^2.3.9",
     "encoding": "^0.1.13",
     "graphql": "^16.8.1",
