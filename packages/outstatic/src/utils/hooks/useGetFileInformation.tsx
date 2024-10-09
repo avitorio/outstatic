@@ -8,6 +8,7 @@ type TreeEntry = {
     oid: string
     text: string
     commitUrl: string
+    entries: TreeEntry[]
   }
   type: 'tree' | 'blob'
   path: string

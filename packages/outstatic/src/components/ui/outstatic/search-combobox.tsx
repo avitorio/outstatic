@@ -100,7 +100,7 @@ export function SearchCombobox({
       <Popover open={open} onOpenChange={setOpen} modal>
         <PopoverTrigger asChild>
           <Button
-            variant={variant}
+            variant={variant === 'hidden' ? undefined : variant}
             role="combobox"
             aria-expanded={open}
             className={buttonClassName}
