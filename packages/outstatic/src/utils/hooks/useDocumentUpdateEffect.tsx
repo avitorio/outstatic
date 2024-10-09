@@ -95,10 +95,6 @@ export const useDocumentUpdateEffect = ({
 
         methods.reset({
           ...formData,
-          author: {
-            name: session?.user.name ?? '',
-            picture: session?.user.image ?? ''
-          },
           publishedAt: slug === 'new' ? getLocalDate() : formData.publishedAt
         })
       }

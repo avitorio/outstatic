@@ -298,10 +298,7 @@ const DocumentSettings = ({
                   <FormItem>
                     <FormLabel>Name</FormLabel>
                     <FormControl>
-                      <Input
-                        {...field}
-                        value={field.value || session?.user?.name}
-                      />
+                      <Input {...field} value={field.value} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -312,6 +309,9 @@ const DocumentSettings = ({
                 <DocumentSettingsImageSelection
                   label="Add an avatar"
                   id="author.picture"
+                  defaultValue={
+                    document.author?.picture || session?.user?.image
+                  }
                 />
               </div>
             </div>
