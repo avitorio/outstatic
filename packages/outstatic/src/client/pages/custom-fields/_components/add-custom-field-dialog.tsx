@@ -40,7 +40,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { addCustomFieldSchema } from '@/utils/schemas/add-custom-field-schema'
 import { DEFAULT_FIELDS } from '@/utils/constants'
 type CustomFieldForm = CustomFieldType<
-  'string' | 'number' | 'array' | 'boolean' | 'date'
+  'string' | 'number' | 'array' | 'boolean' | 'date' | 'image'
 > & { name: string; values?: CustomFieldArrayValue[] }
 
 const fieldDataMap = {
@@ -49,7 +49,8 @@ const fieldDataMap = {
   Number: 'number',
   Tags: 'array',
   Boolean: 'boolean',
-  Date: 'date'
+  Date: 'date',
+  Image: 'image'
 } as const
 
 interface AddCustomFieldDialogProps {

@@ -26,6 +26,9 @@ export const convertSchemaToZod = (customFields: {
       case 'date':
         fieldSchema = z.date(z.any())
         break
+      case 'image':
+        fieldSchema = z.string()
+        break
       default:
         fieldSchema = z.any()
     }

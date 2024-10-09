@@ -59,7 +59,7 @@ type DocumentSettingsProps = {
 }
 
 interface CustomInputProps {
-  type?: 'text' | 'number' | 'checkbox' | 'date'
+  type?: 'text' | 'number' | 'checkbox' | 'date' | 'image'
   suggestions?: CustomFieldArrayValue[]
   registerOptions?: RegisterOptions
 }
@@ -71,6 +71,7 @@ type ComponentType = {
     | typeof TagInput
     | typeof CheckboxWithLabel
     | typeof DateTimePickerForm
+    | typeof DocumentSettingsImageSelection
   props: CustomInputProps
 }
 
@@ -81,6 +82,7 @@ type FieldDataMapType = {
   Tags: ComponentType
   Boolean: ComponentType
   Date: ComponentType
+  Image: ComponentType
 }
 
 const FieldDataMap: FieldDataMapType = {
@@ -94,7 +96,8 @@ const FieldDataMap: FieldDataMapType = {
     }
   },
   Boolean: { component: CheckboxWithLabel, props: { type: 'checkbox' } },
-  Date: { component: DateTimePickerForm, props: { type: 'date' } }
+  Date: { component: DateTimePickerForm, props: { type: 'date' } },
+  Image: { component: DocumentSettingsImageSelection, props: { type: 'image' } }
 }
 
 const DocumentSettings = ({
@@ -113,13 +116,13 @@ const DocumentSettings = ({
   } = useFormContext()
   const router = useRouter()
 
-  const { document, extension, editDocument, hasChanges, collection } =
+  const { document, extension, hasChanges, collection } =
     useContext(DocumentContext)
 
   const [showAddModal, setShowAddModal] = useState(false)
   const [fieldTitle, setFieldTitle] = useState('')
 
-  const { dashboardRoute } = useOutstatic()
+  const { dashboardRoute, session } = useOutstatic()
 
   const [isOpen, setIsOpen] = useState(false)
 
@@ -290,22 +293,27 @@ const DocumentSettings = ({
               <FormField
                 control={control}
                 name="author.name"
-                defaultValue={document.author?.name || ''}
+                defaultValue={document.author?.name || session?.user?.name}
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Name</FormLabel>
                     <FormControl>
-                      <Input {...field} value={field.value || ''} />
+                      <Input
+                        {...field}
+                        value={field.value || session?.user?.name}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-              <DocumentSettingsImageSelection
-                label="Add an avatar"
-                name="author.picture"
-                description="Author Avatar"
-              />
+              <div className="w-full mt-2 gap-2 flex flex-col">
+                <FormLabel>Avatar</FormLabel>
+                <DocumentSettingsImageSelection
+                  label="Add an avatar"
+                  id="author.picture"
+                />
+              </div>
             </div>
           </Accordion>
           <Accordion title="URL Slug*" error={!!errors['slug']?.message}>

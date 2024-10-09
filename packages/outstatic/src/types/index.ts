@@ -55,7 +55,8 @@ export const customFieldTypes = [
   'Number',
   'Tags',
   'Boolean',
-  'Date'
+  'Date',
+  'Image'
 ] as const
 
 export const customFieldData = [
@@ -63,7 +64,8 @@ export const customFieldData = [
   'number',
   'array',
   'boolean',
-  'date'
+  'date',
+  'image'
 ] as const
 
 export type CustomFieldArrayValue = {
@@ -72,7 +74,7 @@ export type CustomFieldArrayValue = {
 }
 
 export type CustomFieldType<
-  T extends 'string' | 'number' | 'array' | 'boolean' | 'date'
+  T extends 'string' | 'number' | 'array' | 'boolean' | 'date' | 'image'
 > = {
   title: string
   fieldType: (typeof customFieldTypes)[number]
@@ -83,7 +85,7 @@ export type CustomFieldType<
 
 export type CustomFieldsType = {
   [key: string]: CustomFieldType<
-    'string' | 'number' | 'array' | 'boolean' | 'date'
+    'string' | 'number' | 'array' | 'boolean' | 'date' | 'image'
   >
 }
 

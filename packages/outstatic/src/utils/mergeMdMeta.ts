@@ -1,6 +1,7 @@
 import { Document } from '@/types'
 import DOMPurify from 'dompurify'
 import replaceImagePath from './replaceImagePath'
+import { API_MEDIA_PATH } from './constants'
 
 export const mergeMdMeta = (
   data: Document & Record<string, any>,
@@ -8,13 +9,34 @@ export const mergeMdMeta = (
   repoInfo: string,
   publicMediaPath: string
 ): string => {
+  const apiMediaPath = `${basePath}${API_MEDIA_PATH}${repoInfo}`
+
+  const processValue = (value: any): any => {
+    if (value instanceof Date) {
+      return value.toISOString()
+    }
+    if (typeof value === 'object' && value !== null) {
+      return Object.fromEntries(
+        Object.entries(value).map(([subKey, subValue]) => [
+          subKey,
+          processValue(subValue)
+        ])
+      )
+    }
+    if (typeof value === 'string' && value.startsWith(apiMediaPath)) {
+      console.log({ value })
+      const regex = new RegExp(`(${apiMediaPath})([^\\s"'\\)]+)`, 'g')
+      return value.replace(regex, (match, apiPath, filename) => {
+        return `${basePath}/${publicMediaPath}${filename}`
+      })
+    }
+    return value
+  }
+
   const meta: Record<string, any> = Object.entries(
     (({ content, ...meta }) => meta)(data)
   ).map(([key, value]) => {
-    if (value instanceof Date) {
-      return [key, value.toISOString()]
-    }
-    return [key, value]
+    return [key, processValue(value)]
   })
 
   let merged = '---\n'
@@ -39,6 +61,8 @@ export const mergeMdMeta = (
   })
 
   merged += '---\n\n'
+
+  console.log(merged)
 
   // replace /api/outstatic/images/ references
   const newContent = replaceImagePath({
