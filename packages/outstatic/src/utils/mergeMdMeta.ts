@@ -63,6 +63,5 @@ export const mergeMdMeta = (
 
   merged += newContent
 
-  console.log(merged)
   return merged
 }

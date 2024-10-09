@@ -61,8 +61,6 @@ export const convertSchemaToZod = (customFields: {
     ...shape
   }
 
-  console.log({ schema })
-
   const mergedSchema = z.object(schema)
 
   return mergedSchema
