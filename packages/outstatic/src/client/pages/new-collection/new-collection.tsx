@@ -172,6 +172,13 @@ export default function NewCollection() {
           }
 
           await refetchCollections()
+          setLoading(false)
+          setHasChanges(false)
+          router.push(
+            `${dashboardRoute}/${slugify(collection, {
+              allowedChars: 'a-zA-Z0-9'
+            })}`
+          )
           return 'Collection created successfully'
         },
         error: () => {
@@ -395,7 +402,6 @@ export default function NewCollection() {
         <MetadataBuilder
           onComplete={() => {
             setRebuild(false)
-            setLoading(false)
             router.push(
               `${dashboardRoute}/${slugify(collectionName, {
                 allowedChars: 'a-zA-Z0-9'

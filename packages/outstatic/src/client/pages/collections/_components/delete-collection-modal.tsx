@@ -56,7 +56,7 @@ function DeleteCollectionModal({
       { data: collections, isError: collectionsError }
     ] = await Promise.all([refetchMetadata(), refetchCollections()])
 
-    if (!metadata || metadataError || !collections || collectionsError) {
+    if (metadataError || !collections || collectionsError) {
       throw new Error('Failed to fetch data')
     }
 
@@ -111,7 +111,8 @@ function DeleteCollectionModal({
 
       toast.promise(mutation.mutateAsync(input), {
         loading: 'Deleting collection...',
-        success: () => {
+        success: async () => {
+          await refetchCollections()
           setDeleting(false)
           setShowDeleteModal(false)
           return 'Collection deleted successfully'
