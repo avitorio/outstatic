@@ -36,9 +36,9 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/shadcn/card'
-import { MetadataBuilder } from '@/components/MetadataBuilder'
 import { useCollections } from '@/utils/hooks'
 import { useGetDocuments } from '@/utils/hooks/useGetDocuments'
+import { useRebuildMetadata } from '@/utils/hooks/useRebuildMetadata'
 
 export default function NewCollection() {
   const { pages, hasChanges, setHasChanges } = useOutstatic()
@@ -72,7 +72,6 @@ export default function NewCollection() {
   const [error, setError] = useState(false)
   const [dialogOpen, setDialogOpen] = useState(false)
   const [showSelectFolderButton, setShowSelectFolderButton] = useState(false)
-  const [rebuild, setRebuild] = useState(false)
   const { refetch: refetchCollections } = useCollections({
     enabled: false,
     detailed: true
@@ -88,6 +87,8 @@ export default function NewCollection() {
   })
 
   const mutation = useCreateCommit()
+
+  const rebuildMetadata = useRebuildMetadata()
 
   const onSubmit: SubmitHandler<Collection> = async ({ name }: Collection) => {
     setLoading(true)
@@ -167,18 +168,23 @@ export default function NewCollection() {
           // check if the collection has md(x) files in it
           const { data } = await refetchDocuments()
 
-          if (data?.documents && data.documents.length > 0) {
-            setRebuild(true)
+          const onComplete = async () => {
+            await refetchCollections()
+            setLoading(false)
+            setHasChanges(false)
+            router.push(
+              `${dashboardRoute}/${slugify(collection, {
+                allowedChars: 'a-zA-Z0-9'
+              })}`
+            )
           }
 
-          await refetchCollections()
-          setLoading(false)
-          setHasChanges(false)
-          router.push(
-            `${dashboardRoute}/${slugify(collection, {
-              allowedChars: 'a-zA-Z0-9'
-            })}`
-          )
+          if (data?.documents && data.documents.length > 0) {
+            await rebuildMetadata({ onComplete })
+          } else {
+            onComplete()
+          }
+
           return 'Collection created successfully'
         },
         error: () => {
@@ -398,19 +404,6 @@ export default function NewCollection() {
           </Card>
         </div>
       </AdminLayout>
-      <div className="hidden">
-        <MetadataBuilder
-          onComplete={() => {
-            setRebuild(false)
-            router.push(
-              `${dashboardRoute}/${slugify(collectionName, {
-                allowedChars: 'a-zA-Z0-9'
-              })}`
-            )
-          }}
-          rebuild={rebuild}
-        />
-      </div>
     </FormProvider>
   )
 }

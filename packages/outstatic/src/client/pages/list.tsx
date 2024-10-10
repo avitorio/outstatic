@@ -13,7 +13,7 @@ import { singular } from 'pluralize'
 import useOutstatic from '@/utils/hooks/useOutstatic'
 import LineBackground from '@/components/ui/outstatic/line-background'
 import { sentenceCase } from 'change-case'
-import { useRouter } from 'next/navigation'
+import { redirect } from 'next/navigation'
 
 type ListProps = {
   collection: string
@@ -22,12 +22,10 @@ type ListProps = {
 export default function List({ collection }: ListProps) {
   const { data, isError, isPending } = useGetDocuments()
   const { dashboardRoute } = useOutstatic()
-  const router = useRouter()
 
   if (isPending) return <AdminLoading />
   if (isError || data?.documents === null) {
-    router.push(dashboardRoute)
-    return null
+    redirect(dashboardRoute)
   }
 
   return (
