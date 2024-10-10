@@ -83,11 +83,7 @@ export const useCollections = <T extends boolean = false>(
                   contentPath: `${repoBranch}:${ostContent}` || ''
                 })
 
-          if (!data) {
-            throw new Error('No collections data found')
-          }
-
-          if (data?.repository?.object === null) {
+          if (!data || data?.repository?.object === null) {
             // We couldn't find the outstatic folder, so we return an empty array
             const collections = detailed
               ? {
