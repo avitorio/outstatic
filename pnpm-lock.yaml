@@ -802,9 +802,6 @@ importers:
       yaml:
         specifier: ^2.5.1
         version: 2.5.1
-      yup:
-        specifier: ^0.32.11
-        version: 0.32.11
       zod:
         specifier: ^3.23.8
         version: 3.23.8
