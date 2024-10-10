@@ -103,7 +103,11 @@ export function SearchCombobox({
             variant={variant === 'hidden' ? undefined : variant}
             role="combobox"
             aria-expanded={open}
-            className={buttonClassName}
+            className={cn(
+              buttonClassName,
+              size === 'sm' &&
+                'focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0'
+            )}
             disabled={disabled || isLoading}
             size={size}
           >
