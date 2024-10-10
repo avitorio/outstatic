@@ -3,8 +3,7 @@ import {
   Card,
   CardHeader,
   CardTitle,
-  CardContent,
-  CardFooter
+  CardContent
 } from '@/components/ui/shadcn/card'
 import { AdminLoading } from '@/components/AdminLoading'
 import { Button } from '@/components/ui/shadcn/button'
@@ -14,6 +13,7 @@ import { singular } from 'pluralize'
 import useOutstatic from '@/utils/hooks/useOutstatic'
 import LineBackground from '@/components/ui/outstatic/line-background'
 import { sentenceCase } from 'change-case'
+import { useRouter } from 'next/navigation'
 
 type ListProps = {
   collection: string
@@ -22,31 +22,12 @@ type ListProps = {
 export default function List({ collection }: ListProps) {
   const { data, isError, isPending } = useGetDocuments()
   const { dashboardRoute } = useOutstatic()
+  const router = useRouter()
 
   if (isPending) return <AdminLoading />
   if (isError || data?.documents === null) {
-    return (
-      <AdminLayout title={sentenceCase(collection)}>
-        <Card className="max-w-2xl">
-          <CardHeader>
-            <CardTitle>This collection doesn&apos;t exist.</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p>You can create a new collection by clicking the button below.</p>
-          </CardContent>
-          <CardFooter>
-            <Button asChild>
-              <Link
-                href={`${dashboardRoute}/collections/new`}
-                className="no-underline"
-              >
-                Create New Collection
-              </Link>
-            </Button>
-          </CardFooter>
-        </Card>
-      </AdminLayout>
-    )
+    router.push(dashboardRoute)
+    return null
   }
 
   return (
