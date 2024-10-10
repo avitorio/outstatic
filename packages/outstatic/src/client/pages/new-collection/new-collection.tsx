@@ -1,34 +1,8 @@
 import { AdminLayout } from '@/components'
 import Alert from '@/components/Alert'
-import { Button } from '@/components/ui/shadcn/button'
-import Input from '@/components/ui/outstatic/input'
-import { Label } from '@/components/ui/shadcn/label'
-import { RadioGroup, RadioGroupItem } from '@/components/ui/shadcn/radio-group'
-import { Collection } from '@/types'
-import { createCommitApi } from '@/utils/createCommitApi'
-import { useCreateCommit } from '@/utils/hooks/useCreateCommit'
-import useOid from '@/utils/hooks/useOid'
-import useOutstatic from '@/utils/hooks/useOutstatic'
-import { yupResolver } from '@hookform/resolvers/yup'
-import { kebabCase } from 'change-case'
-import Link from 'next/link'
-import { useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
-import { FormProvider, SubmitHandler, useForm } from 'react-hook-form'
-import { toast } from 'sonner'
-import { slugify } from 'transliteration'
-import * as yup from 'yup'
-import GithubExplorer from './components/github-explorer'
-import PathBreadcrumbs from './components/path-breadcrumb'
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogFooter
-} from '@/components/ui/shadcn/dialog'
+import { Input } from '@/components/ui/shadcn/input'
 import { SpinnerIcon } from '@/components/ui/outstatic/spinner-icon'
+import { Button } from '@/components/ui/shadcn/button'
 import {
   Card,
   CardContent,
@@ -36,9 +10,43 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/shadcn/card'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle
+} from '@/components/ui/shadcn/dialog'
+import { Label } from '@/components/ui/shadcn/label'
+import { RadioGroup, RadioGroupItem } from '@/components/ui/shadcn/radio-group'
+import { createCommitApi } from '@/utils/createCommitApi'
 import { useCollections } from '@/utils/hooks'
+import { useCreateCommit } from '@/utils/hooks/useCreateCommit'
 import { useGetDocuments } from '@/utils/hooks/useGetDocuments'
+import useOid from '@/utils/hooks/useOid'
+import useOutstatic from '@/utils/hooks/useOutstatic'
 import { useRebuildMetadata } from '@/utils/hooks/useRebuildMetadata'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { kebabCase } from 'change-case'
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
+import { FormProvider, useForm } from 'react-hook-form'
+import { toast } from 'sonner'
+import { slugify } from 'transliteration'
+import * as z from 'zod'
+import GithubExplorer from './_components/github-explorer'
+import PathBreadcrumbs from './_components/path-breadcrumb'
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage
+} from '@/components/ui/shadcn/form'
 
 export default function NewCollection() {
   const { pages, hasChanges, setHasChanges } = useOutstatic()
@@ -56,14 +64,7 @@ export default function NewCollection() {
   const router = useRouter()
   const fetchOid = useOid()
   const [collectionName, setCollectionName] = useState('')
-  const pagesRegex = new RegExp(`^(?!${pages.join('$|')}$)`, 'i')
-  const createCollection: yup.SchemaOf<Collection> = yup.object().shape({
-    name: yup
-      .string()
-      .matches(pagesRegex, `${collectionName} is already taken.`)
-      .required('Collection name is required.'),
-    contentPath: yup.string()
-  })
+
   const ostContent = `${monorepoPath ? monorepoPath + '/' : ''}${contentPath}`
   const [path, setPath] = useState(ostContent)
   const [outstaticFolder, setOutstaticFolder] = useState(true)
@@ -76,21 +77,33 @@ export default function NewCollection() {
     enabled: false,
     detailed: true
   })
+
   const { refetch: refetchDocuments } = useGetDocuments({
     enabled: false,
     collection: collectionName
   })
 
-  const methods = useForm<Collection>({
-    // @ts-ignore
-    resolver: yupResolver(createCollection)
+  const createCollectionSchema = z.object({
+    name: z.string().refine(
+      (val) => !pages.some((page) => page.toLowerCase() === val.toLowerCase()),
+      (val) => ({ message: `${val} is a reserved name.` })
+    ),
+    contentPath: z.string().optional()
+  })
+
+  const form = useForm<z.infer<typeof createCollectionSchema>>({
+    resolver: zodResolver(createCollectionSchema),
+    defaultValues: {
+      name: '',
+      contentPath: ''
+    }
   })
 
   const mutation = useCreateCommit()
 
   const rebuildMetadata = useRebuildMetadata()
 
-  const onSubmit: SubmitHandler<Collection> = async ({ name }: Collection) => {
+  const onSubmit = async ({ name }: z.infer<typeof createCollectionSchema>) => {
     setLoading(true)
     setHasChanges(false)
 
@@ -205,13 +218,13 @@ export default function NewCollection() {
   }
 
   useEffect(() => {
-    const subscription = methods.watch(() => setHasChanges(true))
+    const subscription = form.watch(() => setHasChanges(true))
 
     return () => subscription.unsubscribe()
-  }, [methods, setHasChanges])
+  }, [form, setHasChanges])
 
   return (
-    <FormProvider {...methods}>
+    <FormProvider {...form}>
       <AdminLayout title="New Collection">
         {error ? (
           <Alert type="error">
@@ -233,27 +246,34 @@ export default function NewCollection() {
             </CardHeader>
             <CardContent>
               <form
-                className="max-w-5xl w-full flex mb-4 items-start flex-col space-y-4"
-                onSubmit={methods.handleSubmit(onSubmit)}
+                className="w-full flex mb-4 items-start flex-col space-y-4"
+                onSubmit={form.handleSubmit(onSubmit)}
               >
                 <div className="space-y-4">
-                  <Input
-                    label="Collection Name"
-                    id="name"
-                    inputSize="medium"
-                    className="w-full max-w-sm md:w-80"
-                    placeholder="Ex: Posts"
-                    type="text"
-                    helperText="We suggest naming the collection in plural form, ex: Docs"
-                    registerOptions={{
-                      onChange: (e) => {
-                        setCollectionName(e.target.value)
-                      },
-                      onBlur: (e) => {
-                        methods.setValue('name', e.target.value)
-                      }
-                    }}
-                    autoFocus
+                  <FormField
+                    control={form.control}
+                    name="name"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Collection Name</FormLabel>
+                        <FormControl>
+                          <Input
+                            {...field}
+                            placeholder="Ex: Posts"
+                            autoFocus
+                            onChange={(e) => {
+                              field.onChange(e)
+                              setCollectionName(e.target.value)
+                            }}
+                          />
+                        </FormControl>
+                        <FormDescription>
+                          We suggest naming the collection in plural form, ex:
+                          Docs
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
                   />
                 </div>
                 <div className="space-y-4">
@@ -263,15 +283,11 @@ export default function NewCollection() {
                       outstaticFolder
                         ? ostContent +
                           '/' +
-                          kebabCase(
-                            methods.getValues('name') || 'your-collection'
-                          )
+                          kebabCase(form.getValues('name') || 'your-collection')
                         : createFolder
                         ? '/' +
                           (path ? path + '/' : '') +
-                          kebabCase(
-                            methods.getValues('name') || 'your-collection'
-                          )
+                          kebabCase(form.getValues('name') || 'your-collection')
                         : '/' + path
                     }
                   />
@@ -279,7 +295,7 @@ export default function NewCollection() {
                     This is where your .md(x) files will be stored and read
                     from.
                   </p>
-                  <Input id="contentPath" type="hidden" value={path} />
+                  {/* <Input id="contentPath" type="hidden" value={path} /> */}
                   <RadioGroup
                     defaultValue="outstatic-folder"
                     onValueChange={(value: string) => {
@@ -325,7 +341,7 @@ export default function NewCollection() {
                       </DialogDescription>
                     </DialogHeader>
                     <div className="space-y-4">
-                      <Input id="contentPath" type="hidden" value={path} />
+                      {/* <Input id="contentPath" type="hidden" value={path} /> */}
                       <RadioGroup
                         defaultValue="select-folder"
                         onValueChange={(value: string) =>
@@ -357,7 +373,7 @@ export default function NewCollection() {
                             ? '/' +
                               (path ? path + '/' : '') +
                               kebabCase(
-                                methods.getValues('name') || 'your-collection'
+                                form.getValues('name') || 'your-collection'
                               )
                             : '/' + path
                         }
@@ -375,7 +391,7 @@ export default function NewCollection() {
                       <SaveButton
                         loading={loading}
                         hasChanges={hasChanges}
-                        onClick={methods.handleSubmit(onSubmit)}
+                        onClick={form.handleSubmit(onSubmit)}
                         collectionName={collectionName}
                       />
                     </DialogFooter>

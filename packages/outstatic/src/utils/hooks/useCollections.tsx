@@ -7,7 +7,7 @@ import { toast } from 'sonner'
 import { useCreateCommit } from './useCreateCommit'
 import { GET_FILE } from '@/graphql/queries/file'
 
-type CollectionType = {
+export type CollectionType = {
   name: string
   path: string
   children: CollectionType[]
