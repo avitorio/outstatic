@@ -9,6 +9,8 @@ export const useGetRepository = (options?: { enabled?: boolean }) => {
     queryKey: ['repository', repoOwner, repoSlug],
     queryFn: async () => {
       try {
+        if (!repoOwner || !repoSlug) return null
+
         const { repository } = await gqlClient.request(GET_REPOSITORY, {
           owner: repoOwner,
           name: repoSlug
