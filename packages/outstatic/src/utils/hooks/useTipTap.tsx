@@ -12,7 +12,7 @@ import { OUTSTATIC_API_PATH } from '../constants'
 import { useCsrfToken } from './useCsrfToken'
 
 const useTipTap = ({ ...rhfMethods }) => {
-  const { hasOpenAIKey } = useOutstatic()
+  const { hasOpenAIKey, basePath } = useOutstatic()
   const csrfToken = useCsrfToken()
   const { setValue, trigger } = rhfMethods
 
@@ -26,7 +26,7 @@ const useTipTap = ({ ...rhfMethods }) => {
   const { complete, completion, isLoading, stop } = useCompletion({
     id: 'outstatic',
     headers: csrfToken ? { 'X-CSRF-Token': csrfToken } : undefined,
-    api: OUTSTATIC_API_PATH + '/generate',
+    api: basePath + OUTSTATIC_API_PATH + '/generate',
     onFinish: (_prompt, completion) => {
       if (editorRef.current) {
         editorRef.current.commands.setTextSelection({
