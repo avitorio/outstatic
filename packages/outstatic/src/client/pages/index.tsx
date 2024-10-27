@@ -13,6 +13,7 @@ import Login from './login'
 import Welcome from './welcome'
 import { useGetRepository } from '@/utils/hooks/useGetRepository'
 import Onboarding from './onboarding'
+import { NavigationGuardProvider } from 'next-navigation-guard'
 
 export const AdminArea = ({ params }: { params: { ost: string[] } }) => {
   const [openSidebar, setOpenSidebar] = useState(false)
@@ -78,7 +79,9 @@ export const OstClient = ({ ostData, params }: OstClientProps) => {
     <InitialDataContext.Provider value={ostData}>
       <Toaster richColors />
       <QueryClientProvider client={queryClient}>
-        <AdminArea params={params} />
+        <NavigationGuardProvider>
+          <AdminArea params={params} />
+        </NavigationGuardProvider>
       </QueryClientProvider>
     </InitialDataContext.Provider>
   )
