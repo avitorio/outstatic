@@ -69,7 +69,7 @@ export const DeleteMediaButton = ({
         capi.removeFile(`${path}`)
       }
 
-      // remove post from media.json
+      // remove media from media.json
       media.generated = new Date().toISOString()
       media.commit = hashFromUrl(commitUrl)
       const newMeta = media.media.filter((file) => file.filename !== filename)
