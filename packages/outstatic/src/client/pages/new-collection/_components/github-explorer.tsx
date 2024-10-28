@@ -29,7 +29,7 @@ function GithubExplorer({ path, setPath }: GithubExplorerProps) {
   return (
     <Tree
       data={folders}
-      className="flex-shrink-0 w-[28rem] h-64 border-[1px]"
+      className="flex-shrink-0 w-full h-64 border-[1px]"
       onSelectChange={(item) => handleSelectChange(item)}
       folderIcon={Folder}
       itemIcon={Folder}

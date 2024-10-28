@@ -10,14 +10,6 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/shadcn/card'
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle
-} from '@/components/ui/shadcn/dialog'
 import { Label } from '@/components/ui/shadcn/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/shadcn/radio-group'
 import { createCommitApi } from '@/utils/createCommitApi'
@@ -39,7 +31,6 @@ import * as z from 'zod'
 import GithubExplorer from './_components/github-explorer'
 import PathBreadcrumbs from './_components/path-breadcrumb'
 import {
-  Form,
   FormControl,
   FormDescription,
   FormField,
@@ -47,6 +38,8 @@ import {
   FormLabel,
   FormMessage
 } from '@/components/ui/shadcn/form'
+import { Check } from 'lucide-react'
+import { Checkbox } from '@/components/ui/shadcn/checkbox'
 
 export default function NewCollection() {
   const { pages, hasChanges, setHasChanges } = useOutstatic()
@@ -64,6 +57,7 @@ export default function NewCollection() {
   const router = useRouter()
   const fetchOid = useOid()
   const [collectionName, setCollectionName] = useState('')
+  const [step, setStep] = useState(1)
 
   const ostContent = `${monorepoPath ? monorepoPath + '/' : ''}${contentPath}`
   const [path, setPath] = useState(ostContent)
@@ -71,8 +65,6 @@ export default function NewCollection() {
   const [createFolder, setCreateFolder] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(false)
-  const [dialogOpen, setDialogOpen] = useState(false)
-  const [showSelectFolderButton, setShowSelectFolderButton] = useState(false)
   const { refetch: refetchCollections } = useCollections({
     enabled: false,
     detailed: true
@@ -151,7 +143,7 @@ export default function NewCollection() {
         properties: {}
       }
 
-      const capi = createCommitApi({
+      const commitApi = createCommitApi({
         message: `feat(content): create ${collection}`,
         owner,
         oid,
@@ -159,21 +151,21 @@ export default function NewCollection() {
         branch: repoBranch
       })
 
-      capi.replaceFile(
+      commitApi.replaceFile(
         `${ostContent}/${collection}/schema.json`,
         JSON.stringify(collectionJSON, null, 2) + '\n'
       )
 
-      capi.replaceFile(
+      commitApi.replaceFile(
         `${ostContent}/collections.json`,
         JSON.stringify(fullData, null, 2) + '\n'
       )
 
       if (createFolder) {
-        capi.replaceFile(`${collectionPath}/.gitkeep`, '')
+        commitApi.replaceFile(`${collectionPath}/.gitkeep`, '')
       }
 
-      const input = capi.createInput()
+      const input = commitApi.createInput()
 
       toast.promise(mutation.mutateAsync(input), {
         loading: 'Creating collection...',
@@ -241,72 +233,34 @@ export default function NewCollection() {
             <CardHeader>
               <CardTitle>Create a Collection</CardTitle>
               <CardDescription>
-                Create a new collection to store your content.
+                {step === 1 && 'Choose where to store your content.'}
+                {step === 2 &&
+                  !outstaticFolder &&
+                  'Select or create a folder for your content.'}
+                {step === 2 &&
+                  outstaticFolder &&
+                  'Create a new collection to store your content.'}
+                {step === 3 && 'Create a new collection to store your content.'}
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <form
-                className="w-full flex mb-4 items-start flex-col space-y-4"
-                onSubmit={form.handleSubmit(onSubmit)}
-              >
+              {step === 1 && (
                 <div className="space-y-4">
-                  <FormField
-                    control={form.control}
-                    name="name"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Collection Name</FormLabel>
-                        <FormControl>
-                          <Input
-                            {...field}
-                            placeholder="Ex: Posts"
-                            autoFocus
-                            onChange={(e) => {
-                              field.onChange(e)
-                              setCollectionName(e.target.value)
-                            }}
-                          />
-                        </FormControl>
-                        <FormDescription>
-                          We suggest naming the collection in plural form, ex:
-                          Docs
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-                <div className="space-y-4">
-                  <Label>Content Path</Label>
-                  <PathBreadcrumbs
-                    path={
-                      outstaticFolder
-                        ? ostContent +
-                          '/' +
-                          kebabCase(form.getValues('name') || 'your-collection')
-                        : createFolder
-                        ? '/' +
-                          (path ? path + '/' : '') +
-                          kebabCase(form.getValues('name') || 'your-collection')
-                        : '/' + path
-                    }
-                  />
-                  <p className="text-xs text-gray-500">
-                    This is where your .md(x) files will be stored and read
-                    from.
-                  </p>
-                  {/* <Input id="contentPath" type="hidden" value={path} /> */}
+                  <Label>
+                    Where would you like to store your Markdown files?
+                  </Label>
                   <RadioGroup
-                    defaultValue="outstatic-folder"
+                    className="grid gap-4 md:grid-cols-2 -ml-2"
+                    defaultValue={
+                      outstaticFolder ? 'outstatic-folder' : 'select-folder'
+                    }
                     onValueChange={(value: string) => {
                       setOutstaticFolder(value === 'outstatic-folder')
                       if (value === 'outstatic-folder') {
                         setPath(ostContent)
-                        setShowSelectFolderButton(false)
                       }
-                      if (value === 'select-or-create') {
+                      if (value === 'select-folder') {
                         setPath('')
-                        setShowSelectFolderButton(true)
                       }
                     }}
                   >
@@ -314,108 +268,193 @@ export default function NewCollection() {
                       <RadioGroupItem
                         value="outstatic-folder"
                         id="outstatic-folder"
+                        className="sr-only"
                       />
                       <Label htmlFor="outstatic-folder">
-                        Use Outstatic&apos;s default structure
+                        <Card
+                          className={`h-full cursor-pointer transition-all shadow-none group ${
+                            outstaticFolder ? 'border-primary' : ''
+                          }`}
+                        >
+                          <CardHeader className="relative">
+                            <div
+                              className={`absolute right-2 top-2 w-6 h-6 rounded-full border-2 border-primary flex items-center justify-center transition-all ${
+                                outstaticFolder
+                                  ? 'bg-primary text-primary-foreground opacity-100'
+                                  : 'opacity-0'
+                              }`}
+                            >
+                              <Check className="w-4 h-4" />
+                            </div>
+                            <CardTitle className="text-xl">
+                              Outstatic Folder
+                            </CardTitle>
+                          </CardHeader>
+                          <CardContent>
+                            <CardDescription>
+                              Default Outstatic setup
+                            </CardDescription>
+                            <ul className="mt-2 space-y-1 text-sm">
+                              <li>
+                                Stores markdown files in the outstatic/content
+                                folder.
+                              </li>
+                            </ul>
+                          </CardContent>
+                        </Card>
                       </Label>
                     </div>
                     <div className="flex items-center space-x-2">
                       <RadioGroupItem
-                        value="select-or-create"
-                        id="select-or-create"
+                        value="select-folder"
+                        id="select-folder"
+                        className="sr-only"
                       />
-                      <Label htmlFor="select-or-create">
-                        Select or create a new folder
+                      <Label htmlFor="select-folder">
+                        <Card
+                          className={`h-full cursor-pointer transition-all shadow-none group ${
+                            !outstaticFolder ? 'border-primary' : ''
+                          }`}
+                        >
+                          <CardHeader className="relative">
+                            <div
+                              className={`absolute right-2 top-2 w-6 h-6 rounded-full border-2 border-primary flex items-center justify-center transition-all ${
+                                !outstaticFolder
+                                  ? 'bg-primary text-primary-foreground opacity-100'
+                                  : 'opacity-0'
+                              }`}
+                            >
+                              <Check className="w-4 h-4" />
+                            </div>
+                            <CardTitle className="text-xl">
+                              Select a folder
+                            </CardTitle>
+                          </CardHeader>
+                          <CardContent>
+                            <CardDescription>
+                              For existing Markdown content
+                            </CardDescription>
+                            <ul className="mt-2 space-y-1 text-sm">
+                              <li>
+                                Works with Nextra, Astro, Gatsby FumaDocs &
+                                more.
+                              </li>
+                            </ul>
+                          </CardContent>
+                        </Card>
                       </Label>
                     </div>
                   </RadioGroup>
+                  <div className="flex justify-end pt-4">
+                    <Button
+                      onClick={() => {
+                        if (outstaticFolder) {
+                          setStep(2)
+                        } else {
+                          setStep(2)
+                        }
+                      }}
+                    >
+                      Next Step
+                    </Button>
+                  </div>
                 </div>
+              )}
 
-                <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-                  <DialogContent className="sm:max-w-lg">
-                    <DialogHeader>
-                      <DialogTitle>Content Path</DialogTitle>
-                      <DialogDescription>
-                        Choose where your .md(x) files will be stored and read
-                        from.
-                      </DialogDescription>
-                    </DialogHeader>
-                    <div className="space-y-4">
-                      {/* <Input id="contentPath" type="hidden" value={path} /> */}
-                      <RadioGroup
-                        defaultValue="select-folder"
-                        onValueChange={(value: string) =>
-                          setCreateFolder(value === 'create-folder')
-                        }
-                      >
-                        <div className="flex items-center space-x-2">
-                          <RadioGroupItem
-                            value="select-folder"
-                            id="select-folder"
-                          />
-                          <Label htmlFor="select-folder">
-                            Select an existing folder
-                          </Label>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <RadioGroupItem
-                            value="create-folder"
-                            id="create-folder"
-                          />
-                          <Label htmlFor="create-folder">
-                            Create a new folder
-                          </Label>
-                        </div>
-                      </RadioGroup>
-                      <PathBreadcrumbs
-                        path={
-                          createFolder
-                            ? '/' +
-                              (path ? path + '/' : '') +
-                              kebabCase(
-                                form.getValues('name') || 'your-collection'
-                              )
-                            : '/' + path
-                        }
-                      />
-                      <GithubExplorer path={path} setPath={setPath} />
-                    </div>
-                    <DialogFooter>
-                      <Button
-                        variant="outline"
-                        onClick={() => setDialogOpen(false)}
-                      >
-                        Cancel
-                      </Button>
+              {step === 2 && !outstaticFolder && (
+                <div className="space-y-4">
+                  <PathBreadcrumbs path={'/' + path} />
+                  <GithubExplorer path={path} setPath={setPath} />
+                  <div className="flex justify-between pt-4">
+                    <Button variant="outline" onClick={() => setStep(1)}>
+                      Back
+                    </Button>
+                    <Button onClick={() => setStep(3)}>Next</Button>
+                  </div>
+                </div>
+              )}
 
-                      <SaveButton
-                        loading={loading}
-                        hasChanges={hasChanges}
-                        onClick={form.handleSubmit(onSubmit)}
-                        collectionName={collectionName}
-                      />
-                    </DialogFooter>
-                  </DialogContent>
-                </Dialog>
-                {showSelectFolderButton ? (
-                  <Button
-                    onClick={(e) => {
-                      e.preventDefault()
-                      setDialogOpen(true)
-                    }}
-                    className="mt-7 mb-5"
-                    disabled={loading || !collectionName}
-                  >
-                    Select or Create Folder
-                  </Button>
-                ) : (
-                  <SaveButton
-                    loading={loading}
-                    hasChanges={hasChanges}
-                    collectionName={collectionName}
-                  />
-                )}
-              </form>
+              {((step === 2 && outstaticFolder) || step === 3) && (
+                <form
+                  className="w-full flex mb-4 items-start flex-col space-y-4"
+                  onSubmit={form.handleSubmit(onSubmit)}
+                >
+                  <div className="space-y-4">
+                    <FormField
+                      control={form.control}
+                      name="name"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Collection Name</FormLabel>
+                          <FormControl>
+                            <Input
+                              {...field}
+                              placeholder="Ex: Posts"
+                              autoFocus
+                              onChange={(e) => {
+                                field.onChange(e)
+                                setCollectionName(e.target.value)
+                              }}
+                            />
+                          </FormControl>
+                          <FormDescription>
+                            We suggest naming the collection in plural form, ex:
+                            Docs
+                          </FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                  <div className="space-y-4">
+                    <Label>Content Path</Label>
+                    {!outstaticFolder && (
+                      <div className="flex items-center space-x-2 mb-2">
+                        <Checkbox
+                          id="create-folder"
+                          checked={createFolder}
+                          onCheckedChange={(checked) =>
+                            setCreateFolder(checked as boolean)
+                          }
+                        />
+                        <Label htmlFor="create-folder">
+                          Create a new folder
+                        </Label>
+                      </div>
+                    )}
+                    <PathBreadcrumbs
+                      path={
+                        outstaticFolder
+                          ? ostContent +
+                            '/' +
+                            kebabCase(
+                              form.getValues('name') || 'your-collection'
+                            )
+                          : createFolder
+                          ? '/' +
+                            (path ? path + '/' : '') +
+                            kebabCase(
+                              form.getValues('name') || 'your-collection'
+                            )
+                          : '/' + path
+                      }
+                    />
+                  </div>
+                  <div className="flex justify-between w-full pt-4">
+                    <Button
+                      variant="outline"
+                      onClick={() => setStep(outstaticFolder ? 1 : 2)}
+                    >
+                      Back
+                    </Button>
+                    <SaveButton
+                      loading={loading}
+                      hasChanges={hasChanges}
+                      collectionName={collectionName}
+                    />
+                  </div>
+                </form>
+              )}
             </CardContent>
           </Card>
         </div>
