@@ -1,4 +1,4 @@
-import { useGetRepoFiles } from '@/utils/hooks/useGetRepoFiles'
+import { useGetRepoFolders } from '@/utils/hooks/useGetRepoFolders'
 import { useEffect, useState } from 'react'
 import { Tree, TreeDataItem } from '@/components/ui/outstatic/file-tree'
 import { Folder, FolderRoot } from 'lucide-react'
@@ -19,7 +19,7 @@ function GithubExplorer({
 }: GithubExplorerProps) {
   const [folders, setFolders] = useState<TreeDataItem[]>([])
 
-  const { data } = useGetRepoFiles({ path })
+  const { data } = useGetRepoFolders({ path })
 
   const handleSelectChange = (item: TreeDataItem | undefined) => {
     if (path === item?.id) return
