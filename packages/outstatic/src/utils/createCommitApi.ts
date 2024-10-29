@@ -42,20 +42,22 @@ export const createCommitApi = ({
     deletions.push({ path: file })
   }
 
-  const createInput = () => ({
-    branch: {
-      repositoryNameWithOwner: `${owner}/${name}`,
-      branchName: branch
-    },
-    message: {
-      headline: commitMessage
-    },
-    fileChanges: {
-      additions,
-      deletions
-    },
-    expectedHeadOid: oid
-  })
+  const createInput = () => {
+    return {
+      branch: {
+        repositoryNameWithOwner: `${owner}/${name}`,
+        branchName: branch
+      },
+      message: {
+        headline: commitMessage
+      },
+      fileChanges: {
+        additions,
+        deletions
+      },
+      expectedHeadOid: oid
+    }
+  }
 
   // return the API
   return { setMessage, createInput, replaceFile, removeFile }

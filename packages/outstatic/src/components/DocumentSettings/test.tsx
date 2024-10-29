@@ -33,6 +33,9 @@ describe('<DocumentSettings />', () => {
           saveFunc={() => {}}
           loading={false}
           showDelete={false}
+          customFields={{}}
+          setCustomFields={() => {}}
+          metadata={{}}
         />
       </TestWrapper>
     )
@@ -63,6 +66,9 @@ describe('<DocumentSettings />', () => {
               saveFunc={() => {}}
               loading={false}
               showDelete={false}
+              customFields={{}}
+              setCustomFields={() => {}}
+              metadata={{}}
             />
           </TestProviders.Form>
         </TestProviders.DocumentContext>

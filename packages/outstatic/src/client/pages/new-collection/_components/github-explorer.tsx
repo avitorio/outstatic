@@ -1,7 +1,7 @@
 import { useGetRepoFiles } from '@/utils/hooks/useGetRepoFiles'
 import { useEffect, useState } from 'react'
 import { Tree, TreeDataItem } from '@/components/ui/outstatic/file-tree'
-import { Folder } from 'lucide-react'
+import { Folder, FolderRoot } from 'lucide-react'
 
 type GithubExplorerProps = {
   path: string
@@ -11,7 +11,7 @@ type GithubExplorerProps = {
 function GithubExplorer({ path, setPath }: GithubExplorerProps) {
   const [folders, setFolders] = useState<TreeDataItem[]>([])
 
-  const { data } = useGetRepoFiles({ path })
+  const { data, refetch } = useGetRepoFiles({ path })
 
   const handleSelectChange = (item: TreeDataItem | undefined) => {
     if (path === item?.id) return
@@ -21,7 +21,7 @@ function GithubExplorer({ path, setPath }: GithubExplorerProps) {
 
   useEffect(() => {
     if (data !== undefined && folders !== undefined) {
-      setFolders([{ id: '', name: '' }, ...data])
+      setFolders([{ id: '', name: '', icon: FolderRoot }, ...data])
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [path, data])
@@ -29,7 +29,7 @@ function GithubExplorer({ path, setPath }: GithubExplorerProps) {
   return (
     <Tree
       data={folders}
-      className="flex-shrink-0 w-[28rem] h-[24rem] border-[1px]"
+      className="flex-shrink-0 w-full h-64 border-[1px]"
       onSelectChange={(item) => handleSelectChange(item)}
       folderIcon={Folder}
       itemIcon={Folder}

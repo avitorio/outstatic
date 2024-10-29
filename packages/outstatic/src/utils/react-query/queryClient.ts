@@ -1,7 +1,6 @@
 import { createSyncStoragePersister } from '@tanstack/query-sync-storage-persister'
 import { QueryCache, QueryClient } from '@tanstack/react-query'
 import { persistQueryClient } from '@tanstack/react-query-persist-client'
-import { broadcastQueryClient } from '@tanstack/query-broadcast-client-experimental'
 import { compress, decompress } from 'lz-string'
 import { toast } from 'sonner'
 
@@ -38,9 +37,4 @@ persistQueryClient({
       return !!query?.meta?.persist || false
     }
   }
-})
-
-broadcastQueryClient({
-  queryClient,
-  broadcastChannel: 'outstatic'
 })

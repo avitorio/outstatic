@@ -4,8 +4,9 @@ import { OstDocument } from '@/types/public'
 import { useQuery } from '@tanstack/react-query'
 import matter from 'gray-matter'
 import { useParams } from 'next/navigation'
-import { useGetCollectionSchema } from './useGetCollectionSchema'
 import useOutstatic from './useOutstatic'
+import { useCollections } from './useCollections'
+import { slugify } from 'transliteration'
 
 const dateFormatOptions = {
   year: 'numeric' as const,
@@ -29,7 +30,17 @@ type Document = OstDocument & {
   extension: MDExtensions
 }
 
-export const useGetDocuments = () => {
+type FormattedData = Document & {
+  [key: string]: any
+}
+
+export const useGetDocuments = ({
+  enabled = true,
+  collection
+}: {
+  enabled?: boolean
+  collection?: string
+} = {}) => {
   const {
     repoOwner,
     repoSlug,
@@ -42,26 +53,43 @@ export const useGetDocuments = () => {
 
   const params = useParams<{ ost: string[] }>()
 
-  const { refetch } = useGetCollectionSchema({ enabled: false })
+  const { refetch } = useCollections({ enabled: false, detailed: true })
+
+  const collectionName = collection || params?.ost[0]
 
   return useQuery({
-    queryKey: [`documents-${params?.ost}`, { repoOwner, repoSlug, repoBranch }],
+    queryKey: [
+      `documents-${collectionName}`,
+      { repoOwner, repoSlug, repoBranch }
+    ],
     queryFn: async () => {
-      const schema = ostDetach ? await refetch() : null
+      const collections = ostDetach ? await refetch() : null
 
-      const path = schema?.data?.path
+      const path = collections?.data?.fullData?.find(
+        (col) =>
+          col.name === slugify(collectionName, { allowedChars: 'a-zA-Z0-9' })
+      )?.path
+
+      let contentPath = `${repoBranch}:${ostContent}/${collectionName}`
+
+      if (path !== undefined) {
+        if (path !== '') {
+          contentPath = `${repoBranch}:${path}`
+        } else {
+          contentPath = `${repoBranch}:`
+        }
+      }
 
       const { repository } = await gqlClient.request(GET_DOCUMENTS, {
         owner: repoOwner || session?.user?.login || '',
         name: repoSlug,
-        contentPath: path
-          ? `${repoBranch}:${path}`
-          : `${repoBranch}:${ostContent}/${params?.ost[0]}`
+        contentPath
       })
 
-      if (repository?.object === null) return []
+      const documents: Document[] = []
+      const metadata = new Map<string, any>()
 
-      let documents: Document[] = []
+      if (repository?.object === null) return { documents: null, metadata }
 
       const { entries } = repository?.object as Tree
 
@@ -75,16 +103,38 @@ export const useGetDocuments = () => {
               const { coverImage, ...listData } = data
 
               // Format document details
-              const formattedData = {
+              const formattedData: FormattedData = {
                 ...(listData as Document),
                 title: listData.title || name,
-                author: listData.author?.name || '',
-                publishedAt: new Date(listData.publishedAt).toLocaleDateString(
-                  'en-US',
-                  dateFormatOptions
-                ),
                 slug: name.replace(/\.mdx?$/, ''), // Handles both .md and .mdx
                 extension: name.split('.').pop() as MDExtensions
+              }
+
+              // Add publishedAt or date only if it's a valid date
+              if (listData.publishedAt || listData.date) {
+                const dateKey = listData.publishedAt ? 'publishedAt' : 'date'
+                const dateValue = listData[dateKey]
+                const parsedDate = new Date(dateValue)
+                if (!isNaN(parsedDate.getTime())) {
+                  // It's a valid date
+                  formattedData[dateKey] = parsedDate.toLocaleDateString(
+                    'en-US',
+                    dateFormatOptions
+                  )
+                } else if (typeof dateValue === 'string') {
+                  // It might be a pre-formatted date string
+                  formattedData[dateKey] = dateValue
+                }
+              }
+
+              if (listData.author?.name) {
+                formattedData.author = listData.author.name
+              }
+
+              for (const [key, value] of Object.entries(formattedData)) {
+                if (!metadata.has(key)) {
+                  metadata.set(key, typeof value)
+                }
               }
 
               documents.push(formattedData)
@@ -98,10 +148,11 @@ export const useGetDocuments = () => {
         documents.sort((a, b) => Number(b.publishedAt) - Number(a.publishedAt))
       }
 
-      return documents
+      return { documents, metadata }
     },
     meta: {
-      errorMessage: `Failed to fetch collection: ${params?.ost[0]}`
-    }
+      errorMessage: `Failed to fetch collection: ${collectionName}`
+    },
+    enabled
   })
 }

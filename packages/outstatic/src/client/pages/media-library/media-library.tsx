@@ -8,7 +8,7 @@ import { useState, useMemo } from 'react'
 import { toast } from 'sonner'
 import useSubmitMedia from '@/utils/hooks/useSubmitMedia'
 import { FileType } from '@/types'
-import DeleteMediaButton from '@/components/DeleteMediaButton'
+import { DeleteMediaButton } from '@/components/DeleteMediaButton'
 import { MediaLibraryHeader } from '@/components/ui/outstatic/media-library-header'
 import Image from 'next/image'
 import { FileQuestion, ImageOff } from 'lucide-react'
@@ -37,7 +37,7 @@ export default function MediaLibrary() {
   const apiPath = `${basePath}${API_MEDIA_PATH}${repoOwner}/${repoSlug}/${repoBranch}`
   const [notFoundFiles, setNotFoundFiles] = useState<Set<string>>(new Set())
   const [loadingImages, setLoadingImages] = useState<Set<string>>(new Set())
-  const { data, isLoading, error, refetch } = useGetMediaFiles()
+  const { data, isLoading, error, refetch: refetchMedia } = useGetMediaFiles()
   const filteredFiles = useMemo(() => {
     if (!data) return []
 
@@ -94,7 +94,6 @@ export default function MediaLibrary() {
 
         try {
           await submitMedia(fileType)
-          toast.success(`${file.name} uploaded successfully`)
         } catch (error) {
           toast.error(`Failed to upload ${file.name}`)
         }
@@ -209,7 +208,7 @@ export default function MediaLibrary() {
                   path={file.__outstatic.path}
                   filename={file.filename}
                   disabled={false}
-                  onComplete={() => refetch()}
+                  onComplete={async () => await refetchMedia()}
                   className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 bg-white/50"
                   notFound={notFoundFiles.has(file.__outstatic.path)}
                 />

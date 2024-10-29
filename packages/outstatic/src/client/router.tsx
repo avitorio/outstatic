@@ -1,8 +1,8 @@
 import { AdminLoading } from '@/components/AdminLoading'
 import { useCollections } from '@/utils/hooks/useCollections'
-import useOutstatic, { useLocalData } from '@/utils/hooks/useOutstatic'
+import useOutstatic from '@/utils/hooks/useOutstatic'
 import { ReactElement } from 'react'
-import AddCustomField from './pages/add-custom-field'
+import CustomFields from './pages/custom-fields'
 import Collections from './pages/collections'
 import EditDocument from './pages/edit-document'
 import List from './pages/list'
@@ -32,7 +32,7 @@ export const Router = ({ params }: { params: { ost: string[] } }) => {
       {slug2 && isContent && <EditDocument collection={slug} />}
       {!slug2 && isContent ? <List collection={slug} /> : defaultPages[slug]}
       {(slug === 'collections' && collections?.includes(slug2) && (
-        <AddCustomField collection={slug2} />
+        <CustomFields collection={slug2} />
       )) ||
         (!!slug2 && !isContent && <NewCollection />)}
     </>

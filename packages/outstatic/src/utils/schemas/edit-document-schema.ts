@@ -1,32 +1,27 @@
-import * as yup from 'yup'
+import { z } from 'zod'
 import { slugRegex } from '@/utils/slugRegex'
 import { DocumentSchemaShape } from '@/types'
 
 export const documentShape = {
-  title: yup.string().required('Title is required.'),
-  publishedAt: yup.date().required('Date is required.'),
-  content: yup.string().required('Content is required.'),
-  status: yup
-    .string()
-    .equals(['published', 'draft'])
-    .required('Status is missing.'),
-  author: yup.object().shape({
-    name: yup.string(),
-    picture: yup.string()
+  title: z.string().optional(),
+  publishedAt: z.date().optional(),
+  content: z.string().optional(),
+  status: z.enum(['published', 'draft'], {
+    errorMap: () => ({ message: 'Status is missing.' })
   }),
-  slug: yup
+  author: z.object({
+    name: z.string().optional(),
+    picture: z.string().optional()
+  }),
+  slug: z
     .string()
-    .matches(/^(?!new$)/, 'The word "new" is not a valid slug.')
-    .matches(
+    .regex(
       slugRegex,
       'Slug must contain only lowercase letters, numbers, and hyphens, and cannot start or end with a hyphen.'
     )
     .max(200, 'Slugs can be a maximum of 200 characters.')
-    .required(),
-  description: yup.string(),
-  coverImage: yup.string()
+    .refine((val) => val !== 'new', 'The word "new" is not a valid slug.')
 }
 
-export const editDocumentSchema: yup.SchemaOf<DocumentSchemaShape> = yup
-  .object()
-  .shape(documentShape)
+export const editDocumentSchema: z.ZodType<DocumentSchemaShape> =
+  z.object(documentShape)

@@ -1,25 +1,32 @@
-import { GET_FILE_INFORMATION } from '@/graphql/queries/metadata'
+import { generateGetFileInformationQuery } from '@/graphql/queries/metadata'
 import useOutstatic from '@/utils/hooks/useOutstatic'
 import { useQuery } from '@tanstack/react-query'
+import { useCollections } from './useCollections'
 
-type RepoObject = {
-  oid: string
-  text: string
-  commitUrl: string
-  entries: TreeEntry[]
+type TreeEntry = {
+  object: {
+    oid: string
+    text: string
+    commitUrl: string
+    entries: TreeEntry[]
+  }
+  type: 'tree' | 'blob'
+  path: string
+  entries?: TreeEntry[]
 }
 
 type FileInformationDataType = {
   repository: {
-    object: RepoObject
+    [key: string]: {
+      entries: TreeEntry[]
+    }
   }
 }
 
-type TreeEntry = {
-  name: string
-  object: RepoObject
-  type: 'tree' | 'blob'
-  path: string
+export type SchemasQuery = {
+  repository?: {
+    [key: string]: { text?: string | null } | {} | null
+  } | null
 }
 
 export const useGetFileInformation = ({
@@ -30,19 +37,70 @@ export const useGetFileInformation = ({
   const { repoOwner, repoSlug, repoBranch, ostContent, session, gqlClient } =
     useOutstatic()
 
-  const filePath = `${repoBranch}:${ostContent}/metadata.json`
+  const { refetch: refetchCollections } = useCollections({
+    enabled: false,
+    detailed: true
+  })
 
   return useQuery({
-    queryKey: ['file-info', { filePath }],
-    queryFn: async () =>
-      await gqlClient.request<FileInformationDataType>(GET_FILE_INFORMATION, {
-        owner: repoOwner || session?.user?.login || '',
-        name: repoSlug,
-        filePath
-      }),
+    queryKey: ['file-info', { filePath: `${repoBranch}:${ostContent}` }],
+    queryFn: async () => {
+      const { data: collectionsData } = await refetchCollections()
+
+      if (
+        !collectionsData?.fullData ||
+        collectionsData?.fullData.length === 0
+      ) {
+        throw new Error('No collections data found')
+      }
+
+      const fullData = collectionsData?.fullData ?? []
+
+      // Fetch external files
+      const externalFilesData =
+        fullData.length > 0 ? await fetchExternalFiles(fullData) : null
+
+      // Combine all entries
+      const finalEntries = combineEntries(externalFilesData?.repository ?? {})
+
+      const finalRepository = {
+        object: {
+          entries: finalEntries
+        }
+      }
+
+      return { repository: finalRepository, collections: fullData }
+    },
     meta: {
       errorMessage: `Failed to fetch metadata.`
     },
     enabled
   })
+
+  function combineEntries(obj: FileInformationDataType['repository']) {
+    let allEntries: TreeEntry[] = []
+
+    for (const key in obj) {
+      if (key.startsWith('folder') && obj[key].entries) {
+        allEntries = allEntries.concat(obj[key].entries)
+      }
+    }
+
+    return allEntries
+  }
+
+  async function fetchExternalFiles(externalPaths: any[]) {
+    const GET_EXTERNAL_FILES = generateGetFileInformationQuery({
+      paths: externalPaths.map((path) => path.path),
+      branch: repoBranch
+    })
+
+    return await gqlClient.request<FileInformationDataType>(
+      GET_EXTERNAL_FILES,
+      {
+        owner: repoOwner || session?.user?.login || '',
+        name: repoSlug
+      }
+    )
+  }
 }

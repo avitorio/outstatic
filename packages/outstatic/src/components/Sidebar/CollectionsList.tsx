@@ -14,6 +14,7 @@ import {
 } from '@/components/ui/shadcn/tooltip'
 import Link from 'next/link'
 import { singular } from 'pluralize'
+import { capitalCase } from 'change-case'
 
 const CollectionsList = () => {
   const { data: collections } = useCollections()
@@ -65,7 +66,7 @@ const CollectionsList = () => {
                           <p>
                             Create new{' '}
                             <span className="inline-block first-letter:uppercase">
-                              {singular(collection)}
+                              {singular(capitalCase(collection))}
                             </span>
                           </p>
                         </TooltipContent>
@@ -73,7 +74,7 @@ const CollectionsList = () => {
                     </TooltipProvider>
                   }
                 >
-                  <span className="capitalize">{collection}</span>
+                  <span className="capitalize">{capitalCase(collection)}</span>
                 </SidebarItem>
               ))
             : null}

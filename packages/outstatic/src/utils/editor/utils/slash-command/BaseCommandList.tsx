@@ -31,12 +31,12 @@ export const BaseCommandList = ({
   range: Range
 }) => {
   const [selectedIndex, setSelectedIndex] = useState(0)
-  const { hasOpenAIKey } = useOutstatic()
+  const { hasOpenAIKey, basePath } = useOutstatic()
   const csrfToken = useCsrfToken()
 
   const { complete, isLoading } = useCompletion({
     id: 'outstatic',
-    api: OUTSTATIC_API_PATH + '/generate',
+    api: basePath + OUTSTATIC_API_PATH + '/generate',
     headers: csrfToken ? { 'X-CSRF-Token': csrfToken } : undefined,
     onResponse: () => {
       editor.chain().focus().deleteRange(range).run()

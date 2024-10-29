@@ -1,4 +1,3 @@
-import Modal from '@/components/Modal'
 import { MDExtensions } from '@/types'
 import { createCommitApi } from '@/utils/createCommitApi'
 import { hashFromUrl } from '@/utils/hashFromUrl'
@@ -7,9 +6,23 @@ import { useGetMetadata } from '@/utils/hooks/useGetMetadata'
 import useOid from '@/utils/hooks/useOid'
 import useOutstatic from '@/utils/hooks/useOutstatic'
 import { stringifyMetadata } from '@/utils/metadata/stringify'
-import { Trash2 } from 'lucide-react'
+import { Trash } from 'lucide-react'
 import { useState } from 'react'
 import { Button } from '@/components/ui/shadcn/button'
+import { SpinnerIcon } from '../ui/outstatic/spinner-icon'
+import { toast } from 'sonner'
+import { useGetDocuments } from '@/utils/hooks/useGetDocuments'
+import { useCollections } from '@/utils/hooks'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle
+} from '@/components/ui/shadcn/alert-dialog'
 
 type DeleteDocumentButtonProps = {
   slug: string
@@ -36,13 +49,25 @@ const DeleteDocumentButton = ({
 
   const mutation = useCreateCommit()
 
-  const { refetch } = useGetMetadata({ enabled: false })
+  const { refetch: refetchDocuments } = useGetDocuments({ enabled: false })
+  const { refetch: refetchMetadata } = useGetMetadata({ enabled: false })
+  const { refetch: refetchCollections } = useCollections({
+    enabled: false,
+    detailed: true
+  })
 
   const deleteDocument = async (slug: string) => {
     setDeleting(true)
     try {
-      const [{ data }, oid] = await Promise.all([refetch(), fetchOid()])
-      if (!data || !oid) throw new Error('Failed to fetch metadata or oid')
+      const [{ data }, oid, { data: collections }] = await Promise.all([
+        refetchMetadata(),
+        fetchOid(),
+        refetchCollections()
+      ])
+
+      if (!data) throw new Error('Failed to fetch metadata')
+      if (!oid) throw new Error('Failed to fetch oid')
+      if (!collections) throw new Error('Failed to fetch schema')
       const { metadata, commitUrl } = data
       const owner = repoOwner || session?.user?.login || ''
 
@@ -54,8 +79,12 @@ const DeleteDocumentButton = ({
         branch: repoBranch
       })
 
+      const collectionPath = collections?.fullData?.find(
+        (col) => col.name === collection
+      )?.path
+
       // remove post markdown file
-      capi.removeFile(`${ostContent}/${collection}/${slug}.${extension}`)
+      capi.removeFile(`${collectionPath}/${slug}.${extension}`)
 
       // remove post from metadata.json
       metadata.generated = new Date().toISOString()
@@ -68,7 +97,14 @@ const DeleteDocumentButton = ({
 
       const input = capi.createInput()
 
-      mutation.mutate(input)
+      toast.promise(mutation.mutateAsync(input), {
+        loading: 'Deleting document...',
+        success: () => {
+          refetchDocuments()
+          return 'Document deleted successfully'
+        },
+        error: 'Failed to delete document'
+      })
       setShowDeleteModal(false)
       if (onComplete) onComplete()
     } catch (error) {
@@ -88,59 +124,39 @@ const DeleteDocumentButton = ({
         variant="ghost"
       >
         <span className="sr-only">Delete document</span>
-        <Trash2 className="stroke-foreground" />
+        <Trash className="stroke-foreground" />
       </Button>
-      {showDeleteModal && (
-        <Modal title="Delete Document" close={() => setShowDeleteModal(false)}>
-          <div className="space-y-6 p-6 text-left">
-            <p className="text-base leading-relaxed text-gray-500">
-              Are you sure you want to delete this document?
-            </p>
-            <p className="text-base leading-relaxed text-gray-500">
-              This action cannot be undone.
-            </p>
-          </div>
-          <div className="flex items-center space-x-2 rounded-b border-t p-6">
-            <Button
-              variant="destructive"
+      <AlertDialog open={showDeleteModal} onOpenChange={setShowDeleteModal}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Document</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete this document? This action cannot
+              be&nbsp;undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setShowDeleteModal(false)}>
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction
               onClick={() => {
                 deleteDocument(slug)
               }}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
               {deleting ? (
                 <>
-                  <svg
-                    className="mr-3 -ml-1 h-5 w-5 animate-spin text-white"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <circle
-                      className="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      strokeWidth="4"
-                    ></circle>
-                    <path
-                      className="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                    ></path>
-                  </svg>
+                  <SpinnerIcon className="text-background mr-2" />
                   Deleting
                 </>
               ) : (
                 'Delete'
               )}
-            </Button>
-            <Button variant="outline" onClick={() => setShowDeleteModal(false)}>
-              Cancel
-            </Button>
-          </div>
-        </Modal>
-      )}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   )
 }

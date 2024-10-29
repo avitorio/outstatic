@@ -1,4 +1,3 @@
-import Modal from '@/components/Modal'
 import { createCommitApi } from '@/utils/createCommitApi'
 import { hashFromUrl } from '@/utils/hashFromUrl'
 import { useCreateCommit } from '@/utils/hooks/useCreateCommit'
@@ -10,6 +9,18 @@ import { useState } from 'react'
 import { Button } from '@/components/ui/shadcn/button'
 import { useGetMediaFiles } from '@/utils/hooks/useGetMediaFiles'
 import { MEDIA_JSON_PATH } from '@/utils/constants'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle
+} from '@/components/ui/shadcn/alert-dialog'
+import { SpinnerIcon } from '@/components/ui/outstatic/spinner-icon'
+import { toast } from 'sonner'
 
 type DeleteDocumentButtonProps = {
   disabled?: boolean
@@ -20,7 +31,7 @@ type DeleteDocumentButtonProps = {
   notFound?: boolean
 }
 
-const DeleteMediaButton = ({
+export const DeleteMediaButton = ({
   disabled = false,
   onComplete = () => {},
   path,
@@ -30,18 +41,17 @@ const DeleteMediaButton = ({
 }: DeleteDocumentButtonProps) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [deleting, setDeleting] = useState(false)
-  const { repoOwner, repoSlug, repoBranch, ostContent, session } =
-    useOutstatic()
+  const { repoOwner, repoSlug, repoBranch, session } = useOutstatic()
   const fetchOid = useOid()
 
   const mutation = useCreateCommit()
 
-  const { refetch } = useGetMediaFiles({ enabled: false })
+  const { refetch: refetchMedia } = useGetMediaFiles({ enabled: false })
 
   const deleteMedia = async () => {
     setDeleting(true)
     try {
-      const [{ data }, oid] = await Promise.all([refetch(), fetchOid()])
+      const [{ data }, oid] = await Promise.all([refetchMedia(), fetchOid()])
       if (!data || !oid) throw new Error('Failed to fetch media or oid')
       const { media, commitUrl } = data
       const owner = repoOwner || session?.user?.login || ''
@@ -70,11 +80,21 @@ const DeleteMediaButton = ({
 
       const input = capi.createInput()
 
-      mutation.mutate(input)
+      toast.promise(mutation.mutateAsync(input), {
+        loading: 'Deleting media...',
+        success: async () => {
+          await refetchMedia()
+          if (onComplete) onComplete()
+          return 'Media deleted successfully'
+        },
+        error: 'Failed to delete media'
+      })
+
       setShowDeleteModal(false)
-      if (onComplete) onComplete()
     } catch (error) {
       console.log(error)
+    } finally {
+      setDeleting(false)
     }
   }
 
@@ -92,59 +112,34 @@ const DeleteMediaButton = ({
         <span className="sr-only">Delete media file</span>
         <Trash2 className="stroke-foreground" />
       </Button>
-      {showDeleteModal && (
-        <Modal title="Delete Media" close={() => setShowDeleteModal(false)}>
-          <div className="space-y-6 p-6 text-left">
-            <p className="text-base leading-relaxed text-gray-500">
+      <AlertDialog open={showDeleteModal} onOpenChange={setShowDeleteModal}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Media</AlertDialogTitle>
+            <AlertDialogDescription>
               Are you sure you want to delete this media file?
-            </p>
-            <p className="text-base leading-relaxed text-gray-500">
+              <br />
               This action cannot be undone.
-            </p>
-          </div>
-          <div className="flex items-center space-x-2 rounded-b border-t p-6">
-            <Button
-              variant="destructive"
-              onClick={() => {
-                deleteMedia()
-              }}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={deleteMedia}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
               {deleting ? (
                 <>
-                  <svg
-                    className="mr-3 -ml-1 h-5 w-5 animate-spin text-white"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <circle
-                      className="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      strokeWidth="4"
-                    ></circle>
-                    <path
-                      className="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                    ></path>
-                  </svg>
+                  <SpinnerIcon className="mr-2 h-4 w-4" />
                   Deleting
                 </>
               ) : (
                 'Delete'
               )}
-            </Button>
-            <Button variant="outline" onClick={() => setShowDeleteModal(false)}>
-              Cancel
-            </Button>
-          </div>
-        </Modal>
-      )}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   )
 }
-
-export default DeleteMediaButton

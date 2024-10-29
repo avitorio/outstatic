@@ -1,85 +1,108 @@
-import Input from '@/components/ui/outstatic/input'
-import { DocumentContext } from '@/context'
-import { Document } from '@/types'
 import { API_MEDIA_PATH } from '@/utils/constants'
-import { addImage } from '@/utils/editor/utils/addImage'
 import useOutstatic from '@/utils/hooks/useOutstatic'
-import { ChangeEvent, useContext, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/shadcn/button'
+import MediaLibraryModal from '../ui/outstatic/media-library-modal'
+import { useFormContext } from 'react-hook-form'
+import { FormDescription, FormField, FormMessage } from '../ui/shadcn/form'
+import { Input } from '../ui/shadcn/input'
+import { SpinnerIcon } from '../ui/outstatic/spinner-icon'
+import { ImageOff } from 'lucide-react'
 
 type DocumentSettingsImageSelectionProps = {
-  name: 'coverImage' | 'author.picture'
+  id: string
   label?: string
-  description: string
-}
-
-function resolve(path: string, obj: Document, separator = '.') {
-  var properties = Array.isArray(path) ? path : path.split(separator)
-  return [...properties].reduce(
-    (prev: { [x: string]: any }, curr: string | number) => prev?.[curr],
-    obj
-  )
+  defaultValue?: string
 }
 
 const DocumentSettingsImageSelection = ({
-  name,
-  description,
-  label
+  id,
+  label,
+  defaultValue = ''
 }: DocumentSettingsImageSelectionProps) => {
-  const { basePath, publicMediaPath } = useOutstatic()
-  const { document, editDocument } = useContext(DocumentContext)
+  const {
+    basePath,
+    publicMediaPath,
+    repoOwner,
+    repoSlug,
+    repoBranch,
+    repoMediaPath
+  } = useOutstatic()
   const [showImage, setShowImage] = useState(false)
-  const [showImageOptions, setShowImageOptions] = useState(false)
   const [showLink, setShowLink] = useState(false)
   const [previewLoading, setPreviewLoading] = useState(true)
   const [loadingError, setLoadingError] = useState(false)
   const [image, setImage] = useState('')
-  const resolvedImage = resolve(name, document)
+  const [showImageOptions, setShowImageOptions] = useState(!image)
+  const [showImageLibrary, setShowImageLibrary] = useState(false)
+  const [imageUrl, setImageUrl] = useState('')
+
+  const { setValue, control, getValues, watch } = useFormContext()
+
+  const handleImageSelect = (selectedImage: string) => {
+    setPreviewLoading(true)
+    setShowImage(true)
+    setShowImageOptions(false)
+    setTimeout(() => {
+      setImage(selectedImage)
+      setPreviewLoading(false)
+    }, 1000)
+  }
 
   useEffect(() => {
+    const resolvedImage = getValues(id)
+
+    if (
+      !resolvedImage ||
+      resolvedImage?.startsWith(
+        `${basePath ? basePath + '/' : ''}${API_MEDIA_PATH}`
+      )
+    ) {
+      return
+    }
+
+    if (resolvedImage?.startsWith('http')) {
+      handleImageSelect(resolvedImage)
+      return
+    }
+
     const image = resolvedImage?.replace(
       `${basePath}/${publicMediaPath}`,
-      `${basePath}/${API_MEDIA_PATH}`
+      `${
+        basePath ? basePath + '/' : ''
+      }${API_MEDIA_PATH}${repoOwner}/${repoSlug}/${repoBranch}/${repoMediaPath}`
     )
-    setImage(image || '')
-    setShowImageOptions(!resolvedImage)
-    setShowImage(!!resolvedImage)
-  }, [resolvedImage])
 
-  const addImageFile = async ({
-    currentTarget
-  }: ChangeEvent<HTMLInputElement>) => {
-    if (currentTarget.files?.length && currentTarget.files?.[0] !== null) {
-      const file = currentTarget.files[0]
-      const image = addImage(file)
-      editDocument(name, image)
+    handleImageSelect(image)
+  }, [watch(id)])
+
+  useEffect(() => {
+    if (!image) {
+      setValue(id, defaultValue)
     }
-  }
+  }, [id, defaultValue])
 
   return (
     <>
-      {loadingError && (
-        <div
-          className="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg dark:bg-red-200 dark:text-red-800"
-          role="alert"
-        >
-          The image failed to load, try submitting again.
-        </div>
-      )}
       {showImage && (
         <>
-          <div className="mb-1 block text-sm font-medium text-gray-900">
-            {description}
-          </div>
           <div
-            className={`w-full relative bg-slate-100 ${
-              previewLoading ? 'h-48' : ''
-            }`}
+            className={`w-full relative bg-slate-100 rounded-md overflow-hidden h-48`}
           >
-            {previewLoading && (
-              <div
-                className={`animate-pulse w-full h-48 bg-slate-200 absolute`}
-              ></div>
+            {previewLoading && !loadingError && (
+              <div className="w-full h-48 bg-slate-200 absolute flex items-center justify-center">
+                <div className="flex flex-col gap-2 text-sm items-center font-semibold text-slate-600">
+                  <SpinnerIcon />
+                </div>
+              </div>
+            )}
+            {loadingError && (
+              <div className="w-full h-48 bg-red-100 absolute flex items-center justify-center">
+                <div className="flex flex-col gap-2 text-sm items-center font-semibold text-red-600">
+                  <ImageOff />
+                  <p>Error loading image</p>
+                </div>
+              </div>
             )}
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
@@ -87,25 +110,27 @@ const DocumentSettingsImageSelection = ({
               className="w-full max-h-48 object-contain"
               onLoad={() => {
                 setShowLink(false)
-                setPreviewLoading(false)
                 setLoadingError(false)
               }}
-              onError={() => {
-                setPreviewLoading(false)
-                setLoadingError(true)
-                editDocument(name, '')
-                setShowLink(false)
+              onError={(e) => {
+                if (e.currentTarget.naturalWidth === 0 && !previewLoading) {
+                  console.log('error loading image')
+                  setLoadingError(true)
+                  setShowLink(false)
+                }
               }}
-              alt={description}
+              alt=""
             />
           </div>
           <div className="w-full flex justify-between mt-2">
             <Button
               variant="destructive"
               onClick={() => {
-                editDocument(name, '')
+                setValue(id, '')
+                setImage('')
                 setShowImage(false)
                 setShowLink(false)
+                setShowImageOptions(true)
               }}
             >
               Remove
@@ -115,40 +140,60 @@ const DocumentSettingsImageSelection = ({
       )}
       {showLink && (
         <>
-          <Input
-            label={`${description} URL`}
-            name={name}
-            id={name}
-            defaultValue={resolvedImage}
-            inputSize="small"
-            helperText="Remember to save the document after adding the image URL"
-            onBlur={(e) => {
-              if (e.target.value) {
-                setPreviewLoading(true)
-                setShowLink(false)
-                editDocument(name, e.target.value)
-              }
-            }}
+          <FormField
+            control={control}
+            name={id}
+            defaultValue={''}
+            render={({ field }) => (
+              <>
+                <Input
+                  value={imageUrl || field.value}
+                  onChange={(e) => setImageUrl(e.target.value)}
+                />
+
+                <FormDescription>Image URL</FormDescription>
+                <FormMessage />
+
+                <div className="w-full flex justify-between mt-2">
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      setValue(id, '')
+                      setShowLink(false)
+                      setShowImageOptions(true)
+                    }}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      setShowLink(false)
+                      setShowImage(true)
+                      setValue(id, imageUrl)
+                    }}
+                  >
+                    Select
+                  </Button>
+                </div>
+              </>
+            )}
           />
-          <div className="w-full flex justify-between mt-2">
-            <Button
-              variant="outline"
-              onClick={() => {
-                setShowLink(false)
-                setShowImageOptions(true)
-              }}
-            >
-              Cancel
-            </Button>
-          </div>
         </>
       )}
       {showImageOptions && (
         <>
-          <span className="mb-1 block text-sm font-medium text-gray-900">
+          <span className="mt-2 mb-1 block text-sm font-medium text-gray-900">
             {label ?? 'Add an image'}
           </span>
           <div className="w-full flex justify-between mt-2">
+            <Button
+              onClick={() => {
+                setShowImageLibrary(true)
+              }}
+              type="button"
+            >
+              From library
+            </Button>
             <Button
               onClick={() => {
                 setShowLink(true)
@@ -158,22 +203,16 @@ const DocumentSettingsImageSelection = ({
               }}
               type="button"
             >
-              From link
+              From URL
             </Button>
-
-            <Button asChild className="hover:cursor-pointer">
-              <label htmlFor={`${name}-upload`}>From file</label>
-            </Button>
-            <input
-              type="file"
-              accept="image/*"
-              id={`${name}-upload`}
-              onChange={addImageFile}
-              className="hidden"
-            />
           </div>
         </>
       )}
+      <MediaLibraryModal
+        open={showImageLibrary}
+        onOpenChange={setShowImageLibrary}
+        onSelect={handleImageSelect}
+      />
     </>
   )
 }

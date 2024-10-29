@@ -10,8 +10,6 @@ export type Document = {
   content: string
   status: 'published' | 'draft'
   slug: string
-  description?: string
-  coverImage?: string
 }
 
 export type FileType = {
@@ -56,16 +54,28 @@ export const customFieldTypes = [
   'Text',
   'Number',
   'Tags',
-  'Boolean'
+  'Boolean',
+  'Date',
+  'Image'
 ] as const
-export const customFieldData = ['string', 'number', 'array', 'boolean'] as const
+
+export const customFieldData = [
+  'string',
+  'number',
+  'array',
+  'boolean',
+  'date',
+  'image'
+] as const
 
 export type CustomFieldArrayValue = {
   label: string
   value: string
 }
 
-export type CustomField<T extends 'string' | 'number' | 'array' | 'boolean'> = {
+export type CustomFieldType<
+  T extends 'string' | 'number' | 'array' | 'boolean' | 'date' | 'image'
+> = {
   title: string
   fieldType: (typeof customFieldTypes)[number]
   dataType: T
@@ -73,8 +83,10 @@ export type CustomField<T extends 'string' | 'number' | 'array' | 'boolean'> = {
   required?: boolean
 } & (T extends 'array' ? { values: CustomFieldArrayValue[] } : {})
 
-export type CustomFields = {
-  [key: string]: CustomField<'string' | 'number' | 'array' | 'boolean'>
+export type CustomFieldsType = {
+  [key: string]: CustomFieldType<
+    'string' | 'number' | 'array' | 'boolean' | 'date' | 'image'
+  >
 }
 
 export type DocumentSchemaShape =
@@ -83,7 +95,7 @@ export type DocumentSchemaShape =
       [key: string]: any
     }
 
-export function isArrayCustomField(obj: any): obj is CustomField<'array'> {
+export function isArrayCustomField(obj: any): obj is CustomFieldType<'array'> {
   return obj && obj.dataType === 'array' && Array.isArray(obj.values)
 }
 

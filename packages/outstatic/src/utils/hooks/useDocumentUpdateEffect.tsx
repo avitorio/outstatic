@@ -5,9 +5,9 @@ import { Editor } from '@tiptap/react'
 import matter from 'gray-matter'
 import { Dispatch, SetStateAction, useEffect } from 'react'
 import { UseFormReturn } from 'react-hook-form'
-import { useGetCollectionSchema } from './useGetCollectionSchema'
 import { useGetDocument } from './useGetDocument'
 import useOutstatic from './useOutstatic'
+import { useCollections } from './useCollections'
 
 interface UseDocumentUpdateEffectProps {
   collection: string
@@ -18,6 +18,7 @@ interface UseDocumentUpdateEffectProps {
   setHasChanges: Dispatch<SetStateAction<boolean>>
   setShowDelete: Dispatch<SetStateAction<boolean>>
   setExtension: Dispatch<SetStateAction<MDExtensions>>
+  setMetadata: Dispatch<SetStateAction<Record<string, any>>>
 }
 
 export const useDocumentUpdateEffect = ({
@@ -28,7 +29,8 @@ export const useDocumentUpdateEffect = ({
   session,
   setHasChanges,
   setShowDelete,
-  setExtension
+  setExtension,
+  setMetadata
 }: UseDocumentUpdateEffectProps) => {
   const {
     basePath,
@@ -40,20 +42,27 @@ export const useDocumentUpdateEffect = ({
     repoMediaPath
   } = useOutstatic()
 
-  const { data: schema } = useGetCollectionSchema({ enabled: slug !== 'new' })
+  const { data: collections } = useCollections({
+    enabled: slug !== 'new',
+    detailed: true
+  })
+
+  const collectionPath = collections?.fullData?.find(
+    (col) => col.name === collection
+  )?.path
 
   const { data: document } = useGetDocument({
     filePath: `${
-      schema?.path ? `${schema.path}` : `${ostContent}/${collection}`
+      collectionPath ? `${collectionPath}` : `${ostContent}/${collection}`
     }/${slug}`,
-    enabled: slug !== 'new' && schema !== undefined
+    enabled: slug !== 'new' && collectionPath !== undefined
   })
 
   useEffect(() => {
     if (document && editor) {
       const { mdDocument } = document
       const { data, content } = matter(mdDocument)
-
+      setMetadata(data)
       const parsedContent = parseContent({
         content,
         basePath,
@@ -67,6 +76,7 @@ export const useDocumentUpdateEffect = ({
       const newDate = data.publishedAt
         ? new Date(data.publishedAt)
         : getLocalDate()
+
       const newDocument = {
         ...data,
         publishedAt: newDate,
@@ -85,11 +95,6 @@ export const useDocumentUpdateEffect = ({
 
         methods.reset({
           ...formData,
-          author: {
-            name: session?.user.name ?? '',
-            picture: session?.user.image ?? ''
-          },
-          coverImage: '',
           publishedAt: slug === 'new' ? getLocalDate() : formData.publishedAt
         })
       }

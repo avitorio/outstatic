@@ -1,14 +1,16 @@
 import { AdminLayout } from '@/components'
 import { GitHubRepoSearch } from '@/components/ui/outstatic/github-repo-search'
-import { MetadataBuilder } from '@/components/MetadataBuilder'
 import { Button } from '@/components/ui/shadcn/button'
 import { useCollections } from '@/utils/hooks/useCollections'
 import { useState } from 'react'
 import { MediaSettings } from './_components/media-settings'
+import { useRebuildMetadata } from '@/utils/hooks/useRebuildMetadata'
 
 export default function Settings() {
   const [rebuild, setRebuilding] = useState(false)
   const { data: collections } = useCollections()
+
+  const rebuildMetadata = useRebuildMetadata()
 
   return (
     <AdminLayout title="Settings">
@@ -50,14 +52,17 @@ export default function Settings() {
           <div className="mb-8 max-w-2xl p-8 px-4 md:p-8 text-black bg-white rounded-lg border border-gray-200 shadow-md prose prose-base">
             <h2>Metadata</h2>
             <div className="flex flex-row items-center">
-              <Button disabled={rebuild} onClick={() => setRebuilding(true)}>
+              <Button
+                disabled={rebuild}
+                onClick={() => {
+                  setRebuilding(true)
+                  rebuildMetadata({
+                    onComplete: () => setRebuilding(false)
+                  })
+                }}
+              >
                 {rebuild ? 'Rebuilding...' : 'Rebuild Metadata'}
               </Button>
-              <MetadataBuilder
-                className="pl-2"
-                rebuild={rebuild}
-                onComplete={() => setRebuilding(false)}
-              />
             </div>
             <p className="text-sm">
               If you&apos;ve made changes outside of outstatic, or if you are

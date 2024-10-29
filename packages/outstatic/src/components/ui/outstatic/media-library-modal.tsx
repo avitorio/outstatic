@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/shadcn/button'
 import { toast } from 'sonner'
 import useSubmitMedia from '@/utils/hooks/useSubmitMedia'
 import { FileType } from '@/types'
-import DeleteMediaButton from '@/components/DeleteMediaButton'
+import { DeleteMediaButton } from '@/components/DeleteMediaButton'
 import {
   Dialog,
   DialogFooter,
@@ -22,6 +22,14 @@ import { MediaLibraryHeader } from './media-library-header'
 import Image from 'next/image'
 import { SpinnerIcon } from './spinner-icon'
 import { FileQuestion } from 'lucide-react'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle
+} from '../shadcn/card'
+import { MediaSettings } from '@/client/pages/settings/_components/media-settings'
 
 export default function MediaLibraryModal({
   open,
@@ -37,7 +45,14 @@ export default function MediaLibraryModal({
   const [sortDirection, setSortDirection] = useState('desc')
   const [selectedImage, setSelectedImage] = useState<MediaItem | null>(null)
 
-  const { basePath, repoOwner, repoSlug, repoBranch } = useOutstatic()
+  const {
+    basePath,
+    repoOwner,
+    repoSlug,
+    repoBranch,
+    repoMediaPath,
+    publicMediaPath
+  } = useOutstatic()
   const apiPath = `${basePath}${API_MEDIA_PATH}${repoOwner}/${repoSlug}/${repoBranch}/`
   const { data, isLoading, error, refetch } = useGetMediaFiles()
   const filteredFiles = useMemo(() => {
@@ -96,7 +111,6 @@ export default function MediaLibraryModal({
 
         try {
           await submitMedia(fileType)
-          toast.success(`${file.name} uploaded successfully`)
         } catch (error) {
           toast.error(`Failed to upload ${file.name}`)
         }
@@ -125,10 +139,28 @@ export default function MediaLibraryModal({
               sortDirection={sortDirection}
               setSortDirection={setSortDirection}
               handleFileUpload={handleFileUpload}
+              disableUpload={!repoMediaPath || !publicMediaPath}
             />
           </div>
         </DialogHeader>
-        {isLoading ? (
+        {!repoMediaPath || !publicMediaPath ? (
+          <div className="flex justify-center items-center w-full h-full">
+            <div className="max-w-lg mb-12">
+              <Card>
+                <CardHeader>
+                  <CardTitle>First time here?</CardTitle>
+                  <CardDescription>
+                    It seems you haven&apos;t set up your media paths yet.
+                    Let&apos;s do that!
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <MediaSettings />
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        ) : isLoading ? (
           <div className="flex items-center justify-center h-full">
             <SpinnerIcon size="2xl" />
           </div>

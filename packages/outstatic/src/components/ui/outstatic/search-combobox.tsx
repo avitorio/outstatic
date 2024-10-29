@@ -54,7 +54,7 @@ export function SearchCombobox({
   scrollFooter?: () => React.ReactNode
   isOpen?: boolean
   onOpenChange?: (open: boolean) => void
-  variant?: React.ComponentProps<typeof Button>['variant']
+  variant?: React.ComponentProps<typeof Button>['variant'] | 'hidden'
   size?: React.ComponentProps<typeof Button>['size']
 }) {
   const [internalOpen, setInternalOpen] = React.useState(false)
@@ -65,6 +65,7 @@ export function SearchCombobox({
   const buttonClassName = cn(
     'justify-between',
     size === 'sm' ? 'w-min px-1 ml-0.5' : 'w-[20rem]',
+    variant === 'hidden' ? 'hidden' : '',
     className
   )
 
@@ -99,10 +100,14 @@ export function SearchCombobox({
       <Popover open={open} onOpenChange={setOpen} modal>
         <PopoverTrigger asChild>
           <Button
-            variant={variant}
+            variant={variant === 'hidden' ? undefined : variant}
             role="combobox"
             aria-expanded={open}
-            className={buttonClassName}
+            className={cn(
+              buttonClassName,
+              size === 'sm' &&
+                'focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0'
+            )}
             disabled={disabled || isLoading}
             size={size}
           >
@@ -144,7 +149,7 @@ export function SearchCombobox({
           className="w-[20rem] p-0 md:w-[20rem]"
           align={size === 'sm' ? 'start' : 'center'}
         >
-          <Command>
+          <Command className="max-h-[275px]">
             <CommandInput
               placeholder={searchPlaceholder}
               onValueChange={onValueChange}

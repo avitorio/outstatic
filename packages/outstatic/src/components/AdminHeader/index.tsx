@@ -1,6 +1,6 @@
 import { useOstSession, useOstSignOut } from '@/utils/auth/hooks'
 import { Menu, SlashIcon } from 'lucide-react'
-import { memo, useState } from 'react'
+import { memo, useEffect, useState } from 'react'
 import { Button } from '@/components/ui/shadcn/button'
 import { AppLogo } from '../ui/outstatic/app-logo'
 import { cn } from '@/utils/ui'
@@ -20,6 +20,12 @@ const AdminHeader = ({ toggleSidebar }: AdminHeaderProps) => {
   const { repoOwner, repoSlug } = useOutstatic()
   const [isOpen, setIsOpen] = useState(false)
   const { signOut } = useOstSignOut()
+  const [isMounted, setIsMounted] = useState(false)
+
+  useEffect(() => {
+    // avoid hydration error
+    setIsMounted(true)
+  }, [])
 
   return (
     <>
@@ -46,7 +52,7 @@ const AdminHeader = ({ toggleSidebar }: AdminHeaderProps) => {
 
             <div className={'flex items-center space-x-4'}>
               <AppLogo />
-              {repoOwner && repoSlug && (
+              {isMounted && repoOwner && repoSlug && (
                 <>
                   <SlashIcon className="w-4 text-slate-300" />
                   <span className="whitespace-nowrap text-sm font-medium lg:w-auto lg:max-w-fit justify-start truncate">

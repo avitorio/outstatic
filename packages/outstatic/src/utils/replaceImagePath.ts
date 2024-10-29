@@ -1,5 +1,4 @@
 import { API_MEDIA_PATH } from './constants'
-import { useOutstatic } from './hooks'
 
 // Function to replace the API image paths with the production paths.
 // Used when saving the content.

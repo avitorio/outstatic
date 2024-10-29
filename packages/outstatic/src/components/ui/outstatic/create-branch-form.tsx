@@ -15,32 +15,40 @@ import {
 } from '@/components/ui/shadcn/form'
 import { useState } from 'react'
 import { toast } from 'sonner'
+import { kebabCase } from 'change-case'
 
 type CreateBranchFormProps = {
+  branchName?: string
   onBranchCreated?: (data: { branchName: string }) => void
 }
 
-export function CreateBranchForm({ onBranchCreated }: CreateBranchFormProps) {
+export function CreateBranchForm({
+  branchName = '',
+  onBranchCreated
+}: CreateBranchFormProps) {
   const createBranch = useCreateBranch()
   const [isLoading, setIsLoading] = useState(false)
   const form = useForm({
     resolver: zodResolver(CreateBranchSchema),
     defaultValues: {
-      branchName: ''
+      branchName: kebabCase(branchName)
     }
   })
 
   const handleSubmit = async (data: { branchName: string }) => {
     setIsLoading(true)
     try {
-      toast.promise(createBranch.mutateAsync(data), {
+      const result = await createBranch.mutateAsync(data)
+      toast.promise(Promise.resolve(result), {
         loading: 'Creating branch...',
         success: 'Branch created successfully',
         error: 'Failed to create branch'
       })
       onBranchCreated?.(data)
+      return result
     } catch (error) {
       console.error('Failed to create branch:', error)
+      toast.error('Failed to create branch.')
     } finally {
       setIsLoading(false)
     }
@@ -56,7 +64,7 @@ export function CreateBranchForm({ onBranchCreated }: CreateBranchFormProps) {
             <FormItem>
               <FormLabel>Branch Name</FormLabel>
               <FormControl>
-                <Input placeholder="feature/new-branch" {...field} />
+                <Input {...field} placeholder="feature/new-branch" />
               </FormControl>
               <FormDescription>
                 Enter a name for your new branch.

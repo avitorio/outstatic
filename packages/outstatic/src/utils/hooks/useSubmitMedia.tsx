@@ -10,7 +10,7 @@ import useOid from './useOid'
 import { useGetMediaFiles } from './useGetMediaFiles'
 import { MediaSchema } from '../metadata/types'
 import { MEDIA_JSON_PATH } from '../constants'
-import { useQueryClient } from '@tanstack/react-query'
+import { toast } from 'sonner'
 
 type SubmitDocumentProps = {
   setLoading: (loading: boolean) => void
@@ -31,7 +31,6 @@ function useSubmitMedia({ setLoading, file }: SubmitDocumentProps) {
     session
   } = useOutstatic()
   const fetchOid = useOid()
-  const queryClient = useQueryClient()
 
   const { refetch: refetchMedia } = useGetMediaFiles({
     enabled: false
@@ -107,9 +106,13 @@ function useSubmitMedia({ setLoading, file }: SubmitDocumentProps) {
 
         const input = capi.createInput()
 
-        createCommit.mutate(input)
-        queryClient.invalidateQueries({
-          queryKey: ['media', { filePath: `${repoBranch}:${MEDIA_JSON_PATH}` }]
+        toast.promise(createCommit.mutateAsync(input), {
+          loading: 'Uploading media...',
+          success: async () => {
+            await refetchMedia()
+            return 'Media uploaded successfully'
+          },
+          error: 'Failed to upload media'
         })
         setLoading(false)
       } catch (error) {

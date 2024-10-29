@@ -10,10 +10,10 @@ import { useEffect, useState } from 'react'
 import { Toaster } from 'sonner'
 import { Router } from '../router'
 import Login from './login'
-import Onboarding from './onboarding'
 import Welcome from './welcome'
-import LoadingBackground from '@/components/ui/outstatic/loading-background'
 import { useGetRepository } from '@/utils/hooks/useGetRepository'
+import Onboarding from './onboarding'
+import { NavigationGuardProvider } from 'next-navigation-guard'
 
 export const AdminArea = ({ params }: { params: { ost: string[] } }) => {
   const [openSidebar, setOpenSidebar] = useState(false)
@@ -36,7 +36,7 @@ export const AdminArea = ({ params }: { params: { ost: string[] } }) => {
 
 export const Dashboard = ({ params }: { params: { ost: string[] } }) => {
   const { repoSlug, repoOwner, repoBranch, isPending } = useOutstatic()
-  const { data: repository, isPending: repoPending } = useGetRepository()
+  const { data: repository } = useGetRepository()
   const { setData, data, isPending: localPending } = useLocalData()
 
   useEffect(() => {
@@ -50,7 +50,7 @@ export const Dashboard = ({ params }: { params: { ost: string[] } }) => {
 
   return (
     <>
-      {isPending || repoPending || localPending ? (
+      {isPending || localPending ? (
         <AdminLoading />
       ) : !repoSlug || !repoOwner ? (
         <Onboarding />
@@ -67,20 +67,6 @@ type OstClientProps = {
 }
 
 export const OstClient = ({ ostData, params }: OstClientProps) => {
-  const [mounted, setMounted] = useState(false)
-
-  useEffect(() => {
-    setMounted(true)
-    document.body.id = 'outstatic'
-    return () => {
-      document.body.removeAttribute('id')
-    }
-  }, [])
-
-  if (!mounted) {
-    return <LoadingBackground />
-  }
-
   if (ostData.missingEnvVars) {
     return <Welcome variables={ostData.missingEnvVars} />
   }
@@ -93,7 +79,9 @@ export const OstClient = ({ ostData, params }: OstClientProps) => {
     <InitialDataContext.Provider value={ostData}>
       <Toaster richColors />
       <QueryClientProvider client={queryClient}>
-        <AdminArea params={params} />
+        <NavigationGuardProvider>
+          <AdminArea params={params} />
+        </NavigationGuardProvider>
       </QueryClientProvider>
     </InitialDataContext.Provider>
   )

@@ -1,4 +1,4 @@
-import DeleteMediaButton from './index'
+import { DeleteMediaButton } from './index'
 import { TestWrapper } from '@/utils/TestWrapper'
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 

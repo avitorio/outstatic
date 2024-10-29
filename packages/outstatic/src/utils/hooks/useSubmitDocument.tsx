@@ -1,6 +1,6 @@
 import {
   CustomFieldArrayValue,
-  CustomFields,
+  CustomFieldsType,
   Document,
   FileType,
   MDExtensions,
@@ -22,8 +22,14 @@ import { useGetCollectionSchema } from './useGetCollectionSchema'
 import { useGetMetadata } from './useGetMetadata'
 import useOid from './useOid'
 import { useGetMediaFiles } from './useGetMediaFiles'
-import { MediaItem, MediaSchema } from '../metadata/types'
+import {
+  MediaItem,
+  MediaSchema,
+  MetadataSchema,
+  MetadataType
+} from '../metadata/types'
 import { MEDIA_JSON_PATH } from '../constants'
+import { useCollections } from './useCollections'
 
 type SubmitDocumentProps = {
   session: Session | null
@@ -34,11 +40,12 @@ type SubmitDocumentProps = {
   files: FileType[]
   methods: UseFormReturn<Document, any>
   collection: string
-  customFields: CustomFields
-  setCustomFields: (customFields: CustomFields) => void
+  customFields: CustomFieldsType
+  setCustomFields: (customFields: CustomFieldsType) => void
   setHasChanges: (hasChanges: boolean) => void
   editor: Editor
   extension: MDExtensions
+  documentMetadata: Record<string, any>
 }
 
 function useSubmitDocument({
@@ -54,7 +61,8 @@ function useSubmitDocument({
   setCustomFields,
   setHasChanges,
   editor,
-  extension
+  extension,
+  documentMetadata
 }: SubmitDocumentProps) {
   const createCommit = useCreateCommit()
   const {
@@ -78,23 +86,40 @@ function useSubmitDocument({
   const { refetch: refetchMedia } = useGetMediaFiles({
     enabled: false
   })
+  const { refetch: refetchCollections } = useCollections({
+    enabled: false,
+    detailed: true
+  })
 
   const onSubmit = useCallback(
     async (data: Document) => {
       setLoading(true)
 
       try {
-        const [{ data: schema }, { data: metadata }] = await Promise.all([
+        const [
+          { data: schema, isError: schemaError },
+          { data: metadata, isError: metadataError },
+          { data: collections, isError: collectionsError }
+        ] = await Promise.all([
           refetchSchema(),
-          refetchMetadata()
+          refetchMetadata(),
+          refetchCollections()
         ])
 
-        const collectionPath = schema?.path ?? `${ostContent}/${collection}`
+        if (schemaError || metadataError || collectionsError) {
+          throw new Error('Failed to fetch schema or metadata from GitHub')
+        }
+
+        const collectionPath =
+          collections?.fullData?.find(
+            (collectionInfo) => collectionInfo.name === collection
+          )?.path + '/'
 
         const document = methods.getValues()
         const mdContent = editor.storage.markdown.getMarkdown()
+
         let content = mergeMdMeta(
-          { ...data, content: mdContent },
+          { ...documentMetadata, ...data, content: mdContent },
           basePath,
           `${repoOwner}/${repoSlug}/${repoBranch}/${repoMediaPath}`,
           publicMediaPath
@@ -117,7 +142,7 @@ function useSubmitDocument({
         })
 
         if (oldSlug) {
-          capi.removeFile(`${collectionPath}/${oldSlug}.${extension}`)
+          capi.removeFile(`${collectionPath}${oldSlug}.${extension}`)
         }
 
         if (files.length > 0) {
@@ -165,7 +190,7 @@ function useSubmitDocument({
 
         const { data: matterData } = matter(content)
 
-        capi.replaceFile(`${collectionPath}/${newSlug}.${extension}`, content)
+        capi.replaceFile(`${collectionPath}${newSlug}.${extension}`, content)
 
         // Check if a new tag value was added
         let hasNewTag = false
@@ -205,8 +230,7 @@ function useSubmitDocument({
         if (hasNewTag) {
           const customFieldsJSON = JSON.stringify(
             {
-              title: collection,
-              type: 'object',
+              ...schema,
               properties: { ...customFields }
             },
             null,
@@ -221,59 +245,60 @@ function useSubmitDocument({
 
         // update metadata for this post
         // requires final content for hashing
-        if (metadata?.metadata) {
-          const m = metadata.metadata
-          m.generated = new Date().toISOString()
-          m.commit = hashFromUrl(metadata.commitUrl)
-          const newMeta = (m.metadata ?? []).filter(
-            (c) =>
-              !(
-                c.collection === collection &&
-                (c.slug === oldSlug || c.slug === newSlug)
-              )
-          )
-          const state = MurmurHash3(content)
-          newMeta.push({
-            ...matterData,
-            title: matterData.title,
-            publishedAt: matterData.publishedAt,
-            status: matterData.status,
-            slug: newSlug,
-            collection,
-            __outstatic: {
-              hash: `${state.result()}`,
-              commit: m.commit,
-              path: `${contentPath}/${collection}/${newSlug}.${extension}`
-            }
+        const m: MetadataSchema = {
+          metadata: (metadata?.metadata?.metadata || []) as MetadataType,
+          commit: '',
+          generated: new Date().toISOString()
+        }
+        m.commit = metadata ? hashFromUrl(metadata.commitUrl) : ''
+
+        const state = MurmurHash3(content)
+
+        const newMeta = Array.isArray(m.metadata)
+          ? m.metadata.filter(
+              (c) =>
+                c.collection !== collection ||
+                (c.slug !== oldSlug && c.slug !== newSlug)
+            )
+          : []
+
+        newMeta.push({
+          ...matterData,
+          slug: newSlug,
+          collection,
+          __outstatic: {
+            hash: `${state.result()}`,
+            commit: m.commit,
+            path: `${collectionPath}${newSlug}.${extension}`
+          }
+        })
+
+        capi.replaceFile(
+          `${ostContent}/metadata.json`,
+          stringifyMetadata({ ...m, metadata: newMeta })
+        )
+
+        // update media.json with new media
+        if (media.length > 0) {
+          const { data: mediaData } = await refetchMedia()
+
+          // loop through newMedia and add a commit to each
+          media.forEach((media) => {
+            media.__outstatic.commit = m.commit
           })
 
+          const newMedia = [...(mediaData?.media?.media ?? []), ...media]
+
+          const mediaSchema = {
+            commit: m.commit,
+            generated: m.generated,
+            media: mediaData?.media?.media ?? []
+          } as MediaSchema
+
           capi.replaceFile(
-            `${ostContent}/metadata.json`,
-            stringifyMetadata({ ...m, metadata: newMeta })
+            MEDIA_JSON_PATH,
+            stringifyMedia({ ...mediaSchema, media: newMedia })
           )
-
-          // update media.json with new media
-          if (media.length > 0) {
-            const { data: mediaData } = await refetchMedia()
-
-            // loop throught newMedia and add a commit to each
-            media.forEach((media) => {
-              media.__outstatic.commit = m.commit
-            })
-
-            const newMedia = [...(mediaData?.media?.media ?? []), ...media]
-
-            const mediaSchema = {
-              commit: m.commit,
-              generated: m.generated,
-              media: mediaData?.media?.media ?? []
-            } as MediaSchema
-
-            capi.replaceFile(
-              MEDIA_JSON_PATH,
-              stringifyMedia({ ...mediaSchema, media: newMedia })
-            )
-          }
         }
 
         const input = capi.createInput()

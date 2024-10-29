@@ -1,11 +1,13 @@
 import { OstDocument } from '@/types/public'
 
-export type MetadataSchema<
+export type MetadataType<
   T extends { [key: string]: unknown } = { [key: string]: unknown }
-> = {
+> = Omit<OutstaticSchema<T>, 'content'>[]
+
+export type MetadataSchema = {
   commit: string
   generated: string
-  metadata: Omit<OutstaticSchema<T>, 'content'>[]
+  metadata: MetadataType
 }
 
 export type Projection = Record<string, number> | string[]
