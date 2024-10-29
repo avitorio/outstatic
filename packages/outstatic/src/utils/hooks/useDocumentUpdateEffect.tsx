@@ -88,6 +88,7 @@ export const useDocumentUpdateEffect = ({
       editor.commands.focus('start')
       setShowDelete(slug !== 'new')
       setExtension(document.extension)
+      setHasChanges(false)
     } else {
       // Set publishedAt value on slug update to avoid undefined on first render
       if (slug) {

@@ -68,15 +68,17 @@ export function DateTimePickerForm({
                   fromYear={new Date().getFullYear() - 100}
                   toYear={new Date().getFullYear() + 10}
                   mode="single"
-                  selected={new Date(field.value)}
-                  defaultMonth={new Date(field.value)}
+                  selected={field.value ? new Date(field.value) : new Date()}
+                  defaultMonth={
+                    field.value ? new Date(field.value) : new Date()
+                  }
                   onSelect={field.onChange}
                   initialFocus
                 />
                 <div className="p-3 border-t border-border">
                   <TimePicker
                     setDate={field.onChange}
-                    date={new Date(field.value)}
+                    date={field.value ? new Date(field.value) : new Date()}
                   />
                 </div>
               </PopoverContent>
