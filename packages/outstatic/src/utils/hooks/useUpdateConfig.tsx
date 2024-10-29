@@ -1,6 +1,6 @@
 import { createCommitApi } from '@/utils/createCommitApi'
-import useOutstatic, { useLocalData } from '@/utils/hooks/useOutstatic'
-import { useCallback } from 'react'
+import useOutstatic from '@/utils/hooks/useOutstatic'
+import { useCallback, useEffect, useState } from 'react'
 import { useCreateCommit } from './useCreateCommit'
 import useOid from './useOid'
 import { useGetConfig } from './useGetConfig'
@@ -8,6 +8,7 @@ import { ConfigType } from '../metadata/types'
 import { CONFIG_JSON_PATH } from '../constants'
 import stringify from 'json-stable-stringify'
 import { toast } from 'sonner'
+import { useRebuildMediaJson } from './useRebuildMediaJson'
 
 type SubmitDocumentProps = {
   setLoading: (loading: boolean) => void
@@ -20,13 +21,22 @@ type OnSubmitProps = {
 
 export function useUpdateConfig({ setLoading }: SubmitDocumentProps) {
   const createCommit = useCreateCommit()
-  const { setData } = useLocalData()
-  const { repoOwner, repoSlug, repoBranch, session } = useOutstatic()
+  const [repoMediaPathChanged, setRepoMediaPathChanged] = useState(false)
+  const { repoOwner, repoSlug, repoBranch, session, repoMediaPath, setData } =
+    useOutstatic()
   const fetchOid = useOid()
 
   const { refetch } = useGetConfig({
     enabled: false
   })
+
+  const rebuildMediaJson = useRebuildMediaJson()
+
+  useEffect(() => {
+    if (repoMediaPathChanged) {
+      rebuildMediaJson()
+    }
+  }, [repoMediaPathChanged])
 
   const onSubmit = useCallback(
     async ({ configFields, callbackFunction }: OnSubmitProps) => {
@@ -35,7 +45,7 @@ export function useUpdateConfig({ setLoading }: SubmitDocumentProps) {
         const oid = await fetchOid()
         const owner = repoOwner || session?.user?.login || ''
 
-        const capi = createCommitApi({
+        const commitApi = createCommitApi({
           message: `chore: Updates config`,
           owner,
           oid: oid ?? '',
@@ -54,12 +64,12 @@ export function useUpdateConfig({ setLoading }: SubmitDocumentProps) {
           ...configFields
         }
 
-        capi.replaceFile(
+        commitApi.replaceFile(
           CONFIG_JSON_PATH,
           stringify(updatedConfig, { space: 2 })
         )
 
-        const input = capi.createInput()
+        const input = commitApi.createInput()
 
         toast.promise(createCommit.mutateAsync(input), {
           loading: 'Updating config...',
@@ -71,6 +81,10 @@ export function useUpdateConfig({ setLoading }: SubmitDocumentProps) {
           repoMediaPath: updatedConfig.repoMediaPath,
           publicMediaPath: updatedConfig.publicMediaPath
         })
+
+        if (repoMediaPath !== updatedConfig.repoMediaPath) {
+          setRepoMediaPathChanged(true)
+        }
 
         if (callbackFunction) {
           callbackFunction()

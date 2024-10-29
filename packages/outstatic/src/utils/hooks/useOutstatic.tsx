@@ -68,14 +68,33 @@ export const useOutstatic = () => {
     gqlClient: GraphQLClient
   }
 
-  const { monorepoPath, contentPath } = outstaticData
+  const { monorepoPath, contentPath, ostPath } = outstaticData
 
-  return {
+  const data = {
     ...outstaticData,
     gqlClient: graphQLClient,
     ostContent: [monorepoPath, contentPath].filter(Boolean).join('/'),
+    ostPath: [monorepoPath, ostPath].filter(Boolean).join('/'),
     hasChanges,
     setHasChanges
+  }
+
+  const setData = (newData: Partial<typeof data>) => {
+    const updatedData = {
+      ...data,
+      ...newData
+    } as Partial<typeof data>
+
+    if ('setData' in updatedData) {
+      delete (updatedData as any).setData
+    }
+
+    return updatedData
+  }
+
+  return {
+    ...data,
+    setData
   }
 }
 
