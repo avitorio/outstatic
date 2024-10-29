@@ -18,10 +18,14 @@ function Calendar({
       showOutsideDays={showOutsideDays}
       className={cn('p-3', className)}
       classNames={{
+        caption_dropdowns:
+          'flex gap-2 text-sm font-medium w-full justify-between',
         months: 'flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0',
+        dropdown:
+          'hover:bg-secondary p-0.5 rounded-md border border-transparent hover:border',
         month: 'space-y-4',
         caption: 'flex justify-center pt-1 relative items-center',
-        caption_label: 'text-sm font-medium',
+        caption_label: 'hidden',
         nav: 'space-x-1 flex items-center',
         nav_button: cn(
           buttonVariants({ variant: 'outline' }),
@@ -49,6 +53,7 @@ function Calendar({
         day_range_middle:
           'aria-selected:bg-accent aria-selected:text-accent-foreground',
         day_hidden: 'invisible',
+        vhidden: 'hidden',
         ...classNames
       }}
       components={{

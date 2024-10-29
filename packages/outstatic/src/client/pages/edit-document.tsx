@@ -99,6 +99,47 @@ export default function EditDocument({ collection }: { collection: string }) {
     }
   }, [schema])
 
+  // Convert date strings to Date objects
+  useEffect(() => {
+    if (schema && metadata) {
+      console.log({ schema, metadata })
+      const dateFields: string[] = []
+
+      // Find all date fields in schema
+      const findDateFields = (obj: any) => {
+        Object.entries(obj).forEach(([key, value]: [string, any]) => {
+          if (value?.dataType === 'date') {
+            dateFields.push(key)
+          }
+        })
+      }
+
+      findDateFields(schema.properties)
+
+      // Update form values for date fields
+      const currentValues = methods.getValues()
+      const updates: Record<string, Date> = {}
+
+      dateFields.forEach((field) => {
+        if (
+          currentValues[field as keyof Document] &&
+          typeof currentValues[field as keyof Document] === 'string'
+        ) {
+          updates[field] = new Date(
+            currentValues[field as keyof Document] as string
+          )
+        }
+      })
+
+      if (Object.keys(updates).length > 0) {
+        methods.reset({
+          ...currentValues,
+          ...updates
+        })
+      }
+    }
+  }, [schema, metadata])
+
   return (
     <>
       <Head>
@@ -136,6 +177,7 @@ export default function EditDocument({ collection }: { collection: string }) {
                     return onSubmit(data)
                   },
                   (data) => {
+                    console.log({ data })
                     const firstKey = Object.keys(data)[0] as keyof typeof data
                     const errorMessage =
                       (data[firstKey] as { message?: string })?.message ||

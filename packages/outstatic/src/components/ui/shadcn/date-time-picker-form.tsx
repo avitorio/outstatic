@@ -17,16 +17,14 @@ import {
   FormLabel,
   FormMessage
 } from '@/components/ui/shadcn/form'
-import { RegisterOptions, useFormContext } from 'react-hook-form'
+import { useFormContext } from 'react-hook-form'
 
 export function DateTimePickerForm({
   id,
-  label,
-  registerOptions
+  label
 }: {
   id: string
   label?: string
-  registerOptions?: RegisterOptions
 }) {
   const {
     control,
@@ -66,13 +64,20 @@ export function DateTimePickerForm({
               </FormControl>
               <PopoverContent className="w-auto p-0">
                 <Calendar
+                  captionLayout="dropdown"
+                  fromYear={new Date().getFullYear() - 100}
+                  toYear={new Date().getFullYear() + 10}
                   mode="single"
-                  selected={field.value}
+                  selected={new Date(field.value)}
+                  defaultMonth={new Date(field.value)}
                   onSelect={field.onChange}
                   initialFocus
                 />
                 <div className="p-3 border-t border-border">
-                  <TimePicker setDate={field.onChange} date={field.value} />
+                  <TimePicker
+                    setDate={field.onChange}
+                    date={new Date(field.value)}
+                  />
                 </div>
               </PopoverContent>
             </Popover>
