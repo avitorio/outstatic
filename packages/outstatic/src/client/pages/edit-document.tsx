@@ -102,7 +102,6 @@ export default function EditDocument({ collection }: { collection: string }) {
   // Convert date strings to Date objects
   useEffect(() => {
     if (schema && metadata) {
-      console.log({ schema, metadata })
       const dateFields: string[] = []
 
       // Find all date fields in schema
@@ -138,6 +137,7 @@ export default function EditDocument({ collection }: { collection: string }) {
         })
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [schema, metadata])
 
   return (
