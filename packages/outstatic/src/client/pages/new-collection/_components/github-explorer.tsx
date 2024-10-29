@@ -11,7 +11,7 @@ type GithubExplorerProps = {
 function GithubExplorer({ path, setPath }: GithubExplorerProps) {
   const [folders, setFolders] = useState<TreeDataItem[]>([])
 
-  const { data, refetch } = useGetRepoFiles({ path })
+  const { data, isPending } = useGetRepoFiles({ path })
 
   const handleSelectChange = (item: TreeDataItem | undefined) => {
     if (path === item?.id) return
@@ -28,6 +28,7 @@ function GithubExplorer({ path, setPath }: GithubExplorerProps) {
 
   return (
     <Tree
+      isPending={isPending}
       data={folders}
       className="flex-shrink-0 w-full h-64 border-[1px]"
       onSelectChange={(item) => handleSelectChange(item)}

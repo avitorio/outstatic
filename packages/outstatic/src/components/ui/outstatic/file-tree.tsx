@@ -4,7 +4,7 @@
 import React from 'react'
 import * as AccordionPrimitive from '@radix-ui/react-accordion'
 import { cn } from '@/utils/ui'
-import { ChevronRight, type LucideIcon } from 'lucide-react'
+import { ChevronRight, Loader2, type LucideIcon } from 'lucide-react'
 import useResizeObserver from 'use-resize-observer'
 import { ScrollArea } from '@/components/ui/shadcn/scroll-area'
 
@@ -22,6 +22,7 @@ type TreeProps = React.HTMLAttributes<HTMLDivElement> & {
   expandAll?: boolean
   folderIcon?: LucideIcon
   itemIcon?: LucideIcon
+  isPending?: boolean
 }
 
 const Tree = React.forwardRef<HTMLDivElement, TreeProps>(
@@ -34,6 +35,7 @@ const Tree = React.forwardRef<HTMLDivElement, TreeProps>(
       folderIcon,
       itemIcon,
       className,
+      isPending,
       ...props
     },
     ref
@@ -89,16 +91,22 @@ const Tree = React.forwardRef<HTMLDivElement, TreeProps>(
       <div ref={refRoot} className={cn('overflow-hidden', className)}>
         <ScrollArea style={{ width, height }}>
           <div className="relative p-2">
-            <TreeItem
-              data={data}
-              ref={ref}
-              selectedItemId={selectedItemId}
-              handleSelectChange={handleSelectChange}
-              expandedItemIds={expandedItemIds}
-              FolderIcon={folderIcon}
-              ItemIcon={itemIcon}
-              {...props}
-            />
+            {!isPending ? (
+              <TreeItem
+                data={data}
+                ref={ref}
+                selectedItemId={selectedItemId}
+                handleSelectChange={handleSelectChange}
+                expandedItemIds={expandedItemIds}
+                FolderIcon={folderIcon}
+                ItemIcon={itemIcon}
+                {...props}
+              />
+            ) : (
+              <div className="h-64 w-full flex items-center justify-center">
+                <Loader2 className="h-4 w-4 animate-spin" />
+              </div>
+            )}
           </div>
         </ScrollArea>
       </div>
