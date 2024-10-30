@@ -186,8 +186,6 @@ const useGetInitialConfig = ({
     .filter(Boolean)
     .join('/')}`
 
-  console.log({ filePath1: filePath })
-
   return useQuery({
     queryKey: ['config', { repoOwner, repoSlug, repoBranch, filePath }],
     queryFn: async (): Promise<ConfigType | null> => {
