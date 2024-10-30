@@ -1,6 +1,6 @@
 {
-  "commit": "5c0294f8b638dc553ecc6ca0f68c1f6e3d4cbe09",
-  "generated": "2024-10-30T12:34:53.597Z",
+  "commit": "c7a847c87528f00ba63776f0c7d9bf9c5bf62587",
+  "generated": "2024-10-30T12:52:21.426Z",
   "metadata": [
     {
       "__outstatic": {
@@ -109,24 +109,6 @@
       "slug": "migrating-to-v1",
       "status": "published",
       "title": "Migrating to v1"
-    },
-    {
-      "__outstatic": {
-        "commit": "cdd3b81cdc002ee9f57b53f0f46bff42bbf79d19",
-        "hash": "3433676299",
-        "path": "outstatic/content/docs/faqs.md"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "docs",
-      "coverImage": "",
-      "description": "",
-      "publishedAt": "2023-11-20T13:07:51.000Z",
-      "slug": "faqs",
-      "status": "published",
-      "title": "FAQs"
     },
     {
       "__outstatic": {
@@ -253,6 +235,24 @@
       "slug": "introduction",
       "status": "published",
       "title": "Introduction"
+    },
+    {
+      "__outstatic": {
+        "commit": "c7a847c87528f00ba63776f0c7d9bf9c5bf62587",
+        "hash": "3522297335",
+        "path": "apps/docs/outstatic/content/docs/faqs.md"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "coverImage": "",
+      "description": "",
+      "publishedAt": "2024-10-30T03:00:00.000Z",
+      "slug": "faqs",
+      "status": "published",
+      "title": "FAQs"
     }
   ]
 }

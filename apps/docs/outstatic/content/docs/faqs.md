@@ -1,13 +1,13 @@
 ---
-title: 'FAQs'
-status: 'published'
+title: "FAQs"
+status: "published"
 author:
-  name: 'Andre Vitorio'
-  picture: 'https://avatars.githubusercontent.com/u/1417109?v=4'
-slug: 'faqs'
-description: ''
-coverImage: ''
-publishedAt: '2023-11-20T13:07:51.000Z'
+  name: "Andre Vitorio"
+  picture: "https://avatars.githubusercontent.com/u/1417109?v=4"
+slug: "faqs"
+description: ""
+coverImage: ""
+publishedAt: "2024-10-30T03:00:00.000Z"
 ---
 
 ## I already have a Next.js Markdown blog, how do I start using Outstatic?
@@ -45,3 +45,15 @@ For repositories you own, ensure the `OST_REPO_SLUG` environment variable reflec
 Lastly, if you're attempting to access a repository you don't own, ensure the repository owner has granted you collaborator access. Without this, you won't have full dashboard access.
 
 **Important:** Don't forget to redeploy your website or restart your server after making changes to your environment variables.
+
+## Next.js &lt; 13.4.8 error
+
+In case your Outstatic Dashboard throws errors while trying to create new pages. Either update Next.js to a version above `13.4.8` or add the option `swcMinify: false` to your `next.config.js` file. Example:
+
+```javascript
+const nextConfig = {
+  swcMinify: false
+}
+```
+
+We recommend you learn how Outstatic [manages content](/introduction) and also how to [fetch data](/fetching-data) from your front end.
