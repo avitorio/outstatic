@@ -1,6 +1,6 @@
 {
-  "commit": "bc350dd0f7db6479f39a5de3a834a67c0469a501",
-  "generated": "2024-10-30T15:36:09.544Z",
+  "commit": "45ee48caffb601393d7574e5216ff1c3f94a1fe0",
+  "generated": "2024-10-30T18:52:35.846Z",
   "metadata": [
     {
       "__outstatic": {
@@ -269,6 +269,22 @@
       "slug": "getting-started",
       "status": "published",
       "title": "Getting started"
+    },
+    {
+      "__outstatic": {
+        "commit": "45ee48caffb601393d7574e5216ff1c3f94a1fe0",
+        "hash": "1340636794",
+        "path": "apps/docs/outstatic/content/docs/create-a-new-outstatic-powered-website.mdx"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "publishedAt": "2024-10-30T18:31:58.875Z",
+      "slug": "create-a-new-outstatic-powered-website",
+      "status": "draft",
+      "title": "Create a new Outstatic powered website"
     }
   ]
 }
