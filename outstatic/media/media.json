@@ -1,0 +1,17 @@
+{
+  "commit": "f4e860bc7c0759fbf2b5994ee466f9a4551cfc30",
+  "generated": "2024-10-30T13:50:30.662Z",
+  "media": [
+    {
+      "__outstatic": {
+        "commit": "f4e860bc7c0759fbf2b5994ee466f9a4551cfc30",
+        "hash": "351926849",
+        "path": "apps/docs/apps/docs/images/missing-env-vars-k5ND.webp"
+      },
+      "alt": "",
+      "filename": "missing-env-vars-k5ND.webp",
+      "publishedAt": "2024-10-30T13:50:30.660Z",
+      "type": "image"
+    }
+  ]
+}
