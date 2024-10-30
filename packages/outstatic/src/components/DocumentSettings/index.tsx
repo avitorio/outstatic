@@ -49,7 +49,7 @@ import { AddCustomFieldDialog } from '@/client/pages/custom-fields/_components/a
 import { DateTimePickerForm } from '../ui/shadcn/date-time-picker-form'
 
 type DocumentSettingsProps = {
-  saveFunc: () => void
+  saveDocument: () => void
   loading: boolean
   registerOptions?: RegisterOptions
   showDelete: boolean
@@ -101,7 +101,7 @@ const FieldDataMap: FieldDataMapType = {
 }
 
 const DocumentSettings = ({
-  saveFunc,
+  saveDocument,
   loading,
   showDelete,
   customFields,
@@ -154,6 +154,18 @@ const DocumentSettings = ({
       return acc
     }, {})
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 's') {
+        e.preventDefault()
+        saveDocument()
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [saveDocument])
+
   return (
     <>
       <div className="absolute w-full items-center justify-between flex p-4 border-t z-10 bottom-0 bg-white md:hidden">
@@ -193,7 +205,7 @@ const DocumentSettings = ({
               </FormItem>
             )}
           />
-          <Button onClick={saveFunc} disabled={loading || !hasChanges}>
+          <Button onClick={saveDocument} disabled={loading || !hasChanges}>
             {loading ? (
               <div className="flex gap-3">
                 <SpinnerIcon className="text-background" />
@@ -272,7 +284,7 @@ const DocumentSettings = ({
               className="hover:bg-slate-200 max-h-[2.25rem]"
             />
           )}
-          <Button onClick={saveFunc} disabled={loading || !hasChanges}>
+          <Button onClick={saveDocument} disabled={loading || !hasChanges}>
             {loading ? (
               <div className="flex gap-3">
                 <SpinnerIcon className="text-background" />

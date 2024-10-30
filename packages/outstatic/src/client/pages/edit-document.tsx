@@ -173,7 +173,7 @@ export default function EditDocument({ collection }: { collection: string }) {
             settings={
               <DocumentSettings
                 loading={loading}
-                saveFunc={methods.handleSubmit(
+                saveDocument={methods.handleSubmit(
                   (data) => {
                     return onSubmit(data)
                   },

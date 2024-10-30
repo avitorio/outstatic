@@ -30,7 +30,7 @@ describe('<DocumentSettings />', () => {
     render(
       <TestWrapper>
         <DocumentSettings
-          saveFunc={() => {}}
+          saveDocument={() => {}}
           loading={false}
           showDelete={false}
           customFields={{}}
@@ -63,7 +63,7 @@ describe('<DocumentSettings />', () => {
         >
           <TestProviders.Form>
             <DocumentSettings
-              saveFunc={() => {}}
+              saveDocument={() => {}}
               loading={false}
               showDelete={false}
               customFields={{}}
