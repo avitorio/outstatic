@@ -16,10 +16,6 @@ The concept is simple: write content, click save, and see the changes on your we
 
 Outstatic runs on Next.js but supports markdown editing from any GitHub repository, making it compatible with frameworks such as Astro, Gatsby, Nextra or any other static site generator.
 
-Requirements:
-
-- a [GitHub](https://github.com) account
-
 You can get started by visiting our [Getting started](/getting-started) section. If you want to learn a bit more about Outstatic, keep reading.
 
 ## How does Outstatic work?
