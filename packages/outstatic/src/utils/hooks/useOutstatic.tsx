@@ -4,7 +4,6 @@ import { useInitialData } from '@/utils/hooks/useInitialData'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { GraphQLClient } from 'graphql-request'
 import { useCreateGraphQLClient } from '@/graphql/utils/useCreateGraphQLClient'
-import { CONFIG_JSON_PATH } from '../constants'
 import { GET_FILE } from '@/graphql/queries/file'
 import { ConfigType } from '../metadata/types'
 import { Session } from '@/types'
@@ -48,6 +47,8 @@ export const useOutstatic = () => {
     repoOwner: cleanInitialData.repoOwner || localData.repoOwner || '',
     repoSlug: cleanInitialData.repoSlug || localData.repoSlug || '',
     repoBranch: cleanInitialData.repoBranch || localData.repoBranch || '',
+    monorepoPath: cleanInitialData.monorepoPath || localData.monorepoPath || '',
+    ostPath: cleanInitialData.ostPath || localData.ostPath || '',
     session: cleanInitialData?.session || null,
     gqlClient: graphQLClient
   })
@@ -68,14 +69,39 @@ export const useOutstatic = () => {
     gqlClient: GraphQLClient
   }
 
-  const { monorepoPath, contentPath } = outstaticData
+  const { monorepoPath, contentPath, ostPath } = outstaticData
 
-  return {
+  const data = {
     ...outstaticData,
     gqlClient: graphQLClient,
     ostContent: [monorepoPath, contentPath].filter(Boolean).join('/'),
+    ostPath: [monorepoPath, ostPath].filter(Boolean).join('/'),
+    mediaJsonPath: [monorepoPath, ostPath, 'media/media.json']
+      .filter(Boolean)
+      .join('/'),
+    configJsonPath: [monorepoPath, ostPath, 'config.json']
+      .filter(Boolean)
+      .join('/'),
     hasChanges,
     setHasChanges
+  }
+
+  const setData = (newData: Partial<typeof data>) => {
+    const updatedData = {
+      ...data,
+      ...newData
+    } as Partial<typeof data>
+
+    if ('setData' in updatedData) {
+      delete (updatedData as any).setData
+    }
+
+    return updatedData
+  }
+
+  return {
+    ...data,
+    setData
   }
 }
 
@@ -144,15 +170,23 @@ const useGetInitialConfig = ({
   repoSlug,
   repoBranch,
   session,
-  gqlClient
+  gqlClient,
+  monorepoPath,
+  ostPath
 }: {
   repoOwner: string
   repoSlug: string
   repoBranch: string
   session: Session | null
   gqlClient: GraphQLClient
+  monorepoPath: string
+  ostPath: string
 }) => {
-  const filePath = `${repoBranch}:${CONFIG_JSON_PATH}`
+  const filePath = `${repoBranch}:${[monorepoPath, ostPath, 'config.json']
+    .filter(Boolean)
+    .join('/')}`
+
+  console.log({ filePath1: filePath })
 
   return useQuery({
     queryKey: ['config', { repoOwner, repoSlug, repoBranch, filePath }],

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useCallback } from 'react'
 import { toast } from 'sonner'
-import { useGetFileInformation } from './useGetFileInformation'
+import { useGetAllCollectionsFiles } from './useGetAllCollectionsFiles'
 import useOid from './useOid'
 import useOutstatic from './useOutstatic'
 import { useCreateCommit } from './useCreateCommit'
@@ -43,7 +43,7 @@ export const useRebuildMetadata = () => {
   const [processed, setProcessed] = useState(0)
   const fetchOid = useOid()
   const mutation = useCreateCommit()
-  const { refetch, data } = useGetFileInformation({ enabled: false })
+  const { refetch, data } = useGetAllCollectionsFiles({ enabled: false })
   const {
     repoOwner,
     repoSlug,

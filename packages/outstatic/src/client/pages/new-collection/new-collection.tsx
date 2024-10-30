@@ -28,8 +28,8 @@ import { FormProvider, useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { slugify } from 'transliteration'
 import * as z from 'zod'
-import GithubExplorer from './_components/github-explorer'
-import PathBreadcrumbs from './_components/path-breadcrumb'
+import GithubExplorer from '@/components/ui/outstatic/github-explorer'
+import PathBreadcrumbs from '@/components/ui/outstatic/path-breadcrumb'
 import {
   FormControl,
   FormDescription,

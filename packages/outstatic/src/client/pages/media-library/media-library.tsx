@@ -191,9 +191,7 @@ export default function MediaLibrary() {
                       className="w-full h-full object-cover object-center rounded-md bg-slate-50"
                       width={288}
                       height={288}
-                      onLoadingComplete={() =>
-                        handleImageLoad(file.__outstatic.path)
-                      }
+                      onLoad={() => handleImageLoad(file.__outstatic.path)}
                       onError={() => handleImageError(file.__outstatic.path)}
                       loading="lazy"
                     />

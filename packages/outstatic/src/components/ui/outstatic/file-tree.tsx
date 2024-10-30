@@ -91,7 +91,7 @@ const Tree = React.forwardRef<HTMLDivElement, TreeProps>(
       <div ref={refRoot} className={cn('overflow-hidden', className)}>
         <ScrollArea style={{ width, height }}>
           <div className="relative p-2">
-            {!isPending ? (
+            {!isPending || (data instanceof Array && data.length > 0) ? (
               <TreeItem
                 data={data}
                 ref={ref}

@@ -1,17 +1,25 @@
-import { useGetRepoFiles } from '@/utils/hooks/useGetRepoFiles'
+import { useGetRepoFolders } from '@/utils/hooks/useGetRepoFolders'
 import { useEffect, useState } from 'react'
 import { Tree, TreeDataItem } from '@/components/ui/outstatic/file-tree'
 import { Folder, FolderRoot } from 'lucide-react'
+import { cn } from '@/utils/ui'
 
 type GithubExplorerProps = {
   path: string
   setPath: (path: string) => void
+  className?: string
+  hideRoot?: boolean
 }
 
-function GithubExplorer({ path, setPath }: GithubExplorerProps) {
+function GithubExplorer({
+  path,
+  setPath,
+  className,
+  hideRoot
+}: GithubExplorerProps) {
   const [folders, setFolders] = useState<TreeDataItem[]>([])
 
-  const { data, isPending } = useGetRepoFiles({ path })
+  const { data, isPending } = useGetRepoFolders({ path })
 
   const handleSelectChange = (item: TreeDataItem | undefined) => {
     if (path === item?.id) return
@@ -21,7 +29,9 @@ function GithubExplorer({ path, setPath }: GithubExplorerProps) {
 
   useEffect(() => {
     if (data !== undefined && folders !== undefined) {
-      setFolders([{ id: '', name: '', icon: FolderRoot }, ...data])
+      hideRoot
+        ? setFolders(data)
+        : setFolders([{ id: '', name: '', icon: FolderRoot }, ...data])
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [path, data])
@@ -30,7 +40,7 @@ function GithubExplorer({ path, setPath }: GithubExplorerProps) {
     <Tree
       isPending={isPending}
       data={folders}
-      className="flex-shrink-0 w-full h-64 border-[1px]"
+      className={cn('flex-shrink-0 w-full h-64 border-[1px]', className)}
       onSelectChange={(item) => handleSelectChange(item)}
       folderIcon={Folder}
       itemIcon={Folder}

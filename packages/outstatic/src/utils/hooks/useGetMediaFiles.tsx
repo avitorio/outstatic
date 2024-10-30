@@ -2,7 +2,6 @@ import { GET_FILE } from '@/graphql/queries/file'
 import useOutstatic from '@/utils/hooks/useOutstatic'
 import { useQuery } from '@tanstack/react-query'
 import { MediaSchema } from '../metadata/types'
-import { MEDIA_JSON_PATH } from '../constants'
 
 export type GetMediaType = {
   media: MediaSchema
@@ -14,9 +13,10 @@ export const useGetMediaFiles = ({
 }: {
   enabled?: boolean
 } = {}) => {
-  const { repoOwner, repoSlug, repoBranch, session, gqlClient } = useOutstatic()
+  const { repoOwner, repoSlug, repoBranch, session, gqlClient, mediaJsonPath } =
+    useOutstatic()
 
-  const filePath = `${repoBranch}:${MEDIA_JSON_PATH}`
+  const filePath = `${repoBranch}:${mediaJsonPath}`
 
   return useQuery({
     queryKey: ['media', { filePath }],

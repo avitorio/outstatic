@@ -103,7 +103,6 @@ const FieldDataMap: FieldDataMapType = {
 const DocumentSettings = ({
   saveFunc,
   loading,
-  registerOptions,
   showDelete,
   customFields,
   setCustomFields,
@@ -218,10 +217,7 @@ const DocumentSettings = ({
           >
             Date
           </label>
-          <DateTimePickerForm
-            id="publishedAt"
-            registerOptions={registerOptions}
-          />
+          <DateTimePickerForm id="publishedAt" />
         </div>
         <div className="hidden md:flex relative w-full items-center justify-between mb-4 px-4">
           <label
@@ -353,17 +349,6 @@ const DocumentSettings = ({
                 Field.props.suggestions = field.values
               }
 
-              // Fix for NaN error when saving a non-required number
-              if (field.fieldType === 'Number' && !field.required) {
-                Field.props = {
-                  ...Field.props,
-                  registerOptions: {
-                    setValueAs: (value: any) =>
-                      isNaN(value) ? undefined : Number(value)
-                  }
-                }
-              }
-
               if (field.fieldType === 'String') {
                 return (
                   <Accordion
@@ -392,6 +377,17 @@ const DocumentSettings = ({
               }
 
               if (field.fieldType === 'Number') {
+                // Fix for NaN error when saving a non-required number
+                if (!field.required) {
+                  Field.props = {
+                    ...Field.props,
+                    registerOptions: {
+                      setValueAs: (value: any) =>
+                        isNaN(value) ? undefined : Number(value)
+                    }
+                  }
+                }
+
                 return (
                   <Accordion
                     key={name}

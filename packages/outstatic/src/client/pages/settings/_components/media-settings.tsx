@@ -25,6 +25,9 @@ import {
 import { useEffect, useState } from 'react'
 import { useLocalData, useOutstatic } from '@/utils/hooks'
 import { Skeleton } from '@/components/ui/shadcn/skeleton'
+import { FolderIcon } from 'lucide-react'
+import GithubExplorer from '@/components/ui/outstatic/github-explorer'
+import PathBreadcrumbs from '@/components/ui/outstatic/path-breadcrumb'
 
 type MediaSettingsProps =
   | {
@@ -39,7 +42,11 @@ export function MediaSettings(props: MediaSettingsProps) {
   const { data: config, isPending } = useGetConfig()
   const { setData } = useLocalData()
   const { repoOwner, repoSlug } = useOutstatic()
-  const onSubmit = useUpdateConfig({ setLoading })
+  const [showRepoFolderDialog, setShowRepoFolderDialog] = useState(false)
+  const [repoMediaPath, setRepoMediaPath] = useState(
+    config?.repoMediaPath || ''
+  )
+  const [selectedRepoFolder, setSelectedRepoFolder] = useState('')
   const form = useForm({
     resolver: zodResolver(ConfigSchema),
     defaultValues: {
@@ -48,6 +55,7 @@ export function MediaSettings(props: MediaSettingsProps) {
     }
   })
 
+  const onSubmit = useUpdateConfig({ setLoading })
   const handleSubmit = async () => {
     if (!config) {
       onSubmit({
@@ -82,16 +90,29 @@ export function MediaSettings(props: MediaSettingsProps) {
           <FormField
             control={form.control}
             name="repoMediaPath"
+            defaultValue={repoMediaPath}
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Repository Media Path</FormLabel>
-                <FormControl>
-                  {isPending ? (
-                    <Skeleton className="w-100 h-10" />
-                  ) : (
-                    <Input placeholder="public/images/" {...field} />
-                  )}
-                </FormControl>
+                <div className="flex gap-2">
+                  <FormControl>
+                    {isPending ? (
+                      <Skeleton className="w-100 h-10" />
+                    ) : (
+                      <Input disabled placeholder="public/images/" {...field} />
+                    )}
+                  </FormControl>
+                  <Button
+                    disabled={isPending}
+                    size="icon"
+                    variant="outline"
+                    title="Browse repository folders"
+                    onClick={() => setShowRepoFolderDialog(true)}
+                    type="button"
+                  >
+                    <FolderIcon className="w-4 h-4" />
+                  </Button>
+                </div>
                 <FormDescription>
                   The path where media files are stored in your repository.
                 </FormDescription>
@@ -142,6 +163,41 @@ export function MediaSettings(props: MediaSettingsProps) {
           </Button>
         </form>
       </Form>
+
+      <Dialog
+        open={showRepoFolderDialog}
+        onOpenChange={setShowRepoFolderDialog}
+      >
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle>Select Media Folder</DialogTitle>
+            <DialogDescription>
+              Choose the folder where your media files will be stored
+            </DialogDescription>
+          </DialogHeader>
+          <PathBreadcrumbs
+            path={selectedRepoFolder ? '/' + selectedRepoFolder + '/' : ''}
+          />
+          <GithubExplorer
+            path={selectedRepoFolder}
+            setPath={setSelectedRepoFolder}
+            hideRoot
+          />
+          <div className="flex justify-end">
+            <Button
+              onClick={() => {
+                setRepoMediaPath(selectedRepoFolder + '/')
+                form.setValue('repoMediaPath', selectedRepoFolder + '/')
+                setShowRepoFolderDialog(false)
+              }}
+              disabled={selectedRepoFolder === ''}
+            >
+              Select
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
       <Dialog open={showConfirmModal} onOpenChange={setShowConfirmModal}>
         <DialogContent>
           <DialogHeader>

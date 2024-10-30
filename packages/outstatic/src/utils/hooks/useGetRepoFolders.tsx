@@ -72,7 +72,13 @@ function filterFolders(entries: TreeEntry[]) {
   return result
 }
 
-export const useGetRepoFiles = ({ path = '' }: { path?: string } = {}) => {
+export const useGetRepoFolders = ({
+  path = '',
+  enabled = true
+}: {
+  path?: string
+  enabled?: boolean
+}) => {
   const queryClient = useQueryClient()
   const { repoOwner, repoSlug, repoBranch, session, gqlClient } = useOutstatic()
 
@@ -130,6 +136,7 @@ export const useGetRepoFiles = ({ path = '' }: { path?: string } = {}) => {
 
       return folders
     },
+    enabled,
     meta: {
       errorMessage: `Failed to fetch folders for ${path}`
     }

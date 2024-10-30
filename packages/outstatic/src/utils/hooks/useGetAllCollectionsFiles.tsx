@@ -29,7 +29,7 @@ export type SchemasQuery = {
   } | null
 }
 
-export const useGetFileInformation = ({
+export const useGetAllCollectionsFiles = ({
   enabled = true
 }: {
   enabled?: boolean

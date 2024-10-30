@@ -8,7 +8,6 @@ import { Trash2 } from 'lucide-react'
 import { useState } from 'react'
 import { Button } from '@/components/ui/shadcn/button'
 import { useGetMediaFiles } from '@/utils/hooks/useGetMediaFiles'
-import { MEDIA_JSON_PATH } from '@/utils/constants'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -41,7 +40,8 @@ export const DeleteMediaButton = ({
 }: DeleteDocumentButtonProps) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [deleting, setDeleting] = useState(false)
-  const { repoOwner, repoSlug, repoBranch, session } = useOutstatic()
+  const { repoOwner, repoSlug, repoBranch, session, mediaJsonPath } =
+    useOutstatic()
   const fetchOid = useOid()
 
   const mutation = useCreateCommit()
@@ -69,12 +69,12 @@ export const DeleteMediaButton = ({
         capi.removeFile(`${path}`)
       }
 
-      // remove post from media.json
+      // remove media from media.json
       media.generated = new Date().toISOString()
       media.commit = hashFromUrl(commitUrl)
       const newMeta = media.media.filter((file) => file.filename !== filename)
       capi.replaceFile(
-        MEDIA_JSON_PATH,
+        mediaJsonPath,
         stringifyMedia({ ...media, media: newMeta })
       )
 

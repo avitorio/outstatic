@@ -9,6 +9,7 @@ export type OutstaticData = {
   repoBranch: string
   contentPath: string
   monorepoPath: string
+  ostPath: string
   session: Session | null
   pages: string[]
   missingEnvVars: EnvVarsType | false
@@ -20,6 +21,7 @@ export type OutstaticData = {
   githubGql: string
   publicMediaPath: string
   repoMediaPath: string
+  setData: (newData: Partial<OutstaticData>) => void
 }
 
 export async function Outstatic({
@@ -54,6 +56,7 @@ export async function Outstatic({
     repoOwner: ostConfig.OST_REPO_OWNER,
     repoSlug: ostConfig.OST_REPO_SLUG,
     repoBranch: ostConfig.OST_REPO_BRANCH,
+    ostPath: process.env.OST_OUTSTATIC_PATH || 'outstatic',
     contentPath: process.env.OST_CONTENT_PATH || 'outstatic/content',
     monorepoPath: process.env.OST_MONOREPO_PATH || '',
     session: session || null,
