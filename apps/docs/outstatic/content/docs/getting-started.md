@@ -90,8 +90,6 @@ We recommend you learn how [Outstatic manages content](/introduction) and also h
 
 ## Adding Outstatic to a Next.js website
 
-If you want to use Outstatic with Next.js 12, you can [continue here](/using-with-next-js-12).
-
 Before we start, you should know Outstatic saves content as markdown files to your GitHub repository. To understand how this works please read our [introduction](https://outstatic.com/introduction) article.
 
 First install the Outstatic package and dependencies:
@@ -180,16 +178,6 @@ If everything is setup correctly, then you'll see a login page and will be able 
 ![](/docs/images/outstatic-login-screen-I4Mz.png)
 
 Congratulations! Your Outstatic installation is ready and you can now start creating content.
-
-If you already have a Markdown Next.js blog and want to start editing your files with Outstatic, follow the [steps here](/faqs#i-already-have-a-nextjs-markdown-blog-how-do-i-start-using-outstatic) to move your content to the `outstatic/content` folder.
-
-**Next.js 13 Warning:** In case your Outstatic Dashboard throws errors while trying to create new pages. Either update Next.js to a version above `13.4.8` or add the option `swcMinify: false` to your `next.config.js` file. Example:
-
-```javascript
-const nextConfig = {
-  swcMinify: false
-}
-```
 
 We recommend you learn how Outstatic [manages content](/introduction) and also how to [fetch data](/fetching-data) from your front end.
 
