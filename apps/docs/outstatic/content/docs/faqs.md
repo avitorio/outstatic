@@ -26,8 +26,6 @@ For convenience we also store metadata in a `metadata.json` file to be used with
 
 Yes. We have seen examples of websites being launched on Netlify and other providers.
 
-We specified Vercel on the documentation as it is the only platform we've tried Outstatic on. I don't see why it wouldn't work on other or your own preferred setup.
-
 If you try a different hosting/deploy approach, please [let us know](https://twitter.com/outstatic)
 
 ## Troubleshooting Login and Repository Access Issues.
