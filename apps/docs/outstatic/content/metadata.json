@@ -1,6 +1,6 @@
 {
-  "commit": "29ec769fa3cb71a41ddfd63d94cfe9b825aad3b2",
-  "generated": "2024-10-30T14:13:11.740Z",
+  "commit": "c87da9ca234c2f747739c84bf0be27917f439ef2",
+  "generated": "2024-10-30T14:46:37.175Z",
   "metadata": [
     {
       "__outstatic": {
@@ -202,24 +202,6 @@
     },
     {
       "__outstatic": {
-        "commit": "ba23a4a5a0350d09830a754d96718dc7d11d392e",
-        "hash": "76324923",
-        "path": "outstatic/content/docs/environment-variables.md"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "docs",
-      "coverImage": "",
-      "description": "",
-      "publishedAt": "2024-03-18T12:36:25.000Z",
-      "slug": "environment-variables",
-      "status": "published",
-      "title": "Environment Variables"
-    },
-    {
-      "__outstatic": {
         "commit": "111f3c49a77c3bad8cb20d1a3bae7e22c39317cb",
         "hash": "259082607",
         "path": "outstatic/content/docs/custom-fields.md"
@@ -238,8 +220,8 @@
     },
     {
       "__outstatic": {
-        "commit": "29ec769fa3cb71a41ddfd63d94cfe9b825aad3b2",
-        "hash": "3835551267",
+        "commit": "6ccd176975bf4873b00a121dc7393fdd9edde1d5",
+        "hash": "3801400365",
         "path": "apps/docs/outstatic/content/docs/getting-started.md"
       },
       "author": {
@@ -253,6 +235,24 @@
       "slug": "getting-started",
       "status": "published",
       "title": "Getting started"
+    },
+    {
+      "__outstatic": {
+        "commit": "c87da9ca234c2f747739c84bf0be27917f439ef2",
+        "hash": "646399284",
+        "path": "apps/docs/outstatic/content/docs/environment-variables.md"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "coverImage": "",
+      "description": "",
+      "publishedAt": "2024-10-30T03:00:00.000Z",
+      "slug": "environment-variables",
+      "status": "published",
+      "title": "Environment Variables"
     }
   ]
 }

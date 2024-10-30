@@ -159,13 +159,13 @@ You should see this page:
 OST_GITHUB_ID=YOUR_GITHUB_OAUTH_APP_ID
 OST_GITHUB_SECRET=YOUR_GITHUB_OAUTH_APP_SECRET
 
-# OST_REPO_SLUG
+# REQUIRED
 # The name of your repository on GitHub without the username
 # Example, for avitorio/outstatic, OST_REPO_SLUG=outstatic
 OST_REPO_SLUG=YOUR_GITHUB_REPOSITORY_SLUG
 
 # OPTIONAL
-# If empty this will default to your GitHub username
+# Useful if the project is not under your GitHub account
 # Example, for avitorio/outstatic, OST_REPO_OWNER=avitorio
 OST_REPO_OWNER=YOUR_GITHUB_USERNAME
 
