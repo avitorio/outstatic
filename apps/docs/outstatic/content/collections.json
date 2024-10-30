@@ -1,0 +1,12 @@
+[
+  {
+    "name": "docs",
+    "path": "apps/docs/outstatic/content/docs",
+    "children": []
+  },
+  {
+    "name": "menus",
+    "path": "apps/docs/outstatic/content/menus",
+    "children": []
+  }
+]
