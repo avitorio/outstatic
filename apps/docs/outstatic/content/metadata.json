@@ -1,6 +1,6 @@
 {
-  "commit": "7d2744e98169fe50844c22a0731887a5a0992469",
-  "generated": "2024-10-30T19:15:39.636Z",
+  "commit": "09fe0dfa269984be983926dfbd2f56a8bf08127a",
+  "generated": "2024-10-30T19:16:29.196Z",
   "metadata": [
     {
       "__outstatic": {
@@ -238,22 +238,6 @@
     },
     {
       "__outstatic": {
-        "commit": "82e32ef495370bf9d685a3668766fb2cb627530e",
-        "hash": "3304762833",
-        "path": "apps/docs/outstatic/content/docs/getting-started-with-next-js.mdx"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "docs",
-      "publishedAt": "2024-10-30T13:20:54.632Z",
-      "slug": "getting-started-with-next-js",
-      "status": "draft",
-      "title": "Getting started with Next.js"
-    },
-    {
-      "__outstatic": {
         "commit": "45ee48caffb601393d7574e5216ff1c3f94a1fe0",
         "hash": "1340636794",
         "path": "apps/docs/outstatic/content/docs/create-a-new-outstatic-powered-website.mdx"
@@ -301,6 +285,22 @@
       "slug": "using-outstatic-for-markdown-content",
       "status": "draft",
       "title": "Using Outstatic for Markdown content"
+    },
+    {
+      "__outstatic": {
+        "commit": "09fe0dfa269984be983926dfbd2f56a8bf08127a",
+        "hash": "438878497",
+        "path": "apps/docs/outstatic/content/docs/getting-started-with-next-js.mdx"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "publishedAt": "2024-10-30T13:20:54.632Z",
+      "slug": "getting-started-with-next-js",
+      "status": "draft",
+      "title": "Getting started with Next.js"
     }
   ]
 }
