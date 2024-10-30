@@ -1,25 +1,7 @@
 {
-  "commit": "29ec769fa3cb71a41ddfd63d94cfe9b825aad3b2",
-  "generated": "2024-10-26T23:20:35.859Z",
+  "commit": "5c0294f8b638dc553ecc6ca0f68c1f6e3d4cbe09",
+  "generated": "2024-10-30T12:34:53.597Z",
   "metadata": [
-    {
-      "__outstatic": {
-        "commit": "3bbf1f134c75554e5c13021122ec22f45cc34718",
-        "hash": "4022666034",
-        "path": "/outstatic/content/docs/introduction.md"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "docs",
-      "coverImage": "",
-      "description": "",
-      "publishedAt": "2023-05-26T17:50:55.000Z",
-      "slug": "introduction",
-      "status": "published",
-      "title": "Introduction"
-    },
     {
       "__outstatic": {
         "commit": "d284432c4f249abdc1b70341c757a5fef958f7ae",
@@ -253,6 +235,24 @@
       "slug": "getting-started",
       "status": "published",
       "title": "Getting started"
+    },
+    {
+      "__outstatic": {
+        "commit": "5c0294f8b638dc553ecc6ca0f68c1f6e3d4cbe09",
+        "hash": "4272620071",
+        "path": "apps/docs/outstatic/content/docs/introduction.md"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "coverImage": "",
+      "description": "",
+      "publishedAt": "2024-10-30T03:00:00.000Z",
+      "slug": "introduction",
+      "status": "published",
+      "title": "Introduction"
     }
   ]
 }
