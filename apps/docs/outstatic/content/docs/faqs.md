@@ -57,3 +57,7 @@ const nextConfig = {
 ```
 
 We recommend you learn how Outstatic [manages content](/introduction) and also how to [fetch data](/fetching-data) from your front end.
+
+## Installation on Next.js 12
+
+If you want to use Outstatic with Next.js 12, you can [continue here](/using-with-next-js-12).
