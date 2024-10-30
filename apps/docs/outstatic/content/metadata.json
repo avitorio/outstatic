@@ -1,6 +1,6 @@
 {
-  "commit": "e9d46a3267e37b4216036b8e4ba1bb21ce533bea",
-  "generated": "2024-10-30T18:56:32.189Z",
+  "commit": "7d2744e98169fe50844c22a0731887a5a0992469",
+  "generated": "2024-10-30T19:15:39.636Z",
   "metadata": [
     {
       "__outstatic": {
@@ -285,6 +285,22 @@
       "slug": "getting-started",
       "status": "published",
       "title": "Getting started"
+    },
+    {
+      "__outstatic": {
+        "commit": "7d2744e98169fe50844c22a0731887a5a0992469",
+        "hash": "2570982826",
+        "path": "apps/docs/outstatic/content/docs/using-outstatic-for-markdown-content.mdx"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "publishedAt": "2024-10-30T18:53:46.596Z",
+      "slug": "using-outstatic-for-markdown-content",
+      "status": "draft",
+      "title": "Using Outstatic for Markdown content"
     }
   ]
 }
