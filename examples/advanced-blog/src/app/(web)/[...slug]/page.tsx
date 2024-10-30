@@ -3,6 +3,7 @@ import DocHero from '@/components/doc-hero'
 import MDXComponent from '@/components/mdx/mdx-component'
 import MDXServer from '@/lib/mdx-server'
 import { absoluteUrl, ogUrl } from '@/lib/utils'
+import { sentenceCase } from 'change-case'
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { OstDocument } from 'outstatic'
@@ -23,8 +24,8 @@ export async function generateMetadata(params: Params): Promise<Metadata> {
 
   if (!doc) {
     return {
-      title: `All ${moreDocs.collection}`,
-      description: `All ${moreDocs.collection}`
+      title: `All ${sentenceCase(moreDocs.collection)}`,
+      description: `All ${sentenceCase(moreDocs.collection)}`
     }
   }
 
@@ -59,13 +60,15 @@ export default async function Document(params: Params) {
 
   if (!doc) {
     const { docs, collection } = moreDocs
+
     return (
-      <div className="pt-24 mb-16 animate-fade-up opacity-0">
+      <div className="md:pt-24 mb-16 animate-fade-up opacity-0">
         {docs.length > 0 && (
           <ContentGrid
             title={`All ${collection}`}
             items={docs}
             collection={collection}
+            search
           />
         )}
       </div>
@@ -74,7 +77,7 @@ export default async function Document(params: Params) {
 
   if (doc.collection === 'pages') {
     return (
-      <article className="mb-32 py-24">
+      <article className="mb-32 md:py-24">
         <div className="prose md:prose-xl prose-outstatic animate-fade-up opacity-0">
           <MDXComponent content={doc.content} />
         </div>
