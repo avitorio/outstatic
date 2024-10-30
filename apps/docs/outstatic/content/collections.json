@@ -8,10 +8,5 @@
     "name": "menus",
     "path": "apps/docs/outstatic/content/menus",
     "children": []
-  },
-  {
-    "name": "v1.4",
-    "path": "apps/docs/outstatic/content/v1.4",
-    "children": []
   }
 ]
