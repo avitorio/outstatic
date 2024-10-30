@@ -14,6 +14,8 @@ Outstatic is an open source content management system (CMS) for websites using m
 
 The concept is simple: write content, click save, and see the changes on your website.
 
+The project is built on Next.js but the interface can be used to edit markdown stored on any GitHub repository. Which means it will work with Astro, Gatsby, Nextra or any other framework.
+
 Requirements:
 
 - a [GitHub](https://github.com) account
