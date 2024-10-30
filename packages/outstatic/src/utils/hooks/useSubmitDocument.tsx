@@ -28,7 +28,6 @@ import {
   MetadataSchema,
   MetadataType
 } from '../metadata/types'
-import { MEDIA_JSON_PATH } from '../constants'
 import { useCollections } from './useCollections'
 
 type SubmitDocumentProps = {
@@ -74,7 +73,8 @@ function useSubmitDocument({
     contentPath,
     basePath,
     publicMediaPath,
-    repoMediaPath
+    repoMediaPath,
+    mediaJsonPath
   } = useOutstatic()
   const fetchOid = useOid()
   let media: MediaItem[] = []
@@ -296,7 +296,7 @@ function useSubmitDocument({
           } as MediaSchema
 
           capi.replaceFile(
-            MEDIA_JSON_PATH,
+            mediaJsonPath,
             stringifyMedia({ ...mediaSchema, media: newMedia })
           )
         }
@@ -314,6 +314,7 @@ function useSubmitDocument({
         console.log({ error })
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [
       repoOwner,
       session,
@@ -336,7 +337,8 @@ function useSubmitDocument({
       setHasChanges,
       editor,
       basePath,
-      extension
+      extension,
+      mediaJsonPath
     ]
   )
 

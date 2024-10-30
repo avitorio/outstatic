@@ -9,7 +9,6 @@ import { useCreateCommit } from './useCreateCommit'
 import useOid from './useOid'
 import { useGetMediaFiles } from './useGetMediaFiles'
 import { MediaSchema } from '../metadata/types'
-import { MEDIA_JSON_PATH } from '../constants'
 import { toast } from 'sonner'
 
 type SubmitDocumentProps = {
@@ -28,7 +27,8 @@ function useSubmitMedia({ setLoading, file }: SubmitDocumentProps) {
     contentPath,
     basePath,
     repoMediaPath,
-    session
+    session,
+    mediaJsonPath
   } = useOutstatic()
   const fetchOid = useOid()
 
@@ -100,7 +100,7 @@ function useSubmitMedia({ setLoading, file }: SubmitDocumentProps) {
         } as MediaSchema
 
         capi.replaceFile(
-          MEDIA_JSON_PATH,
+          mediaJsonPath,
           stringifyMedia({ ...mediaSchema, media: newMedia })
         )
 
@@ -121,6 +121,7 @@ function useSubmitMedia({ setLoading, file }: SubmitDocumentProps) {
         console.error('Error submitting media:', error)
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [
       repoOwner,
       session,
@@ -133,7 +134,8 @@ function useSubmitMedia({ setLoading, file }: SubmitDocumentProps) {
       ostContent,
       repoSlug,
       repoBranch,
-      basePath
+      basePath,
+      mediaJsonPath
     ]
   )
 

@@ -1,11 +1,10 @@
 import { createCommitApi } from '@/utils/createCommitApi'
-import useOutstatic from '@/utils/hooks/useOutstatic'
+import useOutstatic, { useLocalData } from '@/utils/hooks/useOutstatic'
 import { useCallback, useEffect, useState } from 'react'
 import { useCreateCommit } from './useCreateCommit'
 import useOid from './useOid'
 import { useGetConfig } from './useGetConfig'
 import { ConfigType } from '../metadata/types'
-import { CONFIG_JSON_PATH } from '../constants'
 import stringify from 'json-stable-stringify'
 import { toast } from 'sonner'
 import { useRebuildMediaJson } from './useRebuildMediaJson'
@@ -22,8 +21,15 @@ type OnSubmitProps = {
 export function useUpdateConfig({ setLoading }: SubmitDocumentProps) {
   const createCommit = useCreateCommit()
   const [repoMediaPathChanged, setRepoMediaPathChanged] = useState(false)
-  const { repoOwner, repoSlug, repoBranch, session, repoMediaPath, setData } =
-    useOutstatic()
+  const { setData } = useLocalData()
+  const {
+    repoOwner,
+    repoSlug,
+    repoBranch,
+    session,
+    repoMediaPath,
+    configJsonPath
+  } = useOutstatic()
   const fetchOid = useOid()
 
   const { refetch } = useGetConfig({
@@ -65,7 +71,7 @@ export function useUpdateConfig({ setLoading }: SubmitDocumentProps) {
         }
 
         commitApi.replaceFile(
-          CONFIG_JSON_PATH,
+          configJsonPath,
           stringify(updatedConfig, { space: 2 })
         )
 

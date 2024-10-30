@@ -42,7 +42,6 @@ export function MediaSettings(props: MediaSettingsProps) {
   const { data: config, isPending } = useGetConfig()
   const { setData } = useLocalData()
   const { repoOwner, repoSlug } = useOutstatic()
-  const onSubmit = useUpdateConfig({ setLoading })
   const [showRepoFolderDialog, setShowRepoFolderDialog] = useState(false)
   const [repoMediaPath, setRepoMediaPath] = useState(
     config?.repoMediaPath || ''
@@ -56,6 +55,7 @@ export function MediaSettings(props: MediaSettingsProps) {
     }
   })
 
+  const onSubmit = useUpdateConfig({ setLoading })
   const handleSubmit = async () => {
     if (!config) {
       onSubmit({
