@@ -1,6 +1,6 @@
 {
-  "commit": "ee5abd9137d203a7076aca85103e23431eca0658",
-  "generated": "2024-10-30T19:21:02.008Z",
+  "commit": "341d75d0c19e4c80c7941bda72a4b0cf566e2e4d",
+  "generated": "2024-10-30T19:21:14.809Z",
   "media": [
     {
       "__outstatic": {
@@ -143,6 +143,17 @@
       "alt": "",
       "filename": "markdown-example-c4MT.gif",
       "publishedAt": "2024-10-30T16:50:00.744Z",
+      "type": "image"
+    },
+    {
+      "__outstatic": {
+        "commit": "341d75d0c19e4c80c7941bda72a4b0cf566e2e4d",
+        "hash": "351926849",
+        "path": "apps/docs/apps/docs/public/images/missing-env-vars-A0OD.webp"
+      },
+      "alt": "",
+      "filename": "missing-env-vars-A0OD.webp",
+      "publishedAt": "2024-10-30T19:21:14.809Z",
       "type": "image"
     },
     {
