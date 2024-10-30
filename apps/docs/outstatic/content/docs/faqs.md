@@ -12,11 +12,7 @@ publishedAt: "2024-10-30T03:00:00.000Z"
 
 ## I already have a Next.js Markdown blog, how do I start using Outstatic?
 
-Follow the [**Add to Next.js**](/getting-started#adding-outstatic-to-a-nextjs-website) documentation. Once finished, log in to your Outstatic dashboard, create collections that match your content and then copy the .md files into the collection directories inside `/outstatic/content`, for example: `/outstatic/content/blog/my-blog-post.md`.
-
-Don't forget to recreate the Metadata Database with your new posts by going to Settings &gt; Rebuild Metadata:
-
-![](/docs/images/rebuild-metadata-Y4MT.png)
+Follow the [**Add to Next.js**](/getting-started#adding-outstatic-to-a-nextjs-website) documentation. Once finished, log in to your Outstatic dashboard, create collections that match your content.
 
 This will create a `metadata.json` file inside of `outstatic/content` in your GitHub repository. You should pull the changes to your local install to be able to use the Metadata DB.
 
