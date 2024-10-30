@@ -58,7 +58,7 @@ const ImageCommandList = ({
   const [showMediaPathDialog, setShowMediaPathDialog] = useState(false)
   const [errors, setErrors] = useState({ imageUrl: '', uploadImage: '' })
   const [selectedIndex, setSelectedIndex] = useState(0)
-  const { repoMediaPath, publicMediaPath } = useOutstatic()
+  const { repoMediaPath, publicMediaPath, basePath } = useOutstatic()
   const [callbackFunction, setCallbackFunction] = useState<() => void>(() => {})
 
   const handleItemAction = (title: string) => {
@@ -107,12 +107,16 @@ const ImageCommandList = ({
   }
 
   const addImageUrl = (imageUrl: string) => {
-    if (!imageUrl.startsWith(API_MEDIA_PATH) && !isValidUrl(imageUrl)) {
+    if (
+      !imageUrl.startsWith(`${basePath}${API_MEDIA_PATH}`) &&
+      !isValidUrl(imageUrl)
+    ) {
       setErrors((prevErrors) => ({ ...prevErrors, imageUrl: 'Invalid URL' }))
       return null
     }
 
     if (imageUrl) {
+      console.log('wein', imageUrl)
       // TODO: Jump to new paragraph after adding image
       editor.chain().focus().deleteRange(range).run()
       editor

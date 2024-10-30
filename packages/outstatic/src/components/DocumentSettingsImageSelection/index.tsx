@@ -51,26 +51,21 @@ const DocumentSettingsImageSelection = ({
 
   useEffect(() => {
     const resolvedImage = getValues(id)
-
-    if (
-      !resolvedImage ||
-      resolvedImage?.startsWith(
-        `${basePath ? basePath + '/' : ''}${API_MEDIA_PATH}`
-      )
-    ) {
+    if (!resolvedImage) {
       return
     }
 
-    if (resolvedImage?.startsWith('http')) {
+    if (
+      resolvedImage?.startsWith('http') ||
+      resolvedImage?.startsWith(`${basePath}${API_MEDIA_PATH}`)
+    ) {
       handleImageSelect(resolvedImage)
       return
     }
 
     const image = resolvedImage?.replace(
-      `${basePath}/${publicMediaPath}`,
-      `${
-        basePath ? basePath + '/' : ''
-      }${API_MEDIA_PATH}${repoOwner}/${repoSlug}/${repoBranch}/${repoMediaPath}`
+      `/${publicMediaPath}`,
+      `${basePath}${API_MEDIA_PATH}${repoOwner}/${repoSlug}/${repoBranch}/${repoMediaPath}`
     )
 
     handleImageSelect(image)
@@ -87,7 +82,7 @@ const DocumentSettingsImageSelection = ({
       {showImage && (
         <>
           <div
-            className={`w-full relative bg-slate-100 rounded-md overflow-hidden h-48`}
+            className={`flex w-full relative bg-slate-100 rounded-md overflow-hidden h-48`}
           >
             {previewLoading && !loadingError && (
               <div className="w-full h-48 bg-slate-200 absolute flex items-center justify-center">
@@ -211,7 +206,9 @@ const DocumentSettingsImageSelection = ({
       <MediaLibraryModal
         open={showImageLibrary}
         onOpenChange={setShowImageLibrary}
-        onSelect={handleImageSelect}
+        onSelect={(image) => {
+          setValue(id, image)
+        }}
       />
     </>
   )

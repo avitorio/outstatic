@@ -14,7 +14,8 @@ import {
   DialogFooter,
   DialogContent,
   DialogTitle,
-  DialogHeader
+  DialogHeader,
+  DialogDescription
 } from '@/components/ui/shadcn/dialog'
 import { MediaItem } from '@/utils/metadata/types'
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden'
@@ -128,6 +129,9 @@ export default function MediaLibraryModal({
         <DialogHeader>
           <VisuallyHidden.Root>
             <DialogTitle>Media Library</DialogTitle>
+            <DialogDescription>
+              Select an image to insert into your content.
+            </DialogDescription>
           </VisuallyHidden.Root>
           <div className="space-y-6 px-[2px] pt-2">
             <MediaLibraryHeader

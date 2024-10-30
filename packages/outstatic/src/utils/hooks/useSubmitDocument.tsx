@@ -117,13 +117,12 @@ function useSubmitDocument({
 
         const document = methods.getValues()
         const mdContent = editor.storage.markdown.getMarkdown()
-
-        let content = mergeMdMeta(
-          { ...documentMetadata, ...data, content: mdContent },
+        let content = mergeMdMeta({
+          data: { ...documentMetadata, ...data, content: mdContent },
           basePath,
-          `${repoOwner}/${repoSlug}/${repoBranch}/${repoMediaPath}`,
+          repoInfo: `${repoOwner}/${repoSlug}/${repoBranch}/${repoMediaPath}`,
           publicMediaPath
-        )
+        })
         const oid = await fetchOid()
         const owner = repoOwner || session?.user?.login || ''
         const newSlug = document.slug
@@ -182,7 +181,7 @@ function useSubmitDocument({
               // replace blob in content with path
               content = content.replace(
                 blob,
-                `${basePath}/${publicMediaPath}${newFilename}`
+                `/${publicMediaPath}${newFilename}`
               )
             }
           })
