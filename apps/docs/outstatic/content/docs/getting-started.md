@@ -14,8 +14,6 @@ Here's how you can get started with Outstatic.
 
 Requirements:
 
-- A [Vercel](https://vercel.com) account.
-
 - A [GitHub](https://github.com) account.
 
 ### **Initiating Setup: GitHub Authentication**
