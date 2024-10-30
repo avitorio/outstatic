@@ -1,6 +1,6 @@
 {
-  "commit": "8e04c148f22c81ce76d0998dbfeb8764b5017325",
-  "generated": "2024-10-30T19:38:19.222Z",
+  "commit": "26092468eabd4ed2b1db2c4db1eba719cfe671a8",
+  "generated": "2024-10-30T21:03:09.397Z",
   "media": [
     {
       "__outstatic": {
@@ -253,17 +253,6 @@
       "alt": "",
       "filename": "y-all-got-any-more-of-that-IxMD.png",
       "publishedAt": "2024-10-30T19:37:47.365Z",
-      "type": "image"
-    },
-    {
-      "__outstatic": {
-        "commit": "8e04c148f22c81ce76d0998dbfeb8764b5017325",
-        "hash": "3508653002",
-        "path": "apps/docs/apps/docs/public/images/y-all-got-any-more-of-that-Q5Nz.png"
-      },
-      "alt": "",
-      "filename": "y-all-got-any-more-of-that-Q5Nz.png",
-      "publishedAt": "2024-10-30T19:38:19.221Z",
       "type": "image"
     }
   ]
