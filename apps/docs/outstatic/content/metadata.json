@@ -1,6 +1,6 @@
 {
-  "commit": "82e32ef495370bf9d685a3668766fb2cb627530e",
-  "generated": "2024-10-30T15:18:58.307Z",
+  "commit": "bc350dd0f7db6479f39a5de3a834a67c0469a501",
+  "generated": "2024-10-30T15:36:09.544Z",
   "metadata": [
     {
       "__outstatic": {
@@ -202,24 +202,6 @@
     },
     {
       "__outstatic": {
-        "commit": "122f5249f152df2be364b42d97398d65ac1ce573",
-        "hash": "843907991",
-        "path": "apps/docs/outstatic/content/docs/getting-started.md"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "docs",
-      "coverImage": "",
-      "description": "Get started with Outstatic",
-      "publishedAt": "2024-03-18T18:34:15.000Z",
-      "slug": "getting-started",
-      "status": "published",
-      "title": "Getting started"
-    },
-    {
-      "__outstatic": {
         "commit": "9643a6b5647637221146b6257753155776c21319",
         "hash": "815659760",
         "path": "apps/docs/outstatic/content/docs/introduction.md"
@@ -269,6 +251,24 @@
       "slug": "getting-started-with-next-js",
       "status": "draft",
       "title": "Getting started with Next.js"
+    },
+    {
+      "__outstatic": {
+        "commit": "bc350dd0f7db6479f39a5de3a834a67c0469a501",
+        "hash": "2095650810",
+        "path": "apps/docs/outstatic/content/docs/getting-started.md"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "coverImage": "",
+      "description": "Get started with Outstatic",
+      "publishedAt": "2024-10-30T03:00:00.000Z",
+      "slug": "getting-started",
+      "status": "published",
+      "title": "Getting started"
     }
   ]
 }
