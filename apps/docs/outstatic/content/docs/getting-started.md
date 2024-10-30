@@ -1,13 +1,13 @@
 ---
-title: 'Getting started'
-status: 'published'
+title: "Getting started"
+status: "published"
 author:
-  name: 'Andre Vitorio'
-  picture: 'https://avatars.githubusercontent.com/u/1417109?v=4'
-slug: 'getting-started'
-description: 'Get started with Outstatic'
-coverImage: ''
-publishedAt: '2024-03-18T18:34:15.000Z'
+  name: "Andre Vitorio"
+  picture: "https://avatars.githubusercontent.com/u/1417109?v=4"
+slug: "getting-started"
+description: "Get started with Outstatic"
+coverImage: ""
+publishedAt: "2024-03-18T18:34:15.000Z"
 ---
 
 Here's how you can get started with Outstatic.
@@ -120,7 +120,7 @@ Once installed, you'll need to add three files to your `/app` folder. We'll crea
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body id="outstatic">{children}</body>
     </html>
   )
 }

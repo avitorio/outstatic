@@ -76,6 +76,7 @@ export default function CollectionOnboarding() {
               </p>
               <p>
                 If you&apos;re new here, try creating a new branch to play with.
+                <br />
                 You can always switch branches later.
               </p>
               <div className="flex gap-3">

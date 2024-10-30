@@ -1,25 +1,7 @@
 {
-  "commit": "c3b70e8ae6e6cd917fe3ccef23996720afb6ad9e",
-  "generated": "2024-03-19T02:57:32.877Z",
+  "commit": "c7a847c87528f00ba63776f0c7d9bf9c5bf62587",
+  "generated": "2024-10-30T12:52:21.426Z",
   "metadata": [
-    {
-      "__outstatic": {
-        "commit": "3bbf1f134c75554e5c13021122ec22f45cc34718",
-        "hash": "4022666034",
-        "path": "/outstatic/content/docs/introduction.md"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "docs",
-      "coverImage": "",
-      "description": "",
-      "publishedAt": "2023-05-26T17:50:55.000Z",
-      "slug": "introduction",
-      "status": "published",
-      "title": "Introduction"
-    },
     {
       "__outstatic": {
         "commit": "d284432c4f249abdc1b70341c757a5fef958f7ae",
@@ -130,24 +112,6 @@
     },
     {
       "__outstatic": {
-        "commit": "cdd3b81cdc002ee9f57b53f0f46bff42bbf79d19",
-        "hash": "3433676299",
-        "path": "outstatic/content/docs/faqs.md"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "docs",
-      "coverImage": "",
-      "description": "",
-      "publishedAt": "2023-11-20T13:07:51.000Z",
-      "slug": "faqs",
-      "status": "published",
-      "title": "FAQs"
-    },
-    {
-      "__outstatic": {
         "commit": "28229851a2eed6b7d565c7e96de476bc6c0795ed",
         "hash": "3687552268",
         "path": "outstatic/content/docs/github-apps-authentication.md"
@@ -220,24 +184,6 @@
     },
     {
       "__outstatic": {
-        "commit": "c3b70e8ae6e6cd917fe3ccef23996720afb6ad9e",
-        "hash": "1579231575",
-        "path": "outstatic/content/docs/getting-started.md"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "docs",
-      "coverImage": "",
-      "description": "Get started with Outstatic",
-      "publishedAt": "2024-03-18T18:34:15.000Z",
-      "slug": "getting-started",
-      "status": "published",
-      "title": "Getting started"
-    },
-    {
-      "__outstatic": {
         "commit": "111f3c49a77c3bad8cb20d1a3bae7e22c39317cb",
         "hash": "259082607",
         "path": "outstatic/content/docs/custom-fields.md"
@@ -253,6 +199,60 @@
       "slug": "custom-fields",
       "status": "published",
       "title": "Custom Fields"
+    },
+    {
+      "__outstatic": {
+        "commit": "29ec769fa3cb71a41ddfd63d94cfe9b825aad3b2",
+        "hash": "160728563",
+        "path": "apps/docs/outstatic/content/docs/getting-started.md"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "coverImage": "",
+      "description": "Get started with Outstatic",
+      "publishedAt": "2024-03-18T18:34:15.000Z",
+      "slug": "getting-started",
+      "status": "published",
+      "title": "Getting started"
+    },
+    {
+      "__outstatic": {
+        "commit": "5c0294f8b638dc553ecc6ca0f68c1f6e3d4cbe09",
+        "hash": "4272620071",
+        "path": "apps/docs/outstatic/content/docs/introduction.md"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "coverImage": "",
+      "description": "",
+      "publishedAt": "2024-10-30T03:00:00.000Z",
+      "slug": "introduction",
+      "status": "published",
+      "title": "Introduction"
+    },
+    {
+      "__outstatic": {
+        "commit": "c7a847c87528f00ba63776f0c7d9bf9c5bf62587",
+        "hash": "3522297335",
+        "path": "apps/docs/outstatic/content/docs/faqs.md"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "coverImage": "",
+      "description": "",
+      "publishedAt": "2024-10-30T03:00:00.000Z",
+      "slug": "faqs",
+      "status": "published",
+      "title": "FAQs"
     }
   ]
 }
