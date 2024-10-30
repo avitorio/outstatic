@@ -10,16 +10,10 @@ coverImage: ""
 publishedAt: "2024-10-30T03:00:00.000Z"
 ---
 
-While Outstatic enables markdown editing for any GitHub repository, its frontend data fetching capabilities are currently limited to Next.js projects.
+Who are you?
 
-| Framework | Manage Content | Fetch Data |
-| --- | --- | --- |
-| Next.js | ✅ | ✅ |
-| Other (Astro, Gatsby, etc...) | ✅ | ❌ |
+I'm just curious, or I'm starting from scratch.
 
-### Choose your adventure
+I have a website which uses Markdown (.md, .mdx) files for content.
 
-Use Outstatic with:
-
-- Next.js
-- With a different framework
+I'm using Next.js and I want to add Outstatic to my website.
