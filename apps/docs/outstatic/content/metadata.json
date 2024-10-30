@@ -1,6 +1,6 @@
 {
-  "commit": "17101987e1870ce733357518024b8424b29f0e78",
-  "generated": "2024-10-30T13:13:16.448Z",
+  "commit": "4d3240370d569870f7aa26f6d6eb48a142fd0000",
+  "generated": "2024-10-30T13:21:57.381Z",
   "metadata": [
     {
       "__outstatic": {
@@ -238,8 +238,8 @@
     },
     {
       "__outstatic": {
-        "commit": "17101987e1870ce733357518024b8424b29f0e78",
-        "hash": "2750784142",
+        "commit": "4d3240370d569870f7aa26f6d6eb48a142fd0000",
+        "hash": "2618794241",
         "path": "apps/docs/outstatic/content/docs/introduction.md"
       },
       "author": {
