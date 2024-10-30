@@ -1,6 +1,6 @@
 {
-  "commit": "24374cbfcedf9694235306e542ca3f92e78b11ec",
-  "generated": "2024-10-30T14:46:31.080Z",
+  "commit": "c87da9ca234c2f747739c84bf0be27917f439ef2",
+  "generated": "2024-10-30T14:46:37.175Z",
   "metadata": [
     {
       "__outstatic": {
@@ -238,8 +238,8 @@
     },
     {
       "__outstatic": {
-        "commit": "24374cbfcedf9694235306e542ca3f92e78b11ec",
-        "hash": "878770655",
+        "commit": "c87da9ca234c2f747739c84bf0be27917f439ef2",
+        "hash": "646399284",
         "path": "apps/docs/outstatic/content/docs/environment-variables.md"
       },
       "author": {
@@ -249,7 +249,7 @@
       "collection": "docs",
       "coverImage": "",
       "description": "",
-      "publishedAt": "2024-03-18T12:36:25.000Z",
+      "publishedAt": "2024-10-30T03:00:00.000Z",
       "slug": "environment-variables",
       "status": "published",
       "title": "Environment Variables"

@@ -7,7 +7,7 @@ author:
 slug: "environment-variables"
 description: ""
 coverImage: ""
-publishedAt: "2024-03-18T12:36:25.000Z"
+publishedAt: "2024-10-30T03:00:00.000Z"
 ---
 
 Here's a list of all the environment variables needed to run your Outstatic install:
