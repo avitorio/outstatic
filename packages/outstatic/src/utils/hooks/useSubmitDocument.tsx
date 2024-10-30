@@ -157,9 +157,7 @@ function useSubmitDocument({
                 .replace(/(\.[^\.]*)?$/, `-${randString}$1`)
 
               capi.replaceFile(
-                `${
-                  monorepoPath ? monorepoPath + '/' : ''
-                }${repoMediaPath}${newFilename}`,
+                `${repoMediaPath}${newFilename}`,
                 fileContents,
                 false
               )
@@ -168,9 +166,7 @@ function useSubmitDocument({
                 __outstatic: {
                   hash: `${MurmurHash3(fileContents).result()}`,
                   commit: '',
-                  path: `${
-                    monorepoPath ? monorepoPath + '/' : ''
-                  }${repoMediaPath}${newFilename}`
+                  path: `${repoMediaPath}${newFilename}`
                 },
                 filename: newFilename,
                 type: type,

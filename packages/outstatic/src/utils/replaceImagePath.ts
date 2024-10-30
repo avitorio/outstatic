@@ -25,7 +25,7 @@ function replaceImagePath({
   let updatedMarkdown = markdownContent.replace(
     regex,
     (match, altText, apiPath, filename) => {
-      return `![${altText}](${basePath}/${publicMediaPath}${filename})`
+      return `![${altText}](/${publicMediaPath}${filename})`
     }
   )
 

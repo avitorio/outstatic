@@ -21,10 +21,7 @@ export const parseContent = ({
 }: ParseContentParams) => {
   // Prepare regex
   const regex = new RegExp(
-    `(\\!\\[[^\\]]*\\]\\()${basePath}/${publicMediaPath.replace(
-      /\//g,
-      '\\/'
-    )}([^)]+)`,
+    `(\\!\\[[^\\]]*\\]\\()/${publicMediaPath.replace(/\//g, '\\/')}([^)]+)`,
     'g'
   )
 
