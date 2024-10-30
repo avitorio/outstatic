@@ -1,13 +1,13 @@
 ---
-title: 'Environment Variables'
-status: 'published'
+title: "Environment Variables"
+status: "published"
 author:
-  name: 'Andre Vitorio'
-  picture: 'https://avatars.githubusercontent.com/u/1417109?v=4'
-slug: 'environment-variables'
-description: ''
-coverImage: ''
-publishedAt: '2024-03-18T12:36:25.000Z'
+  name: "Andre Vitorio"
+  picture: "https://avatars.githubusercontent.com/u/1417109?v=4"
+slug: "environment-variables"
+description: ""
+coverImage: ""
+publishedAt: "2024-03-18T12:36:25.000Z"
 ---
 
 Here's a list of all the environment variables needed to run your Outstatic install:
@@ -16,6 +16,8 @@ Here's a list of all the environment variables needed to run your Outstatic inst
 # REQUIRED Environment variables
 OST_GITHUB_ID=YOUR_GITHUB_OAUTH_OR_APPS_ID
 OST_GITHUB_SECRET=YOUR_GITHUB_OAUTH_OR_APPS_SECRET
+
+# OST_REPO_SLUG (Ex: for avitorio/outstatic, OST_REPO_SLUG=outstatic)
 OST_REPO_SLUG=THE_REPOSITORY_SLUG
 # If empty AND on Vercel, this will default to VERCEL_GIT_REPO_SLUG
 
@@ -30,7 +32,9 @@ OST_REPO_OWNER=myusername
 # Where content is saved. Defaults to outstatic/content if empty.
 OST_CONTENT_PATH=outstatic/content
 
-# Specify monorepo folder of your Outstatic content
+# If your Next.js project is inside a monorepo, ie: your /outstatic folder 
+# is not at the root level of your repository. Specify monorepo folder of 
+# your Next.js install
 OST_MONOREPO_PATH=apps/web
 
 # OpenAI API Key for AI Completions
