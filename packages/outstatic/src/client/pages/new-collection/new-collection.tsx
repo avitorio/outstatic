@@ -449,6 +449,10 @@ export default function NewCollection() {
                           : '/' + path
                       }
                     />
+                    <FormDescription>
+                      The path in your repository where your md(x) files will be
+                      stored.
+                    </FormDescription>
                   </div>
                   <div className="flex justify-between w-full pt-4">
                     <Button
