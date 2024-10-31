@@ -1,6 +1,6 @@
 {
-  "commit": "ef8effe9049969543e81739c263adb516a52d155",
-  "generated": "2024-10-31T19:17:37.195Z",
+  "commit": "1b7f02fe4d5422349a092cd515dbc1b6acf8728d",
+  "generated": "2024-10-31T19:19:46.182Z",
   "metadata": [
     {
       "__outstatic": {
@@ -450,8 +450,8 @@
     },
     {
       "__outstatic": {
-        "commit": "ef8effe9049969543e81739c263adb516a52d155",
-        "hash": "701542664",
+        "commit": "1b7f02fe4d5422349a092cd515dbc1b6acf8728d",
+        "hash": "4248435132",
         "path": "apps/docs/outstatic/content/docs/using-outstatic-for-markdown-content.mdx"
       },
       "author": {
