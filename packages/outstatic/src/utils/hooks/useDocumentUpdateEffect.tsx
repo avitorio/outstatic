@@ -43,12 +43,11 @@ export const useDocumentUpdateEffect = ({
   } = useOutstatic()
 
   const { data: collections } = useCollections({
-    enabled: slug !== 'new',
-    detailed: true
+    enabled: slug !== 'new'
   })
 
-  const collectionPath = collections?.fullData?.find(
-    (col) => col.name === collection
+  const collectionPath = collections?.find(
+    (col) => col.slug === collection
   )?.path
 
   const { data: document } = useGetDocument({

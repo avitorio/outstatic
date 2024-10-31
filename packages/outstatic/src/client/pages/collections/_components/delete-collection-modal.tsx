@@ -13,22 +13,17 @@ import { useState } from 'react'
 import { createCommitApi } from '@/utils/createCommitApi'
 import { hashFromUrl } from '@/utils/hashFromUrl'
 import { useCreateCommit } from '@/utils/hooks/useCreateCommit'
-import {
-  SchemaType,
-  useGetCollectionSchema
-} from '@/utils/hooks/useGetCollectionSchema'
-import { GetMetadataType, useGetMetadata } from '@/utils/hooks/useGetMetadata'
+import { useGetMetadata } from '@/utils/hooks/useGetMetadata'
 import useOid from '@/utils/hooks/useOid'
 import useOutstatic from '@/utils/hooks/useOutstatic'
 import { stringifyMetadata } from '@/utils/metadata/stringify'
-import { sentenceCase } from 'change-case'
 import { toast } from 'sonner'
-import { DetailedReturnType, useCollections } from '@/utils/hooks'
+import { CollectionType, useCollections } from '@/utils/hooks/useCollections'
 
 type DeleteCollectionModalProps = {
   setShowDeleteModal: (value: boolean) => void
-  setSelectedCollection: (value: string) => void
-  collection: string
+  setSelectedCollection: (value: CollectionType | null) => void
+  collection: CollectionType
 }
 
 function DeleteCollectionModal({
@@ -36,7 +31,7 @@ function DeleteCollectionModal({
   setSelectedCollection,
   collection
 }: DeleteCollectionModalProps) {
-  const { repoOwner, session, repoSlug, repoBranch, ostContent, ostDetach } =
+  const { repoOwner, session, repoSlug, repoBranch, ostContent } =
     useOutstatic()
   const [deleting, setDeleting] = useState(false)
   const [keepFiles, setKeepFiles] = useState(false)
@@ -44,13 +39,12 @@ function DeleteCollectionModal({
 
   const { refetch: refetchMetadata } = useGetMetadata({ enabled: false })
   const { refetch: refetchCollections } = useCollections({
-    enabled: false,
-    detailed: true
+    enabled: false
   })
 
   const mutation = useCreateCommit()
 
-  const deleteCollection = async (collection: string) => {
+  const deleteCollection = async (collection: CollectionType) => {
     const [
       { data: metadata, isError: metadataError },
       { data: collections, isError: collectionsError }
@@ -65,23 +59,17 @@ function DeleteCollectionModal({
       const owner = repoOwner || session?.user?.login || ''
 
       const capi = createCommitApi({
-        message: `feat(${collection}): remove ${collection}`,
+        message: `feat(${collection.slug}): remove ${collection.slug}`,
         owner,
         oid: oid ?? '',
         name: repoSlug,
         branch: repoBranch
       })
 
-      let collectionPath = `${ostContent}/${collection}`
-
-      if (collections && collections.fullData) {
-        collectionPath = collections.fullData.find(
-          (col) => col.name === collection
-        )?.path as string
-
+      if (collections) {
         // remove collection from collections.json
-        const newCollections = collections.fullData.filter(
-          (collectionInfo) => collectionInfo.name !== collection
+        const newCollections = collections.filter(
+          (collectionInfo) => collectionInfo.slug !== collection.slug
         )
         capi.replaceFile(
           `${ostContent}/collections.json`,
@@ -90,7 +78,7 @@ function DeleteCollectionModal({
       }
 
       if (!keepFiles) {
-        capi.removeFile(collectionPath)
+        capi.removeFile(collection.path)
       }
 
       // remove collection from metadata.json
@@ -99,7 +87,7 @@ function DeleteCollectionModal({
         m.generated = new Date().toISOString()
         m.commit = hashFromUrl(metadata.commitUrl)
         const newMeta = (m.metadata ?? []).filter(
-          (post) => post.collection !== collection
+          (post) => post.collection !== collection.slug
         )
         capi.replaceFile(
           `${ostContent}/metadata.json`,
@@ -128,7 +116,7 @@ function DeleteCollectionModal({
       onOpenChange={(open) => {
         if (!open) {
           setShowDeleteModal(false)
-          setSelectedCollection('')
+          setSelectedCollection(null)
         }
       }}
     >
@@ -140,33 +128,28 @@ function DeleteCollectionModal({
           </DialogDescription>
         </DialogHeader>
         <div className="space-y-6">
-          {ostDetach ? (
-            <div className="flex items-start space-x-2">
-              <Checkbox
-                id="detached-delete"
-                checked={keepFiles}
-                onCheckedChange={() => setKeepFiles(!keepFiles)}
-                className="mt-0.5"
-              />
-              <Label htmlFor="detached-delete" className="leading-normal">
-                Keep files in the repository. Only remove{' '}
-                <span className="inline-block font-bold first-letter:uppercase">
-                  {sentenceCase(collection)}
-                </span>{' '}
-                from the Outstatic&nbsp;Dashboard.
-              </Label>
-            </div>
-          ) : null}
-          <p className="text-sm text-muted-foreground">
-            This action cannot be undone.
-          </p>
+          <div className="flex items-start space-x-2">
+            <Checkbox
+              id="detached-delete"
+              checked={keepFiles}
+              onCheckedChange={() => setKeepFiles(!keepFiles)}
+              className="mt-0.5"
+            />
+            <Label htmlFor="detached-delete" className="leading-normal">
+              Keep files in the repository. Only remove{' '}
+              <span className="inline-block font-bold first-letter:uppercase">
+                {collection.title}
+              </span>{' '}
+              from the Outstatic&nbsp;Dashboard.
+            </Label>
+          </div>
         </div>
         <DialogFooter>
           <Button
             variant="outline"
             onClick={() => {
               setShowDeleteModal(false)
-              setSelectedCollection('')
+              setSelectedCollection(null)
             }}
           >
             Cancel

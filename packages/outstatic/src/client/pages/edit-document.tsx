@@ -197,7 +197,12 @@ export default function EditDocument({ collection }: { collection: string }) {
               <DocumentTitleInput
                 id="title"
                 className="w-full resize-none outline-none bg-white text-5xl scrollbar-hide min-h-[55px] overflow-hidden"
-                placeholder={`Your ${singular(noCase(collection))} title`}
+                placeholder={`Your ${singular(
+                  noCase(collection, {
+                    split: (str) =>
+                      str.split(/([^A-Za-z0-9\.-]+)/g).filter(Boolean)
+                  })
+                ).replace(/-/g, ' ')} title`}
               />
               <div className="min-h-full prose prose-xl">
                 <MDEditor editor={editor} id="content" />

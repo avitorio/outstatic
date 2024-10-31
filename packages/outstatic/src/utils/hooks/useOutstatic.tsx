@@ -213,6 +213,7 @@ const useGetInitialConfig = ({
         return null
       }
     },
+    staleTime: 1000 * 10,
     meta: {
       errorMessage: `Failed to fetch config.`
     },

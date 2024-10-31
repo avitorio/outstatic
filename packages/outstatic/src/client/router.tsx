@@ -18,23 +18,36 @@ const defaultPages: { [key: string]: ReactElement | undefined } = {
 
 export const Router = ({ params }: { params: { ost: string[] } }) => {
   const { data: collections, isPending, fetchStatus } = useCollections()
+
   const { pages } = useOutstatic()
 
   const slug = params?.ost?.[0] || ''
   const slug2 = params?.ost?.[1] || ''
 
   if (isPending && fetchStatus !== 'idle') return <AdminLoading />
+
   const isContent = slug && ![...pages].includes(slug)
+
+  const title =
+    collections?.find((col) => col.slug === slug || col.slug === slug2)
+      ?.title || ''
 
   return (
     <>
-      {!slug && <Collections />}
-      {slug2 && isContent && <EditDocument collection={slug} />}
-      {!slug2 && isContent ? <List collection={slug} /> : defaultPages[slug]}
-      {(slug === 'collections' && collections?.includes(slug2) && (
-        <CustomFields collection={slug2} />
-      )) ||
-        (!!slug2 && !isContent && <NewCollection />)}
+      {!slug ? (
+        <Collections />
+      ) : slug2 && isContent ? (
+        <EditDocument collection={slug} />
+      ) : !slug2 && isContent ? (
+        <List slug={slug} title={title} />
+      ) : slug === 'collections' &&
+        collections?.find((col) => col.slug === slug2) ? (
+        <CustomFields collection={slug2} title={title} />
+      ) : !!slug2 && !isContent ? (
+        <NewCollection />
+      ) : (
+        defaultPages[slug]
+      )}
     </>
   )
 }

@@ -12,7 +12,6 @@ import { stringifyMetadata } from '../metadata/stringify'
 import { MetadataSchema, OutstaticSchema } from '../metadata/types'
 import { GET_DOCUMENT } from '@/graphql/queries/document'
 import { GetDocumentData } from './useGetDocument'
-import { CollectionsType } from './useCollections'
 import request from 'graphql-request'
 import matter from 'gray-matter'
 import MurmurHash3 from 'imurmurhash'
@@ -25,17 +24,6 @@ interface FileData {
 
 const isIndexable = (fileName: string) => {
   return /\.md(x|oc)?$/.test(fileName)
-}
-
-const getCollectionFromPath = (
-  path: string,
-  collections: CollectionsType | undefined
-): string => {
-  const folderPath = path.split('/').slice(0, -1).join('/')
-  const matchingCollection = collections?.find(
-    (collection) => collection.path === folderPath
-  )
-  return matchingCollection ? matchingCollection.name : ''
 }
 
 export const useRebuildMetadata = () => {
@@ -177,7 +165,6 @@ export const useRebuildMetadata = () => {
 
   const processFiles = async (files: FileData[], onComplete?: () => void) => {
     setTotal(Math.max(files.length, 1))
-
     const chunkSize = 5 // TODO move to constants
     const queue = chunk(files, chunkSize)
     const docs: Record<string, unknown>[] = []
@@ -191,7 +178,7 @@ export const useRebuildMetadata = () => {
           const meta = await getMetaFromFile(fileData)
           docs.push({
             ...meta,
-            collection: getCollectionFromPath(fileData.path, data?.collections)
+            collection: fileData.path.split('/').slice(-2, -1)[0]
           })
           setProcessed((prev) => prev + 1)
         })

@@ -80,16 +80,9 @@ function useSubmitDocument({
   let media: MediaItem[] = []
 
   const { refetch: refetchSchema } = useGetCollectionSchema({ enabled: false })
-  const { refetch: refetchMetadata } = useGetMetadata({
-    enabled: false
-  })
-  const { refetch: refetchMedia } = useGetMediaFiles({
-    enabled: false
-  })
-  const { refetch: refetchCollections } = useCollections({
-    enabled: false,
-    detailed: true
-  })
+  const { refetch: refetchMetadata } = useGetMetadata({ enabled: false })
+  const { refetch: refetchMedia } = useGetMediaFiles({ enabled: false })
+  const { refetch: refetchCollections } = useCollections({ enabled: false })
 
   const onSubmit = useCallback(
     async (data: Document) => {
@@ -111,8 +104,8 @@ function useSubmitDocument({
         }
 
         const collectionPath =
-          collections?.fullData?.find(
-            (collectionInfo) => collectionInfo.name === collection
+          collections?.find(
+            (collectionInfo) => collectionInfo.slug === collection
           )?.path + '/'
 
         const document = methods.getValues()

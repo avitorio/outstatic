@@ -51,10 +51,7 @@ const DeleteDocumentButton = ({
 
   const { refetch: refetchDocuments } = useGetDocuments({ enabled: false })
   const { refetch: refetchMetadata } = useGetMetadata({ enabled: false })
-  const { refetch: refetchCollections } = useCollections({
-    enabled: false,
-    detailed: true
-  })
+  const { refetch: refetchCollections } = useCollections({ enabled: false })
 
   const deleteDocument = async (slug: string) => {
     setDeleting(true)
@@ -79,8 +76,8 @@ const DeleteDocumentButton = ({
         branch: repoBranch
       })
 
-      const collectionPath = collections?.fullData?.find(
-        (col) => col.name === collection
+      const collectionPath = collections.find(
+        (col) => col.slug === collection
       )?.path
 
       // remove post markdown file

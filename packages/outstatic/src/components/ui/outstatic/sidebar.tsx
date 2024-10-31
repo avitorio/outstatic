@@ -193,7 +193,7 @@ export function SidebarItem({
       size={size}
       variant={variant}
       className={cn(
-        'relative flex w-full text-sm shadow-none active:bg-secondary/60 capitalize',
+        'relative flex w-full text-sm shadow-none active:bg-secondary/60',
         {
           'justify-start space-x-2.5': !collapsed,
           'hover:bg-initial': active,

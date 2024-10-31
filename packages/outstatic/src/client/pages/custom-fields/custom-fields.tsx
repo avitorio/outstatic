@@ -8,7 +8,6 @@ import { useGetCollectionSchema } from '@/utils/hooks/useGetCollectionSchema'
 import useOutstatic from '@/utils/hooks/useOutstatic'
 import { addCustomFieldSchema } from '@/utils/schemas/add-custom-field-schema'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { capitalCase } from 'change-case'
 import { Trash } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -18,13 +17,14 @@ import { EditCustomFieldDialog } from './_components/edit-custom-field-dialog'
 
 type CustomFieldsProps = {
   collection: string
+  title: string
 }
 
 type CustomFieldForm = CustomFieldType<
   'string' | 'number' | 'array' | 'boolean'
 > & { name: string }
 
-export default function CustomFields({ collection }: CustomFieldsProps) {
+export default function CustomFields({ collection, title }: CustomFieldsProps) {
   const { setHasChanges } = useOutstatic()
   const [customFields, setCustomFields] = useState<CustomFieldsType>({})
   const methods = useForm<CustomFieldForm>({
@@ -59,9 +59,7 @@ export default function CustomFields({ collection }: CustomFieldsProps) {
   return (
     <AdminLayout title="Add Custom Fields">
       <div className="mb-8 flex h-12 items-center">
-        <h1 className="mr-12 text-2xl">
-          <span className="capitalize">{capitalCase(collection)}</span> Fields
-        </h1>
+        <h1 className="mr-12 text-2xl">{title} Fields</h1>
         {Object.keys(customFields).length > 0 ? (
           <Button
             onClick={() => {
@@ -79,7 +77,7 @@ export default function CustomFields({ collection }: CustomFieldsProps) {
             <LineBackground>
               <div className="relative">
                 <div className="mb-20 max-w-2xl p-8 px-4 md:p-8 text-black bg-white rounded-lg border border-gray-200 shadow-md prose prose-base">
-                  <h3>Add Custom Fields to your collections.</h3>
+                  <h3>Add Custom Fields to your collection.</h3>
                   <p>
                     Create your first Custom Field by clicking the button below.
                   </p>

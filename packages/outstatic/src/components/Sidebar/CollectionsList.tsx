@@ -14,7 +14,6 @@ import {
 } from '@/components/ui/shadcn/tooltip'
 import Link from 'next/link'
 import { singular } from 'pluralize'
-import { capitalCase } from 'change-case'
 
 const CollectionsList = () => {
   const { data: collections } = useCollections()
@@ -45,8 +44,8 @@ const CollectionsList = () => {
           {collections
             ? collections.map((collection) => (
                 <SidebarItem
-                  key={collection}
-                  path={`${dashboardRoute}/${collection}`}
+                  key={collection.slug}
+                  path={`${dashboardRoute}/${collection.slug}`}
                   Icon={<Folder className="w-4" />}
                   action={
                     <TooltipProvider>
@@ -54,7 +53,7 @@ const CollectionsList = () => {
                         <TooltipTrigger asChild>
                           <div className="z-10 w-4">
                             <Link
-                              href={`/outstatic/${collection}/new`}
+                              href={`/outstatic/${collection.slug}/new`}
                               className="hidden group-hover:block bg-white p-1 border border-gray-200 text-gray-500 rounded-sm hover:text-gray-700 w-6"
                               aria-label='Create new item in collection "collection"'
                             >
@@ -65,8 +64,8 @@ const CollectionsList = () => {
                         <TooltipContent>
                           <p>
                             Create new{' '}
-                            <span className="inline-block first-letter:uppercase">
-                              {singular(capitalCase(collection))}
+                            <span className="inline-block">
+                              {singular(collection.title)}
                             </span>
                           </p>
                         </TooltipContent>
@@ -74,7 +73,7 @@ const CollectionsList = () => {
                     </TooltipProvider>
                   }
                 >
-                  <span className="capitalize">{capitalCase(collection)}</span>
+                  {collection.title}
                 </SidebarItem>
               ))
             : null}

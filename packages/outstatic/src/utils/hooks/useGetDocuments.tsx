@@ -41,19 +41,12 @@ export const useGetDocuments = ({
   enabled?: boolean
   collection?: string
 } = {}) => {
-  const {
-    repoOwner,
-    repoSlug,
-    repoBranch,
-    session,
-    ostContent,
-    ostDetach,
-    gqlClient
-  } = useOutstatic()
+  const { repoOwner, repoSlug, repoBranch, session, ostContent, gqlClient } =
+    useOutstatic()
 
   const params = useParams<{ ost: string[] }>()
 
-  const { refetch } = useCollections({ enabled: false, detailed: true })
+  const { refetch } = useCollections({ enabled: false })
 
   const collectionName = collection || params?.ost[0]
 
@@ -63,11 +56,10 @@ export const useGetDocuments = ({
       { repoOwner, repoSlug, repoBranch }
     ],
     queryFn: async () => {
-      const collections = ostDetach ? await refetch() : null
-
-      const path = collections?.data?.fullData?.find(
+      const { data: collections } = await refetch()
+      const path = collections?.find(
         (col) =>
-          col.name === slugify(collectionName, { allowedChars: 'a-zA-Z0-9' })
+          col.slug === slugify(collectionName, { allowedChars: 'a-zA-Z0-9.' })
       )?.path
 
       let contentPath = `${repoBranch}:${ostContent}/${collectionName}`
