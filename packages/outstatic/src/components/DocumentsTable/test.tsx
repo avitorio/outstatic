@@ -34,26 +34,39 @@ const date2 = 'August 15, 2023'
 
 jest.mock('@/utils/hooks/useGetDocuments', () => ({
   useGetDocuments: () => ({
-    data: [
-      {
-        slug: 'doc1',
-        title: 'Document 1',
-        status: 'published',
-        publishedAt: date1,
-        author: { name: 'Andre' },
-        content: 'Test content',
-        collection: 'testCollection'
-      },
-      {
-        slug: 'doc2',
-        title: 'Document 2',
-        status: 'draft',
-        publishedAt: date2,
-        author: { name: 'Filipe' },
-        content: 'Test content',
-        collection: 'testCollection'
-      }
-    ],
+    data: {
+      documents: [
+        {
+          slug: 'doc1',
+          title: 'Document 1',
+          status: 'published',
+          publishedAt: date1,
+          author: { name: 'Andre' },
+          content: 'Test content',
+          collection: 'testCollection'
+        },
+        {
+          slug: 'doc2',
+          title: 'Document 2',
+          status: 'draft',
+          publishedAt: date2,
+          author: { name: 'Filipe' },
+          content: 'Test content',
+          collection: 'testCollection'
+        }
+      ],
+      metadata: new Map(
+        new Map([
+          ['title', 'string'],
+          ['publishedAt', 'string'],
+          ['status', 'string'],
+          ['author', 'string'],
+          ['slug', 'string'],
+          ['extension', 'string'],
+          ['description', 'string']
+        ])
+      )
+    },
     refetch: jest.fn()
   })
 }))

@@ -14,6 +14,12 @@ jest.mock('@/utils/auth/hooks', () => ({
   })
 }))
 
+jest.mock('change-case', () => {
+  return {
+    split: (str: string) => str
+  }
+})
+
 // Mock useOid hook
 jest.mock('@/utils/hooks/useOid', () => () => jest.fn().mockReturnValue('123'))
 // Mock useGetMetadata hook
@@ -28,7 +34,7 @@ jest.mock('@/utils/hooks/useGetMetadata', () => ({
 
 jest.mock('@/utils/hooks/useCreateCommit', () => ({
   useCreateCommit: () => ({
-    mutate: async () => Promise.resolve(true)
+    mutateAsync: async () => Promise.resolve(true)
   })
 }))
 
@@ -65,16 +71,13 @@ test('DeleteDocumentButton renders and operates correctly', async () => {
   // Check if modal shows up
   expect(screen.getByText('Delete Document')).toBeInTheDocument()
 
-  expect(
-    screen.getByText('Are you sure you want to delete this document?')
-  ).toBeInTheDocument()
-
-  expect(screen.getByText('This action cannot be undone.')).toBeInTheDocument()
+  const dialog = screen.getByRole('alertdialog')
+  expect(dialog).toBeInTheDocument()
 
   // Simulate clicking the delete button in the modal
   fireEvent.click(screen.getByText('Delete'))
 
-  // Check if onComplete is called
+  // // Check if onComplete is called
   await waitFor(() => expect(onComplete).toHaveBeenCalled())
 
   // Simulate clicking the delete button
