@@ -116,7 +116,6 @@ const ImageCommandList = ({
     }
 
     if (imageUrl) {
-      console.log('wein', imageUrl)
       // TODO: Jump to new paragraph after adding image
       editor.chain().focus().deleteRange(range).run()
       editor

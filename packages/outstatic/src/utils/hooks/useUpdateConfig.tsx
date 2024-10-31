@@ -88,9 +88,7 @@ export function useUpdateConfig({ setLoading }: SubmitDocumentProps) {
           publicMediaPath: updatedConfig.publicMediaPath
         })
 
-        if (repoMediaPath !== updatedConfig.repoMediaPath) {
-          setRepoMediaPathChanged(true)
-        }
+        setRepoMediaPathChanged(true)
 
         if (callbackFunction) {
           callbackFunction()
