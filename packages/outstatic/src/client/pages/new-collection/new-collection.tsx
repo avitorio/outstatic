@@ -417,6 +417,10 @@ export default function NewCollection() {
                           onCheckedChange={(checked) => {
                             if (checked) {
                               form.setValue('name', '')
+                              setCollectionName('')
+                            } else {
+                              form.setValue('name', '')
+                              setCollectionName(path.split('/').pop() || '')
                             }
                             setCreateFolder(checked as boolean)
                           }}
