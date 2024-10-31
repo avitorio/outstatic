@@ -1,23 +1,7 @@
 {
-  "commit": "",
-  "generated": "Thu, 31 Oct 2024 01:01:47 GMT",
+  "commit": "903225feadc461df4202c3a381efd525cb95b963",
+  "generated": "2024-10-31T19:20:53.658Z",
   "metadata": [
-    {
-      "__outstatic": {
-        "commit": "e84287aa21cc8d2af939fe13ba3410a9ada9c5e7",
-        "hash": "1340636794",
-        "path": "/outstatic/content/docs/create-a-new-outstatic-powered-website.mdx"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "docs",
-      "publishedAt": "2024-10-30T18:31:58.875Z",
-      "slug": "create-a-new-outstatic-powered-website",
-      "status": "draft",
-      "title": "Create a new Outstatic powered website"
-    },
     {
       "__outstatic": {
         "commit": "58681aa369f4f588b39b86143bb757f62423b173",
@@ -270,22 +254,6 @@
     },
     {
       "__outstatic": {
-        "commit": "f9ef6202f90748107e46d97250a63011e90699bb",
-        "hash": "2570982826",
-        "path": "/outstatic/content/docs/using-outstatic-for-markdown-content.mdx"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "docs",
-      "publishedAt": "2024-10-30T18:53:46.596Z",
-      "slug": "using-outstatic-for-markdown-content",
-      "status": "draft",
-      "title": "Using Outstatic for Markdown content"
-    },
-    {
-      "__outstatic": {
         "commit": "fac2262cecb49160d52a2a3a68dc0718875bf879",
         "hash": "1678583174",
         "path": "/outstatic/content/v1.4/fetching-data.md"
@@ -463,6 +431,38 @@
       "slug": "using-with-next-js-12",
       "status": "published",
       "title": "Using with Next.js 12"
+    },
+    {
+      "__outstatic": {
+        "commit": "1b7f02fe4d5422349a092cd515dbc1b6acf8728d",
+        "hash": "4248435132",
+        "path": "apps/docs/outstatic/content/docs/using-outstatic-for-markdown-content.mdx"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "publishedAt": "2024-10-30T18:53:46.596Z",
+      "slug": "using-outstatic-for-markdown-content",
+      "status": "draft",
+      "title": "Using Outstatic for Markdown content"
+    },
+    {
+      "__outstatic": {
+        "commit": "903225feadc461df4202c3a381efd525cb95b963",
+        "hash": "3427059330",
+        "path": "apps/docs/outstatic/content/docs/create-a-new-outstatic-powered-website.mdx"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "publishedAt": "2024-10-30T18:31:58.875Z",
+      "slug": "create-a-new-outstatic-powered-website",
+      "status": "draft",
+      "title": "Create a new Outstatic powered website on Vercel"
     }
   ]
 }
