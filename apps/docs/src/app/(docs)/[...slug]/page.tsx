@@ -80,16 +80,24 @@ import MDXServer from '@/lib/mdx-server'
 
 async function getData({ params }: Params) {
   const db = await load()
+  const latest = params.slug.length === 1
 
   const doc = await db
-    .find({ collection: 'docs', slug: params.slug }, [
-      'title',
-      'publishedAt',
-      'slug',
-      'author',
-      'content',
-      'coverImage'
-    ])
+    .find(
+      {
+        collection: latest ? 'docs' : params.slug[0],
+        slug: latest ? params.slug[0] : params.slug[1]
+      },
+      [
+        'title',
+        'publishedAt',
+        'slug',
+        'author',
+        'content',
+        'coverImage',
+        'collection'
+      ]
+    )
     .first()
 
   const menu = getDocumentBySlug('menus', 'docs-menu', ['content'])
@@ -110,6 +118,13 @@ async function getData({ params }: Params) {
 }
 
 export async function generateStaticParams() {
-  const posts = getDocumentSlugs('docs')
-  return posts.map((slug) => ({ slug }))
+  const latest = getDocumentSlugs('docs')
+  const v1_4 = getDocumentSlugs('v1.4')
+
+  const slugs = [
+    ...latest.map((slug) => ({ slug: [slug] })),
+    ...v1_4.map((slug) => ({ slug: ['v1.4', slug] }))
+  ]
+
+  return slugs
 }
