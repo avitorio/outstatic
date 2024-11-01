@@ -21,7 +21,6 @@ export type OutstaticData = {
   githubGql: string
   publicMediaPath: string
   repoMediaPath: string
-  setData: (newData: Partial<OutstaticData>) => void
 }
 
 export async function Outstatic({
