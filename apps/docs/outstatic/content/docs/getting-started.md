@@ -1,13 +1,13 @@
 ---
-title: 'Getting started'
-status: 'published'
+title: "Getting started"
+status: "published"
 author:
-  name: 'Andre Vitorio'
-  picture: 'https://avatars.githubusercontent.com/u/1417109?v=4'
-slug: 'getting-started'
-description: 'Get started with Outstatic'
-coverImage: ''
-publishedAt: '2024-03-18T18:34:15.000Z'
+  name: "Andre Vitorio"
+  picture: "https://avatars.githubusercontent.com/u/1417109?v=4"
+slug: "getting-started"
+description: "Get started with Outstatic"
+coverImage: ""
+publishedAt: "2024-10-30T03:00:00.000Z"
 ---
 
 Here's how you can get started with Outstatic.
@@ -158,7 +158,16 @@ You should see this page:
 ```bash
 OST_GITHUB_ID=YOUR_GITHUB_OAUTH_APP_ID
 OST_GITHUB_SECRET=YOUR_GITHUB_OAUTH_APP_SECRET
+
+# REQUIRED
+# The name of your repository on GitHub without the username
+# Example, for avitorio/outstatic, OST_REPO_SLUG=outstatic
 OST_REPO_SLUG=YOUR_GITHUB_REPOSITORY_SLUG
+
+# OPTIONAL
+# Useful if the project is not under your GitHub account
+# Example, for avitorio/outstatic, OST_REPO_OWNER=avitorio
+OST_REPO_OWNER=YOUR_GITHUB_USERNAME
 
 # OPTIONAL
 # If empty this will default to main
