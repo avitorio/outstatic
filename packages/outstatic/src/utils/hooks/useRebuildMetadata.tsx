@@ -82,11 +82,9 @@ export const useRebuildMetadata = ({
       onComplete?: () => void
     } = {}) => {
       return new Promise((resolve, reject) => {
-        console.log('collectionPath', collectionPath)
         const refetch = collectionPath ? refetchFiles : refetchCollections
         toast.promise(
           refetch().then(({ data }) => {
-            console.log('data', data)
             if (!data) {
               console.log('No data found')
               reject('No data found')
