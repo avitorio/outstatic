@@ -1,13 +1,13 @@
 ---
-title: 'The content editor'
-status: 'published'
+title: "The content editor"
+status: "published"
 author:
-  name: 'Andre Vitorio'
-  picture: 'https://avatars.githubusercontent.com/u/1417109?v=4'
-slug: 'the-content-editor'
-description: 'Learn how the Outstatic Content Editor works.'
-coverImage: ''
-publishedAt: '2022-10-26T12:26:38.000Z'
+  name: "Andre Vitorio"
+  picture: "https://avatars.githubusercontent.com/u/1417109?v=4"
+slug: "the-content-editor"
+description: "Learn how the Outstatic Content Editor works."
+coverImage: ""
+publishedAt: "2024-11-04T03:00:00.000Z"
 ---
 
 The content editor is the main tool used for editing documents. It's where you'll be writing your content, adding links, images, etc…
@@ -36,7 +36,8 @@ The slash command menu appears whenever you type `/`. It allows you to create he
 
 You can enhance your documents by incorporating images using various methods: choose the 'Image' command from the **slash command menu**, then select if you want to upload or link to the image. You can also paste your desired picture, or simply drag and drop it into the document.
 
-![](/docs/images/cleanshot-2023-10-20-at-23.07.12-2x-MzNz.png)
+When you add an image for the first time you will see this:\
+![](/docs/images/cleanshot-2024-11-04-at-22.34.52-2x-QyOT.png)
 
 Images are uploaded to your `/public/docs/images` folder. Outstatic fetches the images directly from GitHub so they can be visualised instantly on the editor, even if your website hasn't finished deploying.
 

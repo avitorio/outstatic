@@ -1,6 +1,6 @@
 {
-  "commit": "903225feadc461df4202c3a381efd525cb95b963",
-  "generated": "2024-10-31T19:20:53.658Z",
+  "commit": "c971f310f5125390dac7c47e185de621fea0e695",
+  "generated": "2024-11-05T01:36:06.868Z",
   "metadata": [
     {
       "__outstatic": {
@@ -236,24 +236,6 @@
     },
     {
       "__outstatic": {
-        "commit": "a0d6a9cf4ecb4691cd5a981688d6c5d6d3d98d8c",
-        "hash": "3261509199",
-        "path": "/outstatic/content/docs/the-content-editor.md"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "docs",
-      "coverImage": "",
-      "description": "Learn how the Outstatic Content Editor works.",
-      "publishedAt": "2022-10-26T12:26:38.000Z",
-      "slug": "the-content-editor",
-      "status": "published",
-      "title": "The content editor"
-    },
-    {
-      "__outstatic": {
         "commit": "fac2262cecb49160d52a2a3a68dc0718875bf879",
         "hash": "1678583174",
         "path": "/outstatic/content/v1.4/fetching-data.md"
@@ -463,6 +445,24 @@
       "slug": "create-a-new-outstatic-powered-website",
       "status": "draft",
       "title": "Create a new Outstatic powered website on Vercel"
+    },
+    {
+      "__outstatic": {
+        "commit": "c971f310f5125390dac7c47e185de621fea0e695",
+        "hash": "1651910913",
+        "path": "apps/docs/outstatic/content/docs/the-content-editor.md"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "coverImage": "",
+      "description": "Learn how the Outstatic Content Editor works.",
+      "publishedAt": "2024-11-04T03:00:00.000Z",
+      "slug": "the-content-editor",
+      "status": "published",
+      "title": "The content editor"
     }
   ]
 }

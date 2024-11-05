@@ -1,6 +1,6 @@
 {
-  "commit": "ef8effe9049969543e81739c263adb516a52d155",
-  "generated": "2024-10-31T19:17:37.195Z",
+  "commit": "c971f310f5125390dac7c47e185de621fea0e695",
+  "generated": "2024-11-05T01:36:06.868Z",
   "media": [
     {
       "__outstatic": {
@@ -77,6 +77,17 @@
       "alt": "",
       "filename": "cleanshot-2023-11-26-at-22.36.06-2x-E2OT.png",
       "publishedAt": "2024-10-31T19:16:45.944Z",
+      "type": "image"
+    },
+    {
+      "__outstatic": {
+        "commit": "c971f310f5125390dac7c47e185de621fea0e695",
+        "hash": "3818802952",
+        "path": "apps/docs/public/images/cleanshot-2024-11-04-at-22.34.52-2x-QyOT.png"
+      },
+      "alt": "",
+      "filename": "cleanshot-2024-11-04-at-22.34.52-2x-QyOT.png",
+      "publishedAt": "2024-11-05T01:36:06.867Z",
       "type": "image"
     },
     {
