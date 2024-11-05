@@ -39,6 +39,7 @@ import {
 } from '@/components/ui/shadcn/form'
 import { Check } from 'lucide-react'
 import { Checkbox } from '@/components/ui/shadcn/checkbox'
+import { capitalCase } from 'change-case'
 
 export default function NewCollection() {
   const { pages, hasChanges, setHasChanges } = useOutstatic()
@@ -88,7 +89,9 @@ export default function NewCollection() {
 
   const mutation = useCreateCommit()
 
-  const rebuildMetadata = useRebuildMetadata()
+  const rebuildMetadata = useRebuildMetadata({
+    collectionPath: path
+  })
 
   const onSubmit = async ({ name }: z.infer<typeof createCollectionSchema>) => {
     setLoading(true)
@@ -364,8 +367,9 @@ export default function NewCollection() {
                     </Button>
                     <Button
                       onClick={() => {
-                        setCollectionName(path.split('/').pop() || '')
-                        form.setValue('name', path.split('/').pop() || '')
+                        const name = capitalCase(path.split('/').pop() || '')
+                        setCollectionName(name)
+                        form.setValue('name', name)
                         setStep(3)
                       }}
                     >
@@ -419,8 +423,11 @@ export default function NewCollection() {
                               form.setValue('name', '')
                               setCollectionName('')
                             } else {
-                              form.setValue('name', '')
-                              setCollectionName(path.split('/').pop() || '')
+                              const name = capitalCase(
+                                path.split('/').pop() || ''
+                              )
+                              form.setValue('name', name)
+                              setCollectionName(name)
                             }
                             setCreateFolder(checked as boolean)
                           }}
@@ -457,7 +464,11 @@ export default function NewCollection() {
                   <div className="flex justify-between w-full pt-4">
                     <Button
                       variant="outline"
-                      onClick={() => setStep(outstaticFolder ? 1 : 2)}
+                      onClick={() => {
+                        setStep(outstaticFolder ? 1 : 2)
+                        setPath('')
+                        form.setValue('name', '')
+                      }}
                     >
                       Back
                     </Button>

@@ -9,12 +9,18 @@ import { createCommitApi } from '../createCommitApi'
 import { hashFromUrl } from '../hashFromUrl'
 import { chunk } from '../chunk'
 import { stringifyMetadata } from '../metadata/stringify'
-import { MetadataSchema, OutstaticSchema } from '../metadata/types'
+import {
+  MetadataSchema,
+  MetadataType,
+  OutstaticSchema
+} from '../metadata/types'
 import { GET_DOCUMENT } from '@/graphql/queries/document'
 import { GetDocumentData } from './useGetDocument'
 import request from 'graphql-request'
 import matter from 'gray-matter'
 import MurmurHash3 from 'imurmurhash'
+import { useGetFiles } from './useGetFiles'
+import { useGetMetadata } from './useGetMetadata'
 
 interface FileData {
   path: string
@@ -26,12 +32,23 @@ const isIndexable = (fileName: string) => {
   return /\.md(x|oc)?$/.test(fileName)
 }
 
-export const useRebuildMetadata = () => {
+export const useRebuildMetadata = ({
+  collectionPath
+}: {
+  collectionPath?: string
+} = {}) => {
   const [total, setTotal] = useState(0)
   const [processed, setProcessed] = useState(0)
   const fetchOid = useOid()
   const mutation = useCreateCommit()
-  const { refetch, data } = useGetAllCollectionsFiles({ enabled: false })
+  const { refetch: refetchCollections, data } = useGetAllCollectionsFiles({
+    enabled: false
+  })
+  const { refetch: refetchFiles } = useGetFiles({
+    enabled: false,
+    path: collectionPath
+  })
+  const { refetch: refetchMetadata } = useGetMetadata({ enabled: false })
   const {
     repoOwner,
     repoSlug,
@@ -65,8 +82,11 @@ export const useRebuildMetadata = () => {
       onComplete?: () => void
     } = {}) => {
       return new Promise((resolve, reject) => {
+        console.log('collectionPath', collectionPath)
+        const refetch = collectionPath ? refetchFiles : refetchCollections
         toast.promise(
           refetch().then(({ data }) => {
+            console.log('data', data)
             if (!data) {
               console.log('No data found')
               reject('No data found')
@@ -102,7 +122,7 @@ export const useRebuildMetadata = () => {
         )
       })
     },
-    [refetch]
+    [refetchCollections, refetchFiles, collectionPath]
   )
 
   const extractFiles = (data: any): FileData[] => {
@@ -193,10 +213,25 @@ export const useRebuildMetadata = () => {
         // @ts-ignore
         data?.repository?.object?.commitUrl ?? ''
       )
-      const database: MetadataSchema = {
-        commit: parentHash,
-        generated: new Date().toUTCString(),
-        metadata: docs.filter(Boolean)
+      let database: MetadataSchema
+      if (collectionPath) {
+        const { data } = await refetchMetadata()
+        // If collectionPath is set, merge with existing metadata
+        const existingMetadata =
+          data?.metadata?.metadata || ([] as MetadataType)
+
+        database = {
+          commit: parentHash,
+          generated: new Date().toUTCString(),
+          metadata: [...existingMetadata, ...docs.filter(Boolean)]
+        }
+      } else {
+        // Replace entire metadata if no collectionPath
+        database = {
+          commit: parentHash,
+          generated: new Date().toUTCString(),
+          metadata: docs.filter(Boolean)
+        }
       }
       const commitApi = createCommitApi({
         message: 'chore: Updates metadata DB',
