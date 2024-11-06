@@ -1,6 +1,6 @@
 {
-  "commit": "078fc1839903abe2b7ffa60601aa747ffac77dc0",
-  "generated": "2024-11-06T18:02:05.393Z",
+  "commit": "9bda90b15b4944d51ece6e816cec73c27fa64e16",
+  "generated": "2024-11-06T18:08:24.904Z",
   "metadata": [
     {
       "__outstatic": {
@@ -107,24 +107,6 @@
       "slug": "migrating-to-v1",
       "status": "published",
       "title": "Migrating to v1"
-    },
-    {
-      "__outstatic": {
-        "commit": "51ed3497284cfccdb29e96e372f5f98e27d146c3",
-        "hash": "2223982998",
-        "path": "/outstatic/content/docs/getting-started.md"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "docs",
-      "coverImage": "",
-      "description": "Get started with Outstatic",
-      "publishedAt": "2024-10-30T03:00:00.000Z",
-      "slug": "getting-started",
-      "status": "published",
-      "title": "Getting started"
     },
     {
       "__outstatic": {
@@ -463,6 +445,24 @@
       "slug": "the-content-editor",
       "status": "published",
       "title": "The content editor"
+    },
+    {
+      "__outstatic": {
+        "commit": "9bda90b15b4944d51ece6e816cec73c27fa64e16",
+        "hash": "1766411351",
+        "path": "apps/docs/outstatic/content/docs/getting-started.md"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "coverImage": "",
+      "description": "Get started with Outstatic",
+      "publishedAt": "2024-10-30T03:00:00.000Z",
+      "slug": "getting-started",
+      "status": "published",
+      "title": "Getting started"
     }
   ]
 }
