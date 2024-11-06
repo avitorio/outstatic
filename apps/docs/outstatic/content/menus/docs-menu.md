@@ -1,5 +1,5 @@
 ---
-title: "Docs Menu"
+title: "Latest Menu"
 status: "published"
 author:
   name: "Andre Vitorio"
