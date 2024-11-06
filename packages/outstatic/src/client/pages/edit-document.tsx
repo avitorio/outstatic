@@ -34,7 +34,7 @@ export default function EditDocument({ collection }: { collection: string }) {
   const [loading, setLoading] = useState(false)
   const { basePath, session, hasChanges, setHasChanges, dashboardRoute } =
     useOutstatic()
-  const { setData, data: localData } = useLocalData()
+  const { data: localData } = useLocalData()
   const [showDelete, setShowDelete] = useState(false)
   const [documentSchema, setDocumentSchema] = useState(editDocumentSchema)
   //@ts-ignore
@@ -85,7 +85,6 @@ export default function EditDocument({ collection }: { collection: string }) {
     methods,
     slug,
     editor,
-    session,
     setHasChanges,
     setShowDelete,
     setExtension,
@@ -150,6 +149,16 @@ export default function EditDocument({ collection }: { collection: string }) {
       onSubmit(methods.getValues())
     }
   }, [mediaPathUpdated])
+
+  // Watch for changes in form values and update hasChanges state
+  useEffect(() => {
+    const subscription = methods.watch((value, { name, type }) => {
+      if (type === 'change') {
+        setHasChanges(true)
+      }
+    })
+    return () => subscription.unsubscribe()
+  }, [methods, setHasChanges])
 
   return (
     <>

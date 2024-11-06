@@ -29,13 +29,22 @@ export function getDocumentBySlug(
   try {
     const realSlug = slug.replace(MD_MDX_REGEXP, '')
     const collectionsPath = join(CONTENT_PATH, collection)
-    const fullPath = join(collectionsPath, `${realSlug}.md`)
+    const mdPath = join(collectionsPath, `${realSlug}.md`)
+    const mdxPath = join(collectionsPath, `${realSlug}.mdx`)
 
-    // Check if the file exists
-    if (!fs.existsSync(fullPath)) {
-      console.error('File does not exist:', fullPath)
+    let fullPath: string
+
+    // Check which file exists
+    if (fs.existsSync(mdPath)) {
+      fullPath = mdPath
+    } else if (fs.existsSync(mdxPath)) {
+      fullPath = mdxPath
+    } else {
+      console.error('Neither .md nor .mdx file exists:', { mdPath, mdxPath })
       return null
     }
+
+    console.log({ fullPath })
 
     const fileContents = fs.readFileSync(fullPath, 'utf8')
     const { data, content } = matter(fileContents)

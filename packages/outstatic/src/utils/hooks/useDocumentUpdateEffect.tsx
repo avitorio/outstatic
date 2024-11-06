@@ -1,4 +1,4 @@
-import { Document, MDExtensions, Session } from '@/types'
+import { Document, MDExtensions } from '@/types'
 import { getLocalDate } from '@/utils/getLocalDate'
 import { parseContent } from '@/utils/parseContent'
 import { Editor } from '@tiptap/react'
@@ -14,7 +14,6 @@ interface UseDocumentUpdateEffectProps {
   methods: UseFormReturn<Document, any>
   slug: string
   editor: Editor
-  session: Session | null
   setHasChanges: Dispatch<SetStateAction<boolean>>
   setShowDelete: Dispatch<SetStateAction<boolean>>
   setExtension: Dispatch<SetStateAction<MDExtensions>>
@@ -26,7 +25,6 @@ export const useDocumentUpdateEffect = ({
   methods,
   slug,
   editor,
-  session,
   setHasChanges,
   setShowDelete,
   setExtension,
@@ -110,5 +108,5 @@ export const useDocumentUpdateEffect = ({
 
     return () => subscription.unsubscribe()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [document])
+  }, [document, editor])
 }

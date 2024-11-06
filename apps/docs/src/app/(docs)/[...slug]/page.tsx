@@ -44,7 +44,6 @@ export async function generateMetadata(params: Params): Promise<Metadata> {
 
 export default async function Post(params: Params) {
   const { doc, menu } = await getData(params)
-
   return (
     <>
       <Header />
@@ -78,7 +77,6 @@ import MDXComponent from '@/components/mdx/mdx-component'
 import { MobileMenu } from '@/components/mobile-menu'
 import { SidebarNav } from '@/components/sidebar-nav'
 import MDXServer from '@/lib/mdx-server'
-import { BuiltWithOutstatic } from '@/components/built-with-outstatic'
 
 async function getData({ params }: Params) {
   const db = await load()
@@ -102,7 +100,11 @@ async function getData({ params }: Params) {
     )
     .first()
 
-  const menu = getDocumentBySlug('menus', 'docs-menu', ['content'])
+  const menu = getDocumentBySlug(
+    'menus',
+    latest ? 'latest-menu' : `${params.slug[0]}-menu`,
+    ['content']
+  )
 
   const docMdx = await MDXServer(doc?.content)
 
