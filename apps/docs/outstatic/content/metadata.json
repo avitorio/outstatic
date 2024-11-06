@@ -1,6 +1,6 @@
 {
-  "commit": "adc3aa55f2b0df9b30b9247a30c86a6dc5debac1",
-  "generated": "2024-11-06T19:18:49.301Z",
+  "commit": "175793305e13a491f06bb4c02c96865e4dd41b3f",
+  "generated": "2024-11-06T19:34:33.764Z",
   "metadata": [
     {
       "__outstatic": {
@@ -448,24 +448,6 @@
     },
     {
       "__outstatic": {
-        "commit": "ffdda85ee2462b2da98005ee1892daeccdd54b7b",
-        "hash": "2208936292",
-        "path": "apps/docs/outstatic/content/menus/latest-menu.md"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "menus",
-      "coverImage": "",
-      "description": "",
-      "publishedAt": "2024-11-06T03:00:00.000Z",
-      "slug": "latest-menu",
-      "status": "published",
-      "title": "Latest Menu"
-    },
-    {
-      "__outstatic": {
         "commit": "adc3aa55f2b0df9b30b9247a30c86a6dc5debac1",
         "hash": "2299452863",
         "path": "apps/docs/outstatic/content/menus/v1.4-menu.mdx"
@@ -479,6 +461,24 @@
       "slug": "v1.4-menu",
       "status": "published",
       "title": "v1.4 Menu"
+    },
+    {
+      "__outstatic": {
+        "commit": "175793305e13a491f06bb4c02c96865e4dd41b3f",
+        "hash": "883492621",
+        "path": "apps/docs/outstatic/content/menus/latest-menu.md"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "menus",
+      "coverImage": "",
+      "description": "",
+      "publishedAt": "2024-11-06T03:00:00.000Z",
+      "slug": "latest-menu",
+      "status": "published",
+      "title": "Latest Menu"
     }
   ]
 }
