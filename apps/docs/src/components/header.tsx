@@ -55,29 +55,31 @@ const Header = ({ hideVersionSelect = false }) => {
           </svg>
         </Link>
         {!hideVersionSelect ? (
-          <Select
-            value={currentVersion}
-            onValueChange={(value) => {
-              const version = VERSIONS.find((v) => v.value === value)
-              if (version) {
-                router.push(version.path)
-              }
-            }}
-          >
-            <SelectTrigger className="w-[130px]">
-              <SelectValue
-                placeholder={currentVersion}
-                defaultValue={currentVersion}
-              />
-            </SelectTrigger>
-            <SelectContent>
-              {VERSIONS.map((version) => (
-                <SelectItem key={version.value} value={version.value}>
-                  {version.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <div className="hidden lg:block">
+            <Select
+              value={currentVersion}
+              onValueChange={(value) => {
+                const version = VERSIONS.find((v) => v.value === value)
+                if (version) {
+                  router.push(version.path)
+                }
+              }}
+            >
+              <SelectTrigger>
+                <SelectValue
+                  placeholder={currentVersion}
+                  defaultValue={currentVersion}
+                />
+              </SelectTrigger>
+              <SelectContent>
+                {VERSIONS.map((version) => (
+                  <SelectItem key={version.value} value={version.value}>
+                    {version.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
         ) : null}
       </div>
       <div className="hidden lg:block">

@@ -20,7 +20,10 @@ export const SidebarLink = ({
   const pathname = usePathname()
   const hash = useHash()
 
-  const isVersionPath = VERSIONS.some((v) => pathname.startsWith(`${v.path}`))
+  const isVersionPath = VERSIONS.some(
+    (v) => pathname.startsWith(`${v.path}`) && v.path !== '/'
+  )
+
   if (isVersionPath) {
     const version = pathname.split('/')[1]
     href = `/${version}${href}`

@@ -50,8 +50,8 @@ export default async function Post(params: Params) {
       <Header />
       <div className="bg-background flex w-full">
         <SidebarNav content={menu.content} />
-        <div className="w-full ml-0 md:ml-10 px-4 lg:px-8 xl:px-12 py-12 max-w-full overflow-x-scroll lg:overflow-x-auto">
-          <article className="mb-32 w-full">
+        <div className="w-full flex flex-col items-center ml-0 md:ml-10 px-4 lg:px-8 xl:px-12 py-12 max-w-full overflow-x-scroll lg:overflow-x-auto">
+          <article className="mb-32 w-full px-4 pt-10 md:px-6 md:pt-12 max-w-[860px] prose prose-outstatic">
             <h1 className="font-primary text-2xl font-bold md:text-4xl mb-2">
               {doc.title}
             </h1>
@@ -67,6 +67,7 @@ export default async function Post(params: Params) {
             </div>
           </article>
         </div>
+        <div className="hidden 2xl:block w-full max-w-xs"></div>
       </div>
       <MobileMenu content={menu.content} />
     </>
@@ -77,6 +78,7 @@ import MDXComponent from '@/components/mdx/mdx-component'
 import { MobileMenu } from '@/components/mobile-menu'
 import { SidebarNav } from '@/components/sidebar-nav'
 import MDXServer from '@/lib/mdx-server'
+import { BuiltWithOutstatic } from '@/components/built-with-outstatic'
 
 async function getData({ params }: Params) {
   const db = await load()
