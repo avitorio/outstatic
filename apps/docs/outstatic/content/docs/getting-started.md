@@ -14,7 +14,7 @@ publishedAt: "2024-10-30T03:00:00.000Z"
 
 I'm just curious, or I'm starting from scratch.
 
-- Deploy a starter Outstatic website on Vercel
+- [Deploy a starter Outstatic website on Vercel](/deploy-a-starter-outstatic-website-on-vercel)
 
 I have a website which uses Markdown (.md, .mdx) files for content.
 

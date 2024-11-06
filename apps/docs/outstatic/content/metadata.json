@@ -1,6 +1,6 @@
 {
-  "commit": "175793305e13a491f06bb4c02c96865e4dd41b3f",
-  "generated": "2024-11-06T19:34:33.764Z",
+  "commit": "4084efd76b355f6d156c4d8db5993c37aa928bd7",
+  "generated": "2024-11-06T19:36:28.097Z",
   "metadata": [
     {
       "__outstatic": {
@@ -414,24 +414,6 @@
     },
     {
       "__outstatic": {
-        "commit": "9bda90b15b4944d51ece6e816cec73c27fa64e16",
-        "hash": "1766411351",
-        "path": "apps/docs/outstatic/content/docs/getting-started.md"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "docs",
-      "coverImage": "",
-      "description": "Get started with Outstatic",
-      "publishedAt": "2024-10-30T03:00:00.000Z",
-      "slug": "getting-started",
-      "status": "published",
-      "title": "Getting started"
-    },
-    {
-      "__outstatic": {
         "commit": "9abba539bde214b5d5a221a8b054f655dcf259f3",
         "hash": "3403896368",
         "path": "apps/docs/outstatic/content/docs/deploy-a-starter-outstatic-website-on-vercel.mdx"
@@ -479,6 +461,24 @@
       "slug": "latest-menu",
       "status": "published",
       "title": "Latest Menu"
+    },
+    {
+      "__outstatic": {
+        "commit": "4084efd76b355f6d156c4d8db5993c37aa928bd7",
+        "hash": "3301043997",
+        "path": "apps/docs/outstatic/content/docs/getting-started.md"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "coverImage": "",
+      "description": "Get started with Outstatic",
+      "publishedAt": "2024-10-30T03:00:00.000Z",
+      "slug": "getting-started",
+      "status": "published",
+      "title": "Getting started"
     }
   ]
 }
