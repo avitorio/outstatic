@@ -1,6 +1,6 @@
 {
-  "commit": "9bda90b15b4944d51ece6e816cec73c27fa64e16",
-  "generated": "2024-11-06T18:08:24.904Z",
+  "commit": "5c6bbf37b285363b2b194ef049a39fbe5f825c74",
+  "generated": "2024-11-06T18:55:43.060Z",
   "metadata": [
     {
       "__outstatic": {
@@ -414,22 +414,6 @@
     },
     {
       "__outstatic": {
-        "commit": "903225feadc461df4202c3a381efd525cb95b963",
-        "hash": "3427059330",
-        "path": "apps/docs/outstatic/content/docs/create-a-new-outstatic-powered-website.mdx"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "docs",
-      "publishedAt": "2024-10-30T18:31:58.875Z",
-      "slug": "create-a-new-outstatic-powered-website",
-      "status": "draft",
-      "title": "Create a new Outstatic powered website on Vercel"
-    },
-    {
-      "__outstatic": {
         "commit": "078fc1839903abe2b7ffa60601aa747ffac77dc0",
         "hash": "683774730",
         "path": "apps/docs/outstatic/content/docs/the-content-editor.md"
@@ -463,6 +447,22 @@
       "slug": "getting-started",
       "status": "published",
       "title": "Getting started"
+    },
+    {
+      "__outstatic": {
+        "commit": "5c6bbf37b285363b2b194ef049a39fbe5f825c74",
+        "hash": "870494543",
+        "path": "apps/docs/outstatic/content/docs/deploy-a-starter-outstatic-website-on-vercel.mdx"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "publishedAt": "2024-10-30T18:31:58.875Z",
+      "slug": "deploy-a-starter-outstatic-website-on-vercel",
+      "status": "draft",
+      "title": "Deploy a starter Outstatic website on Vercel"
     }
   ]
 }
