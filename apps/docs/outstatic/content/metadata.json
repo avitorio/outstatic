@@ -1,6 +1,6 @@
 {
-  "commit": "6ea05f941514a09dd73fb8c9b270245ac802653d",
-  "generated": "2024-11-06T19:04:20.211Z",
+  "commit": "c1cee681fc69e2efa1260edbe5bd8f10749e0f8a",
+  "generated": "2024-11-06T19:06:01.785Z",
   "metadata": [
     {
       "__outstatic": {
@@ -466,7 +466,7 @@
     },
     {
       "__outstatic": {
-        "commit": "6ea05f941514a09dd73fb8c9b270245ac802653d",
+        "commit": "c1cee681fc69e2efa1260edbe5bd8f10749e0f8a",
         "hash": "2664936568",
         "path": "apps/docs/outstatic/content/menus/v1.4-menu.mdx"
       },
