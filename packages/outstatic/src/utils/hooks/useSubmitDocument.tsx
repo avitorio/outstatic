@@ -29,6 +29,7 @@ import {
   MetadataType
 } from '../metadata/types'
 import { useCollections } from './useCollections'
+import { toast } from 'sonner'
 
 type SubmitDocumentProps = {
   session: Session | null
@@ -291,7 +292,12 @@ function useSubmitDocument({
 
         const input = capi.createInput()
 
-        createCommit.mutate(input)
+        toast.promise(createCommit.mutateAsync(input), {
+          loading: 'Saving changes...',
+          success: 'Changes saved successfully!',
+          error: 'Failed to save changes'
+        })
+
         setLoading(false)
         setHasChanges(false)
         setSlug(newSlug)

@@ -10,7 +10,7 @@ import { deepReplace } from '@/utils/deepReplace'
 import { useDocumentUpdateEffect } from '@/utils/hooks/useDocumentUpdateEffect'
 import { useFileStore } from '@/utils/hooks/useFileStore'
 import { useGetCollectionSchema } from '@/utils/hooks/useGetCollectionSchema'
-import useOutstatic from '@/utils/hooks/useOutstatic'
+import useOutstatic, { useLocalData } from '@/utils/hooks/useOutstatic'
 import useSubmitDocument from '@/utils/hooks/useSubmitDocument'
 import useTipTap from '@/utils/hooks/useTipTap'
 import { editDocumentSchema } from '@/utils/schemas/edit-document-schema'
@@ -24,6 +24,7 @@ import { convertSchemaToZod } from '@/utils/zod'
 import { FormMessage } from '@/components/ui/shadcn/form'
 import { toast } from 'sonner'
 import { noCase } from 'change-case'
+import MediaSettingsDialog from '@/components/ui/outstatic/media-settings-dialog'
 
 export default function EditDocument({ collection }: { collection: string }) {
   const pathname = usePathname()
@@ -33,6 +34,7 @@ export default function EditDocument({ collection }: { collection: string }) {
   const [loading, setLoading] = useState(false)
   const { basePath, session, hasChanges, setHasChanges, dashboardRoute } =
     useOutstatic()
+  const { setData, data: localData } = useLocalData()
   const [showDelete, setShowDelete] = useState(false)
   const [documentSchema, setDocumentSchema] = useState(editDocumentSchema)
   //@ts-ignore
@@ -42,12 +44,13 @@ export default function EditDocument({ collection }: { collection: string }) {
   const files = useFileStore((state) => state.files)
   const [extension, setExtension] = useState<MDExtensions>('mdx')
   const [metadata, setMetadata] = useState<Record<string, any>>({})
-
+  const [showMediaPathDialog, setShowMediaPathDialog] = useState(false)
   const editDocument = (property: string, value: any) => {
     const formValues = methods.getValues()
     const newValue = deepReplace(formValues, property, value)
     methods.reset(newValue)
   }
+  const [mediaPathUpdated, setMediaPathUpdated] = useState(false)
 
   const { data: schema } = useGetCollectionSchema({ collection })
 
@@ -141,6 +144,13 @@ export default function EditDocument({ collection }: { collection: string }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [schema, metadata])
 
+  // Submit the document after media paths are updated
+  useEffect(() => {
+    if (mediaPathUpdated) {
+      onSubmit(methods.getValues())
+    }
+  }, [mediaPathUpdated])
+
   return (
     <>
       <Head>
@@ -175,10 +185,19 @@ export default function EditDocument({ collection }: { collection: string }) {
                 loading={loading}
                 saveDocument={methods.handleSubmit(
                   (data) => {
-                    return onSubmit(data)
+                    if (
+                      !localData?.repoMediaPath &&
+                      !localData?.publicMediaPath &&
+                      files.length > 0
+                    ) {
+                      setShowMediaPathDialog(true)
+                      return
+                    } else {
+                      return onSubmit(data)
+                    }
                   },
                   (data) => {
-                    console.log({ data })
+                    console.error({ data })
                     const firstKey = Object.keys(data)[0] as keyof typeof data
                     const errorMessage =
                       (data[firstKey] as { message?: string })?.message ||
@@ -209,6 +228,15 @@ export default function EditDocument({ collection }: { collection: string }) {
               </div>
             </form>
           </AdminLayout>
+          <MediaSettingsDialog
+            title="Your document contains media files."
+            description="Let's set up your media paths so we can upload your files."
+            showMediaPathDialog={showMediaPathDialog}
+            setShowMediaPathDialog={setShowMediaPathDialog}
+            callbackFunction={() => {
+              setMediaPathUpdated(true)
+            }}
+          />
         </FormProvider>
       </DocumentContext.Provider>
     </>

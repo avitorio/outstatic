@@ -9,12 +9,16 @@ import {
 import { MediaSettings } from '@/client/pages/settings/_components/media-settings'
 
 interface MediaSettingsDialogProps {
+  title?: string
+  description?: string
   showMediaPathDialog: boolean
   setShowMediaPathDialog: (show: boolean) => void
-  callbackFunction?: () => void
+  callbackFunction?: () => void | Promise<void>
 }
 
 const MediaSettingsDialog: React.FC<MediaSettingsDialogProps> = ({
+  title = 'First time here?',
+  description = "It seems you haven't set up your media paths yet. Let's do that!",
   showMediaPathDialog,
   setShowMediaPathDialog,
   callbackFunction
@@ -23,16 +27,14 @@ const MediaSettingsDialog: React.FC<MediaSettingsDialogProps> = ({
     <Dialog open={showMediaPathDialog} onOpenChange={setShowMediaPathDialog}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>First time here?</DialogTitle>
-          <DialogDescription>
-            It seems you haven&apos;t set up your media paths yet. Let&apos;s do
-            that!
-          </DialogDescription>
+          <DialogTitle>{title}</DialogTitle>
+          <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
         <MediaSettings
           onSettingsUpdate={() => {
-            setShowMediaPathDialog(false)
             if (callbackFunction) callbackFunction()
+
+            setShowMediaPathDialog(false)
           }}
         />
       </DialogContent>

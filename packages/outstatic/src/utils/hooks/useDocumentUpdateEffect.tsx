@@ -3,7 +3,7 @@ import { getLocalDate } from '@/utils/getLocalDate'
 import { parseContent } from '@/utils/parseContent'
 import { Editor } from '@tiptap/react'
 import matter from 'gray-matter'
-import { Dispatch, SetStateAction, useEffect } from 'react'
+import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { UseFormReturn } from 'react-hook-form'
 import { useGetDocument } from './useGetDocument'
 import useOutstatic from './useOutstatic'
@@ -42,6 +42,8 @@ export const useDocumentUpdateEffect = ({
     repoMediaPath
   } = useOutstatic()
 
+  const [parsedContent, setParsedContent] = useState(false)
+
   const { data: collections } = useCollections({
     enabled: slug !== 'new'
   })
@@ -58,7 +60,10 @@ export const useDocumentUpdateEffect = ({
   })
 
   useEffect(() => {
+    if (parsedContent) return
+
     if (document && editor) {
+      console.log('document updated')
       const { mdDocument } = document
       const { data, content } = matter(mdDocument)
       setMetadata(data)
@@ -88,6 +93,7 @@ export const useDocumentUpdateEffect = ({
       setShowDelete(slug !== 'new')
       setExtension(document.extension)
       setHasChanges(false)
+      setParsedContent(true)
     } else {
       // Set publishedAt value on slug update to avoid undefined on first render
       if (slug) {
@@ -104,5 +110,5 @@ export const useDocumentUpdateEffect = ({
 
     return () => subscription.unsubscribe()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [document, methods, slug, editor, session])
+  }, [document])
 }

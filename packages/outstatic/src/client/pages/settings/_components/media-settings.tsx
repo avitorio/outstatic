@@ -36,7 +36,7 @@ type MediaSettingsProps =
   | Record<string, never>
 
 export function MediaSettings(props: MediaSettingsProps) {
-  const onSettingsUpdate = props.onSettingsUpdate || (() => {})
+  const onSettingsUpdate = props.onSettingsUpdate ?? (() => {})
   const [loading, setLoading] = useState(false)
   const [showConfirmModal, setShowConfirmModal] = useState(false)
   const { data: config, isPending } = useGetConfig()
@@ -60,7 +60,7 @@ export function MediaSettings(props: MediaSettingsProps) {
     if (!config) {
       onSubmit({
         configFields: form.getValues(),
-        callbackFunction: onSettingsUpdate
+        callbackFunction: () => onSettingsUpdate()
       })
     } else {
       setShowConfirmModal(true)
@@ -71,7 +71,7 @@ export function MediaSettings(props: MediaSettingsProps) {
     setShowConfirmModal(false)
     onSubmit({
       configFields: form.getValues(),
-      callbackFunction: onSettingsUpdate
+      callbackFunction: () => onSettingsUpdate()
     })
   }
 
