@@ -1,6 +1,6 @@
 {
-  "commit": "9abba539bde214b5d5a221a8b054f655dcf259f3",
-  "generated": "2024-11-06T18:57:00.861Z",
+  "commit": "6ea05f941514a09dd73fb8c9b270245ac802653d",
+  "generated": "2024-11-06T19:04:20.211Z",
   "metadata": [
     {
       "__outstatic": {
@@ -463,6 +463,22 @@
       "slug": "deploy-a-starter-outstatic-website-on-vercel",
       "status": "published",
       "title": "Deploy a starter Outstatic website on Vercel"
+    },
+    {
+      "__outstatic": {
+        "commit": "6ea05f941514a09dd73fb8c9b270245ac802653d",
+        "hash": "2664936568",
+        "path": "apps/docs/outstatic/content/menus/v1.4-menu.mdx"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "menus",
+      "publishedAt": "2024-11-06T18:46:11.785Z",
+      "slug": "v1.4-menu",
+      "status": "draft",
+      "title": "v1.4 Menu"
     }
   ]
 }
