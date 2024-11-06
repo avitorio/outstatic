@@ -1,6 +1,6 @@
 {
-  "commit": "3527c6ecbc793839933c8571337857d88ba07056",
-  "generated": "2024-11-06T19:06:12.126Z",
+  "commit": "ffdda85ee2462b2da98005ee1892daeccdd54b7b",
+  "generated": "2024-11-06T19:09:32.736Z",
   "metadata": [
     {
       "__outstatic": {
@@ -464,9 +464,9 @@
     },
     {
       "__outstatic": {
-        "commit": "3527c6ecbc793839933c8571337857d88ba07056",
-        "hash": "1412110951",
-        "path": "apps/docs/outstatic/content/menus/docs-menu.md"
+        "commit": "ffdda85ee2462b2da98005ee1892daeccdd54b7b",
+        "hash": "2208936292",
+        "path": "apps/docs/outstatic/content/menus/latest-menu.md"
       },
       "author": {
         "name": "Andre Vitorio",
@@ -476,7 +476,7 @@
       "coverImage": "",
       "description": "",
       "publishedAt": "2024-11-06T03:00:00.000Z",
-      "slug": "docs-menu",
+      "slug": "latest-menu",
       "status": "published",
       "title": "Latest Menu"
     }

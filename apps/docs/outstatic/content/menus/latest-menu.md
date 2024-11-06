@@ -4,7 +4,7 @@ status: "published"
 author:
   name: "Andre Vitorio"
   picture: "https://avatars.githubusercontent.com/u/1417109?v=4"
-slug: "docs-menu"
+slug: "latest-menu"
 description: ""
 coverImage: ""
 publishedAt: "2024-11-06T03:00:00.000Z"
