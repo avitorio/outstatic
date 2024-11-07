@@ -1,6 +1,6 @@
 {
-  "commit": "bf3089b37e61df74ecdd6fdd43d93e1b4294efea",
-  "generated": "2024-11-07T18:13:25.542Z",
+  "commit": "9f1688f58d653e5fedf36a386d072ded01f2c194",
+  "generated": "2024-11-07T18:14:49.502Z",
   "metadata": [
     {
       "__outstatic": {
@@ -428,24 +428,6 @@
     },
     {
       "__outstatic": {
-        "commit": "175793305e13a491f06bb4c02c96865e4dd41b3f",
-        "hash": "883492621",
-        "path": "apps/docs/outstatic/content/menus/latest-menu.md"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "menus",
-      "coverImage": "",
-      "description": "",
-      "publishedAt": "2024-11-06T03:00:00.000Z",
-      "slug": "latest-menu",
-      "status": "published",
-      "title": "Latest Menu"
-    },
-    {
-      "__outstatic": {
         "commit": "4084efd76b355f6d156c4d8db5993c37aa928bd7",
         "hash": "3301043997",
         "path": "apps/docs/outstatic/content/docs/getting-started.md"
@@ -495,6 +477,24 @@
       "slug": "license",
       "status": "published",
       "title": "License"
+    },
+    {
+      "__outstatic": {
+        "commit": "9f1688f58d653e5fedf36a386d072ded01f2c194",
+        "hash": "1859033054",
+        "path": "apps/docs/outstatic/content/menus/latest-menu.md"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "menus",
+      "coverImage": "",
+      "description": "",
+      "publishedAt": "2024-11-06T03:00:00.000Z",
+      "slug": "latest-menu",
+      "status": "published",
+      "title": "Latest Menu"
     }
   ]
 }

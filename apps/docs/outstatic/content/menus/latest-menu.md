@@ -43,3 +43,7 @@ publishedAt: "2024-11-06T03:00:00.000Z"
   - [Do I need Vercel?](/faqs#can-i-host-my-outstatic-website-on-a-provider-other-than-vercel)
 
   - [Troubleshooting Login and Repository Access Issues](/faqs#troubleshooting-login-and-repository-access-issues)
+
+- [License](/license)
+
+- [Credits](/credits)
