@@ -1,6 +1,6 @@
 {
-  "commit": "c871fea662680adb332f7cd65142cd9941aa106b",
-  "generated": "2024-11-07T19:02:01.413Z",
+  "commit": "36fcaaaafc1cf9b03900d286a0efa23ed070411b",
+  "generated": "2024-11-07T20:16:50.748Z",
   "metadata": [
     {
       "__outstatic": {
@@ -527,6 +527,22 @@
       "slug": "using-outstatic-for-markdown-content",
       "status": "published",
       "title": "Using Outstatic for Markdown content"
+    },
+    {
+      "__outstatic": {
+        "commit": "36fcaaaafc1cf9b03900d286a0efa23ed070411b",
+        "hash": "1475315302",
+        "path": "apps/docs/outstatic/content/docs/breaking-changes-v1.5.mdx"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "publishedAt": "2024-11-07T19:56:08.302Z",
+      "slug": "breaking-changes-v1.5",
+      "status": "published",
+      "title": "Breaking Changes (v1.5)"
     }
   ]
 }
