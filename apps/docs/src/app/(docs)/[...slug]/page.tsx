@@ -2,6 +2,7 @@ import Header from '@/components/header'
 import formatDate from '@/lib/formatDate'
 import { Metadata } from 'next'
 import { getDocumentBySlug, getDocumentSlugs, load } from 'outstatic/server'
+import { notFound } from 'next/navigation'
 
 interface Params {
   params: {
@@ -44,6 +45,11 @@ export async function generateMetadata(params: Params): Promise<Metadata> {
 
 export default async function Post(params: Params) {
   const { doc, menu } = await getData(params)
+
+  if (!doc) {
+    notFound()
+  }
+
   return (
     <>
       <Header />
@@ -99,6 +105,10 @@ async function getData({ params }: Params) {
       ]
     )
     .first()
+
+  if (!doc) {
+    notFound()
+  }
 
   const menu = getDocumentBySlug(
     'menus',
