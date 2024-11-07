@@ -10,12 +10,6 @@ coverImage: ""
 publishedAt: "2024-10-30T03:00:00.000Z"
 ---
 
-## I already have a Next.js Markdown blog, how do I start using Outstatic?
-
-Follow the [**Add to Next.js**](/getting-started#adding-outstatic-to-a-nextjs-website) documentation. Once finished, log in to your Outstatic dashboard, create collections that match your content.
-
-This will create a `metadata.json` file inside of `outstatic/content` in your GitHub repository. You should pull the changes to your local install to be able to use the Metadata DB.
-
 ## Where is the data stored?
 
 All your Outstatic documents and collections are saved as Markdown files in your GitHub repository. In other words, all saved content creates a commit. The commit message specifies the collection and document that is created, for example, if your document is in the recipes collection the commit message would be: `feat(recipes): apple-pie-recipe`o
@@ -27,31 +21,3 @@ For convenience we also store metadata in a `metadata.json` file to be used with
 Yes. We have seen examples of websites being launched on Netlify and other providers.
 
 If you try a different hosting/deploy approach, please [let us know](https://twitter.com/outstatic)
-
-## Troubleshooting Login and Repository Access Issues.
-
-Many users encounter login issues due to either missing the correct environment variables or lacking the necessary permissions for a repository.
-
-If you're using Outstatic with a GitHub repository you don't own, ensure you've set the `OST_REPO_OWNER` environment variable to the repository's owner.
-
-For repositories you own, ensure the `OST_REPO_SLUG` environment variable reflects the correct repository name. Remember, the repository name shouldn't include the username. For instance, use `outstatic` instead of `avitorio/outstatic` for the `OST_REPO_SLUG`.
-
-Lastly, if you're attempting to access a repository you don't own, ensure the repository owner has granted you collaborator access. Without this, you won't have full dashboard access.
-
-**Important:** Don't forget to redeploy your website or restart your server after making changes to your environment variables.
-
-## Next.js &lt; 13.4.8 error
-
-In case your Outstatic Dashboard throws errors while trying to create new pages. Either update Next.js to a version above `13.4.8` or add the option `swcMinify: false` to your `next.config.js` file. Example:
-
-```javascript
-const nextConfig = {
-  swcMinify: false
-}
-```
-
-We recommend you learn how Outstatic [manages content](/introduction) and also how to [fetch data](/fetching-data) from your front end.
-
-## Installation on Next.js 12
-
-If you want to use Outstatic with Next.js 12, you can [continue here](/using-with-next-js-12).

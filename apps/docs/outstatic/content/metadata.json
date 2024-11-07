@@ -1,6 +1,6 @@
 {
-  "commit": "c836b6a674a625303b24d345020e62d92eaf51fb",
-  "generated": "2024-11-07T18:45:03.477Z",
+  "commit": "9c35b9150583a0053899d7f57910b278ca1c48a5",
+  "generated": "2024-11-07T18:45:32.874Z",
   "metadata": [
     {
       "__outstatic": {
@@ -19,24 +19,6 @@
       "slug": "custom-fields",
       "status": "published",
       "title": "Custom Fields"
-    },
-    {
-      "__outstatic": {
-        "commit": "c48cf124ed0f8d6e4258bf23a91c592335274eda",
-        "hash": "3154867915",
-        "path": "/outstatic/content/docs/faqs.md"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "docs",
-      "coverImage": "",
-      "description": "",
-      "publishedAt": "2024-10-30T03:00:00.000Z",
-      "slug": "faqs",
-      "status": "published",
-      "title": "FAQs"
     },
     {
       "__outstatic": {
@@ -527,6 +509,24 @@
       "slug": "troubleshooting",
       "status": "published",
       "title": "Troubleshooting and Common Errors"
+    },
+    {
+      "__outstatic": {
+        "commit": "9c35b9150583a0053899d7f57910b278ca1c48a5",
+        "hash": "4212494313",
+        "path": "apps/docs/outstatic/content/docs/faqs.md"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "coverImage": "",
+      "description": "",
+      "publishedAt": "2024-10-30T03:00:00.000Z",
+      "slug": "faqs",
+      "status": "published",
+      "title": "FAQs"
     }
   ]
 }
