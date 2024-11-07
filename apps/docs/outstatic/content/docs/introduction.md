@@ -10,7 +10,7 @@ coverImage: ""
 publishedAt: "2024-10-30T03:00:00.000Z"
 ---
 
-Outstatic is an open source content management system (CMS) for websites using markdown.
+Outstatic is a content management system (CMS) for websites using markdown.
 
 The concept is simple: write content, click save, and see the changes on your website.
 

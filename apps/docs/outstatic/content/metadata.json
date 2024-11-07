@@ -1,6 +1,6 @@
 {
-  "commit": "4084efd76b355f6d156c4d8db5993c37aa928bd7",
-  "generated": "2024-11-06T19:36:28.097Z",
+  "commit": "a21959ee5a322a9f1e382bafa81c1cb73796e464",
+  "generated": "2024-11-07T14:31:17.874Z",
   "metadata": [
     {
       "__outstatic": {
@@ -125,24 +125,6 @@
       "slug": "local-development",
       "status": "published",
       "title": "Local Development"
-    },
-    {
-      "__outstatic": {
-        "commit": "a2930e120ae16484574ff91c62cc3cdb45aa929f",
-        "hash": "815659760",
-        "path": "/outstatic/content/docs/introduction.md"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "docs",
-      "coverImage": "",
-      "description": "",
-      "publishedAt": "2024-10-30T03:00:00.000Z",
-      "slug": "introduction",
-      "status": "published",
-      "title": "Introduction"
     },
     {
       "__outstatic": {
@@ -479,6 +461,24 @@
       "slug": "getting-started",
       "status": "published",
       "title": "Getting started"
+    },
+    {
+      "__outstatic": {
+        "commit": "a21959ee5a322a9f1e382bafa81c1cb73796e464",
+        "hash": "2537083088",
+        "path": "apps/docs/outstatic/content/docs/introduction.md"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "coverImage": "",
+      "description": "",
+      "publishedAt": "2024-10-30T03:00:00.000Z",
+      "slug": "introduction",
+      "status": "published",
+      "title": "Introduction"
     }
   ]
 }
