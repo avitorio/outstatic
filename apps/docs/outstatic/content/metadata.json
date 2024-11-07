@@ -1,6 +1,6 @@
 {
-  "commit": "c871fea662680adb332f7cd65142cd9941aa106b",
-  "generated": "2024-11-07T19:02:01.413Z",
+  "commit": "314ee4fe52a978ac65424a1ca734418387408b4a",
+  "generated": "2024-11-07T20:41:29.538Z",
   "metadata": [
     {
       "__outstatic": {
@@ -478,24 +478,6 @@
     },
     {
       "__outstatic": {
-        "commit": "c06c75619ce43a5981081cd9fc77cb7049eefde5",
-        "hash": "1060777477",
-        "path": "apps/docs/outstatic/content/menus/latest-menu.md"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "menus",
-      "coverImage": "",
-      "description": "",
-      "publishedAt": "2024-11-06T03:00:00.000Z",
-      "slug": "latest-menu",
-      "status": "published",
-      "title": "Latest Menu"
-    },
-    {
-      "__outstatic": {
         "commit": "73826809ee882458039f2fcc18b195f3f4a22bb5",
         "hash": "346200532",
         "path": "apps/docs/outstatic/content/docs/getting-started.md"
@@ -527,6 +509,40 @@
       "slug": "using-outstatic-for-markdown-content",
       "status": "published",
       "title": "Using Outstatic for Markdown content"
+    },
+    {
+      "__outstatic": {
+        "commit": "6fb505f69f25e8ac78433e627fcd6110c18ba616",
+        "hash": "524572335",
+        "path": "apps/docs/outstatic/content/menus/latest-menu.md"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "menus",
+      "coverImage": "",
+      "description": "",
+      "publishedAt": "2024-11-06T03:00:00.000Z",
+      "slug": "latest-menu",
+      "status": "published",
+      "title": "Latest Menu"
+    },
+    {
+      "__outstatic": {
+        "commit": "314ee4fe52a978ac65424a1ca734418387408b4a",
+        "hash": "1688915829",
+        "path": "apps/docs/outstatic/content/docs/upgrading-to-v1.5.mdx"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "publishedAt": "2024-11-07T19:56:08.302Z",
+      "slug": "upgrading-to-v1.5",
+      "status": "published",
+      "title": "Upgrading to v1.5"
     }
   ]
 }
