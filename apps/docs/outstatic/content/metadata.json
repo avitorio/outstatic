@@ -1,6 +1,6 @@
 {
-  "commit": "47307fa83a8d7b4a3b23128bf9159f86d29b5d58",
-  "generated": "2024-11-07T18:24:04.229Z",
+  "commit": "a2b6dcdc2c5bd082584564ec1ef1cf697ad784df",
+  "generated": "2024-11-07T18:24:07.927Z",
   "metadata": [
     {
       "__outstatic": {
@@ -498,8 +498,8 @@
     },
     {
       "__outstatic": {
-        "commit": "47307fa83a8d7b4a3b23128bf9159f86d29b5d58",
-        "hash": "3294069537",
+        "commit": "a2b6dcdc2c5bd082584564ec1ef1cf697ad784df",
+        "hash": "976497181",
         "path": "apps/docs/outstatic/content/docs/credits.mdx"
       },
       "author": {
@@ -509,7 +509,7 @@
       "collection": "docs",
       "publishedAt": "2024-11-07T17:57:27.073Z",
       "slug": "credits",
-      "status": "draft",
+      "status": "published",
       "title": "Credits"
     }
   ]
