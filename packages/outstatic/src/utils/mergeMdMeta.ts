@@ -3,12 +3,17 @@ import { convert } from '@catalystic/json-to-yaml'
 import { API_MEDIA_PATH } from './constants'
 import replaceImagePath from './replaceImagePath'
 
-export const mergeMdMeta = (
-  data: Document & Record<string, any>,
-  basePath: string,
-  repoInfo: string,
+export const mergeMdMeta = ({
+  data,
+  basePath,
+  repoInfo,
+  publicMediaPath
+}: {
+  data: Document & Record<string, any>
+  basePath: string
+  repoInfo: string
   publicMediaPath: string
-): string => {
+}): string => {
   const apiMediaPath = `${basePath}${API_MEDIA_PATH}${repoInfo}`
 
   const processValue = (value: any): any => {
@@ -29,7 +34,7 @@ export const mergeMdMeta = (
     if (typeof value === 'string' && value.startsWith(apiMediaPath)) {
       const regex = new RegExp(`(${apiMediaPath})([^\\s"'\\)]+)`, 'g')
       return value.replace(regex, (match, apiPath, filename) => {
-        return `${basePath}/${publicMediaPath}${filename}`
+        return `/${publicMediaPath}${filename}`
       })
     }
     return value

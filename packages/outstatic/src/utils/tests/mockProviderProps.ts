@@ -6,6 +6,7 @@ const mockProviderProps = {
   repoBranch: 'anything',
   contentPath: 'anything',
   monorepoPath: 'anything',
+  ostPath: 'outstatic',
   session: null,
   initialApolloState: null,
   collections: ['collection1', 'collection2', 'collection3'],

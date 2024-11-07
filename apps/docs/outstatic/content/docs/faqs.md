@@ -12,11 +12,7 @@ publishedAt: "2024-10-30T03:00:00.000Z"
 
 ## I already have a Next.js Markdown blog, how do I start using Outstatic?
 
-Follow the [**Add to Next.js**](/getting-started#adding-outstatic-to-a-nextjs-website) documentation. Once finished, log in to your Outstatic dashboard, create collections that match your content and then copy the .md files into the collection directories inside `/outstatic/content`, for example: `/outstatic/content/blog/my-blog-post.md`.
-
-Don't forget to recreate the Metadata Database with your new posts by going to Settings &gt; Rebuild Metadata:
-
-![](/docs/images/rebuild-metadata-Y4MT.png)
+Follow the [**Add to Next.js**](/getting-started#adding-outstatic-to-a-nextjs-website) documentation. Once finished, log in to your Outstatic dashboard, create collections that match your content.
 
 This will create a `metadata.json` file inside of `outstatic/content` in your GitHub repository. You should pull the changes to your local install to be able to use the Metadata DB.
 
@@ -29,8 +25,6 @@ For convenience we also store metadata in a `metadata.json` file to be used with
 ## Can I host my Outstatic website on a provider other than Vercel?
 
 Yes. We have seen examples of websites being launched on Netlify and other providers.
-
-We specified Vercel on the documentation as it is the only platform we've tried Outstatic on. I don't see why it wouldn't work on other or your own preferred setup.
 
 If you try a different hosting/deploy approach, please [let us know](https://twitter.com/outstatic)
 
@@ -57,3 +51,7 @@ const nextConfig = {
 ```
 
 We recommend you learn how Outstatic [manages content](/introduction) and also how to [fetch data](/fetching-data) from your front end.
+
+## Installation on Next.js 12
+
+If you want to use Outstatic with Next.js 12, you can [continue here](/using-with-next-js-12).

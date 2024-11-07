@@ -1,29 +1,65 @@
 {
-  "commit": "c7a847c87528f00ba63776f0c7d9bf9c5bf62587",
-  "generated": "2024-10-30T12:52:21.426Z",
+  "commit": "4084efd76b355f6d156c4d8db5993c37aa928bd7",
+  "generated": "2024-11-06T19:36:28.097Z",
   "metadata": [
     {
       "__outstatic": {
-        "commit": "d284432c4f249abdc1b70341c757a5fef958f7ae",
-        "hash": "233056259",
-        "path": "/outstatic/content/docs/github-applications.md"
+        "commit": "58681aa369f4f588b39b86143bb757f62423b173",
+        "hash": "3895841815",
+        "path": "/outstatic/content/docs/custom-fields.md"
       },
       "author": {
-        "name": "Anthony Quéré",
-        "picture": "https://avatars.githubusercontent.com/u/47711333?v=4"
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
       },
       "collection": "docs",
       "coverImage": "",
       "description": "",
-      "publishedAt": "2023-08-04T21:00:00.000Z",
-      "slug": "github-application",
-      "status": "draft",
-      "title": "GitHub Application"
+      "publishedAt": "2024-03-06T20:01:41.000Z",
+      "slug": "custom-fields",
+      "status": "published",
+      "title": "Custom Fields"
     },
     {
       "__outstatic": {
-        "commit": "22650aab8e1fa8241dd7756b1bf90fd79342969d",
-        "hash": "3223339599",
+        "commit": "c48cf124ed0f8d6e4258bf23a91c592335274eda",
+        "hash": "3154867915",
+        "path": "/outstatic/content/docs/faqs.md"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "coverImage": "",
+      "description": "",
+      "publishedAt": "2024-10-30T03:00:00.000Z",
+      "slug": "faqs",
+      "status": "published",
+      "title": "FAQs"
+    },
+    {
+      "__outstatic": {
+        "commit": "c669eda5b3b6e14df0d76236613ff8b319c667ab",
+        "hash": "76324923",
+        "path": "/outstatic/content/docs/environment-variables.md"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "coverImage": "",
+      "description": "",
+      "publishedAt": "2024-03-18T12:36:25.000Z",
+      "slug": "environment-variables",
+      "status": "published",
+      "title": "Environment Variables"
+    },
+    {
+      "__outstatic": {
+        "commit": "fac2262cecb49160d52a2a3a68dc0718875bf879",
+        "hash": "1678583174",
         "path": "/outstatic/content/docs/fetching-data.md"
       },
       "author": {
@@ -40,63 +76,25 @@
     },
     {
       "__outstatic": {
-        "commit": "baab0613ec7117304e95b6dbdcd0d84fbab2c45a",
-        "hash": "2166371953",
-        "path": "/outstatic/content/docs/local-development.md"
-      },
-      "author": {
-        "name": "leplay",
-        "picture": "https://avatars.githubusercontent.com/u/284475?v=4"
-      },
-      "collection": "docs",
-      "coverImage": "",
-      "description": "",
-      "publishedAt": "2023-09-23T08:42:29.464Z",
-      "slug": "local-development",
-      "status": "published",
-      "title": "Local Development"
-    },
-    {
-      "__outstatic": {
-        "commit": "819d30ab3c7f2796b94bd8fd21e936f7a988b07e",
-        "hash": "3670638841",
-        "path": "outstatic/content/docs/using-with-next-js-12.md"
+        "commit": "9b161ff1bcbd1733cbe29cee44b712f38ee6e8a4",
+        "hash": "1514577549",
+        "path": "/outstatic/content/docs/getting-started-with-next-js.mdx"
       },
       "author": {
         "name": "Andre Vitorio",
         "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
       },
       "collection": "docs",
-      "coverImage": "",
-      "description": "",
-      "publishedAt": "2023-09-12T11:50:07.653Z",
-      "slug": "using-with-next-js-12",
-      "status": "published",
-      "title": "Using with Next.js 12"
+      "publishedAt": "2024-10-30T13:20:54.632Z",
+      "slug": "getting-started-with-next-js",
+      "status": "draft",
+      "title": "Getting started with Next.js"
     },
     {
       "__outstatic": {
-        "commit": "8eab69c7c7ae74a8a974448363eb28df8f5ee535",
-        "hash": "1038937038",
-        "path": "outstatic/content/docs/the-content-editor.md"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "docs",
-      "coverImage": "",
-      "description": "Learn how the Outstatic Content Editor works.",
-      "publishedAt": "2022-10-26T12:26:38.000Z",
-      "slug": "the-content-editor",
-      "status": "published",
-      "title": "The content editor"
-    },
-    {
-      "__outstatic": {
-        "commit": "bbdd4ea46504b696b0af71adafc8bbf6b2e4b809",
+        "commit": "236b30a2eaa4e5335fbd02615160b41871a15bb6",
         "hash": "85927068",
-        "path": "outstatic/content/docs/migrating-to-v1.md"
+        "path": "/outstatic/content/docs/migrating-to-v1.md"
       },
       "author": {
         "name": "Andre Vitorio",
@@ -112,117 +110,27 @@
     },
     {
       "__outstatic": {
-        "commit": "28229851a2eed6b7d565c7e96de476bc6c0795ed",
-        "hash": "3687552268",
-        "path": "outstatic/content/docs/github-apps-authentication.md"
+        "commit": "5b338ea37847338e26cf47e2c2c6fd85105b3d0a",
+        "hash": "191850098",
+        "path": "/outstatic/content/docs/local-development.md"
       },
       "author": {
-        "name": "Anthony Quéré",
-        "picture": "https://avatars.githubusercontent.com/u/47711333?v=4"
+        "name": "leplay",
+        "picture": "https://avatars.githubusercontent.com/u/284475?v=4"
       },
       "collection": "docs",
       "coverImage": "",
       "description": "",
-      "publishedAt": "2023-11-26T22:00:00.000Z",
-      "slug": "github-apps-authentication",
+      "publishedAt": "2023-11-25T09:42:29.000Z",
+      "slug": "local-development",
       "status": "published",
-      "title": "GitHub Apps Authentication"
+      "title": "Local Development"
     },
     {
       "__outstatic": {
-        "commit": "111f3c49a77c3bad8cb20d1a3bae7e22c39317cb",
-        "hash": "259082607",
-        "path": "outstatic/content/docs/custom-fields.md"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "docs",
-      "coverImage": "",
-      "description": "",
-      "publishedAt": "2024-03-06T20:01:41.000Z",
-      "slug": "custom-fields",
-      "status": "published",
-      "title": "Custom Fields"
-    },
-    {
-      "__outstatic": {
-        "commit": "d82734a2f01415b553d15d1a46dfd9d334868ee5",
-        "hash": "2170562214",
-        "path": "outstatic/content/menus/docs-menu.md"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "menus",
-      "coverImage": "",
-      "description": "",
-      "publishedAt": "2024-03-16T15:18:37.000Z",
-      "slug": "docs-menu",
-      "status": "published",
-      "title": "Docs Menu"
-    },
-    {
-      "__outstatic": {
-        "commit": "ba23a4a5a0350d09830a754d96718dc7d11d392e",
-        "hash": "76324923",
-        "path": "outstatic/content/docs/environment-variables.md"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "docs",
-      "coverImage": "",
-      "description": "",
-      "publishedAt": "2024-03-18T12:36:25.000Z",
-      "slug": "environment-variables",
-      "status": "published",
-      "title": "Environment Variables"
-    },
-    {
-      "__outstatic": {
-        "commit": "111f3c49a77c3bad8cb20d1a3bae7e22c39317cb",
-        "hash": "259082607",
-        "path": "outstatic/content/docs/custom-fields.md"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "docs",
-      "coverImage": "",
-      "description": "",
-      "publishedAt": "2024-03-06T20:01:41.000Z",
-      "slug": "custom-fields",
-      "status": "published",
-      "title": "Custom Fields"
-    },
-    {
-      "__outstatic": {
-        "commit": "29ec769fa3cb71a41ddfd63d94cfe9b825aad3b2",
-        "hash": "160728563",
-        "path": "apps/docs/outstatic/content/docs/getting-started.md"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "docs",
-      "coverImage": "",
-      "description": "Get started with Outstatic",
-      "publishedAt": "2024-03-18T18:34:15.000Z",
-      "slug": "getting-started",
-      "status": "published",
-      "title": "Getting started"
-    },
-    {
-      "__outstatic": {
-        "commit": "5c0294f8b638dc553ecc6ca0f68c1f6e3d4cbe09",
-        "hash": "4272620071",
-        "path": "apps/docs/outstatic/content/docs/introduction.md"
+        "commit": "a2930e120ae16484574ff91c62cc3cdb45aa929f",
+        "hash": "815659760",
+        "path": "/outstatic/content/docs/introduction.md"
       },
       "author": {
         "name": "Andre Vitorio",
@@ -238,9 +146,45 @@
     },
     {
       "__outstatic": {
-        "commit": "c7a847c87528f00ba63776f0c7d9bf9c5bf62587",
-        "hash": "3522297335",
-        "path": "apps/docs/outstatic/content/docs/faqs.md"
+        "commit": "2d8b5caf2b89969656b7d94ca2c200148e1b2290",
+        "hash": "1968019570",
+        "path": "/outstatic/content/docs/github-apps-authentication.md"
+      },
+      "author": {
+        "name": "Anthony Quéré",
+        "picture": "https://avatars.githubusercontent.com/u/47711333?v=4"
+      },
+      "collection": "docs",
+      "coverImage": "",
+      "description": "",
+      "publishedAt": "2023-11-26T22:00:00.000Z",
+      "slug": "github-apps-authentication",
+      "status": "published",
+      "title": "GitHub Apps Authentication"
+    },
+    {
+      "__outstatic": {
+        "commit": "58681aa369f4f588b39b86143bb757f62423b173",
+        "hash": "3895841815",
+        "path": "/outstatic/content/v1.4/custom-fields.md"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "v1.4",
+      "coverImage": "",
+      "description": "",
+      "publishedAt": "2024-03-06T20:01:41.000Z",
+      "slug": "custom-fields",
+      "status": "published",
+      "title": "Custom Fields"
+    },
+    {
+      "__outstatic": {
+        "commit": "ba6e1a2d196dc858a4284926a89ba7f81b43817d",
+        "hash": "255025884",
+        "path": "/outstatic/content/docs/using-with-next-js-12.md"
       },
       "author": {
         "name": "Andre Vitorio",
@@ -249,10 +193,292 @@
       "collection": "docs",
       "coverImage": "",
       "description": "",
-      "publishedAt": "2024-10-30T03:00:00.000Z",
+      "publishedAt": "2023-09-12T11:50:07.653Z",
+      "slug": "using-with-next-js-12",
+      "status": "published",
+      "title": "Using with Next.js 12"
+    },
+    {
+      "__outstatic": {
+        "commit": "fac2262cecb49160d52a2a3a68dc0718875bf879",
+        "hash": "1678583174",
+        "path": "/outstatic/content/v1.4/fetching-data.md"
+      },
+      "author": {
+        "name": "Jakob Heuser",
+        "picture": "https://avatars.githubusercontent.com/u/1795?v=4"
+      },
+      "collection": "v1.4",
+      "coverImage": "",
+      "description": "",
+      "publishedAt": "2023-07-25T12:28:25.000Z",
+      "slug": "fetching-data",
+      "status": "published",
+      "title": "Fetching data"
+    },
+    {
+      "__outstatic": {
+        "commit": "2d8b5caf2b89969656b7d94ca2c200148e1b2290",
+        "hash": "1968019570",
+        "path": "/outstatic/content/v1.4/github-apps-authentication.md"
+      },
+      "author": {
+        "name": "Anthony Quéré",
+        "picture": "https://avatars.githubusercontent.com/u/47711333?v=4"
+      },
+      "collection": "v1.4",
+      "coverImage": "",
+      "description": "",
+      "publishedAt": "2023-11-26T22:00:00.000Z",
+      "slug": "github-apps-authentication",
+      "status": "published",
+      "title": "GitHub Apps Authentication"
+    },
+    {
+      "__outstatic": {
+        "commit": "27c15bc27922ecf33e87a0a967f338373bf654b0",
+        "hash": "1416836657",
+        "path": "/outstatic/content/v1.4/faqs.md"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "v1.4",
+      "coverImage": "",
+      "description": "",
+      "publishedAt": "2023-11-20T13:07:51.000Z",
       "slug": "faqs",
       "status": "published",
       "title": "FAQs"
+    },
+    {
+      "__outstatic": {
+        "commit": "846fdbcdc40776446e801d69102a4b5994f70205",
+        "hash": "646399284",
+        "path": "/outstatic/content/v1.4/environment-variables.md"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "v1.4",
+      "coverImage": "",
+      "description": "",
+      "publishedAt": "2024-10-30T03:00:00.000Z",
+      "slug": "environment-variables",
+      "status": "published",
+      "title": "Environment Variables"
+    },
+    {
+      "__outstatic": {
+        "commit": "889ccf72e29b7d0a1ffbe18860993ed97b03137e",
+        "hash": "3801400365",
+        "path": "/outstatic/content/v1.4/getting-started.md"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "v1.4",
+      "coverImage": "",
+      "description": "Get started with Outstatic",
+      "publishedAt": "2024-10-30T03:00:00.000Z",
+      "slug": "getting-started",
+      "status": "published",
+      "title": "Getting started"
+    },
+    {
+      "__outstatic": {
+        "commit": "a0d6a9cf4ecb4691cd5a981688d6c5d6d3d98d8c",
+        "hash": "3261509199",
+        "path": "/outstatic/content/v1.4/the-content-editor.md"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "v1.4",
+      "coverImage": "",
+      "description": "Learn how the Outstatic Content Editor works.",
+      "publishedAt": "2022-10-26T12:26:38.000Z",
+      "slug": "the-content-editor",
+      "status": "published",
+      "title": "The content editor"
+    },
+    {
+      "__outstatic": {
+        "commit": "5b338ea37847338e26cf47e2c2c6fd85105b3d0a",
+        "hash": "191850098",
+        "path": "/outstatic/content/v1.4/local-development.md"
+      },
+      "author": {
+        "name": "leplay",
+        "picture": "https://avatars.githubusercontent.com/u/284475?v=4"
+      },
+      "collection": "v1.4",
+      "coverImage": "",
+      "description": "",
+      "publishedAt": "2023-11-25T09:42:29.000Z",
+      "slug": "local-development",
+      "status": "published",
+      "title": "Local Development"
+    },
+    {
+      "__outstatic": {
+        "commit": "236b30a2eaa4e5335fbd02615160b41871a15bb6",
+        "hash": "85927068",
+        "path": "/outstatic/content/v1.4/migrating-to-v1.md"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "v1.4",
+      "coverImage": "",
+      "description": "Migrating Outstatic to >v1.0.0",
+      "publishedAt": "2023-11-11T18:59:51.912Z",
+      "slug": "migrating-to-v1",
+      "status": "published",
+      "title": "Migrating to v1"
+    },
+    {
+      "__outstatic": {
+        "commit": "fff9ad582aa8120c7097c1004319f5d61cf87890",
+        "hash": "2229548952",
+        "path": "/outstatic/content/v1.4/introduction.md"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "v1.4",
+      "coverImage": "",
+      "description": "",
+      "publishedAt": "2023-05-26T17:50:55.000Z",
+      "slug": "introduction",
+      "status": "published",
+      "title": "Introduction"
+    },
+    {
+      "__outstatic": {
+        "commit": "ba6e1a2d196dc858a4284926a89ba7f81b43817d",
+        "hash": "255025884",
+        "path": "/outstatic/content/v1.4/using-with-next-js-12.md"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "v1.4",
+      "coverImage": "",
+      "description": "",
+      "publishedAt": "2023-09-12T11:50:07.653Z",
+      "slug": "using-with-next-js-12",
+      "status": "published",
+      "title": "Using with Next.js 12"
+    },
+    {
+      "__outstatic": {
+        "commit": "1b7f02fe4d5422349a092cd515dbc1b6acf8728d",
+        "hash": "4248435132",
+        "path": "apps/docs/outstatic/content/docs/using-outstatic-for-markdown-content.mdx"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "publishedAt": "2024-10-30T18:53:46.596Z",
+      "slug": "using-outstatic-for-markdown-content",
+      "status": "draft",
+      "title": "Using Outstatic for Markdown content"
+    },
+    {
+      "__outstatic": {
+        "commit": "078fc1839903abe2b7ffa60601aa747ffac77dc0",
+        "hash": "683774730",
+        "path": "apps/docs/outstatic/content/docs/the-content-editor.md"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "coverImage": "",
+      "description": "Learn how the Outstatic Content Editor works.",
+      "publishedAt": "2024-11-06T03:00:00.000Z",
+      "slug": "the-content-editor",
+      "status": "published",
+      "title": "The content editor"
+    },
+    {
+      "__outstatic": {
+        "commit": "9abba539bde214b5d5a221a8b054f655dcf259f3",
+        "hash": "3403896368",
+        "path": "apps/docs/outstatic/content/docs/deploy-a-starter-outstatic-website-on-vercel.mdx"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "publishedAt": "2024-10-30T18:31:58.875Z",
+      "slug": "deploy-a-starter-outstatic-website-on-vercel",
+      "status": "published",
+      "title": "Deploy a starter Outstatic website on Vercel"
+    },
+    {
+      "__outstatic": {
+        "commit": "adc3aa55f2b0df9b30b9247a30c86a6dc5debac1",
+        "hash": "2299452863",
+        "path": "apps/docs/outstatic/content/menus/v1.4-menu.mdx"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "menus",
+      "publishedAt": "2024-11-06T18:46:11.785Z",
+      "slug": "v1.4-menu",
+      "status": "published",
+      "title": "v1.4 Menu"
+    },
+    {
+      "__outstatic": {
+        "commit": "175793305e13a491f06bb4c02c96865e4dd41b3f",
+        "hash": "883492621",
+        "path": "apps/docs/outstatic/content/menus/latest-menu.md"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "menus",
+      "coverImage": "",
+      "description": "",
+      "publishedAt": "2024-11-06T03:00:00.000Z",
+      "slug": "latest-menu",
+      "status": "published",
+      "title": "Latest Menu"
+    },
+    {
+      "__outstatic": {
+        "commit": "4084efd76b355f6d156c4d8db5993c37aa928bd7",
+        "hash": "3301043997",
+        "path": "apps/docs/outstatic/content/docs/getting-started.md"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "coverImage": "",
+      "description": "Get started with Outstatic",
+      "publishedAt": "2024-10-30T03:00:00.000Z",
+      "slug": "getting-started",
+      "status": "published",
+      "title": "Getting started"
     }
   ]
 }

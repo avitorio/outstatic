@@ -44,14 +44,13 @@ export async function generateMetadata(params: Params): Promise<Metadata> {
 
 export default async function Post(params: Params) {
   const { doc, menu } = await getData(params)
-
   return (
     <>
       <Header />
       <div className="bg-background flex w-full">
         <SidebarNav content={menu.content} />
-        <div className="w-full ml-0 md:ml-10 px-4 lg:px-8 xl:px-12 py-12 max-w-full overflow-x-scroll lg:overflow-x-auto">
-          <article className="mb-32 w-full">
+        <div className="w-full flex flex-col items-center ml-0 md:ml-10 px-4 lg:px-8 xl:px-12 py-12 max-w-full overflow-x-scroll lg:overflow-x-auto">
+          <article className="mb-32 w-full px-4 pt-10 md:px-6 md:pt-12 max-w-[860px] prose prose-outstatic">
             <h1 className="font-primary text-2xl font-bold md:text-4xl mb-2">
               {doc.title}
             </h1>
@@ -67,6 +66,7 @@ export default async function Post(params: Params) {
             </div>
           </article>
         </div>
+        <div className="hidden 2xl:block w-full max-w-xs"></div>
       </div>
       <MobileMenu content={menu.content} />
     </>
@@ -80,19 +80,31 @@ import MDXServer from '@/lib/mdx-server'
 
 async function getData({ params }: Params) {
   const db = await load()
+  const latest = params.slug.length === 1
 
   const doc = await db
-    .find({ collection: 'docs', slug: params.slug }, [
-      'title',
-      'publishedAt',
-      'slug',
-      'author',
-      'content',
-      'coverImage'
-    ])
+    .find(
+      {
+        collection: latest ? 'docs' : params.slug[0],
+        slug: latest ? params.slug[0] : params.slug[1]
+      },
+      [
+        'title',
+        'publishedAt',
+        'slug',
+        'author',
+        'content',
+        'coverImage',
+        'collection'
+      ]
+    )
     .first()
 
-  const menu = getDocumentBySlug('menus', 'docs-menu', ['content'])
+  const menu = getDocumentBySlug(
+    'menus',
+    latest ? 'latest-menu' : `${params.slug[0]}-menu`,
+    ['content']
+  )
 
   const docMdx = await MDXServer(doc?.content)
 
@@ -110,6 +122,13 @@ async function getData({ params }: Params) {
 }
 
 export async function generateStaticParams() {
-  const posts = getDocumentSlugs('docs')
-  return posts.map((slug) => ({ slug }))
+  const latest = getDocumentSlugs('docs')
+  const v1_4 = getDocumentSlugs('v1.4')
+
+  const slugs = [
+    ...latest.map((slug) => ({ slug: [slug] })),
+    ...v1_4.map((slug) => ({ slug: ['v1.4', slug] }))
+  ]
+
+  return slugs
 }

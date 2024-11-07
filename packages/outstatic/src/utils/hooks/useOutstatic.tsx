@@ -71,7 +71,7 @@ export const useOutstatic = () => {
 
   const { monorepoPath, contentPath, ostPath } = outstaticData
 
-  const data = {
+  return {
     ...outstaticData,
     gqlClient: graphQLClient,
     ostContent: [monorepoPath, contentPath].filter(Boolean).join('/'),
@@ -84,24 +84,6 @@ export const useOutstatic = () => {
       .join('/'),
     hasChanges,
     setHasChanges
-  }
-
-  const setData = (newData: Partial<typeof data>) => {
-    const updatedData = {
-      ...data,
-      ...newData
-    } as Partial<typeof data>
-
-    if ('setData' in updatedData) {
-      delete (updatedData as any).setData
-    }
-
-    return updatedData
-  }
-
-  return {
-    ...data,
-    setData
   }
 }
 
@@ -213,6 +195,7 @@ const useGetInitialConfig = ({
         return null
       }
     },
+    staleTime: 1000 * 10,
     meta: {
       errorMessage: `Failed to fetch config.`
     },

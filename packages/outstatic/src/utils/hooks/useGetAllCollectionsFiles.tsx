@@ -38,8 +38,7 @@ export const useGetAllCollectionsFiles = ({
     useOutstatic()
 
   const { refetch: refetchCollections } = useCollections({
-    enabled: false,
-    detailed: true
+    enabled: false
   })
 
   return useQuery({
@@ -47,14 +46,11 @@ export const useGetAllCollectionsFiles = ({
     queryFn: async () => {
       const { data: collectionsData } = await refetchCollections()
 
-      if (
-        !collectionsData?.fullData ||
-        collectionsData?.fullData.length === 0
-      ) {
+      if (!collectionsData || collectionsData.length === 0) {
         throw new Error('No collections data found')
       }
 
-      const fullData = collectionsData?.fullData ?? []
+      const fullData = collectionsData ?? []
 
       // Fetch external files
       const externalFilesData =

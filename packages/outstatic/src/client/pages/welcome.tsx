@@ -69,24 +69,6 @@ export default function Welcome({ variables }: WelcomeProps) {
                 </li>
               ))}
             </ul>
-            {!variables.optional.OST_CONTENT_PATH && (
-              <p className="mb-5 p-2 bg-blue-100 rounded">
-                Optional variable{' '}
-                <span className="font-semibold">OST_CONTENT_PATH</span> defines
-                where your content is saved.
-                <br />
-                Defaulting to <code>outstatic/content</code>
-              </p>
-            )}
-            {!variables.optional.OST_REPO_OWNER && (
-              <p className="mb-5 p-2 bg-blue-100 rounded">
-                Optional variable{' '}
-                <span className="font-semibold">OST_REPO_OWNER</span> is not
-                set.
-                <br />
-                Defaulting to your GitHub username.
-              </p>
-            )}
             <p>You may need to restart Next.js to apply the changes.</p>
           </div>
         </main>

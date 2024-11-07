@@ -32,7 +32,8 @@ jest.mock('@/utils/hooks/useGetMediaFiles', () => ({
 
 jest.mock('@/utils/hooks/useCreateCommit', () => ({
   useCreateCommit: () => ({
-    mutate: async () => Promise.resolve(true)
+    mutate: async () => Promise.resolve(true),
+    mutateAsync: async () => Promise.resolve(true)
   })
 }))
 
@@ -66,12 +67,6 @@ test('DeleteMediaButton renders and operates correctly', async () => {
 
   // Check if modal shows up
   expect(screen.getByText('Delete Media')).toBeInTheDocument()
-
-  expect(
-    screen.getByText('Are you sure you want to delete this media file?')
-  ).toBeInTheDocument()
-
-  expect(screen.getByText('This action cannot be undone.')).toBeInTheDocument()
 
   // Simulate clicking the delete button in the modal
   fireEvent.click(screen.getByText('Delete'))

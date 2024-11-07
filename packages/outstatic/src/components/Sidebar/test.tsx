@@ -2,7 +2,7 @@ import { InitialDataContext } from '@/utils/hooks/useInitialData'
 import mockProviderProps from '@/utils/tests/mockProviderProps'
 import { TestWrapper } from '@/utils/TestWrapper'
 import { render, screen } from '@testing-library/react'
-import { act } from 'react-dom/test-utils'
+import { act } from 'react'
 import { Sidebar } from './'
 
 jest.mock('next/navigation', () => ({
@@ -23,12 +23,34 @@ jest.mock('@/utils/generateUniqueId', () => jest.fn())
 
 jest.mock('@/utils/hooks/useCollections', () => ({
   useCollections: () => ({
-    data: ['collection1', 'collection2', 'collection3']
+    data: [
+      {
+        title: 'Collection 1',
+        slug: 'collection-1'
+      },
+      {
+        title: 'Collection 2',
+        slug: 'collection-2'
+      }
+    ]
   })
 }))
 
+jest.mock('pluralize', () => ({
+  singular: (str: string) => str
+}))
+
 describe('<Sidebar />', () => {
-  const mockCollections = ['collection1', 'collection2', 'collection3']
+  const mockCollections = [
+    {
+      title: 'Collection 1',
+      slug: 'collection-1'
+    },
+    {
+      title: 'Collection 2',
+      slug: 'collection-2'
+    }
+  ]
 
   const fetchMock = jest.fn(() =>
     Promise.resolve({
@@ -60,7 +82,7 @@ describe('<Sidebar />', () => {
     expect(screen.getByText('Documentation')).toBeInTheDocument()
 
     mockCollections.forEach((collection) => {
-      expect(screen.getByText(collection)).toBeInTheDocument()
+      expect(screen.getByText(collection.title)).toBeInTheDocument()
     })
   })
 })

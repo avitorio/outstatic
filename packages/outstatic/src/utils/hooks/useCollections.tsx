@@ -6,9 +6,11 @@ import useOid from './useOid'
 import { toast } from 'sonner'
 import { useCreateCommit } from './useCreateCommit'
 import { GET_FILE } from '@/graphql/queries/file'
+import { sentenceCase } from 'change-case'
 
 export type CollectionType = {
-  name: string
+  title: string
+  slug: string
   path: string
   children: CollectionType[]
 }
@@ -17,33 +19,18 @@ export type CollectionsType = CollectionType[] | null
 
 type UseCollectionsOptions = {
   enabled?: boolean
-  detailed?: boolean
 }
 
-export type DetailedReturnType = {
-  collections: string[]
-  fullData: CollectionsType
-}
-
-type UseCollectionsReturnType<T extends boolean> = T extends true
-  ? DetailedReturnType
-  : string[]
-
-export const useCollections = <T extends boolean = false>(
-  options?: UseCollectionsOptions & { detailed?: T }
-) => {
-  const { enabled = true, detailed = false as T } = options ?? {}
+export function useCollections(options?: UseCollectionsOptions) {
+  const { enabled = true } = options ?? {}
   const { repoOwner, repoSlug, repoBranch, isPending, gqlClient, ostContent } =
     useOutstatic()
   const fetchOid = useOid()
   const mutation = useCreateCommit()
 
   return useQuery({
-    queryKey: [
-      'collections',
-      { repoOwner, repoSlug, repoBranch, ostContent, detailed }
-    ],
-    queryFn: async (): Promise<UseCollectionsReturnType<T>> => {
+    queryKey: ['collections', { repoOwner, repoSlug, repoBranch, ostContent }],
+    queryFn: async (): Promise<CollectionsType> => {
       try {
         const collectionJson =
           isPending || !repoOwner || !repoSlug || !repoBranch
@@ -62,17 +49,13 @@ export const useCollections = <T extends boolean = false>(
 
         if (collectionsObject?.text) {
           collectionsData = JSON.parse(collectionsObject.text)
-          const collections = detailed
-            ? {
-                collections:
-                  collectionsData?.map((collection) => collection.name) ?? [],
-                fullData: collectionsData ?? []
-              }
-            : collectionsData?.map((collection) => collection.name) ?? []
+          const collections = collectionsData ?? []
 
-          return collections as UseCollectionsReturnType<T>
+          return collections
         }
 
+        // If the collections.json file doesn't exist, fetch the collections from the outstatic folder
+        // and create the collections.json file
         if (collectionJson === null || collectionsObject === null) {
           const data =
             isPending || !repoOwner || !repoSlug || !repoBranch
@@ -85,14 +68,7 @@ export const useCollections = <T extends boolean = false>(
 
           if (!data || data?.repository?.object === null) {
             // We couldn't find the outstatic folder, so we return an empty array
-            const collections = detailed
-              ? {
-                  collections: [],
-                  fullData: []
-                }
-              : []
-
-            return collections as unknown as UseCollectionsReturnType<T>
+            return [] as CollectionsType
           }
 
           const { entries } = data?.repository?.object as {
@@ -103,7 +79,11 @@ export const useCollections = <T extends boolean = false>(
             .map((entry) =>
               entry.type === 'tree'
                 ? {
-                    name: entry.name,
+                    title: sentenceCase(entry.name, {
+                      split: (str) =>
+                        str.split(/([^A-Za-z0-9\.]+)/g).filter(Boolean)
+                    }),
+                    slug: entry.name,
                     path: `${ostContent}/${entry.name}`,
                     children: []
                   }
@@ -138,21 +118,13 @@ export const useCollections = <T extends boolean = false>(
             error: 'Error updating collections'
           })
 
-          const collections = detailed
-            ? {
-                collections:
-                  collectionsData?.map((collection) => collection.name) ?? [],
-                fullData: collectionsData ?? []
-              }
-            : collectionsData?.map((collection) => collection.name) ?? []
-
-          return collections as UseCollectionsReturnType<T>
+          return collectionsData
         }
-        return [] as unknown as UseCollectionsReturnType<T>
+        return []
       } catch (error) {
         console.error('Error fetching collections:', error)
         toast.error('Error fetching collections')
-        return [] as unknown as UseCollectionsReturnType<T>
+        return []
       }
     },
     enabled:

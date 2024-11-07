@@ -1,6 +1,6 @@
 import { createCommitApi } from '@/utils/createCommitApi'
 import useOutstatic, { useLocalData } from '@/utils/hooks/useOutstatic'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useState, useEffect } from 'react'
 import { useCreateCommit } from './useCreateCommit'
 import useOid from './useOid'
 import { useGetConfig } from './useGetConfig'
@@ -20,29 +20,30 @@ type OnSubmitProps = {
 
 export function useUpdateConfig({ setLoading }: SubmitDocumentProps) {
   const createCommit = useCreateCommit()
-  const [repoMediaPathChanged, setRepoMediaPathChanged] = useState(false)
   const { setData } = useLocalData()
-  const {
-    repoOwner,
-    repoSlug,
-    repoBranch,
-    session,
-    repoMediaPath,
-    configJsonPath
-  } = useOutstatic()
+  const { repoOwner, repoSlug, repoBranch, session, configJsonPath } =
+    useOutstatic()
   const fetchOid = useOid()
 
   const { refetch } = useGetConfig({
     enabled: false
   })
 
+  const [callback, setCallback] = useState<() => void | undefined>(
+    () => undefined
+  )
+  const [shouldRebuildMedia, setShouldRebuildMedia] = useState(false)
+
   const rebuildMediaJson = useRebuildMediaJson()
 
   useEffect(() => {
-    if (repoMediaPathChanged) {
-      rebuildMediaJson()
+    if (shouldRebuildMedia) {
+      const execute = async () => {
+        await rebuildMediaJson({ onComplete: () => callback() })
+      }
+      execute()
     }
-  }, [repoMediaPathChanged])
+  }, [shouldRebuildMedia, callback])
 
   const onSubmit = useCallback(
     async ({ configFields, callbackFunction }: OnSubmitProps) => {
@@ -79,22 +80,22 @@ export function useUpdateConfig({ setLoading }: SubmitDocumentProps) {
 
         toast.promise(createCommit.mutateAsync(input), {
           loading: 'Updating config...',
-          success: 'Config updated successfully',
+          success: () => {
+            setData({
+              repoMediaPath: updatedConfig.repoMediaPath,
+              publicMediaPath: updatedConfig.publicMediaPath
+            })
+
+            if (callbackFunction) {
+              setCallback(() => callbackFunction)
+            }
+
+            setShouldRebuildMedia(!!updatedConfig.repoMediaPath)
+
+            return 'Config updated successfully'
+          },
           error: 'Failed to update config'
         })
-
-        setData({
-          repoMediaPath: updatedConfig.repoMediaPath,
-          publicMediaPath: updatedConfig.publicMediaPath
-        })
-
-        if (repoMediaPath !== updatedConfig.repoMediaPath) {
-          setRepoMediaPathChanged(true)
-        }
-
-        if (callbackFunction) {
-          callbackFunction()
-        }
       } catch (error) {
         // TODO: Better error treatment
         setLoading(false)
@@ -107,7 +108,6 @@ export function useUpdateConfig({ setLoading }: SubmitDocumentProps) {
       session,
       setLoading,
       createCommit,
-      fetchOid,
       repoSlug,
       repoBranch
     ]

@@ -20,7 +20,6 @@ import useOid from '@/utils/hooks/useOid'
 import useOutstatic from '@/utils/hooks/useOutstatic'
 import { useRebuildMetadata } from '@/utils/hooks/useRebuildMetadata'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { kebabCase } from 'change-case'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
@@ -40,6 +39,7 @@ import {
 } from '@/components/ui/shadcn/form'
 import { Check } from 'lucide-react'
 import { Checkbox } from '@/components/ui/shadcn/checkbox'
+import { capitalCase } from 'change-case'
 
 export default function NewCollection() {
   const { pages, hasChanges, setHasChanges } = useOutstatic()
@@ -50,7 +50,6 @@ export default function NewCollection() {
     repoSlug,
     repoBranch,
     repoOwner,
-    ostDetach,
     dashboardRoute
   } = useOutstatic()
 
@@ -65,10 +64,7 @@ export default function NewCollection() {
   const [createFolder, setCreateFolder] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(false)
-  const { refetch: refetchCollections } = useCollections({
-    enabled: false,
-    detailed: true
-  })
+  const { refetch: refetchCollections } = useCollections({ enabled: false })
 
   const { refetch: refetchDocuments } = useGetDocuments({
     enabled: false,
@@ -93,7 +89,9 @@ export default function NewCollection() {
 
   const mutation = useCreateCommit()
 
-  const rebuildMetadata = useRebuildMetadata()
+  const rebuildMetadata = useRebuildMetadata({
+    collectionPath: path
+  })
 
   const onSubmit = async ({ name }: z.infer<typeof createCollectionSchema>) => {
     setLoading(true)
@@ -105,46 +103,48 @@ export default function NewCollection() {
         fetchOid()
       ])
       const owner = repoOwner || session?.user?.login || ''
-      const collection = slugify(name, { allowedChars: 'a-zA-Z0-9' })
+      const slug = slugify(name, { allowedChars: 'a-zA-Z0-9.' })
 
       if (!oid) {
         throw new Error('Failed to fetch oid')
       }
 
-      if (!collectionsJson.data || !collectionsJson?.data?.fullData) {
+      if (!collectionsJson.data) {
         throw new Error('Failed to fetch collections')
       }
 
-      const { collections, fullData } = collectionsJson.data
+      const collections = collectionsJson.data
 
-      if (collections.includes(collection)) {
-        throw new Error(`${collection} already exists.`)
+      if (collections.find((col) => col.slug === slug)) {
+        throw new Error(`${slug} already exists.`)
       }
 
       let collectionPath = ''
 
-      if (!ostDetach || path === ostContent) {
-        collectionPath = `${ostContent}/${collection}`
+      if (path === ostContent) {
+        collectionPath = `${ostContent}/${slug}`
       } else if (createFolder) {
-        collectionPath = path ? `${path}/${collection}` : collection
+        collectionPath = path ? `${path}/${slug}` : slug
       } else {
         collectionPath = path
       }
 
-      fullData.push({
-        name: collection,
+      collections.push({
+        title: name,
+        slug,
         path: collectionPath,
         children: []
       })
 
-      const collectionJSON = {
-        title: collection,
+      const schemaJson = {
+        title: name,
+        slug,
         type: 'object',
         properties: {}
       }
 
       const commitApi = createCommitApi({
-        message: `feat(content): create ${collection}`,
+        message: `feat(content): create ${slug}`,
         owner,
         oid,
         name: repoSlug,
@@ -152,13 +152,13 @@ export default function NewCollection() {
       })
 
       commitApi.replaceFile(
-        `${ostContent}/${collection}/schema.json`,
-        JSON.stringify(collectionJSON, null, 2) + '\n'
+        `${ostContent}/${slug}/schema.json`,
+        JSON.stringify(schemaJson, null, 2) + '\n'
       )
 
       commitApi.replaceFile(
         `${ostContent}/collections.json`,
-        JSON.stringify(fullData, null, 2) + '\n'
+        JSON.stringify(collections, null, 2) + '\n'
       )
 
       if (createFolder) {
@@ -177,11 +177,7 @@ export default function NewCollection() {
             await refetchCollections()
             setLoading(false)
             setHasChanges(false)
-            router.push(
-              `${dashboardRoute}/${slugify(collection, {
-                allowedChars: 'a-zA-Z0-9'
-              })}`
-            )
+            router.push(`${dashboardRoute}/${slug})}`)
           }
 
           if (data?.documents && data.documents.length > 0) {
@@ -369,7 +365,16 @@ export default function NewCollection() {
                     <Button variant="outline" onClick={() => setStep(1)}>
                       Back
                     </Button>
-                    <Button onClick={() => setStep(3)}>Next</Button>
+                    <Button
+                      onClick={() => {
+                        const name = capitalCase(path.split('/').pop() || '')
+                        setCollectionName(name)
+                        form.setValue('name', name)
+                        setStep(3)
+                      }}
+                    >
+                      Next
+                    </Button>
                   </div>
                 </div>
               )}
@@ -413,9 +418,19 @@ export default function NewCollection() {
                         <Checkbox
                           id="create-folder"
                           checked={createFolder}
-                          onCheckedChange={(checked) =>
+                          onCheckedChange={(checked) => {
+                            if (checked) {
+                              form.setValue('name', '')
+                              setCollectionName('')
+                            } else {
+                              const name = capitalCase(
+                                path.split('/').pop() || ''
+                              )
+                              form.setValue('name', name)
+                              setCollectionName(name)
+                            }
                             setCreateFolder(checked as boolean)
-                          }
+                          }}
                         />
                         <Label htmlFor="create-folder">
                           Create a new folder
@@ -427,23 +442,33 @@ export default function NewCollection() {
                         outstaticFolder
                           ? ostContent +
                             '/' +
-                            kebabCase(
-                              form.getValues('name') || 'your-collection'
+                            slugify(
+                              form.getValues('name') || 'your-collection',
+                              { allowedChars: 'a-zA-Z0-9.' }
                             )
                           : createFolder
                           ? '/' +
                             (path ? path + '/' : '') +
-                            kebabCase(
-                              form.getValues('name') || 'your-collection'
+                            slugify(
+                              form.getValues('name') || 'your-collection',
+                              { allowedChars: 'a-zA-Z0-9.' }
                             )
                           : '/' + path
                       }
                     />
+                    <FormDescription>
+                      The path in your repository where your md(x) files will be
+                      stored.
+                    </FormDescription>
                   </div>
                   <div className="flex justify-between w-full pt-4">
                     <Button
                       variant="outline"
-                      onClick={() => setStep(outstaticFolder ? 1 : 2)}
+                      onClick={() => {
+                        setStep(outstaticFolder ? 1 : 2)
+                        setPath('')
+                        form.setValue('name', '')
+                      }}
                     >
                       Back
                     </Button>

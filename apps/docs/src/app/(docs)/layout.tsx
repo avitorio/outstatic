@@ -49,7 +49,7 @@ export default function RootLayout({
           />
         ) : null}
       </head>
-      <body id="outstatic" className="bg-background">
+      <body id="outstatic" className="bg-background relative">
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

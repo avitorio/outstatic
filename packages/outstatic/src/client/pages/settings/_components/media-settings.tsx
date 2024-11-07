@@ -36,7 +36,7 @@ type MediaSettingsProps =
   | Record<string, never>
 
 export function MediaSettings(props: MediaSettingsProps) {
-  const onSettingsUpdate = props.onSettingsUpdate || (() => {})
+  const onSettingsUpdate = props.onSettingsUpdate ?? (() => {})
   const [loading, setLoading] = useState(false)
   const [showConfirmModal, setShowConfirmModal] = useState(false)
   const { data: config, isPending } = useGetConfig()
@@ -60,7 +60,7 @@ export function MediaSettings(props: MediaSettingsProps) {
     if (!config) {
       onSubmit({
         configFields: form.getValues(),
-        callbackFunction: onSettingsUpdate
+        callbackFunction: () => onSettingsUpdate()
       })
     } else {
       setShowConfirmModal(true)
@@ -71,7 +71,7 @@ export function MediaSettings(props: MediaSettingsProps) {
     setShowConfirmModal(false)
     onSubmit({
       configFields: form.getValues(),
-      callbackFunction: onSettingsUpdate
+      callbackFunction: () => onSettingsUpdate()
     })
   }
 
@@ -151,14 +151,7 @@ export function MediaSettings(props: MediaSettingsProps) {
               </FormItem>
             )}
           />
-          <Button
-            disabled={
-              loading ||
-              (form.getValues('publicMediaPath') === config?.publicMediaPath &&
-                form.getValues('repoMediaPath') === config?.repoMediaPath)
-            }
-            type="submit"
-          >
+          <Button disabled={loading} type="submit">
             Update Media Paths
           </Button>
         </form>
@@ -203,26 +196,34 @@ export function MediaSettings(props: MediaSettingsProps) {
           <DialogHeader>
             <DialogTitle>Are you absolutely sure?</DialogTitle>
             <DialogDescription>
-              <p className="mb-2 mt-4">
+              <span className="mb-2 mt-4">
                 Future media uploads will be stored at:
-              </p>
-              <p className="mb-2 mt-4">
+              </span>{' '}
+              <br />
+              <span className="mb-2 mt-4">
                 <span className="font-medium">
                   github.com/{repoOwner}/{repoSlug}/
                   {form.getValues('repoMediaPath')}
-                </span>
-              </p>
-              <p className="mb-2 mt-4">
+                </span>{' '}
+                <br />
+              </span>{' '}
+              <br />
+              <span className="mb-2 mt-4">
                 Future documents will show your media as:
-              </p>
-              <p className="mb-2 mt-4 font-medium">
+              </span>{' '}
+              <br />
+              <span className="mb-2 mt-4 font-medium">
                 /{form.getValues('publicMediaPath')}image-example.png
-              </p>
-              <p className="mt-4">
+              </span>{' '}
+              <br />
+              <br />
+              <span className="mt-4">
                 <span className="text-destructive font-medium">
                   Existing documents and media will NOT be updated.
-                </span>
-              </p>
+                </span>{' '}
+                <br />
+              </span>{' '}
+              <br />
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>

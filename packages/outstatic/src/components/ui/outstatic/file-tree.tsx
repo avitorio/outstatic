@@ -7,6 +7,7 @@ import { cn } from '@/utils/ui'
 import { ChevronRight, Loader2, type LucideIcon } from 'lucide-react'
 import useResizeObserver from 'use-resize-observer'
 import { ScrollArea } from '@/components/ui/shadcn/scroll-area'
+import { SpinnerIcon } from './spinner-icon'
 
 interface TreeDataItem {
   id: string
@@ -100,11 +101,12 @@ const Tree = React.forwardRef<HTMLDivElement, TreeProps>(
                 expandedItemIds={expandedItemIds}
                 FolderIcon={folderIcon}
                 ItemIcon={itemIcon}
+                isPending={isPending}
                 {...props}
               />
             ) : (
               <div className="h-64 w-full flex items-center justify-center">
-                <Loader2 className="h-4 w-4 animate-spin" />
+                <SpinnerIcon />
               </div>
             )}
           </div>
@@ -122,6 +124,7 @@ type TreeItemProps = TreeProps & {
   expandedItemIds: string[]
   FolderIcon?: LucideIcon
   ItemIcon?: LucideIcon
+  isPending?: boolean
 }
 
 const TreeItem = React.forwardRef<HTMLDivElement, TreeItemProps>(
@@ -134,6 +137,7 @@ const TreeItem = React.forwardRef<HTMLDivElement, TreeItemProps>(
       expandedItemIds,
       FolderIcon,
       ItemIcon,
+      isPending,
       ...props
     },
     ref
@@ -152,7 +156,7 @@ const TreeItem = React.forwardRef<HTMLDivElement, TreeItemProps>(
                     <AccordionPrimitive.Item value={item.id}>
                       <AccordionTrigger
                         className={cn(
-                          'px-2 hover:before:opacity-100 before:absolute before:left-0 before:w-full before:opacity-0 before:bg-muted/80 before:h-[1.75rem] before:-z-10',
+                          'px-2 hover:before:opacity-100 before:absolute before:left-0 before:w-full before:opacity-0 before:bg-muted/80 before:h-[2.25rem] before:-z-10',
                           selectedItemId === item.id &&
                             'before:opacity-100 before:bg-accent text-accent-foreground before:border-l-2 before:border-l-accent-foreground/50 dark:before:border-0 bg-secondary'
                         )}
@@ -170,7 +174,12 @@ const TreeItem = React.forwardRef<HTMLDivElement, TreeItemProps>(
                             aria-hidden="true"
                           />
                         )}
-                        <span className="text-sm truncate">{item.name}</span>
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm truncate">{item.name}</span>
+                          {isPending && selectedItemId === item.id && (
+                            <SpinnerIcon className="h-3 w-3 animate-spin" />
+                          )}
+                        </div>
                       </AccordionTrigger>
                       <AccordionContent className="pl-6">
                         <TreeItem
@@ -180,6 +189,7 @@ const TreeItem = React.forwardRef<HTMLDivElement, TreeItemProps>(
                           expandedItemIds={expandedItemIds}
                           FolderIcon={FolderIcon}
                           ItemIcon={ItemIcon}
+                          isPending={isPending}
                         />
                       </AccordionContent>
                     </AccordionPrimitive.Item>
@@ -225,7 +235,7 @@ const Leaf = React.forwardRef<
       ref={ref}
       className={cn(
         'flex items-center py-2 px-2 cursor-pointer \
-        hover:before:opacity-100 before:absolute before:left-0 before:right-1 before:w-full before:opacity-0 before:bg-muted/80 before:h-[1.75rem] before:-z-10',
+        hover:before:opacity-100 before:absolute before:left-0 before:right-1 before:w-full before:opacity-0 before:bg-muted/80 before:h-[2.25rem] before:-z-10',
         className,
         isSelected &&
           'before:opacity-100 before:bg-accent text-accent-foreground before:border-l-2 before:border-l-accent-foreground/50 dark:before:border-0 bg-secondary'

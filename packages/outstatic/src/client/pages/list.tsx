@@ -12,14 +12,14 @@ import Link from 'next/link'
 import { singular } from 'pluralize'
 import useOutstatic from '@/utils/hooks/useOutstatic'
 import LineBackground from '@/components/ui/outstatic/line-background'
-import { sentenceCase } from 'change-case'
 import { redirect } from 'next/navigation'
 
 type ListProps = {
-  collection: string
+  slug: string
+  title: string
 }
 
-export default function List({ collection }: ListProps) {
+export default function List({ slug, title }: ListProps) {
   const { data, isError, isPending } = useGetDocuments()
   const { dashboardRoute } = useOutstatic()
 
@@ -29,12 +29,12 @@ export default function List({ collection }: ListProps) {
   }
 
   return (
-    <AdminLayout title={sentenceCase(collection)}>
-      <div className="mb-8 flex h-12 items-center capitalize">
-        <h1 className="mr-12 text-2xl">{sentenceCase(collection)}</h1>
+    <AdminLayout title={title}>
+      <div className="mb-8 flex h-12 items-center">
+        <h1 className="mr-12 text-2xl">{title}</h1>
         <Button asChild>
-          <Link href={`${dashboardRoute}/${collection}/new`}>
-            New {singular(sentenceCase(collection))}
+          <Link href={`${dashboardRoute}/${slug}/new`}>
+            New {singular(title)}
           </Link>
         </Button>
       </div>
@@ -54,7 +54,7 @@ export default function List({ collection }: ListProps) {
                 <p>
                   Create your first{' '}
                   <span className="capitalize font-semibold">
-                    {singular(sentenceCase(collection))}
+                    {singular(title)}
                   </span>{' '}
                   by clicking the button below.
                 </p>
@@ -62,10 +62,10 @@ export default function List({ collection }: ListProps) {
                 <div>
                   <Button asChild>
                     <Link
-                      href={`${dashboardRoute}/${collection}/new`}
+                      href={`${dashboardRoute}/${slug}/new`}
                       className="no-underline capitalize"
                     >
-                      New {singular(sentenceCase(collection))}
+                      New {singular(title)}
                     </Link>
                   </Button>
                 </div>

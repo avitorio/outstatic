@@ -29,6 +29,7 @@ import {
   MetadataType
 } from '../metadata/types'
 import { useCollections } from './useCollections'
+import { toast } from 'sonner'
 
 type SubmitDocumentProps = {
   session: Session | null
@@ -80,16 +81,9 @@ function useSubmitDocument({
   let media: MediaItem[] = []
 
   const { refetch: refetchSchema } = useGetCollectionSchema({ enabled: false })
-  const { refetch: refetchMetadata } = useGetMetadata({
-    enabled: false
-  })
-  const { refetch: refetchMedia } = useGetMediaFiles({
-    enabled: false
-  })
-  const { refetch: refetchCollections } = useCollections({
-    enabled: false,
-    detailed: true
-  })
+  const { refetch: refetchMetadata } = useGetMetadata({ enabled: false })
+  const { refetch: refetchMedia } = useGetMediaFiles({ enabled: false })
+  const { refetch: refetchCollections } = useCollections({ enabled: false })
 
   const onSubmit = useCallback(
     async (data: Document) => {
@@ -111,19 +105,18 @@ function useSubmitDocument({
         }
 
         const collectionPath =
-          collections?.fullData?.find(
-            (collectionInfo) => collectionInfo.name === collection
+          collections?.find(
+            (collectionInfo) => collectionInfo.slug === collection
           )?.path + '/'
 
         const document = methods.getValues()
         const mdContent = editor.storage.markdown.getMarkdown()
-
-        let content = mergeMdMeta(
-          { ...documentMetadata, ...data, content: mdContent },
+        let content = mergeMdMeta({
+          data: { ...documentMetadata, ...data, content: mdContent },
           basePath,
-          `${repoOwner}/${repoSlug}/${repoBranch}/${repoMediaPath}`,
+          repoInfo: `${repoOwner}/${repoSlug}/${repoBranch}/${repoMediaPath}`,
           publicMediaPath
-        )
+        })
         const oid = await fetchOid()
         const owner = repoOwner || session?.user?.login || ''
         const newSlug = document.slug
@@ -158,9 +151,7 @@ function useSubmitDocument({
                 .replace(/(\.[^\.]*)?$/, `-${randString}$1`)
 
               capi.replaceFile(
-                `${
-                  monorepoPath ? monorepoPath + '/' : ''
-                }${repoMediaPath}${newFilename}`,
+                `${repoMediaPath}${newFilename}`,
                 fileContents,
                 false
               )
@@ -169,9 +160,7 @@ function useSubmitDocument({
                 __outstatic: {
                   hash: `${MurmurHash3(fileContents).result()}`,
                   commit: '',
-                  path: `${
-                    monorepoPath ? monorepoPath + '/' : ''
-                  }${repoMediaPath}${newFilename}`
+                  path: `${repoMediaPath}${newFilename}`
                 },
                 filename: newFilename,
                 type: type,
@@ -182,7 +171,7 @@ function useSubmitDocument({
               // replace blob in content with path
               content = content.replace(
                 blob,
-                `${basePath}/${publicMediaPath}${newFilename}`
+                `/${publicMediaPath}${newFilename}`
               )
             }
           })
@@ -303,7 +292,12 @@ function useSubmitDocument({
 
         const input = capi.createInput()
 
-        createCommit.mutate(input)
+        toast.promise(createCommit.mutateAsync(input), {
+          loading: 'Saving changes...',
+          success: 'Changes saved successfully!',
+          error: 'Failed to save changes'
+        })
+
         setLoading(false)
         setHasChanges(false)
         setSlug(newSlug)

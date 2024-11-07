@@ -77,7 +77,7 @@ export const OstClient = ({ ostData, params }: OstClientProps) => {
 
   return (
     <InitialDataContext.Provider value={ostData}>
-      <Toaster richColors />
+      <Toaster />
       <QueryClientProvider client={queryClient}>
         <NavigationGuardProvider>
           <AdminArea params={params} />

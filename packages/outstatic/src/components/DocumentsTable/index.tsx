@@ -127,10 +127,7 @@ const DocumentsTable = () => {
                 >
                   <tr className="border-b bg-white hover:bg-gray-50 cursor-pointer">
                     {columns.map((column) => {
-                      return cellSwitch(
-                        column.value,
-                        document
-                      )
+                      return cellSwitch(column.value, document)
                     })}
                     <td
                       className="pr-6 py-4 text-right"

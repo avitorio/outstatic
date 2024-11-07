@@ -1,13 +1,13 @@
 ---
-title: 'Docs Menu'
-status: 'published'
+title: "Latest Menu"
+status: "published"
 author:
-  name: 'Andre Vitorio'
-  picture: 'https://avatars.githubusercontent.com/u/1417109?v=4'
-slug: 'docs-menu'
-description: ''
-coverImage: ''
-publishedAt: '2024-03-16T15:18:37.000Z'
+  name: "Andre Vitorio"
+  picture: "https://avatars.githubusercontent.com/u/1417109?v=4"
+slug: "latest-menu"
+description: ""
+coverImage: ""
+publishedAt: "2024-11-06T03:00:00.000Z"
 ---
 
 - [Introduction](/introduction)
@@ -16,7 +16,7 @@ publishedAt: '2024-03-16T15:18:37.000Z'
 
 - [Getting started](/getting-started)
 
-  - [Deploy with Vercel](/getting-started#deploy-with-vercel)
+  - [Deploy with Vercel](/deploy-a-starter-outstatic-website-on-vercel)
 
   - [Add to Next.js](/getting-started#adding-outstatic-to-a-nextjs-website)
 
@@ -26,7 +26,7 @@ publishedAt: '2024-03-16T15:18:37.000Z'
 
 - [The Content Editor](/the-content-editor)
 
-  - [AI Completion 🤖 ](/the-content-editor#ai-completion)
+  - [AI Completion 🤖](/the-content-editor#ai-completion)
 
 - [Fetching data](/fetching-data)
 

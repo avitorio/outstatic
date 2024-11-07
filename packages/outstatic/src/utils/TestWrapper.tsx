@@ -8,6 +8,7 @@ import { Document, DocumentContextType } from '@/types'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { Editor, useEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
+import { NavigationGuardProvider } from 'next-navigation-guard'
 import { ReactNode } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 
@@ -155,6 +156,14 @@ const TestFormProvider = ({ children }: { children: React.ReactNode }) => {
   return <FormProvider {...formMethods}>{children}</FormProvider>
 }
 
+const TestNavigationGuardProvider = ({
+  children
+}: {
+  children: React.ReactNode
+}) => {
+  return <NavigationGuardProvider>{children}</NavigationGuardProvider>
+}
+
 export const TestWrapper = (props: { children: ReactNode }) => (
   <TestProviders.ReactQuery>
     <TestProviders.DocumentContext>
@@ -166,5 +175,6 @@ export const TestWrapper = (props: { children: ReactNode }) => (
 export const TestProviders = {
   ReactQuery: TestReactQueryProvider,
   DocumentContext: TestDocumentContextProvider,
-  Form: TestFormProvider
+  Form: TestFormProvider,
+  NavigationGuard: TestNavigationGuardProvider
 }

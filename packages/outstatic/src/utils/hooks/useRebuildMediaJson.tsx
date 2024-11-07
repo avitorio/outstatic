@@ -78,13 +78,16 @@ export const useRebuildMediaJson = () => {
               return
             }
 
-            return toast.promise(processFiles(files, onComplete), {
-              id: toastId,
-              duration: 4000,
-              loading: `Processing files...`,
-              success: 'Files processed successfully',
-              error: 'Error processing files'
-            })
+            return toast.promise(
+              processFiles(files, () => onComplete?.()),
+              {
+                id: toastId,
+                duration: 4000,
+                loading: `Processing files...`,
+                success: 'Files processed successfully',
+                error: 'Error processing files'
+              }
+            )
           }),
           {
             loading: 'Fetching image files...',

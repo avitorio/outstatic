@@ -64,6 +64,25 @@
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
     --ring: 212.7 26.8% 83.9%;
+    --radius: 0.5rem;
+    --prose-body: 0 0% 79%;
+    --prose-headings: 222 17% 11%;
+    --prose-lead: 220 9% 35%;
+    --prose-links: 220 39% 84%;
+    --prose-bold: 0 0% 87%;
+    --prose-counters: 220 10% 46%;
+    --prose-bullets: 220 13% 84%;
+    --prose-hr: 220 13% 91%;
+    --prose-quotes: 222 17% 11%;
+    --prose-quote-borders: 220 13% 91%;
+    --prose-captions: 220 10% 46%;
+    --prose-kbd: 222 17% 11%;
+    --prose-kbd-shadows: 222 38% 11%;
+    --prose-code: 222 17% 11%;
+    --prose-pre-code: 220 13% 91%;
+    --prose-pre-bg: 222 19% 16%;
+    --prose-th-borders: 220 13% 84%;
+    --prose-td-borders: 220 13% 91%;
   }
 
   body {

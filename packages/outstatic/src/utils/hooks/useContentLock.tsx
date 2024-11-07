@@ -6,7 +6,9 @@ export const useContentLock = () => {
   useNavigationGuard({
     enabled: hasChanges,
     confirm: () => {
-      const confirmed = window.confirm('Leaving?')
+      const confirmed = window.confirm(
+        'You have unsaved changes. Are you sure you want to leave?'
+      )
 
       if (!confirmed) {
         window.history.pushState(null, '', window.location.href)

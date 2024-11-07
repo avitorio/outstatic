@@ -17,7 +17,7 @@
     "preinstall": "npx only-allow pnpm",
     "test": "turbo run test",
     "typecheck": "turbo run typecheck",
-    "prepublish": "pnpm typecheck && pnpm test && pnpm build --filter='!outstatic-blog-example'"
+    "prepublish": "pnpm typecheck && pnpm test && pnpm build --filter='!outstatic-basic-blog'"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.1",
