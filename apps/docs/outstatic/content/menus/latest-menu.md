@@ -10,19 +10,19 @@ coverImage: ""
 publishedAt: "2024-11-06T03:00:00.000Z"
 ---
 
+- [Upgrading to v1.5](/upgrading-to-v1.5)
+
 - [Introduction](/introduction)
 
   - [How does Outstatic work?](/introduction#how-does-outstatic-work)
 
 - [Getting started](/getting-started)
 
-  - [Deploy with Vercel](/deploy-a-starter-outstatic-website-on-vercel)
+  - [Deploy a starter website](/deploy-a-starter-outstatic-website-on-vercel)
 
-  - [Add to Next.js](/getting-started#adding-outstatic-to-a-nextjs-website)
+  - [Use on any GitHub repository](/using-outstatic-for-markdown-content)
 
-  - [Local Development](/local-development)
-
-  - [Migrating to v1](/migrating-to-v1)
+  - [Add to a Next.js project](/getting-started-with-next-js)
 
 - [The Content Editor](/the-content-editor)
 
@@ -36,10 +36,8 @@ publishedAt: "2024-11-06T03:00:00.000Z"
 
 - [FAQs](/faqs)
 
-  - [How do I add Outstatic to a Next.js Markdown blog?](/faqs#i-already-have-a-nextjs-markdown-blog-how-do-i-start-using-outstatic)
+- [Troubleshooting](/troubleshooting)
 
-  - [Where is data stored?](/faqs#where-is-the-data-stored)
+- [License](/license)
 
-  - [Do I need Vercel?](/faqs#can-i-host-my-outstatic-website-on-a-provider-other-than-vercel)
-
-  - [Troubleshooting Login and Repository Access Issues](/faqs#troubleshooting-login-and-repository-access-issues)
+- [Credits](/credits)

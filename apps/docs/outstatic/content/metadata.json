@@ -1,6 +1,6 @@
 {
-  "commit": "4084efd76b355f6d156c4d8db5993c37aa928bd7",
-  "generated": "2024-11-06T19:36:28.097Z",
+  "commit": "9559d9e7c176465bd4e0a029946a868b41519636",
+  "generated": "2024-11-07T20:46:56.951Z",
   "metadata": [
     {
       "__outstatic": {
@@ -22,24 +22,6 @@
     },
     {
       "__outstatic": {
-        "commit": "c48cf124ed0f8d6e4258bf23a91c592335274eda",
-        "hash": "3154867915",
-        "path": "/outstatic/content/docs/faqs.md"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "docs",
-      "coverImage": "",
-      "description": "",
-      "publishedAt": "2024-10-30T03:00:00.000Z",
-      "slug": "faqs",
-      "status": "published",
-      "title": "FAQs"
-    },
-    {
-      "__outstatic": {
         "commit": "c669eda5b3b6e14df0d76236613ff8b319c667ab",
         "hash": "76324923",
         "path": "/outstatic/content/docs/environment-variables.md"
@@ -58,58 +40,6 @@
     },
     {
       "__outstatic": {
-        "commit": "fac2262cecb49160d52a2a3a68dc0718875bf879",
-        "hash": "1678583174",
-        "path": "/outstatic/content/docs/fetching-data.md"
-      },
-      "author": {
-        "name": "Jakob Heuser",
-        "picture": "https://avatars.githubusercontent.com/u/1795?v=4"
-      },
-      "collection": "docs",
-      "coverImage": "",
-      "description": "",
-      "publishedAt": "2023-07-25T12:28:25.000Z",
-      "slug": "fetching-data",
-      "status": "published",
-      "title": "Fetching data"
-    },
-    {
-      "__outstatic": {
-        "commit": "9b161ff1bcbd1733cbe29cee44b712f38ee6e8a4",
-        "hash": "1514577549",
-        "path": "/outstatic/content/docs/getting-started-with-next-js.mdx"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "docs",
-      "publishedAt": "2024-10-30T13:20:54.632Z",
-      "slug": "getting-started-with-next-js",
-      "status": "draft",
-      "title": "Getting started with Next.js"
-    },
-    {
-      "__outstatic": {
-        "commit": "236b30a2eaa4e5335fbd02615160b41871a15bb6",
-        "hash": "85927068",
-        "path": "/outstatic/content/docs/migrating-to-v1.md"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "docs",
-      "coverImage": "",
-      "description": "Migrating Outstatic to >v1.0.0",
-      "publishedAt": "2023-11-11T18:59:51.912Z",
-      "slug": "migrating-to-v1",
-      "status": "published",
-      "title": "Migrating to v1"
-    },
-    {
-      "__outstatic": {
         "commit": "5b338ea37847338e26cf47e2c2c6fd85105b3d0a",
         "hash": "191850098",
         "path": "/outstatic/content/docs/local-development.md"
@@ -125,24 +55,6 @@
       "slug": "local-development",
       "status": "published",
       "title": "Local Development"
-    },
-    {
-      "__outstatic": {
-        "commit": "a2930e120ae16484574ff91c62cc3cdb45aa929f",
-        "hash": "815659760",
-        "path": "/outstatic/content/docs/introduction.md"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "docs",
-      "coverImage": "",
-      "description": "",
-      "publishedAt": "2024-10-30T03:00:00.000Z",
-      "slug": "introduction",
-      "status": "published",
-      "title": "Introduction"
     },
     {
       "__outstatic": {
@@ -179,24 +91,6 @@
       "slug": "custom-fields",
       "status": "published",
       "title": "Custom Fields"
-    },
-    {
-      "__outstatic": {
-        "commit": "ba6e1a2d196dc858a4284926a89ba7f81b43817d",
-        "hash": "255025884",
-        "path": "/outstatic/content/docs/using-with-next-js-12.md"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "docs",
-      "coverImage": "",
-      "description": "",
-      "publishedAt": "2023-09-12T11:50:07.653Z",
-      "slug": "using-with-next-js-12",
-      "status": "published",
-      "title": "Using with Next.js 12"
     },
     {
       "__outstatic": {
@@ -326,24 +220,6 @@
     },
     {
       "__outstatic": {
-        "commit": "236b30a2eaa4e5335fbd02615160b41871a15bb6",
-        "hash": "85927068",
-        "path": "/outstatic/content/v1.4/migrating-to-v1.md"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "v1.4",
-      "coverImage": "",
-      "description": "Migrating Outstatic to >v1.0.0",
-      "publishedAt": "2023-11-11T18:59:51.912Z",
-      "slug": "migrating-to-v1",
-      "status": "published",
-      "title": "Migrating to v1"
-    },
-    {
-      "__outstatic": {
         "commit": "fff9ad582aa8120c7097c1004319f5d61cf87890",
         "hash": "2229548952",
         "path": "/outstatic/content/v1.4/introduction.md"
@@ -359,40 +235,6 @@
       "slug": "introduction",
       "status": "published",
       "title": "Introduction"
-    },
-    {
-      "__outstatic": {
-        "commit": "ba6e1a2d196dc858a4284926a89ba7f81b43817d",
-        "hash": "255025884",
-        "path": "/outstatic/content/v1.4/using-with-next-js-12.md"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "v1.4",
-      "coverImage": "",
-      "description": "",
-      "publishedAt": "2023-09-12T11:50:07.653Z",
-      "slug": "using-with-next-js-12",
-      "status": "published",
-      "title": "Using with Next.js 12"
-    },
-    {
-      "__outstatic": {
-        "commit": "1b7f02fe4d5422349a092cd515dbc1b6acf8728d",
-        "hash": "4248435132",
-        "path": "apps/docs/outstatic/content/docs/using-outstatic-for-markdown-content.mdx"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "docs",
-      "publishedAt": "2024-10-30T18:53:46.596Z",
-      "slug": "using-outstatic-for-markdown-content",
-      "status": "draft",
-      "title": "Using Outstatic for Markdown content"
     },
     {
       "__outstatic": {
@@ -446,8 +288,160 @@
     },
     {
       "__outstatic": {
-        "commit": "175793305e13a491f06bb4c02c96865e4dd41b3f",
-        "hash": "883492621",
+        "commit": "a21959ee5a322a9f1e382bafa81c1cb73796e464",
+        "hash": "2537083088",
+        "path": "apps/docs/outstatic/content/docs/introduction.md"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "coverImage": "",
+      "description": "",
+      "publishedAt": "2024-10-30T03:00:00.000Z",
+      "slug": "introduction",
+      "status": "published",
+      "title": "Introduction"
+    },
+    {
+      "__outstatic": {
+        "commit": "bf3089b37e61df74ecdd6fdd43d93e1b4294efea",
+        "hash": "3858787842",
+        "path": "apps/docs/outstatic/content/docs/license.mdx"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "publishedAt": "2024-11-07T14:13:38.050Z",
+      "slug": "license",
+      "status": "published",
+      "title": "License"
+    },
+    {
+      "__outstatic": {
+        "commit": "a2b6dcdc2c5bd082584564ec1ef1cf697ad784df",
+        "hash": "976497181",
+        "path": "apps/docs/outstatic/content/docs/credits.mdx"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "publishedAt": "2024-11-07T17:57:27.073Z",
+      "slug": "credits",
+      "status": "published",
+      "title": "Credits"
+    },
+    {
+      "__outstatic": {
+        "commit": "56a6bae717f16915dd44601ea5e430f1ddfc6860",
+        "hash": "819262720",
+        "path": "apps/docs/outstatic/content/docs/fetching-data.md"
+      },
+      "author": {
+        "name": "Jakob Heuser",
+        "picture": "https://avatars.githubusercontent.com/u/1795?v=4"
+      },
+      "collection": "docs",
+      "coverImage": "",
+      "description": "",
+      "publishedAt": "2024-11-07T03:00:00.000Z",
+      "slug": "fetching-data",
+      "status": "published",
+      "title": "Fetching data"
+    },
+    {
+      "__outstatic": {
+        "commit": "ec3d74a067530032ce99f67d729a05c764269e98",
+        "hash": "447026549",
+        "path": "apps/docs/outstatic/content/docs/getting-started-with-next-js.mdx"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "publishedAt": "2024-10-30T13:20:54.632Z",
+      "slug": "getting-started-with-next-js",
+      "status": "published",
+      "title": "Getting started with Next.js"
+    },
+    {
+      "__outstatic": {
+        "commit": "c836b6a674a625303b24d345020e62d92eaf51fb",
+        "hash": "2691028132",
+        "path": "apps/docs/outstatic/content/docs/troubleshooting.mdx"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "publishedAt": "2024-11-07T18:25:21.452Z",
+      "slug": "troubleshooting",
+      "status": "published",
+      "title": "Troubleshooting and Common Errors"
+    },
+    {
+      "__outstatic": {
+        "commit": "9c35b9150583a0053899d7f57910b278ca1c48a5",
+        "hash": "4212494313",
+        "path": "apps/docs/outstatic/content/docs/faqs.md"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "coverImage": "",
+      "description": "",
+      "publishedAt": "2024-10-30T03:00:00.000Z",
+      "slug": "faqs",
+      "status": "published",
+      "title": "FAQs"
+    },
+    {
+      "__outstatic": {
+        "commit": "73826809ee882458039f2fcc18b195f3f4a22bb5",
+        "hash": "346200532",
+        "path": "apps/docs/outstatic/content/docs/getting-started.md"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "coverImage": "",
+      "description": "Get started with Outstatic",
+      "publishedAt": "2024-10-30T03:00:00.000Z",
+      "slug": "getting-started",
+      "status": "published",
+      "title": "Getting started"
+    },
+    {
+      "__outstatic": {
+        "commit": "c871fea662680adb332f7cd65142cd9941aa106b",
+        "hash": "2337295835",
+        "path": "apps/docs/outstatic/content/docs/using-outstatic-for-markdown-content.mdx"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "publishedAt": "2024-10-30T18:53:46.596Z",
+      "slug": "using-outstatic-for-markdown-content",
+      "status": "published",
+      "title": "Using Outstatic for Markdown content"
+    },
+    {
+      "__outstatic": {
+        "commit": "6fb505f69f25e8ac78433e627fcd6110c18ba616",
+        "hash": "524572335",
         "path": "apps/docs/outstatic/content/menus/latest-menu.md"
       },
       "author": {
@@ -464,21 +458,19 @@
     },
     {
       "__outstatic": {
-        "commit": "4084efd76b355f6d156c4d8db5993c37aa928bd7",
-        "hash": "3301043997",
-        "path": "apps/docs/outstatic/content/docs/getting-started.md"
+        "commit": "314ee4fe52a978ac65424a1ca734418387408b4a",
+        "hash": "1688915829",
+        "path": "apps/docs/outstatic/content/docs/upgrading-to-v1.5.mdx"
       },
       "author": {
         "name": "Andre Vitorio",
         "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
       },
       "collection": "docs",
-      "coverImage": "",
-      "description": "Get started with Outstatic",
-      "publishedAt": "2024-10-30T03:00:00.000Z",
-      "slug": "getting-started",
+      "publishedAt": "2024-11-07T19:56:08.302Z",
+      "slug": "upgrading-to-v1.5",
       "status": "published",
-      "title": "Getting started"
+      "title": "Upgrading to v1.5"
     }
   ]
 }

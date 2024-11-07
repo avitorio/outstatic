@@ -14,6 +14,7 @@ import Welcome from './welcome'
 import { useGetRepository } from '@/utils/hooks/useGetRepository'
 import Onboarding from './onboarding'
 import { NavigationGuardProvider } from 'next-navigation-guard'
+import V1_5BreakingCheck from '@/components/v1_5BreakingCheck'
 
 export const AdminArea = ({ params }: { params: { ost: string[] } }) => {
   const [openSidebar, setOpenSidebar] = useState(false)
@@ -83,6 +84,7 @@ export const OstClient = ({ ostData, params }: OstClientProps) => {
           <AdminArea params={params} />
         </NavigationGuardProvider>
       </QueryClientProvider>
+      <V1_5BreakingCheck />
     </InitialDataContext.Provider>
   )
 }

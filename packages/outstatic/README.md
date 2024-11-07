@@ -12,9 +12,6 @@
   <a aria-label="NPM version" href="https://www.npmjs.com/package/outstatic">
     <img alt="" src="https://img.shields.io/npm/v/outstatic?style=for-the-badge&labelColor=000000">
   </a>
-  <a aria-label="License" href="https://github.com/avitorio/outstatic/blob/main/license.md">
-    <img alt="" src="https://img.shields.io/npm/l/outstatic?style=for-the-badge&labelColor=000000">
-  </a>
 </p>
 
 https://user-images.githubusercontent.com/1417109/197012503-2378f951-c571-492c-a4d6-5e5bba4fae24.mp4
