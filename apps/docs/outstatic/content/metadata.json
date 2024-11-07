@@ -1,6 +1,6 @@
 {
-  "commit": "314ee4fe52a978ac65424a1ca734418387408b4a",
-  "generated": "2024-11-07T20:41:29.538Z",
+  "commit": "9559d9e7c176465bd4e0a029946a868b41519636",
+  "generated": "2024-11-07T20:46:56.951Z",
   "metadata": [
     {
       "__outstatic": {
@@ -37,24 +37,6 @@
       "slug": "environment-variables",
       "status": "published",
       "title": "Environment Variables"
-    },
-    {
-      "__outstatic": {
-        "commit": "236b30a2eaa4e5335fbd02615160b41871a15bb6",
-        "hash": "85927068",
-        "path": "/outstatic/content/docs/migrating-to-v1.md"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "docs",
-      "coverImage": "",
-      "description": "Migrating Outstatic to >v1.0.0",
-      "publishedAt": "2023-11-11T18:59:51.912Z",
-      "slug": "migrating-to-v1",
-      "status": "published",
-      "title": "Migrating to v1"
     },
     {
       "__outstatic": {
@@ -109,24 +91,6 @@
       "slug": "custom-fields",
       "status": "published",
       "title": "Custom Fields"
-    },
-    {
-      "__outstatic": {
-        "commit": "ba6e1a2d196dc858a4284926a89ba7f81b43817d",
-        "hash": "255025884",
-        "path": "/outstatic/content/docs/using-with-next-js-12.md"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "docs",
-      "coverImage": "",
-      "description": "",
-      "publishedAt": "2023-09-12T11:50:07.653Z",
-      "slug": "using-with-next-js-12",
-      "status": "published",
-      "title": "Using with Next.js 12"
     },
     {
       "__outstatic": {
@@ -256,24 +220,6 @@
     },
     {
       "__outstatic": {
-        "commit": "236b30a2eaa4e5335fbd02615160b41871a15bb6",
-        "hash": "85927068",
-        "path": "/outstatic/content/v1.4/migrating-to-v1.md"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "v1.4",
-      "coverImage": "",
-      "description": "Migrating Outstatic to >v1.0.0",
-      "publishedAt": "2023-11-11T18:59:51.912Z",
-      "slug": "migrating-to-v1",
-      "status": "published",
-      "title": "Migrating to v1"
-    },
-    {
-      "__outstatic": {
         "commit": "fff9ad582aa8120c7097c1004319f5d61cf87890",
         "hash": "2229548952",
         "path": "/outstatic/content/v1.4/introduction.md"
@@ -289,24 +235,6 @@
       "slug": "introduction",
       "status": "published",
       "title": "Introduction"
-    },
-    {
-      "__outstatic": {
-        "commit": "ba6e1a2d196dc858a4284926a89ba7f81b43817d",
-        "hash": "255025884",
-        "path": "/outstatic/content/v1.4/using-with-next-js-12.md"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "v1.4",
-      "coverImage": "",
-      "description": "",
-      "publishedAt": "2023-09-12T11:50:07.653Z",
-      "slug": "using-with-next-js-12",
-      "status": "published",
-      "title": "Using with Next.js 12"
     },
     {
       "__outstatic": {
