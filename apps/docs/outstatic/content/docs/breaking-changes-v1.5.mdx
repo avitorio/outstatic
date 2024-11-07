@@ -1,5 +1,5 @@
 ---
-title: "Breaking Changes (v1.5)"
+title: "Upgrading to v1.5"
 publishedAt: "2024-11-07T19:56:08.302Z"
 status: "published"
 author:
@@ -7,6 +7,8 @@ author:
   picture: "https://avatars.githubusercontent.com/u/1417109?v=4"
 slug: "breaking-changes-v1.5"
 ---
+
+### Styles
 
 We've added a few components which are styled using a `outstatic` css namespace (id).
 
@@ -23,3 +25,9 @@ export default function RootLayout({ children }) {
   )
 }
 ```
+
+### Media Files
+
+We are now using a **Media Gallery** page. You will have to set up a **Repo Media Path** and a **Public Media Path**. 
+
+It should work the same as before, but with the Media Gallery you will be able to easily reuse images you've already uploaded to your repository.
