@@ -1,6 +1,6 @@
 {
-  "commit": "56a6bae717f16915dd44601ea5e430f1ddfc6860",
-  "generated": "2024-11-07T18:31:30.315Z",
+  "commit": "ec3d74a067530032ce99f67d729a05c764269e98",
+  "generated": "2024-11-07T18:33:44.552Z",
   "metadata": [
     {
       "__outstatic": {
@@ -55,22 +55,6 @@
       "slug": "environment-variables",
       "status": "published",
       "title": "Environment Variables"
-    },
-    {
-      "__outstatic": {
-        "commit": "9b161ff1bcbd1733cbe29cee44b712f38ee6e8a4",
-        "hash": "1514577549",
-        "path": "/outstatic/content/docs/getting-started-with-next-js.mdx"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "docs",
-      "publishedAt": "2024-10-30T13:20:54.632Z",
-      "slug": "getting-started-with-next-js",
-      "status": "draft",
-      "title": "Getting started with Next.js"
     },
     {
       "__outstatic": {
@@ -511,6 +495,22 @@
       "slug": "fetching-data",
       "status": "published",
       "title": "Fetching data"
+    },
+    {
+      "__outstatic": {
+        "commit": "ec3d74a067530032ce99f67d729a05c764269e98",
+        "hash": "447026549",
+        "path": "apps/docs/outstatic/content/docs/getting-started-with-next-js.mdx"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "publishedAt": "2024-10-30T13:20:54.632Z",
+      "slug": "getting-started-with-next-js",
+      "status": "published",
+      "title": "Getting started with Next.js"
     }
   ]
 }
