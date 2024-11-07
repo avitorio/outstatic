@@ -1,6 +1,6 @@
 {
-  "commit": "c06c75619ce43a5981081cd9fc77cb7049eefde5",
-  "generated": "2024-11-07T18:45:47.620Z",
+  "commit": "73826809ee882458039f2fcc18b195f3f4a22bb5",
+  "generated": "2024-11-07T18:51:21.818Z",
   "metadata": [
     {
       "__outstatic": {
@@ -376,24 +376,6 @@
     },
     {
       "__outstatic": {
-        "commit": "4084efd76b355f6d156c4d8db5993c37aa928bd7",
-        "hash": "3301043997",
-        "path": "apps/docs/outstatic/content/docs/getting-started.md"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "docs",
-      "coverImage": "",
-      "description": "Get started with Outstatic",
-      "publishedAt": "2024-10-30T03:00:00.000Z",
-      "slug": "getting-started",
-      "status": "published",
-      "title": "Getting started"
-    },
-    {
-      "__outstatic": {
         "commit": "a21959ee5a322a9f1e382bafa81c1cb73796e464",
         "hash": "2537083088",
         "path": "apps/docs/outstatic/content/docs/introduction.md"
@@ -527,6 +509,24 @@
       "slug": "latest-menu",
       "status": "published",
       "title": "Latest Menu"
+    },
+    {
+      "__outstatic": {
+        "commit": "73826809ee882458039f2fcc18b195f3f4a22bb5",
+        "hash": "346200532",
+        "path": "apps/docs/outstatic/content/docs/getting-started.md"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "coverImage": "",
+      "description": "Get started with Outstatic",
+      "publishedAt": "2024-10-30T03:00:00.000Z",
+      "slug": "getting-started",
+      "status": "published",
+      "title": "Getting started"
     }
   ]
 }
