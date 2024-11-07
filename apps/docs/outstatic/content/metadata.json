@@ -1,6 +1,6 @@
 {
-  "commit": "50e798dd86a6af549d6b0cd6f47bc47b4a343f3b",
-  "generated": "2024-11-07T18:44:48.384Z",
+  "commit": "97f714531d06acf107fee1698afe48e2685ce9a9",
+  "generated": "2024-11-07T18:44:59.479Z",
   "metadata": [
     {
       "__outstatic": {
@@ -514,9 +514,9 @@
     },
     {
       "__outstatic": {
-        "commit": "50e798dd86a6af549d6b0cd6f47bc47b4a343f3b",
-        "hash": "3480511998",
-        "path": "apps/docs/outstatic/content/docs/troubleshooting-and-common-errors.mdx"
+        "commit": "97f714531d06acf107fee1698afe48e2685ce9a9",
+        "hash": "352345101",
+        "path": "apps/docs/outstatic/content/docs/troubleshooting.mdx"
       },
       "author": {
         "name": "Andre Vitorio",
@@ -524,7 +524,7 @@
       },
       "collection": "docs",
       "publishedAt": "2024-11-07T18:25:21.452Z",
-      "slug": "troubleshooting-and-common-errors",
+      "slug": "troubleshooting",
       "status": "draft",
       "title": "Troubleshooting and Common Errors"
     }
