@@ -205,3 +205,7 @@ article img {
   list-style: none;
   padding-left: 1rem;
 }
+
+.sidebar .prose > ul > li:has(> ul) {
+  margin-bottom: 1rem;
+}
