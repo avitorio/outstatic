@@ -44,8 +44,6 @@ export function getDocumentBySlug(
       return null
     }
 
-    console.log({ fullPath })
-
     const fileContents = fs.readFileSync(fullPath, 'utf8')
     const { data, content } = matter(fileContents)
 
