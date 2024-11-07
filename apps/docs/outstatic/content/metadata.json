@@ -1,6 +1,6 @@
 {
-  "commit": "75464ae3d8082fe0dacb4a326bc0297677843461",
-  "generated": "2024-11-07T18:12:16.242Z",
+  "commit": "bf3089b37e61df74ecdd6fdd43d93e1b4294efea",
+  "generated": "2024-11-07T18:13:25.542Z",
   "metadata": [
     {
       "__outstatic": {
@@ -482,8 +482,8 @@
     },
     {
       "__outstatic": {
-        "commit": "75464ae3d8082fe0dacb4a326bc0297677843461",
-        "hash": "95268258",
+        "commit": "bf3089b37e61df74ecdd6fdd43d93e1b4294efea",
+        "hash": "3858787842",
         "path": "apps/docs/outstatic/content/docs/license.mdx"
       },
       "author": {
@@ -493,7 +493,7 @@
       "collection": "docs",
       "publishedAt": "2024-11-07T14:13:38.050Z",
       "slug": "license",
-      "status": "draft",
+      "status": "published",
       "title": "License"
     }
   ]
