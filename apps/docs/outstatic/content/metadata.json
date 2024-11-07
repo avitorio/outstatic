@@ -1,6 +1,6 @@
 {
-  "commit": "9f1688f58d653e5fedf36a386d072ded01f2c194",
-  "generated": "2024-11-07T18:14:49.502Z",
+  "commit": "47307fa83a8d7b4a3b23128bf9159f86d29b5d58",
+  "generated": "2024-11-07T18:24:04.229Z",
   "metadata": [
     {
       "__outstatic": {
@@ -495,6 +495,22 @@
       "slug": "latest-menu",
       "status": "published",
       "title": "Latest Menu"
+    },
+    {
+      "__outstatic": {
+        "commit": "47307fa83a8d7b4a3b23128bf9159f86d29b5d58",
+        "hash": "3294069537",
+        "path": "apps/docs/outstatic/content/docs/credits.mdx"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "publishedAt": "2024-11-07T17:57:27.073Z",
+      "slug": "credits",
+      "status": "draft",
+      "title": "Credits"
     }
   ]
 }
