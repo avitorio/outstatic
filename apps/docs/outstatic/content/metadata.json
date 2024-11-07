@@ -1,6 +1,6 @@
 {
-  "commit": "e0811cb2ea6630fdfa5471211d130d236742c5d8",
-  "generated": "2024-11-07T18:39:30.358Z",
+  "commit": "50e798dd86a6af549d6b0cd6f47bc47b4a343f3b",
+  "generated": "2024-11-07T18:44:48.384Z",
   "metadata": [
     {
       "__outstatic": {
@@ -511,6 +511,22 @@
       "slug": "latest-menu",
       "status": "published",
       "title": "Latest Menu"
+    },
+    {
+      "__outstatic": {
+        "commit": "50e798dd86a6af549d6b0cd6f47bc47b4a343f3b",
+        "hash": "3480511998",
+        "path": "apps/docs/outstatic/content/docs/troubleshooting-and-common-errors.mdx"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "publishedAt": "2024-11-07T18:25:21.452Z",
+      "slug": "troubleshooting-and-common-errors",
+      "status": "draft",
+      "title": "Troubleshooting and Common Errors"
     }
   ]
 }
