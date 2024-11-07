@@ -1,6 +1,6 @@
 {
-  "commit": "58e83fe5252ffa4ef0eb40da1d47466023e72e52",
-  "generated": "2024-11-07T20:20:22.305Z",
+  "commit": "96d4f8693e1a500ec2dc1f40d7cd4fae87e54ffd",
+  "generated": "2024-11-07T20:23:08.306Z",
   "metadata": [
     {
       "__outstatic": {
@@ -530,9 +530,9 @@
     },
     {
       "__outstatic": {
-        "commit": "58e83fe5252ffa4ef0eb40da1d47466023e72e52",
-        "hash": "43316459",
-        "path": "apps/docs/outstatic/content/docs/breaking-changes-v1.5.mdx"
+        "commit": "96d4f8693e1a500ec2dc1f40d7cd4fae87e54ffd",
+        "hash": "4081325250",
+        "path": "apps/docs/outstatic/content/docs/upgrading-to-v1.5.mdx"
       },
       "author": {
         "name": "Andre Vitorio",
@@ -540,7 +540,7 @@
       },
       "collection": "docs",
       "publishedAt": "2024-11-07T19:56:08.302Z",
-      "slug": "breaking-changes-v1.5",
+      "slug": "upgrading-to-v1.5",
       "status": "published",
       "title": "Upgrading to v1.5"
     }
