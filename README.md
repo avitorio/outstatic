@@ -1,1 +1,1 @@
-./packages/outstatic/README.md
+./packages/outstatic/README.md
