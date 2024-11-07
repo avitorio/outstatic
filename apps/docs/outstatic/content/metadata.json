@@ -1,6 +1,6 @@
 {
-  "commit": "a2b6dcdc2c5bd082584564ec1ef1cf697ad784df",
-  "generated": "2024-11-07T18:24:07.927Z",
+  "commit": "56a6bae717f16915dd44601ea5e430f1ddfc6860",
+  "generated": "2024-11-07T18:31:30.315Z",
   "metadata": [
     {
       "__outstatic": {
@@ -55,24 +55,6 @@
       "slug": "environment-variables",
       "status": "published",
       "title": "Environment Variables"
-    },
-    {
-      "__outstatic": {
-        "commit": "fac2262cecb49160d52a2a3a68dc0718875bf879",
-        "hash": "1678583174",
-        "path": "/outstatic/content/docs/fetching-data.md"
-      },
-      "author": {
-        "name": "Jakob Heuser",
-        "picture": "https://avatars.githubusercontent.com/u/1795?v=4"
-      },
-      "collection": "docs",
-      "coverImage": "",
-      "description": "",
-      "publishedAt": "2023-07-25T12:28:25.000Z",
-      "slug": "fetching-data",
-      "status": "published",
-      "title": "Fetching data"
     },
     {
       "__outstatic": {
@@ -511,6 +493,24 @@
       "slug": "credits",
       "status": "published",
       "title": "Credits"
+    },
+    {
+      "__outstatic": {
+        "commit": "56a6bae717f16915dd44601ea5e430f1ddfc6860",
+        "hash": "819262720",
+        "path": "apps/docs/outstatic/content/docs/fetching-data.md"
+      },
+      "author": {
+        "name": "Jakob Heuser",
+        "picture": "https://avatars.githubusercontent.com/u/1795?v=4"
+      },
+      "collection": "docs",
+      "coverImage": "",
+      "description": "",
+      "publishedAt": "2024-11-07T03:00:00.000Z",
+      "slug": "fetching-data",
+      "status": "published",
+      "title": "Fetching data"
     }
   ]
 }
