@@ -1,6 +1,6 @@
 {
-  "commit": "97f714531d06acf107fee1698afe48e2685ce9a9",
-  "generated": "2024-11-07T18:44:59.479Z",
+  "commit": "c836b6a674a625303b24d345020e62d92eaf51fb",
+  "generated": "2024-11-07T18:45:03.477Z",
   "metadata": [
     {
       "__outstatic": {
@@ -514,8 +514,8 @@
     },
     {
       "__outstatic": {
-        "commit": "97f714531d06acf107fee1698afe48e2685ce9a9",
-        "hash": "352345101",
+        "commit": "c836b6a674a625303b24d345020e62d92eaf51fb",
+        "hash": "2691028132",
         "path": "apps/docs/outstatic/content/docs/troubleshooting.mdx"
       },
       "author": {
@@ -525,7 +525,7 @@
       "collection": "docs",
       "publishedAt": "2024-11-07T18:25:21.452Z",
       "slug": "troubleshooting",
-      "status": "draft",
+      "status": "published",
       "title": "Troubleshooting and Common Errors"
     }
   ]
