@@ -1,6 +1,6 @@
 {
-  "commit": "96d4f8693e1a500ec2dc1f40d7cd4fae87e54ffd",
-  "generated": "2024-11-07T20:23:08.306Z",
+  "commit": "6fb505f69f25e8ac78433e627fcd6110c18ba616",
+  "generated": "2024-11-07T20:23:25.403Z",
   "metadata": [
     {
       "__outstatic": {
@@ -478,24 +478,6 @@
     },
     {
       "__outstatic": {
-        "commit": "c06c75619ce43a5981081cd9fc77cb7049eefde5",
-        "hash": "1060777477",
-        "path": "apps/docs/outstatic/content/menus/latest-menu.md"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "menus",
-      "coverImage": "",
-      "description": "",
-      "publishedAt": "2024-11-06T03:00:00.000Z",
-      "slug": "latest-menu",
-      "status": "published",
-      "title": "Latest Menu"
-    },
-    {
-      "__outstatic": {
         "commit": "73826809ee882458039f2fcc18b195f3f4a22bb5",
         "hash": "346200532",
         "path": "apps/docs/outstatic/content/docs/getting-started.md"
@@ -543,6 +525,24 @@
       "slug": "upgrading-to-v1.5",
       "status": "published",
       "title": "Upgrading to v1.5"
+    },
+    {
+      "__outstatic": {
+        "commit": "6fb505f69f25e8ac78433e627fcd6110c18ba616",
+        "hash": "524572335",
+        "path": "apps/docs/outstatic/content/menus/latest-menu.md"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "menus",
+      "coverImage": "",
+      "description": "",
+      "publishedAt": "2024-11-06T03:00:00.000Z",
+      "slug": "latest-menu",
+      "status": "published",
+      "title": "Latest Menu"
     }
   ]
 }

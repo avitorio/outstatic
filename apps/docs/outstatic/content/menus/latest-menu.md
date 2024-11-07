@@ -10,6 +10,8 @@ coverImage: ""
 publishedAt: "2024-11-06T03:00:00.000Z"
 ---
 
+- [Upgrading to v1.5](/upgrading-to-v1.5)
+
 - [Introduction](/introduction)
 
   - [How does Outstatic work?](/introduction#how-does-outstatic-work)
