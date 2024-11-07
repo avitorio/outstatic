@@ -1,6 +1,6 @@
 {
-  "commit": "bf138826c8aea410c79d87fdc89e13a6e1dc7216",
-  "generated": "2024-11-07T20:46:38.048Z",
+  "commit": "9559d9e7c176465bd4e0a029946a868b41519636",
+  "generated": "2024-11-07T20:46:56.951Z",
   "metadata": [
     {
       "__outstatic": {
@@ -91,24 +91,6 @@
       "slug": "custom-fields",
       "status": "published",
       "title": "Custom Fields"
-    },
-    {
-      "__outstatic": {
-        "commit": "ba6e1a2d196dc858a4284926a89ba7f81b43817d",
-        "hash": "255025884",
-        "path": "/outstatic/content/docs/using-with-next-js-12.md"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "docs",
-      "coverImage": "",
-      "description": "",
-      "publishedAt": "2023-09-12T11:50:07.653Z",
-      "slug": "using-with-next-js-12",
-      "status": "published",
-      "title": "Using with Next.js 12"
     },
     {
       "__outstatic": {
@@ -253,24 +235,6 @@
       "slug": "introduction",
       "status": "published",
       "title": "Introduction"
-    },
-    {
-      "__outstatic": {
-        "commit": "ba6e1a2d196dc858a4284926a89ba7f81b43817d",
-        "hash": "255025884",
-        "path": "/outstatic/content/v1.4/using-with-next-js-12.md"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "v1.4",
-      "coverImage": "",
-      "description": "",
-      "publishedAt": "2023-09-12T11:50:07.653Z",
-      "slug": "using-with-next-js-12",
-      "status": "published",
-      "title": "Using with Next.js 12"
     },
     {
       "__outstatic": {
