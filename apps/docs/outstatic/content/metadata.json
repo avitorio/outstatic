@@ -1,6 +1,6 @@
 {
-  "commit": "73826809ee882458039f2fcc18b195f3f4a22bb5",
-  "generated": "2024-11-07T18:51:21.818Z",
+  "commit": "c871fea662680adb332f7cd65142cd9941aa106b",
+  "generated": "2024-11-07T19:02:01.413Z",
   "metadata": [
     {
       "__outstatic": {
@@ -310,22 +310,6 @@
     },
     {
       "__outstatic": {
-        "commit": "1b7f02fe4d5422349a092cd515dbc1b6acf8728d",
-        "hash": "4248435132",
-        "path": "apps/docs/outstatic/content/docs/using-outstatic-for-markdown-content.mdx"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "docs",
-      "publishedAt": "2024-10-30T18:53:46.596Z",
-      "slug": "using-outstatic-for-markdown-content",
-      "status": "draft",
-      "title": "Using Outstatic for Markdown content"
-    },
-    {
-      "__outstatic": {
         "commit": "078fc1839903abe2b7ffa60601aa747ffac77dc0",
         "hash": "683774730",
         "path": "apps/docs/outstatic/content/docs/the-content-editor.md"
@@ -527,6 +511,22 @@
       "slug": "getting-started",
       "status": "published",
       "title": "Getting started"
+    },
+    {
+      "__outstatic": {
+        "commit": "c871fea662680adb332f7cd65142cd9941aa106b",
+        "hash": "2337295835",
+        "path": "apps/docs/outstatic/content/docs/using-outstatic-for-markdown-content.mdx"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "publishedAt": "2024-10-30T18:53:46.596Z",
+      "slug": "using-outstatic-for-markdown-content",
+      "status": "published",
+      "title": "Using Outstatic for Markdown content"
     }
   ]
 }
