@@ -18,7 +18,7 @@ publishedAt: "2024-11-06T03:00:00.000Z"
 
   - [Deploy with Vercel](/deploy-a-starter-outstatic-website-on-vercel)
 
-  - [Add to Next.js](/getting-started#adding-outstatic-to-a-nextjs-website)
+  - [Add to Next.js](/getting-started-with-next-js)
 
   - [Local Development](/local-development)
 

@@ -1,6 +1,6 @@
 {
-  "commit": "ec3d74a067530032ce99f67d729a05c764269e98",
-  "generated": "2024-11-07T18:33:44.552Z",
+  "commit": "83b121ede0c64c58d16be444a58969223438958f",
+  "generated": "2024-11-07T18:34:23.052Z",
   "metadata": [
     {
       "__outstatic": {
@@ -446,24 +446,6 @@
     },
     {
       "__outstatic": {
-        "commit": "9f1688f58d653e5fedf36a386d072ded01f2c194",
-        "hash": "1859033054",
-        "path": "apps/docs/outstatic/content/menus/latest-menu.md"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "menus",
-      "coverImage": "",
-      "description": "",
-      "publishedAt": "2024-11-06T03:00:00.000Z",
-      "slug": "latest-menu",
-      "status": "published",
-      "title": "Latest Menu"
-    },
-    {
-      "__outstatic": {
         "commit": "a2b6dcdc2c5bd082584564ec1ef1cf697ad784df",
         "hash": "976497181",
         "path": "apps/docs/outstatic/content/docs/credits.mdx"
@@ -511,6 +493,24 @@
       "slug": "getting-started-with-next-js",
       "status": "published",
       "title": "Getting started with Next.js"
+    },
+    {
+      "__outstatic": {
+        "commit": "83b121ede0c64c58d16be444a58969223438958f",
+        "hash": "1821504890",
+        "path": "apps/docs/outstatic/content/menus/latest-menu.md"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "menus",
+      "coverImage": "",
+      "description": "",
+      "publishedAt": "2024-11-06T03:00:00.000Z",
+      "slug": "latest-menu",
+      "status": "published",
+      "title": "Latest Menu"
     }
   ]
 }
