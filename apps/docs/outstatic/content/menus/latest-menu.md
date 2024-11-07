@@ -16,13 +16,11 @@ publishedAt: "2024-11-06T03:00:00.000Z"
 
 - [Getting started](/getting-started)
 
-  - [Deploy with Vercel](/deploy-a-starter-outstatic-website-on-vercel)
+  - [Deploy a starter website](/deploy-a-starter-outstatic-website-on-vercel)
 
-  - [Add to Next.js](/getting-started-with-next-js)
+  - [Use on any GitHub repository](/using-outstatic-for-markdown-content)
 
-  - [Local Development](/local-development)
-
-  - [Migrating to v1](/migrating-to-v1)
+  - [Add to a Next.js project](/getting-started-with-next-js)
 
 - [The Content Editor](/the-content-editor)
 
