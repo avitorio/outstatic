@@ -342,7 +342,7 @@ const DocumentSettings = ({
                           lastChar === ' ' || lastChar === '-'
                             ? e.target.value
                             : slugify(e.target.value, {
-                                allowedChars: 'a-zA-Z0-9'
+                                allowedChars: 'a-zA-Z0-9.'
                               })
                         )
                       }}
