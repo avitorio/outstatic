@@ -41,7 +41,7 @@
     "./outstatic.css": "./dist/outstatic.css"
   },
   "scripts": {
-    "build": "tsup && tailwindcss -i ./src/styles/styles.css -o ./dist/outstatic.css",
+    "build": "rm -rf dist && tsup && tailwindcss -i ./src/styles/styles.css -o ./dist/outstatic.css",
     "dev": "concurrently \"tsup --watch\" \"tailwindcss -i ./src/styles/styles.css -o ./dist/outstatic.css --watch\"",
     "clean": "rm -rf dist",
     "test": "jest",
