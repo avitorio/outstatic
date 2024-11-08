@@ -1,5 +1,5 @@
 import { CustomFieldArrayValue } from '@/types'
-import camelcase from 'camelcase'
+import { camelCase } from 'change-case'
 import { useState } from 'react'
 import { Controller, RegisterOptions, useFormContext } from 'react-hook-form'
 import { CSSObjectWithLabel } from 'react-select'
@@ -53,7 +53,7 @@ const TagInput = ({
 
   const createOption = (label: string) => ({
     label,
-    value: camelcase(label)
+    value: camelCase(label)
   })
 
   const handleCreate = (inputValue: string) => {

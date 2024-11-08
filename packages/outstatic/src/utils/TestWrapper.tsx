@@ -3,11 +3,12 @@ import {
   CreateCommitDocument,
   DocumentDocument,
   OidDocument
-} from '@/graphql/generated'
+} from '@/graphql/gql/graphql'
 import { Document, DocumentContextType } from '@/types'
-import { MockedProvider } from '@apollo/client/testing'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { Editor, useEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
+import { NavigationGuardProvider } from 'next-navigation-guard'
 import { ReactNode } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 
@@ -100,12 +101,25 @@ export const mocks = [
   }
 ]
 
-const TestApolloProviders = ({ children }: { children: React.ReactNode }) => {
+const createTestQueryClient = () =>
+  new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: false
+      }
+    }
+  })
+
+const TestReactQueryProvider = ({
+  children
+}: {
+  children: React.ReactNode
+}) => {
+  const testQueryClient = createTestQueryClient()
   return (
-    // @ts-ignore
-    <MockedProvider mocks={mocks} addTypename={false}>
+    <QueryClientProvider client={testQueryClient}>
       {children}
-    </MockedProvider>
+    </QueryClientProvider>
   )
 }
 
@@ -125,7 +139,8 @@ const TestDocumentContextProvider = ({
     document: documentExample,
     editDocument: () => {},
     hasChanges: false,
-    collection: 'documents'
+    collection: 'documents',
+    extension: 'md'
   }
 
   return (
@@ -141,16 +156,25 @@ const TestFormProvider = ({ children }: { children: React.ReactNode }) => {
   return <FormProvider {...formMethods}>{children}</FormProvider>
 }
 
+const TestNavigationGuardProvider = ({
+  children
+}: {
+  children: React.ReactNode
+}) => {
+  return <NavigationGuardProvider>{children}</NavigationGuardProvider>
+}
+
 export const TestWrapper = (props: { children: ReactNode }) => (
-  <TestProviders.Apollo>
+  <TestProviders.ReactQuery>
     <TestProviders.DocumentContext>
       <TestProviders.Form>{props.children}</TestProviders.Form>
     </TestProviders.DocumentContext>
-  </TestProviders.Apollo>
+  </TestProviders.ReactQuery>
 )
 
 export const TestProviders = {
-  Apollo: TestApolloProviders,
+  ReactQuery: TestReactQueryProvider,
   DocumentContext: TestDocumentContextProvider,
-  Form: TestFormProvider
+  Form: TestFormProvider,
+  NavigationGuard: TestNavigationGuardProvider
 }

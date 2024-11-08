@@ -1,11 +1,13 @@
 import { OstDocument } from '@/types/public'
 
-export type MetadataSchema<
+export type MetadataType<
   T extends { [key: string]: unknown } = { [key: string]: unknown }
-> = {
+> = Omit<OutstaticSchema<T>, 'content'>[]
+
+export type MetadataSchema = {
   commit: string
   generated: string
-  metadata: Omit<OutstaticSchema<T>, 'content'>[]
+  metadata: MetadataType
 }
 
 export type Projection = Record<string, number> | string[]
@@ -45,4 +47,27 @@ export type FindAPI<T, P> = {
   first: () => Promise<P>
   /** Return the results as an array, populating additional data from the filesystem as needed */
   toArray: () => Promise<P[]>
+}
+
+export type MediaItem = {
+  __outstatic: {
+    hash: string
+    path: string
+    commit: string
+  }
+  filename: string
+  alt: string
+  publishedAt: string
+  type: string
+}
+
+export type MediaSchema = {
+  commit: string
+  generated: string
+  media: MediaItem[]
+}
+
+export type ConfigType = {
+  publicMediaPath: string
+  repoMediaPath: string
 }

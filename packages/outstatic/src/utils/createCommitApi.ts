@@ -1,7 +1,4 @@
-import {
-  type CreateCommitOnBranchInput,
-  type FileChanges
-} from '@/graphql/generated'
+import { CreateCommitOnBranchInput, FileChanges } from '@/graphql/gql/graphql'
 import { encode as toBase64 } from 'js-base64'
 
 export interface CommitAPI {
@@ -45,20 +42,22 @@ export const createCommitApi = ({
     deletions.push({ path: file })
   }
 
-  const createInput = () => ({
-    branch: {
-      repositoryNameWithOwner: `${owner}/${name}`,
-      branchName: branch
-    },
-    message: {
-      headline: commitMessage
-    },
-    fileChanges: {
-      additions,
-      deletions
-    },
-    expectedHeadOid: oid
-  })
+  const createInput = () => {
+    return {
+      branch: {
+        repositoryNameWithOwner: `${owner}/${name}`,
+        branchName: branch
+      },
+      message: {
+        headline: commitMessage
+      },
+      fileChanges: {
+        additions,
+        deletions
+      },
+      expectedHeadOid: oid
+    }
+  }
 
   // return the API
   return { setMessage, createInput, replaceFile, removeFile }

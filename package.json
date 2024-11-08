@@ -1,4 +1,5 @@
 {
+  "name": "outstatic-monorepo",
   "private": true,
   "workspaces": [
     "apps/*",
@@ -8,24 +9,27 @@
     "build": "turbo run build",
     "dev": "turbo run dev --filter=outstatic-dev-blog --filter=outstatic",
     "dev:docs": "turbo run dev --filter=docs --filter=outstatic",
+    "dev:outstatic": "turbo run dev --filter=outstatic",
     "lint": "turbo run lint",
     "clean": "turbo run clean",
     "format": "prettier --write",
     "lint-staged": "lint-staged",
     "preinstall": "npx only-allow pnpm",
-    "prepare": "husky install",
     "test": "turbo run test",
     "typecheck": "turbo run typecheck",
-    "prepublish": "pnpm typecheck && pnpm test && pnpm build --filter='!outstatic-blog-example'"
+    "prepublish": "pnpm typecheck && pnpm test && pnpm build --filter='!outstatic-basic-blog'"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.1",
-    "eslint": "8.42.0",
-    "eslint-config-custom": "workspace:*",
-    "husky": "^8.0.3",
+    "eslint": "^8.0.0",
+    "eslint-config-next": "13.4.4",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-config-turbo": "latest",
+    "eslint-plugin-react": "^7.35.0",
     "lint-staged": "^13.3.0",
     "prettier": "^2.8.8",
     "prettier-plugin-tailwindcss": "^0.1.13",
     "turbo": "latest"
-  }
+  },
+  "packageManager": "pnpm@9.1.4"
 }

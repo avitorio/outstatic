@@ -1,5 +1,5 @@
 {
-  "pipeline": {
+  "tasks": {
     "build": {
       "dependsOn": ["^build"],
       "outputs": ["dist/**", ".next/**"]
@@ -42,7 +42,13 @@
         "VERCEL_GIT_REPO_SLUG",
         "OPENAI_API_KEY",
         "OST_GITHUB_CALLBACK_URL",
-        "OST_BASE_PATH"
+        "OST_BASE_PATH",
+        "OST_DETACH",
+        "OST_OUTSTATIC_PATH",
+        "OST_REPO_MEDIA_PATH",
+        "OST_PUBLIC_MEDIA_PATH",
+        "NEXT_PUBLIC_OST_API_PATH",
+        "NEXT_PUBLIC_OST_TOKEN_NAME"
       ]
     }
   }

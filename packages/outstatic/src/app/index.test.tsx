@@ -27,12 +27,12 @@ describe(Outstatic, () => {
     process.env = JSON.parse(JSON.stringify(ENV))
   })
 
-  it('should request collections', async () => {
+  it('should return initial values', async () => {
     const props = await Outstatic()
     expect(props).toMatchObject({
       repoOwner: process.env.OST_REPO_OWNER,
       repoSlug: process.env.OST_REPO_SLUG,
-      repoBranch: 'main',
+      repoBranch: process.env.OST_REPO_BRANCH,
       contentPath: process.env.OST_CONTENT_PATH,
       monorepoPath: '',
       session: {
@@ -40,32 +40,10 @@ describe(Outstatic, () => {
           email: 'test@example.com'
         }
       },
-      initialApolloState: {},
-      collections: ['pages', 'posts', 'projects'], // <= collections show
-      pages: ['settings', 'collections', 'pages', 'posts', 'projects'] // <= collections in page set
+      missingEnvVars: false,
+      hasOpenAIKey: !!process.env.OPENAI_API_KEY,
+      basePath: process.env.OST_BASE_PATH || '',
+      ostDetach: process.env.OST_DETACH || false
     })
-  })
-
-  it('returns no collections on a graphql error', async () => {
-    // set the repo owner, which alerts MSW we want a different behavior
-    process.env.OST_REPO_OWNER = 'msw::collections::not-implemented'
-
-    const spy = jest.spyOn(console, 'log')
-    spy.mockImplementation(() => {})
-    const props = await Outstatic()
-
-    // verify console log of Apollo Error
-    expect(spy).toBeCalledWith(
-      expect.objectContaining({
-        error: expect.objectContaining({
-          message: expect.stringMatching(/MSW - Not implemented/)
-        })
-      })
-    )
-
-    // TODO: in future, there should be an error instead of a console log event
-    expect(props).toMatchObject({})
-
-    spy.mockRestore()
   })
 })

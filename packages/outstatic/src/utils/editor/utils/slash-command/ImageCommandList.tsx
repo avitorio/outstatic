@@ -4,15 +4,13 @@ import {
   updateScrollView
 } from '@/utils/editor/extensions/SlashCommand'
 import { Editor, Range } from '@tiptap/react'
-import { Link, Upload } from 'lucide-react'
-import {
-  ChangeEvent,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState
-} from 'react'
+import { Image, Link, Upload } from 'lucide-react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { addImage } from '../addImage'
+import MediaLibraryModal from '@/components/ui/outstatic/media-library-modal'
+import { API_MEDIA_PATH } from '@/utils/constants'
+import { useOutstatic } from '@/utils/hooks'
+import MediaSettingsDialog from '@/components/ui/outstatic/media-settings-dialog'
 
 type ImageCommandListProps = {
   editor: Editor
@@ -31,15 +29,21 @@ const isValidUrl = (urlString: string) => {
 const items = [
   {
     title: 'Image Upload',
-    description: 'Upload or embed with a link.',
+    description: 'Upload image from file.',
     searchTerms: ['upload', 'picture', 'media'],
     icon: <Upload size={18} />
   },
   {
     title: 'Image from URL',
-    description: 'Upload or embed with a link.',
+    description: 'Embed with a link.',
     searchTerms: ['photo', 'picture', 'media'],
     icon: <Link size={18} />
+  },
+  {
+    title: 'Media Gallery',
+    description: 'Add image from media gallery.',
+    searchTerms: ['photo', 'picture', 'media'],
+    icon: <Image size={18} />
   }
 ]
 
@@ -50,8 +54,39 @@ const ImageCommandList = ({
 }: ImageCommandListProps) => {
   const [showLink, setShowLink] = useState(false)
   const [imageUrl, setImageUrl] = useState('')
+  const [showMediaLibrary, setShowMediaLibrary] = useState(false)
+  const [showMediaPathDialog, setShowMediaPathDialog] = useState(false)
   const [errors, setErrors] = useState({ imageUrl: '', uploadImage: '' })
   const [selectedIndex, setSelectedIndex] = useState(0)
+  const { repoMediaPath, publicMediaPath, basePath } = useOutstatic()
+  const [callbackFunction, setCallbackFunction] = useState<() => void>(() => {})
+
+  const handleItemAction = (title: string) => {
+    switch (title) {
+      case 'Image Upload':
+        if (!repoMediaPath && !publicMediaPath) {
+          setCallbackFunction(() => addImageFile)
+          setShowMediaPathDialog(true)
+        } else {
+          addImageFile()
+        }
+        break
+      case 'Image from URL':
+        setShowLink(true)
+        break
+      case 'Media Gallery':
+        if (!repoMediaPath && !publicMediaPath) {
+          setCallbackFunction(() => () => setShowMediaLibrary(true))
+          setShowMediaPathDialog(true)
+        } else {
+          setShowMediaLibrary(true)
+        }
+        break
+      // Add more cases for future actions
+      default:
+        console.warn(`Unhandled action: ${title}`)
+    }
+  }
 
   const addImageFile = async () => {
     editor.chain().focus().deleteRange(range).run()
@@ -71,13 +106,12 @@ const ImageCommandList = ({
     input.click()
   }
 
-  const handleImageInput = (e: ChangeEvent<HTMLInputElement>) => {
-    setImageUrl(e.target.value)
-  }
-
-  const addImageUrl = () => {
-    if (!isValidUrl(imageUrl)) {
-      setErrors((oldState) => ({ ...oldState, imageUrl: 'Invalid URL' }))
+  const addImageUrl = (imageUrl: string) => {
+    if (
+      !imageUrl.startsWith(`${basePath}${API_MEDIA_PATH}`) &&
+      !isValidUrl(imageUrl)
+    ) {
+      setErrors((prevErrors) => ({ ...prevErrors, imageUrl: 'Invalid URL' }))
       return null
     }
 
@@ -109,11 +143,11 @@ const ImageCommandList = ({
           return true
         }
         if (e.key === 'Enter') {
-          if (items[selectedIndex].title === 'Image Upload') {
-            addImageFile()
-          } else {
-            showLink ? addImageUrl() : setShowLink(true)
-          }
+          const selectedItem = items[selectedIndex]
+          showLink
+            ? addImageUrl(imageUrl)
+            : handleItemAction(selectedItem.title)
+          document.removeEventListener('keydown', onKeyDown)
           return true
         }
         if (e.key === 'Escape') {
@@ -133,7 +167,7 @@ const ImageCommandList = ({
     return () => {
       document.removeEventListener('keydown', onKeyDown)
     }
-  }, [selectedIndex, showLink])
+  }, [selectedIndex, showLink, items])
 
   useEffect(() => {
     editor.chain().blur().run()
@@ -166,7 +200,7 @@ const ImageCommandList = ({
                 errors.imageUrl ? 'bg-red-50' : 'bg-white'
               }`}
               placeholder="Insert link here"
-              onChange={handleImageInput}
+              onChange={(e) => setImageUrl(e.target.value)}
               value={imageUrl}
               onFocus={() => setErrors({ ...errors, imageUrl: '' })}
               autoFocus
@@ -177,10 +211,26 @@ const ImageCommandList = ({
               </span>
             )}
           </div>
-          <MDEMenuButton onClick={addImageUrl} editor={editor} name="back">
+          <MDEMenuButton
+            onClick={() => addImageUrl(imageUrl)}
+            editor={editor}
+            name="back"
+          >
             Done
           </MDEMenuButton>
         </div>
+      ) : showMediaLibrary ? (
+        <MediaLibraryModal
+          open={showMediaLibrary}
+          onOpenChange={setShowMediaLibrary}
+          onSelect={addImageUrl}
+        />
+      ) : showMediaPathDialog ? (
+        <MediaSettingsDialog
+          showMediaPathDialog={showMediaPathDialog}
+          setShowMediaPathDialog={setShowMediaPathDialog}
+          callbackFunction={callbackFunction}
+        />
       ) : (
         <div
           id="slash-command"
@@ -194,16 +244,10 @@ const ImageCommandList = ({
                   index === selectedIndex ? 'bg-stone-100 text-stone-900' : ''
                 }`}
                 key={index}
-                onClick={() =>
-                  item.title === 'Image Upload'
-                    ? addImageFile()
-                    : setShowLink(true)
-                }
+                onClick={() => handleItemAction(item.title)}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter') {
-                    item.title === 'Image Upload'
-                      ? addImageFile()
-                      : setShowLink(true)
+                    handleItemAction(item.title)
                   }
                 }}
               >

@@ -117,8 +117,8 @@ const items = [
   },
   {
     title: 'Image',
-    description: 'Upload or embed with a link.',
-    searchTerms: ['photo', 'picture', 'media'],
+    description: 'Upload, embed or select from library.',
+    searchTerms: ['photo', 'picture', 'media', 'gallery'],
     icon: <ImageIcon size={18} />
   },
   {

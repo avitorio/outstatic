@@ -2,24 +2,67 @@ import { TiptapExtensions } from '@/utils/editor/extensions'
 import { TiptapEditorProps } from '@/utils/editor/props'
 import { getPrevText } from '@/utils/editor/utils/getPrevText'
 import Placeholder from '@tiptap/extension-placeholder'
-import { Editor, useEditor } from '@tiptap/react'
+import { Editor, EditorEvents, useEditor } from '@tiptap/react'
 import { useCompletion } from 'ai/react'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useCallback } from 'react'
 import { toast } from 'sonner'
 import { useDebouncedCallback } from 'use-debounce'
 import useOutstatic from './useOutstatic'
+import { OUTSTATIC_API_PATH } from '../constants'
+import { useCsrfToken } from './useCsrfToken'
 
 const useTipTap = ({ ...rhfMethods }) => {
-  const { hasOpenAIKey } = useOutstatic()
+  const { hasOpenAIKey, basePath } = useOutstatic()
+  const csrfToken = useCsrfToken()
   const { setValue, trigger } = rhfMethods
-  // Define editorRef to hold the current reference to the editor.
+
   const editorRef = useRef<Editor | null>(null)
 
-  const debouncedUpdates = useDebouncedCallback(async ({ editor }) => {
+  const debouncedCallback = useDebouncedCallback(async ({ editor }) => {
     const val = editor.getHTML()
     setValue('content', val && !editor.isEmpty ? val : '')
-    ;(async () => await trigger('content'))()
-  }, 750)
+  }, 500)
+
+  const { complete, completion, isLoading, stop } = useCompletion({
+    id: 'outstatic',
+    headers: csrfToken ? { 'X-CSRF-Token': csrfToken } : undefined,
+    api: basePath + OUTSTATIC_API_PATH + '/generate',
+    onFinish: (_prompt, completion) => {
+      if (editorRef.current) {
+        editorRef.current.commands.setTextSelection({
+          from: editorRef.current.state.selection.from - completion.length,
+          to: editorRef.current.state.selection.from
+        })
+      }
+    },
+    onError: (err) => {
+      toast.error(err.message)
+    }
+  })
+  const onUpdate = useCallback(
+    ({ editor }: EditorEvents['update']) => {
+      const selection = editor.state.selection
+      const lastTwo = getPrevText(editor, {
+        chars: 2
+      })
+      if (hasOpenAIKey && lastTwo === '++' && !isLoading) {
+        editor.commands.deleteRange({
+          from: selection.from - 2,
+          to: selection.from
+        })
+        const prevText = getPrevText(editor, { chars: 5000 })
+
+        if (prevText === '') {
+          toast.error('Write some content so the AI can continue.')
+        } else {
+          complete(prevText)
+        }
+      } else {
+        debouncedCallback({ editor })
+      }
+    },
+    [hasOpenAIKey, isLoading, complete, debouncedCallback]
+  )
 
   const editor = useEditor({
     extensions: [
@@ -42,48 +85,12 @@ const useTipTap = ({ ...rhfMethods }) => {
       })
     ],
     editorProps: TiptapEditorProps,
-    onUpdate({ editor }) {
-      const selection = editor.state.selection
-      const lastTwo = getPrevText(editor, {
-        chars: 2
-      })
-      if (hasOpenAIKey && lastTwo === '++' && !isLoading) {
-        editor.commands.deleteRange({
-          from: selection.from - 2,
-          to: selection.from
-        })
-        const prevText = getPrevText(editor, { chars: 5000 })
-
-        if (prevText === '') {
-          toast.error('Write some content so the AI can continue.')
-        } else {
-          complete(prevText)
-        }
-      } else {
-        debouncedUpdates({ editor })
-      }
-    }
+    onUpdate
   })
 
   useEffect(() => {
     editorRef.current = editor
   }, [editor])
-
-  const { complete, completion, isLoading, stop } = useCompletion({
-    id: 'outstatic',
-    api: '/api/outstatic/generate',
-    onFinish: (_prompt, completion) => {
-      if (editorRef.current) {
-        editorRef.current.commands.setTextSelection({
-          from: editorRef.current.state.selection.from - completion.length,
-          to: editorRef.current.state.selection.from
-        })
-      }
-    },
-    onError: (err) => {
-      toast.error(err.message)
-    }
-  })
 
   const prev = useRef('')
 
@@ -95,6 +102,7 @@ const useTipTap = ({ ...rhfMethods }) => {
   useEffect(() => {
     const diff = completion.slice(prev.current.length)
     prev.current = completion
+
     try {
       editor?.commands.insertContent(diff)
     } catch (e) {

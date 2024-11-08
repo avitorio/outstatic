@@ -1,8 +1,9 @@
 import { Session } from '@/types'
+import { useInitialData } from '@/utils/hooks/useInitialData'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 import useSWR from 'swr'
-import useOutstatic from '../hooks/useOutstatic'
+import { OUTSTATIC_API_PATH } from '../constants'
 
 type useOstSessionProps = {
   redirectTo?: string
@@ -27,9 +28,9 @@ export const useOstSession = ({
   redirectTo,
   redirectIfFound
 }: useOstSessionProps = {}): useOstSessionReturn => {
-  const { basePath } = useOutstatic()
+  const { basePath } = useInitialData()
   const { data, error } = useSWR(
-    (basePath || '') + '/api/outstatic/user',
+    (basePath || '') + OUTSTATIC_API_PATH + '/user',
     fetcher
   )
   const session = data?.session as Session
@@ -75,7 +76,7 @@ export function useOstSignOut() {
   const router = useRouter()
 
   const signOut = () => {
-    router.push('/api/outstatic/signout')
+    router.push(OUTSTATIC_API_PATH + '/signout')
   }
 
   return { signOut }

@@ -4,12 +4,16 @@ import {
   documentExample
 } from '@/utils/TestWrapper'
 import { useOstSession } from '@/utils/auth/hooks'
-import { dateToString } from '@/utils/tests/utils'
 import { render, screen } from '@testing-library/react'
 import DocumentSettings from '.'
 
 jest.mock('@/utils/auth/hooks')
 jest.mock('next/navigation', () => require('next-router-mock'))
+jest.mock('next-navigation-guard', () => ({
+  useNavigationGuard: jest.fn(),
+  NavigationGuard: jest.fn().mockImplementation(({ children }) => children),
+  useBlocker: jest.fn()
+}))
 
 jest.mock('react-hook-form', () => ({
   ...jest.requireActual('react-hook-form'),
@@ -17,8 +21,14 @@ jest.mock('react-hook-form', () => ({
   handleSubmit: jest.fn()
 }))
 
+jest.mock('change-case', () => {
+  return {
+    split: (str: string) => str
+  }
+})
+
 describe('<DocumentSettings />', () => {
-  it('should render the date', async () => {
+  it('should render the date component', async () => {
     ;(useOstSession as jest.Mock).mockReturnValue({
       session: {
         user: {
@@ -30,16 +40,17 @@ describe('<DocumentSettings />', () => {
     render(
       <TestWrapper>
         <DocumentSettings
-          saveFunc={() => {}}
+          saveDocument={() => {}}
           loading={false}
           showDelete={false}
+          customFields={{}}
+          setCustomFields={() => {}}
+          metadata={{}}
         />
       </TestWrapper>
     )
 
-    expect(
-      screen.getByText(dateToString(new Date('2022-07-14')))
-    ).toBeInTheDocument()
+    expect(screen.getByText('Pick a date')).toBeInTheDocument()
   })
   it('should handle empty author name', async () => {
     ;(useOstSession as jest.Mock).mockReturnValue({
@@ -52,7 +63,7 @@ describe('<DocumentSettings />', () => {
     })
 
     render(
-      <TestProviders.Apollo>
+      <TestWrapper>
         <TestProviders.DocumentContext
           value={{
             document: { ...documentExample, author: { name: undefined } }
@@ -60,13 +71,16 @@ describe('<DocumentSettings />', () => {
         >
           <TestProviders.Form>
             <DocumentSettings
-              saveFunc={() => {}}
+              saveDocument={() => {}}
               loading={false}
               showDelete={false}
+              customFields={{}}
+              setCustomFields={() => {}}
+              metadata={{}}
             />
           </TestProviders.Form>
         </TestProviders.DocumentContext>
-      </TestProviders.Apollo>
+      </TestWrapper>
     )
     expect(screen.getByLabelText('Name')).toHaveValue('')
     expect(screen.getByLabelText('Name')).not.toBeUndefined()

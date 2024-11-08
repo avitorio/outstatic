@@ -1,4 +1,5 @@
 import useOutstatic from '@/utils/hooks/useOutstatic'
+import dynamic from 'next/dynamic'
 import type { LinkProps as NextLinkProps } from 'next/link'
 import NextLink from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -48,4 +49,4 @@ const Link: React.FC<LinkProps> = ({
   )
 }
 
-export default Link
+export default dynamic(() => Promise.resolve(Link), { ssr: false })

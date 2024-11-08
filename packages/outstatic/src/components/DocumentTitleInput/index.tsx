@@ -46,7 +46,7 @@ export default function DocumentTitle({
               if (last === 'new') {
                 setValue(
                   'slug',
-                  slugify(e.target.value, { allowedChars: 'a-zA-Z0-9' })
+                  slugify(e.target.value, { allowedChars: 'a-zA-Z0-9.' })
                 )
               }
             }

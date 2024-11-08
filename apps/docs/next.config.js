@@ -9,6 +9,11 @@ const nextConfig = {
         source: '/',
         destination: '/introduction',
         permanent: true
+      },
+      {
+        source: '/v1.4',
+        destination: '/v1.4/introduction',
+        permanent: true
       }
     ]
   }
