@@ -1,7 +1,7 @@
 {
   "name": "outstatic",
-  "version": "1.5.0-canary.1",
-  "description": "Static site CMS for Next.js",
+  "version": "1.5.0-canary.2",
+  "description": "Static site CMS",
   "author": "Andre Vitorio <andre@vitorio.net>",
   "license": "FSL-1.1-ALv2",
   "repository": {
@@ -12,6 +12,11 @@
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "typings": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md",
+    "license.md"
+  ],
   "exports": {
     ".": {
       "import": "./dist/index.mjs",
