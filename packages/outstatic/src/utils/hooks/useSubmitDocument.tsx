@@ -258,7 +258,12 @@ function useSubmitDocument({
           __outstatic: {
             hash: `${state.result()}`,
             commit: m.commit,
-            path: `${collectionPath}${newSlug}.${extension}`
+            path: monorepoPath
+              ? `${collectionPath}${newSlug}.${extension}`.replace(
+                  monorepoPath,
+                  ''
+                )
+              : `${collectionPath}${newSlug}.${extension}`
           }
         })
 
