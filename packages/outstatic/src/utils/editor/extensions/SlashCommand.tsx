@@ -6,7 +6,7 @@ import tippy from 'tippy.js'
 import { BaseCommandList } from '../utils/slash-command/BaseCommandList'
 import ImageCommandList from '../utils/slash-command/ImageCommandList'
 import { getSuggestionItems } from '../utils/slash-command/getSuggestionItems'
-import { useOutstatic } from '@/utils/hooks'
+import { useOutstatic } from '@/utils/hooks/useOutstatic'
 import {
   Dialog,
   DialogContent,

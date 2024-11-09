@@ -7,7 +7,7 @@ import { useCompletion } from 'ai/react'
 import { useEffect, useRef, useCallback } from 'react'
 import { toast } from 'sonner'
 import { useDebouncedCallback } from 'use-debounce'
-import useOutstatic from './useOutstatic'
+import { useOutstatic } from './useOutstatic'
 import { OUTSTATIC_API_PATH } from '../constants'
 import { useCsrfToken } from './useCsrfToken'
 

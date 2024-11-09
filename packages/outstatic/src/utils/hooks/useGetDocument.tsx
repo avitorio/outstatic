@@ -1,6 +1,6 @@
 import { GET_DOCUMENT } from '@/graphql/queries/document'
 import { MDExtensions } from '@/types'
-import useOutstatic from '@/utils/hooks/useOutstatic'
+import { useOutstatic } from '@/utils/hooks/useOutstatic'
 import { useQuery } from '@tanstack/react-query'
 type Repository = {
   fileMD: { text: string } | null

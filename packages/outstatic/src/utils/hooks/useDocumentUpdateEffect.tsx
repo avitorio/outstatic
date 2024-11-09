@@ -6,7 +6,7 @@ import matter from 'gray-matter'
 import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { UseFormReturn } from 'react-hook-form'
 import { useGetDocument } from './useGetDocument'
-import useOutstatic from './useOutstatic'
+import { useOutstatic } from './useOutstatic'
 import { useCollections } from './useCollections'
 
 interface UseDocumentUpdateEffectProps {

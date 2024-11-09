@@ -1,13 +1,13 @@
 'use client'
 import { SearchCombobox } from '@/components/ui/outstatic/search-combobox'
 import { GET_BRANCHES } from '@/graphql/queries/branches'
-import useOutstatic, { useLocalData } from '@/utils/hooks/useOutstatic'
+import { useOutstatic, useLocalData } from '@/utils/hooks/useOutstatic'
 import { queryClient } from '@/utils/react-query/queryClient'
 import { useCallback, useEffect, useState } from 'react'
 import { CreateBranchDialog } from '@/components/ui/outstatic/create-branch-dialog'
 import { PlusCircle } from 'lucide-react'
 import { Button } from '../shadcn/button'
-import { useInitialData } from '@/utils/hooks'
+import { useInitialData } from '@/utils/hooks/useInitialData'
 
 interface Branch {
   name: string

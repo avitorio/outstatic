@@ -10,7 +10,7 @@ import {
 import Link from 'next/link'
 import { GitHubBranchSearch } from '@/components/ui/outstatic/github-branch-search'
 import { useState } from 'react'
-import { useLocalData, useOutstatic } from '@/utils/hooks'
+import { useLocalData, useOutstatic } from '@/utils/hooks/useOutstatic'
 import { CreateBranchDialog } from '@/components/ui/outstatic/create-branch-dialog'
 
 export default function CollectionOnboarding() {

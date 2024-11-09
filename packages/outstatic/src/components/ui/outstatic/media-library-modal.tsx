@@ -1,7 +1,7 @@
 'use client'
 
 import { API_MEDIA_PATH } from '@/utils/constants'
-import { useOutstatic } from '@/utils/hooks'
+import { useOutstatic } from '@/utils/hooks/useOutstatic'
 import { useGetMediaFiles } from '@/utils/hooks/useGetMediaFiles'
 import { useState, useMemo } from 'react'
 import { Button } from '@/components/ui/shadcn/button'

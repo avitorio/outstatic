@@ -207,9 +207,9 @@
     "@tanstack/query-sync-storage-persister": "^5.29.0",
     "@tanstack/react-query": "5.51.21",
     "@tanstack/react-query-persist-client": "5.51.21",
-    "next": "^13 || ^14",
-    "react": "^17.0.2 || ^18",
-    "react-dom": "^17.0.2 || ^18"
+    "next": "^13 || ^14 || ^15",
+    "react": "^17.0.2 || ^18 || ^19",
+    "react-dom": "^17.0.2 || ^18 || ^19"
   },
   "publishConfig": {
     "access": "public"

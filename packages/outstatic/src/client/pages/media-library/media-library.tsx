@@ -2,7 +2,7 @@
 
 import { AdminLayout } from '@/components'
 import { API_MEDIA_PATH } from '@/utils/constants'
-import { useOutstatic } from '@/utils/hooks'
+import { useOutstatic } from '@/utils/hooks/useOutstatic'
 import { useGetMediaFiles } from '@/utils/hooks/useGetMediaFiles'
 import { useState, useMemo } from 'react'
 import { toast } from 'sonner'

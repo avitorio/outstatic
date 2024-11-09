@@ -3,7 +3,7 @@ import { OutstaticData } from '@/app'
 import { AdminHeader, Sidebar } from '@/components'
 import { AdminLoading } from '@/components/AdminLoading'
 import { InitialDataContext } from '@/utils/hooks/useInitialData'
-import useOutstatic, { useLocalData } from '@/utils/hooks/useOutstatic'
+import { useOutstatic, useLocalData } from '@/utils/hooks/useOutstatic'
 import { queryClient } from '@/utils/react-query/queryClient'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
@@ -15,6 +15,11 @@ import { useGetRepository } from '@/utils/hooks/useGetRepository'
 import Onboarding from './onboarding'
 import { NavigationGuardProvider } from 'next-navigation-guard'
 import V1_5BreakingCheck from '@/components/v1_5BreakingCheck'
+
+type OstClientProps = {
+  ostData: OutstaticData
+  params: { ost: string[] }
+}
 
 export const AdminArea = ({ params }: { params: { ost: string[] } }) => {
   const [openSidebar, setOpenSidebar] = useState(false)
@@ -60,11 +65,6 @@ export const Dashboard = ({ params }: { params: { ost: string[] } }) => {
       )}
     </>
   )
-}
-
-type OstClientProps = {
-  ostData: OutstaticData
-  params: { ost: string[] }
 }
 
 export const OstClient = ({ ostData, params }: OstClientProps) => {
