@@ -1,0 +1,98 @@
+---
+title: "Using Outstatic for Markdown content"
+publishedAt: "2024-10-30T18:53:46.596Z"
+status: "published"
+author:
+  name: "Andre Vitorio"
+  picture: "https://avatars.githubusercontent.com/u/1417109?v=4"
+slug: "using-outstatic-for-markdown-content"
+---
+
+Here's how you can get started with Outstatic on any project using markdown.
+
+Requirements:
+
+- A [GitHub](https://github.com) account.
+
+### **Initiating Setup: GitHub Authentication**
+
+Before diving in, it's essential to configure GitHub Authentication for your project. Outstatic accommodates both **GitHub OAuth** and **GitHub Apps** for authentication purposes:
+
+- **GitHub OAuth:** easier and quicker to set up, ideal for simpler integrations.
+
+- **GitHub Apps:** setup is generally more complex, providing a refined level of access and control.
+
+For those opting for GitHub Apps, please refer to the relevant [GitHub Apps Authentication](/github-apps-authentication) documentation.
+
+#### Setting up a GitHub OAuth Application:
+
+Let’s walk through the steps to create a GitHub OAuth Application, streamlining your project’s initial setup:
+
+- First go to the "Register a new OAuth application" page on GitHub by [clicking here](https://github.com/settings/applications/new).
+
+- Give your application a name, "Outstatic Blog" for example.
+
+- For the **Homepage URL** and **Authorization callback URL** fields type in any valid url, ex: `https://outstatic.com`, we'll change them later.
+
+- You can leave the **Application** description field empty.
+
+Click on **Register application**. You'll be redirected to your GitHub Oauth App settings page.
+
+Next, click on **Generate a new client secret**. Once done, keep this tab open. We'll need these values for our next steps.
+
+## Cloning the project
+
+Start by cloning the `outstatic-dashboard` project to your machine:
+
+```
+git clone git@github.com:avitorio/outstatic-dashboard.git
+cd outstatic-dashboard
+pnpm install
+pnpm dev
+```
+
+Start your dev server. Assuming you're on `http://localhost:3000` you can access your dashboard at `https://localhost:3000/outstatic`.
+
+You should see this page:
+
+![](/docs/images/missing-env-vars-gzNz.webp)
+
+Let's update your environment variables.
+
+```bash
+OST_GITHUB_ID=YOUR_GITHUB_OAUTH_APP_ID
+OST_GITHUB_SECRET=YOUR_GITHUB_OAUTH_APP_SECRET
+```
+
+Now go back to your GitHub OAuth App settings page and update the following values:
+
+- **Homepage URL**: `http://localhost:3000/`.
+
+- **Authorization callback URL:** `http://localhost:3000/api/outstatic/callback`
+
+Click on **Update application**.
+
+Restart your service and go back to the `/outstatic` page.
+
+If everything is setup correctly, then you'll see a login page and will be able to access your Dashboard.
+
+![](/docs/images/outstatic-login-screen-I4Mz.png)
+
+Congratulations! Your Outstatic installation is ready and you can now start creating and editing content.
+
+We recommend you learn how Outstatic [manages content](/introduction).
+
+### Access the Outstatic dashboard from your live site
+
+If you also want to access your Outstatic dashboard from your live site you'll need to create a second GitHub OAuth app as GitHub doesn't allow for multiple callback urls for a single OAuth app.
+
+Just repeat the steps for creating a GitHub OAuth app, but this time, replacing `http://localhost:3000/` on **Homepage URL** and **Authorization callback URL** with your actual website address.
+
+Don't forget to add the following environment variables to your Vercel project:
+
+```bash
+OST_GITHUB_ID=YOUR_GITHUB_OAUTH_APP_ID
+OST_GITHUB_SECRET=YOUR_GITHUB_OAUTH_APP_SECRET
+```
+
+To learn more about all the available environment variables, see the [Environment Variables ](https://outstatic.com/environment-variables)section of the docs.
