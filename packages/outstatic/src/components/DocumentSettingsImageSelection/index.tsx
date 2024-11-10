@@ -79,7 +79,7 @@ const DocumentSettingsImageSelection = ({
 
   return (
     <>
-      {showImage && (
+      {showImage && image && (
         <>
           <div
             className={`flex w-full relative bg-slate-100 rounded-md overflow-hidden h-48`}

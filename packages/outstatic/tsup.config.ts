@@ -23,7 +23,7 @@ export default defineConfig((options) => {
     ],
     format: ['cjs', 'esm'],
     dts: true,
-    clean: true,
+    clean: !options.watch,
     minify: !options.watch,
     treeshake: true, // Add tree shaking
     esbuildOptions(options) {
