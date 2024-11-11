@@ -84,6 +84,8 @@ const useTipTap = ({ ...rhfMethods }) => {
         includeChildren: true
       })
     ],
+    shouldRerenderOnTransaction: false,
+    immediatelyRender: false,
     editorProps: TiptapEditorProps,
     onUpdate
   })

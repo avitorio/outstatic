@@ -61,7 +61,6 @@ export const useDocumentUpdateEffect = ({
     if (parsedContent) return
 
     if (document && editor) {
-      console.log('document updated')
       const { mdDocument } = document
       const { data, content } = matter(mdDocument)
       setMetadata(data)
@@ -85,9 +84,13 @@ export const useDocumentUpdateEffect = ({
         content: parsedContent,
         slug
       }
-      methods.reset(newDocument)
-      editor.commands.setContent(parsedContent)
-      editor.commands.focus('start')
+
+      Promise.resolve().then(() => {
+        methods.reset(newDocument)
+        editor.commands.setContent(parsedContent)
+        editor.commands.focus('start')
+      })
+
       setShowDelete(slug !== 'new')
       setExtension(document.extension)
       setHasChanges(false)
