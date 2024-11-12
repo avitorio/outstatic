@@ -2,12 +2,12 @@
 import { SearchCombobox } from '@/components/ui/outstatic/search-combobox'
 import { GET_BRANCHES } from '@/graphql/queries/branches'
 import { useOutstatic, useLocalData } from '@/utils/hooks/useOutstatic'
-import { queryClient } from '@/utils/react-query/queryClient'
 import { useCallback, useEffect, useState } from 'react'
 import { CreateBranchDialog } from '@/components/ui/outstatic/create-branch-dialog'
 import { PlusCircle } from 'lucide-react'
 import { Button } from '../shadcn/button'
 import { useInitialData } from '@/utils/hooks/useInitialData'
+import { useQueryClient } from '@tanstack/react-query'
 
 interface Branch {
   name: string
@@ -32,6 +32,7 @@ export const GitHubBranchSearch = ({
   size = 'default',
   onboarding = false
 }: GitHubBranchSearchProps) => {
+  const queryClient = useQueryClient()
   const { setData, data } = useLocalData()
   const [query, setQuery] = useState('')
   const { repoBranch: initialRepoBranch } = useInitialData()

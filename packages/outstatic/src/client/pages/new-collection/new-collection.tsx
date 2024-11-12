@@ -177,7 +177,7 @@ export default function NewCollection() {
             await refetchCollections()
             setLoading(false)
             setHasChanges(false)
-            router.push(`${dashboardRoute}/${slug})}`)
+            router.push(`${dashboardRoute}/${slug}`)
           }
 
           if (data?.documents && data.documents.length > 0) {
