@@ -6,7 +6,6 @@ import CustomFields from './pages/custom-fields'
 import Collections from './pages/collections'
 import EditDocument from './pages/edit-document'
 import List from './pages/list'
-import NewCollection from './pages/new-collection'
 import Settings from './pages/settings'
 import MediaLibrary from './pages/media-library'
 
@@ -43,8 +42,6 @@ export const Router = ({ params }: { params: { ost: string[] } }) => {
       ) : slug === 'collections' &&
         collections?.find((col) => col.slug === slug2) ? (
         <CustomFields collection={slug2} title={title} />
-      ) : !!slug2 && !isContent ? (
-        <NewCollection />
       ) : (
         defaultPages[slug]
       )}

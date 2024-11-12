@@ -12,11 +12,13 @@ import { GitHubBranchSearch } from '@/components/ui/outstatic/github-branch-sear
 import { useState } from 'react'
 import { useLocalData, useOutstatic } from '@/utils/hooks'
 import { CreateBranchDialog } from '@/components/ui/outstatic/create-branch-dialog'
+import NewCollectionModal from './new-collection-modal'
 
 export default function CollectionOnboarding() {
   const { dashboardRoute } = useOutstatic()
   const { setData } = useLocalData()
   const [showCreateBranchDialog, setShowCreateBranchDialog] = useState(false)
+  const [showNewCollectionModal, setShowNewCollectionModal] = useState(false)
 
   const searchParams = useSearchParams()
   const [confirmBranch, setConfirmBranch] = useState(
@@ -41,13 +43,8 @@ export default function CollectionOnboarding() {
                 website.
               </p>
               <p>Create your first Collection by clicking the button below.</p>
-              <Button asChild>
-                <Link
-                  href={`${dashboardRoute}/collections/new`}
-                  className="no-underline"
-                >
-                  New Collection
-                </Link>
+              <Button onClick={() => setShowNewCollectionModal(true)}>
+                New Collection
               </Button>
               <p>
                 To learn more about how Collections work{' '}
@@ -110,6 +107,13 @@ export default function CollectionOnboarding() {
           setData({ repoBranch: branchName })
         }}
       />
+
+      {showNewCollectionModal && (
+        <NewCollectionModal
+          open={showNewCollectionModal}
+          onOpenChange={setShowNewCollectionModal}
+        />
+      )}
     </>
   )
 }

@@ -48,7 +48,7 @@ export const useGetDocuments = ({
 
   const { refetch } = useCollections({ enabled: false })
 
-  const collectionName = collection || params?.ost[0]
+  const collectionName = collection || params?.ost?.[0]
 
   return useQuery({
     queryKey: [
