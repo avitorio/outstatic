@@ -12,8 +12,8 @@ import { toast } from 'sonner'
 import {
   CommandItemProps,
   updateScrollView
-} from '../../extensions/SlashCommand'
-import { getPrevText } from '../getPrevText'
+} from '@/components/editor/extensions/slash-command'
+import { getPrevText } from '@/components/editor/utils/getPrevText'
 import { OUTSTATIC_API_PATH } from '@/utils/constants'
 import { useCsrfToken } from '@/utils/hooks/useCsrfToken'
 

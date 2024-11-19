@@ -1,4 +1,3 @@
-import MDEMenuButton from '@/components/MDEMenuButton'
 import { BubbleMenu, Editor } from '@tiptap/react'
 import {
   Heading,
@@ -9,12 +8,13 @@ import {
   PanelTopCloseIcon
 } from 'lucide-react'
 import { useCallback } from 'react'
+import { EditorBubbleButton } from '../ui/editor-bubble-button'
 
-type MDETableMenuProps = {
+type TableMenuProps = {
   editor: Editor
 }
 
-const MDETableMenu = ({ editor }: MDETableMenuProps) => {
+const TableMenu = ({ editor }: TableMenuProps) => {
   const shouldShow = useCallback(() => {
     return (
       (editor.isActive('tableCell') || editor.isActive('tableHeader')) &&
@@ -32,60 +32,53 @@ const MDETableMenu = ({ editor }: MDETableMenuProps) => {
       }}
     >
       <div className="flex prose-sm rounded-md border border-stone-200 bg-white shadow-md transition-all">
-        <MDEMenuButton
-          onClick={() => editor.chain().focus().addColumnBefore().run()}
-          editor={editor}
+        <EditorBubbleButton
+          onSelect={() => editor.chain().focus().addColumnBefore().run()}
           name="Add column before"
         >
           <PanelLeftClose size={18} />
-        </MDEMenuButton>
-        <MDEMenuButton
-          onClick={() => editor.chain().focus().addColumnAfter().run()}
-          editor={editor}
+        </EditorBubbleButton>
+        <EditorBubbleButton
+          onSelect={() => editor.chain().focus().addColumnAfter().run()}
           name="Add column after"
         >
           <PanelRightClose size={18} />
-        </MDEMenuButton>
+        </EditorBubbleButton>
 
-        <MDEMenuButton
-          onClick={() => editor.chain().focus().deleteColumn().run()}
-          editor={editor}
+        <EditorBubbleButton
+          onSelect={() => editor.chain().focus().deleteColumn().run()}
           name="Delete column"
         >
           <ListX size={18} className="-rotate-90" />
-        </MDEMenuButton>
+        </EditorBubbleButton>
 
-        <MDEMenuButton
-          onClick={() => editor.chain().focus().addRowBefore().run()}
-          editor={editor}
+        <EditorBubbleButton
+          onSelect={() => editor.chain().focus().addRowBefore().run()}
           name="Add row before"
         >
           <PanelTopCloseIcon size={18} />
-        </MDEMenuButton>
-        <MDEMenuButton
-          onClick={() => editor.chain().focus().addRowAfter().run()}
-          editor={editor}
+        </EditorBubbleButton>
+        <EditorBubbleButton
+          onSelect={() => editor.chain().focus().addRowAfter().run()}
           name="Add row after"
         >
           <PanelBottomClose size={18} />
-        </MDEMenuButton>
-        <MDEMenuButton
-          onClick={() => editor.chain().focus().deleteRow().run()}
-          editor={editor}
+        </EditorBubbleButton>
+        <EditorBubbleButton
+          onSelect={() => editor.chain().focus().deleteRow().run()}
           name="Delete row"
         >
           <ListX size={18} />
-        </MDEMenuButton>
-        <MDEMenuButton
-          onClick={() => editor.chain().focus().toggleHeaderRow().run()}
-          editor={editor}
+        </EditorBubbleButton>
+        <EditorBubbleButton
+          onSelect={() => editor.chain().focus().toggleHeaderRow().run()}
           name="Toggle Header row"
         >
           <Heading size={18} />
-        </MDEMenuButton>
+        </EditorBubbleButton>
       </div>
     </BubbleMenu>
   )
 }
 
-export default MDETableMenu
+export { TableMenu }

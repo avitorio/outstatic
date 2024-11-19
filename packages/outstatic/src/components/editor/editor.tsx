@@ -1,14 +1,15 @@
-import MDEMenu from '@/components/MDEMenu'
-import MDETableMenu from '@/components/MDETableMenu'
+import EditorMenu from '@/components/editor/menu/editor-menu'
 import { Editor, EditorContent } from '@tiptap/react'
 import { useFormContext } from 'react-hook-form'
+import { TableMenu } from './menu/table-menu'
+import ImageMenu from './menu/image-menu'
 
 interface MDEditorProps {
   editor: Editor
   id: string
 }
 
-const MDEditor = ({ id, editor }: MDEditorProps) => {
+export const MDEditor = ({ id, editor }: MDEditorProps) => {
   const {
     watch,
     formState: { errors }
@@ -18,8 +19,9 @@ const MDEditor = ({ id, editor }: MDEditorProps) => {
 
   return (
     <>
-      {editor && <MDEMenu editor={editor} />}
-      {editor && <MDETableMenu editor={editor} />}
+      {editor && <EditorMenu editor={editor} />}
+      {editor && <TableMenu editor={editor} />}
+      {editor && <ImageMenu editor={editor} />}
       <EditorContent name="content" value={watchContent} editor={editor} />
       <div className="mt-1">
         {errors[id]?.message && (
@@ -31,5 +33,3 @@ const MDEditor = ({ id, editor }: MDEditorProps) => {
     </>
   )
 }
-
-export default MDEditor

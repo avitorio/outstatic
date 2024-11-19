@@ -11,13 +11,15 @@ import TableRow from '@tiptap/extension-table-row'
 import TiptapUnderline from '@tiptap/extension-underline'
 import { ReactNodeViewRenderer } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
-import lowlight from 'lowlight'
+import { common, createLowlight } from 'lowlight'
 import { Markdown } from 'tiptap-markdown'
-import CodeBlock from './CodeBlock'
-import SlashCommand from './SlashCommand'
-import { ToggleClass } from './ToggleClass'
+import CodeBlock from '@/components/editor/extensions/code-block'
+import SlashCommand from '@/components/editor/extensions/slash-command'
+import { ToggleClass } from '@/components/editor/extensions/toggle-class'
+import { AIHighlight } from 'novel/extensions'
 
 export const TiptapExtensions = [
+  AIHighlight,
   StarterKit.configure({
     bulletList: {
       HTMLAttributes: {
@@ -108,7 +110,9 @@ export const TiptapExtensions = [
       return ReactNodeViewRenderer(CodeBlock)
     }
   }).configure({
-    lowlight
+    // configure lowlight: common /  all / use highlightJS in case there is a need to specify certain language grammars only
+    // common: covers 37 language grammars which should be good enough in most cases
+    lowlight: createLowlight(common)
   }),
   Table.configure({
     resizable: true

@@ -3,18 +3,9 @@ import { Editor, ReactRenderer } from '@tiptap/react'
 import Suggestion from '@tiptap/suggestion'
 import { ReactNode, useState } from 'react'
 import tippy from 'tippy.js'
-import { BaseCommandList } from '../utils/slash-command/BaseCommandList'
-import ImageCommandList from '../utils/slash-command/ImageCommandList'
-import { getSuggestionItems } from '../utils/slash-command/getSuggestionItems'
-import { useOutstatic } from '@/utils/hooks'
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription
-} from '@/components/ui/shadcn/dialog'
-import { MediaSettings } from '@/client/pages/settings/_components/media-settings'
+import { BaseCommandList } from '@/components/editor/extensions/slash-command/BaseCommandList'
+import ImageCommandList from '@/components/editor/extensions/slash-command/ImageCommandList'
+import { getSuggestionItems } from '@/components/editor/extensions/slash-command/getSuggestionItems'
 
 export type CommandItemProps = {
   title: string

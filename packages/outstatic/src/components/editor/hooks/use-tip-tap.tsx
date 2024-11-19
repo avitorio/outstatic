@@ -1,20 +1,20 @@
-import { TiptapExtensions } from '@/utils/editor/extensions'
-import { TiptapEditorProps } from '@/utils/editor/props'
-import { getPrevText } from '@/utils/editor/utils/getPrevText'
+import { TiptapExtensions } from '@/components/editor/extensions/index'
+import { TiptapEditorProps } from '@/components/editor/props'
+import { getPrevText } from '@/components/editor/utils/getPrevText'
 import Placeholder from '@tiptap/extension-placeholder'
 import { Editor, EditorEvents, useEditor } from '@tiptap/react'
 import { useCompletion } from 'ai/react'
 import { useEffect, useRef, useCallback } from 'react'
 import { toast } from 'sonner'
 import { useDebouncedCallback } from 'use-debounce'
-import useOutstatic from './useOutstatic'
-import { OUTSTATIC_API_PATH } from '../constants'
-import { useCsrfToken } from './useCsrfToken'
+import useOutstatic from '@/utils/hooks/useOutstatic'
+import { OUTSTATIC_API_PATH } from '@/utils/constants'
+import { useCsrfToken } from '@/utils/hooks/useCsrfToken'
 
-const useTipTap = ({ ...rhfMethods }) => {
+export const useTipTap = ({ ...rhfMethods }) => {
   const { hasOpenAIKey, basePath } = useOutstatic()
   const csrfToken = useCsrfToken()
-  const { setValue, trigger } = rhfMethods
+  const { setValue } = rhfMethods
 
   const editorRef = useRef<Editor | null>(null)
 
@@ -29,16 +29,21 @@ const useTipTap = ({ ...rhfMethods }) => {
     api: basePath + OUTSTATIC_API_PATH + '/generate',
     onFinish: (_prompt, completion) => {
       if (editorRef.current) {
+        const start = editorRef.current.state.selection.from
+        editorRef.current.commands.insertContentAt(start, completion)
         editorRef.current.commands.setTextSelection({
-          from: editorRef.current.state.selection.from - completion.length,
+          from: start,
           to: editorRef.current.state.selection.from
         })
+        editorRef.current.commands.removeClass('completing')
       }
     },
     onError: (err) => {
+      editorRef.current?.commands.removeClass('completing')
       toast.error(err.message)
     }
   })
+
   const onUpdate = useCallback(
     ({ editor }: EditorEvents['update']) => {
       const selection = editor.state.selection
@@ -55,7 +60,9 @@ const useTipTap = ({ ...rhfMethods }) => {
         if (prevText === '') {
           toast.error('Write some content so the AI can continue.')
         } else {
-          complete(prevText)
+          complete(prevText, {
+            body: { option: 'continue', command: '' }
+          })
         }
       } else {
         debouncedCallback({ editor })
@@ -77,38 +84,35 @@ const useTipTap = ({ ...rhfMethods }) => {
             return `Heading ${node.attrs.level}`
           }
 
+          if (
+            node.type.name === 'bulletList' ||
+            node.type.name === 'orderedList'
+          ) {
+            return ''
+          }
+
           return `Press '/' for commands${
             hasOpenAIKey ? ", or '++' for AI autocomplete..." : ''
           }`
         },
-        includeChildren: true
+        includeChildren: false
       })
     ],
     editorProps: TiptapEditorProps,
-    onUpdate
+    onUpdate,
+    immediatelyRender: false
   })
 
   useEffect(() => {
+    if (!editor || editorRef.current) return
     editorRef.current = editor
   }, [editor])
 
-  const prev = useRef('')
-
   useEffect(() => {
-    editor?.commands.toggleClass('completing')
-  }, [isLoading])
-
-  // Insert chunks of the generated text
-  useEffect(() => {
-    const diff = completion.slice(prev.current.length)
-    prev.current = completion
-
-    try {
-      editor?.commands.insertContent(diff)
-    } catch (e) {
-      console.log(`error adding content: ${diff}`)
+    if (isLoading) {
+      editor?.commands.addClass('completing')
     }
-  }, [isLoading, editor, completion])
+  }, [isLoading])
 
   useEffect(() => {
     // if user presses escape or cmd + z and it's loading,
@@ -130,7 +134,11 @@ const useTipTap = ({ ...rhfMethods }) => {
       e.stopPropagation()
       stop()
       if (window.confirm('AI writing paused. Continue?')) {
-        complete(editor?.getText() || '')
+        if (editor?.getText()) {
+          complete(editor.getText(), {
+            body: { option: 'continue', command: '' }
+          })
+        }
       }
     }
     if (isLoading) {
@@ -148,5 +156,3 @@ const useTipTap = ({ ...rhfMethods }) => {
 
   return { editor: editor as Editor }
 }
-
-export default useTipTap

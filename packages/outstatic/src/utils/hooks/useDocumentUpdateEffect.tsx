@@ -13,7 +13,7 @@ interface UseDocumentUpdateEffectProps {
   collection: string
   methods: UseFormReturn<Document, any>
   slug: string
-  editor: Editor
+  editor: Editor | null
   setHasChanges: Dispatch<SetStateAction<boolean>>
   setShowDelete: Dispatch<SetStateAction<boolean>>
   setExtension: Dispatch<SetStateAction<MDExtensions>>
@@ -61,7 +61,6 @@ export const useDocumentUpdateEffect = ({
     if (parsedContent) return
 
     if (document && editor) {
-      console.log('document updated')
       const { mdDocument } = document
       const { data, content } = matter(mdDocument)
       setMetadata(data)

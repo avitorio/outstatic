@@ -15,6 +15,18 @@ declare module '@tiptap/core' {
        */
       toggleClass: (classs: string) => ReturnType
     }
+    addClass: {
+      /**
+       * Add a class if it doesn't exist
+       */
+      addClass: (classs: string) => ReturnType
+    }
+    removeClass: {
+      /**
+       * Remove a class if it exists
+       */
+      removeClass: (classs: string) => ReturnType
+    }
   }
 }
 
@@ -55,6 +67,60 @@ const toggleClass =
     return true
   }
 
+const addClass =
+  (className: string) =>
+  ({ tr, state }: { tr: Transaction; state: EditorState }) => {
+    const { selection } = state
+    const { $anchor } = selection
+
+    const node = $anchor.node($anchor.depth)
+
+    if (!node || node.isText) {
+      return false
+    }
+
+    const classes = node.attrs.class || ''
+    const classArray = classes.split(' ')
+
+    // Only add if class doesn't already exist
+    if (!classArray.includes(className)) {
+      const newClasses = `${classes} ${className}`.trim()
+      const newAttrs = { ...node.attrs, class: newClasses }
+      tr.setNodeMarkup($anchor.before($anchor.depth), null, newAttrs)
+      return true
+    }
+
+    return false
+  }
+
+const removeClass =
+  (className: string) =>
+  ({ tr, state }: { tr: Transaction; state: EditorState }) => {
+    const { selection } = state
+    const { $anchor } = selection
+
+    const node = $anchor.node($anchor.depth)
+
+    if (!node || node.isText) {
+      return false
+    }
+
+    const classes = node.attrs.class || ''
+    const classArray = classes.split(' ')
+
+    // Only remove if class exists
+    if (classArray.includes(className)) {
+      const newClasses = classArray
+        .filter((item: string) => item !== className)
+        .join(' ')
+      const newAttrs = { ...node.attrs, class: newClasses }
+      tr.setNodeMarkup($anchor.before($anchor.depth), null, newAttrs)
+      return true
+    }
+
+    return false
+  }
+
 export const ToggleClass = Extension.create<TextAlignOptions>({
   name: 'toggleClass',
   addGlobalAttributes() {
@@ -85,6 +151,16 @@ export const ToggleClass = Extension.create<TextAlignOptions>({
         (className: string) =>
         ({ commands }) => {
           return commands.command(toggleClass(className))
+        },
+      addClass:
+        (className: string) =>
+        ({ commands }) => {
+          return commands.command(addClass(className))
+        },
+      removeClass:
+        (className: string) =>
+        ({ commands }) => {
+          return commands.command(removeClass(className))
         }
     }
   }

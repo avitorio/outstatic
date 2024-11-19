@@ -1,16 +1,16 @@
-import MDEMenuButton from '@/components/MDEMenuButton'
 import {
   CommandItemProps,
   updateScrollView
-} from '@/utils/editor/extensions/SlashCommand'
+} from '@/components/editor/extensions/slash-command'
 import { Editor, Range } from '@tiptap/react'
-import { Image, Link, Upload } from 'lucide-react'
+import { Check, Image, Link, Upload } from 'lucide-react'
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
-import { addImage } from '../addImage'
+import { addImage } from '@/components/editor/utils/addImage'
 import MediaLibraryModal from '@/components/ui/outstatic/media-library-modal'
 import { API_MEDIA_PATH } from '@/utils/constants'
 import { useOutstatic } from '@/utils/hooks'
 import MediaSettingsDialog from '@/components/ui/outstatic/media-settings-dialog'
+import { Button } from '@/components/ui/shadcn/button'
 
 type ImageCommandListProps = {
   editor: Editor
@@ -40,7 +40,7 @@ const items = [
     icon: <Link size={18} />
   },
   {
-    title: 'Media Gallery',
+    title: 'Media Library',
     description: 'Add image from media gallery.',
     searchTerms: ['photo', 'picture', 'media'],
     icon: <Image size={18} />
@@ -74,7 +74,7 @@ const ImageCommandList = ({
       case 'Image from URL':
         setShowLink(true)
         break
-      case 'Media Gallery':
+      case 'Media Library':
         if (!repoMediaPath && !publicMediaPath) {
           setCallbackFunction(() => () => setShowMediaLibrary(true))
           setShowMediaPathDialog(true)
@@ -190,34 +190,32 @@ const ImageCommandList = ({
   return (
     <div id="outstatic">
       {showLink ? (
-        <div className="flex w-[500px] rounded-sm border border-black outline-none">
-          <div
-            className={`relative w-[500px] border-r outline-none border-black`}
-          >
-            <input
-              type="text"
-              className={`w-full h-full py-2 px-3 outline-none ${
-                errors.imageUrl ? 'bg-red-50' : 'bg-white'
-              }`}
-              placeholder="Insert link here"
-              onChange={(e) => setImageUrl(e.target.value)}
-              value={imageUrl}
-              onFocus={() => setErrors({ ...errors, imageUrl: '' })}
-              autoFocus
-            />
-            {errors.imageUrl && (
-              <span className="absolute text-red-500 top-10 left-0">
-                {errors.imageUrl}
-              </span>
-            )}
-          </div>
-          <MDEMenuButton
+        <div
+          className={`flex justify-between z-50 w-96 rounded-md border bg-popover text-popover-foreground shadow-md outline-none p-1`}
+        >
+          <input
+            type="text"
+            className={`flex-1 bg-background p-1 text-sm outline-none ${
+              errors.imageUrl ? 'bg-red-50' : 'bg-white'
+            }`}
+            placeholder="Insert link here"
+            onChange={(e) => setImageUrl(e.target.value)}
+            value={imageUrl}
+            onFocus={() => setErrors({ ...errors, imageUrl: '' })}
+            autoFocus
+          />
+          {errors.imageUrl && (
+            <span className="absolute text-red-500 top-10 left-0">
+              {errors.imageUrl}
+            </span>
+          )}
+          <Button
             onClick={() => addImageUrl(imageUrl)}
-            editor={editor}
-            name="back"
+            size="icon"
+            className="h-8"
           >
-            Done
-          </MDEMenuButton>
+            <Check className="h-4 w-4" />
+          </Button>
         </div>
       ) : showMediaLibrary ? (
         <MediaLibraryModal

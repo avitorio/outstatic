@@ -11,7 +11,10 @@ import {
   Text,
   TextQuote
 } from 'lucide-react'
-import { CommandItemProps, CommandProps } from '../../extensions/SlashCommand'
+import {
+  CommandItemProps,
+  CommandProps
+} from '@/components/editor/extensions/slash-command'
 
 const items = [
   {

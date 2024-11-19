@@ -4,11 +4,10 @@ import signout from '@/app/api/auth/signout'
 import user from '@/app/api/auth/user'
 import generate from '@/app/api/generate'
 import media from '@/app/api/media'
-import { Session } from 'next-session/lib/types'
 import { NextRequest } from 'next/server'
 
 export interface Request extends NextRequest {
-  session: Session
+  session: any
 }
 
 export type GetParams = {
