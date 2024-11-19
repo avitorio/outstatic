@@ -107,7 +107,7 @@ export const TiptapExtensions = [
   Link.configure({ openOnClick: false }),
   CodeBlockLowlight.extend({
     addNodeView() {
-      return ReactNodeViewRenderer(CodeBlock)
+      return ReactNodeViewRenderer(CodeBlock as any)
     }
   }).configure({
     // configure lowlight: common /  all / use highlightJS in case there is a need to specify certain language grammars only

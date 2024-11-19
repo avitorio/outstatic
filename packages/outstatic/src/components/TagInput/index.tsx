@@ -4,7 +4,6 @@ import { useState } from 'react'
 import { Controller, RegisterOptions, useFormContext } from 'react-hook-form'
 import { CSSObjectWithLabel } from 'react-select'
 import Creatable from 'react-select/creatable'
-import CreatableSelect from 'react-select/dist/declarations/src/Creatable'
 
 export type TagProps = {
   label?: string
@@ -18,7 +17,7 @@ export type TagProps = {
   className?: string
   suggestions?: CustomFieldArrayValue[]
   inputSize?: 'small' | 'medium'
-} & React.ComponentPropsWithoutRef<CreatableSelect>
+} & React.ComponentPropsWithoutRef<typeof Creatable>
 
 const sizes = {
   small: {
@@ -93,7 +92,7 @@ const TagInput = ({
                     borderRadius: '0.375rem',
                     backgroundColor: '#f9fafb',
                     fontSize: '0.875rem'
-                  } as CSSObjectWithLabel)
+                  }) as CSSObjectWithLabel
               }}
               classNames={{
                 menu: () => (inputSize === 'small' ? 'text-sm' : 'text-base'),
