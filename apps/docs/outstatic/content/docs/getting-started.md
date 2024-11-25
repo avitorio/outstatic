@@ -1,13 +1,13 @@
 ---
-title: "Getting started"
-status: "published"
+title: 'Getting started'
+status: 'published'
 author:
-  name: "Andre Vitorio"
-  picture: "https://avatars.githubusercontent.com/u/1417109?v=4"
-slug: "getting-started"
-description: "Get started with Outstatic"
-coverImage: ""
-publishedAt: "2024-10-30T03:00:00.000Z"
+  name: 'Andre Vitorio'
+  picture: 'https://avatars.githubusercontent.com/u/1417109?v=4'
+slug: 'getting-started'
+description: 'Get started with Outstatic'
+coverImage: ''
+publishedAt: '2024-11-25T03:00:00.000Z'
 ---
 
 Here's how you can get started with Outstatic.
@@ -133,7 +133,8 @@ import 'outstatic/outstatic.css'
 import { Outstatic } from 'outstatic'
 import { OstClient } from 'outstatic/client'
 
-export default async function Page({ params }: { params: { ost: string[] } }) {
+export default async function Page(props: { params: Promise<{ ost: string[] }> }) {
+  const params = await props.params;
   const ostData = await Outstatic()
   return <OstClient ostData={ostData} params={params} />
 }

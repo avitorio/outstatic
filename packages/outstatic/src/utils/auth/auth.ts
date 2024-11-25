@@ -34,7 +34,7 @@ export async function setLoginSession(session: LoginSession) {
 }
 
 export async function getLoginSession(): Promise<Session | null> {
-  const cookieStore = cookies()
+  const cookieStore = await cookies()
   const token = cookieStore.get('ost_token')?.value
   if (!token) return null
 
