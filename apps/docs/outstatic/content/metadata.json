@@ -1,6 +1,6 @@
 {
-  "commit": "6ccd176975bf4873b00a121dc7393fdd9edde1d5",
-  "generated": "2024-11-25T16:27:12.202Z",
+  "commit": "ce7739af99e173bd6f12eef35c4f5ce8ec32faca",
+  "generated": "2024-11-25T17:10:03.509Z",
   "metadata": [
     {
       "__outstatic": {
@@ -37,24 +37,6 @@
       "slug": "github-application",
       "status": "draft",
       "title": "GitHub Application"
-    },
-    {
-      "__outstatic": {
-        "commit": "22650aab8e1fa8241dd7756b1bf90fd79342969d",
-        "hash": "3223339599",
-        "path": "/outstatic/content/docs/fetching-data.md"
-      },
-      "author": {
-        "name": "Jakob Heuser",
-        "picture": "https://avatars.githubusercontent.com/u/1795?v=4"
-      },
-      "collection": "docs",
-      "coverImage": "",
-      "description": "",
-      "publishedAt": "2023-07-25T12:28:25.000Z",
-      "slug": "fetching-data",
-      "status": "published",
-      "title": "Fetching data"
     },
     {
       "__outstatic": {
@@ -253,6 +235,24 @@
       "slug": "getting-started",
       "status": "published",
       "title": "Getting started"
+    },
+    {
+      "__outstatic": {
+        "commit": "ce7739af99e173bd6f12eef35c4f5ce8ec32faca",
+        "hash": "989655473",
+        "path": "outstatic/content/docs/fetching-data.md"
+      },
+      "author": {
+        "name": "Jakob Heuser",
+        "picture": "https://avatars.githubusercontent.com/u/1795?v=4"
+      },
+      "collection": "docs",
+      "coverImage": "",
+      "description": "",
+      "publishedAt": "2024-11-25T12:28:25.000Z",
+      "slug": "fetching-data",
+      "status": "published",
+      "title": "Fetching data"
     }
   ]
 }
