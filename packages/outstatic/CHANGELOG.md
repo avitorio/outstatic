@@ -1,5 +1,11 @@
 # outstatic
 
+## 1.4.13
+
+### Patch Changes
+
+- 9455fed: fix: API GET not returning promise
+
 ## 1.4.12
 
 ### Patch Changes
