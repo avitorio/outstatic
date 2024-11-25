@@ -1,6 +1,6 @@
 {
-  "commit": "29ec769fa3cb71a41ddfd63d94cfe9b825aad3b2",
-  "generated": "2024-10-30T14:13:11.740Z",
+  "commit": "6ccd176975bf4873b00a121dc7393fdd9edde1d5",
+  "generated": "2024-11-25T16:27:12.202Z",
   "metadata": [
     {
       "__outstatic": {
@@ -238,9 +238,9 @@
     },
     {
       "__outstatic": {
-        "commit": "29ec769fa3cb71a41ddfd63d94cfe9b825aad3b2",
-        "hash": "3835551267",
-        "path": "apps/docs/outstatic/content/docs/getting-started.md"
+        "commit": "6ccd176975bf4873b00a121dc7393fdd9edde1d5",
+        "hash": "2772151537",
+        "path": "outstatic/content/docs/getting-started.md"
       },
       "author": {
         "name": "Andre Vitorio",
@@ -249,7 +249,7 @@
       "collection": "docs",
       "coverImage": "",
       "description": "Get started with Outstatic",
-      "publishedAt": "2024-10-30T03:00:00.000Z",
+      "publishedAt": "2024-11-25T03:00:00.000Z",
       "slug": "getting-started",
       "status": "published",
       "title": "Getting started"
