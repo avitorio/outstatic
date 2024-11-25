@@ -41,7 +41,7 @@ export const AdminArea = ({ params }: { params: { ost: string[] } }) => {
 }
 
 export const Dashboard = ({ params }: { params: { ost: string[] } }) => {
-  const { repoSlug, repoOwner, repoBranch, isPending } = useOutstatic()
+  const { repoSlug, repoOwner, repoBranch, isPending, session } = useOutstatic()
   const { data: repository } = useGetRepository()
   const { setData, data, isPending: localPending } = useLocalData()
 
@@ -52,7 +52,10 @@ export const Dashboard = ({ params }: { params: { ost: string[] } }) => {
         setData({ repoBranch: defaultBranch })
       }
     }
-  }, [repository, setData, data])
+    if (repoSlug && !repoOwner) {
+      setData({ repoBranch, repoOwner: session?.user.login })
+    }
+  }, [repository, setData, data, session])
 
   return (
     <>
