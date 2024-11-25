@@ -1,5 +1,11 @@
 # outstatic
 
+## 1.4.12
+
+### Patch Changes
+
+- fcca5ad: Add Next.js 15 support
+
 ## 1.4.9
 
 ### Patch Changes
