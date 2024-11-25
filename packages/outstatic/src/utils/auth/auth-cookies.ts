@@ -6,8 +6,9 @@ export const TOKEN_NAME = 'ost_token'
 
 export const MAX_AGE = 60 * 60 * 8 // 8 hours
 
-export function setTokenCookie(token: string) {
-  cookies().set(TOKEN_NAME, token, {
+export async function setTokenCookie(token: string) {
+  const cookieStore = await cookies()
+  cookieStore.set(TOKEN_NAME, token, {
     maxAge: MAX_AGE,
     expires: new Date(Date.now() + MAX_AGE * 1000),
     httpOnly: true,

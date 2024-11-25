@@ -37,12 +37,12 @@ const postPaths = {
 
 export const OutstaticApi = {
   GET: async (req: Request, { params }: GetParams) => {
-    const { ost } = params
+    const { ost } = await params
     const rsp = getPaths[ost[0]](req)
     return rsp
   },
   POST: async (req: Request, { params }: PostParams) => {
-    const { ost } = params
+    const { ost } = await params
     const rsp = postPaths[ost[0]](req)
     return rsp
   }
