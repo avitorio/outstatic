@@ -22,7 +22,7 @@ export default function CollectionOnboarding() {
 
   const searchParams = useSearchParams()
   const [confirmBranch, setConfirmBranch] = useState(
-    searchParams.get('confirmed') === 'true' || initialRepoBranch !== null
+    searchParams.get('confirmed') === 'true' || initialRepoBranch
   )
 
   return (
