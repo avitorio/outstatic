@@ -1,0 +1,34 @@
+{
+  "commit": "",
+  "generated": "2024-11-26T19:37:41.929Z",
+  "metadata": [
+    {
+      "__outstatic": {
+        "commit": "",
+        "hash": "2190604922",
+        "path": "/outstatic/content/posts/welcome-to-outstatic.md"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "posts",
+      "coverImage": "/images/welcome-to-outstatic-g3Mz.png",
+      "description": "Thank you for choosing Outstatic to create your website! We look forward to helping you every step of the way.",
+      "publishedAt": "2024-02-10T01:41:03.484Z",
+      "slug": "welcome-to-outstatic",
+      "status": "published",
+      "tags": [
+        {
+          "label": "Outstatic",
+          "value": "outstatic"
+        },
+        {
+          "label": "NextJs",
+          "value": "nextJs"
+        }
+      ],
+      "title": "Welcome to Outstatic!"
+    }
+  ]
+}
