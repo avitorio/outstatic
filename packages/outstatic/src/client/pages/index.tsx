@@ -76,7 +76,7 @@ export const OstClient = ({ ostData, params }: OstClientProps) => {
   }
 
   if (!ostData?.session) {
-    return <Login />
+    return <Login basePath={ostData?.basePath} />
   }
 
   return (

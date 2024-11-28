@@ -1,8 +1,21 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  basePath: '/docs',
   async redirects() {
     return [
+      {
+        source: '/',
+        destination: '/docs',
+        basePath: false,
+        permanent: false
+      },
+      {
+        source: '/outstatic',
+        destination: '/docs/outstatic',
+        basePath: false,
+        permanent: true
+      },
       {
         source: '/',
         destination: '/introduction',

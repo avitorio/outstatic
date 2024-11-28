@@ -4,3 +4,9 @@
 
 Please, visit our [getting started](https://outstatic.com/docs/getting-started) guide.
 Don't forget to check the `.env.local.example` file for environment variables.
+
+## Additional Details
+
+The docs demo uses the `basePath` config on `next.config.js`. You can read more about it on the [Next.js docs](https://nextjs.org/docs/app/api-reference/next-config-js/basePath).
+
+The Outstatic dashboard is located at `http://localhost:3000/docs/outstatic`

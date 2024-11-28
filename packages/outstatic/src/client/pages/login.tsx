@@ -9,7 +9,7 @@ import { useState } from 'react'
 
 type Errors = keyof typeof loginErrors
 
-export default function Login() {
+export default function Login({ basePath }: { basePath?: string }) {
   const searchParams = useSearchParams()
 
   const error = searchParams.get('error') as Errors
@@ -23,7 +23,9 @@ export default function Login() {
     setIsLoading(true)
 
     try {
-      const response = await fetch(`${OUTSTATIC_API_PATH}/login`)
+      const response = await fetch(
+        `${basePath + '/' || ''}${OUTSTATIC_API_PATH}/login`
+      )
       const data = await response.json()
 
       if (data.url) {
