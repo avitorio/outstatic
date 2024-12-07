@@ -24,7 +24,7 @@ export default function Login({ basePath }: { basePath?: string }) {
 
     try {
       const response = await fetch(
-        `${basePath + '/' || ''}${OUTSTATIC_API_PATH}/login`
+        `${basePath ? basePath + '/' : ''}${OUTSTATIC_API_PATH}/login`
       )
       const data = await response.json()
 
