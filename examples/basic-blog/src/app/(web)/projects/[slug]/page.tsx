@@ -14,12 +14,12 @@ type Project = {
   tags: { value: string; label: string }[]
 } & OstDocument
 
-interface Params {
-  params: {
-    slug: string
-  }
-}
-export async function generateMetadata(params: Params): Promise<Metadata> {
+type Params = Promise<{ slug: string }>
+
+export async function generateMetadata(props: {
+  params: Params
+}): Promise<Metadata> {
+  const params = await props.params
   const { project } = await getData(params)
 
   if (!project) {
@@ -52,7 +52,8 @@ export async function generateMetadata(params: Params): Promise<Metadata> {
   }
 }
 
-export default async function Project(params: Params) {
+export default async function Project(props: { params: Params }) {
+  const params = await props.params
   const { project, moreProjects, content } = await getData(params)
 
   return (
@@ -104,7 +105,7 @@ export default async function Project(params: Params) {
   )
 }
 
-async function getData({ params }: Params) {
+async function getData(params: { slug: string }) {
   const db = await load()
   const project = await db
     .find<Project>({ collection: 'projects', slug: params.slug }, [

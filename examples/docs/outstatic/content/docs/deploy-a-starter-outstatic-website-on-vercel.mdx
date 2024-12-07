@@ -1,0 +1,82 @@
+---
+title: "Deploy a starter Outstatic website on Vercel"
+publishedAt: "2024-10-30T18:31:58.875Z"
+status: "published"
+author:
+  name: "Andre Vitorio"
+  picture: "https://avatars.githubusercontent.com/u/1417109?v=4"
+slug: "deploy-a-starter-outstatic-website-on-vercel"
+---
+
+Here's how you can get started with Outstatic.
+
+Requirements:
+
+- A [GitHub](https://github.com) account.
+- A [Vercel](https://vercel.com) account
+
+### **Initiating Setup: GitHub Authentication**
+
+Before diving in, it's essential to configure GitHub Authentication for your project. Outstatic accommodates both **GitHub OAuth** and **GitHub Apps** for authentication purposes:
+
+- **GitHub OAuth:** easier and quicker to set up, ideal for simpler integrations.
+
+- **GitHub Apps:** setup is generally more complex, providing a refined level of access and control.
+
+For those opting for GitHub Apps, please refer to the relevant [GitHub Apps Authentication](/github-apps-authentication) documentation.
+
+#### Setting up a GitHub OAuth Application:
+
+Let’s walk through the steps to create a GitHub OAuth Application, streamlining your project’s initial setup:
+
+- First go to the "Register a new OAuth application" page on GitHub by [clicking here](https://github.com/settings/applications/new).
+
+- Give your application a name, "Outstatic Blog" for example.
+
+- For the **Homepage URL** and **Authorization callback URL** fields type in any valid url, ex: `https://outstatic.com`, we'll change them later.
+
+- You can leave the **Application** description field empty.
+
+Click on **Register application**. You'll be redirected to your GitHub Oauth App settings page.
+
+Next, click on **Generate a new client secret**. Once done, keep this tab open. We'll need these values for our next steps.
+
+Awesome, with your GitHub Oauth keys in hand select how you want to use Outstatic:
+
+## Deploy with vercel:
+
+To deploy with Vercel, start by clicking the button below and follow the setup steps:
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/avitorio/outstatic/tree/main/examples/basic-blog&env=OST_GITHUB_ID,OST_GITHUB_SECRET&project-name=outstatic-blog&repo-name=outstatic-basic-blog&demo-title=Outstatic%20Basic%20Blog%20Demo&demo-description=A%20statically%20generated%20blog%20example%20using%20Outstatic&demo-url=https://outstatic-dev-blog.vercel.app/&demo-image=https://outstatic.com/images/outstatic-demo.png&envDescription=API%20Keys%20needed%20for%20installation&envLink=https://outstatic.com/docs/environment-variables)
+
+Select GitHub as your git service. Then, type the name of your repository (ex: `outstatic-blog`) and click **create**.
+
+Fill in the following environment variables:
+
+- `OST_GITHUB_ID` with your GitHub Client ID.
+
+- `OST_GITHUB_SECRET` with your GitHub Client secret.
+
+Click on Deploy and wait until it's done.
+
+Once the deploy is concluded, you will be taken to your Vercel dashboard. There you'll see your new website URL.
+
+Go back to your GitHub OAuth App settings page and update the **Homepage URL** with your new website URL.
+
+You'll also need to update the **Authorization callback URL** with your new website URL, but you'll need to add `/api/outstatic/callback` to the end of the url.
+
+Example: `https://myblog.vercel.app/api/outstatic/callback`
+
+Click on **Update application** and you are done!
+
+You can now visit your site.
+
+To login to your Dashboard add `/outstatic` to the end of your site url:
+
+Example: `https://myblog.vercel.app/outstatic`
+
+Congratulations! Now you have a website with a full-featured dashboard to edit your content.
+
+To develop your Vercel deployed website locally, please check the [Local Development](/local-development) page.
+
+We recommend you learn how [Outstatic manages content](/introduction) and also how to [fetch content](/fetching-data) from your front end.

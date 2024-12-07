@@ -3,7 +3,8 @@ import { cookies } from 'next/headers'
 import { NextRequest, NextResponse } from 'next/server'
 
 export default async function GET(req: NextRequest) {
-  cookies().set(TOKEN_NAME, '', {
+  const cookieStore = await cookies()
+  cookieStore.set(TOKEN_NAME, '', {
     maxAge: -1,
     path: '/'
   })

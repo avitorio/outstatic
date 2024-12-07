@@ -9,7 +9,7 @@ import {
 } from '@/types'
 import { createCommitApi } from '@/utils/createCommitApi'
 import { hashFromUrl } from '@/utils/hashFromUrl'
-import useOutstatic from '@/utils/hooks/useOutstatic'
+import { useOutstatic } from '@/utils/hooks/useOutstatic'
 import { mergeMdMeta } from '@/utils/mergeMdMeta'
 import { stringifyMedia, stringifyMetadata } from '@/utils/metadata/stringify'
 import { Editor } from '@tiptap/react'

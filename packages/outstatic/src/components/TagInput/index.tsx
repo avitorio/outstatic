@@ -2,9 +2,10 @@ import { CustomFieldArrayValue } from '@/types'
 import { camelCase } from 'change-case'
 import { useState } from 'react'
 import { Controller, RegisterOptions, useFormContext } from 'react-hook-form'
-import { CSSObjectWithLabel } from 'react-select'
+import { CSSObjectWithLabel, ControlProps } from 'react-select'
 import Creatable from 'react-select/creatable'
 import CreatableSelect from 'react-select/dist/declarations/src/Creatable'
+import { cva } from 'class-variance-authority'
 
 export type TagProps = {
   label?: string
@@ -17,21 +18,47 @@ export type TagProps = {
   wrapperClass?: string
   className?: string
   suggestions?: CustomFieldArrayValue[]
-  inputSize?: 'small' | 'medium'
+  inputSize: 'small' | 'medium'
 } & React.ComponentPropsWithoutRef<CreatableSelect>
 
-const sizes = {
-  small: {
-    label: 'mb-1 block text-sm font-medium text-gray-900',
-    input:
-      'w-full rounded-lg border border-gray-300 bg-gray-50 p-2 text-sm text-gray-900 outline-none focus:border-blue-500 focus:ring-blue-500'
+const tagInputVariants = cva('', {
+  variants: {
+    size: {
+      small: '',
+      medium: ''
+    }
   },
-  medium: {
-    label: 'block mb-2 text-sm font-medium text-gray-900',
-    input:
-      'w-full text-gray-900 bg-gray-50 rounded-lg border border-gray-300 sm:text-sm outline-none focus:ring-blue-500 focus:border-blue-500'
+  compoundVariants: [
+    {
+      size: 'small',
+      className: 'text-sm'
+    }
+  ],
+  defaultVariants: {
+    size: 'medium'
   }
-}
+})
+
+const labelVariants = cva('block font-medium text-gray-900', {
+  variants: {
+    size: {
+      small: 'mb-1 text-sm',
+      medium: 'mb-2 text-sm'
+    }
+  }
+})
+
+const inputVariants = cva(
+  'w-full rounded-lg border border-gray-300 bg-gray-50 text-gray-900 outline-none focus:border-blue-500 focus:ring-blue-500',
+  {
+    variants: {
+      size: {
+        small: 'p-2 text-sm',
+        medium: 'sm:text-sm'
+      }
+    }
+  }
+)
 
 const TagInput = ({
   label,
@@ -58,7 +85,7 @@ const TagInput = ({
 
   const handleCreate = (inputValue: string) => {
     const newOption = createOption(inputValue)
-    setOptions((prev) => [...prev, newOption])
+    setOptions((prev: any) => [...prev, newOption])
     const values = getValues(id) || []
     setValue(id, [...values, newOption])
   }
@@ -68,7 +95,9 @@ const TagInput = ({
       {label && (
         <label
           htmlFor={id}
-          className={`${sizes[inputSize].label} first-letter:capitalize`}
+          className={
+            labelVariants({ size: inputSize }) + ' first-letter:capitalize'
+          }
         >
           {label}
         </label>
@@ -84,7 +113,10 @@ const TagInput = ({
               isMulti
               className={errors.multiSelect ? 'is-invalid' : ''}
               styles={{
-                control: (baseStyles, state) =>
+                control: (
+                  baseStyles: CSSObjectWithLabel,
+                  state: ControlProps
+                ) =>
                   ({
                     ...baseStyles,
                     borderColor: state.isFocused
@@ -96,8 +128,8 @@ const TagInput = ({
                   } as CSSObjectWithLabel)
               }}
               classNames={{
-                menu: () => (inputSize === 'small' ? 'text-sm' : 'text-base'),
-                control: () => sizes[inputSize].input,
+                menu: () => tagInputVariants({ size: inputSize }),
+                control: () => inputVariants({ size: inputSize }),
                 valueContainer: () => 'p-2'
               }}
               onCreateOption={handleCreate}

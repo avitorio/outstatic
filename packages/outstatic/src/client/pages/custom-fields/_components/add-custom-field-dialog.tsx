@@ -8,7 +8,7 @@ import {
   customFieldTypes
 } from '@/types'
 import { useGetCollectionSchema } from '@/utils/hooks/useGetCollectionSchema'
-import useOutstatic from '@/utils/hooks/useOutstatic'
+import { useOutstatic } from '@/utils/hooks/useOutstatic'
 import { camelCase, capitalCase } from 'change-case'
 import { useEffect, useState } from 'react'
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form'

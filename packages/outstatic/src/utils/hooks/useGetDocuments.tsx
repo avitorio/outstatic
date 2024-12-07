@@ -4,7 +4,7 @@ import { OstDocument } from '@/types/public'
 import { useQuery } from '@tanstack/react-query'
 import matter from 'gray-matter'
 import { useParams } from 'next/navigation'
-import useOutstatic from './useOutstatic'
+import { useOutstatic } from './useOutstatic'
 import { useCollections } from './useCollections'
 import { slugify } from 'transliteration'
 

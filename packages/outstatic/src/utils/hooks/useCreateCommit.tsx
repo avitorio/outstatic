@@ -1,7 +1,7 @@
 import { CreateCommitOnBranchInput } from '@/graphql/gql/graphql'
 import { CREATE_COMMIT } from '@/graphql/mutations/create-commit'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import useOutstatic from './useOutstatic'
+import { useOutstatic } from './useOutstatic'
 
 export const useCreateCommit = () => {
   const queryClient = useQueryClient()

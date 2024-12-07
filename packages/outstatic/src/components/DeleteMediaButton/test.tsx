@@ -5,7 +5,7 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 // Mock the useOutstatic hook
 jest.mock('@/utils/hooks/useOutstatic', () => ({
   __esModule: true,
-  default: () => ({
+  useOutstatic: () => ({
     repoOwner: 'testOwner',
     repoSlug: 'testRepo',
     repoBranch: 'main',

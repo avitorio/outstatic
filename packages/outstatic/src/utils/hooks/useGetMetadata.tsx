@@ -1,5 +1,5 @@
 import { GET_FILE } from '@/graphql/queries/file'
-import useOutstatic from '@/utils/hooks/useOutstatic'
+import { useOutstatic } from '@/utils/hooks/useOutstatic'
 import { useQuery } from '@tanstack/react-query'
 import { MetadataSchema } from '../metadata/types'
 

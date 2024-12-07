@@ -1,7 +1,7 @@
-import Layout from '../components/Layout'
+import Layout from '@/components/Layout'
 import { load } from 'outstatic/server'
-import ContentGrid from '../components/ContentGrid'
-import markdownToHtml from '../lib/markdownToHtml'
+import ContentGrid from '@/components/ContentGrid'
+import markdownToHtml from '@/lib/markdownToHtml'
 
 export default async function Index() {
   const { content, allPosts, allProjects } = await getData()

@@ -1,6 +1,4 @@
-import { redirect } from 'next/navigation'
-
-export default async function GET() {
+export default async function GET(): Promise<Response> {
   const scopes = ['read:user', 'user:email', 'repo']
 
   const url = new URL('https://github.com/login/oauth/authorize')
@@ -12,5 +10,5 @@ export default async function GET() {
     url.searchParams.append('redirect_uri', process.env.OST_GITHUB_CALLBACK_URL)
   }
 
-  redirect(url.toString())
+  return Response.json({ url: url.toString() })
 }

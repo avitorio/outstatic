@@ -4,7 +4,7 @@ import { hashFromUrl } from '@/utils/hashFromUrl'
 import { useCreateCommit } from '@/utils/hooks/useCreateCommit'
 import { useGetMetadata } from '@/utils/hooks/useGetMetadata'
 import useOid from '@/utils/hooks/useOid'
-import useOutstatic from '@/utils/hooks/useOutstatic'
+import { useOutstatic } from '@/utils/hooks/useOutstatic'
 import { stringifyMetadata } from '@/utils/metadata/stringify'
 import { Trash } from 'lucide-react'
 import { useState } from 'react'
@@ -12,7 +12,7 @@ import { Button } from '@/components/ui/shadcn/button'
 import { SpinnerIcon } from '../ui/outstatic/spinner-icon'
 import { toast } from 'sonner'
 import { useGetDocuments } from '@/utils/hooks/useGetDocuments'
-import { useCollections } from '@/utils/hooks'
+import { useCollections } from '@/utils/hooks/useCollections'
 import {
   AlertDialog,
   AlertDialogAction,

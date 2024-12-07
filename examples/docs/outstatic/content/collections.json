@@ -1,0 +1,20 @@
+[
+  {
+    "title": "Docs",
+    "slug": "docs",
+    "path": "examples/docs/outstatic/content/docs",
+    "children": []
+  },
+  {
+    "title": "Menus",
+    "slug": "menus",
+    "path": "examples/docs/outstatic/content/menus",
+    "children": []
+  },
+  {
+    "title": "V1.4",
+    "slug": "v1.4",
+    "path": "examples/docs/outstatic/content/v1.4",
+    "children": []
+  }
+]

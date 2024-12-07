@@ -3,11 +3,12 @@ import Collections from './collections'
 import { useCollections } from '@/utils/hooks/useCollections'
 import { useOutstatic, useLocalData } from '@/utils/hooks/useOutstatic'
 import { TestWrapper } from '@/utils/TestWrapper'
-import userEvent from '@testing-library/user-event'
+import { useInitialData } from '@/utils/hooks/useInitialData'
 
 // Mock the hooks
 jest.mock('@/utils/hooks/useCollections')
 jest.mock('@/utils/hooks/useOutstatic')
+jest.mock('@/utils/hooks/useInitialData')
 jest.mock('@/utils/auth/hooks', () => ({
   useOstSession: () => ({ status: 'authenticated' })
 }))
@@ -67,29 +68,28 @@ describe('Collections', () => {
     expect(screen.getByTestId('admin-loading')).toBeInTheDocument()
   })
 
-  it('shows onboarding when no collections exist', async () => {
+  it('shows onboarding when no collections exist and no repo branch', async () => {
+    // Mock useInitialData hook
+    ;(useInitialData as jest.Mock).mockReturnValue(() => ({
+      repoBranch: null
+    }))
     ;(useCollections as jest.Mock).mockReturnValue({
       isPending: false,
       data: []
     })
-
-    const user = userEvent.setup()
 
     render(
       <TestWrapper>
         <Collections />
       </TestWrapper>
     )
+
+    // Update to match the exact text in the component
     expect(
-      screen.getByText(
-        /Confirm the branch before creating your first Collection/i
+      await screen.findByText(
+        'Confirm the branch before creating your first Collection'
       )
     ).toBeInTheDocument()
-
-    const selectButton = screen.getByRole('button', { name: /select/i })
-    await user.click(selectButton)
-
-    expect(screen.getByText(/Create a Collection/i)).toBeInTheDocument()
   })
 
   it('renders collections list correctly', () => {

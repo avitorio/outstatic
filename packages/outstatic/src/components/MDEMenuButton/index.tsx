@@ -1,5 +1,7 @@
 import { Editor } from '@tiptap/react'
 
+import type { JSX } from "react";
+
 type MDEMenuButtonProps = {
   editor: Editor
   onClick: () => void
