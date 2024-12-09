@@ -87,8 +87,6 @@ export const useOutstatic = () => {
   }
 }
 
-export default useOutstatic
-
 export const useLocalData = () => {
   const queryClient = useQueryClient()
   const { repoOwner, repoSlug } = useInitialData()

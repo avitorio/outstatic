@@ -1,7 +1,7 @@
 'use client'
 import { SearchCombobox } from '@/components/ui/outstatic/search-combobox'
 import { useInitialData } from '@/utils/hooks/useInitialData'
-import useOutstatic, { useLocalData } from '@/utils/hooks/useOutstatic'
+import { useOutstatic, useLocalData } from '@/utils/hooks/useOutstatic'
 import React, { useEffect, useState } from 'react'
 import { useDebouncedCallback } from 'use-debounce'
 

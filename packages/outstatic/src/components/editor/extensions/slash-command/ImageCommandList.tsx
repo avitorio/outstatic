@@ -8,7 +8,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { addImage } from '@/components/editor/utils/addImage'
 import MediaLibraryModal from '@/components/ui/outstatic/media-library-modal'
 import { API_MEDIA_PATH } from '@/utils/constants'
-import { useOutstatic } from '@/utils/hooks'
+import { useOutstatic } from '@/utils/hooks/useOutstatic'
 import MediaSettingsDialog from '@/components/ui/outstatic/media-settings-dialog'
 import { Button } from '@/components/ui/shadcn/button'
 

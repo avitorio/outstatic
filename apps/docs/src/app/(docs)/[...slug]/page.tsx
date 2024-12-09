@@ -4,13 +4,12 @@ import { Metadata } from 'next'
 import { getDocumentBySlug, getDocumentSlugs, load } from 'outstatic/server'
 import { notFound } from 'next/navigation'
 
-interface Params {
-  params: {
-    slug: string
-  }
-}
+type Params = Promise<{ slug: string[] }>
 
-export async function generateMetadata(params: Params): Promise<Metadata> {
+export async function generateMetadata(props: {
+  params: Params
+}): Promise<Metadata> {
+  const params = await props.params
   const { doc } = await getData(params)
 
   if (!doc) {
@@ -43,7 +42,8 @@ export async function generateMetadata(params: Params): Promise<Metadata> {
   }
 }
 
-export default async function Post(params: Params) {
+export default async function Post(props: { params: Params }) {
+  const params = await props.params
   const { doc, menu } = await getData(params)
 
   if (!doc) {
@@ -84,9 +84,10 @@ import { MobileMenu } from '@/components/mobile-menu'
 import { SidebarNav } from '@/components/sidebar-nav'
 import MDXServer from '@/lib/mdx-server'
 
-async function getData({ params }: Params) {
+async function getData(params: { slug: string[] }) {
   const db = await load()
-  const latest = params.slug.length === 1
+  const slug = params.slug
+  const latest = slug.length === 1
 
   const doc = await db
     .find(

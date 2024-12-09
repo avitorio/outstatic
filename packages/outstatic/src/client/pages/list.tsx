@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/shadcn/button'
 import { useGetDocuments } from '@/utils/hooks/useGetDocuments'
 import Link from 'next/link'
 import { singular } from 'pluralize'
-import useOutstatic from '@/utils/hooks/useOutstatic'
+import { useOutstatic } from '@/utils/hooks/useOutstatic'
 import LineBackground from '@/components/ui/outstatic/line-background'
 import { redirect } from 'next/navigation'
 

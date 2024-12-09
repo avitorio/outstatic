@@ -6,7 +6,7 @@ import matter from 'gray-matter'
 import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { UseFormReturn } from 'react-hook-form'
 import { useGetDocument } from './useGetDocument'
-import useOutstatic from './useOutstatic'
+import { useOutstatic } from './useOutstatic'
 import { useCollections } from './useCollections'
 
 interface UseDocumentUpdateEffectProps {
@@ -84,9 +84,13 @@ export const useDocumentUpdateEffect = ({
         content: parsedContent,
         slug
       }
-      methods.reset(newDocument)
-      editor.commands.setContent(parsedContent)
-      editor.commands.focus('start')
+
+      Promise.resolve().then(() => {
+        methods.reset(newDocument)
+        editor.commands.setContent(parsedContent)
+        editor.commands.focus('start')
+      })
+
       setShowDelete(slug !== 'new')
       setExtension(document.extension)
       setHasChanges(false)

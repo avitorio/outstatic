@@ -7,7 +7,7 @@ import { useCompletion } from 'ai/react'
 import { useEffect, useRef, useCallback } from 'react'
 import { toast } from 'sonner'
 import { useDebouncedCallback } from 'use-debounce'
-import useOutstatic from '@/utils/hooks/useOutstatic'
+import { useOutstatic } from '@/utils/hooks/useOutstatic'
 import { OUTSTATIC_API_PATH } from '@/utils/constants'
 import { useCsrfToken } from '@/utils/hooks/useCsrfToken'
 
@@ -98,6 +98,7 @@ export const useTipTap = ({ ...rhfMethods }) => {
         includeChildren: false
       })
     ],
+    shouldRerenderOnTransaction: false,
     editorProps: TiptapEditorProps,
     onUpdate,
     immediatelyRender: false

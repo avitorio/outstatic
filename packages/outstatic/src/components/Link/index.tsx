@@ -1,4 +1,4 @@
-import useOutstatic from '@/utils/hooks/useOutstatic'
+import { useOutstatic } from '@/utils/hooks/useOutstatic'
 import dynamic from 'next/dynamic'
 import type { LinkProps as NextLinkProps } from 'next/link'
 import NextLink from 'next/link'

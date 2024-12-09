@@ -158,7 +158,7 @@
     "@graphql-codegen/typescript": "^2.4.11",
     "@graphql-codegen/typescript-operations": "^2.4.0",
     "@parcel/watcher": "^2.4.1",
-    "@tailwindcss/typography": "^0.5.4",
+    "@tailwindcss/typography": "^0.5.10",
     "@tanstack/eslint-plugin-query": "^5.28.11",
     "@tanstack/query-sync-storage-persister": "^5.29.0",
     "@tanstack/react-query": "5.62.2",
@@ -181,7 +181,7 @@
     "@types/testing-library__jest-dom": "^5.14.5",
     "concurrently": "^7.6.0",
     "eslint": "^8.57.0",
-    "eslint-config-next": "13.4.4",
+    "eslint-config-next": "15.0.3",
     "eslint-config-prettier": "^9.1.0",
     "eslint-config-turbo": "latest",
     "eslint-plugin-react": "7.37.2",
@@ -216,5 +216,11 @@
   },
   "publishConfig": {
     "access": "public"
+  },
+  "pnpm": {
+    "overrides": {
+      "@types/react": "npm:types-react@19.0.0-rc.1",
+      "@types/react-dom": "npm:types-react-dom@19.0.0-rc.1"
+    }
   }
 }

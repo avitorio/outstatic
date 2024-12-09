@@ -6,6 +6,15 @@ import tippy from 'tippy.js'
 import { BaseCommandList } from '@/components/editor/extensions/slash-command/BaseCommandList'
 import ImageCommandList from '@/components/editor/extensions/slash-command/ImageCommandList'
 import { getSuggestionItems } from '@/components/editor/extensions/slash-command/getSuggestionItems'
+import { useOutstatic } from '@/utils/hooks/useOutstatic'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription
+} from '@/components/ui/shadcn/dialog'
+import { MediaSettings } from '@/client/pages/settings/_components/media-settings'
 
 export type CommandItemProps = {
   title: string
