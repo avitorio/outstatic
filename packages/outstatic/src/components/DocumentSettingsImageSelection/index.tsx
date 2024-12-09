@@ -1,5 +1,5 @@
 import { API_MEDIA_PATH } from '@/utils/constants'
-import useOutstatic from '@/utils/hooks/useOutstatic'
+import { useOutstatic } from '@/utils/hooks/useOutstatic'
 import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/shadcn/button'
 import MediaLibraryModal from '../ui/outstatic/media-library-modal'
@@ -79,7 +79,7 @@ const DocumentSettingsImageSelection = ({
 
   return (
     <>
-      {showImage && (
+      {showImage && image && (
         <>
           <div
             className={`flex w-full relative bg-slate-100 rounded-md overflow-hidden h-48`}

@@ -1,6 +1,6 @@
 import { absoluteUrl } from '@/lib/utils'
 import { Metadata } from 'next'
-import '../styles/index.css'
+import '@/styles/index.css'
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://outstatic.com'),
@@ -37,7 +37,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body id="outstatic">{children}</body>
+      <body>{children}</body>
     </html>
   )
 }

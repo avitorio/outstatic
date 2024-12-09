@@ -1,6 +1,6 @@
 import { AdminLoading } from '@/components/AdminLoading'
 import { useCollections } from '@/utils/hooks/useCollections'
-import useOutstatic from '@/utils/hooks/useOutstatic'
+import { useOutstatic } from '@/utils/hooks/useOutstatic'
 import { ReactElement } from 'react'
 import CustomFields from './pages/custom-fields'
 import Collections from './pages/collections'

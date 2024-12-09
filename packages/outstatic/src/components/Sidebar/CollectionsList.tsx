@@ -1,5 +1,5 @@
 import { useCollections } from '@/utils/hooks/useCollections'
-import useOutstatic from '@/utils/hooks/useOutstatic'
+import { useOutstatic } from '@/utils/hooks/useOutstatic'
 import {
   SidebarContent,
   SidebarGroup,

@@ -1,4 +1,4 @@
-import useOutstatic from '@/utils/hooks/useOutstatic'
+import { useOutstatic } from '@/utils/hooks/useOutstatic'
 import dynamic from 'next/dynamic'
 import { cn } from '@/utils/ui'
 import {

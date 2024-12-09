@@ -43,6 +43,7 @@ const MultiValue = (props: MultiValueProps<Column>) => {
 
   return (
     <div style={style} ref={setNodeRef} {...attributes} {...listeners}>
+      {/* @ts-ignore */}
       <components.MultiValue {...props} innerProps={innerProps} />
     </div>
   )
@@ -52,6 +53,7 @@ const MultiValueLabel = (props: MultiValueGenericProps<Column>) => {
   return (
     <div className="flex cursor-pointer items-center pl-1">
       <GripVertical size={15} />
+      {/* @ts-ignore */}
       <components.MultiValueLabel {...props} />
     </div>
   )
@@ -64,24 +66,33 @@ const Control = (props: ControlProps<Column>) => {
 
   return (
     <div ref={setNodeRef}>
+      {/* @ts-ignore */}
       <components.Control {...props} />
     </div>
   )
 }
 
 const MultiValueContainer = (props: MultiValueGenericProps<Column>) => {
-  return <components.MultiValueContainer {...props} />
+  return (
+    <div>
+      {/* @ts-ignore */}
+      <components.MultiValueContainer {...props} />
+    </div>
+  )
 }
 
 const MultiValueRemove = (props: MultiValueRemoveProps<Column>) => {
   return (
-    <components.MultiValueRemove
-      {...props}
-      innerProps={{
-        onPointerDown: (e) => e.stopPropagation(),
-        ...props.innerProps
-      }}
-    />
+    <div>
+      {/* @ts-ignore */}
+      <components.MultiValueRemove
+        {...props}
+        innerProps={{
+          onPointerDown: (e: any) => e.stopPropagation(),
+          ...props.innerProps
+        }}
+      />
+    </div>
   )
 }
 
@@ -145,7 +156,7 @@ const SortableSelect = ({
           autoFocus
           className="border border-gray-200 rounded-md"
           styles={{
-            control: (base) =>
+            control: (base: any) =>
               ({
                 ...base,
                 border: 'none',

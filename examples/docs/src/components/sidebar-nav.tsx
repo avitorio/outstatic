@@ -4,10 +4,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { CustomLinkProps } from './mdx/custom-link'
 import MDXComponent from './mdx/mdx-component'
-
-type SidebarNavProps = {
-  content: string
-}
+import { VERSIONS } from '@/lib/constants'
 
 export const Paragraph = ({ children }: CustomLinkProps) => {
   return <p className="m-0">{children}</p>
@@ -22,6 +19,16 @@ export const SidebarLink = ({
 }: CustomLinkProps) => {
   const pathname = usePathname()
   const hash = useHash()
+
+  const isVersionPath = VERSIONS.some(
+    (v) => pathname.startsWith(`${v.path}`) && v.path !== '/'
+  )
+
+  if (isVersionPath) {
+    const version = pathname.split('/')[1]
+    href = `/${version}${href}`
+  }
+
   return (
     <Link
       href={href}
@@ -37,7 +44,7 @@ export const SidebarLink = ({
   )
 }
 
-export const SidebarNav = ({ content }: SidebarNavProps) => {
+export const SidebarNav = ({ content }: { content: string }) => {
   return (
     <aside className="hidden lg:block border-r dark:border-secondary px-4 py-4 w-full max-w-xs sticky top-16 h-[calc(100vh-4rem)] overflow-y-scroll no-scrollbar sidebar">
       <div className="prose prose-sm">

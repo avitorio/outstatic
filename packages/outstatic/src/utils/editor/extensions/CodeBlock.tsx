@@ -3,12 +3,12 @@ import { NodeViewContent, NodeViewWrapper } from '@tiptap/react'
 type CodeBlockProps = {
   node: {
     attrs: {
-      language: string
+      language?: string
     }
   }
   updateAttributes: (attrs: { language: string }) => void
   extension: {
-    languages: { [key: string]: string }
+    languages?: { [key: string]: string }
     options: {
       lowlight: {
         listLanguages: () => string[]

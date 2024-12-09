@@ -10,17 +10,19 @@ import {
 import Link from 'next/link'
 import { GitHubBranchSearch } from '@/components/ui/outstatic/github-branch-search'
 import { useState } from 'react'
-import { useLocalData, useOutstatic } from '@/utils/hooks'
+import { useLocalData, useOutstatic } from '@/utils/hooks/useOutstatic'
 import { CreateBranchDialog } from '@/components/ui/outstatic/create-branch-dialog'
+import { useInitialData } from '@/utils/hooks/useInitialData'
 
 export default function CollectionOnboarding() {
+  const { repoBranch: initialRepoBranch } = useInitialData()
   const { dashboardRoute } = useOutstatic()
   const { setData } = useLocalData()
   const [showCreateBranchDialog, setShowCreateBranchDialog] = useState(false)
 
   const searchParams = useSearchParams()
   const [confirmBranch, setConfirmBranch] = useState(
-    searchParams.get('confirmed') === 'true'
+    searchParams.get('confirmed') === 'true' || initialRepoBranch
   )
 
   return (

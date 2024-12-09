@@ -2,14 +2,14 @@ import Header from '@/components/header'
 import formatDate from '@/lib/formatDate'
 import { Metadata } from 'next'
 import { getDocumentBySlug, getDocumentSlugs, load } from 'outstatic/server'
+import { notFound } from 'next/navigation'
 
-interface Params {
-  params: {
-    slug: string
-  }
-}
+type Params = Promise<{ slug: string[] }>
 
-export async function generateMetadata(params: Params): Promise<Metadata> {
+export async function generateMetadata(props: {
+  params: Params
+}): Promise<Metadata> {
+  const params = await props.params
   const { doc } = await getData(params)
 
   if (!doc) {
@@ -42,16 +42,21 @@ export async function generateMetadata(params: Params): Promise<Metadata> {
   }
 }
 
-export default async function Post(params: Params) {
+export default async function Post(props: { params: Params }) {
+  const params = await props.params
   const { doc, menu } = await getData(params)
+
+  if (!doc) {
+    notFound()
+  }
 
   return (
     <>
       <Header />
       <div className="bg-background flex w-full">
         <SidebarNav content={menu.content} />
-        <div className="w-full ml-0 md:ml-10 px-4 lg:px-8 xl:px-12 py-12 max-w-full overflow-x-scroll lg:overflow-x-auto">
-          <article className="mb-32 w-full">
+        <div className="w-full flex flex-col items-center ml-0 md:ml-10 px-4 lg:px-8 xl:px-12 py-12 max-w-full overflow-x-scroll lg:overflow-x-auto">
+          <article className="mb-32 w-full px-4 pt-10 md:px-6 md:pt-12 max-w-[860px] prose prose-outstatic">
             <h1 className="font-primary text-2xl font-bold md:text-4xl mb-2">
               {doc.title}
             </h1>
@@ -67,6 +72,7 @@ export default async function Post(params: Params) {
             </div>
           </article>
         </div>
+        <div className="hidden 2xl:block w-full max-w-xs"></div>
       </div>
       <MobileMenu content={menu.content} />
     </>
@@ -78,21 +84,38 @@ import { MobileMenu } from '@/components/mobile-menu'
 import { SidebarNav } from '@/components/sidebar-nav'
 import MDXServer from '@/lib/mdx-server'
 
-async function getData({ params }: Params) {
+async function getData(params: { slug: string[] }) {
   const db = await load()
+  const slug = params.slug
+  const latest = slug.length === 1
 
   const doc = await db
-    .find({ collection: 'docs', slug: params.slug }, [
-      'title',
-      'publishedAt',
-      'slug',
-      'author',
-      'content',
-      'coverImage'
-    ])
+    .find(
+      {
+        collection: latest ? 'docs' : params.slug[0],
+        slug: latest ? params.slug[0] : params.slug[1]
+      },
+      [
+        'title',
+        'publishedAt',
+        'slug',
+        'author',
+        'content',
+        'coverImage',
+        'collection'
+      ]
+    )
     .first()
 
-  const menu = getDocumentBySlug('menus', 'docs-menu', ['content'])
+  if (!doc) {
+    notFound()
+  }
+
+  const menu = getDocumentBySlug(
+    'menus',
+    latest ? 'latest-menu' : `${params.slug[0]}-menu`,
+    ['content']
+  )
 
   const docMdx = await MDXServer(doc?.content)
 
@@ -110,6 +133,13 @@ async function getData({ params }: Params) {
 }
 
 export async function generateStaticParams() {
-  const posts = getDocumentSlugs('docs')
-  return posts.map((slug) => ({ slug }))
+  const latest = getDocumentSlugs('docs')
+  const v1_4 = getDocumentSlugs('v1.4')
+
+  const slugs = [
+    ...latest.map((slug) => ({ slug: [slug] })),
+    ...v1_4.map((slug) => ({ slug: ['v1.4', slug] }))
+  ]
+
+  return slugs
 }

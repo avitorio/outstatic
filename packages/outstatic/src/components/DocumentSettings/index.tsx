@@ -22,7 +22,7 @@ import { RegisterOptions, useFormContext } from 'react-hook-form'
 import { slugify } from 'transliteration'
 import { CheckboxWithLabel } from '@/components/ui/outstatic/checkbox-with-label'
 import { Button } from '@/components/ui/shadcn/button'
-import useOutstatic from '@/utils/hooks/useOutstatic'
+import { useOutstatic } from '@/utils/hooks/useOutstatic'
 import {
   FormField,
   FormItem,

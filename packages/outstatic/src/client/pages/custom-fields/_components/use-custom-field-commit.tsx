@@ -1,4 +1,4 @@
-import useOutstatic from '@/utils/hooks/useOutstatic'
+import { useOutstatic } from '@/utils/hooks/useOutstatic'
 import { useCreateCommit } from '@/utils/hooks/useCreateCommit'
 import useOid from '@/utils/hooks/useOid'
 import { createCommitApi } from '@/utils/createCommitApi'

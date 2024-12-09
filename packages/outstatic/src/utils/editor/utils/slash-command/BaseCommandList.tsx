@@ -1,4 +1,4 @@
-import useOutstatic from '@/utils/hooks/useOutstatic'
+import { useOutstatic } from '@/utils/hooks/useOutstatic'
 import { Editor, Range } from '@tiptap/react'
 import { useCompletion } from 'ai/react'
 import {

@@ -1,5 +1,5 @@
 import { GET_FILES } from '@/graphql/queries/files'
-import useOutstatic from '@/utils/hooks/useOutstatic'
+import { useOutstatic } from '@/utils/hooks/useOutstatic'
 import { useQuery } from '@tanstack/react-query'
 
 export const useGetFiles = ({

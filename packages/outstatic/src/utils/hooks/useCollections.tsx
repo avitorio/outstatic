@@ -1,5 +1,5 @@
 import { GET_COLLECTIONS } from '@/graphql/queries/collections'
-import useOutstatic from '@/utils/hooks/useOutstatic'
+import { useOutstatic } from '@/utils/hooks/useOutstatic'
 import { useQuery } from '@tanstack/react-query'
 import { createCommitApi } from '../createCommitApi'
 import useOid from './useOid'
