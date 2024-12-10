@@ -1,5 +1,11 @@
 # outstatic
 
+## 1.4.14-canary.0
+
+### Patch Changes
+
+- fix examples
+
 ## 1.4.13
 
 ### Patch Changes
