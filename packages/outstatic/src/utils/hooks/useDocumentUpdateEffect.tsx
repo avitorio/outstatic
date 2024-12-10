@@ -76,5 +76,5 @@ export const useDocumentUpdateEffect = ({
 
     return () => subscription.unsubscribe()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [documentQueryData, methods, slug, editor, session])
+  }, [documentQueryData, slug, editor, session])
 }
