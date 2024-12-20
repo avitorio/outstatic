@@ -45,7 +45,7 @@ export async function generateMetadata(params: Params): Promise<Metadata> {
       card: 'summary_large_image',
       title: post.title,
       description: post.description,
-      images: ogUrl(post?.coverImage || `/api/og?title=${post.title}`)
+      images: ogUrl(post?.coverImage || `${post.title}`)
     }
   }
 }

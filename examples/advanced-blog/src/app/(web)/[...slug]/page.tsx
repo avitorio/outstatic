@@ -38,7 +38,7 @@ export async function generateMetadata(params: Params): Promise<Metadata> {
       url: absoluteUrl(`/${doc.collection}/${doc.slug}`),
       images: [
         {
-          url: ogUrl(doc?.coverImage || `/api/og?title=${doc.title}`),
+          url: ogUrl(doc?.coverImage || `${doc.title}`),
           width: 1200,
           height: 630,
           alt: doc.title
@@ -49,7 +49,7 @@ export async function generateMetadata(params: Params): Promise<Metadata> {
       card: 'summary_large_image',
       title: doc.title,
       description: doc.description,
-      images: ogUrl(doc?.coverImage || `/api/og?title=${doc.title}`)
+      images: ogUrl(doc?.coverImage || `${doc.title}`)
     }
   }
 }
