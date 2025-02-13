@@ -3,8 +3,7 @@ import { camelCase } from 'change-case'
 import { useState } from 'react'
 import { Controller, RegisterOptions, useFormContext } from 'react-hook-form'
 import { CSSObjectWithLabel, ControlProps } from 'react-select'
-import Creatable from 'react-select/creatable'
-import CreatableSelect from 'react-select/dist/declarations/src/Creatable'
+import CreatableSelect from 'react-select/creatable'
 import { cva } from 'class-variance-authority'
 
 export type TagProps = {
@@ -18,7 +17,7 @@ export type TagProps = {
   wrapperClass?: string
   className?: string
   suggestions?: CustomFieldArrayValue[]
-  inputSize: 'small' | 'medium'
+  inputSize?: 'small' | 'medium'
 } & React.ComponentPropsWithoutRef<CreatableSelect>
 
 const tagInputVariants = cva('', {
@@ -107,7 +106,7 @@ const TagInput = ({
           name={id}
           control={control}
           render={({ field }) => (
-            <Creatable
+            <CreatableSelect
               {...field}
               options={options}
               isMulti

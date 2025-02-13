@@ -47,7 +47,7 @@ const AdminHeader = ({ toggleSidebar }: AdminHeaderProps) => {
               onClick={toggleSidebar}
             >
               <span className="sr-only">Open main menu</span>
-              <Menu className="lucide lucide-menu " />
+              <Menu />
             </Button>
 
             <div className={'flex items-center space-x-4'}>

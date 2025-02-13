@@ -38,8 +38,12 @@ export default function EditDocument({ collection }: { collection: string }) {
   const methods = useForm<Document>({ resolver: zodResolver(documentSchema) })
 
   const { editor, setEditor } = useEditor()
+  const tiptapEditor = useTipTap({ ...methods }).editor
 
-  setEditor(useTipTap({ ...methods }).editor)
+  // Move the setEditor call into useEffect
+  useEffect(() => {
+    setEditor(tiptapEditor)
+  }, [tiptapEditor, setEditor])
 
   const [customFields, setCustomFields] = useState<CustomFieldsType>({})
   const files = useFileStore((state) => state.files)

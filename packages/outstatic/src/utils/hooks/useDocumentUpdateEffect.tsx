@@ -107,7 +107,11 @@ export const useDocumentUpdateEffect = ({
       }
     }
 
-    const subscription = methods.watch(() => setHasChanges(true))
+    const subscription = methods.watch((value, { name, type }) => {
+      if (name === 'content') {
+        setHasChanges(true)
+      }
+    })
 
     return () => subscription.unsubscribe()
     // eslint-disable-next-line react-hooks/exhaustive-deps
