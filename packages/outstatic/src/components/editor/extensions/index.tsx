@@ -69,6 +69,7 @@ export const TiptapExtensions = [
             const start = range.from
             let end = range.to
 
+            // @ts-ignore
             tr.insert(start - 1, this.type.create(attributes)).delete(
               tr.mapping.map(start),
               tr.mapping.map(end)
