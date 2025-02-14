@@ -1,5 +1,15 @@
 # outstatic
 
+## 2.0.0-canary.0
+
+### Major Changes
+
+- 2.0.0 start
+
+### Patch Changes
+
+- e81ff20: feat: adjust onboarding when .env vars are present
+
 ## 1.5.0-canary.0
 
 ### Minor Changes
