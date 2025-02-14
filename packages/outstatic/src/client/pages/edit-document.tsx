@@ -40,7 +40,6 @@ export default function EditDocument({ collection }: { collection: string }) {
   const { editor, setEditor } = useEditor()
   const tiptapEditor = useTipTap({ ...methods }).editor
 
-  // Move the setEditor call into useEffect
   useEffect(() => {
     setEditor(tiptapEditor)
   }, [tiptapEditor, setEditor])
