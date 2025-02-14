@@ -1,6 +1,6 @@
 {
-  "commit": "",
-  "generated": "Fri, 08 Nov 2024 19:46:23 GMT",
+  "commit": "970ebd2fc86b9901d3d3aa3fa8e3c2347f6aa14f",
+  "generated": "2025-02-14T22:01:10.291Z",
   "metadata": [
     {
       "__outstatic": {
@@ -17,22 +17,6 @@
       "slug": "deploy-a-starter-outstatic-website-on-vercel",
       "status": "published",
       "title": "Deploy a starter Outstatic website on Vercel"
-    },
-    {
-      "__outstatic": {
-        "commit": "d6913759cc77759b74f3d7bc428d531704fd6c7e",
-        "hash": "976497181",
-        "path": "/outstatic/content/docs/credits.mdx"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "docs",
-      "publishedAt": "2024-11-07T17:57:27.073Z",
-      "slug": "credits",
-      "status": "published",
-      "title": "Credits"
     },
     {
       "__outstatic": {
@@ -507,6 +491,22 @@
       "slug": "local-development",
       "status": "published",
       "title": "Local Development"
+    },
+    {
+      "__outstatic": {
+        "commit": "970ebd2fc86b9901d3d3aa3fa8e3c2347f6aa14f",
+        "hash": "976497181",
+        "path": "/outstatic/content/docs/credits.mdx"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "publishedAt": "2024-11-07T17:57:27.073Z",
+      "slug": "credits",
+      "status": "published",
+      "title": "Credits"
     }
   ]
 }
