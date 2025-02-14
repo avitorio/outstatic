@@ -1,6 +1,6 @@
 {
-  "commit": "970ebd2fc86b9901d3d3aa3fa8e3c2347f6aa14f",
-  "generated": "2024-11-11T14:39:13.508Z",
+  "commit": "a031c802e7c9c3a4bb12b00bf9d3a59f668be445",
+  "generated": "2025-02-14T21:39:33.992Z",
   "metadata": [
     {
       "__outstatic": {
@@ -17,22 +17,6 @@
       "slug": "deploy-a-starter-outstatic-website-on-vercel",
       "status": "published",
       "title": "Deploy a starter Outstatic website on Vercel"
-    },
-    {
-      "__outstatic": {
-        "commit": "d6913759cc77759b74f3d7bc428d531704fd6c7e",
-        "hash": "976497181",
-        "path": "/outstatic/content/docs/credits.mdx"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "docs",
-      "publishedAt": "2024-11-07T17:57:27.073Z",
-      "slug": "credits",
-      "status": "published",
-      "title": "Credits"
     },
     {
       "__outstatic": {
@@ -507,6 +491,22 @@
       "slug": "upgrading-to-v1.5",
       "status": "published",
       "title": "Upgrading to v1.5"
+    },
+    {
+      "__outstatic": {
+        "commit": "a031c802e7c9c3a4bb12b00bf9d3a59f668be445",
+        "hash": "976497181",
+        "path": "/outstatic/content/docs/credits.mdx"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "publishedAt": "2024-11-07T17:57:27.073Z",
+      "slug": "credits",
+      "status": "published",
+      "title": "Credits"
     }
   ]
 }
