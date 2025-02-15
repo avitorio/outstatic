@@ -24,7 +24,6 @@
       "cache": false
     },
     "docs": {
-      "dependsOn": [],
       "env": [
         "NEXT_PUBLIC_GA_ID",
         "NEXT_PUBLIC_TINYBIRD_TOKEN",
@@ -50,7 +49,6 @@
       ]
     },
     "outstatic": {
-      "dependsOn": [],
       "env": [
         "NODE_ENV",
         "OST_CONTENT_PATH",

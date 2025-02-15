@@ -7,7 +7,7 @@ import {
   DialogDescription
 } from '@/components/ui/shadcn/dialog'
 import { CreateBranchForm } from './create-branch-form'
-import { useOutstatic } from '@/utils/hooks'
+import { useOutstatic } from '@/utils/hooks/useOutstatic'
 
 interface CreateBranchDialogProps {
   branchName?: string

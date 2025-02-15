@@ -26,9 +26,9 @@ const V1_5BreakingCheck = () => {
     <AlertDialog open={showOverlay}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Important OutStatic Update</AlertDialogTitle>
+          <AlertDialogTitle>Important Outstatic Update</AlertDialogTitle>
           <AlertDialogDescription>
-            Starting from version 1.5, OutStatic requires additional
+            Starting from version 2.0, Outstatic requires additional
             configuration to work properly.
             <br />
             <br /> Please check the documentation for the required changes.

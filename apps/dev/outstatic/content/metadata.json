@@ -1,6 +1,6 @@
 {
-  "commit": "5f6a88320da27c4d284996d498842939ad1d8d19",
-  "generated": "Sun, 11 Feb 2024 21:48:22 GMT",
+  "commit": "d164819e9dad435410707d379bdda074f40eda64",
+  "generated": "2024-11-11T14:42:41.780Z",
   "metadata": [
     {
       "__outstatic": {
@@ -179,6 +179,24 @@
         }
       ],
       "title": "Far Out - The Next Steps for Outstatic "
+    },
+    {
+      "__outstatic": {
+        "commit": "d164819e9dad435410707d379bdda074f40eda64",
+        "hash": "3686094754",
+        "path": "/outstatic/content/posts/test-post.mdx"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "posts",
+      "publishedAt": "2024-11-11T14:22:52.515Z",
+      "slug": "test-post",
+      "status": "draft",
+      "tags": [
+      ],
+      "title": "Test Post"
     }
   ]
 }

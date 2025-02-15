@@ -2,11 +2,10 @@ import { setLoginSession } from '@/utils/auth/auth'
 import { MAX_AGE } from '@/utils/constants'
 import { createEdgeRouter } from 'next-connect'
 import nextSession from 'next-session'
-import { Session } from 'next-session/lib/types'
 import { NextRequest, NextResponse } from 'next/server'
 
 interface Request extends NextRequest {
-  session: Session
+  session: Awaited<ReturnType<typeof getSession>>
 }
 
 interface RequestContext {

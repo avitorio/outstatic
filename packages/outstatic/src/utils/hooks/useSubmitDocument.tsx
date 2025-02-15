@@ -9,7 +9,7 @@ import {
 } from '@/types'
 import { createCommitApi } from '@/utils/createCommitApi'
 import { hashFromUrl } from '@/utils/hashFromUrl'
-import useOutstatic from '@/utils/hooks/useOutstatic'
+import { useOutstatic } from '@/utils/hooks/useOutstatic'
 import { mergeMdMeta } from '@/utils/mergeMdMeta'
 import { stringifyMedia, stringifyMetadata } from '@/utils/metadata/stringify'
 import { Editor } from '@tiptap/react'
@@ -43,7 +43,7 @@ type SubmitDocumentProps = {
   customFields: CustomFieldsType
   setCustomFields: (customFields: CustomFieldsType) => void
   setHasChanges: (hasChanges: boolean) => void
-  editor: Editor
+  editor: Editor | null
   extension: MDExtensions
   documentMetadata: Record<string, any>
 }
@@ -88,6 +88,10 @@ function useSubmitDocument({
   const onSubmit = useCallback(
     async (data: Document) => {
       setLoading(true)
+
+      if (!editor) {
+        throw new Error('Editor is not initialized')
+      }
 
       try {
         const [

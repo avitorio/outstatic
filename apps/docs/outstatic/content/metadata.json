@@ -1,6 +1,6 @@
 {
-  "commit": "",
-  "generated": "Fri, 08 Nov 2024 19:46:23 GMT",
+  "commit": "a031c802e7c9c3a4bb12b00bf9d3a59f668be445",
+  "generated": "2025-02-14T21:39:33.992Z",
   "metadata": [
     {
       "__outstatic": {
@@ -17,22 +17,6 @@
       "slug": "deploy-a-starter-outstatic-website-on-vercel",
       "status": "published",
       "title": "Deploy a starter Outstatic website on Vercel"
-    },
-    {
-      "__outstatic": {
-        "commit": "d6913759cc77759b74f3d7bc428d531704fd6c7e",
-        "hash": "976497181",
-        "path": "/outstatic/content/docs/credits.mdx"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "docs",
-      "publishedAt": "2024-11-07T17:57:27.073Z",
-      "slug": "credits",
-      "status": "published",
-      "title": "Credits"
     },
     {
       "__outstatic": {
@@ -296,22 +280,6 @@
     },
     {
       "__outstatic": {
-        "commit": "74c32e3a5f0f4b551b73cb6c9b6c7fb125727abe",
-        "hash": "1688915829",
-        "path": "/outstatic/content/docs/upgrading-to-v1.5.mdx"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "docs",
-      "publishedAt": "2024-11-07T19:56:08.302Z",
-      "slug": "upgrading-to-v1.5",
-      "status": "published",
-      "title": "Upgrading to v1.5"
-    },
-    {
-      "__outstatic": {
         "commit": "7ba6d2bf972f5a0e2d531104eb3c2a49414149dc",
         "hash": "524572335",
         "path": "/outstatic/content/menus/latest-menu.md"
@@ -507,6 +475,38 @@
       "slug": "local-development",
       "status": "published",
       "title": "Local Development"
+    },
+    {
+      "__outstatic": {
+        "commit": "970ebd2fc86b9901d3d3aa3fa8e3c2347f6aa14f",
+        "hash": "1469343855",
+        "path": "/outstatic/content/docs/upgrading-to-v1.5.mdx"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "publishedAt": "2024-11-07T19:56:08.302Z",
+      "slug": "upgrading-to-v1.5",
+      "status": "published",
+      "title": "Upgrading to v1.5"
+    },
+    {
+      "__outstatic": {
+        "commit": "a031c802e7c9c3a4bb12b00bf9d3a59f668be445",
+        "hash": "976497181",
+        "path": "/outstatic/content/docs/credits.mdx"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "publishedAt": "2024-11-07T17:57:27.073Z",
+      "slug": "credits",
+      "status": "published",
+      "title": "Credits"
     }
   ]
 }

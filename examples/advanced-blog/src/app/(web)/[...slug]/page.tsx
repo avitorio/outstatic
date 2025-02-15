@@ -12,13 +12,12 @@ type Document = {
   tags: { value: string; label: string }[]
 } & OstDocument
 
-interface Params {
-  params: {
-    slug: string
-  }
-}
+type Params = Promise<{ slug: string[] }>
 
-export async function generateMetadata(params: Params): Promise<Metadata> {
+export async function generateMetadata(props: {
+  params: Params
+}): Promise<Metadata> {
+  const params = await props.params
   const { doc, moreDocs } = await getData(params)
 
   if (!doc) {
@@ -54,7 +53,8 @@ export async function generateMetadata(params: Params): Promise<Metadata> {
   }
 }
 
-export default async function Document(params: Params) {
+export default async function Document(props: { params: Params }) {
+  const params = await props.params
   const { doc, moreDocs } = await getData(params)
 
   if (!doc) {
@@ -105,7 +105,7 @@ export default async function Document(params: Params) {
   )
 }
 
-async function getData({ params }: Params) {
+async function getData(params: { slug: string[] }) {
   const db = await load()
   let slug = params.slug[1]
   let collection = params.slug[0]
@@ -127,7 +127,6 @@ async function getData({ params }: Params) {
       // if we have docs, we are on a collection archive
       if (docs.length) {
         return {
-          doc: undefined,
           moreDocs: {
             docs,
             collection

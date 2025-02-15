@@ -1,3 +1,3 @@
-export * from './useCollections'
+export { useCollections } from './useCollections'
+export { useOutstatic, useLocalData } from './useOutstatic'
 export * from './useInitialData'
-export * from './useOutstatic'

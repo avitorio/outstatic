@@ -1,7 +1,7 @@
 import { FileType } from '@/types'
 import { createCommitApi } from '@/utils/createCommitApi'
 import { hashFromUrl } from '@/utils/hashFromUrl'
-import useOutstatic from '@/utils/hooks/useOutstatic'
+import { useOutstatic } from '@/utils/hooks/useOutstatic'
 import { stringifyMedia } from '@/utils/metadata/stringify'
 import MurmurHash3 from 'imurmurhash'
 import { useCallback } from 'react'

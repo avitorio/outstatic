@@ -1,0 +1,20 @@
+[
+  {
+    "title": "Pages",
+    "slug": "pages",
+    "path": "examples/basic-blog/outstatic/content/pages",
+    "children": []
+  },
+  {
+    "title": "Posts",
+    "slug": "posts",
+    "path": "examples/basic-blog/outstatic/content/posts",
+    "children": []
+  },
+  {
+    "title": "Projects",
+    "slug": "projects",
+    "path": "examples/basic-blog/outstatic/content/projects",
+    "children": []
+  }
+]

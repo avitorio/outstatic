@@ -17,7 +17,7 @@ import {
   useSortedDocuments,
   SortConfig
 } from '@/utils/hooks/useSortedDocuments'
-import useOutstatic from '@/utils/hooks/useOutstatic'
+import { useOutstatic } from '@/utils/hooks/useOutstatic'
 import { MDExtensions } from '@/types'
 import { useParams } from 'next/navigation'
 
