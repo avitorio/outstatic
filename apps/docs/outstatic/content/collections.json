@@ -1,0 +1,14 @@
+[
+  {
+    "title": "Docs",
+    "slug": "docs",
+    "path": "apps/docs/outstatic/content/docs",
+    "children": []
+  },
+  {
+    "title": "Menus",
+    "slug": "menus",
+    "path": "apps/docs/outstatic/content/menus",
+    "children": []
+  }
+]
