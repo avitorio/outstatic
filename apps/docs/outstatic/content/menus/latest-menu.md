@@ -1,16 +1,16 @@
 ---
-title: "Latest Menu"
-status: "published"
+title: 'Latest Menu'
+status: 'published'
 author:
-  name: "Andre Vitorio"
-  picture: "https://avatars.githubusercontent.com/u/1417109?v=4"
-slug: "latest-menu"
-description: ""
-coverImage: ""
-publishedAt: "2024-11-06T03:00:00.000Z"
+  name: 'Andre Vitorio'
+  picture: 'https://avatars.githubusercontent.com/u/1417109?v=4'
+slug: 'latest-menu'
+description: ''
+coverImage: ''
+publishedAt: '2024-11-06T03:00:00.000Z'
 ---
 
-- [Upgrading to v1.5](/upgrading-to-v1.5)
+- [Upgrading to v2.0](/upgrading-to-2.0)
 
 - [Introduction](/introduction)
 
