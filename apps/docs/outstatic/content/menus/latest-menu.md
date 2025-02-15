@@ -10,7 +10,7 @@ coverImage: ""
 publishedAt: "2024-11-06T03:00:00.000Z"
 ---
 
-- [Upgrading to v1.5](/upgrading-to-v1.5)
+- [Upgrading to v2.0 (Next.js 15)](/upgrading-to-v1.5)
 
 - [Introduction](/introduction)
 

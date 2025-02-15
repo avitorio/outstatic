@@ -1,6 +1,6 @@
 {
-  "commit": "a031c802e7c9c3a4bb12b00bf9d3a59f668be445",
-  "generated": "2025-02-15T00:34:33.264Z",
+  "commit": "38cd3494aeed4a3142efd8f22298a69ad8e26554",
+  "generated": "2025-02-15T00:35:23.121Z",
   "metadata": [
     {
       "__outstatic": {
@@ -296,24 +296,6 @@
     },
     {
       "__outstatic": {
-        "commit": "7ba6d2bf972f5a0e2d531104eb3c2a49414149dc",
-        "hash": "524572335",
-        "path": "/outstatic/content/menus/latest-menu.md"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "menus",
-      "coverImage": "",
-      "description": "",
-      "publishedAt": "2024-11-06T03:00:00.000Z",
-      "slug": "latest-menu",
-      "status": "published",
-      "title": "Latest Menu"
-    },
-    {
-      "__outstatic": {
         "commit": "2d8b5caf2b89969656b7d94ca2c200148e1b2290",
         "hash": "1968019570",
         "path": "/outstatic/content/v1.4/github-apps-authentication.md"
@@ -507,6 +489,24 @@
       "slug": "upgrading-to-v1.5",
       "status": "published",
       "title": "Upgrading to v2.0"
+    },
+    {
+      "__outstatic": {
+        "commit": "38cd3494aeed4a3142efd8f22298a69ad8e26554",
+        "hash": "2065699020",
+        "path": "/outstatic/content/menus/latest-menu.md"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "menus",
+      "coverImage": "",
+      "description": "",
+      "publishedAt": "2024-11-06T03:00:00.000Z",
+      "slug": "latest-menu",
+      "status": "published",
+      "title": "Latest Menu"
     }
   ]
 }
