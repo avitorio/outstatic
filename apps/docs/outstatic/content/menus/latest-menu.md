@@ -10,7 +10,7 @@ coverImage: ''
 publishedAt: '2024-11-06T03:00:00.000Z'
 ---
 
-- [Upgrading to v2.0](/upgrading-to-2.0)
+- [Upgrading to v2.0](/upgrading-to-v2.0)
 
 - [Introduction](/introduction)
 

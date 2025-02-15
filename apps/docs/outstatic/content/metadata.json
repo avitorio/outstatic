@@ -480,7 +480,7 @@
       "__outstatic": {
         "commit": "970ebd2fc86b9901d3d3aa3fa8e3c2347f6aa14f",
         "hash": "1469343855",
-        "path": "/outstatic/content/docs/upgrading-to-2.0.mdx"
+        "path": "/outstatic/content/docs/upgrading-to-v2.0.mdx"
       },
       "author": {
         "name": "Andre Vitorio",
@@ -488,7 +488,7 @@
       },
       "collection": "docs",
       "publishedAt": "2024-11-07T19:56:08.302Z",
-      "slug": "upgrading-to-2.0",
+      "slug": "upgrading-to-v2.0",
       "status": "published",
       "title": "Upgrading to v2.0"
     },
