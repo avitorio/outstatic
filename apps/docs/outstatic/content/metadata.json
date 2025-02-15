@@ -1,6 +1,6 @@
 {
-  "commit": "38cd3494aeed4a3142efd8f22298a69ad8e26554",
-  "generated": "2025-02-15T00:35:23.121Z",
+  "commit": "25fa830cc042f25273c7c3df2f80a96ca84225a3",
+  "generated": "2025-02-15T00:35:40.546Z",
   "metadata": [
     {
       "__outstatic": {
@@ -476,22 +476,6 @@
     },
     {
       "__outstatic": {
-        "commit": "a031c802e7c9c3a4bb12b00bf9d3a59f668be445",
-        "hash": "399978642",
-        "path": "/outstatic/content/docs/upgrading-to-v1.5.mdx"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "docs",
-      "publishedAt": "2025-02-14T03:00:00.000Z",
-      "slug": "upgrading-to-v1.5",
-      "status": "published",
-      "title": "Upgrading to v2.0"
-    },
-    {
-      "__outstatic": {
         "commit": "38cd3494aeed4a3142efd8f22298a69ad8e26554",
         "hash": "2065699020",
         "path": "/outstatic/content/menus/latest-menu.md"
@@ -507,6 +491,22 @@
       "slug": "latest-menu",
       "status": "published",
       "title": "Latest Menu"
+    },
+    {
+      "__outstatic": {
+        "commit": "25fa830cc042f25273c7c3df2f80a96ca84225a3",
+        "hash": "2284311591",
+        "path": "/outstatic/content/docs/upgrading-to-v2.mdx"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "publishedAt": "2025-02-14T03:00:00.000Z",
+      "slug": "upgrading-to-v2",
+      "status": "published",
+      "title": "Upgrading to v2.0"
     }
   ]
 }
