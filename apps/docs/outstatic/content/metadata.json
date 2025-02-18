@@ -214,24 +214,6 @@
     },
     {
       "__outstatic": {
-        "commit": "7ba6d2bf972f5a0e2d531104eb3c2a49414149dc",
-        "hash": "524572335",
-        "path": "/outstatic/content/menus/latest-menu.md"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "menus",
-      "coverImage": "",
-      "description": "",
-      "publishedAt": "2024-11-06T03:00:00.000Z",
-      "slug": "latest-menu",
-      "status": "published",
-      "title": "Latest Menu"
-    },
-    {
-      "__outstatic": {
         "commit": "2d8b5caf2b89969656b7d94ca2c200148e1b2290",
         "hash": "1968019570",
         "path": "/outstatic/content/v1.4/github-apps-authentication.md"
