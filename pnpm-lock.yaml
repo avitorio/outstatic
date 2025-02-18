@@ -796,9 +796,6 @@ importers:
       next-connect:
         specifier: ^1.0.0-next.2
         version: 1.0.0
-      next-navigation-guard:
-        specifier: ^0.1.1
-        version: 0.1.1(next@15.1.6(@babel/core@7.24.5)(babel-plugin-macros@3.1.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react@19.0.0)
       next-remove-imports:
         specifier: ^1.0.6
         version: 1.0.12(webpack@5.91.0(esbuild@0.17.19))
@@ -998,6 +995,9 @@ importers:
       next:
         specifier: 15.1.6
         version: 15.1.6(@babel/core@7.24.5)(babel-plugin-macros@3.1.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      next-navigation-guard:
+        specifier: ^0.1.1
+        version: 0.1.1(next@15.1.6(@babel/core@7.24.5)(babel-plugin-macros@3.1.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react@19.0.0)
       next-router-mock:
         specifier: ^0.9.7
         version: 0.9.13(next@15.1.6(@babel/core@7.24.5)(babel-plugin-macros@3.1.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react@19.0.0)
