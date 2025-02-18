@@ -8,7 +8,7 @@ author:
 slug: "upgrading-to-v2.0"
 ---
 
-Outstatic v2.0 offers support for Next.js 15. If you are using Next.js 14, please use v1.4.
+Outstatic v2.0 offers support for Next.js 15. If you are using Next.js 14, please use v1.4 instead.
 
 ### Params:
 
@@ -16,7 +16,7 @@ On Next.js 15, params should be awaited:
 
 `/app/(cms)/outstatic/[[...ost]]/page.tsx`
 
-```
+```typescript
 import 'outstatic/outstatic.css'
 import { Outstatic } from 'outstatic'
 import { OstClient } from 'outstatic/client'
