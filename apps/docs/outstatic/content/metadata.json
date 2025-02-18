@@ -1,6 +1,6 @@
 {
-  "commit": "29bcaccbfd016621c42c31ebc4ff376bc18d2a2e",
-  "generated": "2025-02-17T21:46:48.451Z",
+  "commit": "81bf8ad38e288ce125aab4886e94c07a8cede4b7",
+  "generated": "2025-02-18T13:27:20.594Z",
   "metadata": [
     {
       "__outstatic": {
@@ -494,8 +494,8 @@
     },
     {
       "__outstatic": {
-        "commit": "29bcaccbfd016621c42c31ebc4ff376bc18d2a2e",
-        "hash": "3087524350",
+        "commit": "81bf8ad38e288ce125aab4886e94c07a8cede4b7",
+        "hash": "307609540",
         "path": "/outstatic/content/docs/upgrading-to-v2.0.mdx"
       },
       "author": {
