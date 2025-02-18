@@ -12,7 +12,7 @@ import {
 import { Label } from '@/components/ui/shadcn/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/shadcn/radio-group'
 import { createCommitApi } from '@/utils/createCommitApi'
-import { useCollections } from '@/utils/hooks'
+import { useCollections } from '@/utils/hooks/useCollections'
 import { useCreateCommit } from '@/utils/hooks/useCreateCommit'
 import { useGetDocuments } from '@/utils/hooks/useGetDocuments'
 import useOid from '@/utils/hooks/useOid'
@@ -465,12 +465,12 @@ export default function NewCollectionModal({
                           allowedChars: 'a-zA-Z0-9.'
                         })
                       : createFolder
-                        ? '/' +
-                          (path ? path + '/' : '') +
-                          slugify(form.getValues('name') || 'your-collection', {
-                            allowedChars: 'a-zA-Z0-9.'
-                          })
-                        : '/' + path
+                      ? '/' +
+                        (path ? path + '/' : '') +
+                        slugify(form.getValues('name') || 'your-collection', {
+                          allowedChars: 'a-zA-Z0-9.'
+                        })
+                      : '/' + path
                   }
                 />
                 <FormDescription>

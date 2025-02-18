@@ -13,7 +13,7 @@ import { MediaLibraryHeader } from '@/components/ui/outstatic/media-library-head
 import Image from 'next/image'
 import { FileQuestion, ImageOff } from 'lucide-react'
 import { SpinnerIcon } from '@/components/ui/outstatic/spinner-icon'
-import { MediaSettings } from '@/client/client'
+import { MediaSettings } from '@/client/pages/settings/_components/media-settings'
 import {
   Card,
   CardHeader,
