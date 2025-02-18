@@ -43,7 +43,7 @@ export default function Collections() {
                   <CardContent className="relative flex p-6 justify-between items-center">
                     <Link
                       href={`${dashboardRoute}/${collection.slug}`}
-                      className="focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg"
+                      className="focus:ring-4 focus:outline-hidden focus:ring-gray-200 rounded-lg"
                     >
                       <h5 className="text-2xl cursor-pointer font-bold tracking-tight text-gray-900 hover:text-blue-500">
                         {collection.title}

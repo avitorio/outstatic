@@ -191,11 +191,11 @@ const ImageCommandList = ({
     <div id="outstatic">
       {showLink ? (
         <div
-          className={`flex justify-between z-50 w-96 rounded-md border bg-popover text-popover-foreground shadow-md outline-none p-1`}
+          className={`flex justify-between z-50 w-96 rounded-md border bg-popover text-popover-foreground shadow-md outline-hidden p-1`}
         >
           <input
             type="text"
-            className={`flex-1 bg-background p-1 text-sm outline-none ${
+            className={`flex-1 bg-background p-1 text-sm outline-hidden ${
               errors.imageUrl ? 'bg-red-50' : 'bg-white'
             }`}
             placeholder="Insert link here"

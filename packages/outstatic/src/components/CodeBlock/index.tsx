@@ -30,7 +30,7 @@ const CodeBlock = ({
         <select
           contentEditable={false}
           defaultValue={defaultLanguage}
-          className="select-none bg-gradient-to-tr from-primary-300 to-primary-400 bg-clip-text font-medium text-white outline-none text-sm"
+          className="select-none bg-linear-to-tr from-primary-300 to-primary-400 bg-clip-text font-medium text-white outline-hidden text-sm"
           onChange={(event) =>
             updateAttributes({ language: event.target.value })
           }

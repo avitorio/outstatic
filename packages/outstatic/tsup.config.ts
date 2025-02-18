@@ -18,7 +18,8 @@ export default defineConfig((options) => {
       'react',
       'react-dom',
       'next',
-      'tsup'
+      'tsup',
+      'tailwindcss'
       // Add any other external dependencies your project uses
     ],
     format: ['cjs', 'esm'],

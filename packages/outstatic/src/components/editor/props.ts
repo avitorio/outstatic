@@ -3,7 +3,7 @@ import { addImage } from './utils/addImage'
 
 export const TiptapEditorProps: EditorProps = {
   attributes: {
-    class: `prose-lg prose-stone prose-headings:font-display font-default focus:outline-none max-w-full`
+    class: `prose-lg prose-stone prose-headings:font-display font-default focus:outline-hidden max-w-full`
   },
   handleDOMEvents: {
     keydown: (_view, event) => {
