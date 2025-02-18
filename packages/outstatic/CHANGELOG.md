@@ -1,6 +1,12 @@
 # outstatic
 
-## 2.0.0-canary.1
+## 2.0.0-canary.2
+
+### Patch Changes
+
+- fix prosemirror error
+
+## 2.0.0-canary.2
 
 ### Major Changes
 

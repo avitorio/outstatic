@@ -14,7 +14,7 @@ import Welcome from './welcome'
 import { useGetRepository } from '@/utils/hooks/useGetRepository'
 import Onboarding from './onboarding'
 import { NavigationGuardProvider } from 'next-navigation-guard'
-import V1_5BreakingCheck from '@/components/v1_5BreakingCheck'
+import V2_0_BreakingCheck from '@/components/v2_0_BreakingCheck'
 
 type OstClientProps = {
   ostData: OutstaticData
@@ -87,7 +87,7 @@ export const OstClient = ({ ostData, params }: OstClientProps) => {
           <AdminArea params={params} />
         </NavigationGuardProvider>
       </QueryClientProvider>
-      <V1_5BreakingCheck />
+      <V2_0_BreakingCheck />
     </InitialDataContext.Provider>
   )
 }

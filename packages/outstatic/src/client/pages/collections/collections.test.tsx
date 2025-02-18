@@ -147,8 +147,8 @@ describe('Collections', () => {
 
     // Check New Collection link
     expect(
-      screen.getByRole('link', { name: 'New Collection' })
-    ).toHaveAttribute('href', '/outstatic/collections/new')
+      screen.getByRole('button', { name: 'New Collection' })
+    ).toBeInTheDocument()
 
     // Check collection links
     expect(screen.getByRole('link', { name: 'Blog' })).toHaveAttribute(

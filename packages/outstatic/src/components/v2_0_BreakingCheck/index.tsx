@@ -8,8 +8,9 @@ import {
   AlertDialogFooter,
   AlertDialogAction
 } from '@/components/ui/shadcn/alert-dialog'
+import { OUTSTATIC_VERSION } from '@/utils/constants'
 
-const V1_5BreakingCheck = () => {
+const V2_0_BreakingCheck = () => {
   const [showOverlay, setShowOverlay] = useState(false)
 
   useEffect(() => {
@@ -21,6 +22,8 @@ const V1_5BreakingCheck = () => {
   }, [])
 
   if (!showOverlay) return null
+
+  const isBeta = OUTSTATIC_VERSION.includes('canary')
 
   return (
     <AlertDialog open={showOverlay}>
@@ -38,7 +41,9 @@ const V1_5BreakingCheck = () => {
           <AlertDialogAction
             onClick={() =>
               window.open(
-                'https://outstatic.com/docs/upgrading-to-v1.5',
+                `https://${
+                  isBeta ? 'beta.' : ''
+                }outstatic.com/docs/upgrading-to-v2.0`,
                 '_blank'
               )
             }
@@ -51,4 +56,4 @@ const V1_5BreakingCheck = () => {
   )
 }
 
-export default V1_5BreakingCheck
+export default V2_0_BreakingCheck

@@ -36,7 +36,8 @@
   "pnpm": {
     "overrides": {
       "@types/react": "npm:types-react@19.0.0-rc.1",
-      "@types/react-dom": "npm:types-react-dom@19.0.0-rc.1"
+      "@types/react-dom": "npm:types-react-dom@19.0.0-rc.1",
+      "prosemirror-model": "1.24.1"
     }
   }
 }
