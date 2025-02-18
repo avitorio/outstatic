@@ -1,5 +1,5 @@
 import { createCommitApi } from '@/utils/createCommitApi'
-import useOutstatic, { useLocalData } from '@/utils/hooks/useOutstatic'
+import { useOutstatic, useLocalData } from '@/utils/hooks/useOutstatic'
 import { useCallback, useState, useEffect } from 'react'
 import { useCreateCommit } from './useCreateCommit'
 import useOid from './useOid'

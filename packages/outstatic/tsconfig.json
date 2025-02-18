@@ -8,9 +8,9 @@
     "paths": {
       "@/*": ["src/*"]
     },
-    "lib": ["ES2021"],
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
     "module": "ESNext",
-    "target": "ES6",
+    "target": "ESNext",
     "jsx": "react-jsx",
     "composite": false,
     "declaration": false,
@@ -19,11 +19,14 @@
     "forceConsistentCasingInFileNames": true,
     "inlineSources": false,
     "isolatedModules": true,
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "preserveWatchOutput": true,
     "skipLibCheck": true,
-    "strict": true
+    "strict": true,
+    "allowJs": true,
+    "moduleDetection": "force",
+    "resolveJsonModule": true,
   }
 }

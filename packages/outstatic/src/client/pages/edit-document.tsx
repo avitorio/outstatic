@@ -1,18 +1,14 @@
-import {
-  AdminLayout,
-  DocumentSettings,
-  DocumentTitleInput,
-  MDEditor
-} from '@/components'
+import { AdminLayout, DocumentSettings, DocumentTitleInput } from '@/components'
+import { MDEditor } from '@/components/editor/editor'
 import { DocumentContext } from '@/context'
 import { CustomFieldsType, Document, MDExtensions } from '@/types'
 import { deepReplace } from '@/utils/deepReplace'
 import { useDocumentUpdateEffect } from '@/utils/hooks/useDocumentUpdateEffect'
 import { useFileStore } from '@/utils/hooks/useFileStore'
 import { useGetCollectionSchema } from '@/utils/hooks/useGetCollectionSchema'
-import useOutstatic, { useLocalData } from '@/utils/hooks/useOutstatic'
+import { useOutstatic, useLocalData } from '@/utils/hooks/useOutstatic'
 import useSubmitDocument from '@/utils/hooks/useSubmitDocument'
-import useTipTap from '@/utils/hooks/useTipTap'
+import { useTipTap } from '@/components/editor/hooks/use-tip-tap'
 import { editDocumentSchema } from '@/utils/schemas/edit-document-schema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import Head from 'next/head'
@@ -25,6 +21,7 @@ import { FormMessage } from '@/components/ui/shadcn/form'
 import { toast } from 'sonner'
 import { noCase } from 'change-case'
 import MediaSettingsDialog from '@/components/ui/outstatic/media-settings-dialog'
+import { useEditor } from '@/components/editor/editor-context'
 
 export default function EditDocument({ collection }: { collection: string }) {
   const pathname = usePathname()
@@ -39,7 +36,14 @@ export default function EditDocument({ collection }: { collection: string }) {
   const [documentSchema, setDocumentSchema] = useState(editDocumentSchema)
   //@ts-ignore
   const methods = useForm<Document>({ resolver: zodResolver(documentSchema) })
-  const { editor } = useTipTap({ ...methods })
+
+  const { editor, setEditor } = useEditor()
+  const tiptapEditor = useTipTap({ ...methods }).editor
+
+  useEffect(() => {
+    setEditor(tiptapEditor)
+  }, [tiptapEditor, setEditor])
+
   const [customFields, setCustomFields] = useState<CustomFieldsType>({})
   const files = useFileStore((state) => state.files)
   const [extension, setExtension] = useState<MDExtensions>('mdx')
@@ -175,79 +179,81 @@ export default function EditDocument({ collection }: { collection: string }) {
           rel="stylesheet"
         />
       </Head>
-      <DocumentContext.Provider
-        value={{
-          editor,
-          document: methods.getValues(),
-          editDocument,
-          hasChanges,
-          collection,
-          extension
-        }}
-      >
-        <FormProvider {...methods}>
-          <FormMessage />
-          <AdminLayout
-            title={methods.getValues('title')}
-            settings={
-              <DocumentSettings
-                loading={loading}
-                saveDocument={methods.handleSubmit(
-                  (data) => {
-                    if (
-                      !localData?.repoMediaPath &&
-                      !localData?.publicMediaPath &&
-                      files.length > 0
-                    ) {
-                      setShowMediaPathDialog(true)
-                      return
-                    } else {
-                      return onSubmit(data)
+      {editor && editor?.isEditable && (
+        <DocumentContext.Provider
+          value={{
+            editor,
+            document: methods.getValues(),
+            editDocument,
+            hasChanges,
+            collection,
+            extension
+          }}
+        >
+          <FormProvider {...methods}>
+            <FormMessage />
+            <AdminLayout
+              title={methods.getValues('title')}
+              settings={
+                <DocumentSettings
+                  loading={loading}
+                  saveDocument={methods.handleSubmit(
+                    (data) => {
+                      if (
+                        !localData?.repoMediaPath &&
+                        !localData?.publicMediaPath &&
+                        files.length > 0
+                      ) {
+                        setShowMediaPathDialog(true)
+                        return
+                      } else {
+                        return onSubmit(data)
+                      }
+                    },
+                    (data) => {
+                      console.error({ data })
+                      const firstKey = Object.keys(data)[0] as keyof typeof data
+                      const errorMessage =
+                        (data[firstKey] as { message?: string })?.message ||
+                        'Unknown error'
+                      toast.error(`Error in ${firstKey}: ${errorMessage}`)
                     }
-                  },
-                  (data) => {
-                    console.error({ data })
-                    const firstKey = Object.keys(data)[0] as keyof typeof data
-                    const errorMessage =
-                      (data[firstKey] as { message?: string })?.message ||
-                      'Unknown error'
-                    toast.error(`Error in ${firstKey}: ${errorMessage}`)
-                  }
-                )}
-                showDelete={showDelete}
-                customFields={customFields}
-                setCustomFields={setCustomFields}
-                metadata={metadata}
-              />
-            }
-          >
-            <form className="m-auto max-w-[700px] space-y-4">
-              <DocumentTitleInput
-                id="title"
-                className="w-full resize-none outline-none bg-white text-5xl scrollbar-hide min-h-[55px] overflow-hidden"
-                placeholder={`Your ${singular(
-                  noCase(collection, {
-                    split: (str) =>
-                      str.split(/([^A-Za-z0-9\.-]+)/g).filter(Boolean)
-                  })
-                ).replace(/-/g, ' ')} title`}
-              />
-              <div className="min-h-full prose prose-xl">
-                <MDEditor editor={editor} id="content" />
-              </div>
-            </form>
-          </AdminLayout>
-          <MediaSettingsDialog
-            title="Your document contains media files."
-            description="Let's set up your media paths so we can upload your files."
-            showMediaPathDialog={showMediaPathDialog}
-            setShowMediaPathDialog={setShowMediaPathDialog}
-            callbackFunction={() => {
-              setMediaPathUpdated(true)
-            }}
-          />
-        </FormProvider>
-      </DocumentContext.Provider>
+                  )}
+                  showDelete={showDelete}
+                  customFields={customFields}
+                  setCustomFields={setCustomFields}
+                  metadata={metadata}
+                />
+              }
+            >
+              <form className="m-auto max-w-[700px] space-y-4">
+                <DocumentTitleInput
+                  id="title"
+                  className="w-full resize-none outline-none bg-white text-5xl scrollbar-hide min-h-[55px] overflow-hidden"
+                  placeholder={`Your ${singular(
+                    noCase(collection, {
+                      split: (str) =>
+                        str.split(/([^A-Za-z0-9\.-]+)/g).filter(Boolean)
+                    })
+                  ).replace(/-/g, ' ')} title`}
+                />
+                <div className="min-h-full prose prose-xl">
+                  <MDEditor editor={editor} id="content" />
+                </div>
+              </form>
+            </AdminLayout>
+            <MediaSettingsDialog
+              title="Your document contains media files."
+              description="Let's set up your media paths so we can upload your files."
+              showMediaPathDialog={showMediaPathDialog}
+              setShowMediaPathDialog={setShowMediaPathDialog}
+              callbackFunction={() => {
+                setMediaPathUpdated(true)
+              }}
+            />
+          </FormProvider>
+        </DocumentContext.Provider>
+      )}
     </>
   )
 }

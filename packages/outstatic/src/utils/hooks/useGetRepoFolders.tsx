@@ -1,6 +1,6 @@
 import { TreeDataItem } from '@/components/ui/outstatic/file-tree'
 import { GET_FILES } from '@/graphql/queries/files'
-import useOutstatic from '@/utils/hooks/useOutstatic'
+import { useOutstatic } from '@/utils/hooks/useOutstatic'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 
 type Tree = {

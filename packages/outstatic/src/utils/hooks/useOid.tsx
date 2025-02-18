@@ -1,6 +1,6 @@
 import { Commit, Repository } from '@/graphql/gql/graphql'
 import { OID } from '@/graphql/queries/oid'
-import useOutstatic from '@/utils/hooks/useOutstatic'
+import { useOutstatic } from '@/utils/hooks/useOutstatic'
 import { useQuery } from '@tanstack/react-query'
 import { useCallback } from 'react'
 

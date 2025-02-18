@@ -23,7 +23,7 @@ import {
   DialogFooter
 } from '@/components/ui/shadcn/dialog'
 import { useEffect, useState } from 'react'
-import { useLocalData, useOutstatic } from '@/utils/hooks'
+import { useLocalData, useOutstatic } from '@/utils/hooks/useOutstatic'
 import { Skeleton } from '@/components/ui/shadcn/skeleton'
 import { FolderIcon } from 'lucide-react'
 import GithubExplorer from '@/components/ui/outstatic/github-explorer'

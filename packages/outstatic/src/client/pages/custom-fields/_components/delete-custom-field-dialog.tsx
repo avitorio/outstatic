@@ -13,7 +13,7 @@ import { Button } from '@/components/ui/shadcn/button'
 import { SpinnerIcon } from '@/components/ui/outstatic/spinner-icon'
 import { useCustomFieldCommit } from './use-custom-field-commit'
 import { useGetCollectionSchema } from '@/utils/hooks/useGetCollectionSchema'
-import { useOutstatic } from '@/utils/hooks'
+import { useOutstatic } from '@/utils/hooks/useOutstatic'
 import { CustomFieldsType } from '@/types'
 
 interface DeleteCustomFieldDialogProps {

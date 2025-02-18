@@ -74,22 +74,6 @@
     },
     {
       "__outstatic": {
-        "commit": "900068b0fb276b409cb82ee3132e42f4bd51bc8a",
-        "hash": "447026549",
-        "path": "/outstatic/content/docs/getting-started-with-next-js.mdx"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "docs",
-      "publishedAt": "2024-10-30T13:20:54.632Z",
-      "slug": "getting-started-with-next-js",
-      "status": "published",
-      "title": "Getting started with Next.js"
-    },
-    {
-      "__outstatic": {
         "commit": "2d8b5caf2b89969656b7d94ca2c200148e1b2290",
         "hash": "1968019570",
         "path": "/outstatic/content/docs/github-apps-authentication.md"
@@ -123,24 +107,6 @@
       "slug": "faqs",
       "status": "published",
       "title": "FAQs"
-    },
-    {
-      "__outstatic": {
-        "commit": "aacb2c4d45b9aacce32fb86226e4c58d6e79d497",
-        "hash": "1878763941",
-        "path": "/outstatic/content/docs/getting-started.md"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "docs",
-      "coverImage": "",
-      "description": "Get started with Outstatic",
-      "publishedAt": "2024-10-30T03:00:00.000Z",
-      "slug": "getting-started",
-      "status": "published",
-      "title": "Getting started"
     },
     {
       "__outstatic": {
@@ -214,22 +180,6 @@
     },
     {
       "__outstatic": {
-        "commit": "3644b8f48e06e49e47368172393cb57380c95bb5",
-        "hash": "2691028132",
-        "path": "/outstatic/content/docs/troubleshooting.mdx"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "docs",
-      "publishedAt": "2024-11-07T18:25:21.452Z",
-      "slug": "troubleshooting",
-      "status": "published",
-      "title": "Troubleshooting and Common Errors"
-    },
-    {
-      "__outstatic": {
         "commit": "58681aa369f4f588b39b86143bb757f62423b173",
         "hash": "3895841815",
         "path": "/outstatic/content/v1.4/custom-fields.md"
@@ -248,22 +198,6 @@
     },
     {
       "__outstatic": {
-        "commit": "4762875c5baa7469c50cfd9ee58ea11199f5d0f2",
-        "hash": "2337295835",
-        "path": "/outstatic/content/docs/using-outstatic-for-markdown-content.mdx"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "docs",
-      "publishedAt": "2024-10-30T18:53:46.596Z",
-      "slug": "using-outstatic-for-markdown-content",
-      "status": "published",
-      "title": "Using Outstatic for Markdown content"
-    },
-    {
-      "__outstatic": {
         "commit": "e7ffdfb9e9444fd4e30e343a6db7cb9807e47af4",
         "hash": "2299452863",
         "path": "/outstatic/content/menus/v1.4-menu.mdx"
@@ -277,40 +211,6 @@
       "slug": "v1.4-menu",
       "status": "published",
       "title": "v1.4 Menu"
-    },
-    {
-      "__outstatic": {
-        "commit": "74c32e3a5f0f4b551b73cb6c9b6c7fb125727abe",
-        "hash": "1688915829",
-        "path": "/outstatic/content/docs/upgrading-to-v1.5.mdx"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "docs",
-      "publishedAt": "2024-11-07T19:56:08.302Z",
-      "slug": "upgrading-to-v1.5",
-      "status": "published",
-      "title": "Upgrading to v1.5"
-    },
-    {
-      "__outstatic": {
-        "commit": "7ba6d2bf972f5a0e2d531104eb3c2a49414149dc",
-        "hash": "524572335",
-        "path": "/outstatic/content/menus/latest-menu.md"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "menus",
-      "coverImage": "",
-      "description": "",
-      "publishedAt": "2024-11-06T03:00:00.000Z",
-      "slug": "latest-menu",
-      "status": "published",
-      "title": "Latest Menu"
     },
     {
       "__outstatic": {

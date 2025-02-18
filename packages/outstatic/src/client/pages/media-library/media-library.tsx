@@ -2,7 +2,7 @@
 
 import { AdminLayout } from '@/components'
 import { API_MEDIA_PATH } from '@/utils/constants'
-import { useOutstatic } from '@/utils/hooks'
+import { useOutstatic } from '@/utils/hooks/useOutstatic'
 import { useGetMediaFiles } from '@/utils/hooks/useGetMediaFiles'
 import { useState, useMemo } from 'react'
 import { toast } from 'sonner'
@@ -13,7 +13,7 @@ import { MediaLibraryHeader } from '@/components/ui/outstatic/media-library-head
 import Image from 'next/image'
 import { FileQuestion, ImageOff } from 'lucide-react'
 import { SpinnerIcon } from '@/components/ui/outstatic/spinner-icon'
-import { MediaSettings } from '@/client/client'
+import { MediaSettings } from '@/client/pages/settings/_components/media-settings'
 import {
   Card,
   CardHeader,

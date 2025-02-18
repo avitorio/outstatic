@@ -1,6 +1,6 @@
 import { GET_FILE } from '@/graphql/queries/file'
 import { CustomFieldsType } from '@/types'
-import useOutstatic from '@/utils/hooks/useOutstatic'
+import { useOutstatic } from '@/utils/hooks/useOutstatic'
 import { useQuery } from '@tanstack/react-query'
 import { useParams } from 'next/navigation'
 

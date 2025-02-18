@@ -30,7 +30,8 @@ export async function setLoginSession(session: LoginSession) {
   // Create a session object with a max age that we can validate later
   const obj = { ...session }
   const token = await Iron.seal(obj, TOKEN_SECRET, Iron.defaults)
-  cookies().set(TOKEN_NAME, token, {
+  const cookieStore = await cookies()
+  cookieStore.set(TOKEN_NAME, token, {
     maxAge: MAX_AGE,
     expires: new Date(Date.now() + MAX_AGE),
     httpOnly: true,
@@ -43,7 +44,7 @@ export async function setLoginSession(session: LoginSession) {
 }
 
 export async function getLoginSession(): Promise<Session | null> {
-  const cookieStore = cookies()
+  const cookieStore = await cookies()
   const token = cookieStore.get(TOKEN_NAME)?.value
   if (!token) return null
 

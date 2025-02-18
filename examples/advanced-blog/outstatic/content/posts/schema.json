@@ -22,6 +22,18 @@
           "label": "Outstatic"
         }
       ]
+    },
+    "description": {
+      "required": false,
+      "fieldType": "String",
+      "dataType": "string",
+      "title": "Description"
+    },
+    "coverImage": {
+      "required": false,
+      "fieldType": "String",
+      "dataType": "string",
+      "title": "Cover Image"
     }
   }
 }

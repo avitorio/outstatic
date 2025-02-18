@@ -1,5 +1,45 @@
 # outstatic
 
+## 2.0.0-canary.2
+
+### Patch Changes
+
+- fix prosemirror error
+
+## 2.0.0-canary.2
+
+### Major Changes
+
+- Outstatic v2.0 offers support for Next.js 15. If you are using Next.js 14, please use v1.4.
+
+  #### Styles
+
+  We've added a few components which are styled using a `outstatic` css namespace (id).
+
+  To make sure your dashboard works with the new styles, you should add the id to your `app/(cms)/layout.tsx`'s `body` tag.
+
+  `/app/(cms)/layout.tsx`
+
+  ```javascript
+  export default function RootLayout({ children }) {
+    return (
+      <html lang="en">
+        <body id="outstatic">{children}</body>
+      </html>
+    )
+  }
+  ```
+
+  #### Media Files (No code changes needed)
+
+  We are now using a **Media Library** page. You will have to define a **Repo Media Path** and a **Public Media Path**. You will be prompted to set up your paths either from the Media Library page or when trying to upload an image to a document.
+
+  It should work the same as before, but with the Media Gallery you will be able to easily reuse images you've already uploaded to your repository.
+
+### Patch Changes
+
+- e81ff20: feat: adjust onboarding when .env vars are present
+
 ## 1.5.0-canary.0
 
 ### Minor Changes
