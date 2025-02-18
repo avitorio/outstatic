@@ -1,6 +1,6 @@
 {
-  "commit": "29bcaccbfd016621c42c31ebc4ff376bc18d2a2e",
-  "generated": "2025-02-17T21:46:48.451Z",
+  "commit": "e38a562506aef43edf33cc75ba85f0881d039bc4",
+  "generated": "2025-02-18T13:28:56.157Z",
   "metadata": [
     {
       "__outstatic": {
@@ -177,22 +177,6 @@
       "slug": "local-development",
       "status": "published",
       "title": "Local Development"
-    },
-    {
-      "__outstatic": {
-        "commit": "3644b8f48e06e49e47368172393cb57380c95bb5",
-        "hash": "2691028132",
-        "path": "/outstatic/content/docs/troubleshooting.mdx"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "docs",
-      "publishedAt": "2024-11-07T18:25:21.452Z",
-      "slug": "troubleshooting",
-      "status": "published",
-      "title": "Troubleshooting and Common Errors"
     },
     {
       "__outstatic": {
@@ -494,8 +478,8 @@
     },
     {
       "__outstatic": {
-        "commit": "29bcaccbfd016621c42c31ebc4ff376bc18d2a2e",
-        "hash": "3087524350",
+        "commit": "81bf8ad38e288ce125aab4886e94c07a8cede4b7",
+        "hash": "307609540",
         "path": "/outstatic/content/docs/upgrading-to-v2.0.mdx"
       },
       "author": {
@@ -507,6 +491,22 @@
       "slug": "upgrading-to-v2.0",
       "status": "published",
       "title": "Upgrading to v2.0"
+    },
+    {
+      "__outstatic": {
+        "commit": "e38a562506aef43edf33cc75ba85f0881d039bc4",
+        "hash": "1687885050",
+        "path": "/outstatic/content/docs/troubleshooting.mdx"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "publishedAt": "2025-02-18T03:00:00.000Z",
+      "slug": "troubleshooting",
+      "status": "published",
+      "title": "Troubleshooting and Common Errors"
     }
   ]
 }
