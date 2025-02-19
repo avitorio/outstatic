@@ -9,7 +9,7 @@ export const BuiltWithOutstatic = ({ fixed = true }: { fixed: boolean }) => (
     <a
       href="https://outstatic.com"
       target="_blank"
-      className="group text-[#1e293b] dark:text-slate-50 bg-white dark:bg-[#1e293b] flex items-center justify-center border rounded-md p-2 text-sm cursor-poiner h-8 hover:shadow-sm w-[108px] transition duration-300 ease-in-out"
+      className="group text-[#1e293b] dark:text-slate-50 bg-white dark:bg-[#1e293b] flex items-center justify-center border rounded-md p-2 text-sm cursor-poiner h-8 hover:shadow-2xs w-[108px] transition duration-300 ease-in-out"
     >
       <div className="absolute hidden md:flex items-center border rounded-l-md border-r-0 bg-white dark:bg-[#1e293b] left-0 -translate-x-[1px] md:group-hover:-translate-x-[80%] transition duration-1000 ease-in-out h-8 p-2">
         <span className="opacity-0 md:group-hover:opacity-100 transition duration-1000 ease-in-out ">
