@@ -40,7 +40,7 @@ function GithubExplorer({
     <Tree
       isPending={isPending}
       data={folders}
-      className={cn('flex-shrink-0 w-full h-64 border-[1px]', className)}
+      className={cn('shrink-0 w-full h-64 border-[1px]', className)}
       onSelectChange={(item) => handleSelectChange(item)}
       folderIcon={Folder}
       itemIcon={Folder}

@@ -78,7 +78,7 @@ export default function Login({ basePath }: { basePath?: string }) {
                   href={`${OUTSTATIC_API_PATH}/login`}
                   onClick={handleLogin}
                   className={clsx(
-                    'mr-2 mb-2 inline-flex items-center rounded-lg bg-[#24292F] px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-[#24292F]/90 focus:outline-none focus:ring-4 focus:ring-[#24292F]/50',
+                    'mr-2 mb-2 inline-flex items-center rounded-lg bg-[#24292F] px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-[#24292F]/90 focus:outline-hidden focus:ring-4 focus:ring-[#24292F]/50',
                     isLoading && 'animate-pulse'
                   )}
                 >

@@ -80,7 +80,7 @@ const ImageMenu = ({ editor }: ImageMenuProps) => {
               id="alt-text"
               name="alt-text"
               required
-              className="w-[500px] border-r border-stone-200 px-3 outline-none"
+              className="w-[500px] border-r border-stone-200 px-3 outline-hidden"
               placeholder="Insert alt text here"
               onChange={(e) => {
                 setAltText(e.target.value.trim())

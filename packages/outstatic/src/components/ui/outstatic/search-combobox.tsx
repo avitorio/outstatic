@@ -106,7 +106,7 @@ export function SearchCombobox({
             className={cn(
               buttonClassName,
               size === 'sm' &&
-                'focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0'
+                'focus-visible:outline-hidden focus-visible:ring-0 focus-visible:ring-offset-0'
             )}
             disabled={disabled || isLoading}
             size={size}
