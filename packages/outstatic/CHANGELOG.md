@@ -1,5 +1,67 @@
 # outstatic
 
+## 2.0.0
+
+### Major Changes
+
+- 13c4309: Outstatic v2.0 offers support for Next.js 15. If you are using Next.js 14, please use v1.4.
+
+  ### Styles
+
+  We've added a few components which are styled using a `outstatic` css namespace (id).
+
+  To make sure your dashboard works with the new styles, you should add the id to your `app/(cms)/layout.tsx`'s `body` tag.
+
+  `/app/(cms)/layout.tsx`
+
+  ```javascript
+  export default function RootLayout({ children }) {
+    return (
+      <html lang="en">
+        <body id="outstatic">{children}</body>
+      </html>
+    )
+  }
+  ```
+
+  ### Media Files (No code changes needed)
+
+  We are now using a **Media Library** page. You will have to define a **Repo Media Path** and a **Public Media Path**. You will be prompted to set up your paths either from the Media Library page or when trying to upload an image to a document.
+
+  It should work the same as before, but with the Media Gallery you will be able to easily reuse images you've already uploaded to your repository.
+
+- f13ba35: 2.0.0 start
+
+### Minor Changes
+
+- a0c13ef: feat: detached mode
+  feat: delete collection on detached mode
+  feat: improve repo and branch selection
+  feat: update rebuild metadata to use react-query
+  feat: replace useoid with react query
+  feat: use react-query for custom fields
+  feat: remove apollo
+  refactor: reuse graphql client
+  feat: redesign sidebar
+  feat: adjust main wrapper
+  fix: branch search not showing results if arraylength 1 on
+  feat: create media library
+  feat: create branch option if branch not found
+  feat: v1.5 docs
+  feat: add fair license
+
+### Patch Changes
+
+- fab75d9: fix prosemirror error
+- e81ff20: feat: adjust onboarding when .env vars are present
+- b902a0f: upgrade to tailwindcss v4
+
+## 2.0.0-canary.3
+
+### Patch Changes
+
+- b902a0f: upgrade to tailwindcss v4
+
 ## 2.0.0-canary.2
 
 ### Patch Changes
