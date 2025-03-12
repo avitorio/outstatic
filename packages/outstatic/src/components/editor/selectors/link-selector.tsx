@@ -1,5 +1,9 @@
 import { Button } from '@/components/ui/shadcn/button'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/shadcn/popover'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger
+} from '@/components/ui/shadcn/popover'
 import { cn } from '@/utils/ui'
 import { Check, Trash } from 'lucide-react'
 import { useEditor } from '@/components/editor/editor-context'
@@ -8,12 +12,15 @@ import { EditorBubbleButton } from '@/components/editor/ui/editor-bubble-button'
 
 export function isValidUrl(url: string) {
   try {
+    // Check if the URL is absolute
     new URL(url)
     return true
   } catch (_e) {
-    return false
+    // If not, check if it's a valid relative path
+    return url.startsWith('/')
   }
 }
+
 export function getUrlFromString(str: string) {
   if (isValidUrl(str)) return str
   try {
@@ -24,6 +31,7 @@ export function getUrlFromString(str: string) {
     return null
   }
 }
+
 interface LinkSelectorProps {
   open: boolean
   onOpenChange: (open: boolean) => void
@@ -37,7 +45,7 @@ export const LinkSelector = ({ open, onOpenChange }: LinkSelectorProps) => {
   useEffect(() => {
     inputRef.current?.focus()
   })
-  
+
   if (!editor) return null
 
   return (
