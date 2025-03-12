@@ -1,13 +1,13 @@
 'use client'
 import { SearchCombobox } from '@/components/ui/outstatic/search-combobox'
 import { GET_BRANCHES } from '@/graphql/queries/branches'
-import useOutstatic, { useLocalData } from '@/utils/hooks/useOutstatic'
-import { queryClient } from '@/utils/react-query/queryClient'
+import { useOutstatic, useLocalData } from '@/utils/hooks/useOutstatic'
 import { useCallback, useEffect, useState } from 'react'
 import { CreateBranchDialog } from '@/components/ui/outstatic/create-branch-dialog'
 import { PlusCircle } from 'lucide-react'
 import { Button } from '../shadcn/button'
-import { useInitialData } from '@/utils/hooks'
+import { useInitialData } from '@/utils/hooks/useInitialData'
+import { useQueryClient } from '@tanstack/react-query'
 
 interface Branch {
   name: string
@@ -32,6 +32,7 @@ export const GitHubBranchSearch = ({
   size = 'default',
   onboarding = false
 }: GitHubBranchSearchProps) => {
+  const queryClient = useQueryClient()
   const { setData, data } = useLocalData()
   const [query, setQuery] = useState('')
   const { repoBranch: initialRepoBranch } = useInitialData()
@@ -129,7 +130,7 @@ export const GitHubBranchSearch = ({
         size={size}
         scrollFooter={() => (
           <div
-            className="rounded-t-none border border-t px-3 hover:cursor-pointer relative flex cursor-default select-none items-center rounded-sm py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground"
+            className="rounded-t-none border border-t px-3 hover:cursor-pointer relative flex cursor-default select-none items-center rounded-sm py-1.5 text-sm outline-hidden hover:bg-accent hover:text-accent-foreground"
             onClick={() => {
               setIsOpen(false)
               setIsLoading(true)
@@ -140,7 +141,7 @@ export const GitHubBranchSearch = ({
               {query !== repoBranch &&
               query !== '' &&
               !suggestions.some((branch) => branch.name === query) ? (
-                <span className="flex-grow font-normal break-words">
+                <span className="grow font-normal break-words">
                   <PlusCircle className="mr-2 h-4 w-4 min-w-[1rem] inline-block select-none align-text-bottom overflow-visible" />
                   <span>Create branch&nbsp;</span>
                   <span className="font-semibold">{query}</span> from{' '}

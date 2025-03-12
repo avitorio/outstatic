@@ -1,13 +1,13 @@
 ---
-title: "Fetching data"
-status: "published"
+title: 'Fetching data'
+status: 'published'
 author:
-  name: "Jakob Heuser"
-  picture: "https://avatars.githubusercontent.com/u/1795?v=4"
-slug: "fetching-data"
-description: ""
-coverImage: ""
-publishedAt: "2024-11-07T03:00:00.000Z"
+  name: 'Jakob Heuser'
+  picture: 'https://avatars.githubusercontent.com/u/1795?v=4'
+slug: 'fetching-data'
+description: ''
+coverImage: ''
+publishedAt: '2024-11-07T03:00:00.000Z'
 ---
 
 **Fetching data is only available for Next.js projects.**

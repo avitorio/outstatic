@@ -11,13 +11,12 @@ type Post = {
   tags: { value: string; label: string }[]
 } & OstDocument
 
-interface Params {
-  params: {
-    slug: string
-  }
-}
+type Params = Promise<{ slug: string }>
 
-export async function generateMetadata(params: Params): Promise<Metadata> {
+export async function generateMetadata(props: {
+  params: Params
+}): Promise<Metadata> {
+  const params = await props.params
   const post = await getData(params)
 
   if (!post) {
@@ -34,7 +33,7 @@ export async function generateMetadata(params: Params): Promise<Metadata> {
       url: absoluteUrl(`/posts/${post.slug}`),
       images: [
         {
-          url: ogUrl(post?.coverImage || `/api/og?title=${post.title}`),
+          url: ogUrl(post?.coverImage || post.title),
           width: 1200,
           height: 630,
           alt: post.title
@@ -45,12 +44,13 @@ export async function generateMetadata(params: Params): Promise<Metadata> {
       card: 'summary_large_image',
       title: post.title,
       description: post.description,
-      images: ogUrl(post?.coverImage || `/api/og?title=${post.title}`)
+      images: ogUrl(post?.coverImage || `${post.title}`)
     }
   }
 }
 
-export default async function Post(params: Params) {
+export default async function Post(props: { params: Params }) {
+  const params = await props.params
   const post = await getData(params)
   return (
     <article className="mb-32">
@@ -64,7 +64,7 @@ export default async function Post(params: Params) {
   )
 }
 
-async function getData({ params }: Params) {
+async function getData(params: { slug: string }) {
   const db = await load()
 
   const post = await db

@@ -1,12 +1,24 @@
 ---
 title: "Troubleshooting and Common Errors"
-publishedAt: "2024-11-07T18:25:21.452Z"
+publishedAt: "2025-02-18T03:00:00.000Z"
 status: "published"
 author:
   name: "Andre Vitorio"
   picture: "https://avatars.githubusercontent.com/u/1417109?v=4"
 slug: "troubleshooting"
 ---
+
+## Cannot find module 'outstatic/client' or 'outstatic/server' or its corresponding type declarations.
+
+Update your `tsconfig.json` :
+
+```json
+# from:
+"moduleResolution": "node",
+
+# to:
+"moduleResolution": "bundler",
+```
 
 ## Troubleshooting Login and Repository Access Issues.
 

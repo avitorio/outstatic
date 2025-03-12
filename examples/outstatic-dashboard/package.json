@@ -1,0 +1,28 @@
+{
+  "name": "outstatic-cms",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@tailwindcss/postcss": "^4.0.7",
+    "next": "^15",
+    "outstatic": "latest",
+    "react": "^19",
+    "react-dom": "^19",
+    "tailwindcss": "4.0.7"
+  },
+  "devDependencies": {
+    "@tailwindcss/typography": "^0.5.9",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^8.57.0",
+    "eslint-config-next": "^13.4.0",
+    "postcss": "8.4.24",
+    "typescript": "5.1.3"
+  }
+}

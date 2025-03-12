@@ -3,7 +3,7 @@ import { OutstaticData } from '@/app'
 import { AdminHeader, Sidebar } from '@/components'
 import { AdminLoading } from '@/components/AdminLoading'
 import { InitialDataContext } from '@/utils/hooks/useInitialData'
-import useOutstatic, { useLocalData } from '@/utils/hooks/useOutstatic'
+import { useOutstatic, useLocalData } from '@/utils/hooks/useOutstatic'
 import { queryClient } from '@/utils/react-query/queryClient'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
@@ -14,7 +14,12 @@ import Welcome from './welcome'
 import { useGetRepository } from '@/utils/hooks/useGetRepository'
 import Onboarding from './onboarding'
 import { NavigationGuardProvider } from 'next-navigation-guard'
-import V1_5BreakingCheck from '@/components/v1_5BreakingCheck'
+import V2_0_BreakingCheck from '@/components/v2_0_BreakingCheck'
+
+type OstClientProps = {
+  ostData: OutstaticData
+  params: { ost: string[] }
+}
 
 export const AdminArea = ({ params }: { params: { ost: string[] } }) => {
   const [openSidebar, setOpenSidebar] = useState(false)
@@ -36,7 +41,7 @@ export const AdminArea = ({ params }: { params: { ost: string[] } }) => {
 }
 
 export const Dashboard = ({ params }: { params: { ost: string[] } }) => {
-  const { repoSlug, repoOwner, repoBranch, isPending } = useOutstatic()
+  const { repoSlug, repoOwner, repoBranch, isPending, session } = useOutstatic()
   const { data: repository } = useGetRepository()
   const { setData, data, isPending: localPending } = useLocalData()
 
@@ -47,7 +52,10 @@ export const Dashboard = ({ params }: { params: { ost: string[] } }) => {
         setData({ repoBranch: defaultBranch })
       }
     }
-  }, [repository, setData, data])
+    if (repoSlug && !repoOwner) {
+      setData({ repoBranch, repoOwner: session?.user.login })
+    }
+  }, [repository, setData, data, session])
 
   return (
     <>
@@ -62,18 +70,13 @@ export const Dashboard = ({ params }: { params: { ost: string[] } }) => {
   )
 }
 
-type OstClientProps = {
-  ostData: OutstaticData
-  params: { ost: string[] }
-}
-
 export const OstClient = ({ ostData, params }: OstClientProps) => {
   if (ostData.missingEnvVars) {
     return <Welcome variables={ostData.missingEnvVars} />
   }
 
   if (!ostData?.session) {
-    return <Login />
+    return <Login basePath={ostData?.basePath} />
   }
 
   return (
@@ -84,7 +87,7 @@ export const OstClient = ({ ostData, params }: OstClientProps) => {
           <AdminArea params={params} />
         </NavigationGuardProvider>
       </QueryClientProvider>
-      <V1_5BreakingCheck />
+      <V2_0_BreakingCheck />
     </InitialDataContext.Provider>
   )
 }

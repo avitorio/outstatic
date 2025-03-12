@@ -1,32 +1,28 @@
 ---
-title: 'Introduction'
-status: 'published'
+title: "Introduction"
+status: "published"
 author:
-  name: 'Andre Vitorio'
-  picture: 'https://avatars.githubusercontent.com/u/1417109?v=4'
-slug: 'introduction'
-description: ''
-coverImage: ''
-publishedAt: '2023-05-26T17:50:55.000Z'
+  name: "Andre Vitorio"
+  picture: "https://avatars.githubusercontent.com/u/1417109?v=4"
+slug: "introduction"
+description: ""
+coverImage: ""
+publishedAt: "2024-10-30T03:00:00.000Z"
 ---
 
-Outstatic is an open source content management system (CMS) for static websites using [Next.js](https://nextjs.org).
+Outstatic is a content management system (CMS) for websites using markdown.
 
 The concept is simple: write content, click save, and see the changes on your website.
 
-Requirements:
-
-- a [GitHub](https://github.com) account
-
-- a [Vercel](https://vercel.com/signup) account
+Outstatic runs on Next.js but supports markdown editing from any GitHub repository, making it compatible with frameworks such as Astro, Gatsby, Nextra or any other static site generator.
 
 You can get started by visiting our [Getting started](/getting-started) section. If you want to learn a bit more about Outstatic, keep reading.
 
 ## How does Outstatic work?
 
-We provide you with a user interface to create and edit website content. There is no database or server to set up: **all the data is added to your GitHub repository**.
+We provide you with a user interface to create and edit markdown content. There is no database or server to set up: **all the data is added to your GitHub repository**.
 
-To see the changes on your website, you'll need to wait until Vercel finishes deploying it. In the case that you are developing your site locally, you'll need to pull the changes to see them on your dev environment.
+In the case that you are developing your site locally, you'll need to pull the changes to see them on your dev environment.
 
 Your site's content is organised into two parts: **Collections** and **Documents**.
 
@@ -36,17 +32,17 @@ Collections are used to organise and define the types of content on your website
 
 Collections form the structure of your website, so you probably won't be creating them often. When you log in to your Outstatic dashboard for the first time, you'll be asked to create a **Collection**.
 
-Collections are organised as folders in your GitHub repository under the following path:
+Collections are organised as folders in your GitHub repository, for example:
 
 `/outstatic/content/{collection}`
 
 ### What's a Document?
 
-A Document is what you will be creating and editing more frequently. In the case of our example above, a Document would be a blog post.
+A Document is what you will be creating and editing more frequently. In the case of our example above, a Document would be a blog post and saved at:
 
-Documents are saved at: `/outstatic/content/{collection}/{document}`
+`/outstatic/content/{collection}/{document}`
 
-Imagine we create a blog post titled: _How to raise a dragon_ \- the document would be: `/outstatic/content/posts/how-to-raise-a-dragon.md`
+Imagine we create a blog post titled: *How to raise a dragon* - the full document path would be: `/outstatic/content/posts/how-to-raise-a-dragon.mdx`
 
 Documents contains some data by default:
 
@@ -61,10 +57,6 @@ Documents contains some data by default:
 - **Author**: who created the Document. This field is automatically populated with your GitHub name and avatar, but can be edited.
 
 - **URL Slug** (optional): this is created automatically based on the Document title, but can be edited.
-
-- **Description** (optional): a short description of the Document's contents.
-
-- **Cover Image** (optional): an image to be used as a cover or [Open Graph](https://ogp.me) image.
 
 But you are not limited to the above, you can also add [Custom Fields](/custom-fields) to your documents.
 

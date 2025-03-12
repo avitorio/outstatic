@@ -4,7 +4,7 @@ import { memo, useEffect, useState } from 'react'
 import { Button } from '@/components/ui/shadcn/button'
 import { AppLogo } from '../ui/outstatic/app-logo'
 import { cn } from '@/utils/ui'
-import { useOutstatic } from '@/utils/hooks'
+import { useOutstatic } from '@/utils/hooks/useOutstatic'
 import { GitHubBranchSearch } from '@/components/ui/outstatic/github-branch-search'
 
 type AdminHeaderProps = {
@@ -47,7 +47,7 @@ const AdminHeader = ({ toggleSidebar }: AdminHeaderProps) => {
               onClick={toggleSidebar}
             >
               <span className="sr-only">Open main menu</span>
-              <Menu className="lucide lucide-menu " />
+              <Menu />
             </Button>
 
             <div className={'flex items-center space-x-4'}>

@@ -255,7 +255,7 @@ const Leaf = React.forwardRef<
           aria-hidden="true"
         />
       )}
-      <span className="flex-grow text-sm truncate">{item.name}</span>
+      <span className="grow text-sm truncate">{item.name}</span>
     </div>
   )
 })

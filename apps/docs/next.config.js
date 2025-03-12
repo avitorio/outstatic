@@ -7,6 +7,12 @@ const nextConfig = {
     return [
       {
         source: '/',
+        destination: '/docs',
+        permanent: true,
+        basePath: false
+      },
+      {
+        source: '/',
         destination: '/introduction',
         permanent: true
       },

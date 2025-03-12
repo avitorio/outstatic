@@ -6,14 +6,14 @@ import matter from 'gray-matter'
 import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { UseFormReturn } from 'react-hook-form'
 import { useGetDocument } from './useGetDocument'
-import useOutstatic from './useOutstatic'
+import { useOutstatic } from './useOutstatic'
 import { useCollections } from './useCollections'
 
 interface UseDocumentUpdateEffectProps {
   collection: string
   methods: UseFormReturn<Document, any>
   slug: string
-  editor: Editor
+  editor: Editor | null
   setHasChanges: Dispatch<SetStateAction<boolean>>
   setShowDelete: Dispatch<SetStateAction<boolean>>
   setExtension: Dispatch<SetStateAction<MDExtensions>>
@@ -61,7 +61,6 @@ export const useDocumentUpdateEffect = ({
     if (parsedContent) return
 
     if (document && editor) {
-      console.log('document updated')
       const { mdDocument } = document
       const { data, content } = matter(mdDocument)
       setMetadata(data)
@@ -85,9 +84,13 @@ export const useDocumentUpdateEffect = ({
         content: parsedContent,
         slug
       }
-      methods.reset(newDocument)
-      editor.commands.setContent(parsedContent)
-      editor.commands.focus('start')
+
+      Promise.resolve().then(() => {
+        methods.reset(newDocument)
+        editor.commands.setContent(parsedContent)
+        editor.commands.focus('start')
+      })
+
       setShowDelete(slug !== 'new')
       setExtension(document.extension)
       setHasChanges(false)
@@ -104,7 +107,11 @@ export const useDocumentUpdateEffect = ({
       }
     }
 
-    const subscription = methods.watch(() => setHasChanges(true))
+    const subscription = methods.watch((value, { name, type }) => {
+      if (name === 'content') {
+        setHasChanges(true)
+      }
+    })
 
     return () => subscription.unsubscribe()
     // eslint-disable-next-line react-hooks/exhaustive-deps

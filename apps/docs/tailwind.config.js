@@ -1,5 +1,4 @@
 /** @type {import('tailwindcss').Config} */
-const plugin = require('tailwindcss/plugin')
 
 module.exports = {
   darkMode: 'selector',
@@ -124,22 +123,5 @@ module.exports = {
       })
     }
   },
-  plugins: [
-    require('@tailwindcss/typography'),
-    plugin(function ({ matchUtilities }) {
-      matchUtilities({
-        // Class name
-        'animation-delay': (value) => {
-          return {
-            animationDelay: value // Desired CSS properties here
-          }
-        },
-        'animation-duration': (value) => {
-          return {
-            animationDuration: value // Desired CSS properties here
-          }
-        }
-      })
-    })
-  ]
+  plugins: [require('@tailwindcss/typography')]
 }
