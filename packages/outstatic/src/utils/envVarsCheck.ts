@@ -32,16 +32,6 @@ export const envVars = (function () {
     }
   }
 
-  // OST_REPO_SLUG takes precendece over VERCEL_GIT_REPO_SLUG,
-  // if both are empty, then we default to asking for OST_REPO_SLUG
-  if (process.env.OST_REPO_SLUG) {
-    initialEnvVars.required.OST_REPO_SLUG = true
-  } else if (process.env.VERCEL_GIT_REPO_SLUG) {
-    initialEnvVars.required.VERCEL_GIT_REPO_SLUG = true
-  } else {
-    initialEnvVars.required.OST_REPO_SLUG = false
-  }
-
   Object.entries(initialEnvVars.required).forEach(([key]) => {
     envVarsObj.envVars.required[key] = !!process.env[key]
 

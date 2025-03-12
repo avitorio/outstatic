@@ -3,16 +3,15 @@ import login from '@/app/api/auth/login'
 import signout from '@/app/api/auth/signout'
 import user from '@/app/api/auth/user'
 import generate from '@/app/api/generate'
-import images from '@/app/api/images'
-import { Session } from 'next-session/lib/types'
+import media from '@/app/api/media'
 import { NextRequest } from 'next/server'
 
 export interface Request extends NextRequest {
-  session: Session
+  session: any
 }
 
 export type GetParams = Promise<{
-  ost: ['callback', 'login', 'signout', 'user', 'images']
+  ost: ['callback', 'login', 'signout', 'user', 'media']
 }>
 
 export type PostParams = Promise<{
@@ -24,7 +23,7 @@ const getPaths = {
   login,
   signout,
   user,
-  images
+  media
 }
 
 const postPaths = {

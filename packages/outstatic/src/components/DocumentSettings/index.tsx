@@ -1,34 +1,65 @@
 import Accordion from '@/components/Accordion'
-import DateTimePicker from '@/components/DateTimePicker'
 import DeleteDocumentButton from '@/components/DeleteDocumentButton'
 import DocumentSettingsImageSelection from '@/components/DocumentSettingsImageSelection'
 import TagInput from '@/components/TagInput'
-import Input from '@/components/ui/input'
-import TextArea from '@/components/ui/text-area'
+import { Input } from '@/components/ui/shadcn/input'
+import TextArea from '@/components/ui/shadcn/text-area'
 import { DocumentContext } from '@/context'
 import {
   CustomFieldArrayValue,
-  CustomFields,
+  CustomFieldsType,
   isArrayCustomField
 } from '@/types'
-import { PanelRight, PanelRightClose } from 'lucide-react'
+import {
+  ArrowDown,
+  PanelRight,
+  PanelRightClose,
+  PlusCircle
+} from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import { useContext, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { RegisterOptions, useFormContext } from 'react-hook-form'
 import { slugify } from 'transliteration'
-import { Button } from '../ui/button'
-import { CheckboxWithLabel } from '../ui/checkbox-with-label'
+import { CheckboxWithLabel } from '@/components/ui/outstatic/checkbox-with-label'
+import { Button } from '@/components/ui/shadcn/button'
+import { useOutstatic } from '@/utils/hooks/useOutstatic'
+import {
+  FormField,
+  FormItem,
+  FormControl,
+  FormMessage,
+  FormLabel,
+  FormDescription
+} from '@/components/ui/shadcn/form'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from '@/components/ui/shadcn/select'
+import { SpinnerIcon } from '@/components/ui/outstatic/spinner-icon'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger
+} from '@/components/ui/shadcn/tooltip'
+import { AddCustomFieldDialog } from '@/client/pages/custom-fields/_components/add-custom-field-dialog'
+import { DateTimePickerForm } from '../ui/shadcn/date-time-picker-form'
 
 type DocumentSettingsProps = {
-  saveFunc: () => void
+  saveDocument: () => void
   loading: boolean
   registerOptions?: RegisterOptions
   showDelete: boolean
-  customFields?: CustomFields
+  customFields: CustomFieldsType
+  setCustomFields: (fields: CustomFieldsType) => void
+  metadata: Record<string, any>
 }
 
 interface CustomInputProps {
-  type?: 'text' | 'number' | 'checkbox'
+  type?: 'text' | 'number' | 'checkbox' | 'date' | 'image'
   suggestions?: CustomFieldArrayValue[]
   registerOptions?: RegisterOptions
 }
@@ -39,6 +70,8 @@ type ComponentType = {
     | typeof TextArea
     | typeof TagInput
     | typeof CheckboxWithLabel
+    | typeof DateTimePickerForm
+    | typeof DocumentSettingsImageSelection
   props: CustomInputProps
 }
 
@@ -48,6 +81,8 @@ type FieldDataMapType = {
   Number: ComponentType
   Tags: ComponentType
   Boolean: ComponentType
+  Date: ComponentType
+  Image: ComponentType
 }
 
 const FieldDataMap: FieldDataMapType = {
@@ -60,24 +95,76 @@ const FieldDataMap: FieldDataMapType = {
       suggestions: []
     }
   },
-  Boolean: { component: CheckboxWithLabel, props: { type: 'checkbox' } }
+  Boolean: { component: CheckboxWithLabel, props: { type: 'checkbox' } },
+  Date: { component: DateTimePickerForm, props: { type: 'date' } },
+  Image: { component: DocumentSettingsImageSelection, props: { type: 'image' } }
 }
 
 const DocumentSettings = ({
-  saveFunc,
+  saveDocument,
   loading,
-  registerOptions,
   showDelete,
-  customFields = {}
+  customFields,
+  setCustomFields,
+  metadata
 }: DocumentSettingsProps) => {
   const {
-    register,
-    formState: { errors }
+    setValue,
+    formState: { errors },
+    control
   } = useFormContext()
   const router = useRouter()
-  const { document, editDocument, hasChanges, collection } =
+
+  const { document, extension, hasChanges, collection } =
     useContext(DocumentContext)
+
+  const [showAddModal, setShowAddModal] = useState(false)
+  const [fieldTitle, setFieldTitle] = useState('')
+
+  const { dashboardRoute, session } = useOutstatic()
+
   const [isOpen, setIsOpen] = useState(false)
+
+  useEffect(() => {
+    if (!document.status) {
+      setValue('status', 'draft')
+    }
+  }, [document.status])
+
+  const onModalChange = (value: boolean) => {
+    if (!value) {
+      setFieldTitle('')
+    }
+    setShowAddModal(value)
+  }
+
+  const defaultMetadata = ['title', 'status', 'author', 'slug', 'publishedAt']
+
+  const missingCustomFields = Object.keys(metadata)
+    .filter(
+      (key) =>
+        !customFields.hasOwnProperty(key) && !defaultMetadata.includes(key)
+    )
+    .reduce<Record<string, { title: string }>>((acc, key) => {
+      const title = key
+        .replace(/([A-Z])/g, ' $1')
+        .replace(/^./, (str) => str.toUpperCase())
+        .trim()
+      acc[key] = { title }
+      return acc
+    }, {})
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 's') {
+        e.preventDefault()
+        saveDocument()
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [saveDocument])
 
   return (
     <>
@@ -94,42 +181,36 @@ const DocumentSettings = ({
           <label htmlFor="status" className="sr-only">
             Status
           </label>
-          <Button asChild variant="select">
-            <select
-              {...register('status', registerOptions)}
-              name="status"
-              id="status"
-              defaultValue={document.status}
-            >
-              <option value="draft">Draft</option>
-              <option value="published">Published</option>
-            </select>
-          </Button>
-          <Button onClick={saveFunc} disabled={loading || !hasChanges}>
-            {loading ? (
-              <>
-                <svg
-                  className="mr-3 -ml-1 h-5 w-5 animate-spin text-white"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
+          <FormField
+            control={control}
+            name="status"
+            defaultValue={document.status}
+            render={({ field }) => (
+              <FormItem>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value ?? 'draft'}
+                  value={field.value ?? 'draft'}
                 >
-                  <circle
-                    className="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    strokeWidth="4"
-                  ></circle>
-                  <path
-                    className="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                  ></path>
-                </svg>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select status" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="draft">Draft</SelectItem>
+                    <SelectItem value="published">Published</SelectItem>
+                  </SelectContent>
+                </Select>
+              </FormItem>
+            )}
+          />
+          <Button onClick={saveDocument} disabled={loading || !hasChanges}>
+            {loading ? (
+              <div className="flex gap-3">
+                <SpinnerIcon className="text-background" />
                 Saving
-              </>
+              </div>
             ) : (
               'Save'
             )}
@@ -139,15 +220,16 @@ const DocumentSettings = ({
       <aside
         className={`${
           isOpen ? 'block absolute' : 'hidden relative'
-        } md:block w-full border-b border-gray-300 bg-white md:w-64 md:flex-none md:flex-col md:flex-wrap md:items-start md:justify-start md:border-b-0 md:border-l pt-6 pb-16 h-full max-h-[calc(100vh-128px)] md:max-h-[calc(100vh-53px)] scrollbar-hide overflow-scroll`}
+        } md:block w-full border-b border-gray-300 bg-white md:w-64 md:flex-none md:flex-col md:flex-wrap md:items-start md:justify-start md:border-b-0 md:border-l pt-6 pb-16 h-full max-h-[calc(100vh-128px)] md:max-h-[calc(100vh-56px)] scrollbar-hide overflow-scroll`}
       >
         <div className="relative w-full items-center justify-between mb-4 flex px-4">
-          <DateTimePicker
-            id="publishedAt"
-            label="Date"
-            date={document.publishedAt}
-            setDate={(publishedAt) => editDocument('publishedAt', publishedAt)}
-          />
+          <label
+            htmlFor="publishedAt"
+            className="block text-sm font-medium text-gray-900"
+          >
+            Date
+          </label>
+          <DateTimePickerForm id="publishedAt" />
         </div>
         <div className="hidden md:flex relative w-full items-center justify-between mb-4 px-4">
           <label
@@ -156,17 +238,34 @@ const DocumentSettings = ({
           >
             Status
           </label>
-          <Button asChild variant="select">
-            <select
-              {...register('status', registerOptions)}
+
+          <div className="min-w-[128px] ">
+            <FormField
+              control={control}
               name="status"
-              id="status"
               defaultValue={document.status}
-            >
-              <option value="draft">Draft</option>
-              <option value="published">Published</option>
-            </select>
-          </Button>
+              render={({ field }) => (
+                <FormItem>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value ?? 'draft'}
+                    value={field.value ?? 'draft'}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select status" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="draft">Draft</SelectItem>
+                      <SelectItem value="published">Published</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
         </div>
         <div
           className={`flex w-full pb-4 px-4 ${
@@ -177,38 +276,20 @@ const DocumentSettings = ({
             <DeleteDocumentButton
               disabled={loading}
               slug={document.slug}
+              extension={extension}
               onComplete={() => {
-                router.push(`/outstatic/${collection}`)
+                router.push(`${dashboardRoute}/${collection}`)
               }}
               collection={collection}
               className="hover:bg-slate-200 max-h-[2.25rem]"
             />
           )}
-          <Button onClick={saveFunc} disabled={loading || !hasChanges}>
+          <Button onClick={saveDocument} disabled={loading || !hasChanges}>
             {loading ? (
-              <>
-                <svg
-                  className="mr-3 -ml-1 h-5 w-5 animate-spin text-white"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <circle
-                    className="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    strokeWidth="4"
-                  ></circle>
-                  <path
-                    className="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                  ></path>
-                </svg>
+              <div className="flex gap-3">
+                <SpinnerIcon className="text-background" />
                 Saving
-              </>
+              </div>
             ) : (
               'Save'
             )}
@@ -216,57 +297,63 @@ const DocumentSettings = ({
         </div>
         <div className="w-full">
           <Accordion title="Author">
-            <Input
-              label="Name"
-              name="author.name"
-              id="author.name"
-              defaultValue={document.author?.name ?? ''}
-              inputSize="small"
-              wrapperClass="mb-4"
-            />
-            <DocumentSettingsImageSelection
-              label="Add an avatar"
-              name="author.picture"
-              description="Author Avatar"
-            />
+            <div className="flex flex-col gap-2">
+              <FormField
+                control={control}
+                name="author.name"
+                defaultValue={document.author?.name || session?.user?.name}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Name</FormLabel>
+                    <FormControl>
+                      <Input {...field} value={field.value} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <div className="w-full mt-2 gap-2 flex flex-col">
+                <FormLabel>Avatar</FormLabel>
+                <DocumentSettingsImageSelection
+                  label="Add an avatar"
+                  id="author.picture"
+                  defaultValue={
+                    document.author?.picture || session?.user?.image
+                  }
+                />
+              </div>
+            </div>
           </Accordion>
-          <Accordion title="URL Slug">
-            <Input
-              label="Write a slug (optional)"
+          <Accordion title="URL Slug*" error={!!errors['slug']?.message}>
+            <FormField
+              control={control}
               name="slug"
-              id="slug"
-              defaultValue={document.slug}
-              inputSize="small"
-              registerOptions={{
-                onChange: (e) => {
-                  const lastChar = e.target.value.slice(-1)
-                  editDocument(
-                    'slug',
-                    lastChar === ' ' || lastChar === '-'
-                      ? e.target.value
-                      : slugify(e.target.value, { allowedChars: 'a-zA-Z0-9' })
-                  )
-                }
-              }}
-            />
-          </Accordion>
-          <Accordion title="Description">
-            <TextArea
-              name="description"
-              type="textarea"
-              label="Write a description (optional)"
-              id="description"
-              rows={5}
-              className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2 text-sm text-gray-900 outline-none focus:border-blue-500 focus:ring-blue-500"
+              defaultValue={document.slug || ''}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Write a slug</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      value={field.value ?? ''}
+                      onChange={(e) => {
+                        const lastChar = e.target.value.slice(-1)
+                        field.onChange(
+                          lastChar === ' ' || lastChar === '-'
+                            ? e.target.value
+                            : slugify(e.target.value, {
+                                allowedChars: 'a-zA-Z0-9.'
+                              })
+                        )
+                      }}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
           </Accordion>
 
-          <Accordion title="Cover Image">
-            <DocumentSettingsImageSelection
-              name="coverImage"
-              description="Cover Image"
-            />
-          </Accordion>
           {customFields &&
             Object.entries(customFields).map(([name, field]) => {
               const Field = FieldDataMap[field.fieldType]
@@ -274,16 +361,77 @@ const DocumentSettings = ({
                 Field.props.suggestions = field.values
               }
 
-              // Fix for NaN error when saving a non-required number
-              if (field.fieldType === 'Number' && !field.required) {
-                Field.props = {
-                  ...Field.props,
-                  registerOptions: {
-                    setValueAs: (value: any) =>
-                      isNaN(value) ? undefined : Number(value)
+              if (field.fieldType === 'String') {
+                return (
+                  <Accordion
+                    key={name}
+                    title={`${field.title}${field.required ? '*' : ''}`}
+                    error={!!errors[name]?.message}
+                  >
+                    <FormField
+                      control={control}
+                      name={name}
+                      render={({ field: formField }) => (
+                        <FormItem>
+                          <FormControl>
+                            <Input
+                              {...formField}
+                              value={formField.value ?? ''}
+                            />
+                          </FormControl>
+                          <FormDescription>{field.description}</FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </Accordion>
+                )
+              }
+
+              if (field.fieldType === 'Number') {
+                // Fix for NaN error when saving a non-required number
+                if (!field.required) {
+                  Field.props = {
+                    ...Field.props,
+                    registerOptions: {
+                      setValueAs: (value: any) =>
+                        isNaN(value) ? undefined : Number(value)
+                    }
                   }
                 }
+
+                return (
+                  <Accordion
+                    key={name}
+                    title={`${field.title}${field.required ? '*' : ''}`}
+                    error={!!errors[name]?.message}
+                  >
+                    <FormField
+                      control={control}
+                      name={name}
+                      render={({ field: formField }) => (
+                        <FormItem>
+                          <FormControl>
+                            <Input
+                              {...formField}
+                              type="number"
+                              value={formField.value ?? ''}
+                              onChange={(e) => {
+                                if (e.target.value === '')
+                                  return formField.onChange(undefined)
+                                formField.onChange(Number(e.target.value))
+                              }}
+                            />
+                          </FormControl>
+                          <FormDescription>{field.description}</FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </Accordion>
+                )
               }
+
               return (
                 <Accordion
                   key={name}
@@ -298,7 +446,67 @@ const DocumentSettings = ({
                 </Accordion>
               )
             })}
+
+          {missingCustomFields &&
+            Object.keys(missingCustomFields).length > 0 && (
+              <>
+                <div className="w-full flex items-center justify-center py-4 gap-2">
+                  <ArrowDown className="h-4 w-4" />
+                  <p className="semiblod text-sm">Set up Custom Fields</p>
+                </div>
+                {Object.entries(missingCustomFields).map(([name, field]) => {
+                  return (
+                    <div
+                      key={name}
+                      className="w-full flex items-center justify-between px-4 py-2 gap-2"
+                    >
+                      <p className="semiblod text-sm truncate">{field.title}</p>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="text-xs flex gap-2"
+                        onClick={() => {
+                          setFieldTitle(field.title)
+                          setShowAddModal(true)
+                        }}
+                      >
+                        <PlusCircle className="h-4 w-4" /> Create
+                      </Button>
+                    </div>
+                  )
+                })}
+              </>
+            )}
+          <div className="w-full flex items-center justify-center px-4 py-2 gap-2">
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="text-xs flex gap-2"
+                    onClick={() => setShowAddModal(true)}
+                  >
+                    <PlusCircle className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Add Custom Field</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </div>
         </div>
+        {showAddModal ? (
+          <AddCustomFieldDialog
+            collection={collection}
+            showAddModal={showAddModal}
+            setShowAddModal={onModalChange}
+            customFields={customFields}
+            setCustomFields={setCustomFields}
+            fieldTitle={fieldTitle ?? ''}
+          />
+        ) : null}
       </aside>
     </>
   )

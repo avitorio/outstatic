@@ -10,7 +10,7 @@ export type Request = {
   }
 }
 
-export default async function user() {
+export default async function user(): Promise<NextResponse> {
   try {
     const session = await getLoginSession()
     return NextResponse.json({ session })

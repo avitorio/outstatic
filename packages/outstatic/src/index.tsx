@@ -1,4 +1,4 @@
-import './styles.css'
+import './styles/styles.css'
 
 export * from './app'
 export * from './app/api'

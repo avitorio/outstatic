@@ -1,10 +1,19 @@
 module.exports = {
   root: true,
-  // This tells ESLint to load the config from the package `eslint-config-custom`
-  extends: ["custom"],
+  extends: ['next', 'turbo', 'prettier'],
   settings: {
     next: {
-      rootDir: ["apps/*/"],
-    },
+      rootDir: ['apps/*/']
+    }
   },
-};
+  env: {
+    browser: true,
+    es2020: true,
+    jest: true,
+    node: true
+  },
+  rules: {
+    '@next/next/no-html-link-for-pages': 'off',
+    'react/jsx-key': 'off'
+  }
+}

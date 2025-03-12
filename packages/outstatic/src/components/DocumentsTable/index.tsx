@@ -1,12 +1,13 @@
 import DeleteDocumentButton from '@/components/DeleteDocumentButton'
 import SortableSelect from '@/components/SortableSelect'
 import { OstDocument } from '@/types/public'
+import { useGetDocuments } from '@/utils/hooks/useGetDocuments'
 import { sentenceCase } from 'change-case'
 import cookies from 'js-cookie'
-import { Settings } from 'lucide-react'
+import { ListFilter } from 'lucide-react'
 import Link from 'next/link'
-import { useState, useCallback, useEffect, ReactNode } from 'react'
-import { Button } from '../ui/button'
+import { useState, useCallback, ReactNode } from 'react'
+import { Button } from '@/components/ui/shadcn/button'
 import {
   CaretSortIcon,
   CaretDownIcon,
@@ -16,11 +17,9 @@ import {
   useSortedDocuments,
   SortConfig
 } from '@/utils/hooks/useSortedDocuments'
-
-type DocumentsTableProps = {
-  documents: OstDocument[]
-  collection: string
-}
+import { useOutstatic } from '@/utils/hooks/useOutstatic'
+import { MDExtensions } from '@/types'
+import { useParams } from 'next/navigation'
 
 export type Column = {
   id: string
@@ -28,23 +27,11 @@ export type Column = {
   value: string
 }
 
-const defaultColumns: Column[] = [
-  { id: 'title', label: 'Title', value: 'title' },
-  { id: 'status', label: 'Status', value: 'status' },
-  { id: 'publishedAt', label: 'Published at', value: 'publishedAt' }
-]
+const DocumentsTable = () => {
+  const { data, refetch } = useGetDocuments()
+  const { dashboardRoute } = useOutstatic()
 
-const DocumentsTable = (props: DocumentsTableProps) => {
-  const allColumns = Object.keys(props.documents[0]).map((column: string) => ({
-    id: column,
-    label: sentenceCase(column),
-    value: column
-  }))
-  const [documents, setDocuments] = useState(props.documents)
-  const [columns, setColumns] = useState<Column[]>(
-    JSON.parse(cookies.get(`ost_${props.collection}_fields`) || 'null') ??
-      defaultColumns
-  )
+  const params = useParams<{ ost: string[] }>()
   const [showColumnOptions, setShowColumnOptions] = useState(false)
 
   const [sortConfig, setSortConfig] = useState<SortConfig>({
@@ -52,7 +39,7 @@ const DocumentsTable = (props: DocumentsTableProps) => {
     direction: 'descending'
   })
 
-  const sortedDocuments = useSortedDocuments(documents, sortConfig)
+  const sortedDocuments = useSortedDocuments(data?.documents || [], sortConfig)
 
   const requestSort = useCallback((key: keyof OstDocument) => {
     setSortConfig((prevConfig) => ({
@@ -64,15 +51,18 @@ const DocumentsTable = (props: DocumentsTableProps) => {
     }))
   }, [])
 
-  const handleDelete = useCallback((slug: string) => {
-    setDocuments((prevDocuments) =>
-      prevDocuments.filter((doc) => doc.slug !== slug)
-    )
-  }, [])
+  const allColumns = Array.from(data?.metadata?.keys() ?? []).map(
+    (column: string) => ({
+      id: column,
+      label: sentenceCase(column),
+      value: column
+    })
+  )
 
-  useEffect(() => {
-    setDocuments(props.documents)
-  }, [props.documents])
+  const [columns, setColumns] = useState<Column[]>(
+    JSON.parse(cookies.get(`ost_${params.ost[0]}_fields`) || 'null') ??
+      allColumns.slice(0, 5)
+  )
 
   return (
     <div className="overflow-x-auto">
@@ -120,32 +110,41 @@ const DocumentsTable = (props: DocumentsTableProps) => {
                 size="icon"
                 onClick={() => setShowColumnOptions(!showColumnOptions)}
               >
-                <span className="sr-only">Settings</span>
-                <Settings />
+                <span className="sr-only">List Columns</span>
+                <ListFilter />
               </Button>
             </th>
           </tr>
         </thead>
         <tbody>
-          {sortedDocuments &&
-            sortedDocuments.map((document) => (
-              <tr
-                key={document.slug}
-                className="border-b bg-white hover:bg-gray-50"
-              >
-                {columns.map((column) => {
-                  return cellSwitch(column.value, document, props.collection)
-                })}
-                <td className="pr-6 py-4 text-right">
-                  <DeleteDocumentButton
-                    slug={document.slug}
-                    disabled={false}
-                    onComplete={() => handleDelete(document.slug)}
-                    collection={props.collection}
-                  />
-                </td>
-              </tr>
-            ))}
+          {sortedDocuments
+            ? sortedDocuments.map((document) => (
+                <Link
+                  key={document.slug}
+                  href={`${dashboardRoute}/${params.ost[0]}/${document.slug}`}
+                  legacyBehavior
+                  passHref
+                >
+                  <tr className="border-b bg-white hover:bg-gray-50 cursor-pointer">
+                    {columns.map((column) => {
+                      return cellSwitch(column.value, document)
+                    })}
+                    <td
+                      className="pr-6 py-4 text-right"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <DeleteDocumentButton
+                        slug={document.slug}
+                        extension={document.extension as MDExtensions}
+                        disabled={false}
+                        onComplete={() => refetch()}
+                        collection={params.ost[0]}
+                      />
+                    </td>
+                  </tr>
+                </Link>
+              ))
+            : null}
         </tbody>
       </table>
       {showColumnOptions && (
@@ -156,9 +155,9 @@ const DocumentsTable = (props: DocumentsTableProps) => {
             selected={columns}
             setSelected={setColumns}
             allOptions={allColumns}
-            defaultValues={defaultColumns}
+            defaultValues={allColumns}
             onChangeList={(e: any) => {
-              cookies.set(`ost_${props.collection}_fields`, JSON.stringify(e))
+              cookies.set(`ost_${params.ost[0]}_fields`, JSON.stringify(e))
             }}
             onBlur={() => setShowColumnOptions(false)}
           />
@@ -168,32 +167,13 @@ const DocumentsTable = (props: DocumentsTableProps) => {
   )
 }
 
-const cellSwitch = (
-  columnValue: string,
-  document: OstDocument,
-  collection: string
-) => {
+const cellSwitch = (columnValue: string, document: OstDocument) => {
   const item = document[columnValue] as
     | string
     | {
         label: string
       }[]
   switch (columnValue) {
-    case 'title':
-      return (
-        <th
-          key="title"
-          scope="row"
-          className="relative whitespace-nowrap px-6 py-4 text-base font-semibold text-gray-900 group"
-        >
-          <Link href={`/outstatic/${collection}/${document.slug}`}>
-            <div className="group-hover:text-blue-500">
-              {item as string}
-              <div className="absolute top-0 bottom-0 left-0 right-40 cursor-pointer" />
-            </div>
-          </Link>
-        </th>
-      )
     case 'status':
       return (
         <td
@@ -210,7 +190,7 @@ const cellSwitch = (
           key={columnValue}
           className="px-6 py-4 text-base font-semibold text-gray-900"
         >
-          {typeof item === 'object' && item !== null
+          {typeof item === 'object' && item !== null && Array.isArray(item)
             ? item.map((item: { label: string }) => (
                 <span
                   key={item.label}
@@ -219,7 +199,9 @@ const cellSwitch = (
                   {item.label}
                 </span>
               ))
-            : item}
+            : typeof item === 'string'
+            ? item
+            : null}
         </td>
       )
   }

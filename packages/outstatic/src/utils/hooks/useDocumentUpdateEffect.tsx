@@ -1,21 +1,23 @@
-import { Document, Session } from '@/types'
+import { Document, MDExtensions } from '@/types'
 import { getLocalDate } from '@/utils/getLocalDate'
 import { parseContent } from '@/utils/parseContent'
 import { Editor } from '@tiptap/react'
 import matter from 'gray-matter'
-import { Dispatch, SetStateAction, useEffect } from 'react'
+import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { UseFormReturn } from 'react-hook-form'
-import useFileQuery from './useFileQuery'
-import useOutstatic from './useOutstatic'
+import { useGetDocument } from './useGetDocument'
+import { useOutstatic } from './useOutstatic'
+import { useCollections } from './useCollections'
 
 interface UseDocumentUpdateEffectProps {
   collection: string
   methods: UseFormReturn<Document, any>
   slug: string
-  editor: Editor
-  session: Session | null
+  editor: Editor | null
   setHasChanges: Dispatch<SetStateAction<boolean>>
   setShowDelete: Dispatch<SetStateAction<boolean>>
+  setExtension: Dispatch<SetStateAction<MDExtensions>>
+  setMetadata: Dispatch<SetStateAction<Record<string, any>>>
 }
 
 export const useDocumentUpdateEffect = ({
@@ -23,38 +25,76 @@ export const useDocumentUpdateEffect = ({
   methods,
   slug,
   editor,
-  session,
   setHasChanges,
-  setShowDelete
+  setShowDelete,
+  setExtension,
+  setMetadata
 }: UseDocumentUpdateEffectProps) => {
-  const { basePath } = useOutstatic()
-  const { data: documentQueryData } = useFileQuery({
-    file: `${collection}/${slug}.md`,
-    skip: slug === 'new' || !slug
+  const {
+    basePath,
+    ostContent,
+    repoOwner,
+    repoSlug,
+    repoBranch,
+    publicMediaPath,
+    repoMediaPath
+  } = useOutstatic()
+
+  const [parsedContent, setParsedContent] = useState(false)
+
+  const { data: collections } = useCollections({
+    enabled: slug !== 'new'
+  })
+
+  const collectionPath = collections?.find(
+    (col) => col.slug === collection
+  )?.path
+
+  const { data: document } = useGetDocument({
+    filePath: `${
+      collectionPath ? `${collectionPath}` : `${ostContent}/${collection}`
+    }/${slug}`,
+    enabled: slug !== 'new' && collectionPath !== undefined
   })
 
   useEffect(() => {
-    const documentQueryObject = documentQueryData?.repository?.object
+    if (parsedContent) return
 
-    if (documentQueryObject?.__typename === 'Blob') {
-      let mdContent = documentQueryObject.text as string
-      const { data, content } = matter(mdContent)
-
-      const parsedContent = parseContent(content, basePath)
+    if (document && editor) {
+      const { mdDocument } = document
+      const { data, content } = matter(mdDocument)
+      setMetadata(data)
+      const parsedContent = parseContent({
+        content,
+        basePath,
+        repoOwner,
+        repoSlug,
+        repoBranch,
+        publicMediaPath,
+        repoMediaPath
+      })
 
       const newDate = data.publishedAt
         ? new Date(data.publishedAt)
         : getLocalDate()
-      const document = {
+
+      const newDocument = {
         ...data,
         publishedAt: newDate,
         content: parsedContent,
         slug
       }
-      methods.reset(document)
-      editor.commands.setContent(parsedContent)
-      editor.commands.focus('start')
+
+      Promise.resolve().then(() => {
+        methods.reset(newDocument)
+        editor.commands.setContent(parsedContent)
+        editor.commands.focus('start')
+      })
+
       setShowDelete(slug !== 'new')
+      setExtension(document.extension)
+      setHasChanges(false)
+      setParsedContent(true)
     } else {
       // Set publishedAt value on slug update to avoid undefined on first render
       if (slug) {
@@ -62,19 +102,18 @@ export const useDocumentUpdateEffect = ({
 
         methods.reset({
           ...formData,
-          author: {
-            name: session?.user.name ?? '',
-            picture: session?.user.image ?? ''
-          },
-          coverImage: '',
           publishedAt: slug === 'new' ? getLocalDate() : formData.publishedAt
         })
       }
     }
 
-    const subscription = methods.watch(() => setHasChanges(true))
+    const subscription = methods.watch((value, { name, type }) => {
+      if (name === 'content') {
+        setHasChanges(true)
+      }
+    })
 
     return () => subscription.unsubscribe()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [documentQueryData, slug, editor, session])
+  }, [document, editor])
 }

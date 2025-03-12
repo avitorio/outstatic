@@ -1,5 +1,4 @@
 /** @type {import('tailwindcss').Config} */
-const plugin = require('tailwindcss/plugin')
 
 module.exports = {
   darkMode: 'selector',
@@ -83,59 +82,46 @@ module.exports = {
       typography: ({ theme }) => ({
         outstatic: {
           css: {
-            '--tw-prose-body': theme('colors.foreground'),
-            '--tw-prose-headings': theme('colors.foreground'),
-            '--tw-prose-lead': theme('colors.foreground'),
-            '--tw-prose-links': theme('colors.foreground'),
-            '--tw-prose-bold': theme('colors.foreground'),
-            '--tw-prose-counters': theme('colors.foreground'),
-            '--tw-prose-bullets': theme('colors.foreground'),
-            '--tw-prose-hr': theme('colors.foreground'),
-            '--tw-prose-quotes': theme('colors.foreground'),
-            '--tw-prose-quote-borders': theme('colors.foreground'),
-            '--tw-prose-captions': theme('colors.foreground'),
-            '--tw-prose-code': theme('colors.white'),
-            '--tw-prose-pre-code': theme('colors.white'),
-            '--tw-prose-pre-bg': theme('colors.foreground'),
-            '--tw-prose-th-borders': theme('colors.foreground'),
-            '--tw-prose-td-borders': theme('colors.foreground'),
-            '--tw-prose-invert-body': theme('colors.foreground'),
-            '--tw-prose-invert-headings': theme('colors.white'),
-            '--tw-prose-invert-lead': theme('colors.foreground'),
-            '--tw-prose-invert-links': theme('colors.white'),
-            '--tw-prose-invert-bold': theme('colors.white'),
-            '--tw-prose-invert-counters': theme('colors.foreground'),
-            '--tw-prose-invert-bullets': theme('colors.foreground'),
-            '--tw-prose-invert-hr': theme('colors.foreground'),
-            '--tw-prose-invert-quotes': theme('colors.foreground'),
-            '--tw-prose-invert-quote-borders': theme('colors.foreground'),
-            '--tw-prose-invert-captions': theme('colors.foreground'),
-            '--tw-prose-invert-code': theme('colors.white'),
-            '--tw-prose-invert-pre-code': theme('colors.foreground'),
-            '--tw-prose-invert-pre-bg': 'rgb(0 0 0 / 50%)',
-            '--tw-prose-invert-th-borders': theme('colors.foreground'),
-            '--tw-prose-invert-td-borders': theme('colors.foreground')
+            '--tw-prose-body': 'hsl(var(--prose-body))',
+            '--tw-prose-headings': 'hsl(var(--prose-headings))',
+            '--tw-prose-lead': 'hsl(var(--prose-lead))',
+            '--tw-prose-links': 'hsl(var(--prose-links))',
+            '--tw-prose-bold': 'hsl(var(--prose-bold))',
+            '--tw-prose-counters': 'hsl(var(--prose-counters))',
+            '--tw-prose-bullets': 'hsl(var(--prose-bullets))',
+            '--tw-prose-hr': 'hsl(var(--prose-hr))',
+            '--tw-prose-quotes': 'hsl(var(--prose-quotes))',
+            '--tw-prose-quote-borders': 'hsl(var(--prose-quote-borders))',
+            '--tw-prose-captions': 'hsl(var(--prose-captions))',
+            '--tw-prose-kbd': 'hsl(var(--prose-kbd))',
+            '--tw-prose-kbd-shadows': 'hsl(var(--prose-kbd-shadows))',
+            '--tw-prose-code': 'hsl(var(--prose-code))',
+            '--tw-prose-pre-code': 'hsl(var(--prose-pre-code))',
+            '--tw-prose-pre-bg': 'hsl(var(--prose-pre-bg))',
+            '--tw-prose-th-borders': 'hsl(var(--prose-th-borders))',
+            '--tw-prose-td-borders': 'hsl(var(--prose-td-borders))',
+            '--tw-prose-invert-body': 'hsl(var(--prose-bullets))',
+            '--tw-prose-invert-headings': '#fff',
+            '--tw-prose-invert-lead': 'hsl(var(--prose-counters))',
+            '--tw-prose-invert-links': '#fff',
+            '--tw-prose-invert-bold': '#fff',
+            '--tw-prose-invert-counters': 'hsl(var(--prose-counters))',
+            '--tw-prose-invert-bullets': 'hsl(var(--prose-lead))',
+            '--tw-prose-invert-hr': 'hsl(var(--prose-body))',
+            '--tw-prose-invert-quotes': '#f3f4f6',
+            '--tw-prose-invert-quote-borders': 'hsl(var(--prose-body))',
+            '--tw-prose-invert-captions': 'hsl(var(--prose-counters))',
+            '--tw-prose-invert-kbd': '#fff',
+            '--tw-prose-invert-kbd-shadows': '255 255 255',
+            '--tw-prose-invert-code': '#fff',
+            '--tw-prose-invert-pre-code': 'hsl(var(--prose-bullets))',
+            '--tw-prose-invert-pre-bg': 'rgba(0, 0, 0, .5)',
+            '--tw-prose-invert-th-borders': 'hsl(var(--prose-lead))',
+            '--tw-prose-invert-td-borders': 'hsl(var(--prose-body))'
           }
         }
       })
     }
   },
-  plugins: [
-    require('@tailwindcss/typography'),
-    plugin(function ({ matchUtilities }) {
-      matchUtilities({
-        // Class name
-        'animation-delay': (value) => {
-          return {
-            animationDelay: value // Desired CSS properties here
-          }
-        },
-        'animation-duration': (value) => {
-          return {
-            animationDuration: value // Desired CSS properties here
-          }
-        }
-      })
-    })
-  ]
+  plugins: [require('@tailwindcss/typography')]
 }

@@ -1,37 +1,41 @@
-import { useOidLazyQuery } from '@/graphql/generated'
-import { useOstSession } from '@/utils/auth/hooks'
+import { Commit, Repository } from '@/graphql/gql/graphql'
+import { OID } from '@/graphql/queries/oid'
+import { useOutstatic } from '@/utils/hooks/useOutstatic'
+import { useQuery } from '@tanstack/react-query'
 import { useCallback } from 'react'
-import useOutstatic from './useOutstatic'
 
 const useOid = () => {
-  const { repoSlug, repoBranch, repoOwner } = useOutstatic()
-  const { session } = useOstSession()
-  const [oidQuery] = useOidLazyQuery({
-    variables: {
-      owner: repoOwner || session?.user?.login || '',
-      name: repoSlug,
-      branch: repoBranch
+  const { repoSlug, repoBranch, repoOwner, gqlClient, session } = useOutstatic()
+  const { refetch: oidQuery } = useQuery({
+    queryKey: ['oid'],
+    queryFn: async () => {
+      try {
+        const { repository } = await gqlClient.request<{
+          repository: Repository
+        }>(OID, {
+          owner: repoOwner || session?.user?.login || '',
+          name: repoSlug,
+          branch: repoBranch
+        })
+
+        const target = repository?.ref?.target as Commit
+
+        if (typeof target.history.nodes?.[0]?.oid !== 'string') {
+          throw new Error('Received a non-string oid')
+        }
+
+        return target.history.nodes[0].oid
+      } catch (error) {
+        throw error
+      }
     },
-    fetchPolicy: 'no-cache'
+    enabled: false,
+    gcTime: 0
   })
 
   const fetchOid = useCallback(async () => {
-    const { data: oidData, error: oidError } = await oidQuery()
-    if (oidError) {
-      throw oidError
-    }
-
-    if (oidData?.repository?.ref?.target?.__typename !== 'Commit') {
-      throw new Error('No valid oid found')
-    }
-
-    if (
-      typeof oidData.repository.ref.target.history.nodes?.[0]?.oid !== 'string'
-    ) {
-      throw new Error('Received a non-string oid')
-    }
-
-    return oidData.repository.ref.target.history.nodes[0].oid
+    const { data } = await oidQuery()
+    return data
   }, [oidQuery])
 
   return fetchOid

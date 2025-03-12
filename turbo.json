@@ -1,5 +1,5 @@
 {
-  "pipeline": {
+  "tasks": {
     "build": {
       "dependsOn": ["^build"],
       "outputs": ["dist/**", ".next/**"]
@@ -24,11 +24,31 @@
       "cache": false
     },
     "docs": {
-      "dependsOn": [],
-      "env": ["NEXT_PUBLIC_GA_ID", "NEXT_PUBLIC_TINYBIRD_TOKEN"]
+      "env": [
+        "NEXT_PUBLIC_GA_ID",
+        "NEXT_PUBLIC_TINYBIRD_TOKEN",
+        "NODE_ENV",
+        "OST_CONTENT_PATH",
+        "OST_GITHUB_ID",
+        "OST_GITHUB_SECRET",
+        "OST_MONOREPO_PATH",
+        "OST_REPO_BRANCH",
+        "OST_REPO_SLUG",
+        "OST_REPO_OWNER",
+        "OST_TOKEN_SECRET",
+        "VERCEL_GIT_REPO_SLUG",
+        "OPENAI_API_KEY",
+        "OST_GITHUB_CALLBACK_URL",
+        "OST_BASE_PATH",
+        "OST_DETACH",
+        "OST_OUTSTATIC_PATH",
+        "OST_REPO_MEDIA_PATH",
+        "OST_PUBLIC_MEDIA_PATH",
+        "NEXT_PUBLIC_OST_API_PATH",
+        "NEXT_PUBLIC_OST_TOKEN_NAME"
+      ]
     },
     "outstatic": {
-      "dependsOn": [],
       "env": [
         "NODE_ENV",
         "OST_CONTENT_PATH",
@@ -42,7 +62,13 @@
         "VERCEL_GIT_REPO_SLUG",
         "OPENAI_API_KEY",
         "OST_GITHUB_CALLBACK_URL",
-        "OST_BASE_PATH"
+        "OST_BASE_PATH",
+        "OST_DETACH",
+        "OST_OUTSTATIC_PATH",
+        "OST_REPO_MEDIA_PATH",
+        "OST_PUBLIC_MEDIA_PATH",
+        "NEXT_PUBLIC_OST_API_PATH",
+        "NEXT_PUBLIC_OST_TOKEN_NAME"
       ]
     }
   }

@@ -1,11 +1,6 @@
-import {
-  CollectionsDocument,
-  CollectionsQuery,
-  CollectionsQueryVariables
-} from '@/graphql/generated'
 import { Session } from '@/types'
-import { initializeApollo } from '@/utils/apollo'
 import { getLoginSession } from '@/utils/auth/auth'
+import { GITHUB_GQL_API_URL } from '@/utils/constants'
 import { EnvVarsType, envVars } from '@/utils/envVarsCheck'
 
 export type OutstaticData = {
@@ -14,76 +9,64 @@ export type OutstaticData = {
   repoBranch: string
   contentPath: string
   monorepoPath: string
+  ostPath: string
   session: Session | null
-  initialApolloState?: null
-  collections: string[]
   pages: string[]
   missingEnvVars: EnvVarsType | false
   hasOpenAIKey: boolean
   basePath: string
+  ostDetach: boolean
+  ostContent?: string
+  dashboardRoute: string
+  githubGql: string
+  publicMediaPath: string
+  repoMediaPath: string
 }
 
-export const defaultPages = ['settings', 'collections']
+export async function Outstatic({
+  repoOwner = '',
+  repoSlug = '',
+  repoBranch = ''
+}: { repoOwner?: string; repoSlug?: string; repoBranch?: string } = {}) {
+  const ostConfig = {
+    OST_REPO_OWNER: repoOwner || process.env.OST_REPO_OWNER || '',
+    OST_REPO_SLUG:
+      repoSlug ||
+      process.env.OST_REPO_SLUG ||
+      process.env.VERCEL_GIT_REPO_SLUG ||
+      '',
+    OST_REPO_BRANCH: repoBranch || process.env.OST_REPO_BRANCH,
+    OST_CONTENT_PATH: `${repoBranch || process.env.OST_REPO_BRANCH}:${
+      process.env.OST_MONOREPO_PATH ? process.env.OST_MONOREPO_PATH + '/' : ''
+    }${process.env.OST_CONTENT_PATH || ''}`,
+    OST_MONOREPO_PATH: '',
+    OST_BASE_PATH: ''
+  }
 
-export async function Outstatic() {
-  if (envVars.hasMissingEnvVars) {
+  if (envVars.hasMissingEnvVars && !ostConfig.OST_REPO_OWNER) {
     return {
       missingEnvVars: envVars.envVars
     } as OutstaticData
   }
 
   const session = await getLoginSession()
-  const apolloClient = session
-    ? initializeApollo(null, session, process.env.OST_BASE_PATH)
-    : null
-
-  let collections: String[] = []
-
-  if (apolloClient) {
-    try {
-      const { data: documentQueryData } = await apolloClient.query<
-        CollectionsQuery,
-        CollectionsQueryVariables
-      >({
-        query: CollectionsDocument,
-        variables: {
-          name:
-            process.env.OST_REPO_SLUG || process.env.VERCEL_GIT_REPO_SLUG || '',
-          contentPath: `${process.env.OST_REPO_BRANCH || 'main'}:${
-            process.env.OST_MONOREPO_PATH
-              ? process.env.OST_MONOREPO_PATH + '/'
-              : ''
-          }${process.env.OST_CONTENT_PATH || 'outstatic/content'}`,
-          owner: process.env.OST_REPO_OWNER || session?.user?.login || ''
-        },
-        fetchPolicy: 'no-cache'
-      })
-
-      const documentQueryObject = documentQueryData?.repository?.object
-
-      if (documentQueryObject?.__typename === 'Tree') {
-        collections = documentQueryObject?.entries
-          ?.map((entry) => (entry.type === 'tree' ? entry.name : undefined))
-          .filter(Boolean) as String[]
-      }
-    } catch (error) {
-      console.log({ error })
-    }
-  }
 
   return {
-    repoOwner: process.env.OST_REPO_OWNER || session?.user?.login || '',
-    repoSlug:
-      process.env.OST_REPO_SLUG || process.env.VERCEL_GIT_REPO_SLUG || '',
-    repoBranch: process.env.OST_REPO_BRANCH || 'main',
+    repoOwner: ostConfig.OST_REPO_OWNER,
+    repoSlug: ostConfig.OST_REPO_SLUG,
+    repoBranch: ostConfig.OST_REPO_BRANCH,
+    ostPath: process.env.OST_OUTSTATIC_PATH || 'outstatic',
     contentPath: process.env.OST_CONTENT_PATH || 'outstatic/content',
     monorepoPath: process.env.OST_MONOREPO_PATH || '',
     session: session || null,
-    initialApolloState: null,
-    collections,
-    pages: [...defaultPages, ...collections],
     missingEnvVars: false,
     hasOpenAIKey: !!process.env.OPENAI_API_KEY,
-    basePath: process.env.OST_BASE_PATH || ''
+    basePath: process.env.OST_BASE_PATH || '',
+    ostDetach: process.env.OST_DETACH || false,
+    pages: ['collections', 'settings', 'media-library'],
+    dashboardRoute: '/outstatic',
+    githubGql: GITHUB_GQL_API_URL,
+    publicMediaPath: process.env.OST_PUBLIC_MEDIA_PATH || '',
+    repoMediaPath: process.env.OST_REPO_MEDIA_PATH || ''
   } as OutstaticData
 }

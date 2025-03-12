@@ -21,7 +21,7 @@ const Header = async () => {
       <nav className="max-w-6xl mx-auto w-full layout flex items-center justify-between">
         <Link
           href="/"
-          className="hover:text-slate-900 hover:dark:text-blue-200 px-5 underline-offset-2 font-semibold transition-all hover:scale-105"
+          className="hover:text-slate-900 dark:hover:text-blue-200 px-5 underline-offset-2 font-semibold transition-all hover:scale-105"
         >
           Andre Vitorio
         </Link>
