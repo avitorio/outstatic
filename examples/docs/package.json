@@ -21,7 +21,7 @@
     "lucide-react": "^0.358.0",
     "next": "15.0.3",
     "next-themes": "^0.4.3",
-    "outstatic": "2.0.0",
+    "outstatic": "latest",
     "react": "19.0.0",
     "react-dom": "19.0.0",
     "rehype-pretty-code": "^0.12.6",
