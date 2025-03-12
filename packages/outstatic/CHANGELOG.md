@@ -1,5 +1,11 @@
 # outstatic
 
+## 2.0.1
+
+### Patch Changes
+
+- fix relative path links
+
 ## 2.0.0
 
 ### Major Changes
