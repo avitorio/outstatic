@@ -1,6 +1,6 @@
 ---
 title: "Upgrading to v2.0"
-publishedAt: "2025-02-17T03:00:00.000Z"
+publishedAt: "2025-03-13T03:00:00.000Z"
 status: "published"
 author:
   name: "Andre Vitorio"
@@ -65,3 +65,13 @@ Update your `tsconfig.json` :
 # to:
 "moduleResolution": "bundler",
 ```
+
+#### **TailwindCSS related errors**
+
+Outstatic v2 uses TailwindCSS v4. To upgrade your project you can run the codemode:
+
+```bash
+npx @tailwindcss/upgrade
+```
+
+If you face other problems, please refer to the [TailwindCSS v4 upgrade guide](https://tailwindcss.com/docs/upgrade-guide).

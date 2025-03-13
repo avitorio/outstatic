@@ -1,6 +1,6 @@
 {
-  "commit": "728af870d81e6a2062451f4cd5b156dd3a6ea839",
-  "generated": "2025-03-12T19:10:11.831Z",
+  "commit": "e99f790c4f80ea441ff901fea629dae46134da3c",
+  "generated": "2025-03-13T19:23:26.407Z",
   "metadata": [
     {
       "__outstatic": {
@@ -476,22 +476,6 @@
     },
     {
       "__outstatic": {
-        "commit": "c86b5554dd9b3b61d7f93fa635d11765224aacb8",
-        "hash": "2290482961",
-        "path": "/outstatic/content/docs/upgrading-to-v2.0.mdx"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "docs",
-      "publishedAt": "2025-02-17T03:00:00.000Z",
-      "slug": "upgrading-to-v2.0",
-      "status": "published",
-      "title": "Upgrading to v2.0"
-    },
-    {
-      "__outstatic": {
         "commit": "728af870d81e6a2062451f4cd5b156dd3a6ea839",
         "hash": "2972708602",
         "path": "/outstatic/content/docs/getting-started.md"
@@ -507,6 +491,22 @@
       "slug": "getting-started",
       "status": "published",
       "title": "Getting started"
+    },
+    {
+      "__outstatic": {
+        "commit": "e99f790c4f80ea441ff901fea629dae46134da3c",
+        "hash": "2009272698",
+        "path": "/outstatic/content/docs/upgrading-to-v2.0.mdx"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "publishedAt": "2025-03-13T03:00:00.000Z",
+      "slug": "upgrading-to-v2.0",
+      "status": "published",
+      "title": "Upgrading to v2.0"
     }
   ]
 }
