@@ -1,5 +1,11 @@
 # outstatic
 
+## 2.0.2
+
+### Patch Changes
+
+- fix: use regular img element for media library
+
 ## 2.0.1
 
 ### Patch Changes

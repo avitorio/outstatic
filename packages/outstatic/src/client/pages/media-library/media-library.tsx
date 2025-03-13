@@ -10,7 +10,6 @@ import useSubmitMedia from '@/utils/hooks/useSubmitMedia'
 import { FileType } from '@/types'
 import { DeleteMediaButton } from '@/components/DeleteMediaButton'
 import { MediaLibraryHeader } from '@/components/ui/outstatic/media-library-header'
-import Image from 'next/image'
 import { FileQuestion, ImageOff } from 'lucide-react'
 import { SpinnerIcon } from '@/components/ui/outstatic/spinner-icon'
 import { MediaSettings } from '@/client/client'
@@ -185,7 +184,7 @@ export default function MediaLibrary() {
                         <SpinnerIcon />
                       </div>
                     )}
-                    <Image
+                    <img
                       src={`${apiPath}/${file.__outstatic.path}`}
                       alt={file.alt}
                       className="w-full h-full object-cover object-center rounded-md bg-slate-50"

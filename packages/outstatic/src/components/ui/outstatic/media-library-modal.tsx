@@ -20,7 +20,6 @@ import {
 import { MediaItem } from '@/utils/metadata/types'
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden'
 import { MediaLibraryHeader } from './media-library-header'
-import Image from 'next/image'
 import { SpinnerIcon } from './spinner-icon'
 import { FileQuestion } from 'lucide-react'
 import {
@@ -199,7 +198,7 @@ export default function MediaLibraryModal({
                     onClick={() => setSelectedImage(file)}
                   >
                     <div className="aspect-square">
-                      <Image
+                      <img
                         src={`${apiPath}${file.__outstatic.path}`}
                         alt={file.alt}
                         className="w-full h-full object-cover object-center rounded-md"
