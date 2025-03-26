@@ -11,10 +11,10 @@
     "@tailwindcss/postcss": "^4.0.7",
     "date-fns": "^2.30.0",
     "gray-matter": "^4.0.3",
-    "next": "15.0.3",
+    "next": "15.2.4",
     "outstatic": "latest",
-    "react": "19.0.0-rc-66855b96-20241106",
-    "react-dom": "19.0.0-rc-66855b96-20241106",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
     "remark": "^14.0.3",
     "remark-html": "^15.0.2",
     "tailwindcss": "4.0.7"
@@ -22,17 +22,17 @@
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.9",
     "@types/node": "^20",
-    "@types/react": "npm:types-react@19.0.0-rc.1",
-    "@types/react-dom": "npm:types-react-dom@19.0.0-rc.1",
+    "@types/react": "19.0.12",
+    "@types/react-dom": "19.0.4",
     "eslint": "9.14.0",
-    "eslint-config-next": "15.0.3",
+    "eslint-config-next": "15.2.4",
     "postcss": "8.4.24",
     "typescript": "5.7.2"
   },
   "pnpm": {
     "overrides": {
-      "@types/react": "npm:types-react@19.0.0-rc.1",
-      "@types/react-dom": "npm:types-react-dom@19.0.0-rc.1"
+      "@types/react": "19.0.12",
+      "@types/react-dom": "19.0.4"
     }
   }
 }
