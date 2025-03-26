@@ -211,9 +211,10 @@
     "@tanstack/query-sync-storage-persister": "^5.29.0",
     "@tanstack/react-query": "5.66.0",
     "@tanstack/react-query-persist-client": "5.66.0",
-    "next": "^13 || ^14 || ^15",
-    "react": "^17.0.2 || ^18 || ^19",
-    "react-dom": "^17.0.2 || ^18 || ^19"
+    "next": "^15",
+    "react": "^19",
+    "react-dom": "^19",
+    "tailwindcss": "^4.0.7"
   },
   "publishConfig": {
     "access": "public"
