@@ -1,5 +1,11 @@
 # outstatic
 
+## 2.0.3
+
+### Patch Changes
+
+- c7a049e: Adds correct peer dependencies for v2.
+
 ## 2.0.2
 
 ### Patch Changes
