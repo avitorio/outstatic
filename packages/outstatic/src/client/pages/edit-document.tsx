@@ -186,6 +186,7 @@ export default function EditDocument({ collection }: { collection: string }) {
             document: methods.getValues(),
             editDocument,
             hasChanges,
+            setHasChanges,
             collection,
             extension
           }}

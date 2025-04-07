@@ -24,6 +24,7 @@ export type DocumentContextType = {
   document: Document
   editDocument: (property: string, value: any) => void
   hasChanges: boolean
+  setHasChanges: (hasChanges: boolean) => void
   collection: string
   extension: MDExtensions
 }
