@@ -1,0 +1,15 @@
+{
+  "mode": "pre",
+  "tag": "canary",
+  "initialVersions": {
+    "outstatic-dev-blog": "0.0.1",
+    "docs": "1.0.5",
+    "outstatic": "2.0.3",
+    "@outstatic/ui": "0.1.0"
+  },
+  "changesets": [
+    "neat-carrots-poke",
+    "tender-roses-fail",
+    "thirty-jokes-teach"
+  ]
+}
