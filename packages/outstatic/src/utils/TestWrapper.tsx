@@ -139,6 +139,7 @@ const TestDocumentContextProvider = ({
     document: documentExample,
     editDocument: () => {},
     hasChanges: false,
+    setHasChanges: () => {},
     collection: 'documents',
     extension: 'md'
   }

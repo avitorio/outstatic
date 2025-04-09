@@ -57,7 +57,7 @@ export function CustomCode(props: ComponentPropsWithRef<"code">) {
       )}
       {language ? (
         <div className="absolute top-0 left-4 rounded-b-md border border-t-0 border-gray-600 px-3 py-1">
-          <span className="select-none bg-gradient-to-tr from-primary-300 to-primary-400 bg-clip-text font-medium text-white">
+          <span className="select-none bg-linear-to-tr from-primary-300 to-primary-400 bg-clip-text font-medium text-white">
             {language}
           </span>
         </div>

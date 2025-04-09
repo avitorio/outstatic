@@ -48,7 +48,7 @@ const labelVariants = cva('block font-medium text-gray-900', {
 })
 
 const inputVariants = cva(
-  'w-full rounded-lg border border-gray-300 bg-gray-50 text-gray-900 outline-none focus:border-blue-500 focus:ring-blue-500',
+  'w-full rounded-lg border border-gray-300 bg-gray-50 text-gray-900 outline-hidden focus:border-blue-500 focus:ring-blue-500',
   {
     variants: {
       size: {

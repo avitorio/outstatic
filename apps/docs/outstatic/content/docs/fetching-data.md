@@ -1,13 +1,13 @@
 ---
-title: "Fetching data"
-status: "published"
+title: 'Fetching data'
+status: 'published'
 author:
-  name: "Jakob Heuser"
-  picture: "https://avatars.githubusercontent.com/u/1795?v=4"
-slug: "fetching-data"
-description: ""
-coverImage: ""
-publishedAt: "2024-11-07T03:00:00.000Z"
+  name: 'Jakob Heuser'
+  picture: 'https://avatars.githubusercontent.com/u/1795?v=4'
+slug: 'fetching-data'
+description: ''
+coverImage: ''
+publishedAt: '2024-11-07T03:00:00.000Z'
 ---
 
 **Fetching data is only available for Next.js projects.**
@@ -313,4 +313,4 @@ export async function getStaticPaths() {
 
 ## Usage examples:
 
-If you'd like to check out examples of how to use these functions, please refer to our [Example Blog](https://github.com/avitorio/outstatic/tree/main/examples/blog) repository.
+If you'd like to check out examples of how to use these functions, please refer to our [Example Blog](https://github.com/avitorio/outstatic/tree/main/examples/basic-blog) repository.

@@ -39,13 +39,13 @@ export default function Collections() {
           <div className="max-w-5xl w-full grid md:grid-cols-3 gap-6">
             {collections &&
               collections.map((collection) => (
-                <Card key={collection.slug}>
+                <Card
+                  key={collection.slug}
+                  className="hover:border-gray-500 transition-all duration-300"
+                >
                   <CardContent className="relative flex p-6 justify-between items-center">
-                    <Link
-                      href={`${dashboardRoute}/${collection.slug}`}
-                      className="focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg"
-                    >
-                      <h5 className="text-2xl cursor-pointer font-bold tracking-tight text-gray-900 hover:text-blue-500">
+                    <Link href={`${dashboardRoute}/${collection.slug}`}>
+                      <h5 className="text-2xl cursor-pointer font-bold tracking-tight text-gray-900">
                         {collection.title}
                         <span className="absolute top-0 bottom-0 left-0 right-16"></span>
                       </h5>

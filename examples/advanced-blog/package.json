@@ -11,15 +11,16 @@
   "dependencies": {
     "@radix-ui/react-dialog": "^1.0.5",
     "@radix-ui/react-slot": "^1.0.2",
+    "@tailwindcss/postcss": "^4.0.7",
     "@vercel/og": "^0.6.1",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
     "date-fns": "^2.30.0",
     "gray-matter": "^4.0.3",
     "lucide-react": "^0.303.0",
-    "next": "15.0.3",
+    "next": "15.2.4",
     "next-themes": "^0.2.1",
-    "outstatic": "2.0.0-canary.2",
+    "outstatic": "latest",
     "react": "19.0.0",
     "react-dom": "19.0.0",
     "remark": "^14.0.3",
@@ -27,22 +28,20 @@
     "remark-html": "^15.0.2",
     "shikiji": "^0.9.0",
     "tailwind-merge": "^2.2.0",
-    "tailwindcss": "3.3.2",
+    "tailwindcss": "4.0.7",
     "tailwindcss-animate": "^1.0.7",
     "vaul": "^0.8.0"
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.9",
     "@types/node": "^20",
-    "@types/react": "npm:types-react@19.0.0-rc.1",
-    "@types/react-dom": "npm:types-react-dom@19.0.0-rc.1",
-    "autoprefixer": "10.4.14",
+    "@types/react": "19.0.12",
+    "@types/react-dom": "19.0.4",
     "esbuild": "^0.15.10",
     "eslint": "9.14.0",
-    "eslint-config-next": "15.0.3",
+    "eslint-config-next": "15.2.4",
     "mdx-bundler": "^10.0.1",
     "postcss": "8.4.24",
-    "postcss-import": "^16.0.0",
     "postcss-nesting": "^12.0.2",
     "rehype-autolink-headings": "^6.1.1",
     "rehype-pretty-code": "^0.12.3",
@@ -51,8 +50,8 @@
   },
   "pnpm": {
     "overrides": {
-      "@types/react": "npm:types-react@19.0.0-rc.1",
-      "@types/react-dom": "npm:types-react-dom@19.0.0-rc.1"
+      "@types/react": "19.0.12",
+      "@types/react-dom": "19.0.4"
     }
   }
 }

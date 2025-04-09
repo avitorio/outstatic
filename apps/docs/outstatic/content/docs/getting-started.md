@@ -10,7 +10,7 @@ coverImage: ""
 publishedAt: "2025-02-17T03:00:00.000Z"
 ---
 
-If you are using Next.js 14 please refer to the [Before v1.4](https://docs/v1.4/introduction) documentation.
+If you are using Next.js 14 please refer to the [Before v1.4](/v1.4/introduction) documentation.
 
 ## Who are you?
 

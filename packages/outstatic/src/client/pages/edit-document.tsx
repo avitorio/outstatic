@@ -186,6 +186,7 @@ export default function EditDocument({ collection }: { collection: string }) {
             document: methods.getValues(),
             editDocument,
             hasChanges,
+            setHasChanges,
             collection,
             extension
           }}
@@ -229,7 +230,7 @@ export default function EditDocument({ collection }: { collection: string }) {
               <form className="m-auto max-w-[700px] space-y-4">
                 <DocumentTitleInput
                   id="title"
-                  className="w-full resize-none outline-none bg-white text-5xl scrollbar-hide min-h-[55px] overflow-hidden"
+                  className="w-full resize-none outline-hidden bg-white text-5xl scrollbar-hide min-h-[55px] overflow-hidden"
                   placeholder={`Your ${singular(
                     noCase(collection, {
                       split: (str) =>

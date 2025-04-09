@@ -19,7 +19,7 @@ export const Pre = (props: ComponentPropsWithRef<'pre'>) => {
           }}
           title="Copy code"
           className={clsx([
-            'hidden rounded p-1 transition-colors md:flex items-center gap-1 text-sm',
+            'hidden rounded-xs p-1 transition-colors md:flex items-center gap-1 text-sm',
             'border border-gray-700',
             'text-slate-200',
             'bg-slate-800'
@@ -57,7 +57,7 @@ export function CustomCode(props: ComponentPropsWithRef<'code'>) {
       )}
       {language ? (
         <div className="absolute top-0 left-4 rounded-b-md border border-t-0 border-gray-600 px-3 py-1">
-          <span className="select-none bg-gradient-to-tr from-primary-300 to-primary-400 bg-clip-text font-medium text-white">
+          <span className="select-none bg-linear-to-tr from-primary-300 to-primary-400 bg-clip-text font-medium text-white">
             {language}
           </span>
         </div>

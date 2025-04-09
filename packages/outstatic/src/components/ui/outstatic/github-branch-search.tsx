@@ -130,7 +130,7 @@ export const GitHubBranchSearch = ({
         size={size}
         scrollFooter={() => (
           <div
-            className="rounded-t-none border border-t px-3 hover:cursor-pointer relative flex cursor-default select-none items-center rounded-sm py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground"
+            className="rounded-t-none border border-t px-3 hover:cursor-pointer relative flex cursor-default select-none items-center rounded-sm py-1.5 text-sm outline-hidden hover:bg-accent hover:text-accent-foreground"
             onClick={() => {
               setIsOpen(false)
               setIsLoading(true)
@@ -141,7 +141,7 @@ export const GitHubBranchSearch = ({
               {query !== repoBranch &&
               query !== '' &&
               !suggestions.some((branch) => branch.name === query) ? (
-                <span className="flex-grow font-normal break-words">
+                <span className="grow font-normal break-words">
                   <PlusCircle className="mr-2 h-4 w-4 min-w-[1rem] inline-block select-none align-text-bottom overflow-visible" />
                   <span>Create branch&nbsp;</span>
                   <span className="font-semibold">{query}</span> from{' '}

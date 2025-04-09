@@ -33,7 +33,7 @@ export async function generateMetadata(props: {
       url: absoluteUrl(`/posts/${post.slug}`),
       images: [
         {
-          url: ogUrl(post?.coverImage || `/api/og?title=${post.title}`),
+          url: ogUrl(post?.coverImage || `${post.title}`),
           width: 1200,
           height: 630,
           alt: post.title
