@@ -22,6 +22,7 @@ export default defineConfig((options) => {
       'tailwindcss'
       // Add any other external dependencies your project uses
     ],
+    noExternal: ['@outstatic/ui'],
     format: ['cjs', 'esm'],
     dts: true,
     clean: !options.watch,
