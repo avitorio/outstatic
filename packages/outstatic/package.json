@@ -33,16 +33,6 @@
       "require": "./dist/utils/server.js",
       "types": "./dist/utils/server.d.ts"
     },
-    "./utils/auth": {
-      "import": "./dist/utils/auth/auth.mjs",
-      "require": "./dist/utils/auth/auth.js",
-      "types": "./dist/utils/auth/auth.d.ts"
-    },
-    "./utils/hooks": {
-      "import": "./dist/utils/hooks/index.mjs",
-      "require": "./dist/utils/hooks/index.js",
-      "types": "./dist/utils/hooks/index.d.ts"
-    },
     "./outstatic.css": "./dist/outstatic.css"
   },
   "scripts": {
