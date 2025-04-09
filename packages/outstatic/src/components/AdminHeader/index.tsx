@@ -3,7 +3,7 @@ import { Menu, SlashIcon } from 'lucide-react'
 import { memo, useEffect, useState } from 'react'
 import { Button } from '@outstatic/ui/button'
 import { AppLogo } from '@outstatic/ui/app-logo'
-import { cn } from '@/utils/ui'
+import { cn } from '@outstatic/ui/utils'
 import { useOutstatic } from '@/utils/hooks/useOutstatic'
 import { GitHubBranchSearch } from '@/components/github/github-branch-search'
 

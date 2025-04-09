@@ -1,4 +1,4 @@
-import { cn } from '@/utils/ui'
+import { cn } from '@outstatic/ui/utils'
 import {
   BoldIcon,
   CodeIcon,

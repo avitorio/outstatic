@@ -1,6 +1,6 @@
 import { useOutstatic } from '@/utils/hooks/useOutstatic'
 import dynamic from 'next/dynamic'
-import { cn } from '@/utils/ui'
+import { cn } from '@outstatic/ui/utils'
 import {
   SidebarContent,
   SidebarGroup,
