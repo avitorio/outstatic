@@ -8,8 +8,8 @@ import { useOutstatic } from '@/utils/hooks/useOutstatic'
 import { stringifyMetadata } from '@/utils/metadata/stringify'
 import { Trash } from 'lucide-react'
 import { useState } from 'react'
-import { Button } from '@/components/ui/shadcn/button'
-import { SpinnerIcon } from '../ui/outstatic/spinner-icon'
+import { Button } from '@outstatic/ui/button'
+import { SpinnerIcon } from '@outstatic/ui/spinner-icon'
 import { toast } from 'sonner'
 import { useGetDocuments } from '@/utils/hooks/useGetDocuments'
 import { useCollections } from '@/utils/hooks/useCollections'
@@ -22,7 +22,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle
-} from '@/components/ui/shadcn/alert-dialog'
+} from '@outstatic/ui/alert-dialog'
 
 type DeleteDocumentButtonProps = {
   slug: string

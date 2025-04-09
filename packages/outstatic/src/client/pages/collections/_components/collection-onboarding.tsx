@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui/shadcn/button'
+import { Button } from '@outstatic/ui/button'
 import { useSearchParams } from 'next/navigation'
 import {
   Card,
@@ -6,12 +6,11 @@ import {
   CardHeader,
   CardTitle,
   CardDescription
-} from '@/components/ui/shadcn/card'
-import Link from 'next/link'
-import { GitHubBranchSearch } from '@/components/ui/outstatic/github-branch-search'
+} from '@outstatic/ui/card'
+import { GitHubBranchSearch } from '@/components/github/github-branch-search'
 import { useState } from 'react'
 import { useLocalData, useOutstatic } from '@/utils/hooks/useOutstatic'
-import { CreateBranchDialog } from '@/components/ui/outstatic/create-branch-dialog'
+import { CreateBranchDialog } from '@/components/github/create-branch-dialog'
 import NewCollectionModal from './new-collection-modal'
 import { useInitialData } from '@/utils/hooks/useInitialData'
 

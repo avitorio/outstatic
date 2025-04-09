@@ -67,15 +67,19 @@ export const useRebuildMediaJson = () => {
           refetch().then(({ data }) => {
             if (!data) {
               console.log('No data found')
-              reject('No data found')
-              return
+              toast.error('No data found')
+              resolve(undefined)
+              onComplete?.()
+              return 'No data found'
             }
 
             const files = extractFiles(data)
             if (files.length === 0) {
               console.log('No files found')
-              reject('No files found')
-              return
+              toast.success('Media Settings updated')
+              resolve(undefined)
+              onComplete?.()
+              return 'No files found'
             }
 
             return toast.promise(

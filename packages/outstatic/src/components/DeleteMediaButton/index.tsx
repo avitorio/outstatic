@@ -6,7 +6,7 @@ import { useOutstatic } from '@/utils/hooks/useOutstatic'
 import { stringifyMedia } from '@/utils/metadata/stringify'
 import { Trash2 } from 'lucide-react'
 import { useState } from 'react'
-import { Button } from '@/components/ui/shadcn/button'
+import { Button } from '@outstatic/ui/button'
 import { useGetMediaFiles } from '@/utils/hooks/useGetMediaFiles'
 import {
   AlertDialog,
@@ -17,8 +17,8 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle
-} from '@/components/ui/shadcn/alert-dialog'
-import { SpinnerIcon } from '@/components/ui/outstatic/spinner-icon'
+} from '@outstatic/ui/alert-dialog'
+import { SpinnerIcon } from '@outstatic/ui/spinner-icon'
 import { toast } from 'sonner'
 
 type DeleteDocumentButtonProps = {

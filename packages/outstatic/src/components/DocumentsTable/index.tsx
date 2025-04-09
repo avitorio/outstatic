@@ -7,7 +7,7 @@ import cookies from 'js-cookie'
 import { ListFilter } from 'lucide-react'
 import Link from 'next/link'
 import { useState, useCallback, ReactNode } from 'react'
-import { Button } from '@/components/ui/shadcn/button'
+import { Button } from '@outstatic/ui/button'
 import {
   CaretSortIcon,
   CaretDownIcon,
