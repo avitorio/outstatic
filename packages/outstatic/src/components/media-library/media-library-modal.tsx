@@ -124,7 +124,7 @@ export default function MediaLibraryModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="w-full h-full max-w-[96%] max-h-[96%] flex flex-col">
+      <DialogContent className="w-full h-full md:max-w-[96%] md:max-h-[96%] flex flex-col">
         <DialogHeader>
           <VisuallyHidden.Root>
             <DialogTitle>Media Library</DialogTitle>
