@@ -4,14 +4,14 @@ import {
   SidebarContent,
   SidebarGroup,
   SidebarItem
-} from '@/components/ui/outstatic/sidebar'
+} from '@outstatic/ui/sidebar'
 import { Folder, LayoutDashboard, Plus } from 'lucide-react'
 import {
   Tooltip,
   TooltipProvider,
   TooltipTrigger,
   TooltipContent
-} from '@/components/ui/shadcn/tooltip'
+} from '@outstatic/ui/tooltip'
 import Link from 'next/link'
 import { singular } from 'pluralize'
 

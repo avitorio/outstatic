@@ -1,6 +1,6 @@
 import { AdminLayout } from '@/components'
-import { GitHubRepoSearch } from '@/components/ui/outstatic/github-repo-search'
-import { Button } from '@/components/ui/shadcn/button'
+import { GitHubRepoSearch } from '@/components/github/github-repo-search'
+import { Button } from '@outstatic/ui/button'
 import { useCollections } from '@/utils/hooks/useCollections'
 import { useState } from 'react'
 import { MediaSettings } from './_components/media-settings'

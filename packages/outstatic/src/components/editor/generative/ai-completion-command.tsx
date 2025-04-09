@@ -3,7 +3,7 @@ import {
   CommandItem,
   CommandList,
   CommandSeparator
-} from '@/components/ui/shadcn/command'
+} from '@outstatic/ui/command'
 import { useEditor } from '@/components/editor/editor-context'
 import { Check, TextQuote, TrashIcon } from 'lucide-react'
 

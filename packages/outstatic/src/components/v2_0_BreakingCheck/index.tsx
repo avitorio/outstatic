@@ -7,7 +7,7 @@ import {
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogAction
-} from '@/components/ui/shadcn/alert-dialog'
+} from '@outstatic/ui/alert-dialog'
 import { OUTSTATIC_VERSION } from '@/utils/constants'
 
 const V2_0_BreakingCheck = () => {

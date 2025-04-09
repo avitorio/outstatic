@@ -17,10 +17,10 @@ import { singular } from 'pluralize'
 import { useEffect, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { convertSchemaToZod } from '@/utils/zod'
-import { FormMessage } from '@/components/ui/shadcn/form'
+import { FormMessage } from '@outstatic/ui/form'
 import { toast } from 'sonner'
 import { noCase } from 'change-case'
-import MediaSettingsDialog from '@/components/ui/outstatic/media-settings-dialog'
+import MediaSettingsDialog from '@/components/media-library/media-settings-dialog'
 import { useEditor } from '@/components/editor/editor-context'
 
 export default function EditDocument({ collection }: { collection: string }) {

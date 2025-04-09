@@ -1,4 +1,4 @@
-import { GitHubRepoSearch } from '@/components/ui/outstatic/github-repo-search'
+import { GitHubRepoSearch } from '@/components/github/github-repo-search'
 
 export default function RepoOnboarding() {
   return (

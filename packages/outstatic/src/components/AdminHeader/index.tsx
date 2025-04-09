@@ -1,11 +1,11 @@
 import { useOstSession, useOstSignOut } from '@/utils/auth/hooks'
 import { Menu, SlashIcon } from 'lucide-react'
 import { memo, useEffect, useState } from 'react'
-import { Button } from '@/components/ui/shadcn/button'
-import { AppLogo } from '../ui/outstatic/app-logo'
+import { Button } from '@outstatic/ui/button'
+import { AppLogo } from '@outstatic/ui/app-logo'
 import { cn } from '@/utils/ui'
 import { useOutstatic } from '@/utils/hooks/useOutstatic'
-import { GitHubBranchSearch } from '@/components/ui/outstatic/github-branch-search'
+import { GitHubBranchSearch } from '@/components/github/github-branch-search'
 
 type AdminHeaderProps = {
   name?: string | null | undefined

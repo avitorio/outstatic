@@ -1,5 +1,5 @@
 import Alert from '@/components/Alert'
-import LoadingBackground from '@/components/ui/outstatic/loading-background'
+import LoadingBackground from '@outstatic/ui/loading-background'
 import { OUTSTATIC_API_PATH } from '@/utils/constants'
 import loginErrors from '@/utils/errors/loginErrors'
 import clsx from 'clsx'

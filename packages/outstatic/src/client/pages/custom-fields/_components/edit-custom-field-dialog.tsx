@@ -1,7 +1,7 @@
 import Alert from '@/components/Alert'
 import TagInput from '@/components/TagInput'
-import { Button } from '@/components/ui/shadcn/button'
-import { Input } from '@/components/ui/shadcn/input'
+import { Button } from '@outstatic/ui/button'
+import { Input } from '@outstatic/ui/input'
 import {
   CustomFieldArrayValue,
   CustomFieldType,
@@ -19,7 +19,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue
-} from '@/components/ui/shadcn/select'
+} from '@outstatic/ui/select'
 import {
   FormField,
   FormItem,
@@ -27,8 +27,8 @@ import {
   FormControl,
   FormDescription,
   FormMessage
-} from '@/components/ui/shadcn/form'
-import { SpinnerIcon } from '@/components/ui/outstatic/spinner-icon'
+} from '@outstatic/ui/form'
+import { SpinnerIcon } from '@outstatic/ui/spinner-icon'
 import { useCustomFieldCommit } from './use-custom-field-commit'
 import {
   Dialog,
@@ -36,7 +36,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle
-} from '@/components/ui/shadcn/dialog'
+} from '@outstatic/ui/dialog'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { editCustomFieldSchema } from '@/utils/schemas/edit-custom-field-schema'
 
@@ -124,7 +124,7 @@ export const EditCustomFieldDialog: React.FC<EditCustomFieldDialogProps> = ({
 
   return (
     <Dialog open={showEditModal} onOpenChange={onOpenChange}>
-      <DialogContent className="w-full max-w-2xl">
+      <DialogContent className="w-full lg:max-w-2xl">
         <DialogHeader>
           <DialogTitle>Edit {customFields[selectedField].title}</DialogTitle>
         </DialogHeader>
