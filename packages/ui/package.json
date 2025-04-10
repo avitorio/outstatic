@@ -1,6 +1,6 @@
 {
   "name": "@outstatic/ui",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "UI components for Outstatic",
   "license": "MIT",
   "sideEffects": false,
@@ -48,51 +48,284 @@
     "tsup": "8.4.0",
     "typescript": "^5.7.3"
   },
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
   "exports": {
-    "./alert-dialog": "./src/shadcn/alert-dialog.tsx",
-    "./breadcrumb": "./src/shadcn/breadcrumb.tsx",
-    "./button": "./src/shadcn/button.tsx",
-    "./calendar": "./src/shadcn/calendar.tsx",
-    "./card": "./src/shadcn/card.tsx",
-    "./checkbox": "./src/shadcn/checkbox.tsx",
-    "./command": "./src/shadcn/command.tsx",
-    "./date-time-picker-form": "./src/shadcn/date-time-picker-form.tsx",
-    "./dialog": "./src/shadcn/dialog.tsx",
-    "./form": "./src/shadcn/form.tsx",
-    "./input": "./src/shadcn/input.tsx",
-    "./label": "./src/shadcn/label.tsx",
-    "./popover": "./src/shadcn/popover.tsx",
-    "./radio-group": "./src/shadcn/radio-group.tsx",
-    "./scroll-area": "./src/shadcn/scroll-area.tsx",
-    "./select": "./src/shadcn/select.tsx",
-    "./skeleton": "./src/shadcn/skeleton.tsx",
-    "./tabs": "./src/shadcn/tabs.tsx",
-    "./text-area": "./src/shadcn/text-area.tsx",
-    "./tooltip": "./src/shadcn/tooltip.tsx",
-    "./utils": "./src/lib/utils/index.ts",
-    "./search-combobox": "./src/outstatic/search-combobox.tsx",
-    "./app-logo": "./src/outstatic/app-logo.tsx",
-    "./checkbox-with-label": "./src/outstatic/checkbox-with-label.tsx",
-    "./file-tree": "./src/outstatic/file-tree.tsx",
-    "./github-branch-search": "./src/outstatic/github-branch-search.tsx",
-    "./github-explorer": "./src/outstatic/github-explorer.tsx",
-    "./github-repo-search": "./src/outstatic/github-repo-search.tsx",
-    "./if": "./src/outstatic/if.tsx",
-    "./line-background": "./src/outstatic/line-background.tsx",
-    "./loading-background": "./src/outstatic/loading-background.tsx",
-    "./media-library-header": "./src/outstatic/media-library-header.tsx",
-    "./media-library-modal": "./src/outstatic/media-library-modal.tsx",
-    "./media-settings-dialog": "./src/outstatic/media-settings-dialog.tsx",
-    "./path-breadcrumb": "./src/outstatic/path-breadcrumb.tsx",
-    "./sidebar-footer": "./src/outstatic/sidebar-footer.tsx",
-    "./sidebar": "./src/outstatic/sidebar.tsx",
-    "./spinner-icon": "./src/outstatic/spinner-icon.tsx",
-    "./stepper": "./src/outstatic/stepper.tsx"
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./alert-dialog": {
+      "types": "./dist/shadcn/alert-dialog.d.ts",
+      "import": "./dist/shadcn/alert-dialog.mjs",
+      "require": "./dist/shadcn/alert-dialog.js"
+    },
+    "./breadcrumb": {
+      "types": "./dist/shadcn/breadcrumb.d.ts",
+      "import": "./dist/shadcn/breadcrumb.mjs",
+      "require": "./dist/shadcn/breadcrumb.js"
+    },
+    "./button": {
+      "types": "./dist/shadcn/button.d.ts",
+      "import": "./dist/shadcn/button.mjs",
+      "require": "./dist/shadcn/button.js"
+    },
+    "./calendar": {
+      "types": "./dist/shadcn/calendar.d.ts",
+      "import": "./dist/shadcn/calendar.mjs",
+      "require": "./dist/shadcn/calendar.js"
+    },
+    "./card": {
+      "types": "./dist/shadcn/card.d.ts",
+      "import": "./dist/shadcn/card.mjs",
+      "require": "./dist/shadcn/card.js"
+    },
+    "./checkbox": {
+      "types": "./dist/shadcn/checkbox.d.ts",
+      "import": "./dist/shadcn/checkbox.mjs",
+      "require": "./dist/shadcn/checkbox.js"
+    },
+    "./command": {
+      "types": "./dist/shadcn/command.d.ts",
+      "import": "./dist/shadcn/command.mjs",
+      "require": "./dist/shadcn/command.js"
+    },
+    "./date-time-picker-form": {
+      "types": "./dist/shadcn/date-time-picker-form.d.ts",
+      "import": "./dist/shadcn/date-time-picker-form.mjs",
+      "require": "./dist/shadcn/date-time-picker-form.js"
+    },
+    "./dialog": {
+      "types": "./dist/shadcn/dialog.d.ts",
+      "import": "./dist/shadcn/dialog.mjs",
+      "require": "./dist/shadcn/dialog.js"
+    },
+    "./form": {
+      "types": "./dist/shadcn/form.d.ts",
+      "import": "./dist/shadcn/form.mjs",
+      "require": "./dist/shadcn/form.js"
+    },
+    "./input": {
+      "types": "./dist/shadcn/input.d.ts",
+      "import": "./dist/shadcn/input.mjs",
+      "require": "./dist/shadcn/input.js"
+    },
+    "./label": {
+      "types": "./dist/shadcn/label.d.ts",
+      "import": "./dist/shadcn/label.mjs",
+      "require": "./dist/shadcn/label.js"
+    },
+    "./popover": {
+      "types": "./dist/shadcn/popover.d.ts",
+      "import": "./dist/shadcn/popover.mjs",
+      "require": "./dist/shadcn/popover.js"
+    },
+    "./radio-group": {
+      "types": "./dist/shadcn/radio-group.d.ts",
+      "import": "./dist/shadcn/radio-group.mjs",
+      "require": "./dist/shadcn/radio-group.js"
+    },
+    "./scroll-area": {
+      "types": "./dist/shadcn/scroll-area.d.ts",
+      "import": "./dist/shadcn/scroll-area.mjs",
+      "require": "./dist/shadcn/scroll-area.js"
+    },
+    "./select": {
+      "types": "./dist/shadcn/select.d.ts",
+      "import": "./dist/shadcn/select.mjs",
+      "require": "./dist/shadcn/select.js"
+    },
+    "./skeleton": {
+      "types": "./dist/shadcn/skeleton.d.ts",
+      "import": "./dist/shadcn/skeleton.mjs",
+      "require": "./dist/shadcn/skeleton.js"
+    },
+    "./tabs": {
+      "types": "./dist/shadcn/tabs.d.ts",
+      "import": "./dist/shadcn/tabs.mjs",
+      "require": "./dist/shadcn/tabs.js"
+    },
+    "./text-area": {
+      "types": "./dist/shadcn/text-area.d.ts",
+      "import": "./dist/shadcn/text-area.mjs",
+      "require": "./dist/shadcn/text-area.js"
+    },
+    "./tooltip": {
+      "types": "./dist/shadcn/tooltip.d.ts",
+      "import": "./dist/shadcn/tooltip.mjs",
+      "require": "./dist/shadcn/tooltip.js"
+    },
+    "./utils": {
+      "types": "./dist/lib/utils/index.d.ts",
+      "import": "./dist/lib/utils/index.mjs",
+      "require": "./dist/lib/utils/index.js"
+    },
+    "./search-combobox": {
+      "types": "./dist/outstatic/search-combobox.d.ts",
+      "import": "./dist/outstatic/search-combobox.mjs",
+      "require": "./dist/outstatic/search-combobox.js"
+    },
+    "./app-logo": {
+      "types": "./dist/outstatic/app-logo.d.ts",
+      "import": "./dist/outstatic/app-logo.mjs",
+      "require": "./dist/outstatic/app-logo.js"
+    },
+    "./checkbox-with-label": {
+      "types": "./dist/outstatic/checkbox-with-label.d.ts",
+      "import": "./dist/outstatic/checkbox-with-label.mjs",
+      "require": "./dist/outstatic/checkbox-with-label.js"
+    },
+    "./file-tree": {
+      "types": "./dist/outstatic/file-tree.d.ts",
+      "import": "./dist/outstatic/file-tree.mjs",
+      "require": "./dist/outstatic/file-tree.js"
+    },
+    "./if": {
+      "types": "./dist/outstatic/if.d.ts",
+      "import": "./dist/outstatic/if.mjs",
+      "require": "./dist/outstatic/if.js"
+    },
+    "./line-background": {
+      "types": "./dist/outstatic/line-background.d.ts",
+      "import": "./dist/outstatic/line-background.mjs",
+      "require": "./dist/outstatic/line-background.js"
+    },
+    "./loading-background": {
+      "types": "./dist/outstatic/loading-background.d.ts",
+      "import": "./dist/outstatic/loading-background.mjs",
+      "require": "./dist/outstatic/loading-background.js"
+    },
+    "./path-breadcrumb": {
+      "types": "./dist/outstatic/path-breadcrumb.d.ts",
+      "import": "./dist/outstatic/path-breadcrumb.mjs",
+      "require": "./dist/outstatic/path-breadcrumb.js"
+    },
+    "./sidebar-footer": {
+      "types": "./dist/outstatic/sidebar-footer.d.ts",
+      "import": "./dist/outstatic/sidebar-footer.mjs",
+      "require": "./dist/outstatic/sidebar-footer.js"
+    },
+    "./sidebar": {
+      "types": "./dist/outstatic/sidebar.d.ts",
+      "import": "./dist/outstatic/sidebar.mjs",
+      "require": "./dist/outstatic/sidebar.js"
+    },
+    "./spinner-icon": {
+      "types": "./dist/outstatic/spinner-icon.d.ts",
+      "import": "./dist/outstatic/spinner-icon.mjs",
+      "require": "./dist/outstatic/spinner-icon.js"
+    },
+    "./stepper": {
+      "types": "./dist/outstatic/stepper.d.ts",
+      "import": "./dist/outstatic/stepper.mjs",
+      "require": "./dist/outstatic/stepper.js"
+    }
   },
   "typesVersions": {
     "*": {
-      "*": [
-        "src/*"
+      ".": [
+        "./dist/index.d.ts"
+      ],
+      "alert-dialog": [
+        "./dist/shadcn/alert-dialog.d.ts"
+      ],
+      "breadcrumb": [
+        "./dist/shadcn/breadcrumb.d.ts"
+      ],
+      "button": [
+        "./dist/shadcn/button.d.ts"
+      ],
+      "calendar": [
+        "./dist/shadcn/calendar.d.ts"
+      ],
+      "card": [
+        "./dist/shadcn/card.d.ts"
+      ],
+      "checkbox": [
+        "./dist/shadcn/checkbox.d.ts"
+      ],
+      "command": [
+        "./dist/shadcn/command.d.ts"
+      ],
+      "date-time-picker-form": [
+        "./dist/shadcn/date-time-picker-form.d.ts"
+      ],
+      "dialog": [
+        "./dist/shadcn/dialog.d.ts"
+      ],
+      "form": [
+        "./dist/shadcn/form.d.ts"
+      ],
+      "input": [
+        "./dist/shadcn/input.d.ts"
+      ],
+      "label": [
+        "./dist/shadcn/label.d.ts"
+      ],
+      "popover": [
+        "./dist/shadcn/popover.d.ts"
+      ],
+      "radio-group": [
+        "./dist/shadcn/radio-group.d.ts"
+      ],
+      "scroll-area": [
+        "./dist/shadcn/scroll-area.d.ts"
+      ],
+      "select": [
+        "./dist/shadcn/select.d.ts"
+      ],
+      "skeleton": [
+        "./dist/shadcn/skeleton.d.ts"
+      ],
+      "tabs": [
+        "./dist/shadcn/tabs.d.ts"
+      ],
+      "text-area": [
+        "./dist/shadcn/text-area.d.ts"
+      ],
+      "tooltip": [
+        "./dist/shadcn/tooltip.d.ts"
+      ],
+      "utils": [
+        "./dist/lib/utils/index.d.ts"
+      ],
+      "search-combobox": [
+        "./dist/outstatic/search-combobox.d.ts"
+      ],
+      "app-logo": [
+        "./dist/outstatic/app-logo.d.ts"
+      ],
+      "checkbox-with-label": [
+        "./dist/outstatic/checkbox-with-label.d.ts"
+      ],
+      "file-tree": [
+        "./dist/outstatic/file-tree.d.ts"
+      ],
+      "if": [
+        "./dist/outstatic/if.d.ts"
+      ],
+      "line-background": [
+        "./dist/outstatic/line-background.d.ts"
+      ],
+      "loading-background": [
+        "./dist/outstatic/loading-background.d.ts"
+      ],
+      "path-breadcrumb": [
+        "./dist/outstatic/path-breadcrumb.d.ts"
+      ],
+      "sidebar-footer": [
+        "./dist/outstatic/sidebar-footer.d.ts"
+      ],
+      "sidebar": [
+        "./dist/outstatic/sidebar.d.ts"
+      ],
+      "spinner-icon": [
+        "./dist/outstatic/spinner-icon.d.ts"
+      ],
+      "stepper": [
+        "./dist/outstatic/stepper.d.ts"
       ]
     }
   },
@@ -100,6 +333,8 @@
     "access": "public"
   },
   "peerDependencies": {
-    "next": "^14.2.3 || ^15"
+    "next": "^14.2.3 || ^15",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
   }
 }
