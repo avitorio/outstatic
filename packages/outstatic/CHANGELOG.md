@@ -1,5 +1,12 @@
 # outstatic
 
+## 2.0.4-canary.0
+
+### Patch Changes
+
+- 7c875d2: Fix Document Settings' Image component not triggering setHasChanges
+- 36f7b88: Fix weird shadcn dialog animation
+
 ## 2.0.3
 
 ### Patch Changes

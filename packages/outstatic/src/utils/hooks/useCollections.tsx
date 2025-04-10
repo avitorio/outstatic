@@ -15,7 +15,7 @@ export type CollectionType = {
   children: CollectionType[]
 }
 
-export type CollectionsType = CollectionType[] | null
+type CollectionsType = CollectionType[] | null
 
 type UseCollectionsOptions = {
   enabled?: boolean
