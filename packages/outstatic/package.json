@@ -19,29 +19,19 @@
   ],
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "import": "./dist/index.mjs",
-      "require": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "require": "./dist/index.js"
     },
     "./client": {
+      "types": "./dist/client/client.d.ts",
       "import": "./dist/client/client.mjs",
-      "require": "./dist/client/client.js",
-      "types": "./dist/client/client.d.ts"
+      "require": "./dist/client/client.js"
     },
     "./server": {
+      "types": "./dist/utils/server.d.ts",
       "import": "./dist/utils/server.mjs",
-      "require": "./dist/utils/server.js",
-      "types": "./dist/utils/server.d.ts"
-    },
-    "./utils/auth": {
-      "import": "./dist/utils/auth/auth.mjs",
-      "require": "./dist/utils/auth/auth.js",
-      "types": "./dist/utils/auth/auth.d.ts"
-    },
-    "./utils/hooks": {
-      "import": "./dist/utils/hooks/index.mjs",
-      "require": "./dist/utils/hooks/index.js",
-      "types": "./dist/utils/hooks/index.d.ts"
+      "require": "./dist/utils/server.js"
     },
     "./outstatic.css": "./dist/outstatic.css"
   },
