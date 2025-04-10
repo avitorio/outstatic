@@ -96,6 +96,9 @@
       ]
     }
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "peerDependencies": {
     "next": "^14.2.3 || ^15"
   }
