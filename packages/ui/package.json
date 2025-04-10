@@ -1,6 +1,6 @@
 {
   "name": "@outstatic/ui",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "UI components for Outstatic",
   "license": "MIT",
   "sideEffects": false,
