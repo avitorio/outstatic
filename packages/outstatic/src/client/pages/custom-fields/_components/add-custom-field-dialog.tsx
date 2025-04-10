@@ -1,5 +1,5 @@
-import { Button } from '@outstatic/ui/button'
-import { Input } from '@outstatic/ui/input'
+import { Button } from '@/components/ui/shadcn/button'
+import { Input } from '@/components/ui/shadcn/input'
 import {
   CustomFieldArrayValue,
   CustomFieldType,
@@ -18,7 +18,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue
-} from '@outstatic/ui/select'
+} from '@/components/ui/shadcn/select'
 import {
   FormField,
   FormItem,
@@ -26,8 +26,8 @@ import {
   FormControl,
   FormDescription,
   FormMessage
-} from '@outstatic/ui/form'
-import { SpinnerIcon } from '@outstatic/ui/spinner-icon'
+} from '@/components/ui/shadcn/form'
+import { SpinnerIcon } from '@/components/ui/outstatic/spinner-icon'
 import { useCustomFieldCommit } from './use-custom-field-commit'
 import {
   Dialog,
@@ -35,7 +35,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle
-} from '@outstatic/ui/dialog'
+} from '@/components/ui/shadcn/dialog'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { addCustomFieldSchema } from '@/utils/schemas/add-custom-field-schema'
 import { DEFAULT_FIELDS } from '@/utils/constants'
@@ -156,7 +156,7 @@ export const AddCustomFieldDialog: React.FC<AddCustomFieldDialogProps> = ({
 
   return (
     <Dialog open={showAddModal} onOpenChange={onOpenChange}>
-      <DialogContent className="w-full md:max-w-2xl">
+      <DialogContent className="w-full max-w-2xl">
         <DialogHeader>
           <DialogTitle>
             Add Custom Field to {capitalCase(collection)}

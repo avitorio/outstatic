@@ -12,7 +12,7 @@ import {
   CommandGroup,
   CommandItem,
   CommandSeparator
-} from '@outstatic/ui/command'
+} from '@/components/ui/shadcn/command'
 
 const options = [
   {

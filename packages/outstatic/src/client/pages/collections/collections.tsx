@@ -1,15 +1,15 @@
 import { AdminLayout } from '@/components'
 import { AdminLoading } from '@/components/AdminLoading'
-import { Button } from '@outstatic/ui/button'
+import { Button } from '@/components/ui/shadcn/button'
 import { CollectionType, useCollections } from '@/utils/hooks/useCollections'
-import { Card, CardContent } from '@outstatic/ui/card'
+import { Card, CardContent } from '@/components/ui/shadcn/card'
 import Link from 'next/link'
 import { useState } from 'react'
 import DeleteCollectionModal from './_components/delete-collection-modal'
 import { useOutstatic } from '@/utils/hooks/useOutstatic'
 import { Settings, Trash } from 'lucide-react'
 import CollectionOnboarding from './_components/collection-onboarding'
-import LineBackground from '@outstatic/ui/line-background'
+import LineBackground from '@/components/ui/outstatic/line-background'
 import NewCollectionModal from './_components/new-collection-modal'
 
 export default function Collections() {

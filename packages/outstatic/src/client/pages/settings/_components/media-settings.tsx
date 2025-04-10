@@ -3,8 +3,8 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useGetConfig } from '@/utils/hooks/useGetConfig'
 import { useUpdateConfig } from '@/utils/hooks/useUpdateConfig'
 import { ConfigSchema } from '@/utils/schemas/config-schema'
-import { Button } from '@outstatic/ui/button'
-import { Input } from '@outstatic/ui/input'
+import { Button } from '@/components/ui/shadcn/button'
+import { Input } from '@/components/ui/shadcn/input'
 import {
   Form,
   FormField,
@@ -13,7 +13,7 @@ import {
   FormControl,
   FormDescription,
   FormMessage
-} from '@outstatic/ui/form'
+} from '@/components/ui/shadcn/form'
 import {
   Dialog,
   DialogContent,
@@ -21,13 +21,13 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter
-} from '@outstatic/ui/dialog'
+} from '@/components/ui/shadcn/dialog'
 import { useEffect, useState } from 'react'
 import { useLocalData, useOutstatic } from '@/utils/hooks/useOutstatic'
-import { Skeleton } from '@outstatic/ui/skeleton'
+import { Skeleton } from '@/components/ui/shadcn/skeleton'
 import { FolderIcon } from 'lucide-react'
-import GithubExplorer from '@/components/github/github-explorer'
-import PathBreadcrumbs from '@outstatic/ui/path-breadcrumb'
+import GithubExplorer from '@/components/ui/outstatic/github-explorer'
+import PathBreadcrumbs from '@/components/ui/outstatic/path-breadcrumb'
 
 type MediaSettingsProps =
   | {

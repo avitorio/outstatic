@@ -17,11 +17,7 @@
     "preinstall": "npx only-allow pnpm",
     "test": "turbo run test",
     "typecheck": "turbo run typecheck",
-    "prepublish": "pnpm typecheck && pnpm test && pnpm build --filter='!outstatic-basic-blog'",
-    "publish:canary": "pnpm build --filter=outstatic && pnpm publish --filter=outstatic --tag canary",
-    "publish:latest": "pnpm build --filter=outstatic && pnpm publish --filter=outstatic --tag latest",
-    "publish:canary:dry": "pnpm build --filter=outstatic && pnpm publish --filter=outstatic --tag canary --dry-run",
-    "publish:latest:dry": "pnpm build --filter=outstatic && pnpm publish --filter=outstatic --tag latest --dry-run"
+    "prepublish": "pnpm typecheck && pnpm test && pnpm build --filter='!outstatic-basic-blog'"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.1",

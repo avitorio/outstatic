@@ -87,19 +87,15 @@ export const useRebuildMetadata = ({
           refetch().then(({ data }) => {
             if (!data) {
               console.log('No data found')
-              toast.error('No data found')
-              resolve(undefined)
-              onComplete?.()
-              return 'No Metadata found'
+              reject('No data found')
+              return
             }
 
             const files = extractFiles(data)
             if (files.length === 0) {
               console.log('No files found')
-              toast.success('No files found')
-              resolve(undefined)
-              onComplete?.()
-              return 'No files found'
+              reject('No files found')
+              return
             }
 
             return toast.promise(processFiles(files, onComplete), {

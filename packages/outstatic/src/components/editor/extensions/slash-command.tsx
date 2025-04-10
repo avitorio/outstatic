@@ -13,7 +13,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogDescription
-} from '@outstatic/ui/dialog'
+} from '@/components/ui/shadcn/dialog'
 import { MediaSettings } from '@/client/pages/settings/_components/media-settings'
 
 export type CommandItemProps = {

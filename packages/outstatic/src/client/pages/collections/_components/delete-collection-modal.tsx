@@ -1,5 +1,5 @@
-import { Button } from '@outstatic/ui/button'
-import { Checkbox } from '@outstatic/ui/checkbox'
+import { Button } from '@/components/ui/shadcn/button'
+import { Checkbox } from '@/components/ui/shadcn/checkbox'
 import {
   Dialog,
   DialogContent,
@@ -7,8 +7,8 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle
-} from '@outstatic/ui/dialog'
-import { Label } from '@outstatic/ui/label'
+} from '@/components/ui/shadcn/dialog'
+import { Label } from '@/components/ui/shadcn/label'
 import { useState } from 'react'
 import { createCommitApi } from '@/utils/createCommitApi'
 import { hashFromUrl } from '@/utils/hashFromUrl'

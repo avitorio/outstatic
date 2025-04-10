@@ -6,11 +6,11 @@ import { Editor, Range } from '@tiptap/react'
 import { Check, Image, Link, Upload } from 'lucide-react'
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { addImage } from '@/components/editor/utils/addImage'
-import MediaLibraryModal from '@/components/media-library/media-library-modal'
+import MediaLibraryModal from '@/components/ui/outstatic/media-library-modal'
 import { API_MEDIA_PATH } from '@/utils/constants'
 import { useOutstatic } from '@/utils/hooks/useOutstatic'
-import MediaSettingsDialog from '@/components/media-library/media-settings-dialog'
-import { Button } from '@outstatic/ui/button'
+import MediaSettingsDialog from '@/components/ui/outstatic/media-settings-dialog'
+import { Button } from '@/components/ui/shadcn/button'
 
 type ImageCommandListProps = {
   editor: Editor

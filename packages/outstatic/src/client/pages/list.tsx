@@ -1,12 +1,17 @@
 import { AdminLayout, DocumentsTable } from '@/components'
-import { Card, CardHeader, CardTitle, CardContent } from '@outstatic/ui/card'
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent
+} from '@/components/ui/shadcn/card'
 import { AdminLoading } from '@/components/AdminLoading'
-import { Button } from '@outstatic/ui/button'
+import { Button } from '@/components/ui/shadcn/button'
 import { useGetDocuments } from '@/utils/hooks/useGetDocuments'
 import Link from 'next/link'
 import { singular } from 'pluralize'
 import { useOutstatic } from '@/utils/hooks/useOutstatic'
-import LineBackground from '@outstatic/ui/line-background'
+import LineBackground from '@/components/ui/outstatic/line-background'
 import { redirect } from 'next/navigation'
 
 type ListProps = {

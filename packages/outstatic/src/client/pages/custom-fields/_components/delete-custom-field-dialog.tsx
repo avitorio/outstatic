@@ -8,9 +8,9 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle
-} from '@outstatic/ui/alert-dialog'
-import { Button } from '@outstatic/ui/button'
-import { SpinnerIcon } from '@outstatic/ui/spinner-icon'
+} from '@/components/ui/shadcn/alert-dialog'
+import { Button } from '@/components/ui/shadcn/button'
+import { SpinnerIcon } from '@/components/ui/outstatic/spinner-icon'
 import { useCustomFieldCommit } from './use-custom-field-commit'
 import { useGetCollectionSchema } from '@/utils/hooks/useGetCollectionSchema'
 import { useOutstatic } from '@/utils/hooks/useOutstatic'

@@ -9,9 +9,9 @@ import { toast } from 'sonner'
 import useSubmitMedia from '@/utils/hooks/useSubmitMedia'
 import { FileType } from '@/types'
 import { DeleteMediaButton } from '@/components/DeleteMediaButton'
-import { MediaLibraryHeader } from '@/components/media-library/media-library-header'
+import { MediaLibraryHeader } from '@/components/ui/outstatic/media-library-header'
 import { FileQuestion, ImageOff } from 'lucide-react'
-import { SpinnerIcon } from '@outstatic/ui/spinner-icon'
+import { SpinnerIcon } from '@/components/ui/outstatic/spinner-icon'
 import { MediaSettings } from '@/client/client'
 import {
   Card,
@@ -19,7 +19,7 @@ import {
   CardTitle,
   CardDescription,
   CardContent
-} from '@outstatic/ui/card'
+} from '@/components/ui/shadcn/card'
 
 export default function MediaLibrary() {
   const [searchTerm, setSearchTerm] = useState('')

@@ -9,7 +9,7 @@ import {
 import type { SelectorItem } from './node-selector'
 import { useEditor } from '@/components/editor/editor-context'
 import { EditorBubbleButton } from '@/components/editor/ui/editor-bubble-button'
-import { Button } from '@outstatic/ui/button'
+import { Button } from '@/components/ui/shadcn/button'
 
 export const TextButtons = () => {
   const { editor } = useEditor()
@@ -57,11 +57,11 @@ export const TextButtons = () => {
             item.command(editor)
           }}
         >
-          <item.icon
-            className={cn('h-4 w-4', {
-              'text-blue-500': item.isActive(editor)
-            })}
-          />
+            <item.icon
+              className={cn('h-4 w-4', {
+                'text-blue-500': item.isActive(editor)
+              })}
+            />
         </EditorBubbleButton>
       ))}
     </>

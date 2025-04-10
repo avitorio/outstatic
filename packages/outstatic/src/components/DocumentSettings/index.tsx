@@ -2,8 +2,8 @@ import Accordion from '@/components/Accordion'
 import DeleteDocumentButton from '@/components/DeleteDocumentButton'
 import DocumentSettingsImageSelection from '@/components/DocumentSettingsImageSelection'
 import TagInput from '@/components/TagInput'
-import { Input } from '@outstatic/ui/input'
-import TextArea from '@outstatic/ui/text-area'
+import { Input } from '@/components/ui/shadcn/input'
+import TextArea from '@/components/ui/shadcn/text-area'
 import { DocumentContext } from '@/context'
 import {
   CustomFieldArrayValue,
@@ -20,8 +20,8 @@ import { useRouter } from 'next/navigation'
 import { useContext, useEffect, useState } from 'react'
 import { RegisterOptions, useFormContext } from 'react-hook-form'
 import { slugify } from 'transliteration'
-import { CheckboxWithLabel } from '@outstatic/ui/checkbox-with-label'
-import { Button } from '@outstatic/ui/button'
+import { CheckboxWithLabel } from '@/components/ui/outstatic/checkbox-with-label'
+import { Button } from '@/components/ui/shadcn/button'
 import { useOutstatic } from '@/utils/hooks/useOutstatic'
 import {
   FormField,
@@ -30,23 +30,23 @@ import {
   FormMessage,
   FormLabel,
   FormDescription
-} from '@outstatic/ui/form'
+} from '@/components/ui/shadcn/form'
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue
-} from '@outstatic/ui/select'
-import { SpinnerIcon } from '@outstatic/ui/spinner-icon'
+} from '@/components/ui/shadcn/select'
+import { SpinnerIcon } from '@/components/ui/outstatic/spinner-icon'
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger
-} from '@outstatic/ui/tooltip'
+} from '@/components/ui/shadcn/tooltip'
 import { AddCustomFieldDialog } from '@/client/pages/custom-fields/_components/add-custom-field-dialog'
-import { DateTimePickerForm } from '@outstatic/ui/date-time-picker-form'
+import { DateTimePickerForm } from '../ui/shadcn/date-time-picker-form'
 
 type DocumentSettingsProps = {
   saveDocument: () => void

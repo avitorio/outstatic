@@ -6,9 +6,9 @@ import {
   SidebarGroup,
   SidebarItem,
   Sidebar as SidebarUI
-} from '@outstatic/ui/sidebar'
+} from '@/components/ui/outstatic/sidebar'
 import { Image, Settings } from 'lucide-react'
-import { SidebarFooter } from '@outstatic/ui/sidebar-footer'
+import { SidebarFooter } from './sidebar-footer'
 
 const CollectionsList = dynamic(() => import('./CollectionsList'), {
   ssr: false

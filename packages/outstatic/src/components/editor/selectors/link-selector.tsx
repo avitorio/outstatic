@@ -1,5 +1,9 @@
-import { Button } from '@outstatic/ui/button'
-import { Popover, PopoverContent, PopoverTrigger } from '@outstatic/ui/popover'
+import { Button } from '@/components/ui/shadcn/button'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger
+} from '@/components/ui/shadcn/popover'
 import { cn } from '@/utils/ui'
 import { Check, Trash } from 'lucide-react'
 import { useEditor } from '@/components/editor/editor-context'

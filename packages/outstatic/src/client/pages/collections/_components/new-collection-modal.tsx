@@ -1,16 +1,16 @@
 import Alert from '@/components/Alert'
-import { Input } from '@outstatic/ui/input'
-import { SpinnerIcon } from '@outstatic/ui/spinner-icon'
-import { Button } from '@outstatic/ui/button'
+import { Input } from '@/components/ui/shadcn/input'
+import { SpinnerIcon } from '@/components/ui/outstatic/spinner-icon'
+import { Button } from '@/components/ui/shadcn/button'
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle
-} from '@outstatic/ui/card'
-import { Label } from '@outstatic/ui/label'
-import { RadioGroup, RadioGroupItem } from '@outstatic/ui/radio-group'
+} from '@/components/ui/shadcn/card'
+import { Label } from '@/components/ui/shadcn/label'
+import { RadioGroup, RadioGroupItem } from '@/components/ui/shadcn/radio-group'
 import { createCommitApi } from '@/utils/createCommitApi'
 import { useCollections } from '@/utils/hooks'
 import { useCreateCommit } from '@/utils/hooks/useCreateCommit'
@@ -26,8 +26,8 @@ import { FormProvider, useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { slugify } from 'transliteration'
 import * as z from 'zod'
-import GithubExplorer from '@/components/github/github-explorer'
-import PathBreadcrumbs from '@outstatic/ui/path-breadcrumb'
+import GithubExplorer from '@/components/ui/outstatic/github-explorer'
+import PathBreadcrumbs from '@/components/ui/outstatic/path-breadcrumb'
 import {
   FormControl,
   FormDescription,
@@ -35,9 +35,9 @@ import {
   FormItem,
   FormLabel,
   FormMessage
-} from '@outstatic/ui/form'
+} from '@/components/ui/shadcn/form'
 import { Check } from 'lucide-react'
-import { Checkbox } from '@outstatic/ui/checkbox'
+import { Checkbox } from '@/components/ui/shadcn/checkbox'
 import { capitalCase } from 'change-case'
 import {
   Dialog,
@@ -45,7 +45,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogDescription
-} from '@outstatic/ui/dialog'
+} from '@/components/ui/shadcn/dialog'
 
 export default function NewCollectionModal({
   open,
@@ -230,7 +230,7 @@ export default function NewCollectionModal({
   return (
     <FormProvider {...form}>
       <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="lg:max-w-2xl w-full gap-y-2">
+        <DialogContent className="max-w-2xl">
           {error ? (
             <Alert type="error">
               <span className="font-medium">Oops!</span> We couldn&apos;t create
@@ -255,7 +255,7 @@ export default function NewCollectionModal({
             </DialogDescription>
           </DialogHeader>
           {step === 1 && (
-            <div className="flex flex-col space-y-4">
+            <div className="space-y-4">
               <Label>Where would you like to store your Markdown files?</Label>
               <RadioGroup
                 className="grid gap-4 md:grid-cols-2 -ml-2"
@@ -409,7 +409,6 @@ export default function NewCollectionModal({
                         <Input
                           {...field}
                           placeholder="Ex: Posts"
-                          className="mt-2"
                           autoFocus
                           onChange={(e) => {
                             field.onChange(e)
@@ -438,7 +437,7 @@ export default function NewCollectionModal({
               <div className="space-y-4">
                 <Label>Content Path</Label>
                 {!outstaticFolder && (
-                  <div className="flex items-center space-x-2 mt-2 mb-4">
+                  <div className="flex items-center space-x-2 mb-2">
                     <Checkbox
                       id="create-folder"
                       checked={createFolder}
@@ -457,25 +456,23 @@ export default function NewCollectionModal({
                     <Label htmlFor="create-folder">Create a new folder</Label>
                   </div>
                 )}
-                <div className="mt-2">
-                  <PathBreadcrumbs
-                    path={
-                      outstaticFolder
-                        ? ostContent +
-                          '/' +
-                          slugify(form.getValues('name') || 'your-collection', {
-                            allowedChars: 'a-zA-Z0-9.'
-                          })
-                        : createFolder
+                <PathBreadcrumbs
+                  path={
+                    outstaticFolder
+                      ? ostContent +
+                        '/' +
+                        slugify(form.getValues('name') || 'your-collection', {
+                          allowedChars: 'a-zA-Z0-9.'
+                        })
+                      : createFolder
                         ? '/' +
                           (path ? path + '/' : '') +
                           slugify(form.getValues('name') || 'your-collection', {
                             allowedChars: 'a-zA-Z0-9.'
                           })
                         : '/' + path
-                    }
-                  />
-                </div>
+                  }
+                />
                 <FormDescription>
                   The path in your repository where your md(x) files will be
                   stored.
