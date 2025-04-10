@@ -7,8 +7,8 @@
   ],
   "scripts": {
     "build": "turbo run build",
-    "dev": "turbo run dev --filter=outstatic-dev-blog --filter=outstatic",
-    "dev:docs": "turbo run dev --filter=docs --filter=outstatic",
+    "dev": "turbo run dev --filter=outstatic-dev-blog --filter=outstatic --filter=@outstatic/ui",
+    "dev:docs": "turbo run dev --filter=docs --filter=outstatic  --filter=@outstatic/ui",
     "dev:outstatic": "turbo run dev --filter=outstatic",
     "lint": "turbo run lint",
     "clean": "turbo run clean",
