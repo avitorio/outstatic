@@ -57,7 +57,7 @@ export default async function Post(props: { params: Params }) {
       <DocHero {...post} />
       <div className="max-w-2xl mx-auto">
         <div className="prose prose-outstatic">
-          <MDXComponent content={post.content} />
+          <MDXComponent content={post.content} showTOC />
         </div>
       </div>
     </article>
