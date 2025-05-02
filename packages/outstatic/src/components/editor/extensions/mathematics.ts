@@ -26,6 +26,9 @@ export const Mathematics = Node.create({
     return [
       {
         tag: 'span.math-node',
+        getAttrs: node => ({
+          latex: node.getAttribute('data-latex'),
+        }),
       },
     ]
   },
@@ -48,14 +51,18 @@ export const Mathematics = Node.create({
           .run()
       },
       
-      unsetLatex: () => ({ chain }) => {
+      unsetLatex: () => ({ chain, state }) => {
+        const { selection } = state
+        const node = selection.$from.node()
         return chain()
+          .insertContent(node.attrs.latex || '')
           .deleteSelection()
           .run()
       }
     }
   },
   
+  // Handle rendering of LaTeX nodes to KaTeX
   addProseMirrorPlugins() {
     return [
       new Plugin({
@@ -67,7 +74,7 @@ export const Mathematics = Node.create({
               if (latex) {
                 try {
                   element.innerHTML = ''
-                  katex.render(latex, element, {
+                  katex.render(latex, element as HTMLElement, {
                     throwOnError: false,
                     displayMode: false
                   })
@@ -83,18 +90,16 @@ export const Mathematics = Node.create({
     ]
   },
   
-  // This is crucial for markdown integration
-  toMarkdown(state, node) {
-    const latex = node.attrs.latex || ''
-    state.write('$' + latex + '$')
-  },
-  
-  parseMarkdown() {
+  // Add support for transforming to GitHub-style markdown format
+  addStorage() {
     return {
-      node: 'math',
-      getAttrs: token => ({
-        latex: token.content
-      })
+      markdown: {
+        serialize: (state: any, node: any) => {
+          if (node.attrs.latex) {
+            state.write(`$\`${node.attrs.latex}$\``)
+          }
+        }
+      }
     }
   }
 })
