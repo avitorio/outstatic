@@ -91,7 +91,7 @@ export const TiptapExtensions = [
     multicolor: true
   }),
   Markdown.configure({
-    html: false,
+    html: true,
     linkify: false,
     transformPastedText: true,
   }),
