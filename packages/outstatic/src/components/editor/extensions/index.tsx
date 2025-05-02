@@ -12,13 +12,13 @@ import TiptapUnderline from '@tiptap/extension-underline'
 import { ReactNodeViewRenderer } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import { common, createLowlight } from 'lowlight'
+import { Markdown } from 'tiptap-markdown'
 import CodeBlock from '@/components/editor/extensions/code-block'
 import SlashCommand from '@/components/editor/extensions/slash-command'
 import { ToggleClass } from '@/components/editor/extensions/toggle-class'
 import { Mathematics } from '@/components/editor/extensions/mathematics'
 import { AIHighlight } from 'novel/extensions'
 import { cn } from '@/utils/ui'
-import { Markdown } from 'tiptap-markdown'
 
 export const TiptapExtensions = [
   AIHighlight,
@@ -90,7 +90,11 @@ export const TiptapExtensions = [
   Highlight.configure({
     multicolor: true
   }),
-  Markdown,
+  Markdown.configure({
+    html: false,
+    linkify: false,
+    transformPastedText: true,
+  }),
   Mathematics.configure({
     HTMLAttributes: {
       class: cn("text-foreground rounded p-1 hover:bg-accent cursor-pointer"),
