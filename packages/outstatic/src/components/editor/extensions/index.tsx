@@ -16,7 +16,9 @@ import { Markdown } from 'tiptap-markdown'
 import CodeBlock from '@/components/editor/extensions/code-block'
 import SlashCommand from '@/components/editor/extensions/slash-command'
 import { ToggleClass } from '@/components/editor/extensions/toggle-class'
+import { Mathematics } from '@/components/editor/extensions/mathematics'
 import { AIHighlight } from 'novel/extensions'
+import { cn } from '@/utils/ui'
 
 export const TiptapExtensions = [
   AIHighlight,
@@ -92,6 +94,14 @@ export const TiptapExtensions = [
     html: false,
     linkify: false,
     transformPastedText: true
+  }),
+  Mathematics.configure({
+    HTMLAttributes: {
+      class: cn('text-foreground rounded p-1 hover:bg-accent cursor-pointer')
+    },
+    katexOptions: {
+      throwOnError: false
+    }
   }),
   Image.extend({
     renderHTML({ HTMLAttributes }) {

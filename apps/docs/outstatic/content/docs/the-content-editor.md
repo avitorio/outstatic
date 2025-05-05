@@ -39,7 +39,7 @@ You can enhance your documents by incorporating images using various methods: ch
 When you add an image for the first time you will see this:\
 ![](/docs/images/cleanshot-2024-11-04-at-22.34.52-2x-QyOT.png)
 
-The **Repository Media Path** is where images are stored in your repository. The **Public Media Path** is the corresponding path to your media folder on your frontend. 
+The **Repository Media Path** is where images are stored in your repository. The **Public Media Path** is the corresponding path to your media folder on your frontend.
 
 Outstatic fetches the images directly from GitHub so they can be visualised instantly on the editor.
 
@@ -59,3 +59,8 @@ When this is done you will be able to trigger completion in two ways. Through th
 ![](/docs/images/ai-autocomplete-Q2Mj.gif)
 
 Outstatic's AI-powered completions offers you an effortless writing experience by suggesting content continuations and creative directions in real-time.
+
+## Mathematical Expressions
+
+Outstatic supports math expressions using LaTeX format. You can add them to your Markdown by clicking the Σ icon in the formatting menu. For more details, see GitHub’s [Writing Mathematical Expressions](https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/writing-mathematical-expressions) guide.\
+Please note that only inline expressions are currently supported—block expressions are not yet available.
