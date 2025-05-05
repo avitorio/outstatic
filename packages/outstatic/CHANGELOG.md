@@ -1,5 +1,11 @@
 # outstatic
 
+## 2.0.5
+
+### Patch Changes
+
+- 6310e2e: fix: save button disabled on change
+
 ## 2.0.4
 
 ### Patch Changes
