@@ -1,102 +1,192 @@
 import { Node, mergeAttributes } from '@tiptap/core'
-import { Plugin, PluginKey } from '@tiptap/pm/state'
-import katex from 'katex'
+import { EditorState } from '@tiptap/pm/state'
+import katex, { type KatexOptions } from 'katex'
+import markdownItMath from './markdown-it-math'
 
-export const Mathematics = Node.create({
+export interface MathematicsOptions {
+  /**
+   * By default LaTeX decorations can render when mathematical expressions are not inside a code block.
+   * @param state - EditorState
+   * @param pos - number
+   * @returns boolean
+   */
+  shouldRender: (state: EditorState, pos: number) => boolean
+
+  /**
+   * @see https://katex.org/docs/options.html
+   */
+  katexOptions?: KatexOptions
+
+  HTMLAttributes: Record<string, any>
+}
+
+declare module '@tiptap/core' {
+  interface Commands<ReturnType> {
+    LatexCommand: {
+      /**
+       * Set selection to a LaTex symbol
+       */
+      setLatex: ({ latex }: { latex: string }) => ReturnType
+
+      /**
+       * Unset a LaTex symbol
+       */
+      unsetLatex: () => ReturnType
+    }
+  }
+}
+
+/**
+ * This extension adds support for mathematical symbols with LaTex expression.
+ *
+ * NOTE: Don't forget to import `katex/dist/katex.min.css` CSS for KaTex styling.
+ *
+ * @see https://katex.org/
+ */
+export const Mathematics = Node.create<MathematicsOptions>({
   name: 'math',
-  group: 'inline',
   inline: true,
+  group: 'inline',
   atom: true,
-  
+  selectable: true,
+  marks: '',
+
   addAttributes() {
     return {
-      latex: {
-        default: '',
-        parseHTML: element => element.getAttribute('data-latex'),
-        renderHTML: attributes => {
-          return {
-            'data-latex': attributes.latex,
-          }
-        }
-      }
+      latex: ''
     }
   },
-  
-  parseHTML() {
-    return [
-      {
-        tag: 'span.math-node',
-        getAttrs: node => ({
-          latex: node.getAttribute('data-latex'),
-        }),
+
+  addOptions() {
+    return {
+      shouldRender: (state, pos) => {
+        const $pos = state.doc.resolve(pos)
+
+        if (!$pos.parent.isTextblock) {
+          return false
+        }
+
+        return $pos.parent.type.name !== 'codeBlock'
       },
-    ]
+      katexOptions: {
+        throwOnError: false
+      },
+      HTMLAttributes: {}
+    }
   },
-  
-  renderHTML({ node, HTMLAttributes }) {
-    return ['span', mergeAttributes(HTMLAttributes, { 
-      class: 'math-node',
-      'data-type': 'math',
-    })]
-  },
-  
+
   addCommands() {
     return {
-      setLatex: attrs => ({ chain }) => {
-        return chain()
-          .insertContent({
-            type: this.name,
-            attrs
-          })
-          .run()
-      },
-      
-      unsetLatex: () => ({ chain, state }) => {
-        const { selection } = state
-        const node = selection.$from.node()
-        return chain()
-          .insertContent(node.attrs.latex || '')
-          .deleteSelection()
-          .run()
+      setLatex:
+        ({ latex }) =>
+        ({ chain, state }) => {
+          if (!latex) {
+            return false
+          }
+          const { from, to, $anchor } = state.selection
+
+          if (!this.options.shouldRender(state, $anchor.pos)) {
+            return false
+          }
+
+          return chain()
+            .insertContentAt(
+              { from: from, to: to },
+              {
+                type: 'math',
+                attrs: {
+                  latex: latex
+                }
+              }
+            )
+            .setTextSelection({ from: from, to: from + 1 })
+            .run()
+        },
+      unsetLatex:
+        () =>
+        ({ editor, state, chain }) => {
+          const latex = editor.getAttributes(this.name).latex
+          if (typeof latex !== 'string') {
+            return false
+          }
+
+          const { from, to } = state.selection
+
+          return chain()
+            .command(({ tr }) => {
+              tr.insertText(latex, from, to)
+              return true
+            })
+            .setTextSelection({
+              from: from,
+              to: from + latex.length
+            })
+            .run()
+        }
+    }
+  },
+
+  parseHTML() {
+    return [{ tag: `span[data-type="${this.name}"]` }]
+  },
+
+  renderHTML({ node, HTMLAttributes }) {
+    const latex = node.attrs['latex'] ?? ''
+    return [
+      'span',
+      mergeAttributes(HTMLAttributes, {
+        'data-type': this.name
+      }),
+      latex
+    ]
+  },
+
+  renderText({ node }) {
+    return node.attrs['latex'] ?? ''
+  },
+
+  addNodeView() {
+    return ({ node, HTMLAttributes, getPos, editor }) => {
+      const dom = document.createElement('span')
+      const latex: string = node.attrs['latex'] ?? ''
+
+      Object.entries(this.options.HTMLAttributes).forEach(([key, value]) => {
+        dom.setAttribute(key, value)
+      })
+
+      Object.entries(HTMLAttributes).forEach(([key, value]) => {
+        dom.setAttribute(key, value)
+      })
+
+      dom.addEventListener('click', (evt) => {
+        if (editor.isEditable && typeof getPos === 'function') {
+          const pos = getPos()
+          const nodeSize = node.nodeSize
+          editor.commands.setTextSelection({ from: pos, to: pos + nodeSize })
+        }
+      })
+
+      dom.contentEditable = 'false'
+
+      dom.innerHTML = katex.renderToString(latex, this.options.katexOptions)
+
+      return {
+        dom: dom
       }
     }
   },
-  
-  // Handle rendering of LaTeX nodes to KaTeX
-  addProseMirrorPlugins() {
-    return [
-      new Plugin({
-        key: new PluginKey('mathRenderer'),
-        view: () => ({
-          update: view => {
-            view.dom.querySelectorAll('span.math-node').forEach(element => {
-              const latex = element.getAttribute('data-latex')
-              if (latex) {
-                try {
-                  element.innerHTML = ''
-                  katex.render(latex, element as HTMLElement, {
-                    throwOnError: false,
-                    displayMode: false
-                  })
-                } catch (error) {
-                  console.error('KaTeX rendering error:', error)
-                }
-              }
-            })
-            return true
-          }
-        })
-      })
-    ]
-  },
-  
-  // Add support for transforming to GitHub-style markdown format
+
   addStorage() {
     return {
       markdown: {
         serialize: (state: any, node: any) => {
           if (node.attrs.latex) {
-            state.write(`$\`${node.attrs.latex}$\``)
+            state.write(`$\`${node.attrs.latex}\`$`)
+          }
+        },
+        parse: {
+          setup(markdownit: any) {
+            markdownit.use(markdownItMath)
           }
         }
       }

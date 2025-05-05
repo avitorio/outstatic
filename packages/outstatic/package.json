@@ -176,6 +176,7 @@
     "@types/jest": "^29.0.0",
     "@types/js-cookie": "^3.0.3",
     "@types/json-stable-stringify": "^1.0.34",
+    "@types/markdown-it": "^14.1.2",
     "@types/node": "^22.13.0",
     "@types/pluralize": "^0.0.29",
     "@types/react": "19.0.8",

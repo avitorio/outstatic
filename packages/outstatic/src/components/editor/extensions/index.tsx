@@ -93,15 +93,15 @@ export const TiptapExtensions = [
   Markdown.configure({
     html: true,
     linkify: false,
-    transformPastedText: true,
+    transformPastedText: true
   }),
   Mathematics.configure({
     HTMLAttributes: {
-      class: cn("text-foreground rounded p-1 hover:bg-accent cursor-pointer"),
+      class: cn('text-foreground rounded p-1 hover:bg-accent cursor-pointer')
     },
     katexOptions: {
-      throwOnError: false,
-    },
+      throwOnError: false
+    }
   }),
   Image.extend({
     renderHTML({ HTMLAttributes }) {

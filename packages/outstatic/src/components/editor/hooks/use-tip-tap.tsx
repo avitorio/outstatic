@@ -98,7 +98,7 @@ export const useTipTap = ({ ...rhfMethods }) => {
         includeChildren: false
       })
     ],
-    shouldRerenderOnTransaction: false,
+    // shouldRerenderOnTransaction: false,
     editorProps: TiptapEditorProps,
     onUpdate,
     immediatelyRender: false
