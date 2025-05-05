@@ -62,4 +62,5 @@ Outstatic's AI-powered completions offers you an effortless writing experience b
 
 ## Mathematical Expressions
 
-Outstatic supports math expressions in the LaTex format, they can be added to your markdown by clicking the Σ icon on the selection menu. For more information on visit GitHub's [Writing Mathematical Expressions](https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/writing-mathematical-expressions) guide. Note that we don't currently support block expressions, only inline.
+Outstatic supports math expressions using LaTeX format. You can add them to your Markdown by clicking the Σ icon in the formatting menu. For more details, see GitHub’s [Writing Mathematical Expressions](https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/writing-mathematical-expressions) guide.\
+Please note that only inline expressions are currently supported—block expressions are not yet available.

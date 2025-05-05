@@ -1,6 +1,6 @@
 {
-  "commit": "352471192d36fc43ed683550b361db6cf7c3ba11",
-  "generated": "2025-05-05T20:30:48.666Z",
+  "commit": "9679d09421cd5ef75ba22550acd46660df2b6f51",
+  "generated": "2025-05-05T20:34:31.847Z",
   "metadata": [
     {
       "__outstatic": {
@@ -492,8 +492,8 @@
     },
     {
       "__outstatic": {
-        "commit": "352471192d36fc43ed683550b361db6cf7c3ba11",
-        "hash": "511952265",
+        "commit": "9679d09421cd5ef75ba22550acd46660df2b6f51",
+        "hash": "3874734747",
         "path": "/outstatic/content/docs/the-content-editor.md"
       },
       "author": {
