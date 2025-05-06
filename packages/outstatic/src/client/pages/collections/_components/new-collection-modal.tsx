@@ -255,7 +255,7 @@ export default function NewCollectionModal({
             </DialogDescription>
           </DialogHeader>
           {step === 1 && (
-            <div className="space-y-4">
+            <div className="flex flex-col space-y-4">
               <Label>Where would you like to store your Markdown files?</Label>
               <RadioGroup
                 className="grid gap-4 md:grid-cols-2 -ml-2"
