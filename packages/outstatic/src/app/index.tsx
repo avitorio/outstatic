@@ -1,5 +1,4 @@
-import { Session } from '@/types'
-import { getLoginSession } from '@/utils/auth/auth'
+import { LoginSession, getLoginSession } from '@/utils/auth/auth'
 import { GITHUB_GQL_API_URL } from '@/utils/constants'
 import { EnvVarsType, envVars } from '@/utils/envVarsCheck'
 
@@ -10,7 +9,7 @@ export type OutstaticData = {
   contentPath: string
   monorepoPath: string
   ostPath: string
-  session: Session | null
+  session: LoginSession | null
   pages: string[]
   missingEnvVars: EnvVarsType | false
   hasOpenAIKey: boolean

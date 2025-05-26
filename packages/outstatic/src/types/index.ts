@@ -29,18 +29,6 @@ export type DocumentContextType = {
   extension: MDExtensions
 }
 
-export type Session = {
-  user: {
-    name: string
-    login: string
-    email: string
-    image: string
-  }
-  access_token: string
-  refresh_token?: string
-  expires: Date
-}
-
 export type Collection = {
   name: string
   contentPath?: string

@@ -4,7 +4,6 @@ import {
   Document,
   FileType,
   MDExtensions,
-  Session,
   isArrayCustomField
 } from '@/types'
 import { createCommitApi } from '@/utils/createCommitApi'
@@ -12,6 +11,7 @@ import { hashFromUrl } from '@/utils/hashFromUrl'
 import { useOutstatic } from '@/utils/hooks/useOutstatic'
 import { mergeMdMeta } from '@/utils/mergeMdMeta'
 import { stringifyMedia, stringifyMetadata } from '@/utils/metadata/stringify'
+import { LoginSession } from '@/utils/auth/auth'
 import { Editor } from '@tiptap/react'
 import matter from 'gray-matter'
 import MurmurHash3 from 'imurmurhash'
@@ -32,7 +32,7 @@ import { useCollections } from './useCollections'
 import { toast } from 'sonner'
 
 type SubmitDocumentProps = {
-  session: Session | null
+  session: LoginSession | null
   slug: string
   setSlug: (slug: string) => void
   setShowDelete: (showDelete: boolean) => void
