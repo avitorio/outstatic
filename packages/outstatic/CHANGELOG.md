@@ -1,5 +1,11 @@
 # outstatic
 
+## 2.0.6
+
+### Patch Changes
+
+- OAuth: Handle refresh tokens when available (#301). Thanks @mathieudutour
+
 ## 2.0.5
 
 ### Patch Changes
