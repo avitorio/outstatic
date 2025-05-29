@@ -1,5 +1,5 @@
 import { setLoginSession } from '@/utils/auth/auth'
-import { MAX_AGE } from '@/utils/constants'
+import { getAccessToken, fetchGitHubUser } from '@/utils/auth/github'
 import { createEdgeRouter } from 'next-connect'
 import nextSession from 'next-session'
 import { NextRequest, NextResponse } from 'next/server'
@@ -27,65 +27,6 @@ export default async function GET(request: Request) {
   return router.run(request, { params: { id: '1' } }) as Promise<Response>
 }
 
-async function getAccessToken(code: string) {
-  const request = await fetch('https://github.com/login/oauth/access_token', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      client_id: process.env.OST_GITHUB_ID,
-      client_secret: process.env.OST_GITHUB_SECRET,
-      code
-    })
-  })
-  const text = await request.text()
-  const params = new URLSearchParams(text)
-  return params.get('access_token')
-}
-
-async function fetchGitHubUser(token: string) {
-  const request = await fetch('https://api.github.com/user', {
-    headers: {
-      Authorization: 'token ' + token
-    }
-  })
-  return await request.json()
-}
-
-async function checkRepository(token: string, userName: string) {
-  const repoOwner = process.env.OST_REPO_OWNER || userName
-  const repoSlug =
-    process.env.OST_REPO_SLUG || process.env.VERCEL_GIT_REPO_SLUG || ''
-  const response = await fetch(
-    `https://api.github.com/repos/${repoOwner}/${repoSlug}`,
-    {
-      headers: {
-        Authorization: `token ${token}`
-      }
-    }
-  )
-  if (response.status === 200) return true
-  else return false
-}
-
-async function checkCollaborator(token: string, userName: string) {
-  const repoSlug =
-    process.env.OST_REPO_SLUG || process.env.VERCEL_GIT_REPO_SLUG || ''
-  if (process.env.OST_REPO_OWNER) {
-    const response = await fetch(
-      `https://api.github.com/repos/${process.env.OST_REPO_OWNER}/${repoSlug}/collaborators/${userName}`,
-      {
-        headers: {
-          Authorization: `token ${token}`
-        }
-      }
-    )
-    if (response.status !== 204) return false
-  }
-  return true
-}
-
 router
   .use(async (req, res, next) => {
     //@ts-ignore
@@ -111,8 +52,14 @@ router
     }
 
     const code = req?.nextUrl.searchParams?.get('code') as string
-    const access_token = await getAccessToken(code)
+    const {
+      access_token,
+      refresh_token,
+      expires_in,
+      refresh_token_expires_in
+    } = await getAccessToken({ code })
     req.session.token = access_token
+    req.session.refresh_token = refresh_token
     const userData = await fetchGitHubUser(access_token || '')
 
     // const checks = Promise.all([
@@ -163,7 +110,11 @@ router
       await setLoginSession({
         user: { name, login, email, image: avatar_url },
         access_token,
-        expires: new Date(Date.now() + MAX_AGE * 1000)
+        refresh_token: refresh_token,
+        expires: new Date(Date.now() + expires_in),
+        refresh_token_expires: refresh_token_expires_in
+          ? new Date(Date.now() + refresh_token_expires_in)
+          : undefined
       })
       return new NextResponse('ok', { status: 200 })
     } else {

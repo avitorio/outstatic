@@ -1,12 +1,13 @@
 import { OutstaticData } from '@/app'
 import { useContentLock } from '@/utils/hooks/useContentLock'
 import { useInitialData } from '@/utils/hooks/useInitialData'
+import { LoginSession } from '@/utils/auth/auth'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { GraphQLClient } from 'graphql-request'
 import { useCreateGraphQLClient } from '@/graphql/utils/useCreateGraphQLClient'
 import { GET_FILE } from '@/graphql/queries/file'
 import { ConfigType } from '../metadata/types'
-import { Session } from '@/types'
+
 import { ConfigSchema } from '../schemas/config-schema'
 
 type HeadersType = {
@@ -157,7 +158,7 @@ const useGetInitialConfig = ({
   repoOwner: string
   repoSlug: string
   repoBranch: string
-  session: Session | null
+  session: LoginSession | null
   gqlClient: GraphQLClient
   monorepoPath: string
   ostPath: string
