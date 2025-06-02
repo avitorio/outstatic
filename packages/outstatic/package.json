@@ -124,6 +124,7 @@
     "next-navigation-guard": "^0.1.1",
     "next-remove-imports": "^1.0.6",
     "next-session": "^4.0.5",
+    "next-themes": "^0.4.6",
     "novel": "^0.5.0",
     "openai": "^4.13.0",
     "openai-edge": "^1.2.2",

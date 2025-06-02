@@ -76,7 +76,7 @@ export default function CustomFields({ collection, title }: CustomFieldsProps) {
           {Object.keys(customFields).length === 0 ? (
             <LineBackground>
               <div className="relative">
-                <div className="mb-20 max-w-2xl p-8 px-4 md:p-8 text-black bg-white rounded-lg border border-gray-200 shadow-md prose prose-base">
+                <Card className="mb-20 max-w-2xl p-8 px-4 md:p-8 rounded-lg prose prose-base dark:prose-invert">
                   <h3>Add Custom Fields to your collection.</h3>
                   <p>
                     Create your first Custom Field by clicking the button below.
@@ -100,7 +100,7 @@ export default function CustomFields({ collection, title }: CustomFieldsProps) {
                     </a>
                     .
                   </p>
-                </div>
+                </Card>
               </div>
             </LineBackground>
           ) : (
@@ -124,7 +124,7 @@ export default function CustomFields({ collection, title }: CustomFieldsProps) {
                             }}
                             className="text-left"
                           >
-                            <span className="block text-xl cursor-pointer font-bold tracking-tight text-gray-900 capitalize hover:text-blue-500 mb-2">
+                            <span className="block text-xl cursor-pointer font-bold tracking-tight text-foreground/90 capitalize hover:text-foreground mb-2">
                               {field.title}
                               {/* This span allows for full card click */}
                               <span className="absolute top-0 bottom-0 left-0 right-16"></span>

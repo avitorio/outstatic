@@ -168,7 +168,7 @@ const DocumentSettings = ({
 
   return (
     <>
-      <div className="absolute w-full items-center justify-between flex p-4 border-t z-10 bottom-0 bg-white md:hidden">
+      <div className="absolute w-full items-center justify-between flex p-4 border-t z-10 bottom-0 bg-background md:hidden">
         <Button
           variant="ghost"
           size="icon"
@@ -220,12 +220,12 @@ const DocumentSettings = ({
       <aside
         className={`${
           isOpen ? 'block absolute' : 'hidden relative'
-        } md:block w-full border-b border-gray-300 bg-white md:w-64 md:flex-none md:flex-col md:flex-wrap md:items-start md:justify-start md:border-b-0 md:border-l pt-6 pb-16 h-full max-h-[calc(100vh-128px)] md:max-h-[calc(100vh-56px)] scrollbar-hide overflow-scroll`}
+        } md:block w-full border-b border-secondary bg-background md:w-64 md:flex-none md:flex-col md:flex-wrap md:items-start md:justify-start md:border-b-0 md:border-l pt-6 pb-16 h-full max-h-[calc(100vh-128px)] md:max-h-[calc(100vh-56px)] scrollbar-hide overflow-scroll`}
       >
         <div className="relative w-full items-center justify-between mb-4 flex px-4">
           <label
             htmlFor="publishedAt"
-            className="block text-sm font-medium text-gray-900"
+            className="block text-sm font-medium text-foreground"
           >
             Date
           </label>
@@ -234,7 +234,7 @@ const DocumentSettings = ({
         <div className="hidden md:flex relative w-full items-center justify-between mb-4 px-4">
           <label
             htmlFor="status"
-            className="block text-sm font-medium text-gray-900"
+            className="block text-sm font-medium text-foreground"
           >
             Status
           </label>
@@ -281,7 +281,7 @@ const DocumentSettings = ({
                 router.push(`${dashboardRoute}/${collection}`)
               }}
               collection={collection}
-              className="hover:bg-slate-200 max-h-[2.25rem]"
+              className="hover:bg-foreground/30 max-h-[2.25rem]"
             />
           )}
           <Button onClick={saveDocument} disabled={loading || !hasChanges}>

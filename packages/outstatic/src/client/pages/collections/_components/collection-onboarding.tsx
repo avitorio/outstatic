@@ -38,7 +38,7 @@ export default function CollectionOnboarding() {
                 Get started with your first Collection
               </CardDescription>
             </CardHeader>
-            <CardContent className="prose prose-base">
+            <CardContent className="prose prose-base dark:prose-invert">
               <p>
                 To get started you will need to create a new Collection.
                 Collections are the main building block of your Outstatic
@@ -69,7 +69,7 @@ export default function CollectionOnboarding() {
                 Confirm the branch before creating your first Collection
               </CardDescription>
             </CardHeader>
-            <CardContent className="prose prose-base">
+            <CardContent className="prose prose-base dark:prose-invert">
               <p>
                 Hey! Just so you know, Outstatic saves everything to GitHub.{' '}
               </p>
