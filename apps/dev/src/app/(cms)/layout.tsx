@@ -2,6 +2,8 @@ export const metadata = {
   title: 'Outstatic'
 }
 
+import { ThemeProvider } from "@/components/theme-provider"
+
 export default function RootLayout({
   children
 }: {
@@ -9,7 +11,16 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body id="outstatic">{children}</body>
+      <body id="outstatic">
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+        {children}
+        </ThemeProvider>
+        </body>
     </html>
   )
 }
