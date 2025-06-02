@@ -5,6 +5,8 @@ import { useCollections } from '@/utils/hooks/useCollections'
 import { useState } from 'react'
 import { MediaSettings } from './_components/media-settings'
 import { useRebuildMetadata } from '@/utils/hooks/useRebuildMetadata'
+import { Card } from '@/components/ui/shadcn/card'
+import { ThemeSettings } from './_components/theme-settings'
 
 export default function Settings() {
   const [rebuild, setRebuilding] = useState(false)
@@ -18,10 +20,14 @@ export default function Settings() {
         <h1 className="mr-12 text-2xl">Settings</h1>
       </div>
       <div className="max-w-lg">
-        <div className="mb-8 max-w-2xl p-8 px-4 md:p-8 text-black bg-white rounded-lg border border-gray-200 shadow-md prose prose-base">
-          <h2>Repository</h2>
+        <Card className="mb-8 max-w-2xl p-8 px-4 md:p-8 prose prose-base">
+          <h2 className='text-foreground'>Theme</h2>
+          <ThemeSettings />
+        </Card>
+        <Card className="mb-8 max-w-2xl p-8 px-4 md:p-8 prose prose-base">
+          <h2 className='text-foreground'>Repository</h2>
           <div>
-            <label className="block mb-2 text-sm font-medium text-gray-900">
+            <label className="block mb-2 text-sm font-medium text-foreground">
               Repository
             </label>
             <GitHubRepoSearch />
@@ -34,23 +40,21 @@ export default function Settings() {
               href="https://outstatic.com/docs/environment-variables"
               target="_blank"
               rel="noreferrer"
-              className="underline font-semibold"
+              className="underline font-semibold text-muted-foreground"
             >
               click here
             </a>
             .
           </p>
-        </div>
-        <div className="max-w-lg">
-          <div className="mb-8 max-w-2xl p-8 px-4 md:p-8 text-black bg-white rounded-lg border border-gray-200 shadow-md prose prose-base">
-            <h2>Media Library</h2>
-            <MediaSettings />
-          </div>
-        </div>
+        </Card>
+        <Card className="mb-8 max-w-2xl p-8 px-4 md:p-8 prose prose-base">
+          <h2 className='text-foreground'>Media Library</h2>
+          <MediaSettings />
+        </Card>
 
         {collections && collections.length > 0 ? (
-          <div className="mb-8 max-w-2xl p-8 px-4 md:p-8 text-black bg-white rounded-lg border border-gray-200 shadow-md prose prose-base">
-            <h2>Metadata</h2>
+          <Card className="mb-8 max-w-2xl p-8 px-4 md:p-8 prose prose-base">
+            <h2 className='text-foreground'>Metadata</h2>
             <div className="flex flex-row items-center">
               <Button
                 disabled={rebuild}
@@ -69,7 +73,7 @@ export default function Settings() {
               seeing posts with incorrect metadata, you can rebuild your
               metadata and automatically deploy those changes to your site.
             </p>
-          </div>
+          </Card>
         ) : null}
       </div>
     </AdminLayout>

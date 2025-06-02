@@ -27,7 +27,7 @@ const Accordion = ({
       <h2 id="accordion-collapse-heading-1 bg-red-50 ">
         <button
           type="button"
-          className={`flex items-center justify-between w-full text-sm font-medium text-gray-900 p-4 hover:bg-gray-50 focus:outline-hidden focus:outline-blue-300 focus:outline-offset-[-1px] ${
+          className={`flex items-center justify-between w-full text-sm font-medium text-foreground p-4 focus:outline-hidden focus:outline-offset-[-1px] ${
             error ? 'bg-red-50' : ''
           }`}
           onClick={handleShow}
@@ -49,7 +49,7 @@ const Accordion = ({
         </button>
       </h2>
       <div className={show ? 'block' : 'hidden'}>
-        <div className="p-4 font-light border-gray-200 border-t">
+        <div className="p-4 font-light border-secondary border-t">
           {children}
         </div>
       </div>

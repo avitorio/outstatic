@@ -74,7 +74,7 @@ const TableMenu = ({ editor }: TableMenuProps) => {
           onSelect={() => editor.chain().focus().toggleHeaderRow().run()}
           name="Toggle Header row"
         >
-          <Heading size={18} />
+          <Heading className='text-foreground' size={18} />
         </EditorBubbleButton>
       </div>
     </BubbleMenu>
