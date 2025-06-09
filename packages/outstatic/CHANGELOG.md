@@ -1,5 +1,11 @@
 # outstatic
 
+## 2.0.7-canary.0
+
+### Patch Changes
+
+- Fix math notation
+
 ## 2.0.6
 
 ### Patch Changes

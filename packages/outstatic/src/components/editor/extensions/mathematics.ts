@@ -83,9 +83,13 @@ export const Mathematics = Node.create<MathematicsOptions>({
           if (!latex) {
             return false
           }
-          const { from, to, $anchor } = state.selection
 
-          if (!this.options.shouldRender(state, $anchor.pos)) {
+          const { from, to } = state.selection
+
+          // Check if we can render at the current position
+          const $pos = state.doc.resolve(from)
+
+          if ($pos.parent.type.name === 'codeBlock') {
             return false
           }
 
@@ -106,6 +110,7 @@ export const Mathematics = Node.create<MathematicsOptions>({
         () =>
         ({ editor, state, chain }) => {
           const latex = editor.getAttributes(this.name).latex
+
           if (typeof latex !== 'string') {
             return false
           }
@@ -168,7 +173,12 @@ export const Mathematics = Node.create<MathematicsOptions>({
 
       dom.contentEditable = 'false'
 
-      dom.innerHTML = katex.renderToString(latex, this.options.katexOptions)
+      try {
+        dom.innerHTML = katex.renderToString(latex, this.options.katexOptions)
+      } catch (error) {
+        console.error('Error rendering math:', error)
+        dom.innerHTML = `Error: ${latex}`
+      }
 
       return {
         dom: dom
