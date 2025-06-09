@@ -1,6 +1,6 @@
 {
-  "commit": "a0b1902d7fd49c79aafeaa0be18e16d846cdd045",
-  "generated": "2025-03-26T20:02:22.490Z",
+  "commit": "9679d09421cd5ef75ba22550acd46660df2b6f51",
+  "generated": "2025-05-05T20:34:31.847Z",
   "metadata": [
     {
       "__outstatic": {
@@ -107,24 +107,6 @@
       "slug": "faqs",
       "status": "published",
       "title": "FAQs"
-    },
-    {
-      "__outstatic": {
-        "commit": "ee09a7f980e7d5bb6bf7a3849b12aec490c475ef",
-        "hash": "683774730",
-        "path": "/outstatic/content/docs/the-content-editor.md"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "docs",
-      "coverImage": "",
-      "description": "Learn how the Outstatic Content Editor works.",
-      "publishedAt": "2024-11-06T03:00:00.000Z",
-      "slug": "the-content-editor",
-      "status": "published",
-      "title": "The content editor"
     },
     {
       "__outstatic": {
@@ -489,6 +471,24 @@
       "slug": "getting-started-with-next-js",
       "status": "published",
       "title": "Getting started with Next.js"
+    },
+    {
+      "__outstatic": {
+        "commit": "9679d09421cd5ef75ba22550acd46660df2b6f51",
+        "hash": "3874734747",
+        "path": "/outstatic/content/docs/the-content-editor.md"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "coverImage": "",
+      "description": "Learn how the Outstatic Content Editor works.",
+      "publishedAt": "2024-11-06T03:00:00.000Z",
+      "slug": "the-content-editor",
+      "status": "published",
+      "title": "The content editor"
     }
   ]
 }

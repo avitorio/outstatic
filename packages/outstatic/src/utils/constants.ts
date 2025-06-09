@@ -1,7 +1,7 @@
 import { Document } from '@/types'
 
 // Outstatic configuration
-export const OUTSTATIC_VERSION = '2.0.4-canary.4'
+export const OUTSTATIC_VERSION = '2.0.6'
 export const OUTSTATIC_URL = 'https://outstatic.com'
 
 // API configuration

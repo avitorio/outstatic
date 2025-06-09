@@ -1,9 +1,9 @@
-import { Session } from '@/types'
 import { useInitialData } from '@/utils/hooks/useInitialData'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 import useSWR from 'swr'
 import { OUTSTATIC_API_PATH } from '../constants'
+import { LoginSession } from './auth'
 
 type useOstSessionProps = {
   redirectTo?: string
@@ -11,7 +11,7 @@ type useOstSessionProps = {
 }
 
 type useOstSessionReturn = {
-  session: Session | null
+  session: LoginSession | null
   status: 'loading' | 'unauthenticated' | 'authenticated'
 }
 
@@ -33,7 +33,7 @@ export const useOstSession = ({
     (basePath || '') + OUTSTATIC_API_PATH + '/user',
     fetcher
   )
-  const session = data?.session as Session
+  const session = data?.session as LoginSession
   const finished = Boolean(data)
   const hasUser = Boolean(session)
   const router = useRouter()

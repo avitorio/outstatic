@@ -157,7 +157,7 @@ export default function EditDocument({ collection }: { collection: string }) {
   // Watch for changes in form values and update hasChanges state
   useEffect(() => {
     const subscription = methods.watch((value, { name, type }) => {
-      if (type === 'change') {
+      if (type === 'change' || name === 'content') {
         setHasChanges(true)
       }
     })
