@@ -1,5 +1,11 @@
 # outstatic
 
+## 2.0.7-canary.1
+
+### Patch Changes
+
+- fix math extension
+
 ## 2.0.7-canary.0
 
 ### Patch Changes
