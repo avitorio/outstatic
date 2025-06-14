@@ -64,3 +64,30 @@ Outstatic's AI-powered completions offers you an effortless writing experience b
 
 Outstatic supports math expressions using LaTeX format. You can add them to your Markdown by clicking the Σ icon in the formatting menu. For more details, see GitHub’s [Writing Mathematical Expressions](https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/writing-mathematical-expressions) guide.\
 Please note that only inline expressions are currently supported—block expressions are not yet available.
+
+To render LaTeX in your frontend you will need to install the packages needed for your framewor. You can use [remark-math](https://www.npmjs.com/package/remark-math) and [rehype-katex](https://www.npmjs.com/package/rehype-katex).
+
+Here's a small example with `mdx-bundler`
+
+```typescript
+import { bundleMDX } from 'mdx-bundler'
+import remarkMath from 'remark-math'
+import rehypeKatex from 'rehype-katex'
+
+export default async function MDXServer(code: string) {
+  const result = await bundleMDX({
+    source: code,
+    mdxOptions(options) {
+      ...
+      options.remarkPlugins.push(remarkMath as any)
+      options.rehypePlugins = options.rehypePlugins ?? []
+      options.rehypePlugins.push(rehypeKatex as any)
+      ...
+
+      return options
+    }
+  })
+
+  return result.code
+}
+```
