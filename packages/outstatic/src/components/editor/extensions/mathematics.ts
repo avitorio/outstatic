@@ -191,7 +191,7 @@ export const Mathematics = Node.create<MathematicsOptions>({
       markdown: {
         serialize: (state: any, node: any) => {
           if (node.attrs.latex) {
-            state.write(`$\`${node.attrs.latex}\`$`)
+            state.write(`$${node.attrs.latex}$`)
           }
         },
         parse: {

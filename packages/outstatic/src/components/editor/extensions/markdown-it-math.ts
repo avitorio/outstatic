@@ -6,8 +6,8 @@ import MarkdownIt from 'markdown-it'
 const markdownItMath = (md: MarkdownIt) => {
   // Default options
   const options = {
-    inlineOpen: '$`',
-    inlineClose: '`$'
+    inlineOpen: '$',
+    inlineClose: '$'
   }
 
   // Helper function to create a token
