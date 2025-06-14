@@ -1,6 +1,6 @@
 {
-  "commit": "d164819e9dad435410707d379bdda074f40eda64",
-  "generated": "2024-11-11T14:42:41.780Z",
+  "commit": "7caaf2a3580959b9c939e6a2db51af5270eddd7b",
+  "generated": "2025-06-14T19:13:33.854Z",
   "metadata": [
     {
       "__outstatic": {
@@ -197,6 +197,22 @@
       "tags": [
       ],
       "title": "Test Post"
+    },
+    {
+      "__outstatic": {
+        "commit": "7caaf2a3580959b9c939e6a2db51af5270eddd7b",
+        "hash": "2761786424",
+        "path": "/outstatic/content/pages/math.mdx"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "pages",
+      "publishedAt": "2025-06-14T18:54:37.516Z",
+      "slug": "math",
+      "status": "draft",
+      "title": "Math"
     }
   ]
 }
