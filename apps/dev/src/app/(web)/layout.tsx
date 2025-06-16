@@ -5,6 +5,7 @@ import { ThemeProvider } from '@/components/theme-provider'
 import { absoluteUrl, ogUrl } from '@/lib/utils'
 import '@/styles/index.css'
 import { Metadata } from 'next'
+import 'katex/dist/katex.min.css'
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://outstatic.com'),
