@@ -68,7 +68,6 @@ $E=mc^2$
 
 You can add them to your Markdown by clicking the Σ icon in the formatting menu. For more details, see GitHub’s [Writing Mathematical Expressions](https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/writing-mathematical-expressions) guide.
 
-\
 Please note that only inline expressions are currently supported—block expressions are not yet available.
 
 To render LaTeX in your frontend you will need to install the packages needed for your framework. You can use [katex](https://www.npmjs.com/package/katex), [remark-math](https://www.npmjs.com/package/remark-math) and [rehype-katex](https://www.npmjs.com/package/rehype-katex).
