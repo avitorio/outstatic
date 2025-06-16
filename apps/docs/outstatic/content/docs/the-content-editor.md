@@ -7,7 +7,7 @@ author:
 slug: "the-content-editor"
 description: "Learn how the Outstatic Content Editor works."
 coverImage: ""
-publishedAt: "2024-11-06T03:00:00.000Z"
+publishedAt: "2024-11-16T03:00:00.000Z"
 ---
 
 The content editor is the main tool used for editing documents. It's where you'll be writing your content, adding links, images, etc…
@@ -62,7 +62,13 @@ Outstatic's AI-powered completions offers you an effortless writing experience b
 
 ## Mathematical Expressions
 
-Outstatic supports math expressions using LaTeX format. You can add them to your Markdown by clicking the Σ icon in the formatting menu. For more details, see GitHub’s [Writing Mathematical Expressions](https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/writing-mathematical-expressions) guide.\
+Outstatic supports math expressions using LaTeX format. Example:
+
+$E=mc^2$
+
+You can add them to your Markdown by clicking the Σ icon in the formatting menu. For more details, see GitHub’s [Writing Mathematical Expressions](https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/writing-mathematical-expressions) guide.
+
+\
 Please note that only inline expressions are currently supported—block expressions are not yet available.
 
 To render LaTeX in your frontend you will need to install the packages needed for your framework. You can use [katex](https://www.npmjs.com/package/katex), [remark-math](https://www.npmjs.com/package/remark-math) and [rehype-katex](https://www.npmjs.com/package/rehype-katex).

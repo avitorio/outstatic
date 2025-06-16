@@ -1,6 +1,6 @@
 {
-  "commit": "382839199de1c424ded7cfd44385a1a90e9813a1",
-  "generated": "2025-06-16T19:26:18.011Z",
+  "commit": "35269e721a4d0090d19dfbe6ca576740c192a461",
+  "generated": "2025-06-16T19:27:40.058Z",
   "metadata": [
     {
       "__outstatic": {
@@ -492,8 +492,8 @@
     },
     {
       "__outstatic": {
-        "commit": "382839199de1c424ded7cfd44385a1a90e9813a1",
-        "hash": "1431862261",
+        "commit": "35269e721a4d0090d19dfbe6ca576740c192a461",
+        "hash": "371216984",
         "path": "/outstatic/content/docs/the-content-editor.md"
       },
       "author": {
@@ -503,7 +503,7 @@
       "collection": "docs",
       "coverImage": "",
       "description": "Learn how the Outstatic Content Editor works.",
-      "publishedAt": "2024-11-06T03:00:00.000Z",
+      "publishedAt": "2024-11-16T03:00:00.000Z",
       "slug": "the-content-editor",
       "status": "published",
       "title": "The content editor"
