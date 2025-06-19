@@ -1,26 +1,19 @@
-// import { Ratelimit } from "@upstash/ratelimit";
-// import { kv } from "@vercel/kv";
 import { getLoginSession } from '@/utils/auth/auth'
-import { OpenAIStream, StreamingTextResponse } from 'ai'
-import OpenAI from 'openai'
-import type { ChatCompletionMessageParam } from 'openai/resources/index.mjs'
+import { createOpenAI } from '@ai-sdk/openai'
+import { CoreMessage, streamText } from 'ai'
 import { match } from 'ts-pattern'
 
-// Create an OpenAI API client (that's edge friendly!)
+export const maxDuration = 30
 
 // IMPORTANT! Set the runtime to edge: https://vercel.com/docs/functions/edge-functions/edge-runtime
 export const runtime = 'edge'
 
 export default async function POST(req: Request): Promise<Response> {
-  console.log('generate')
   const session = await getLoginSession()
   if (!session) {
     return new Response('Unauthorized', { status: 401 })
   }
-  const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY,
-    baseURL: process.env.OPENAI_BASE_URL || 'https://api.openai.com/v1'
-  })
+
   // Check if the OPENAI_API_KEY is set, if not return 400
   if (!process.env.OPENAI_API_KEY || process.env.OPENAI_API_KEY === '') {
     return new Response(
@@ -30,26 +23,10 @@ export default async function POST(req: Request): Promise<Response> {
       }
     )
   }
-  // if (process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN) {
-  //   const ip = req.headers.get("x-forwarded-for");
-  //   const ratelimit = new Ratelimit({
-  //     redis: kv,
-  //     limiter: Ratelimit.slidingWindow(50, "1 d"),
-  //   });
 
-  //   const { success, limit, reset, remaining } = await ratelimit.limit(`novel_ratelimit_${ip}`);
-
-  //   if (!success) {
-  //     return new Response("You have reached your request limit for the day.", {
-  //       status: 429,
-  //       headers: {
-  //         "X-RateLimit-Limit": limit.toString(),
-  //         "X-RateLimit-Remaining": remaining.toString(),
-  //         "X-RateLimit-Reset": reset.toString(),
-  //       },
-  //     });
-  //   }
-  // }
+  const openai = createOpenAI({
+    baseURL: process.env.OPENAI_BASE_URL || 'https://api.openai.com/v1'
+  })
 
   const { prompt, option, command } = await req.json()
   const messages = match(option)
@@ -130,22 +107,13 @@ export default async function POST(req: Request): Promise<Response> {
         content: `For this text: ${prompt}. You have to respect the command: ${command}`
       }
     ])
-    .run() as ChatCompletionMessageParam[]
+    .run() as CoreMessage[]
 
-  const response = await openai.chat.completions.create({
-    model: 'gpt-3.5-turbo',
-    stream: true,
+  const result = streamText({
+    model: openai('gpt-3.5-turbo'),
     messages,
-    temperature: 0.7,
-    top_p: 1,
-    frequency_penalty: 0,
-    presence_penalty: 0,
-    n: 1
+    temperature: 0.7
   })
 
-  // Convert the response into a friendly text-stream
-  const stream = OpenAIStream(response)
-
-  // Respond with the stream
-  return new StreamingTextResponse(stream)
+  return result.toDataStreamResponse()
 }
