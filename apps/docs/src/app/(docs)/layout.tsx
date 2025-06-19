@@ -3,6 +3,7 @@ import { ThemeProvider } from '@/components/theme-provider'
 import '@/styles/style.css'
 import { Metadata } from 'next'
 import Script from 'next/script'
+import 'katex/dist/katex.min.css'
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://outstatic.com'),

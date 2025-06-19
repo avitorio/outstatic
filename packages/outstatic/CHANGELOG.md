@@ -1,5 +1,56 @@
 # outstatic
 
+## 2.0.8
+
+### Patch Changes
+
+- Add math examples
+
+## 2.0.7
+
+### Patch Changes
+
+- 14163b2: Fix math notation
+- 1089131: fix math extension
+
+## 2.0.7-canary.1
+
+### Patch Changes
+
+- fix math extension
+
+## 2.0.7-canary.0
+
+### Patch Changes
+
+- Fix math notation
+
+## 2.0.6
+
+### Patch Changes
+
+- OAuth: Handle refresh tokens when available (#301). Thanks @mathieudutour
+
+## 2.0.5
+
+### Patch Changes
+
+- 6310e2e: fix: save button disabled on change
+
+## 2.0.4
+
+### Patch Changes
+
+- 9797239: Add support for math expressions
+- 7c875d2: Fix Document Settings' Image component not triggering setHasChanges
+- 36f7b88: Fix weird shadcn dialog animation
+
+## 2.0.4-canary.5
+
+### Patch Changes
+
+- 9797239: Add support for math expressions
+
 ## 2.0.4-canary.0
 
 ### Patch Changes

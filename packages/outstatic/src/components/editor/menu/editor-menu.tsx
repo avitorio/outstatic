@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { NodeSelector } from '@/components/editor/selectors/node-selector'
 import { LinkSelector } from '@/components/editor/selectors/link-selector'
 import { TextButtons } from '@/components/editor/selectors/text-buttons'
+import { MathSelector } from '@/components/editor/selectors/math-selector'
 import GenerativeMenuSwitch from '../generative/generative-menu-switch'
 import { Editor } from '@tiptap/react'
 
@@ -22,6 +23,7 @@ const EditorMenu = ({ editor }: { editor: Editor }) => {
         <NodeSelector open={openNode} onOpenChange={setOpenNode} />
         <LinkSelector open={openLink} onOpenChange={setOpenLink} />
         <TextButtons />
+        <MathSelector />
       </>
     </GenerativeMenuSwitch>
   )

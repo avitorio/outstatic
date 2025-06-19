@@ -15,6 +15,7 @@ import { useGetRepository } from '@/utils/hooks/useGetRepository'
 import Onboarding from './onboarding'
 import { NavigationGuardProvider } from 'next-navigation-guard'
 import V2_0_BreakingCheck from '@/components/v2_0_BreakingCheck'
+import 'katex/dist/katex.min.css'
 
 type OstClientProps = {
   ostData: OutstaticData

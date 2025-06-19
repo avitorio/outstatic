@@ -9,7 +9,6 @@ import {
 import type { SelectorItem } from './node-selector'
 import { useEditor } from '@/components/editor/editor-context'
 import { EditorBubbleButton } from '@/components/editor/ui/editor-bubble-button'
-import { Button } from '@/components/ui/shadcn/button'
 
 export const TextButtons = () => {
   const { editor } = useEditor()

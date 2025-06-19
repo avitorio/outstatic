@@ -7,7 +7,7 @@ author:
 slug: "the-content-editor"
 description: "Learn how the Outstatic Content Editor works."
 coverImage: ""
-publishedAt: "2024-11-06T03:00:00.000Z"
+publishedAt: "2024-11-16T03:00:00.000Z"
 ---
 
 The content editor is the main tool used for editing documents. It's where you'll be writing your content, adding links, images, etc…
@@ -39,7 +39,7 @@ You can enhance your documents by incorporating images using various methods: ch
 When you add an image for the first time you will see this:\
 ![](/docs/images/cleanshot-2024-11-04-at-22.34.52-2x-QyOT.png)
 
-The **Repository Media Path** is where images are stored in your repository. The **Public Media Path** is the corresponding path to your media folder on your frontend. 
+The **Repository Media Path** is where images are stored in your repository. The **Public Media Path** is the corresponding path to your media folder on your frontend.
 
 Outstatic fetches the images directly from GitHub so they can be visualised instantly on the editor.
 
@@ -59,3 +59,53 @@ When this is done you will be able to trigger completion in two ways. Through th
 ![](/docs/images/ai-autocomplete-Q2Mj.gif)
 
 Outstatic's AI-powered completions offers you an effortless writing experience by suggesting content continuations and creative directions in real-time.
+
+## Mathematical Expressions
+
+Outstatic supports math expressions using LaTeX format. Example:
+
+$E=mc^2$
+
+You can add them to your Markdown by clicking the Σ icon in the formatting menu. For more details, see GitHub’s [Writing Mathematical Expressions](https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/writing-mathematical-expressions) guide.
+
+Please note that only inline expressions are currently supported—block expressions are not yet available.
+
+To render LaTeX in your frontend you will need to install the packages needed for your framework. You can use [katex](https://www.npmjs.com/package/katex), [remark-math](https://www.npmjs.com/package/remark-math) and [rehype-katex](https://www.npmjs.com/package/rehype-katex).
+
+Here's a small example for Next.js:
+
+```bash
+pnpm i katex remark-math rehype-katex
+```
+
+In your `layout.tsx` files add:
+
+```javascript
+
+import "katex/dist/katex.min.css";
+```
+
+And in your  `mdx-bundler`:
+
+```typescript
+import { bundleMDX } from 'mdx-bundler'
+import remarkMath from 'remark-math'
+import rehypeKatex from 'rehype-katex'
+
+export default async function MDXServer(code: string) {
+  const result = await bundleMDX({
+    source: code,
+    mdxOptions(options) {
+      ...
+      options.remarkPlugins.push(remarkMath as any)
+      options.rehypePlugins = options.rehypePlugins ?? []
+      options.rehypePlugins.push(rehypeKatex as any)
+      ...
+
+      return options
+    }
+  })
+
+  return result.code
+}
+```
