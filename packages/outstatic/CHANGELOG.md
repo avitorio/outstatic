@@ -1,5 +1,30 @@
 # outstatic
 
+## 2.0.8
+
+### Patch Changes
+
+- Add math examples
+
+## 2.0.7
+
+### Patch Changes
+
+- 14163b2: Fix math notation
+- 1089131: fix math extension
+
+## 2.0.7-canary.1
+
+### Patch Changes
+
+- fix math extension
+
+## 2.0.7-canary.0
+
+### Patch Changes
+
+- Fix math notation
+
 ## 2.0.6
 
 ### Patch Changes

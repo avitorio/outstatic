@@ -3,6 +3,8 @@ import rehypeAutolinkHeadings from 'rehype-autolink-headings'
 import rehypePrettyCode from 'rehype-pretty-code'
 import rehypeSlug from 'rehype-slug'
 import remarkGfm from 'remark-gfm'
+import remarkMath from 'remark-math'
+import rehypeKatex from 'rehype-katex'
 
 export default async function MDXServer(code: string) {
   const result = await bundleMDX({
@@ -10,8 +12,9 @@ export default async function MDXServer(code: string) {
     mdxOptions(options) {
       options.remarkPlugins = options.remarkPlugins ?? []
       options.remarkPlugins.push(remarkGfm as any)
-
+      options.remarkPlugins.push(remarkMath as any)
       options.rehypePlugins = options.rehypePlugins ?? []
+      options.rehypePlugins.push(rehypeKatex as any)
       options.rehypePlugins.push(rehypeSlug as any)
       options.rehypePlugins.push([
         rehypePrettyCode as any,

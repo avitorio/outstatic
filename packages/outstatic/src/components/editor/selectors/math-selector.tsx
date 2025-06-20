@@ -1,4 +1,3 @@
-import { Button } from '@/components/ui/shadcn/button'
 import { cn } from '@/utils/ui'
 import { SigmaIcon } from 'lucide-react'
 import { useEditor } from '@/components/editor/editor-context'
@@ -12,16 +11,16 @@ export const MathSelector = () => {
   return (
     <EditorBubbleButton
       name="math"
-      onSelect={() => {
+      className="rounded-none w-12"
+      onSelect={(editor) => {
         if (editor.isActive('math')) {
           editor.chain().focus().unsetLatex().run()
         } else {
           const { from, to } = editor.state.selection
           const latex = editor.state.doc.textBetween(from, to)
 
-          if (!latex) return
-
-          editor.chain().focus().setLatex({ latex }).run()
+          // If there's selected text, convert it to math
+          editor.chain().focus().setLatex({ latex: latex.trim() }).run()
         }
       }}
     >

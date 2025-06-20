@@ -1,6 +1,6 @@
 {
-  "commit": "9679d09421cd5ef75ba22550acd46660df2b6f51",
-  "generated": "2025-05-05T20:34:31.847Z",
+  "commit": "051ca0a3c621db5de18718975b4f584245187147",
+  "generated": "2025-06-16T19:31:00.806Z",
   "metadata": [
     {
       "__outstatic": {
@@ -196,24 +196,6 @@
     },
     {
       "__outstatic": {
-        "commit": "7ba6d2bf972f5a0e2d531104eb3c2a49414149dc",
-        "hash": "524572335",
-        "path": "/outstatic/content/menus/latest-menu.md"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "menus",
-      "coverImage": "",
-      "description": "",
-      "publishedAt": "2024-11-06T03:00:00.000Z",
-      "slug": "latest-menu",
-      "status": "published",
-      "title": "Latest Menu"
-    },
-    {
-      "__outstatic": {
         "commit": "2d8b5caf2b89969656b7d94ca2c200148e1b2290",
         "hash": "1968019570",
         "path": "/outstatic/content/v1.4/github-apps-authentication.md"
@@ -394,7 +376,7 @@
     },
     {
       "__outstatic": {
-        "commit": "a031c802e7c9c3a4bb12b00bf9d3a59f668be445",
+        "commit": "970ebd2fc86b9901d3d3aa3fa8e3c2347f6aa14f",
         "hash": "976497181",
         "path": "/outstatic/content/docs/credits.mdx"
       },
@@ -492,8 +474,8 @@
     },
     {
       "__outstatic": {
-        "commit": "9679d09421cd5ef75ba22550acd46660df2b6f51",
-        "hash": "3874734747",
+        "commit": "051ca0a3c621db5de18718975b4f584245187147",
+        "hash": "1502496",
         "path": "/outstatic/content/docs/the-content-editor.md"
       },
       "author": {
@@ -503,7 +485,7 @@
       "collection": "docs",
       "coverImage": "",
       "description": "Learn how the Outstatic Content Editor works.",
-      "publishedAt": "2024-11-06T03:00:00.000Z",
+      "publishedAt": "2024-11-16T03:00:00.000Z",
       "slug": "the-content-editor",
       "status": "published",
       "title": "The content editor"
