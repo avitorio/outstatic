@@ -1,11 +1,12 @@
 import { GitHubRepoSearch } from '@/components/ui/outstatic/github-repo-search'
+import { Card } from '@/components/ui/shadcn/card'
 
 export default function RepoOnboarding() {
   return (
     <div className="max-w-lg">
-      <div className="mb-8 max-w-2xl p-8 px-4 md:p-8 text-black bg-white rounded-lg border border-gray-200 shadow-md prose prose-base">
-        <h2>Pick your Repository</h2>
-        <label className="block mb-2 text-sm font-medium text-gray-900">
+      <Card className="mb-8 max-w-2xl p-8 px-4 md:p-8 prose prose-base dark:prose-invert">
+        <h2 className='text-foreground'>Pick your Repository</h2>
+        <label className="block mb-2 text-sm font-medium text-foreground">
           Repository
         </label>
         <GitHubRepoSearch />
@@ -23,7 +24,7 @@ export default function RepoOnboarding() {
           </a>
           .
         </p>
-      </div>
+      </Card>
     </div>
   )
 }

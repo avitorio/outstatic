@@ -2,7 +2,7 @@ export default function FourOhFour() {
   return (
     <>
       <div id="outstatic">
-        <div className="absolute bottom-10 w-full left-0 overflow-hidden z-0 md:-top-10 bg-white">
+        <div className="absolute bottom-10 w-full left-0 overflow-hidden z-0 md:-top-10 bg-background">
           <svg
             width="100%"
             height="100%"
@@ -41,7 +41,7 @@ export default function FourOhFour() {
               </g>
             </svg>
           </h1>
-          <div className="text-center mb-20 flex max-w-2xl flex-col items-center p-8 px-4 md:p-8 text-black bg-white rounded-lg border border-gray-200 shadow-md">
+          <div className="text-center mb-20 flex max-w-2xl flex-col items-center p-8 px-4 md:p-8 text-foreground bg-background rounded-lg border border-gray-200 shadow-md">
             <p className="text-2xl">404 - Nothing here...</p>
           </div>
         </main>

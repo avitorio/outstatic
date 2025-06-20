@@ -65,7 +65,7 @@ const ImageMenu = ({ editor }: ImageMenuProps) => {
         maxWidth: 500
       }}
     >
-      <div className="flex prose-sm rounded-md border border-stone-200 bg-white shadow-md transition-all">
+      <div className="flex rounded-md border border-muted bg-background shadow-md transition-all">
         {showAltText && (
           <>
             <EditorBubbleButton
@@ -80,7 +80,7 @@ const ImageMenu = ({ editor }: ImageMenuProps) => {
               id="alt-text"
               name="alt-text"
               required
-              className="w-[500px] border-r border-stone-200 px-3 outline-hidden"
+              className="w-[500px] border-r border-muted px-3 outline-hidden"
               placeholder="Insert alt text here"
               onChange={(e) => {
                 setAltText(e.target.value.trim())

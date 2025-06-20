@@ -65,104 +65,106 @@ const DocumentsTable = () => {
   )
 
   return (
-    <div className="overflow-x-auto">
-      <table className="w-full text-left text-sm text-gray-500">
-        <thead className="bg-gray-50 text-xs uppercase text-gray-700 border-b">
-          <tr>
-            {columns.map((column) => (
-              <th
-                key={column.value}
-                scope="col"
-                className="px-6 py-3 cursor-pointer"
-                onClick={() => requestSort(column.value)}
-              >
-                <div className="flex items-center">
-                  <span>{column.label}</span>
-                  <span
-                    className="ml-2"
-                    data-testid={`sort-icon-${column.value}`}
-                  >
-                    {sortConfig.key === column.value ? (
-                      sortConfig.direction === 'ascending' ? (
-                        <CaretUpIcon
-                          className="h-4 w-4"
-                          data-testid="caret-up-icon"
-                        />
-                      ) : (
-                        <CaretDownIcon
-                          className="h-4 w-4"
-                          data-testid="caret-down-icon"
-                        />
-                      )
-                    ) : (
-                      <CaretSortIcon
-                        className="h-4 w-4"
-                        data-testid="caret-sort-icon"
-                      />
-                    )}
-                  </span>
-                </div>
-              </th>
-            ))}
-            <th scope="col" className="px-6 py-3 text-right">
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setShowColumnOptions(!showColumnOptions)}
-              >
-                <span className="sr-only">List Columns</span>
-                <ListFilter />
-              </Button>
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {sortedDocuments
-            ? sortedDocuments.map((document) => (
-                <Link
-                  key={document.slug}
-                  href={`${dashboardRoute}/${params.ost[0]}/${document.slug}`}
-                  legacyBehavior
-                  passHref
+    <div className="border border-solid border-muted rounded-md">
+      <div className="overflow-x-auto">
+        <table className="w-full text-left text-sm text-foreground">
+          <thead className="text-xs uppercase text-foreground border-b">
+            <tr>
+              {columns.map((column) => (
+                <th
+                  key={column.value}
+                  scope="col"
+                  className="px-6 py-3 cursor-pointer"
+                  onClick={() => requestSort(column.value)}
                 >
-                  <tr className="border-b bg-white hover:bg-gray-50 cursor-pointer">
-                    {columns.map((column) => {
-                      return cellSwitch(column.value, document)
-                    })}
-                    <td
-                      className="pr-6 py-4 text-right"
-                      onClick={(e) => e.stopPropagation()}
+                  <div className="flex items-center">
+                    <span>{column.label}</span>
+                    <span
+                      className="ml-2"
+                      data-testid={`sort-icon-${column.value}`}
                     >
-                      <DeleteDocumentButton
-                        slug={document.slug}
-                        extension={document.extension as MDExtensions}
-                        disabled={false}
-                        onComplete={() => refetch()}
-                        collection={params.ost[0]}
-                      />
-                    </td>
-                  </tr>
-                </Link>
-              ))
-            : null}
-        </tbody>
-      </table>
-      {showColumnOptions && (
-        <div
-          className={`absolute -top-12 max-w-full min-w-min capitalize right-0`}
-        >
-          <SortableSelect
-            selected={columns}
-            setSelected={setColumns}
-            allOptions={allColumns}
-            defaultValues={allColumns}
-            onChangeList={(e: any) => {
-              cookies.set(`ost_${params.ost[0]}_fields`, JSON.stringify(e))
-            }}
-            onBlur={() => setShowColumnOptions(false)}
-          />
-        </div>
-      )}
+                      {sortConfig.key === column.value ? (
+                        sortConfig.direction === 'ascending' ? (
+                          <CaretUpIcon
+                            className="h-4 w-4"
+                            data-testid="caret-up-icon"
+                          />
+                        ) : (
+                          <CaretDownIcon
+                            className="h-4 w-4"
+                            data-testid="caret-down-icon"
+                          />
+                        )
+                      ) : (
+                        <CaretSortIcon
+                          className="h-4 w-4"
+                          data-testid="caret-sort-icon"
+                        />
+                      )}
+                    </span>
+                  </div>
+                </th>
+              ))}
+              <th scope="col" className="px-6 py-3 text-right">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setShowColumnOptions(!showColumnOptions)}
+                >
+                  <span className="sr-only">List Columns</span>
+                  <ListFilter />
+                </Button>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {sortedDocuments
+              ? sortedDocuments.map((document) => (
+                  <Link
+                    key={document.slug}
+                    href={`${dashboardRoute}/${params.ost[0]}/${document.slug}`}
+                    legacyBehavior
+                    passHref
+                  >
+                    <tr className="border-b last:border-b-0 bg-background hover:bg-background cursor-pointer">
+                      {columns.map((column) => {
+                        return cellSwitch(column.value, document)
+                      })}
+                      <td
+                        className="pr-6 py-4 text-right"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <DeleteDocumentButton
+                          slug={document.slug}
+                          extension={document.extension as MDExtensions}
+                          disabled={false}
+                          onComplete={() => refetch()}
+                          collection={params.ost[0]}
+                        />
+                      </td>
+                    </tr>
+                  </Link>
+                ))
+              : null}
+          </tbody>
+        </table>
+        {showColumnOptions && (
+          <div
+            className={`absolute -top-12 max-w-full min-w-min capitalize right-0`}
+          >
+            <SortableSelect
+              selected={columns}
+              setSelected={setColumns}
+              allOptions={allColumns}
+              defaultValues={allColumns}
+              onChangeList={(e: any) => {
+                cookies.set(`ost_${params.ost[0]}_fields`, JSON.stringify(e))
+              }}
+              onBlur={() => setShowColumnOptions(false)}
+            />
+          </div>
+        )}
+      </div>
     </div>
   )
 }
@@ -178,7 +180,7 @@ const cellSwitch = (columnValue: string, document: OstDocument) => {
       return (
         <td
           key="status"
-          className="px-6 py-4 text-base font-semibold text-gray-900"
+          className="px-6 py-4 text-base font-semibold text-foreground"
           data-testid="status-cell"
         >
           {item as ReactNode}
@@ -188,13 +190,13 @@ const cellSwitch = (columnValue: string, document: OstDocument) => {
       return (
         <td
           key={columnValue}
-          className="px-6 py-4 text-base font-semibold text-gray-900"
+          className="px-6 py-4 text-base font-semibold text-foreground"
         >
           {typeof item === 'object' && item !== null && Array.isArray(item)
             ? item.map((item: { label: string }) => (
                 <span
                   key={item.label}
-                  className="bg-gray-100 text-gray-800 font-medium me-2 px-2.5 py-0.5 rounded"
+                  className="bg-muted text-muted-foreground font-medium me-2 px-2.5 py-0.5 rounded"
                 >
                   {item.label}
                 </span>

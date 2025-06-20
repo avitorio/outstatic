@@ -15,6 +15,7 @@ import { useGetRepository } from '@/utils/hooks/useGetRepository'
 import Onboarding from './onboarding'
 import { NavigationGuardProvider } from 'next-navigation-guard'
 import V2_0_BreakingCheck from '@/components/v2_0_BreakingCheck'
+import { ThemeProvider } from 'next-themes'
 import 'katex/dist/katex.min.css'
 
 type OstClientProps = {
@@ -82,13 +83,20 @@ export const OstClient = ({ ostData, params }: OstClientProps) => {
 
   return (
     <InitialDataContext.Provider value={ostData}>
-      <Toaster />
-      <QueryClientProvider client={queryClient}>
-        <NavigationGuardProvider>
-          <AdminArea params={params} />
-        </NavigationGuardProvider>
-      </QueryClientProvider>
-      <V2_0_BreakingCheck />
+      <ThemeProvider
+        attribute="class"
+        defaultTheme="system"
+        enableSystem
+        disableTransitionOnChange
+      >
+        <Toaster />
+        <QueryClientProvider client={queryClient}>
+          <NavigationGuardProvider>
+            <AdminArea params={params} />
+          </NavigationGuardProvider>
+        </QueryClientProvider>
+        <V2_0_BreakingCheck />
+      </ThemeProvider>
     </InitialDataContext.Provider>
   )
 }

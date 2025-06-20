@@ -31,7 +31,7 @@ const TableMenu = ({ editor }: TableMenuProps) => {
         maxWidth: 500
       }}
     >
-      <div className="flex prose-sm rounded-md border border-stone-200 bg-white shadow-md transition-all">
+      <div className="flex rounded-md border border-muted bg-background shadow-md transition-all">
         <EditorBubbleButton
           onSelect={() => editor.chain().focus().addColumnBefore().run()}
           name="Add column before"
@@ -74,7 +74,7 @@ const TableMenu = ({ editor }: TableMenuProps) => {
           onSelect={() => editor.chain().focus().toggleHeaderRow().run()}
           name="Toggle Header row"
         >
-          <Heading size={18} />
+          <Heading className="text-foreground" size={18} />
         </EditorBubbleButton>
       </div>
     </BubbleMenu>
