@@ -91,12 +91,12 @@
 
 .ProseMirror blockquote {
   padding-left: 1rem;
-  border-left: 2px solid rgba(13, 13, 13, 0.1);
+  border-left: 2px solid hsl(var(--muted));
 }
 
 .ProseMirror hr {
   border: none;
-  border-top: 2px solid rgba(13, 13, 13, 0.1);
+  border-top: 2px solid hsl(var(--muted));
   margin: 2rem 0;
 }
 

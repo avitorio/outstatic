@@ -40,7 +40,7 @@ export const TiptapExtensions = [
     },
     blockquote: {
       HTMLAttributes: {
-        class: 'border-l-4 border-stone-700'
+        class: 'border-l-4 border-muted'
       }
     },
     codeBlock: false,
