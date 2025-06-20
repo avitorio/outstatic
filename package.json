@@ -15,6 +15,7 @@
     "format": "prettier --write",
     "lint-staged": "lint-staged",
     "preinstall": "npx only-allow pnpm",
+    "postinstall": "manypkg check && manypkg fix",
     "test": "turbo run test",
     "typecheck": "turbo run typecheck",
     "prepublish": "pnpm typecheck && pnpm test && pnpm build --filter='!outstatic-basic-blog'",
@@ -26,18 +27,18 @@
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.1",
-    "@manypkg/cli": "^0.23.0",
-    "eslint": "9.14.0",
-    "eslint-config-next": "15.0.3",
-    "eslint-config-prettier": "^9.1.0",
+    "@manypkg/cli": "^0.24.0",
+    "eslint": "^9.29.0",
+    "eslint-config-next": "15.3.3",
+    "eslint-config-prettier": "^10.0.1",
     "eslint-config-turbo": "latest",
-    "eslint-plugin-react": "^7.35.0",
+    "eslint-plugin-react": "7.37.4",
     "lint-staged": "^13.3.0",
     "prettier": "^2.8.8",
     "prettier-plugin-tailwindcss": "^0.1.13",
     "turbo": "latest"
   },
-  "packageManager": "pnpm@9.1.4",
+  "packageManager": "pnpm@9.12.2",
   "pnpm": {
     "overrides": {
       "@types/react": "npm:types-react@19.0.0-rc.1",
