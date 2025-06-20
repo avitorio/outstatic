@@ -31,7 +31,7 @@ const AdminHeader = ({ toggleSidebar }: AdminHeaderProps) => {
     <>
       <nav
         className={cn(
-          'flex h-14 items-center justify-between border-b border-gray-200 bg-white px-4 dark:border-border dark:bg-background dark:shadow-primary/10 lg:justify-start'
+          'flex h-14 items-center justify-between border-b border-gray-200 bg-background px-4 dark:border-border dark:bg-background dark:shadow-primary/10 lg:justify-start'
         )}
       >
         <div className={'flex w-full flex-1 items-center space-x-8'}>
@@ -90,7 +90,7 @@ const AdminHeader = ({ toggleSidebar }: AdminHeaderProps) => {
                   />
                 </button>
                 <div
-                  className={`right-0 top-[60px] z-50 my-4 w-full list-none divide-y divide-gray-100 rounded-br rounded-bl bg-white text-base shadow md:-right-0 md:top-[52px] md:w-auto ${
+                  className={`right-0 top-[60px] z-50 my-4 w-full list-none divide-y divide-gray-100 rounded-br rounded-bl bg-background text-base shadow md:-right-0 md:top-[52px] md:w-auto ${
                     isOpen ? 'block' : 'hidden'
                   }`}
                   id="dropdown"

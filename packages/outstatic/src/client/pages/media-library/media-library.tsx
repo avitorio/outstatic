@@ -206,7 +206,7 @@ export default function MediaLibrary() {
                   filename={file.filename}
                   disabled={false}
                   onComplete={async () => await refetchMedia()}
-                  className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 bg-white/50"
+                  className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 bg-background/50"
                   notFound={notFoundFiles.has(file.__outstatic.path)}
                 />
               </div>

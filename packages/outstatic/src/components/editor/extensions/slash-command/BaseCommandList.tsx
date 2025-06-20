@@ -138,7 +138,7 @@ export const BaseCommandList = ({
                 {item.title === 'Continue writing' && isLoading ? (
                   <div>
                     <svg
-                      className="h-6 animate-spin text-black"
+                      className="h-6 animate-spin text-foreground"
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
                       viewBox="0 0 24 24"
