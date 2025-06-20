@@ -192,7 +192,7 @@ export default function MediaLibraryModal({
                     key={file.filename}
                     className={`space-y-1 p-2 bg-card rounded-lg overflow-hidden cursor-pointer group relative  ${
                       selectedImage?.filename === file.filename
-                        ? 'ring-1 ring-primary bg-slate-50'
+                        ? 'ring-1 ring-primary bg-muted'
                         : ''
                     }`}
                     onClick={() => setSelectedImage(file)}

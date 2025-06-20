@@ -1,6 +1,6 @@
 export const SidebarFooter = () => (
   <div className={`mt-5 overflow-y-auto`}>
-    <div className="flex h-10 w-full items-center justify-between border-t bg-secondary py-2 px-4 text-xs">
+    <div className="flex h-10 w-full items-center justify-between border-t py-2 px-4 text-xs">
       <a
         className="font-semibold text-secondary-foreground hover:text-foreground hover:underline"
         href="https://outstatic.com/docs"
