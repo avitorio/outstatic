@@ -1,45 +1,46 @@
-import { BuiltWithOutstatic } from "@/components/built-with-outstatic";
-import Footer from "@/components/footer";
-import Header from "@/components/header";
-import { ThemeProvider } from "@/components/theme-provider";
-import { absoluteUrl, ogUrl } from "@/lib/utils";
-import "@/styles/index.css";
-import { Metadata } from "next";
+import { BuiltWithOutstatic } from '@/components/built-with-outstatic'
+import Footer from '@/components/footer'
+import Header from '@/components/header'
+import { ThemeProvider } from '@/components/theme-provider'
+import { absoluteUrl, ogUrl } from '@/lib/utils'
+import '@/styles/index.css'
+import { Metadata } from 'next'
+import 'katex/dist/katex.min.css'
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://outstatic.com"),
+  metadataBase: new URL('https://outstatic.com'),
   title: {
-    default: "Andre Vitorio - Design. Develop. Deploy.",
-    template: "%s | Andre Vitorio",
+    default: 'Andre Vitorio - Design. Develop. Deploy.',
+    template: '%s | Andre Vitorio'
   },
   description:
-    "Design engineer from Maceió, Brazil. I write about web development, software engineering, and more.",
+    'Design engineer from Maceió, Brazil. I write about web development, software engineering, and more.',
   openGraph: {
-    title: "Andre Vitorio - Design. Develop. Deploy.",
+    title: 'Andre Vitorio - Design. Develop. Deploy.',
     description:
-      "Design engineer from Maceió, Brazil. I write about web development, software engineering, and more.",
-    url: absoluteUrl("/"),
-    siteName: "AndreVitorio.com",
+      'Design engineer from Maceió, Brazil. I write about web development, software engineering, and more.',
+    url: absoluteUrl('/'),
+    siteName: 'AndreVitorio.com',
     images: [
       {
-        url: ogUrl("Andre Vitorio - Design. Develop. Deploy."),
+        url: ogUrl('Andre Vitorio - Design. Develop. Deploy.'),
         width: 1200,
-        height: 630,
-      },
+        height: 630
+      }
     ],
-    locale: "en_US",
-    type: "website",
+    locale: 'en_US',
+    type: 'website'
   },
   icons: {
-    icon: [{ url: "/favicon/favicon-32x32.png" }],
-    apple: [{ url: "/favicon/apple-touch-icon.png" }],
-  },
-};
+    icon: [{ url: '/favicon/favicon-32x32.png' }],
+    apple: [{ url: '/favicon/apple-touch-icon.png' }]
+  }
+}
 
 export default function RootLayout({
-  children,
+  children
 }: {
-  children: React.ReactNode;
+  children: React.ReactNode
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
@@ -59,5 +60,5 @@ export default function RootLayout({
         </ThemeProvider>
       </body>
     </html>
-  );
+  )
 }
