@@ -16,7 +16,8 @@ import Select, {
   MultiValueProps,
   MultiValueRemoveProps,
   OnChangeValue,
-  components
+  components,
+  MenuProps
 } from 'react-select'
 import { Column } from '../DocumentsTable'
 
@@ -51,10 +52,13 @@ const MultiValue = (props: MultiValueProps<Column>) => {
 
 const MultiValueLabel = (props: MultiValueGenericProps<Column>) => {
   return (
-    <div className="flex cursor-pointer items-center pl-1">
+    <div className="flex cursor-pointer items-center pl-1 bg-background">
       <GripVertical size={15} />
       {/* @ts-ignore */}
-      <components.MultiValueLabel {...props} />
+      <components.MultiValueLabel
+        {...props}
+        innerProps={{ className: 'text-foreground' }}
+      />
     </div>
   )
 }
@@ -65,16 +69,26 @@ const Control = (props: ControlProps<Column>) => {
   })
 
   return (
-    <div ref={setNodeRef}>
+    <div
+      ref={setNodeRef}
+      className="border border-solid border-muted rounded-md bg-background text-foreground"
+    >
       {/* @ts-ignore */}
-      <components.Control {...props} />
+      <components.Control
+        {...props}
+        innerProps={{
+          style: {
+            backgroundColor: `hsl(var(--background))`
+          }
+        }}
+      />
     </div>
   )
 }
 
 const MultiValueContainer = (props: MultiValueGenericProps<Column>) => {
   return (
-    <div>
+    <div className="bg-background text-foreground border border-solid rounded-md mr-2">
       {/* @ts-ignore */}
       <components.MultiValueContainer {...props} />
     </div>
@@ -83,16 +97,40 @@ const MultiValueContainer = (props: MultiValueGenericProps<Column>) => {
 
 const MultiValueRemove = (props: MultiValueRemoveProps<Column>) => {
   return (
-    <div>
+    <div className="bg-background text-foreground">
       {/* @ts-ignore */}
       <components.MultiValueRemove
         {...props}
         innerProps={{
           onPointerDown: (e: any) => e.stopPropagation(),
-          ...props.innerProps
+          ...props.innerProps,
+          className: `${props.innerProps.className} text-foreground`
         }}
       />
     </div>
+  )
+}
+
+const Menu = (props: MenuProps) => {
+  return (
+    <>
+      {/* @ts-ignore */}
+      <components.Menu
+        {...props}
+        innerProps={{
+          className:
+            'rounded-md border bg-popover text-popover-foreground shadow-md outline-hidden',
+          style: {
+            backgroundColor: `hsl(var(--background))`,
+            border: '1px solid hsl(var(--muted))',
+            boxShadow:
+              'var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow)'
+          }
+        }}
+      >
+        {props.children}
+      </components.Menu>
+    </>
   )
 }
 
@@ -147,14 +185,14 @@ const SortableSelect = ({
             MultiValueLabel,
             MultiValueContainer,
             MultiValueRemove,
-            Control
+            Control,
+            Menu
           }}
           isClearable={false}
           escapeClearsValue={false}
           closeMenuOnSelect={false}
           onBlur={onBlur}
           autoFocus
-          className="border border-gray-200 rounded-md"
           styles={{
             control: (base: any) =>
               ({
@@ -164,6 +202,16 @@ const SortableSelect = ({
                 '&:hover': {
                   border: 'none'
                 }
+              } as CSSObjectWithLabel),
+            option: (base: any) =>
+              ({
+                ...base,
+                color: 'hsl(var(--foreground))',
+                backgroundColor: 'hsl(var(--background))',
+                '&:hover': {
+                  backgroundColor: 'hsl(var(--muted))'
+                },
+                border: 'none'
               } as CSSObjectWithLabel)
           }}
         />

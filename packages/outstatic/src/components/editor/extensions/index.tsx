@@ -40,14 +40,14 @@ export const TiptapExtensions = [
     },
     blockquote: {
       HTMLAttributes: {
-        class: 'border-l-4 border-stone-700'
+        class: 'border-l-4 border-muted'
       }
     },
     codeBlock: false,
     code: {
       HTMLAttributes: {
         class:
-          'rounded-md bg-stone-200 px-1.5 py-1 font-mono font-medium text-stone-900',
+          'rounded-md bg-muted px-1.5 py-1 font-mono font-medium text-foreground',
         spellcheck: 'false'
       }
     },
@@ -82,7 +82,7 @@ export const TiptapExtensions = [
     }
   }).configure({
     HTMLAttributes: {
-      class: 'mt-4 mb-6 border-t border-stone-300'
+      class: 'mt-4 mb-6 border-t border-muted'
     }
   }),
   SlashCommand,

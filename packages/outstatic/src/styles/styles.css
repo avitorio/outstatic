@@ -91,18 +91,18 @@
 
 .ProseMirror blockquote {
   padding-left: 1rem;
-  border-left: 2px solid rgba(13, 13, 13, 0.1);
+  border-left: 2px solid hsl(var(--muted));
 }
 
 .ProseMirror hr {
   border: none;
-  border-top: 2px solid rgba(13, 13, 13, 0.1);
+  border-top: 2px solid hsl(var(--muted));
   margin: 2rem 0;
 }
 
 .ProseMirror a {
   text-decoration: underline;
-  color: blue;
+  color: hsl(var(--text-foreground));
   cursor: pointer;
   display: inline-block !important;
 }
@@ -259,7 +259,7 @@ ul[data-type='taskList'] li[data-checked='true'] > div > p {
 }
 
 .tiptap table th {
-  background-color: #f1f3f5;
+  background-color: hsl(var(--muted));
   font-weight: bold;
   text-align: left;
 }

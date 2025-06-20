@@ -16,7 +16,7 @@ export default function Welcome({ variables }: WelcomeProps) {
   return (
     <>
       <div id="outstatic">
-        <div className="absolute bottom-10 w-full left-0 overflow-hidden z-0 md:-top-10 bg-white">
+        <div className="absolute bottom-10 w-full left-0 overflow-hidden z-0 md:-top-10 bg-background">
           <svg
             width="100%"
             height="100%"
@@ -55,7 +55,7 @@ export default function Welcome({ variables }: WelcomeProps) {
               </g>
             </svg>
           </h1>
-          <div className="mb-20 max-w-2xl p-8 px-4 md:p-8 text-black bg-white rounded-lg border border-gray-200 shadow-md">
+          <div className="mb-20 max-w-2xl p-8 px-4 md:p-8 text-foreground bg-background rounded-lg border border-gray-200 shadow-md">
             <p className="mb-5">
               Before you can access your admin area, make sure the following
               environment variables are set up:

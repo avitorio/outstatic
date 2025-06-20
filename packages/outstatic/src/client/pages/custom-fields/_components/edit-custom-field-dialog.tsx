@@ -227,7 +227,7 @@ export const EditCustomFieldDialog: React.FC<EditCustomFieldDialogProps> = ({
                   <div className="ml-2 text-sm">
                     <label
                       htmlFor="required"
-                      className="cursor-pointer text-sm font-medium text-gray-900"
+                      className="cursor-pointer text-sm font-medium text-foreground"
                     >
                       Required field
                     </label>

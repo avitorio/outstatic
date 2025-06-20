@@ -192,7 +192,7 @@ export default function MediaLibraryModal({
                     key={file.filename}
                     className={`space-y-1 p-2 bg-card rounded-lg overflow-hidden cursor-pointer group relative  ${
                       selectedImage?.filename === file.filename
-                        ? 'ring-1 ring-primary bg-slate-50'
+                        ? 'ring-1 ring-primary bg-muted'
                         : ''
                     }`}
                     onClick={() => setSelectedImage(file)}
@@ -210,7 +210,7 @@ export default function MediaLibraryModal({
                         filename={file.filename}
                         disabled={false}
                         onComplete={() => refetch()}
-                        className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 bg-white/50"
+                        className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 bg-background/50"
                       />
                     </div>
                     <div className="pb-4 relative">
