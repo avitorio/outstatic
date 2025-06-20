@@ -238,7 +238,7 @@ export default function EditDocument({ collection }: { collection: string }) {
                     })
                   ).replace(/-/g, ' ')} title`}
                 />
-                <div className="min-h-full prose prose-xl">
+                <div className="min-h-full">
                   <MDEditor editor={editor} id="content" />
                 </div>
               </form>
