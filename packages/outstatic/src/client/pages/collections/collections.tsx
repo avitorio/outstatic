@@ -32,7 +32,7 @@ export default function Collections() {
         <>
           <div className="mb-8 flex h-12 items-center">
             <h1 className="mr-12 text-2xl text-foreground">Collections</h1>
-            <Button onClick={() => setShowNewCollectionModal(true)}>
+            <Button size="sm" onClick={() => setShowNewCollectionModal(true)}>
               New Collection
             </Button>
           </div>

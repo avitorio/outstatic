@@ -121,7 +121,7 @@ export default function MediaLibrary() {
 
   return (
     <AdminLayout title="Media Library" className="pt-0 md:pt-0">
-      <div className="pb-6 pt-5 sticky top-0 z-10 bg-background">
+      <div className="pb-6 pt-10 sticky top-0 z-10 bg-background">
         <MediaLibraryHeader
           isUploading={isUploading}
           searchTerm={searchTerm}
