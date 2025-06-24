@@ -38,7 +38,7 @@ type SubmitDocumentProps = {
   setShowDelete: (showDelete: boolean) => void
   setLoading: (loading: boolean) => void
   files: FileType[]
-  methods: UseFormReturn<Document, any>
+  methods: UseFormReturn<Document, any, any>
   collection: string
   customFields: CustomFieldsType
   setCustomFields: (customFields: CustomFieldsType) => void

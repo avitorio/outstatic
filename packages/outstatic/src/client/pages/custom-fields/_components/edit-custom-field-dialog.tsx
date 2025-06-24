@@ -66,7 +66,7 @@ export const EditCustomFieldDialog: React.FC<EditCustomFieldDialogProps> = ({
   const [error, setError] = useState('')
   const methods = useForm<CustomFieldForm>({
     mode: 'onChange',
-    resolver: zodResolver(editCustomFieldSchema)
+    resolver: zodResolver(editCustomFieldSchema) as any
   })
 
   const { data: schema, isLoading } = useGetCollectionSchema({ collection })

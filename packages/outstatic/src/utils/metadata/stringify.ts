@@ -16,7 +16,7 @@ export const stringifyMetadata = (m: MetadataSchema): string => {
   m.metadata = m.metadata.sort(firstBy('__outstatic.path'))
 
   const s = stringify(m, { space: 2 })
-  return s
+  return s as string
 }
 
 /**
@@ -33,5 +33,5 @@ export const stringifyMedia = (m: MediaSchema): string => {
   m.media = m.media.sort(firstBy('filename'))
 
   const s = stringify(m, { space: 2 })
-  return s
+  return s as string
 }

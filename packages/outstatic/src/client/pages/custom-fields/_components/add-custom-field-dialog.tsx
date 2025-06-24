@@ -76,7 +76,7 @@ export const AddCustomFieldDialog: React.FC<AddCustomFieldDialogProps> = ({
   const [fieldName, setFieldName] = useState(fieldTitle ?? '')
   const methods = useForm<CustomFieldForm>({
     mode: 'onChange',
-    resolver: zodResolver(addCustomFieldSchema)
+    resolver: zodResolver(addCustomFieldSchema) as any
   })
 
   const { data: schema } = useGetCollectionSchema({ collection })

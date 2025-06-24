@@ -11,7 +11,7 @@ import { useCollections } from './useCollections'
 
 interface UseDocumentUpdateEffectProps {
   collection: string
-  methods: UseFormReturn<Document, any>
+  methods: UseFormReturn<Document, any, any>
   slug: string
   editor: Editor | null
   setHasChanges: Dispatch<SetStateAction<boolean>>
