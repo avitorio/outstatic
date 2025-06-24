@@ -2,7 +2,12 @@ import { AdminLayout } from '@/components'
 import { AdminLoading } from '@/components/AdminLoading'
 import LineBackground from '@/components/ui/outstatic/line-background'
 import { Button } from '@/components/ui/shadcn/button'
-import { Card, CardContent } from '@/components/ui/shadcn/card'
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle
+} from '@/components/ui/shadcn/card'
 import { CustomFieldType, CustomFieldsType } from '@/types'
 import { useGetCollectionSchema } from '@/utils/hooks/useGetCollectionSchema'
 import { useOutstatic } from '@/utils/hooks/useOutstatic'
@@ -76,30 +81,37 @@ export default function CustomFields({ collection, title }: CustomFieldsProps) {
           {Object.keys(customFields).length === 0 ? (
             <LineBackground>
               <div className="relative">
-                <Card className="mb-20 max-w-2xl p-8 px-4 md:p-8 rounded-lg prose prose-base dark:prose-invert">
-                  <h3>Add Custom Fields to your collection.</h3>
-                  <p>
-                    Create your first Custom Field by clicking the button below.
-                  </p>
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Add Custom Fields to your collection.</CardTitle>
+                  </CardHeader>
+                  <CardContent className="prose dark:prose-invert">
+                    <p>
+                      Create your first Custom Field by clicking the button
+                      below.
+                    </p>
 
-                  <Button
-                    onClick={() => {
-                      setShowAddModal(true)
-                    }}
-                  >
-                    Add Custom Field
-                  </Button>
-                  <p>
-                    To learn more about how Custom Fields work checkout{' '}
-                    <a
-                      href="https://outstatic.com/docs/custom-fields"
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      the docs.
-                    </a>
-                    .
-                  </p>
+                    <div>
+                      <Button
+                        onClick={() => {
+                          setShowAddModal(true)
+                        }}
+                      >
+                        Add Custom Field
+                      </Button>
+                    </div>
+                    <p>
+                      To learn more about how Custom Fields work checkout{' '}
+                      <a
+                        href="https://outstatic.com/docs/custom-fields"
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        the docs
+                      </a>
+                      .
+                    </p>
+                  </CardContent>
                 </Card>
               </div>
             </LineBackground>
