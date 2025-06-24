@@ -158,3 +158,5 @@
     @apply bg-background text-foreground;
   }
 }
+
+@source inline("{lg:,}flex");
