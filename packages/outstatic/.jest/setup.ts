@@ -12,6 +12,21 @@ process.env.OST_REPO_BRANCH = 'TEST_OST_REPO_BRANCH'
 // required by Iron
 process.env.OST_TOKEN_SECRET = '32characterstringtestrequirement'
 
+// Mock matchMedia for tests
+Object.defineProperty(window, 'matchMedia', {
+  writable: true,
+  value: jest.fn().mockImplementation((query) => ({
+    matches: false,
+    media: query,
+    onchange: null,
+    addListener: jest.fn(), // deprecated
+    removeListener: jest.fn(), // deprecated
+    addEventListener: jest.fn(),
+    removeEventListener: jest.fn(),
+    dispatchEvent: jest.fn()
+  }))
+})
+
 // beforeEach(() => {
 //   jest.spyOn(console, 'error')
 //   // @ts-ignore jest.spyOn adds this functionallity

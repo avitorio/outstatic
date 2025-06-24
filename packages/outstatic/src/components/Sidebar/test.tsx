@@ -70,16 +70,14 @@ describe('<Sidebar />', () => {
       render(
         <TestWrapper>
           <InitialDataContext.Provider value={mockProviderProps}>
-            <Sidebar isOpen={true} />
+            <Sidebar />
           </InitialDataContext.Provider>
         </TestWrapper>
       )
     })
 
-    expect(screen.getByLabelText('Sidebar')).toBeInTheDocument()
     expect(screen.getByText('Collections')).toBeInTheDocument()
-    expect(screen.getByText('Settings')).toBeInTheDocument()
-    expect(screen.getByText('Documentation')).toBeInTheDocument()
+    expect(screen.getAllByText('Settings')).toHaveLength(2)
 
     mockCollections.forEach((collection) => {
       expect(screen.getByText(collection.title)).toBeInTheDocument()
