@@ -6,7 +6,6 @@ import { useState } from 'react'
 import { MediaSettings } from './_components/media-settings'
 import { useRebuildMetadata } from '@/utils/hooks/useRebuildMetadata'
 import { Card } from '@/components/ui/shadcn/card'
-import { ThemeSettings } from './_components/theme-settings'
 
 export default function Settings() {
   const [rebuild, setRebuilding] = useState(false)
@@ -21,11 +20,7 @@ export default function Settings() {
       </div>
       <div className="max-w-lg">
         <Card className="mb-8 max-w-2xl p-8 px-4 md:p-8 prose prose-base">
-          <h2 className='text-foreground'>Theme</h2>
-          <ThemeSettings />
-        </Card>
-        <Card className="mb-8 max-w-2xl p-8 px-4 md:p-8 prose prose-base">
-          <h2 className='text-foreground'>Repository</h2>
+          <h2 className="text-foreground">Repository</h2>
           <div>
             <label className="block mb-2 text-sm font-medium text-foreground">
               Repository
@@ -48,13 +43,13 @@ export default function Settings() {
           </p>
         </Card>
         <Card className="mb-8 max-w-2xl p-8 px-4 md:p-8 prose prose-base">
-          <h2 className='text-foreground'>Media Library</h2>
+          <h2 className="text-foreground">Media Library</h2>
           <MediaSettings />
         </Card>
 
         {collections && collections.length > 0 ? (
           <Card className="mb-8 max-w-2xl p-8 px-4 md:p-8 prose prose-base">
-            <h2 className='text-foreground'>Metadata</h2>
+            <h2 className="text-foreground">Metadata</h2>
             <div className="flex flex-row items-center">
               <Button
                 disabled={rebuild}
