@@ -121,8 +121,11 @@ export default function CustomFields({ collection, title }: CustomFieldsProps) {
                 {customFields &&
                   Object.entries(customFields).map(([name, field]) => {
                     return (
-                      <Card key={name}>
-                        <CardContent className="relative flex p-6 justify-between items-center max-w-sm">
+                      <Card
+                        key={name}
+                        className="hover:border-gray-500 transition-all duration-300"
+                      >
+                        <CardContent className="relative flex justify-between items-center max-w-sm">
                           <button
                             type="button"
                             onClick={() => {
