@@ -1,5 +1,5 @@
 import Alert from '@/components/Alert'
-import TagInput from '@/components/TagInput'
+import { TagInput } from '@/components/ui/outstatic/tag-input'
 import { Button } from '@/components/ui/shadcn/button'
 import { Input } from '@/components/ui/shadcn/input'
 import {
@@ -70,13 +70,16 @@ export const EditCustomFieldDialog: React.FC<EditCustomFieldDialogProps> = ({
     resolver: zodResolver(editCustomFieldSchema) as any
   })
 
-  const { data: schema, isLoading } = useGetCollectionSchema({ collection })
+  const { data: schema } = useGetCollectionSchema({ collection })
 
   const capiHelper = useCustomFieldCommit()
 
   useEffect(() => {
     if (schema) {
       setCustomFields(schema.properties)
+      if (isArrayCustomField(customFields[selectedField])) {
+        methods.setValue('values', customFields[selectedField].values)
+      }
     }
   }, [schema, setCustomFields])
 
@@ -218,6 +221,11 @@ export const EditCustomFieldDialog: React.FC<EditCustomFieldDialogProps> = ({
 
               <FormField
                 control={methods.control}
+                defaultValue={
+                  customFields[selectedField].required
+                    ? customFields[selectedField].required
+                    : false
+                }
                 name="required"
                 render={({ field }) => (
                   <FormItem>
@@ -226,9 +234,6 @@ export const EditCustomFieldDialog: React.FC<EditCustomFieldDialogProps> = ({
                       <div className="flex items-center gap-2">
                         <FormControl>
                           <Checkbox
-                            defaultChecked={
-                              customFields[selectedField].required
-                            }
                             checked={field.value}
                             onCheckedChange={(checked) => {
                               return checked
@@ -254,15 +259,8 @@ export const EditCustomFieldDialog: React.FC<EditCustomFieldDialogProps> = ({
                 <TagInput
                   label="Your tags"
                   id="values"
-                  helperText="Deleting tags will remove them from suggestions, not from existing documents."
-                  defaultValue={customFields[selectedField].values}
-                  noOptionsMessage={() => null}
-                  isClearable={false}
-                  isSearchable={false}
-                  components={{
-                    DropdownIndicator: () => null,
-                    IndicatorSeparator: () => null
-                  }}
+                  description="Deleting tags will remove them from suggestions, not from existing documents."
+                  suggestions={customFields[selectedField].values}
                 />
               </div>
             ) : null}

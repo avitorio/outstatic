@@ -8,5 +8,6 @@ export const editCustomFieldSchema = z.object({
     .min(1, 'Custom field name is required.'),
   fieldType: z.enum(customFieldTypes),
   description: z.string().optional(),
-  required: z.boolean().optional()
+  required: z.boolean().optional(),
+  values: z.array(z.object({ label: z.string(), value: z.string() })).optional()
 })

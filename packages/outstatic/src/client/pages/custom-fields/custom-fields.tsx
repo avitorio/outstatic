@@ -10,7 +10,6 @@ import {
 } from '@/components/ui/shadcn/card'
 import { CustomFieldType, CustomFieldsType } from '@/types'
 import { useGetCollectionSchema } from '@/utils/hooks/useGetCollectionSchema'
-import { useOutstatic } from '@/utils/hooks/useOutstatic'
 import { addCustomFieldSchema } from '@/utils/schemas/add-custom-field-schema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Trash } from 'lucide-react'
@@ -30,7 +29,6 @@ type CustomFieldForm = CustomFieldType<
 > & { name: string }
 
 export default function CustomFields({ collection, title }: CustomFieldsProps) {
-  const { setHasChanges } = useOutstatic()
   const [customFields, setCustomFields] = useState<CustomFieldsType>({})
   const methods = useForm<CustomFieldForm>({
     mode: 'onChange',
@@ -51,11 +49,6 @@ export default function CustomFields({ collection, title }: CustomFieldsProps) {
       setCustomFields(schema.properties)
     }
   }, [schema])
-
-  useEffect(() => {
-    const subscription = methods.watch(() => setHasChanges(true))
-    return () => subscription.unsubscribe()
-  }, [methods])
 
   if (isLoading) {
     return <AdminLoading />

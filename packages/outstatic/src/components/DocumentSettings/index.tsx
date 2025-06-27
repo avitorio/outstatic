@@ -1,7 +1,7 @@
 import Accordion from '@/components/Accordion'
 import DeleteDocumentButton from '@/components/DeleteDocumentButton'
 import DocumentSettingsImageSelection from '@/components/DocumentSettingsImageSelection'
-import TagInput from '@/components/TagInput'
+import { TagInput } from '@/components/ui/outstatic/tag-input'
 import { Input } from '@/components/ui/shadcn/input'
 import TextArea from '@/components/ui/shadcn/text-area'
 import { DocumentContext } from '@/context'
