@@ -47,7 +47,7 @@ export function DateTimePickerForm({
                   <Button
                     variant="outline"
                     className={cn(
-                      'justify-start text-left font-normal',
+                      'justify-start text-left font-normal w-full',
                       !field.value && 'text-muted-foreground'
                     )}
                   >
