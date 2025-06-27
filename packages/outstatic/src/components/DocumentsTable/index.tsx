@@ -72,7 +72,7 @@ const DocumentsTable = () => {
   )
 
   return (
-    <div className="border border-solid border-muted rounded-md">
+    <div className="border border-solid border-muted rounded-md shadow-sm">
       <div className="overflow-x-auto">
         <table className="w-full text-left text-sm text-foreground">
           <thead className="text-xs uppercase text-foreground border-b border-muted">
