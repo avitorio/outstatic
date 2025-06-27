@@ -41,9 +41,9 @@ export default function Collections() {
               collections.map((collection) => (
                 <Card
                   key={collection.slug}
-                  className="hover:border-gray-500 transition-all duration-300 py-0"
+                  className="hover:border-gray-500 transition-all duration-300"
                 >
-                  <CardContent className="relative flex p-6 justify-between items-center">
+                  <CardContent className="relative flex justify-between items-center">
                     <Link href={`${dashboardRoute}/${collection.slug}`}>
                       <h5 className="text-2xl cursor-pointer font-bold tracking-tight text-foreground">
                         {collection.title}
