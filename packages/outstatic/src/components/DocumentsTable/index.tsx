@@ -19,7 +19,7 @@ import {
 } from '@/utils/hooks/useSortedDocuments'
 import { useOutstatic } from '@/utils/hooks/useOutstatic'
 import { MDExtensions } from '@/types'
-import { useParams } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 
 export type Column = {
   id: string
@@ -30,6 +30,7 @@ export type Column = {
 const DocumentsTable = () => {
   const { data, refetch } = useGetDocuments()
   const { dashboardRoute } = useOutstatic()
+  const router = useRouter()
 
   const params = useParams<{ ost: string[] }>()
   const [showColumnOptions, setShowColumnOptions] = useState(false)
@@ -50,6 +51,13 @@ const DocumentsTable = () => {
           : 'ascending'
     }))
   }, [])
+
+  const handleRowClick = useCallback(
+    (document: OstDocument) => {
+      router.push(`${dashboardRoute}/${params.ost[0]}/${document.slug}`)
+    },
+    [dashboardRoute, params.ost, router]
+  )
 
   const allColumns = Array.from(data?.metadata?.keys() ?? []).map(
     (column: string) => ({
@@ -117,33 +125,30 @@ const DocumentsTable = () => {
               </th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="[&_tr:last-child]:border-0">
             {sortedDocuments
               ? sortedDocuments.map((document) => (
-                  <Link
+                  <tr
                     key={document.slug}
-                    href={`${dashboardRoute}/${params.ost[0]}/${document.slug}`}
-                    legacyBehavior
-                    passHref
+                    className="hover:bg-muted/50 border-b cursor-pointer"
+                    onClick={() => handleRowClick(document)}
                   >
-                    <tr className="border-b last:border-b-0 bg-background hover:bg-background cursor-pointer">
-                      {columns.map((column) => {
-                        return cellSwitch(column.value, document)
-                      })}
-                      <td
-                        className="pr-6 py-4 text-right"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        <DeleteDocumentButton
-                          slug={document.slug}
-                          extension={document.extension as MDExtensions}
-                          disabled={false}
-                          onComplete={() => refetch()}
-                          collection={params.ost[0]}
-                        />
-                      </td>
-                    </tr>
-                  </Link>
+                    {columns.map((column) => {
+                      return cellSwitch(column.value, document)
+                    })}
+                    <td
+                      className="pr-6 py-4 text-right"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <DeleteDocumentButton
+                        slug={document.slug}
+                        extension={document.extension as MDExtensions}
+                        disabled={false}
+                        onComplete={() => refetch()}
+                        collection={params.ost[0]}
+                      />
+                    </td>
+                  </tr>
                 ))
               : null}
           </tbody>
