@@ -5,7 +5,6 @@ import { useGetDocuments } from '@/utils/hooks/useGetDocuments'
 import { sentenceCase } from 'change-case'
 import cookies from 'js-cookie'
 import { ListFilter } from 'lucide-react'
-import Link from 'next/link'
 import { useState, useCallback, ReactNode } from 'react'
 import { Button } from '@/components/ui/shadcn/button'
 import {
@@ -76,7 +75,7 @@ const DocumentsTable = () => {
     <div className="border border-solid border-muted rounded-md">
       <div className="overflow-x-auto">
         <table className="w-full text-left text-sm text-foreground">
-          <thead className="text-xs uppercase text-foreground border-b">
+          <thead className="text-xs uppercase text-foreground border-b border-muted">
             <tr>
               {columns.map((column) => (
                 <th
@@ -130,7 +129,7 @@ const DocumentsTable = () => {
               ? sortedDocuments.map((document) => (
                   <tr
                     key={document.slug}
-                    className="hover:bg-muted/50 border-b cursor-pointer"
+                    className="hover:bg-muted/50 border-b border-muted cursor-pointer"
                     onClick={() => handleRowClick(document)}
                   >
                     {columns.map((column) => {

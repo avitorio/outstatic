@@ -39,7 +39,7 @@ export default function List({ slug, title }: ListProps) {
         </Button>
       </div>
       {data?.documents.length > 0 && (
-        <div className="relative shadow-md sm:rounded-lg">
+        <div className="relative sm:rounded-lg">
           <DocumentsTable />
         </div>
       )}
