@@ -268,9 +268,9 @@ export const AddCustomFieldDialog: React.FC<AddCustomFieldDialogProps> = ({
             </div>
 
             <DialogFooter className="flex sm:justify-between items-center pt-6 border-t">
-              <div className="text-sm text-gray-700">
+              <div className="text-sm">
                 This field will be accessible on the frontend as:{' '}
-                <code className="bg-gray-200 font-semibold">
+                <code className="bg-muted font-semibold">
                   {camelCase(fieldName)}
                 </code>
               </div>

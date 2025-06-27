@@ -259,11 +259,9 @@ export const EditCustomFieldDialog: React.FC<EditCustomFieldDialogProps> = ({
             ) : null}
 
             <DialogFooter className="flex sm:justify-between items-center pt-6 border-t">
-              <div className="text-sm text-gray-700">
+              <div className="text-sm">
                 This field will be accessible on the frontend as:{' '}
-                <code className="bg-gray-200 font-semibold">
-                  {selectedField}
-                </code>
+                <code className="bg-muted font-semibold">{selectedField}</code>
               </div>
               <div className="flex gap-2">
                 <Button
