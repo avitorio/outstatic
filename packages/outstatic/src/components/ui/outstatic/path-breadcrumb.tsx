@@ -11,7 +11,7 @@ import { Fragment } from 'react/jsx-runtime'
 function PathBreadcrumbs({ path }: { path: string }) {
   const pathArray = path.split('/')
   return (
-    <div className="flex items-center p-2 bg-gray-50 rounded-md h-10">
+    <div className="flex items-center p-2 bg-muted rounded-md h-10">
       <Breadcrumb>
         <BreadcrumbList>
           {path

@@ -160,3 +160,7 @@
 }
 
 @source inline("{lg:,}flex");
+
+@utility no-scrollbar {
+  @apply [scrollbar-width:none] [&::-webkit-scrollbar]:hidden;
+}
