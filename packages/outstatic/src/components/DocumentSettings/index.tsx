@@ -220,7 +220,7 @@ const DocumentSettings = ({
       <aside
         className={`${
           isOpen ? 'block absolute' : 'hidden relative'
-        } md:block w-full border-b border-secondary bg-background md:w-64 md:flex-none md:flex-col md:flex-wrap md:items-start md:justify-start md:border-b-0 md:border-l py-6 h-full max-h-[calc(100vh-128px)] md:max-h-[calc(100vh-56px)] no-scrollbar overflow-y-scroll`}
+        } md:block w-full border-l bg-background md:w-64 md:flex-none md:flex-col md:flex-wrap md:items-start md:justify-start md:border-b-0 md:border-l py-6 h-full max-h-[calc(100vh-128px)] md:max-h-[calc(100vh-56px)] no-scrollbar overflow-y-scroll`}
       >
         <div className="relative w-full items-center justify-between mb-4 flex px-4">
           <label
