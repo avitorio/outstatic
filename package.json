@@ -19,11 +19,11 @@
     "test": "turbo run test",
     "typecheck": "turbo run typecheck",
     "prepublish": "pnpm typecheck && pnpm test && pnpm build --filter='!outstatic-basic-blog'",
-    "publish:canary": "pnpm clean --filter=outstatic && pnpm build --filter=outstatic && pnpm test --filter=outstatic && pnpm publish --filter=outstatic --tag canary",
-    "publish:latest": "pnpm clean --filter=outstatic && pnpm build --filter=outstatic && pnpm test --filter=outstatic && pnpm publish --filter=outstatic --tag latest",
-    "publish:canary:dry": "pnpm clean --filter=outstatic && pnpm build --filter=outstatic && pnpm test --filter=outstatic &&  pnpm publish --filter=outstatic --tag canary --dry-run",
-    "publish:latest:dry": "pnpm clean --filter=outstatic && pnpm build --filter=outstatic && pnpm test --filter=outstatic && pnpm publish --filter=outstatic --tag latest --dry-run",
-    "pack:outstatic": "pnpm clean --filter=outstatic && pnpm build --filter=outstatic && pnpm test --filter=outstatic && cd packages/outstatic && pnpm pack"
+    "publish:canary": "pnpm clean && pnpm i && pnpm build --filter=outstatic && pnpm test --filter=outstatic && pnpm publish --filter=outstatic --tag canary",
+    "publish:latest": "pnpm clean && pnpm i && pnpm build --filter=outstatic && pnpm test --filter=outstatic && pnpm publish --filter=outstatic --tag latest",
+    "publish:canary:dry": "pnpm clean && pnpm i && pnpm build --filter=outstatic && pnpm test --filter=outstatic &&  pnpm publish --filter=outstatic --tag canary --dry-run",
+    "publish:latest:dry": "pnpm clean && pnpm i && pnpm build --filter=outstatic && pnpm test --filter=outstatic && pnpm publish --filter=outstatic --tag latest --dry-run",
+    "pack:outstatic": "pnpm clean && pnpm i && pnpm build --filter=outstatic && pnpm test --filter=outstatic && cd packages/outstatic && pnpm pack"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.1",
