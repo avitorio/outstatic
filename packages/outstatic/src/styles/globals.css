@@ -1,7 +1,6 @@
 @import 'tailwindcss';
-/*
-  ---break---
-*/
+@import 'tw-animate-css';
+
 @custom-variant dark (&:is(.dark *));
 
 @config '../../tailwind.config.js';
@@ -23,11 +22,6 @@
     border-color: var(--color-gray-200, currentColor);
   }
 }
-
-@import 'tailwindcss';
-@import 'tw-animate-css';
-
-@custom-variant dark (&:is(.dark *));
 
 @theme inline {
   --color-background: var(--background);
