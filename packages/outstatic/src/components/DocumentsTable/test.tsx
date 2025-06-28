@@ -4,7 +4,15 @@ import React from 'react'
 import DocumentsTable from './'
 
 jest.mock('next/navigation', () => ({
-  useParams: jest.fn().mockReturnValue({ ost: ['testCollection'] })
+  useParams: jest.fn().mockReturnValue({ ost: ['testCollection'] }),
+  useRouter: jest.fn().mockReturnValue({
+    push: jest.fn(),
+    replace: jest.fn(),
+    back: jest.fn(),
+    forward: jest.fn(),
+    refresh: jest.fn(),
+    prefetch: jest.fn()
+  })
 }))
 
 jest.mock(

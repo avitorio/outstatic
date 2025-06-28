@@ -1,3 +1,4 @@
+import { SidebarProvider } from '@/components/ui/shadcn/sidebar'
 import { DocumentContext } from '@/context'
 import {
   CreateCommitDocument,
@@ -165,10 +166,16 @@ const TestNavigationGuardProvider = ({
   return <NavigationGuardProvider>{children}</NavigationGuardProvider>
 }
 
+const TestSidebarProvider = ({ children }: { children: React.ReactNode }) => {
+  return <SidebarProvider>{children}</SidebarProvider>
+}
+
 export const TestWrapper = (props: { children: ReactNode }) => (
   <TestProviders.ReactQuery>
     <TestProviders.DocumentContext>
-      <TestProviders.Form>{props.children}</TestProviders.Form>
+      <TestProviders.Form>
+        <TestSidebarProvider>{props.children}</TestSidebarProvider>
+      </TestProviders.Form>
     </TestProviders.DocumentContext>
   </TestProviders.ReactQuery>
 )
@@ -177,5 +184,6 @@ export const TestProviders = {
   ReactQuery: TestReactQueryProvider,
   DocumentContext: TestDocumentContextProvider,
   Form: TestFormProvider,
-  NavigationGuard: TestNavigationGuardProvider
+  NavigationGuard: TestNavigationGuardProvider,
+  Sidebar: TestSidebarProvider
 }

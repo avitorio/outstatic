@@ -1,15 +1,9 @@
 import Accordion from '@/components/Accordion'
 import DeleteDocumentButton from '@/components/DeleteDocumentButton'
 import DocumentSettingsImageSelection from '@/components/DocumentSettingsImageSelection'
-import TagInput from '@/components/TagInput'
 import { Input } from '@/components/ui/shadcn/input'
-import TextArea from '@/components/ui/shadcn/text-area'
 import { DocumentContext } from '@/context'
-import {
-  CustomFieldArrayValue,
-  CustomFieldsType,
-  isArrayCustomField
-} from '@/types'
+import { CustomFieldsType } from '@/types'
 import {
   ArrowDown,
   PanelRight,
@@ -20,7 +14,6 @@ import { useRouter } from 'next/navigation'
 import { useContext, useEffect, useState } from 'react'
 import { RegisterOptions, useFormContext } from 'react-hook-form'
 import { slugify } from 'transliteration'
-import { CheckboxWithLabel } from '@/components/ui/outstatic/checkbox-with-label'
 import { Button } from '@/components/ui/shadcn/button'
 import { useOutstatic } from '@/utils/hooks/useOutstatic'
 import {
@@ -28,8 +21,7 @@ import {
   FormItem,
   FormControl,
   FormMessage,
-  FormLabel,
-  FormDescription
+  FormLabel
 } from '@/components/ui/shadcn/form'
 import {
   Select,
@@ -46,7 +38,9 @@ import {
   TooltipTrigger
 } from '@/components/ui/shadcn/tooltip'
 import { AddCustomFieldDialog } from '@/client/pages/custom-fields/_components/add-custom-field-dialog'
-import { DateTimePickerForm } from '../ui/shadcn/date-time-picker-form'
+import { DateTimePickerForm } from '@/components/ui/outstatic/date-time-picker-form'
+
+import { CustomFieldRenderer } from './custom-field-renderer'
 
 type DocumentSettingsProps = {
   saveDocument: () => void
@@ -56,48 +50,6 @@ type DocumentSettingsProps = {
   customFields: CustomFieldsType
   setCustomFields: (fields: CustomFieldsType) => void
   metadata: Record<string, any>
-}
-
-interface CustomInputProps {
-  type?: 'text' | 'number' | 'checkbox' | 'date' | 'image'
-  suggestions?: CustomFieldArrayValue[]
-  registerOptions?: RegisterOptions
-}
-
-type ComponentType = {
-  component:
-    | typeof Input
-    | typeof TextArea
-    | typeof TagInput
-    | typeof CheckboxWithLabel
-    | typeof DateTimePickerForm
-    | typeof DocumentSettingsImageSelection
-  props: CustomInputProps
-}
-
-type FieldDataMapType = {
-  String: ComponentType
-  Text: ComponentType
-  Number: ComponentType
-  Tags: ComponentType
-  Boolean: ComponentType
-  Date: ComponentType
-  Image: ComponentType
-}
-
-const FieldDataMap: FieldDataMapType = {
-  String: { component: Input, props: { type: 'text' } },
-  Text: { component: TextArea, props: {} },
-  Number: { component: Input, props: { type: 'number' } },
-  Tags: {
-    component: TagInput,
-    props: {
-      suggestions: []
-    }
-  },
-  Boolean: { component: CheckboxWithLabel, props: { type: 'checkbox' } },
-  Date: { component: DateTimePickerForm, props: { type: 'date' } },
-  Image: { component: DocumentSettingsImageSelection, props: { type: 'image' } }
 }
 
 const DocumentSettings = ({
@@ -220,7 +172,7 @@ const DocumentSettings = ({
       <aside
         className={`${
           isOpen ? 'block absolute' : 'hidden relative'
-        } md:block w-full border-b border-secondary bg-background md:w-64 md:flex-none md:flex-col md:flex-wrap md:items-start md:justify-start md:border-b-0 md:border-l pt-6 pb-16 h-full max-h-[calc(100vh-128px)] md:max-h-[calc(100vh-56px)] scrollbar-hide overflow-scroll`}
+        } md:block w-full border-l bg-background md:w-64 md:flex-none md:flex-col md:flex-wrap md:items-start md:justify-start md:border-b-0 md:border-l py-6 h-full max-h-[calc(100vh-128px)] md:max-h-[calc(100vh-56px)] no-scrollbar overflow-y-scroll`}
       >
         <div className="relative w-full items-center justify-between mb-4 flex px-4">
           <label
@@ -239,33 +191,31 @@ const DocumentSettings = ({
             Status
           </label>
 
-          <div className="min-w-[128px] ">
-            <FormField
-              control={control}
-              name="status"
-              defaultValue={document.status}
-              render={({ field }) => (
-                <FormItem>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value ?? 'draft'}
-                    value={field.value ?? 'draft'}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select status" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value="draft">Draft</SelectItem>
-                      <SelectItem value="published">Published</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
+          <FormField
+            control={control}
+            name="status"
+            defaultValue={document.status}
+            render={({ field }) => (
+              <FormItem>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value ?? 'draft'}
+                  value={field.value ?? 'draft'}
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select status" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="draft">Draft</SelectItem>
+                    <SelectItem value="published">Published</SelectItem>
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
         </div>
         <div
           className={`flex w-full pb-4 px-4 ${
@@ -315,7 +265,6 @@ const DocumentSettings = ({
               <div className="w-full mt-2 gap-2 flex flex-col">
                 <FormLabel>Avatar</FormLabel>
                 <DocumentSettingsImageSelection
-                  label="Add an avatar"
                   id="author.picture"
                   defaultValue={
                     document.author?.picture || session?.user?.image
@@ -355,97 +304,15 @@ const DocumentSettings = ({
           </Accordion>
 
           {customFields &&
-            Object.entries(customFields).map(([name, field]) => {
-              const Field = FieldDataMap[field.fieldType]
-              if (isArrayCustomField(field)) {
-                Field.props.suggestions = field.values
-              }
-
-              if (field.fieldType === 'String') {
-                return (
-                  <Accordion
-                    key={name}
-                    title={`${field.title}${field.required ? '*' : ''}`}
-                    error={!!errors[name]?.message}
-                  >
-                    <FormField
-                      control={control}
-                      name={name}
-                      render={({ field: formField }) => (
-                        <FormItem>
-                          <FormControl>
-                            <Input
-                              {...formField}
-                              value={formField.value ?? ''}
-                            />
-                          </FormControl>
-                          <FormDescription>{field.description}</FormDescription>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </Accordion>
-                )
-              }
-
-              if (field.fieldType === 'Number') {
-                // Fix for NaN error when saving a non-required number
-                if (!field.required) {
-                  Field.props = {
-                    ...Field.props,
-                    registerOptions: {
-                      setValueAs: (value: any) =>
-                        isNaN(value) ? undefined : Number(value)
-                    }
-                  }
-                }
-
-                return (
-                  <Accordion
-                    key={name}
-                    title={`${field.title}${field.required ? '*' : ''}`}
-                    error={!!errors[name]?.message}
-                  >
-                    <FormField
-                      control={control}
-                      name={name}
-                      render={({ field: formField }) => (
-                        <FormItem>
-                          <FormControl>
-                            <Input
-                              {...formField}
-                              type="number"
-                              value={formField.value ?? ''}
-                              onChange={(e) => {
-                                if (e.target.value === '')
-                                  return formField.onChange(undefined)
-                                formField.onChange(Number(e.target.value))
-                              }}
-                            />
-                          </FormControl>
-                          <FormDescription>{field.description}</FormDescription>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </Accordion>
-                )
-              }
-
-              return (
-                <Accordion
-                  key={name}
-                  title={`${field.title}${field.required ? '*' : ''}`}
-                  error={!!errors[name]?.message}
-                >
-                  <Field.component
-                    id={name}
-                    label={field.description}
-                    {...Field.props}
-                  />
-                </Accordion>
-              )
-            })}
+            Object.entries(customFields).map(([name, field]) => (
+              <CustomFieldRenderer
+                key={name}
+                name={name}
+                field={field}
+                control={control}
+                errors={errors}
+              />
+            ))}
 
           {missingCustomFields &&
             Object.keys(missingCustomFields).length > 0 && (

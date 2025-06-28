@@ -208,6 +208,7 @@ export default function EditDocument({ collection }: { collection: string }) {
                         setShowMediaPathDialog(true)
                         return
                       } else {
+                        // @ts-ignore
                         return onSubmit(data)
                       }
                     },

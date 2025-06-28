@@ -19,7 +19,7 @@ export const SpinnerIcon = ({
     <svg
       className={cn(
         sizeClasses[size],
-        'animate-spin text-foreground dark:text-background',
+        'animate-spin text-foreground',
         className
       )}
       xmlns="http://www.w3.org/2000/svg"

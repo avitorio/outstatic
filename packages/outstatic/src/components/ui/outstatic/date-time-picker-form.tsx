@@ -9,9 +9,10 @@ import {
   PopoverContent,
   PopoverTrigger
 } from '@/components/ui/shadcn/popover'
-import { TimePicker } from './time-picker'
+import { TimePicker } from '@/components/ui/shadcn/time-picker'
 import {
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -21,10 +22,12 @@ import { useFormContext } from 'react-hook-form'
 
 export function DateTimePickerForm({
   id,
-  label
+  label,
+  description
 }: {
   id: string
   label?: string
+  description?: string
 }) {
   const {
     control,
@@ -47,7 +50,7 @@ export function DateTimePickerForm({
                   <Button
                     variant="outline"
                     className={cn(
-                      'justify-start text-left font-normal',
+                      'justify-start text-left font-normal w-full',
                       !field.value && 'text-muted-foreground'
                     )}
                   >
@@ -83,6 +86,9 @@ export function DateTimePickerForm({
                 </div>
               </PopoverContent>
             </Popover>
+            {description ? (
+              <FormDescription>{description}</FormDescription>
+            ) : null}
             <FormMessage />
           </FormItem>
         )

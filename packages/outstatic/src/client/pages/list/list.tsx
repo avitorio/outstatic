@@ -32,14 +32,14 @@ export default function List({ slug, title }: ListProps) {
     <AdminLayout title={title}>
       <div className="mb-8 flex h-12 items-center">
         <h1 className="mr-12 text-2xl">{title}</h1>
-        <Button asChild>
+        <Button size="sm" asChild>
           <Link href={`${dashboardRoute}/${slug}/new`}>
             New {singular(title)}
           </Link>
         </Button>
       </div>
       {data?.documents.length > 0 && (
-        <div className="relative shadow-md sm:rounded-lg">
+        <div className="relative sm:rounded-lg">
           <DocumentsTable />
         </div>
       )}

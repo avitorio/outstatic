@@ -39,9 +39,14 @@ export const GitHubBranchSearch = ({
   const { repoOwner, repoSlug, repoBranch, gqlClient } = useOutstatic()
   const [suggestions, setSuggestions] = useState<Branch[]>([])
   const [isLoading, setIsLoading] = useState<boolean>(false)
-  const [value, setValue] = useState(repoBranch)
+  const [value, setValue] = useState('')
   const [showCreateBranchDialog, setShowCreateBranchDialog] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   const fetchBranches = useCallback(
     (keyword: string) => {
@@ -103,12 +108,35 @@ export const GitHubBranchSearch = ({
   }, [value])
 
   useEffect(() => {
-    if (repoOwner && repoSlug && repoBranch) {
+    if (mounted && repoOwner && repoSlug && repoBranch) {
       setValue(repoBranch)
       setQuery(repoBranch)
       setSuggestions([{ name: repoBranch }])
     }
-  }, [data])
+  }, [mounted, repoOwner, repoSlug, repoBranch])
+
+  if (!mounted) {
+    return (
+      <div>
+        <SearchCombobox
+          data={[]}
+          value=""
+          setValue={() => {}}
+          onValueChange={() => {}}
+          isLoading={false}
+          disabled={true}
+          selectPlaceholder="Select a branch"
+          searchPlaceholder="Search for a branch. Ex: main"
+          resultsPlaceholder="No branches found"
+          loadingPlaceholder={size !== 'sm' ? 'loading...' : ''}
+          variant={initialRepoBranch ? 'hidden' : variant}
+          size={size}
+          isOpen={false}
+          onOpenChange={() => {}}
+        />
+      </div>
+    )
+  }
 
   return (
     <div>

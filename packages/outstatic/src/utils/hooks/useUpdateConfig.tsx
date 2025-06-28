@@ -73,6 +73,7 @@ export function useUpdateConfig({ setLoading }: SubmitDocumentProps) {
 
         commitApi.replaceFile(
           configJsonPath,
+          // @ts-ignore
           stringify(updatedConfig, { space: 2 })
         )
 

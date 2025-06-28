@@ -39,6 +39,7 @@ import {
 import { zodResolver } from '@hookform/resolvers/zod'
 import { addCustomFieldSchema } from '@/utils/schemas/add-custom-field-schema'
 import { DEFAULT_FIELDS } from '@/utils/constants'
+import { Checkbox } from '@/components/ui/shadcn/checkbox'
 type CustomFieldForm = CustomFieldType<
   'string' | 'number' | 'array' | 'boolean' | 'date' | 'image'
 > & { name: string; values?: CustomFieldArrayValue[] }
@@ -76,7 +77,7 @@ export const AddCustomFieldDialog: React.FC<AddCustomFieldDialogProps> = ({
   const [fieldName, setFieldName] = useState(fieldTitle ?? '')
   const methods = useForm<CustomFieldForm>({
     mode: 'onChange',
-    resolver: zodResolver(addCustomFieldSchema)
+    resolver: zodResolver(addCustomFieldSchema) as any
   })
 
   const { data: schema } = useGetCollectionSchema({ collection })
@@ -242,35 +243,39 @@ export const AddCustomFieldDialog: React.FC<AddCustomFieldDialogProps> = ({
                   </FormItem>
                 )}
               />
-              <fieldset>
-                <div className="flex mt-7">
-                  <div className="flex items-center h-5">
-                    <input
-                      {...methods.register('required')}
-                      id="required"
-                      type="checkbox"
-                      className="cursor-pointer w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 focus:ring-2"
-                    />
-                  </div>
-                  <div className="ml-2 text-sm">
-                    <label
-                      htmlFor="required"
-                      className="cursor-pointer text-sm font-medium text-foreground"
-                    >
-                      Required field
-                    </label>
-                    <FormDescription>
-                      This field must be filled out to save the document
-                    </FormDescription>
-                  </div>
-                </div>
-              </fieldset>
+              <FormField
+                control={methods.control}
+                name="required"
+                render={({ field }) => (
+                  <FormItem>
+                    <div className="flex flex-col gap-2">
+                      <FormLabel>Required</FormLabel>
+                      <div className="flex items-center gap-2">
+                        <FormControl>
+                          <Checkbox
+                            checked={field.value}
+                            onCheckedChange={(checked) => {
+                              return checked
+                                ? field.onChange(true)
+                                : field.onChange(false)
+                            }}
+                          />
+                        </FormControl>
+                        <FormLabel className="text-sm font-normal">
+                          Set this custom field as required
+                        </FormLabel>
+                      </div>
+                      <FormMessage />
+                    </div>
+                  </FormItem>
+                )}
+              />
             </div>
 
             <DialogFooter className="flex sm:justify-between items-center pt-6 border-t">
-              <div className="text-sm text-gray-700">
+              <div className="text-sm">
                 This field will be accessible on the frontend as:{' '}
-                <code className="bg-gray-200 font-semibold">
+                <code className="bg-muted font-semibold">
                   {camelCase(fieldName)}
                 </code>
               </div>

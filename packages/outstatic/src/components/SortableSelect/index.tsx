@@ -186,6 +186,7 @@ const SortableSelect = ({
             MultiValueContainer,
             MultiValueRemove,
             Control,
+            // @ts-ignore
             Menu
           }}
           isClearable={false}
