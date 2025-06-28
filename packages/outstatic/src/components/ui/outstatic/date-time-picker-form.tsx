@@ -9,7 +9,7 @@ import {
   PopoverContent,
   PopoverTrigger
 } from '@/components/ui/shadcn/popover'
-import { TimePicker } from './time-picker'
+import { TimePicker } from '@/components/ui/shadcn/time-picker'
 import {
   FormControl,
   FormDescription,
