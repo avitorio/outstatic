@@ -1,5 +1,5 @@
 import Alert from '@/components/Alert'
-import TagInput from '@/components/TagInput'
+import { TagInput } from '@/components/ui/outstatic/tag-input'
 import { Button } from '@/components/ui/shadcn/button'
 import { Input } from '@/components/ui/shadcn/input'
 import {
@@ -39,6 +39,7 @@ import {
 } from '@/components/ui/shadcn/dialog'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { editCustomFieldSchema } from '@/utils/schemas/edit-custom-field-schema'
+import { Checkbox } from '@/components/ui/shadcn/checkbox'
 
 type CustomFieldForm = CustomFieldType<
   'string' | 'number' | 'array' | 'boolean'
@@ -66,16 +67,19 @@ export const EditCustomFieldDialog: React.FC<EditCustomFieldDialogProps> = ({
   const [error, setError] = useState('')
   const methods = useForm<CustomFieldForm>({
     mode: 'onChange',
-    resolver: zodResolver(editCustomFieldSchema)
+    resolver: zodResolver(editCustomFieldSchema) as any
   })
 
-  const { data: schema, isLoading } = useGetCollectionSchema({ collection })
+  const { data: schema } = useGetCollectionSchema({ collection })
 
   const capiHelper = useCustomFieldCommit()
 
   useEffect(() => {
     if (schema) {
       setCustomFields(schema.properties)
+      if (isArrayCustomField(customFields[selectedField])) {
+        methods.setValue('values', customFields[selectedField].values)
+      }
     }
   }, [schema, setCustomFields])
 
@@ -137,7 +141,7 @@ export const EditCustomFieldDialog: React.FC<EditCustomFieldDialogProps> = ({
               <Alert type="info">
                 <>
                   <span className="font-medium">Field name</span> and{' '}
-                  <span className="font-medium">Field type</span> editing is
+                  <span className="font-medium">Field type</span> editing are
                   disabled to avoid data conflicts.
                 </>
               </Alert>
@@ -155,6 +159,7 @@ export const EditCustomFieldDialog: React.FC<EditCustomFieldDialogProps> = ({
                         {...field}
                         className="w-full max-w-sm md:w-80"
                         readOnly
+                        disabled
                       />
                     </FormControl>
                     <FormDescription>The name of the field</FormDescription>
@@ -213,30 +218,39 @@ export const EditCustomFieldDialog: React.FC<EditCustomFieldDialogProps> = ({
                   </FormItem>
                 )}
               />
-              <fieldset>
-                <div className="flex mt-7">
-                  <div className="flex items-center h-5">
-                    <input
-                      {...methods.register('required')}
-                      id="required"
-                      type="checkbox"
-                      className="cursor-pointer w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 focus:ring-2"
-                      defaultChecked={customFields[selectedField].required}
-                    />
-                  </div>
-                  <div className="ml-2 text-sm">
-                    <label
-                      htmlFor="required"
-                      className="cursor-pointer text-sm font-medium text-foreground"
-                    >
-                      Required field
-                    </label>
-                    <FormDescription>
-                      This field must be filled out to save the document
-                    </FormDescription>
-                  </div>
-                </div>
-              </fieldset>
+
+              <FormField
+                control={methods.control}
+                defaultValue={
+                  customFields[selectedField].required
+                    ? customFields[selectedField].required
+                    : false
+                }
+                name="required"
+                render={({ field }) => (
+                  <FormItem>
+                    <div className="flex flex-col gap-2">
+                      <FormLabel>Required</FormLabel>
+                      <div className="flex items-center gap-2">
+                        <FormControl>
+                          <Checkbox
+                            checked={field.value}
+                            onCheckedChange={(checked) => {
+                              return checked
+                                ? field.onChange(true)
+                                : field.onChange(false)
+                            }}
+                          />
+                        </FormControl>
+                        <FormLabel className="text-sm font-normal">
+                          Set this custom field as required
+                        </FormLabel>
+                      </div>
+                      <FormMessage />
+                    </div>
+                  </FormItem>
+                )}
+              />
             </div>
             {customFields[selectedField].fieldType === 'Tags' &&
             customFields[selectedField].dataType === 'array' &&
@@ -245,25 +259,16 @@ export const EditCustomFieldDialog: React.FC<EditCustomFieldDialogProps> = ({
                 <TagInput
                   label="Your tags"
                   id="values"
-                  helperText="Deleting tags will remove them from suggestions, not from existing documents."
-                  defaultValue={customFields[selectedField].values}
-                  noOptionsMessage={() => null}
-                  isClearable={false}
-                  isSearchable={false}
-                  components={{
-                    DropdownIndicator: () => null,
-                    IndicatorSeparator: () => null
-                  }}
+                  description="Deleting tags will remove them from suggestions, not from existing documents."
+                  suggestions={customFields[selectedField].values}
                 />
               </div>
             ) : null}
 
             <DialogFooter className="flex sm:justify-between items-center pt-6 border-t">
-              <div className="text-sm text-gray-700">
+              <div className="text-sm">
                 This field will be accessible on the frontend as:{' '}
-                <code className="bg-gray-200 font-semibold">
-                  {selectedField}
-                </code>
+                <code className="bg-muted font-semibold">{selectedField}</code>
               </div>
               <div className="flex gap-2">
                 <Button

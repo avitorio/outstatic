@@ -36,6 +36,7 @@ export function MediaLibraryHeader({
       <div className="flex h-12 items-center capitalize gap-4 xl:gap-12">
         <h1 className="text-xl md:text-2xl">Media Library</h1>
         <Button
+          size="sm"
           asChild={!disableUpload}
           className="hover:cursor-pointer"
           disabled={isUploading || disableUpload}

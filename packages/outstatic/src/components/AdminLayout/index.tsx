@@ -39,7 +39,7 @@ export default function AdminLayout({
       {status === 'loading' ? null : (
         <>
           <main
-            className={`w-auto flex-auto p-5 pb-0 md:p-10 bg-background h-dvh max-h-[calc(100vh-128px)] md:max-h-[calc(100vh-64px)] overflow-y-scroll scrollbar-hide ${
+            className={`w-auto flex-auto p-5 pb-0 md:p-10 bg-background h-dvh max-h-[calc(100vh-56px)] overflow-y-scroll scrollbar-hide ${
               className || ''
             }`}
           >

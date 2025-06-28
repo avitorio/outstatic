@@ -6,7 +6,7 @@ import { InitialDataContext } from '@/utils/hooks/useInitialData'
 import { useOutstatic, useLocalData } from '@/utils/hooks/useOutstatic'
 import { queryClient } from '@/utils/react-query/queryClient'
 import { QueryClientProvider } from '@tanstack/react-query'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { Toaster } from 'sonner'
 import { Router } from '../router'
 import Login from './login'
@@ -17,6 +17,7 @@ import { NavigationGuardProvider } from 'next-navigation-guard'
 import V2_0_BreakingCheck from '@/components/v2_0_BreakingCheck'
 import { ThemeProvider } from 'next-themes'
 import 'katex/dist/katex.min.css'
+import { SidebarProvider } from '@/components/ui/shadcn/sidebar'
 
 type OstClientProps = {
   ostData: OutstaticData
@@ -24,21 +25,31 @@ type OstClientProps = {
 }
 
 export const AdminArea = ({ params }: { params: { ost: string[] } }) => {
-  const [openSidebar, setOpenSidebar] = useState(false)
-  const toggleSidebar = () => {
-    setOpenSidebar(!openSidebar)
-  }
-
   return (
-    <div className="min-h-screen">
-      <AdminHeader toggleSidebar={toggleSidebar} />
-      <div className="flex md:grow flex-col-reverse justify-between md:flex-row md:min-h-[calc(100vh-56px)]">
-        <div className="flex w-full">
-          <Sidebar isOpen={openSidebar} />
-          <Dashboard params={params} />
+    <SidebarProvider>
+      <div className="flex h-screen flex-1 flex-col w-full">
+        <div className="flex flex-1 flex-col">
+          <div className="dark:border-border dark:bg-background dark:shadow-primary/10 bg-background z-50 flex h-14 items-center justify-between border-b border-gray-200 px-4 lg:justify-start">
+            <div className="flex w-full flex-1 items-center space-x-8">
+              <div className="flex flex-1">
+                <AdminHeader />
+              </div>
+            </div>
+          </div>
+          <div className="dark:bg-background flex max-h-[calc(100svh-3.5rem)] overflow-hidden bg-gray-50">
+            <div className="flex flex-1">
+              <Sidebar />
+            </div>
+
+            <div className="dark:bg-background bg-background mx-auto flex w-full flex-col overflow-y-auto">
+              <div className={'flex flex-1 overflow-y-auto'}>
+                <Dashboard params={params} />
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+    </SidebarProvider>
   )
 }
 

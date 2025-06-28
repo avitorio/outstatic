@@ -32,7 +32,7 @@ export default function Collections() {
         <>
           <div className="mb-8 flex h-12 items-center">
             <h1 className="mr-12 text-2xl text-foreground">Collections</h1>
-            <Button onClick={() => setShowNewCollectionModal(true)}>
+            <Button size="sm" onClick={() => setShowNewCollectionModal(true)}>
               New Collection
             </Button>
           </div>
@@ -43,7 +43,7 @@ export default function Collections() {
                   key={collection.slug}
                   className="hover:border-gray-500 transition-all duration-300"
                 >
-                  <CardContent className="relative flex p-6 justify-between items-center">
+                  <CardContent className="relative flex justify-between items-center">
                     <Link href={`${dashboardRoute}/${collection.slug}`}>
                       <h5 className="text-2xl cursor-pointer font-bold tracking-tight text-foreground">
                         {collection.title}

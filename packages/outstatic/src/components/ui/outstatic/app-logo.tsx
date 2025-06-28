@@ -10,7 +10,7 @@ function LogoImage({
   return (
     <svg
       width={width}
-      className={cn(`w-[80px] lg:w-[95px]`, className)}
+      className={cn(`w-[80px] lg:w-[75px]`, className)}
       fill="none"
       height="20"
       viewBox="0 0 775 135"

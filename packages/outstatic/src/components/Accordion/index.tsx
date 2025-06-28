@@ -24,11 +24,11 @@ const Accordion = ({
 
   return (
     <div className="w-full border-b first:border-t">
-      <h2 id="accordion-collapse-heading-1 bg-red-50 ">
+      <h2 id="accordion-collapse-heading-1 bg-muted ">
         <button
           type="button"
           className={`flex items-center justify-between w-full text-sm font-medium text-foreground p-4 focus:outline-hidden focus:outline-offset-[-1px] ${
-            error ? 'bg-red-50' : ''
+            error ? 'bg-muted' : ''
           }`}
           onClick={handleShow}
         >

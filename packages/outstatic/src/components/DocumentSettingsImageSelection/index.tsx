@@ -12,13 +12,11 @@ import { DocumentContext } from '@/context'
 
 type DocumentSettingsImageSelectionProps = {
   id: string
-  label?: string
   defaultValue?: string
 }
 
 const DocumentSettingsImageSelection = ({
   id,
-  label,
   defaultValue = ''
 }: DocumentSettingsImageSelectionProps) => {
   const {
@@ -190,25 +188,20 @@ const DocumentSettingsImageSelection = ({
 
   // Render image selection options
   const renderImageOptions = () => (
-    <>
-      <span className="mt-2 mb-1 block text-sm font-medium text-gray-900">
-        {label ?? 'Add an image'}
-      </span>
-      <div className="w-full flex justify-between mt-2">
-        <Button onClick={() => setShowImageLibrary(true)} type="button">
-          From library
-        </Button>
-        <Button
-          onClick={() => {
-            setImageState('url')
-            setLoadingError(false)
-          }}
-          type="button"
-        >
-          From URL
-        </Button>
-      </div>
-    </>
+    <div className="w-full flex justify-between mt-2">
+      <Button onClick={() => setShowImageLibrary(true)} type="button">
+        From library
+      </Button>
+      <Button
+        onClick={() => {
+          setImageState('url')
+          setLoadingError(false)
+        }}
+        type="button"
+      >
+        From URL
+      </Button>
+    </div>
   )
 
   return (

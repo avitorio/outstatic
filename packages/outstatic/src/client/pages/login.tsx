@@ -6,7 +6,7 @@ import loginErrors from '@/utils/errors/loginErrors'
 import clsx from 'clsx'
 import Link from 'next/link'
 import { useSearchParams, useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/shadcn/button'
 
 type Errors = keyof typeof loginErrors
@@ -19,6 +19,10 @@ export default function Login({ basePath }: { basePath?: string }) {
   const [isLoading, setIsLoading] = useState(false)
 
   const router = useRouter()
+
+  useEffect(() => {
+    document.title = 'Outstatic | Login'
+  }, [])
 
   const handleLogin = async (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault()
