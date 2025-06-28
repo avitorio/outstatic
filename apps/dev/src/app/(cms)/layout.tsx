@@ -2,7 +2,7 @@ export const metadata = {
   title: 'Outstatic'
 }
 
-import { ThemeProvider } from "@/components/theme-provider"
+import { ThemeProvider } from '@/components/theme-provider'
 
 export default function RootLayout({
   children
@@ -10,7 +10,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
+    <html suppressHydrationWarning>
       <body id="outstatic">
         <ThemeProvider
           attribute="class"
@@ -18,9 +18,9 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-        {children}
+          {children}
         </ThemeProvider>
-        </body>
+      </body>
     </html>
   )
 }

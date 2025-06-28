@@ -115,7 +115,7 @@ Once installed, you'll need to add three files to your `/app` folder. We'll crea
 ```javascript
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html suppressHydrationWarning>
       <body id="outstatic">{children}</body>
     </html>
   )

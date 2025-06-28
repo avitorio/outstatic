@@ -8,7 +8,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
+    <html suppressHydrationWarning>
       <body id="outstatic">{children}</body>
     </html>
   )
