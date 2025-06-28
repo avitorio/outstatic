@@ -39,7 +39,7 @@ To make sure your dashboard works with the new styles, you should add the id to 
 ```javascript
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html suppressHydrationWarning>
       <body id="outstatic">{children}</body>
     </html>
   )
