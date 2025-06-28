@@ -12,6 +12,7 @@ import {
 import { TimePicker } from './time-picker'
 import {
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -21,10 +22,12 @@ import { useFormContext } from 'react-hook-form'
 
 export function DateTimePickerForm({
   id,
-  label
+  label,
+  description
 }: {
   id: string
   label?: string
+  description?: string
 }) {
   const {
     control,
@@ -83,6 +86,9 @@ export function DateTimePickerForm({
                 </div>
               </PopoverContent>
             </Popover>
+            {description ? (
+              <FormDescription>{description}</FormDescription>
+            ) : null}
             <FormMessage />
           </FormItem>
         )
