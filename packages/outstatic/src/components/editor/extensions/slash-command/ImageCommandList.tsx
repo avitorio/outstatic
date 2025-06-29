@@ -254,7 +254,9 @@ const ImageCommandList = ({
                 </div>
                 <div>
                   <p className="font-medium">{item.title}</p>
-                  <p className="text-xs text-muted">{item.description}</p>
+                  <p className="text-xs text-muted-foreground">
+                    {item.description}
+                  </p>
                 </div>
               </button>
             )

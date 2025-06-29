@@ -66,7 +66,7 @@ export function MediaLibraryHeader({
           onChange={(e) => setSearchTerm(e.target.value)}
           className="xl:w-64"
         />
-        <div className="hidden md:block xl:w-40">
+        <div className="hidden md:block">
           <Select value={sortBy} onValueChange={(value) => setSortBy(value)}>
             <SelectTrigger>
               <SelectValue placeholder="Sort by" />
@@ -77,7 +77,7 @@ export function MediaLibraryHeader({
             </SelectContent>
           </Select>
         </div>
-        <div className="hidden md:block xl:w-40">
+        <div className="hidden md:block">
           <Select
             value={sortDirection}
             onValueChange={(value) => setSortDirection(value)}
