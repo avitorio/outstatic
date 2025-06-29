@@ -1,4 +1,4 @@
-import Accordion from '@/components/Accordion'
+// import Accordion from '@/components/Accordion'
 import DocumentSettingsImageSelection from '@/components/DocumentSettingsImageSelection'
 import { TagInput } from '@/components/ui/outstatic/tag-input'
 import { Input } from '@/components/ui/shadcn/input'
@@ -19,6 +19,13 @@ import {
 } from '@/components/ui/shadcn/form'
 import { DateTimePickerForm } from '@/components/ui/outstatic/date-time-picker-form'
 import { Checkbox } from '@/components/ui/shadcn/checkbox'
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger
+} from '@/components/ui/shadcn/accordion'
+import { cn } from '@/utils/ui'
 
 type CustomFieldRendererProps = {
   name: string
@@ -151,21 +158,32 @@ export const CustomFieldRenderer = ({
 
   return (
     <Accordion
+      type="single"
+      collapsible
       key={name}
-      title={`${field.title}${field.required ? '*' : ''}`}
-      error={!!errors[name]?.message}
+      className={cn(
+        'border-b first:border-t',
+        errors[name]?.message && 'border-destructive'
+      )}
     >
-      <FormField
-        control={control}
-        name={name}
-        render={({ field: formField }) => (
-          <FormItem>
-            <FormControl>{renderFieldContent(formField)}</FormControl>
-            <FormDescription>{field.description}</FormDescription>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
+      <AccordionItem value={name}>
+        <AccordionTrigger className="hover:no-underline hover:bg-muted px-4 rounded-none data-[state=open]:bg-muted">{`
+          ${field.title}${field.required ? '*' : ''}
+        `}</AccordionTrigger>
+        <AccordionContent className="p-4 border-top">
+          <FormField
+            control={control}
+            name={name}
+            render={({ field: formField }) => (
+              <FormItem>
+                <FormControl>{renderFieldContent(formField)}</FormControl>
+                <FormDescription>{field.description}</FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </AccordionContent>
+      </AccordionItem>
     </Accordion>
   )
 }
