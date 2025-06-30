@@ -135,12 +135,14 @@ function DeleteCollectionModal({
               onCheckedChange={() => setKeepFiles(!keepFiles)}
               className="mt-0.5"
             />
-            <Label htmlFor="detached-delete" className="leading-normal">
-              Keep files in the repository. Only remove{' '}
-              <span className="inline-block font-bold first-letter:uppercase">
-                {collection.title}
-              </span>{' '}
-              from the Outstatic&nbsp;Dashboard.
+            <Label htmlFor="detached-delete" className="leading-normal ">
+              <div>
+                Keep files in the repository. Only remove{' '}
+                <span className="inline-block font-bold first-letter:uppercase">
+                  {collection.title}
+                </span>{' '}
+                from the Outstatic&nbsp;Dashboard.
+              </div>
             </Label>
           </div>
         </div>
