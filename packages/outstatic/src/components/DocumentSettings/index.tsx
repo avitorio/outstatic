@@ -1,4 +1,9 @@
-import Accordion from '@/components/Accordion'
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger
+} from '@/components/ui/shadcn/accordion'
 import DeleteDocumentButton from '@/components/DeleteDocumentButton'
 import DocumentSettingsImageSelection from '@/components/DocumentSettingsImageSelection'
 import { Input } from '@/components/ui/shadcn/input'
@@ -21,7 +26,8 @@ import {
   FormItem,
   FormControl,
   FormMessage,
-  FormLabel
+  FormLabel,
+  FormDescription
 } from '@/components/ui/shadcn/form'
 import {
   Select,
@@ -41,6 +47,7 @@ import { AddCustomFieldDialog } from '@/client/pages/custom-fields/_components/a
 import { DateTimePickerForm } from '@/components/ui/outstatic/date-time-picker-form'
 
 import { CustomFieldRenderer } from './custom-field-renderer'
+import { cn } from '@/utils/ui'
 
 type DocumentSettingsProps = {
   saveDocument: () => void
@@ -63,7 +70,8 @@ const DocumentSettings = ({
   const {
     setValue,
     formState: { errors },
-    control
+    control,
+    reset
   } = useFormContext()
   const router = useRouter()
 
@@ -78,10 +86,15 @@ const DocumentSettings = ({
   const [isOpen, setIsOpen] = useState(false)
 
   useEffect(() => {
-    if (!document.status) {
-      setValue('status', 'draft')
-    }
-  }, [document.status])
+    reset((prev) => ({
+      ...prev,
+      status: prev.status || 'draft',
+      author: {
+        name: prev.author?.name || session?.user?.name,
+        picture: prev.author?.picture || session?.user?.image
+      }
+    }))
+  }, [session?.user?.name, session?.user?.image, reset])
 
   const onModalChange = (value: boolean) => {
     if (!value) {
@@ -246,61 +259,84 @@ const DocumentSettings = ({
           </Button>
         </div>
         <div className="w-full">
-          <Accordion title="Author">
-            <div className="flex flex-col gap-2">
-              <FormField
-                control={control}
-                name="author.name"
-                defaultValue={document.author?.name || session?.user?.name}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Name</FormLabel>
-                    <FormControl>
-                      <Input {...field} value={field.value} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <div className="w-full mt-2 gap-2 flex flex-col">
-                <FormLabel>Avatar</FormLabel>
-                <DocumentSettingsImageSelection
-                  id="author.picture"
-                  defaultValue={
-                    document.author?.picture || session?.user?.image
-                  }
+          <Accordion
+            type="single"
+            collapsible
+            className={cn('border-b first:border-t')}
+          >
+            <AccordionItem value={'author'}>
+              <AccordionTrigger className="hover:no-underline hover:bg-muted px-4 rounded-none data-[state=open]:bg-muted">
+                Author
+              </AccordionTrigger>
+              <AccordionContent className="p-4 border-top">
+                <FormField
+                  control={control}
+                  name="author.name"
+                  defaultValue={document.author?.name || session?.user?.name}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Name</FormLabel>
+                      <FormControl>
+                        <Input {...field} value={field.value} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
                 />
-              </div>
-            </div>
+                <div className="w-full mt-4 gap-2 flex flex-col">
+                  <FormLabel>Avatar</FormLabel>
+                  <DocumentSettingsImageSelection
+                    id="author.picture"
+                    defaultValue={
+                      document.author?.picture || session?.user?.image
+                    }
+                  />
+                </div>
+              </AccordionContent>
+            </AccordionItem>
           </Accordion>
-          <Accordion title="URL Slug*" error={!!errors['slug']?.message}>
-            <FormField
-              control={control}
-              name="slug"
-              defaultValue={document.slug || ''}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Write a slug</FormLabel>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      value={field.value ?? ''}
-                      onChange={(e) => {
-                        const lastChar = e.target.value.slice(-1)
-                        field.onChange(
-                          lastChar === ' ' || lastChar === '-'
-                            ? e.target.value
-                            : slugify(e.target.value, {
-                                allowedChars: 'a-zA-Z0-9.'
-                              })
-                        )
-                      }}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+          <Accordion
+            type="single"
+            collapsible
+            className={cn(
+              'border-b first:border-t',
+              errors['slug']?.message && 'border-destructive'
+            )}
+          >
+            <AccordionItem value={'slug'}>
+              <AccordionTrigger className="hover:no-underline hover:bg-muted px-4 rounded-none data-[state=open]:bg-muted">
+                Slug*
+              </AccordionTrigger>
+              <AccordionContent className="p-4 border-top">
+                <FormField
+                  control={control}
+                  name="slug"
+                  defaultValue={document.slug || ''}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          value={field.value ?? ''}
+                          onChange={(e) => {
+                            const lastChar = e.target.value.slice(-1)
+                            field.onChange(
+                              lastChar === ' ' || lastChar === '-'
+                                ? e.target.value
+                                : slugify(e.target.value, {
+                                    allowedChars: 'a-zA-Z0-9.'
+                                  })
+                            )
+                          }}
+                        />
+                      </FormControl>
+                      <FormDescription>The document slug</FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </AccordionContent>
+            </AccordionItem>
           </Accordion>
 
           {customFields &&

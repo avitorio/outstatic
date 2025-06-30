@@ -3,7 +3,6 @@ import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight'
 import Highlight from '@tiptap/extension-highlight'
 import HorizontalRule from '@tiptap/extension-horizontal-rule'
 import Image from '@tiptap/extension-image'
-import Link from '@tiptap/extension-link'
 import Table from '@tiptap/extension-table'
 import TableCell from '@tiptap/extension-table-cell'
 import TableHeader from '@tiptap/extension-table-header'
@@ -17,10 +16,16 @@ import CodeBlock from '@/components/editor/extensions/code-block'
 import SlashCommand from '@/components/editor/extensions/slash-command'
 import { ToggleClass } from '@/components/editor/extensions/toggle-class'
 import { Mathematics } from '@/components/editor/extensions/mathematics'
+import LinkParser from '@/components/editor/extensions/link-parser'
 import { AIHighlight } from 'novel/extensions'
 import { cn } from '@/utils/ui'
 
 export const TiptapExtensions = [
+  Markdown.configure({
+    html: false,
+    linkify: false,
+    transformPastedText: true
+  }),
   AIHighlight,
   StarterKit.configure({
     bulletList: {
@@ -90,10 +95,8 @@ export const TiptapExtensions = [
   Highlight.configure({
     multicolor: true
   }),
-  Markdown.configure({
-    html: false,
-    linkify: false,
-    transformPastedText: true
+  LinkParser.configure({
+    openOnClick: false
   }),
   Mathematics.configure({
     HTMLAttributes: {
@@ -115,7 +118,6 @@ export const TiptapExtensions = [
       ]
     }
   }).configure({ inline: true }),
-  Link.configure({ openOnClick: false }),
   CodeBlockLowlight.extend({
     addNodeView() {
       return ReactNodeViewRenderer(CodeBlock as any)

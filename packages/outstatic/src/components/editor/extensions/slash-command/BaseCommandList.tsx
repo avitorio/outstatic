@@ -59,12 +59,16 @@ export const BaseCommandList = ({
       if (item) {
         if (item.title === 'Continue writing') {
           if (isLoading) return
-          complete(
-            getPrevText(editor, {
-              chars: 5000,
-              offset: 1
+
+          const prevText = getPrevText(editor, { chars: 5000, offset: 1 })
+
+          if (prevText === '') {
+            toast.error('Write some content so the AI can continue.')
+          } else {
+            complete(prevText, {
+              body: { option: 'continue', command: '' }
             })
-          )
+          }
         } else if (item.title === 'Image') {
           setImageMenu(true)
         } else {
