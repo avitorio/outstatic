@@ -157,7 +157,7 @@ export const AddCustomFieldDialog: React.FC<AddCustomFieldDialogProps> = ({
 
   return (
     <Dialog open={showAddModal} onOpenChange={onOpenChange}>
-      <DialogContent className="w-full max-w-2xl">
+      <DialogContent className="w-full md:max-w-2xl">
         <DialogHeader>
           <DialogTitle>
             Add Custom Field to {capitalCase(collection)}
