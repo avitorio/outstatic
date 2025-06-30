@@ -70,7 +70,8 @@ const DocumentSettings = ({
   const {
     setValue,
     formState: { errors },
-    control
+    control,
+    reset
   } = useFormContext()
   const router = useRouter()
 
@@ -85,10 +86,15 @@ const DocumentSettings = ({
   const [isOpen, setIsOpen] = useState(false)
 
   useEffect(() => {
-    if (!document.status) {
-      setValue('status', 'draft')
-    }
-  }, [document.status])
+    reset((prev) => ({
+      ...prev,
+      status: prev.status || 'draft',
+      author: {
+        name: prev.author?.name || session?.user?.name,
+        picture: prev.author?.picture || session?.user?.image
+      }
+    }))
+  }, [session?.user?.name, session?.user?.image, reset])
 
   const onModalChange = (value: boolean) => {
     if (!value) {
