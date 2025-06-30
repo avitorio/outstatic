@@ -129,12 +129,17 @@ const DocumentSettings = ({
     <>
       <div className="absolute w-full items-center justify-between flex p-4 border-t z-10 bottom-0 bg-background md:hidden">
         <Button
+          data-testid="mobile-toggle-button"
           variant="ghost"
           size="icon"
           onClick={() => setIsOpen(!isOpen)}
           className={`stroke-foreground ${isOpen ? 'bg-accent' : ''}`}
         >
-          {isOpen ? <PanelRightClose /> : <PanelRight />}
+          {isOpen ? (
+            <PanelRightClose data-testid="mobile-toggle-close-button" />
+          ) : (
+            <PanelRight />
+          )}
         </Button>
         <div className="flex flex-end w-full items-center justify-end gap-4">
           <label htmlFor="status" className="sr-only">
@@ -152,7 +157,7 @@ const DocumentSettings = ({
                   value={field.value ?? 'draft'}
                 >
                   <FormControl>
-                    <SelectTrigger>
+                    <SelectTrigger data-testid="status-select-mobile">
                       <SelectValue placeholder="Select status" />
                     </SelectTrigger>
                   </FormControl>
@@ -164,9 +169,13 @@ const DocumentSettings = ({
               </FormItem>
             )}
           />
-          <Button onClick={saveDocument} disabled={loading || !hasChanges}>
+          <Button
+            onClick={saveDocument}
+            disabled={loading || !hasChanges}
+            data-testid="save-button-mobile"
+          >
             {loading ? (
-              <div className="flex gap-3">
+              <div className="flex gap-3 items-center">
                 <SpinnerIcon className="text-background" />
                 Saving
               </div>
@@ -210,7 +219,7 @@ const DocumentSettings = ({
                   value={field.value ?? 'draft'}
                 >
                   <FormControl>
-                    <SelectTrigger>
+                    <SelectTrigger data-testid="status-select-desktop">
                       <SelectValue placeholder="Select status" />
                     </SelectTrigger>
                   </FormControl>
@@ -241,7 +250,11 @@ const DocumentSettings = ({
               className="hover:bg-foreground/30 max-h-[2.25rem]"
             />
           )}
-          <Button onClick={saveDocument} disabled={loading || !hasChanges}>
+          <Button
+            onClick={saveDocument}
+            disabled={loading || !hasChanges}
+            data-testid="save-button-desktop"
+          >
             {loading ? (
               <div className="flex gap-3">
                 <SpinnerIcon className="text-background" />
@@ -379,6 +392,7 @@ const DocumentSettings = ({
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button
+                    data-testid="add-custom-field-button"
                     variant="ghost"
                     size="icon"
                     className="text-xs flex gap-2"
