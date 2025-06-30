@@ -128,7 +128,7 @@ export const EditCustomFieldDialog: React.FC<EditCustomFieldDialogProps> = ({
 
   return (
     <Dialog open={showEditModal} onOpenChange={onOpenChange}>
-      <DialogContent className="w-full max-w-2xl">
+      <DialogContent className="w-full md:max-w-2xl">
         <DialogHeader>
           <DialogTitle>Edit {customFields[selectedField].title}</DialogTitle>
         </DialogHeader>
