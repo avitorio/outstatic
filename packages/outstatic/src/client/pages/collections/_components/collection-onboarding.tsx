@@ -65,12 +65,9 @@ export default function CollectionOnboarding() {
         ) : (
           <Card className="animate-fade-in">
             <CardHeader>
-              <CardTitle>Confirm Branch</CardTitle>
-              <CardDescription>
-                Confirm the branch before creating your first Collection
-              </CardDescription>
+              <CardTitle>Confirm branch</CardTitle>
             </CardHeader>
-            <CardContent className="prose prose-base dark:prose-invert">
+            <CardContent className="prose prose-sm dark:prose-invert">
               <p>
                 Hey! Just so you know, Outstatic saves everything to GitHub.{' '}
               </p>
