@@ -38,9 +38,10 @@ export default function CollectionOnboarding() {
                 Get started with your first Collection
               </CardDescription>
             </CardHeader>
-            <CardContent className="prose prose-base dark:prose-invert">
+            <CardContent className="prose prose-sm dark:prose-invert">
               <p>
                 To get started you will need to create a new Collection.
+                <br />
                 Collections are the main building block of your Outstatic
                 website.
               </p>
