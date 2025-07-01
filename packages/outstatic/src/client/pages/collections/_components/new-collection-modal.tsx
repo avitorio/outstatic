@@ -54,8 +54,10 @@ export default function NewCollectionModal({
   open: boolean
   onOpenChange: (open: boolean) => void
 }) {
-  const { pages, hasChanges, setHasChanges } = useOutstatic()
   const {
+    pages,
+    hasChanges,
+    setHasChanges,
     contentPath,
     monorepoPath,
     session,
@@ -192,8 +194,10 @@ export default function NewCollectionModal({
             setLoading(false)
             setHasChanges(false)
             onOpenChange(false)
-            router.push(`${dashboardRoute}/${slug}`)
-            router.refresh()
+            setTimeout(() => {
+              router.push(`${dashboardRoute}/${slug}`)
+              router.refresh()
+            }, 100)
           }
 
           if (data?.documents && data.documents.length > 0) {
@@ -230,7 +234,7 @@ export default function NewCollectionModal({
   return (
     <FormProvider {...form}>
       <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="max-w-2xl">
+        <DialogContent className="md:max-w-xl">
           {error ? (
             <Alert type="error">
               <span className="font-medium">Oops!</span> We couldn&apos;t create
@@ -287,11 +291,11 @@ export default function NewCollectionModal({
                   />
                   <Label htmlFor="outstatic-folder">
                     <Card
-                      className={`h-full cursor-pointer transition-all shadow-none group ${
+                      className={`h-full cursor-pointer transition-all shadow-none group relative ${
                         outstaticFolder ? 'border-primary' : ''
                       }`}
                     >
-                      <CardHeader className="relative">
+                      <CardHeader>
                         <div
                           className={`absolute right-2 top-2 w-6 h-6 rounded-full border-2 border-primary flex items-center justify-center transition-all ${
                             outstaticFolder
@@ -327,11 +331,11 @@ export default function NewCollectionModal({
                   />
                   <Label htmlFor="select-folder">
                     <Card
-                      className={`h-full cursor-pointer transition-all shadow-none group ${
+                      className={`h-full cursor-pointer transition-all shadow-none group relative ${
                         !outstaticFolder ? 'border-primary' : ''
                       }`}
                     >
-                      <CardHeader className="relative">
+                      <CardHeader>
                         <div
                           className={`absolute right-2 top-2 w-6 h-6 rounded-full border-2 border-primary flex items-center justify-center transition-all ${
                             !outstaticFolder

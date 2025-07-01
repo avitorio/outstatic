@@ -50,7 +50,7 @@ export default function List({ slug, title }: ListProps) {
               <CardHeader>
                 <CardTitle>This collection has no documents yet.</CardTitle>
               </CardHeader>
-              <CardContent className="flex flex-col w-full gap-4 prose prose-base">
+              <CardContent className="flex flex-col w-full gap-4 prose prose-sm">
                 <p>
                   Create your first{' '}
                   <span className="capitalize font-semibold">
