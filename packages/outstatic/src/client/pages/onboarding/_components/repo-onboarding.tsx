@@ -9,7 +9,7 @@ import {
 export default function RepoOnboarding() {
   return (
     <div className="max-w-lg">
-      <Card className="prose prose-base dark:prose-invert">
+      <Card className="prose prose-sm dark:prose-invert">
         <CardHeader className="text-foreground">
           Pick your Repository
         </CardHeader>

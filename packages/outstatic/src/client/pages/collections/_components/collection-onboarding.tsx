@@ -65,7 +65,7 @@ export default function CollectionOnboarding() {
         ) : (
           <Card className="animate-fade-in">
             <CardHeader>
-              <CardTitle>Confirm branch</CardTitle>
+              <CardTitle>Confirm your Branch</CardTitle>
             </CardHeader>
             <CardContent className="prose prose-sm dark:prose-invert">
               <p>
