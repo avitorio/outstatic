@@ -1,7 +1,7 @@
 import { useInitialData } from '@/utils/hooks/useInitialData'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
-import useSWR from 'swr'
+import { useQuery } from '@tanstack/react-query'
 import { OUTSTATIC_API_PATH } from '../constants'
 import { LoginSession } from './auth'
 
@@ -15,31 +15,37 @@ type useOstSessionReturn = {
   status: 'loading' | 'unauthenticated' | 'authenticated'
 }
 
-const fetcher = (url: string) =>
-  fetch(url)
-    .then((r) => {
-      return r.json()
-    })
-    .then((data) => {
-      return data || null
-    })
-
 export const useOstSession = ({
   redirectTo,
   redirectIfFound
 }: useOstSessionProps = {}): useOstSessionReturn => {
   const { basePath } = useInitialData()
-  const { data, error } = useSWR(
-    (basePath || '') + OUTSTATIC_API_PATH + '/user',
-    fetcher
-  )
-  const session = data?.session as LoginSession
-  const finished = Boolean(data)
-  const hasUser = Boolean(session)
   const router = useRouter()
 
+  const { data, error, isLoading } = useQuery({
+    queryKey: ['ost-session', basePath],
+    queryFn: async (): Promise<{ session: LoginSession } | null> => {
+      const response = await fetch(
+        (basePath || '') + OUTSTATIC_API_PATH + '/user'
+      )
+      if (!response.ok) {
+        throw new Error('Failed to fetch user session')
+      }
+      const data = await response.json()
+      return data || null
+    },
+    staleTime: 1000 * 60 * 5, // 5 minutes
+    gcTime: 1000 * 60 * 10, // 10 minutes
+    retry: 1,
+    refetchOnWindowFocus: false
+  })
+
+  const session = data?.session as LoginSession
+  const hasUser = Boolean(session)
+
   useEffect(() => {
-    if (!redirectTo || !finished) return
+    if (!redirectTo || isLoading) return
+
     if (
       // If redirectTo is set, redirect if the user was not found.
       (redirectTo && !redirectIfFound && !hasUser) ||
@@ -48,11 +54,9 @@ export const useOstSession = ({
     ) {
       router.push(redirectTo)
     }
+  }, [redirectTo, redirectIfFound, isLoading, hasUser, router])
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [redirectTo, redirectIfFound, finished, hasUser])
-
-  if (!data) {
+  if (isLoading) {
     return {
       session: null,
       status: 'loading'

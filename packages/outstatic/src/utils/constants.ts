@@ -16,6 +16,21 @@ export const MAX_AGE = 60 * 60 * 24 * 30 // 30 days
 export const TOKEN_SECRET =
   process.env.OST_TOKEN_SECRET || 'l1f3154n4dv3ntur3st4yS7r0n9s3cr3t'
 
+// Cookie settings
+export const COOKIE_SETTINGS = {
+  httpOnly: true,
+  secure: process.env.NODE_ENV === 'production',
+  path: '/',
+  sameSite: 'lax' as const
+} as const
+
+// Session validation
+export const SESSION_ERROR_MESSAGES = {
+  INVALID_SESSION: 'Invalid session data',
+  SESSION_EXPIRED: 'Session expired',
+  INVALID_STRUCTURE: 'Invalid session structure detected'
+} as const
+
 // Document fields
 export const DEFAULT_FIELDS: (keyof Document)[] = [
   'author',
