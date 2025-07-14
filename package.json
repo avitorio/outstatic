@@ -18,7 +18,7 @@
     "postinstall": "manypkg check && manypkg fix",
     "test": "turbo run test",
     "typecheck": "turbo run typecheck",
-    "prepublish": "pnpm typecheck && pnpm test && pnpm build --filter='!outstatic-basic-blog'",
+    "prepublish": "pnpm typecheck && pnpm test && pnpm build",
     "publish:canary": "pnpm clean && pnpm i && pnpm build --filter=outstatic && pnpm test --filter=outstatic && pnpm publish --filter=outstatic --tag canary",
     "publish:latest": "pnpm clean && pnpm i && pnpm build --filter=outstatic && pnpm test --filter=outstatic && pnpm publish --filter=outstatic --tag latest",
     "publish:canary:dry": "pnpm clean && pnpm i && pnpm build --filter=outstatic && pnpm test --filter=outstatic &&  pnpm publish --filter=outstatic --tag canary --dry-run",
