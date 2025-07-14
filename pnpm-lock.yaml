@@ -837,7 +837,7 @@ importers:
         version: 1.0.0
       next-navigation-guard:
         specifier: 0.1.2
-        version: 0.1.2(next@15.3.3(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.1.0)
+        version: 0.1.2(next@15.3.3(@babel/core@7.27.4)(@opentelemetry/api@1.9.0)(babel-plugin-macros@3.1.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.1.0)
       next-remove-imports:
         specifier: ^1.0.12
         version: 1.0.12(webpack@5.99.9(esbuild@0.17.19))
@@ -880,9 +880,6 @@ importers:
       sonner:
         specifier: ^1.7.4
         version: 1.7.4(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
-      swr:
-        specifier: ^1.3.0
-        version: 1.3.0(react@19.1.0)
       tailwind-merge:
         specifier: ^3.3.1
         version: 3.3.1
@@ -17803,6 +17800,11 @@ snapshots:
     dependencies:
       '@tsconfig/node16': 1.0.4
       regexparam: 2.0.2
+
+  next-navigation-guard@0.1.2(next@15.3.3(@babel/core@7.27.4)(@opentelemetry/api@1.9.0)(babel-plugin-macros@3.1.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.1.0):
+    dependencies:
+      next: 15.3.3(@babel/core@7.27.4)(@opentelemetry/api@1.9.0)(babel-plugin-macros@3.1.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      react: 19.1.0
 
   next-navigation-guard@0.1.2(next@15.3.3(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.1.0):
     dependencies:

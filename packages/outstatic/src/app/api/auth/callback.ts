@@ -107,7 +107,8 @@ router
 
     if (userData && access_token) {
       const { name, login, email, avatar_url } = userData
-      await setLoginSession({
+
+      const sessionData = {
         user: { name, login, email, image: avatar_url },
         access_token,
         refresh_token: refresh_token,
@@ -115,9 +116,15 @@ router
         refresh_token_expires: refresh_token_expires_in
           ? new Date(Date.now() + refresh_token_expires_in)
           : undefined
-      })
+      }
+
+      await setLoginSession(sessionData)
       return new NextResponse('ok', { status: 200 })
     } else {
+      console.error('Missing user data or access token:', {
+        userData,
+        access_token
+      })
       return NextResponse.json({ error: 'something' }, { status: 403 })
     }
   })
