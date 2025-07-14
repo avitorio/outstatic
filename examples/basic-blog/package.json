@@ -12,7 +12,7 @@
     "date-fns": "^4.1.0",
     "gray-matter": "^4.0.3",
     "next": "15.3.3",
-    "outstatic": "2.0.8",
+    "outstatic": "latest",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "remark": "^14.0.3",
