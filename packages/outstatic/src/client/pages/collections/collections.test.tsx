@@ -85,11 +85,7 @@ describe('Collections', () => {
     )
 
     // Update to match the exact text in the component
-    expect(
-      await screen.findByText(
-        'Confirm the branch before creating your first Collection'
-      )
-    ).toBeInTheDocument()
+    expect(await screen.findByText('Confirm your Branch')).toBeInTheDocument()
   })
 
   it('renders collections list correctly', () => {
