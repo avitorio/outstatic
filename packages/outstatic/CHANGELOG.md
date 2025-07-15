@@ -1,5 +1,24 @@
 # outstatic
 
+## 2.0.9
+
+### Patch Changes
+
+- 4eb536e: Refactor auth
+- 8f02bc6: fix how autolinks are parsed to markdown
+- bf4bd61: Update shadcn/ui styles
+- a8cea78: Fix: new collection content lock
+- da7b9e8: Update Packages & Install Manypkg
+- 8a67834: Add tests to DocumentSettings
+- 34837b3: - Improve Dark Mode with ShadCN theme classes (#302)
+- c3f9d6e: Fix: Author not being auto filled
+- 91f0b72: fix: media gallery dialog
+- 2bf467f: Add shadcn/ui accordion to custom fields
+- 158bcb1: Fix: custom field modal width
+- 227bfb5: Adjust onboarding styles
+- a70040a: fix: next-themes hydration error
+- b6fbe7d: fix ai autocomplete
+
 ## 2.0.8
 
 ### Patch Changes
