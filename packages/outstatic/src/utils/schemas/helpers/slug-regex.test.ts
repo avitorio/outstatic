@@ -1,4 +1,4 @@
-import { slugRegex } from './slugRegex'
+import { slugRegex } from './slug-regex'
 
 describe('Regex Test', () => {
   it('should allow lowercase letters, numbers, and hyphens', () => {
