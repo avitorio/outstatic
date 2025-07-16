@@ -1,4 +1,6 @@
-import { AdminLayout, DocumentSettings, DocumentTitleInput } from '@/components'
+import { AdminLayout } from '@/components/admin-layout'
+import { DocumentSettings } from '@/components/document-settings'
+import { DocumentTitleInput } from '@/components/document-title-input'
 import { MDEditor } from '@/components/editor/editor'
 import { DocumentContext } from '@/context'
 import { CustomFieldsType, Document, MDExtensions } from '@/types'

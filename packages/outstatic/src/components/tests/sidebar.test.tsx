@@ -3,7 +3,7 @@ import mockProviderProps from '@/utils/tests/mockProviderProps'
 import { TestWrapper } from '@/utils/TestWrapper'
 import { render, screen } from '@testing-library/react'
 import { act } from 'react'
-import { Sidebar } from './'
+import { Sidebar } from '@/components/sidebar'
 
 jest.mock('next/navigation', () => ({
   useRouter() {

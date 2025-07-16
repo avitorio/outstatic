@@ -17,7 +17,7 @@ export type DocumentTitleProps = {
   className?: string
 } & TextareaAutosizeProps
 
-export default function DocumentTitle({
+export function DocumentTitleInput({
   label,
   placeholder = '',
   helperText,

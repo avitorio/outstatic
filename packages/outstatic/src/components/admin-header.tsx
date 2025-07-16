@@ -11,7 +11,7 @@ import {
 } from 'lucide-react'
 import { memo, useEffect, useState } from 'react'
 import { Button } from '@/components/ui/shadcn/button'
-import { AppLogo } from '../ui/outstatic/app-logo'
+import { AppLogo } from '@/components/ui/outstatic/app-logo'
 import { useOutstatic } from '@/utils/hooks/useOutstatic'
 import { GitHubBranchSearch } from '@/components/ui/outstatic/github-branch-search'
 import {
@@ -32,7 +32,7 @@ import {
 } from '@/components/ui/shadcn/dropdown-menu'
 import { useTheme } from 'next-themes'
 import Link from 'next/link'
-import { useSidebar } from '../ui/shadcn/sidebar'
+import { useSidebar } from '@/components/ui/shadcn/sidebar'
 import { DiscordLogoIcon, GitHubLogoIcon } from '@radix-ui/react-icons'
 
 const themes = [
@@ -84,7 +84,7 @@ const community = [
   }
 ]
 
-const AdminHeader = () => {
+const AdminHeaderComponent = () => {
   const { session, status } = useOstSession()
   const { repoOwner, repoSlug } = useOutstatic()
   const { signOut } = useOstSignOut()
@@ -243,4 +243,4 @@ const AdminHeader = () => {
   )
 }
 
-export default memo(AdminHeader)
+export const AdminHeader = memo(AdminHeaderComponent)

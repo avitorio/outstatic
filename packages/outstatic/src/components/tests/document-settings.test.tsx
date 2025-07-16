@@ -4,9 +4,9 @@ import {
   documentExample
 } from '@/utils/TestWrapper'
 import { useOstSession } from '@/utils/auth/hooks'
-import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+import { render, screen, fireEvent } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import DocumentSettings from '.'
+import { DocumentSettings } from '@/components/document-settings'
 
 jest.mock('@/utils/auth/hooks')
 jest.mock('next/navigation', () => require('next-router-mock'))
@@ -83,9 +83,9 @@ jest.mock(
 )
 
 // Mock DeleteDocumentButton
-jest.mock('@/components/DeleteDocumentButton', () => ({
+jest.mock('@/components/delete-document-button', () => ({
   __esModule: true,
-  default: ({ onComplete, disabled }: any) => (
+  DeleteDocumentButton: ({ onComplete, disabled }: any) => (
     <button
       onClick={onComplete}
       disabled={disabled}
@@ -97,9 +97,9 @@ jest.mock('@/components/DeleteDocumentButton', () => ({
 }))
 
 // Mock DocumentSettingsImageSelection
-jest.mock('@/components/DocumentSettingsImageSelection', () => ({
+jest.mock('@/components/document-settings-image-selection', () => ({
   __esModule: true,
-  default: ({ id, defaultValue }: any) => (
+  DocumentSettingsImageSelection: ({ id, defaultValue }: any) => (
     <div data-testid={`image-selection-${id}`}>
       Image Selection: {defaultValue}
     </div>
@@ -116,7 +116,7 @@ jest.mock('@/components/ui/outstatic/date-time-picker-form', () => ({
 }))
 
 // Mock CustomFieldRenderer
-jest.mock('./custom-field-renderer', () => ({
+jest.mock('@/components/utils/custom-field-renderer', () => ({
   CustomFieldRenderer: ({ name, field }: any) => (
     <div data-testid={`custom-field-${name}`}>Custom Field: {field.title}</div>
   )

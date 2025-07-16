@@ -11,7 +11,7 @@ export type AdminLayoutProps = {
   className?: string
 }
 
-export default function AdminLayout({
+export function AdminLayout({
   children,
   error,
   settings,

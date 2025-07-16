@@ -1,4 +1,4 @@
-import DeleteDocumentButton from '@/components/DeleteDocumentButton'
+import { DeleteDocumentButton } from '@/components/delete-document-button'
 import { TestWrapper } from '@/utils/TestWrapper'
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 

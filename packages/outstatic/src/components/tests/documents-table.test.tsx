@@ -1,7 +1,7 @@
 import { TestWrapper } from '@/utils/TestWrapper'
 import { render, screen } from '@testing-library/react'
 import React from 'react'
-import DocumentsTable from './'
+import { DocumentsTable } from '@/components/documents-table'
 
 jest.mock('next/navigation', () => ({
   useParams: jest.fn().mockReturnValue({ ost: ['testCollection'] }),
@@ -26,15 +26,6 @@ jest.mock('change-case', () => {
   return {
     sentenceCase: (str: string) => str
   }
-})
-
-// Mock the DeleteDocumentButton component
-jest.mock('@/components/DeleteDocumentButton', () => {
-  return jest.fn(({ onComplete }) => (
-    <button onClick={onComplete} data-testid="delete-button">
-      Delete
-    </button>
-  ))
 })
 
 const date1 = 'July 14, 2022'

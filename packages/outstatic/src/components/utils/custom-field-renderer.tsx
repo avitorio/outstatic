@@ -1,4 +1,4 @@
-import DocumentSettingsImageSelection from '@/components/DocumentSettingsImageSelection'
+import { DocumentSettingsImageSelection } from '@/components/document-settings-image-selection'
 import { TagInput } from '@/components/ui/outstatic/tag-input'
 import { Input } from '@/components/ui/shadcn/input'
 import { Textarea } from '@/components/ui/shadcn/textarea'

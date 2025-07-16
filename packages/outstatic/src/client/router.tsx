@@ -1,4 +1,4 @@
-import { AdminLoading } from '@/components/AdminLoading'
+import { AdminLoading } from '@/components/admin-loading'
 import { useCollections } from '@/utils/hooks/useCollections'
 import { useOutstatic } from '@/utils/hooks/useOutstatic'
 import { ReactElement } from 'react'

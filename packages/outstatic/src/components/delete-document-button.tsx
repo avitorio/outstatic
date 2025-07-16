@@ -9,7 +9,7 @@ import { stringifyMetadata } from '@/utils/metadata/stringify'
 import { Trash } from 'lucide-react'
 import { useState } from 'react'
 import { Button } from '@/components/ui/shadcn/button'
-import { SpinnerIcon } from '../ui/outstatic/spinner-icon'
+import { SpinnerIcon } from '@/components/ui/outstatic/spinner-icon'
 import { toast } from 'sonner'
 import { useGetDocuments } from '@/utils/hooks/useGetDocuments'
 import { useCollections } from '@/utils/hooks/useCollections'
@@ -33,7 +33,7 @@ type DeleteDocumentButtonProps = {
   className?: string
 }
 
-const DeleteDocumentButton = ({
+export const DeleteDocumentButton = ({
   slug,
   extension,
   disabled = false,
@@ -157,5 +157,3 @@ const DeleteDocumentButton = ({
     </>
   )
 }
-
-export default DeleteDocumentButton

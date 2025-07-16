@@ -2,11 +2,15 @@ import { API_MEDIA_PATH } from '@/utils/constants'
 import { useOutstatic } from '@/utils/hooks/useOutstatic'
 import { useContext, useEffect, useState } from 'react'
 import { Button } from '@/components/ui/shadcn/button'
-import MediaLibraryModal from '../ui/outstatic/media-library-modal'
+import MediaLibraryModal from '@/components/ui/outstatic/media-library-modal'
 import { useFormContext } from 'react-hook-form'
-import { FormDescription, FormField, FormMessage } from '../ui/shadcn/form'
-import { Input } from '../ui/shadcn/input'
-import { SpinnerIcon } from '../ui/outstatic/spinner-icon'
+import {
+  FormDescription,
+  FormField,
+  FormMessage
+} from '@/components/ui/shadcn/form'
+import { Input } from '@/components/ui/shadcn/input'
+import { SpinnerIcon } from '@/components/ui/outstatic/spinner-icon'
 import { ImageOff } from 'lucide-react'
 import { DocumentContext } from '@/context'
 
@@ -15,7 +19,7 @@ type DocumentSettingsImageSelectionProps = {
   defaultValue?: string
 }
 
-const DocumentSettingsImageSelection = ({
+export const DocumentSettingsImageSelection = ({
   id,
   defaultValue = ''
 }: DocumentSettingsImageSelectionProps) => {
@@ -221,5 +225,3 @@ const DocumentSettingsImageSelection = ({
     </>
   )
 }
-
-export default DocumentSettingsImageSelection

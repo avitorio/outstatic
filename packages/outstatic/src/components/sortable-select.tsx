@@ -19,7 +19,7 @@ import Select, {
   components,
   MenuProps
 } from 'react-select'
-import { Column } from '../DocumentsTable'
+import { Column } from '@/components/documents-table'
 
 const MultiValue = (props: MultiValueProps<Column>) => {
   const onMouseDown: MouseEventHandler<HTMLDivElement> = (e) => {
@@ -134,7 +134,7 @@ const Menu = (props: MenuProps) => {
   )
 }
 
-const SortableSelect = ({
+export const SortableSelect = ({
   selected,
   setSelected,
   defaultValues,
@@ -220,5 +220,3 @@ const SortableSelect = ({
     </DndContext>
   )
 }
-
-export default SortableSelect

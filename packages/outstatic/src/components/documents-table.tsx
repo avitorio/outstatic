@@ -1,5 +1,5 @@
-import DeleteDocumentButton from '@/components/DeleteDocumentButton'
-import SortableSelect from '@/components/SortableSelect'
+import { DeleteDocumentButton } from '@/components/delete-document-button'
+import { SortableSelect } from '@/components/sortable-select'
 import { OstDocument } from '@/types/public'
 import { useGetDocuments } from '@/utils/hooks/useGetDocuments'
 import { sentenceCase } from 'change-case'
@@ -26,7 +26,7 @@ export type Column = {
   value: string
 }
 
-const DocumentsTable = () => {
+export const DocumentsTable = () => {
   const { data, refetch } = useGetDocuments()
   const { dashboardRoute } = useOutstatic()
   const router = useRouter()
@@ -212,5 +212,3 @@ const cellSwitch = (columnValue: string, document: OstDocument) => {
       )
   }
 }
-
-export default DocumentsTable

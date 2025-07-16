@@ -4,8 +4,8 @@ import {
   AccordionItem,
   AccordionTrigger
 } from '@/components/ui/shadcn/accordion'
-import DeleteDocumentButton from '@/components/DeleteDocumentButton'
-import DocumentSettingsImageSelection from '@/components/DocumentSettingsImageSelection'
+import { DeleteDocumentButton } from '@/components/delete-document-button'
+import { DocumentSettingsImageSelection } from '@/components/document-settings-image-selection'
 import { Input } from '@/components/ui/shadcn/input'
 import { DocumentContext } from '@/context'
 import { CustomFieldsType } from '@/types'
@@ -46,7 +46,7 @@ import {
 import { AddCustomFieldDialog } from '@/client/pages/custom-fields/_components/add-custom-field-dialog'
 import { DateTimePickerForm } from '@/components/ui/outstatic/date-time-picker-form'
 
-import { CustomFieldRenderer } from './custom-field-renderer'
+import { CustomFieldRenderer } from '@/components/utils/custom-field-renderer'
 import { cn } from '@/utils/ui'
 
 type DocumentSettingsProps = {
@@ -59,7 +59,7 @@ type DocumentSettingsProps = {
   metadata: Record<string, any>
 }
 
-const DocumentSettings = ({
+export const DocumentSettings = ({
   saveDocument,
   loading,
   showDelete,
@@ -68,7 +68,6 @@ const DocumentSettings = ({
   metadata
 }: DocumentSettingsProps) => {
   const {
-    setValue,
     formState: { errors },
     control,
     reset
@@ -428,5 +427,3 @@ const DocumentSettings = ({
     </>
   )
 }
-
-export default DocumentSettings

@@ -1,11 +1,12 @@
-import { AdminLayout, DocumentsTable } from '@/components'
+import { AdminLayout } from '@/components/admin-layout'
+import { DocumentsTable } from '@/components/documents-table'
 import {
   Card,
   CardHeader,
   CardTitle,
   CardContent
 } from '@/components/ui/shadcn/card'
-import { AdminLoading } from '@/components/AdminLoading'
+import { AdminLoading } from '@/components/admin-loading'
 import { Button } from '@/components/ui/shadcn/button'
 import { useGetDocuments } from '@/utils/hooks/useGetDocuments'
 import Link from 'next/link'

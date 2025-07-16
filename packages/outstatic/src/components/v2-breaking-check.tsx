@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/shadcn/alert-dialog'
 import { OUTSTATIC_VERSION } from '@/utils/constants'
 
-const V2_0_BreakingCheck = () => {
+export const V2BreakingCheck = () => {
   const [showOverlay, setShowOverlay] = useState(false)
 
   useEffect(() => {
@@ -55,5 +55,3 @@ const V2_0_BreakingCheck = () => {
     </AlertDialog>
   )
 }
-
-export default V2_0_BreakingCheck

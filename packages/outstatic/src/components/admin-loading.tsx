@@ -1,4 +1,4 @@
-import AdminLayout from '@/components/AdminLayout'
+import { AdminLayout } from '@/components/admin-layout'
 import { Skeleton } from '@/components/ui/shadcn/skeleton'
 
 export const AdminLoading = () => (
