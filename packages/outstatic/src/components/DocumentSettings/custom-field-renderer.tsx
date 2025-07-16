@@ -1,4 +1,3 @@
-// import Accordion from '@/components/Accordion'
 import DocumentSettingsImageSelection from '@/components/DocumentSettingsImageSelection'
 import { TagInput } from '@/components/ui/outstatic/tag-input'
 import { Input } from '@/components/ui/shadcn/input'
