@@ -19,8 +19,6 @@ jest.mock('js-cookie', () => ({
   set: jest.fn()
 }))
 
-jest.mock('@/utils/generateUniqueId', () => jest.fn())
-
 jest.mock('@/utils/hooks/useCollections', () => ({
   useCollections: () => ({
     data: [
