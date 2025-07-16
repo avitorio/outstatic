@@ -1,5 +1,5 @@
-import { AdminLayout } from '@/components'
-import { AdminLoading } from '@/components/AdminLoading'
+import { AdminLayout } from '@/components/admin-layout'
+import { AdminLoading } from '@/components/admin-loading'
 import { Button } from '@/components/ui/shadcn/button'
 import { CollectionType, useCollections } from '@/utils/hooks/useCollections'
 import { Card, CardContent } from '@/components/ui/shadcn/card'

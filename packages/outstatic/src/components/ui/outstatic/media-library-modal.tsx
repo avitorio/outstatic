@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/shadcn/button'
 import { toast } from 'sonner'
 import useSubmitMedia from '@/utils/hooks/useSubmitMedia'
 import { FileType } from '@/types'
-import { DeleteMediaButton } from '@/components/DeleteMediaButton'
+import { DeleteMediaButton } from '@/components/delete-media-button'
 import {
   Dialog,
   DialogFooter,

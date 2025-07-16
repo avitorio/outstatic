@@ -1,4 +1,4 @@
-import { AdminLayout } from '@/components'
+import { AdminLayout } from '@/components/admin-layout'
 import { GitHubRepoSearch } from '@/components/ui/outstatic/github-repo-search'
 import { Button } from '@/components/ui/shadcn/button'
 import { useCollections } from '@/utils/hooks/useCollections'

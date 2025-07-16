@@ -1,5 +1,5 @@
-import { AdminLayout } from '@/components'
-import { AdminLoading } from '@/components/AdminLoading'
+import { AdminLayout } from '@/components/admin-layout'
+import { AdminLoading } from '@/components/admin-loading'
 import LineBackground from '@/components/ui/outstatic/line-background'
 import { Button } from '@/components/ui/shadcn/button'
 import {

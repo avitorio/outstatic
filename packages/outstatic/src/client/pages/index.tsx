@@ -1,7 +1,8 @@
 'use client'
 import { OutstaticData } from '@/app'
-import { AdminHeader, Sidebar } from '@/components'
-import { AdminLoading } from '@/components/AdminLoading'
+import { AdminHeader } from '@/components/admin-header'
+import { Sidebar } from '@/components/sidebar'
+import { AdminLoading } from '@/components/admin-loading'
 import { InitialDataContext } from '@/utils/hooks/useInitialData'
 import { useOutstatic, useLocalData } from '@/utils/hooks/useOutstatic'
 import { queryClient } from '@/utils/react-query/queryClient'
@@ -14,7 +15,7 @@ import Welcome from './welcome'
 import { useGetRepository } from '@/utils/hooks/useGetRepository'
 import Onboarding from './onboarding'
 import { NavigationGuardProvider } from 'next-navigation-guard'
-import V2_0_BreakingCheck from '@/components/v2_0_BreakingCheck'
+import { V2BreakingCheck } from '@/components/v2-breaking-check'
 import { ThemeProvider } from 'next-themes'
 import 'katex/dist/katex.min.css'
 import { SidebarProvider } from '@/components/ui/shadcn/sidebar'
@@ -106,7 +107,7 @@ export const OstClient = ({ ostData, params }: OstClientProps) => {
             <AdminArea params={params} />
           </NavigationGuardProvider>
         </QueryClientProvider>
-        <V2_0_BreakingCheck />
+        <V2BreakingCheck />
       </ThemeProvider>
     </InitialDataContext.Provider>
   )
