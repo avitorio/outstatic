@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { slugRegex } from '@/utils/slugRegex'
+import { slugRegex } from '@/utils/schemas/helpers/slug-regex'
 import { DocumentSchemaShape } from '@/types'
 
 export const documentShape = {
