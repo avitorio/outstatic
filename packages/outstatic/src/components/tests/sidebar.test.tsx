@@ -1,6 +1,6 @@
 import { InitialDataContext } from '@/utils/hooks/useInitialData'
 import mockProviderProps from '@/utils/tests/mockProviderProps'
-import { TestWrapper } from '@/utils/TestWrapper'
+import { TestWrapper } from '@/utils/tests/test-wrapper'
 import { render, screen } from '@testing-library/react'
 import { act } from 'react'
 import { Sidebar } from '@/components/sidebar'

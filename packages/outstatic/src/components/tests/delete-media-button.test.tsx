@@ -1,5 +1,5 @@
 import { DeleteMediaButton } from '@/components/delete-media-button'
-import { TestWrapper } from '@/utils/TestWrapper'
+import { TestWrapper } from '@/utils/tests/test-wrapper'
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 
 // Mock the useOutstatic hook

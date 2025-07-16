@@ -1,4 +1,4 @@
-import { TestWrapper } from '@/utils/TestWrapper'
+import { TestWrapper } from '@/utils/tests/test-wrapper'
 import { render, screen } from '@testing-library/react'
 import React from 'react'
 import { DocumentsTable } from '@/components/documents-table'

@@ -2,7 +2,7 @@ import {
   TestProviders,
   TestWrapper,
   documentExample
-} from '@/utils/TestWrapper'
+} from '@/utils/tests/test-wrapper'
 import { useOstSession } from '@/utils/auth/hooks'
 import { render, screen, fireEvent } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
