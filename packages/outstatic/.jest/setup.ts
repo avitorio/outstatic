@@ -12,6 +12,11 @@ process.env.OST_REPO_BRANCH = 'TEST_OST_REPO_BRANCH'
 // required by Iron
 process.env.OST_TOKEN_SECRET = '32characterstringtestrequirement'
 
+// Polyfill TextEncoder and TextDecoder for jose library
+import { TextEncoder, TextDecoder } from 'util'
+global.TextEncoder = TextEncoder
+global.TextDecoder = TextDecoder as any
+
 // Mock matchMedia for tests
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
