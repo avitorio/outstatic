@@ -1,4 +1,4 @@
-import * as Iron from '@hapi/iron'
+import { SignJWT, jwtVerify } from 'jose'
 import { cookies } from 'next/headers'
 import {
   TOKEN_SECRET,
@@ -99,9 +99,14 @@ export async function setLoginSession(session: LoginSession): Promise<boolean> {
     throw new Error(SESSION_ERROR_MESSAGES.INVALID_SESSION)
   }
 
-  // Create a session object with a max age that we can validate later
-  const obj = { ...session }
-  const token = await Iron.seal(obj, TOKEN_SECRET, Iron.defaults)
+  // Create a JWT token with the session data
+  const secret = new TextEncoder().encode(TOKEN_SECRET)
+  const token = await new SignJWT({ ...session })
+    .setProtectedHeader({ alg: 'HS256' })
+    .setIssuedAt()
+    .setExpirationTime(session.refresh_token_expires ?? session.expires)
+    .sign(secret)
+
   const cookieStore = await cookies()
 
   const maxAge = Math.max(
@@ -128,14 +133,11 @@ export async function getLoginSession(): Promise<LoginSession | null> {
   }
 
   try {
-    const unsealedSession = await Iron.unseal(
-      token,
-      TOKEN_SECRET,
-      Iron.defaults
-    )
+    const secret = new TextEncoder().encode(TOKEN_SECRET)
+    const { payload } = await jwtVerify(token, secret)
 
     // Normalize dates (convert strings back to Date objects)
-    const session = normalizeDates(unsealedSession)
+    const session = normalizeDates(payload)
 
     // Validate the session structure
     if (!validateSession(session)) {

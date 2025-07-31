@@ -1,5 +1,5 @@
 import { LoginSession } from '@/utils/auth/auth'
-import * as Iron from '@hapi/iron'
+import { SignJWT } from 'jose'
 import hm from 'node-mocks-http'
 
 export const createMockRequest = async (
@@ -23,11 +23,14 @@ export const createMockRequest = async (
   }
 
   // see auth.ts
-  const token = await Iron.seal(
-    sesh,
-    process.env.OST_TOKEN_SECRET || 'l1f3154n4dv3ntur3st4yS7r0n9s3cr3t',
-    Iron.defaults
+  const secret = new TextEncoder().encode(
+    process.env.OST_TOKEN_SECRET || 'l1f3154n4dv3ntur3st4yS7r0n9s3cr3t'
   )
+  const token = await new SignJWT({ ...sesh })
+    .setProtectedHeader({ alg: 'HS256' })
+    .setIssuedAt()
+    .setExpirationTime(sesh.refresh_token_expires ?? sesh.expires)
+    .sign(secret)
 
   // create mock next.js objects for SSP
   const req = hm.createRequest({
