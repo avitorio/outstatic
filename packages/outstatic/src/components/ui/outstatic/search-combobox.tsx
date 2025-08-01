@@ -74,7 +74,7 @@ export function SearchCombobox({
       {size === 'sm' ? (
         <span
           className={cn(
-            'truncate text-left hidden lg:flex',
+            'truncate text-left',
             size === 'sm' ? 'w-min text-sm mr-1 font-medium' : 'w-[20rem]'
           )}
         >
@@ -113,8 +113,8 @@ export function SearchCombobox({
           >
             <span
               className={cn(
-                'truncate text-left mr-1 lg:hidden',
-                size === 'sm' ? 'w-min' : 'w-[20rem]'
+                'truncate text-left mr-1',
+                size === 'sm' ? 'hidden' : 'w-[20rem]'
               )}
             >
               {isLoading
