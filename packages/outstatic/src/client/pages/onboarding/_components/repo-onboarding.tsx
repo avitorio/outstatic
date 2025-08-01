@@ -3,7 +3,8 @@ import {
   Card,
   CardContent,
   CardFooter,
-  CardHeader
+  CardHeader,
+  CardTitle
 } from '@/components/ui/shadcn/card'
 
 export default function RepoOnboarding() {
@@ -11,7 +12,7 @@ export default function RepoOnboarding() {
     <div className="max-w-lg">
       <Card className="prose prose-sm dark:prose-invert">
         <CardHeader className="text-foreground">
-          Pick your Repository
+          <CardTitle>Pick your Repository</CardTitle>
         </CardHeader>
         <CardContent>
           <GitHubRepoSearch />
