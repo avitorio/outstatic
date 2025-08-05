@@ -74,8 +74,8 @@ export function SearchCombobox({
       {size === 'sm' ? (
         <span
           className={cn(
-            'truncate text-left',
-            size === 'sm' ? 'w-min text-sm font-medium' : 'w-[20rem]'
+            'truncate text-left hidden lg:flex',
+            size === 'sm' ? 'w-min text-sm mr-1 font-medium' : 'w-[20rem]'
           )}
         >
           {isLoading
@@ -88,7 +88,7 @@ export function SearchCombobox({
                 return (
                   <>
                     {selectedRecord?.icon && (
-                      <selectedRecord.icon className="mr-2 h-4 w-4 inline-block" />
+                      <selectedRecord.icon className="h-4 w-4 inline-block" />
                     )}
                     {selectedRecord?.label}
                   </>
@@ -106,49 +106,41 @@ export function SearchCombobox({
             className={cn(
               buttonClassName,
               size === 'sm' &&
-                'focus-visible:outline-hidden focus-visible:ring-0 focus-visible:ring-offset-0'
+                'focus-visible:outline-hidden focus-visible:ring-0 focus-visible:ring-offset-0 px-1'
             )}
             disabled={disabled || isLoading}
             size={size}
           >
             <span
               className={cn(
-                'truncate text-left',
+                'truncate text-left mr-1 lg:hidden',
                 size === 'sm' ? 'w-min' : 'w-[20rem]'
               )}
             >
-              {size !== 'sm'
-                ? isLoading
-                  ? loadingPlaceholder
-                  : value
-                  ? (() => {
-                      const selectedRecord = data.find(
-                        (dataRecord) => dataRecord.value === value
-                      )
-                      return (
-                        <>
-                          {selectedRecord?.icon && (
-                            <selectedRecord.icon className="mr-2 h-4 w-4 inline-block" />
-                          )}
-                          {selectedRecord?.label}
-                        </>
-                      )
-                    })()
-                  : selectPlaceholder
-                : null}
+              {isLoading
+                ? loadingPlaceholder
+                : value
+                ? (() => {
+                    const selectedRecord = data.find(
+                      (dataRecord) => dataRecord.value === value
+                    )
+                    return (
+                      <>
+                        {selectedRecord?.icon && (
+                          <selectedRecord.icon className="h-4 w-4 inline-block" />
+                        )}
+                        {selectedRecord?.label}
+                      </>
+                    )
+                  })()
+                : selectPlaceholder}
             </span>
-            <CaretSortIcon
-              className={cn(
-                'h-4 w-4 shrink-0 opacity-50',
-                size !== 'sm' && 'ml-2'
-              )}
-            />
+            <div>
+              <CaretSortIcon className={cn('h-4 w-4 shrink-0 opacity-50')} />
+            </div>
           </Button>
         </PopoverTrigger>
-        <PopoverContent
-          className="w-[20rem] p-0 md:w-[20rem]"
-          align={size === 'sm' ? 'start' : 'center'}
-        >
+        <PopoverContent className="w-[20rem] p-0 md:w-[20rem]" align="center">
           <Command className="max-h-[275px]">
             <CommandInput
               placeholder={searchPlaceholder}
