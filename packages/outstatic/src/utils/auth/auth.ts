@@ -139,7 +139,7 @@ export async function refreshToken(
     const updatedSession: LoginSession = {
       ...session,
       access_token,
-      expires: new Date(Date.now() + 30 * 1000),
+      expires: new Date(Date.now() + expires_in),
       refresh_token: refresh_token || session.refresh_token,
       refresh_token_expires: refresh_token_expires_in
         ? new Date(Date.now() + refresh_token_expires_in)
