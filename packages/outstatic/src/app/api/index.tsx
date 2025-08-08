@@ -4,6 +4,7 @@ import signout from '@/app/api/auth/signout'
 import user from '@/app/api/auth/user'
 import generate from '@/app/api/generate'
 import media from '@/app/api/media'
+import github from '@/app/api/github'
 import { NextRequest } from 'next/server'
 
 export interface Request extends NextRequest {
@@ -15,7 +16,7 @@ export type GetParams = Promise<{
 }>
 
 export type PostParams = Promise<{
-  ost: ['generate']
+  ost: ['generate', 'github']
 }>
 
 const getPaths = {
@@ -27,7 +28,8 @@ const getPaths = {
 }
 
 const postPaths = {
-  generate
+  generate,
+  github
 }
 
 export const OutstaticApi = {

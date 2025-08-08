@@ -94,6 +94,106 @@ function validateSession(session: any): session is LoginSession {
   return isValid
 }
 
+// Helper function to check if token is expired
+export function isTokenExpired(expires: Date): boolean {
+  return Date.now() >= expires.getTime()
+}
+
+// Helper function to check if refresh token is valid
+export function isRefreshTokenValid(session: LoginSession): boolean {
+  if (!session.refresh_token) return false
+
+  if (!session.refresh_token_expires) return true
+
+  return Date.now() < session.refresh_token_expires.getTime()
+}
+
+// Helper function to refresh token
+export async function refreshToken(
+  session: LoginSession
+): Promise<LoginSession> {
+  if (!session.refresh_token) {
+    throw new Error('No refresh token available')
+  }
+
+  if (!isRefreshTokenValid(session)) {
+    throw new Error('Refresh token is expired')
+  }
+
+  try {
+    const {
+      access_token,
+      expires_in,
+      refresh_token,
+      refresh_token_expires_in
+    } = await getAccessToken({
+      refresh_token: session.refresh_token,
+      grant_type: 'refresh_token'
+    })
+
+    if (!access_token) {
+      throw new Error('Failed to refresh access token')
+    }
+
+    // Update the session with new tokens
+    const updatedSession: LoginSession = {
+      ...session,
+      access_token,
+      expires: new Date(Date.now() + 30 * 1000),
+      refresh_token: refresh_token || session.refresh_token,
+      refresh_token_expires: refresh_token_expires_in
+        ? new Date(Date.now() + refresh_token_expires_in)
+        : session.refresh_token_expires
+    }
+
+    // Save the updated session
+    await setLoginSession(updatedSession)
+    return updatedSession
+  } catch (error) {
+    console.error('Failed to refresh token:', error)
+    throw new Error('Token refresh failed')
+  }
+}
+
+// Map to track ongoing refresh operations to prevent multiple concurrent refreshes
+const refreshOperations = new Map<string, Promise<LoginSession>>()
+
+// Helper function to refresh token with concurrent request handling
+export async function refreshTokenIfNeeded(
+  session: LoginSession
+): Promise<LoginSession> {
+  // If token is not expired, return the session as is
+  if (!isTokenExpired(session.expires)) {
+    return session
+  }
+
+  // If no refresh token or refresh token is expired, throw error
+  if (!isRefreshTokenValid(session)) {
+    throw new Error('Token expired and no valid refresh token available')
+  }
+
+  // Create a unique key for this refresh operation based on the refresh token
+  const refreshKey = session.refresh_token!
+
+  // Check if there's already a refresh operation in progress for this token
+  if (refreshOperations.has(refreshKey)) {
+    // Wait for the existing refresh operation to complete
+    return await refreshOperations.get(refreshKey)!
+  }
+
+  // Start a new refresh operation
+  const refreshPromise = refreshToken(session)
+  refreshOperations.set(refreshKey, refreshPromise)
+
+  try {
+    const refreshedSession = await refreshPromise
+    return refreshedSession
+  } finally {
+    // Clean up the refresh operation from the map
+    refreshOperations.delete(refreshKey)
+  }
+}
+
 export async function setLoginSession(session: LoginSession): Promise<boolean> {
   if (!validateSession(session)) {
     throw new Error(SESSION_ERROR_MESSAGES.INVALID_SESSION)
@@ -145,54 +245,7 @@ export async function getLoginSession(): Promise<LoginSession | null> {
       return null
     }
 
-    const expires = session.expires.getTime()
-    const now = Date.now()
-
-    if (now <= expires) {
-      return session
-    }
-
-    // If the access token is expired but we have a valid refresh token, try to refresh it
-    if (
-      now > expires &&
-      session.refresh_token &&
-      (!session.refresh_token_expires ||
-        now <= session.refresh_token_expires.getTime())
-    ) {
-      try {
-        const {
-          access_token,
-          expires_in,
-          refresh_token,
-          refresh_token_expires_in
-        } = await getAccessToken({
-          refresh_token: session.refresh_token,
-          grant_type: 'refresh_token'
-        })
-
-        if (access_token) {
-          // Update the session with new tokens
-          const updatedSession: LoginSession = {
-            ...session,
-            access_token,
-            expires: new Date(now + expires_in),
-            refresh_token: refresh_token || session.refresh_token,
-            refresh_token_expires: refresh_token_expires_in
-              ? new Date(now + refresh_token_expires_in)
-              : session.refresh_token_expires
-          }
-
-          // Save the updated session
-          await setLoginSession(updatedSession)
-          return updatedSession
-        }
-      } catch (refreshError) {
-        console.error('Failed to refresh token:', refreshError)
-        // Continue to throw session expired error
-      }
-    }
-
-    throw new Error(SESSION_ERROR_MESSAGES.SESSION_EXPIRED)
+    return session
   } catch (error) {
     console.error('Session validation error:', error)
     return null
