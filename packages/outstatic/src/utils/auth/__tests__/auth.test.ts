@@ -4,6 +4,9 @@ import {
   setLoginSession,
   getLoginSession,
   clearLoginSession,
+  refreshTokenIfNeeded,
+  isTokenExpired,
+  isRefreshTokenValid,
   LoginSession
 } from '../auth'
 import { getAccessToken } from '../github'
@@ -227,7 +230,7 @@ describe('Auth Utils', () => {
       )
     })
 
-    it('should refresh token when access token is expired but refresh token is valid', async () => {
+    it('should return session even if access token is expired', async () => {
       const expiredSession = {
         ...mockSession,
         expires: new Date(Date.now() - 1000) // expired
@@ -238,64 +241,13 @@ describe('Auth Utils', () => {
         payload: expiredSession
       })
 
-      const newAccessToken = 'new-access-token'
-      const newRefreshToken = 'new-refresh-token'
-      ;(getAccessToken as jest.Mock).mockResolvedValueOnce({
-        access_token: newAccessToken,
-        expires_in: 3600,
-        refresh_token: newRefreshToken,
-        refresh_token_expires_in: 86400
-      })
-
       const result = await getLoginSession()
 
-      expect(getAccessToken).toHaveBeenCalledWith({
-        refresh_token: expiredSession.refresh_token,
-        grant_type: 'refresh_token'
-      })
-
-      expect(result).toEqual(
-        expect.objectContaining({
-          access_token: newAccessToken,
-          refresh_token: newRefreshToken,
-          expires: expect.any(Date),
-          refresh_token_expires: expect.any(Date)
-        })
-      )
-
-      // Should save the updated session
-      expect(SignJWT).toHaveBeenCalled()
-      expect(mockCookieStore.set).toHaveBeenCalled()
+      // Should return the session as is, even if expired
+      expect(result).toEqual(expiredSession)
     })
 
-    it('should handle token refresh when no new refresh token is provided', async () => {
-      const expiredSession = {
-        ...mockSession,
-        expires: new Date(Date.now() - 1000) // expired
-      }
-      const mockToken = 'mock-jwt-token'
-      mockCookieStore.get.mockReturnValue({ value: mockToken })
-      ;(jwtVerify as jest.Mock).mockResolvedValueOnce({
-        payload: expiredSession
-      })
-      ;(getAccessToken as jest.Mock).mockResolvedValueOnce({
-        access_token: 'new-access-token',
-        expires_in: 3600
-        // No refresh_token in response
-      })
-
-      const result = await getLoginSession()
-
-      expect(result).toEqual(
-        expect.objectContaining({
-          access_token: 'new-access-token',
-          refresh_token: expiredSession.refresh_token, // Should keep old refresh token
-          expires: expect.any(Date)
-        })
-      )
-    })
-
-    it('should return null when session is expired and refresh token is invalid', async () => {
+    it('should return session even if refresh token is expired', async () => {
       const expiredSession = {
         ...mockSession,
         expires: new Date(Date.now() - 1000), // expired
@@ -309,10 +261,11 @@ describe('Auth Utils', () => {
 
       const result = await getLoginSession()
 
-      expect(result).toBeNull()
+      // Should return the session as is, even if refresh token is expired
+      expect(result).toEqual(expiredSession)
     })
 
-    it('should return null when session is expired and no refresh token exists', async () => {
+    it('should return session even if no refresh token exists', async () => {
       const expiredSession = {
         ...mockSession,
         expires: new Date(Date.now() - 1000), // expired
@@ -327,7 +280,8 @@ describe('Auth Utils', () => {
 
       const result = await getLoginSession()
 
-      expect(result).toBeNull()
+      // Should return the session as is, even if no refresh token
+      expect(result).toEqual(expiredSession)
     })
 
     it('should return null when token verification fails', async () => {
@@ -346,7 +300,7 @@ describe('Auth Utils', () => {
       )
     })
 
-    it('should return null when token refresh fails', async () => {
+    it('should return session even if token refresh would fail', async () => {
       const expiredSession = {
         ...mockSession,
         expires: new Date(Date.now() - 1000) // expired
@@ -356,20 +310,14 @@ describe('Auth Utils', () => {
       ;(jwtVerify as jest.Mock).mockResolvedValueOnce({
         payload: expiredSession
       })
-      ;(getAccessToken as jest.Mock).mockRejectedValueOnce(
-        new Error('Refresh failed')
-      )
 
       const result = await getLoginSession()
 
-      expect(result).toBeNull()
-      expect(console.error).toHaveBeenCalledWith(
-        'Failed to refresh token:',
-        expect.any(Error)
-      )
+      // Should return the session as is, even if token refresh would fail
+      expect(result).toEqual(expiredSession)
     })
 
-    it('should return null when token refresh returns no access token', async () => {
+    it('should return session even if token refresh returns no access token', async () => {
       const expiredSession = {
         ...mockSession,
         expires: new Date(Date.now() - 1000) // expired
@@ -379,14 +327,11 @@ describe('Auth Utils', () => {
       ;(jwtVerify as jest.Mock).mockResolvedValueOnce({
         payload: expiredSession
       })
-      ;(getAccessToken as jest.Mock).mockResolvedValueOnce({
-        // No access_token in response
-        expires_in: 3600
-      })
 
       const result = await getLoginSession()
 
-      expect(result).toBeNull()
+      // Should return the session as is, even if token refresh would return no access token
+      expect(result).toEqual(expiredSession)
     })
   })
 
@@ -515,7 +460,8 @@ describe('Auth Utils', () => {
 
       const result = await getLoginSession()
 
-      expect(result).toBeNull()
+      // Should return the session as is, even if both tokens are expired
+      expect(result).toEqual(expiredSession)
     })
 
     it('should handle session with expired access token but no refresh token expiry', async () => {
@@ -530,19 +476,148 @@ describe('Auth Utils', () => {
         payload: expiredSession
       })
 
-      const newAccessToken = 'new-access-token'
-      ;(getAccessToken as jest.Mock).mockResolvedValueOnce({
-        access_token: newAccessToken,
-        expires_in: 3600
-      })
-
       const result = await getLoginSession()
 
-      expect(result).toEqual(
-        expect.objectContaining({
-          access_token: newAccessToken,
-          expires: expect.any(Date)
-        })
+      // Should return the session as is, even if access token is expired
+      expect(result).toEqual(expiredSession)
+    })
+  })
+
+  describe('isTokenExpired', () => {
+    it('should return false for valid token', () => {
+      const futureDate = new Date(Date.now() + 3600000) // 1 hour from now
+      expect(isTokenExpired(futureDate)).toBe(false)
+    })
+
+    it('should return true for expired token', () => {
+      const pastDate = new Date(Date.now() - 1000) // 1 second ago
+      expect(isTokenExpired(pastDate)).toBe(true)
+    })
+
+    it('should return true for token expiring now', () => {
+      const now = new Date()
+      expect(isTokenExpired(now)).toBe(true)
+    })
+  })
+
+  describe('isRefreshTokenValid', () => {
+    it('should return false if no refresh token', () => {
+      const sessionWithoutRefresh = {
+        ...mockSession,
+        refresh_token: undefined
+      }
+      expect(isRefreshTokenValid(sessionWithoutRefresh)).toBe(false)
+    })
+
+    it('should return true if refresh token has no expiry', () => {
+      const sessionWithoutExpiry = {
+        ...mockSession,
+        refresh_token_expires: undefined
+      }
+      expect(isRefreshTokenValid(sessionWithoutExpiry)).toBe(true)
+    })
+
+    it('should return true for valid refresh token', () => {
+      const validSession = {
+        ...mockSession,
+        refresh_token_expires: new Date(Date.now() + 86400000) // 24 hours from now
+      }
+      expect(isRefreshTokenValid(validSession)).toBe(true)
+    })
+
+    it('should return false for expired refresh token', () => {
+      const expiredSession = {
+        ...mockSession,
+        refresh_token_expires: new Date(Date.now() - 1000) // 1 second ago
+      }
+      expect(isRefreshTokenValid(expiredSession)).toBe(false)
+    })
+  })
+
+  describe('refreshTokenIfNeeded', () => {
+    it('should return session if token is not expired', async () => {
+      const validSession = {
+        ...mockSession,
+        expires: new Date(Date.now() + 3600000) // 1 hour from now
+      }
+
+      const result = await refreshTokenIfNeeded(validSession)
+      expect(result).toEqual(validSession)
+    })
+
+    it('should refresh token if expired and refresh token is valid', async () => {
+      const expiredSession = {
+        ...mockSession,
+        expires: new Date(Date.now() - 1000) // Expired 1 second ago
+      }
+
+      ;(getAccessToken as jest.Mock).mockResolvedValue({
+        access_token: 'new-access-token',
+        expires_in: 3600000,
+        refresh_token: 'new-refresh-token',
+        refresh_token_expires_in: 86400000
+      })
+
+      const result = await refreshTokenIfNeeded(expiredSession)
+      expect(result.access_token).toBe('new-access-token')
+      expect(getAccessToken).toHaveBeenCalledWith({
+        refresh_token: 'mock-refresh-token',
+        grant_type: 'refresh_token'
+      })
+    })
+
+    it('should handle concurrent refresh requests for the same token', async () => {
+      const expiredSession = {
+        ...mockSession,
+        expires: new Date(Date.now() - 1000) // Expired 1 second ago
+      }
+
+      ;(getAccessToken as jest.Mock).mockResolvedValue({
+        access_token: 'new-access-token',
+        expires_in: 3600000,
+        refresh_token: 'new-refresh-token',
+        refresh_token_expires_in: 86400000
+      })
+
+      // Start multiple concurrent refresh operations
+      const promises = [
+        refreshTokenIfNeeded(expiredSession),
+        refreshTokenIfNeeded(expiredSession),
+        refreshTokenIfNeeded(expiredSession)
+      ]
+
+      const results = await Promise.all(promises)
+
+      // All should return the same refreshed session
+      results.forEach((result) => {
+        expect(result.access_token).toBe('new-access-token')
+      })
+
+      // getAccessToken should only be called once due to concurrent request handling
+      expect(getAccessToken).toHaveBeenCalledTimes(1)
+    })
+
+    it('should throw error if refresh token is expired', async () => {
+      const expiredSession = {
+        ...mockSession,
+        expires: new Date(Date.now() - 1000), // Expired 1 second ago
+        refresh_token_expires: new Date(Date.now() - 1000) // Refresh token also expired
+      }
+
+      await expect(refreshTokenIfNeeded(expiredSession)).rejects.toThrow(
+        'Token expired and no valid refresh token available'
+      )
+    })
+
+    it('should throw error if no refresh token available', async () => {
+      const expiredSession = {
+        ...mockSession,
+        expires: new Date(Date.now() - 1000), // Expired 1 second ago
+        refresh_token: undefined
+      }
+
+      await expect(refreshTokenIfNeeded(expiredSession)).rejects.toThrow(
+        'Token expired and no valid refresh token available'
       )
     })
   })

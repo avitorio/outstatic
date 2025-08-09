@@ -1,10 +1,8 @@
 import { getLoginSession } from '@/utils/auth/auth'
-import { NextRequest, NextResponse } from 'next/server'
+import { NextRequest } from 'next/server'
+import type { Request } from '@/app/api/index'
 
-export default async function GET(
-  req: NextRequest,
-  res: NextResponse
-): Promise<Response> {
+export default async function GET(req: Request): Promise<Response> {
   const session = await getLoginSession()
   const pathParts = req.nextUrl.pathname.split('/')
   const mediaIndex = pathParts.indexOf('media')
