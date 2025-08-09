@@ -1,4 +1,5 @@
 import { OutstaticData } from '@/app'
+import { OUTSTATIC_API_PATH } from '../constants'
 
 const mockProviderProps = {
   repoOwner: 'anything',
@@ -19,7 +20,7 @@ const mockProviderProps = {
   ostDetach: false,
   ostContent: 'anything',
   dashboardRoute: '/outstatic',
-  githubGql: 'https://api.github.com/graphql',
+  githubGql: `${OUTSTATIC_API_PATH}/github-graphql`,
   csrfToken: null,
   publicMediaPath: 'anything',
   repoMediaPath: 'anything'

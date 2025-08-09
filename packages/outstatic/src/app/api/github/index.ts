@@ -1,1 +1,1 @@
-export { default } from './github'
+export { POST, GET } from './github'
