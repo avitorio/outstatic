@@ -1,6 +1,6 @@
 {
-  "commit": "051ca0a3c621db5de18718975b4f584245187147",
-  "generated": "2025-06-16T19:31:00.806Z",
+  "commit": "36187de9789fee1797f7180ffca0aeb9187acf14",
+  "generated": "2025-08-18T18:49:03.843Z",
   "metadata": [
     {
       "__outstatic": {
@@ -71,24 +71,6 @@
       "slug": "fetching-data",
       "status": "published",
       "title": "Fetching data"
-    },
-    {
-      "__outstatic": {
-        "commit": "2d8b5caf2b89969656b7d94ca2c200148e1b2290",
-        "hash": "1968019570",
-        "path": "/outstatic/content/docs/github-apps-authentication.md"
-      },
-      "author": {
-        "name": "Anthony Quéré",
-        "picture": "https://avatars.githubusercontent.com/u/47711333?v=4"
-      },
-      "collection": "docs",
-      "coverImage": "",
-      "description": "",
-      "publishedAt": "2023-11-26T22:00:00.000Z",
-      "slug": "github-apps-authentication",
-      "status": "published",
-      "title": "GitHub Apps Authentication"
     },
     {
       "__outstatic": {
@@ -489,6 +471,24 @@
       "slug": "the-content-editor",
       "status": "published",
       "title": "The content editor"
+    },
+    {
+      "__outstatic": {
+        "commit": "36187de9789fee1797f7180ffca0aeb9187acf14",
+        "hash": "473389805",
+        "path": "/outstatic/content/docs/github-apps-authentication.md"
+      },
+      "author": {
+        "name": "Anthony Quéré",
+        "picture": "https://avatars.githubusercontent.com/u/47711333?v=4"
+      },
+      "collection": "docs",
+      "coverImage": "",
+      "description": "",
+      "publishedAt": "2024-08-18T03:00:00.000Z",
+      "slug": "github-apps-authentication",
+      "status": "published",
+      "title": "GitHub Apps Authentication"
     }
   ]
 }
