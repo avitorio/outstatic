@@ -29,7 +29,7 @@ export default async function GET(request: NextRequest) {
     }
 
     let userData = await fetchGitHubUser(access_token)
-
+    console.log('userData', userData)
     // If email is missing, fetch from /user/emails
     if (!userData.email) {
       const emails = await (
@@ -49,7 +49,7 @@ export default async function GET(request: NextRequest) {
     if (userData && userData.email && access_token) {
       const { name, login, email, avatar_url } = userData
       const sessionData = {
-        user: { name, login, email, image: avatar_url },
+        user: { name: name || '', login, email, image: avatar_url },
         access_token,
         refresh_token,
         expires: new Date(Date.now() + expires_in),
