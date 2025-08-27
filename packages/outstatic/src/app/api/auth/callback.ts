@@ -29,7 +29,7 @@ export default async function GET(request: NextRequest) {
     }
 
     let userData = await fetchGitHubUser(access_token)
-    console.log('userData', userData)
+    
     // If email is missing, fetch from /user/emails
     if (!userData.email) {
       const emails = await (
