@@ -2,7 +2,7 @@ import { render, screen, fireEvent } from '@testing-library/react'
 import Collections from './collections'
 import { useCollections } from '@/utils/hooks/useCollections'
 import { useOutstatic, useLocalData } from '@/utils/hooks/useOutstatic'
-import { TestWrapper } from '@/utils/TestWrapper'
+import { TestWrapper } from '@/utils/tests/test-wrapper'
 import { useInitialData } from '@/utils/hooks/useInitialData'
 
 // Mock the hooks

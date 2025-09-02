@@ -2,7 +2,8 @@
 
 This is a simple install of Outstatic that can be used to manage Markdown `.md(x)` files on any GitHub repository regardless of framework.
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Favitorio%2Foutstatic%2Ftree%2Fmain%2Fexamples%2Foutstatic-dashboard&env=OST_GITHUB_ID,OST_GITHUB_SECRET&project-name=outstatic-dashboard&repo-name=outstatic-dashboard&demo-title=Outstatic%20CMS%20Demo&demo-description=Outstatic CMS for any Markdown Website Demo&demo-url=https%3A%2F%2Foutstatic-example-blog.vercel.app%2F&demo-image=https%3A%2F%2Foutstatic.com%2Fimages%2Foutstatic-demo.png&envDescription=API%20Keys%20needed%20for%20installation&envLink=https%3A%2F%2Foutstatic.com%2Fdocs%2Fenvironment-variables)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/avitorio/outstatic/tree/main/examples/outstatic-dashboard&env=OST_GITHUB_ID,OST_GITHUB_SECRET&project-name=outstatic-dashboard&repo-name=outstatic-dashboard&demo-title=Outstatic%20CMS%20Demo&demo-description=Outstatic%20CMS%20for%20any%20Markdown%20Website%20Demo&demo-url=https://outstatic-example-blog.vercel.app/&demo-image=https://outstatic.com/images/outstatic-demo.png&envDescription=API%20Keys%20needed%20for%20installation&envLink=https://outstatic.com/docs/environment-variables)
+
 
 Or [download this repository](https://github.com/avitorio/outstatic-dashboard/archive/refs/heads/main.zip).
 

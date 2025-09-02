@@ -60,12 +60,6 @@ export default async function Post(props: { params: Params }) {
             <h1 className="font-primary text-2xl font-bold md:text-4xl mb-2">
               {doc.title}
             </h1>
-            <div className="hidden md:block md:mb-12 text-slate-700 dark:text-slate-400">
-              Last updated on{' '}
-              <time dateTime={doc.publishedAt}>
-                {formatDate(doc.publishedAt)}
-              </time>
-            </div>
             <hr className="border-neutral-200 mt-10 mb-10" />
             <div className="w-full prose prose-outstatic">
               <MDXComponent content={doc.content} />
@@ -97,7 +91,6 @@ async function getData(params: { slug: string[] }) {
       },
       [
         'title',
-        'publishedAt',
         'slug',
         'author',
         'content',

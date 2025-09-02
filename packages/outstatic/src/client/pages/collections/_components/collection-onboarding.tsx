@@ -76,18 +76,20 @@ export default function CollectionOnboarding() {
                 <br />
                 You can always switch branches later.
               </p>
-              <div className="flex gap-3">
+              <div className="flex flex-col lg:flex-row gap-3">
                 <GitHubBranchSearch onboarding />
-                <Button onClick={() => setConfirmBranch(true)}>Select</Button>
-                <span className="text-muted-foreground h-10 flex items-center">
-                  or
-                </span>
-                <Button
-                  variant="outline"
-                  onClick={() => setShowCreateBranchDialog(true)}
-                >
-                  Create Branch
-                </Button>
+                <div className="flex gap-3">
+                  <Button onClick={() => setConfirmBranch(true)}>Select</Button>
+                  <span className="text-muted-foreground h-10 flex items-center">
+                    or
+                  </span>
+                  <Button
+                    variant="outline"
+                    onClick={() => setShowCreateBranchDialog(true)}
+                  >
+                    Create Branch
+                  </Button>
+                </div>
               </div>
             </CardContent>
           </Card>

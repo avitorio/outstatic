@@ -1,0 +1,214 @@
+import { DeleteDocumentButton } from '@/components/delete-document-button'
+import { SortableSelect } from '@/components/sortable-select'
+import { OstDocument } from '@/types/public'
+import { useGetDocuments } from '@/utils/hooks/useGetDocuments'
+import { sentenceCase } from 'change-case'
+import cookies from 'js-cookie'
+import { ListFilter } from 'lucide-react'
+import { useState, useCallback, ReactNode } from 'react'
+import { Button } from '@/components/ui/shadcn/button'
+import {
+  CaretSortIcon,
+  CaretDownIcon,
+  CaretUpIcon
+} from '@radix-ui/react-icons'
+import {
+  useSortedDocuments,
+  SortConfig
+} from '@/utils/hooks/useSortedDocuments'
+import { useOutstatic } from '@/utils/hooks/useOutstatic'
+import { MDExtensions } from '@/types'
+import { useParams, useRouter } from 'next/navigation'
+
+export type Column = {
+  id: string
+  label: string
+  value: string
+}
+
+export const DocumentsTable = () => {
+  const { data, refetch } = useGetDocuments()
+  const { dashboardRoute } = useOutstatic()
+  const router = useRouter()
+
+  const params = useParams<{ ost: string[] }>()
+  const [showColumnOptions, setShowColumnOptions] = useState(false)
+
+  const [sortConfig, setSortConfig] = useState<SortConfig>({
+    key: 'publishedAt',
+    direction: 'descending'
+  })
+
+  const sortedDocuments = useSortedDocuments(data?.documents || [], sortConfig)
+
+  const requestSort = useCallback((key: keyof OstDocument) => {
+    setSortConfig((prevConfig) => ({
+      key,
+      direction:
+        prevConfig.key === key && prevConfig.direction === 'ascending'
+          ? 'descending'
+          : 'ascending'
+    }))
+  }, [])
+
+  const handleRowClick = useCallback(
+    (document: OstDocument) => {
+      router.push(`${dashboardRoute}/${params.ost[0]}/${document.slug}`)
+    },
+    [dashboardRoute, params.ost, router]
+  )
+
+  const allColumns = Array.from(data?.metadata?.keys() ?? []).map(
+    (column: string) => ({
+      id: column,
+      label: sentenceCase(column),
+      value: column
+    })
+  )
+
+  const [columns, setColumns] = useState<Column[]>(
+    JSON.parse(cookies.get(`ost_${params.ost[0]}_fields`) || 'null') ??
+      allColumns.slice(0, 5)
+  )
+
+  return (
+    <div className="border border-solid border-muted rounded-md shadow-sm">
+      <div className="overflow-x-auto">
+        <table className="w-full text-left text-sm text-foreground">
+          <thead className="text-xs uppercase text-foreground border-b border-muted">
+            <tr>
+              {columns.map((column) => (
+                <th
+                  key={column.value}
+                  scope="col"
+                  className="px-6 py-3 cursor-pointer"
+                  onClick={() => requestSort(column.value)}
+                >
+                  <div className="flex items-center">
+                    <span>{column.label}</span>
+                    <span
+                      className="ml-2"
+                      data-testid={`sort-icon-${column.value}`}
+                    >
+                      {sortConfig.key === column.value ? (
+                        sortConfig.direction === 'ascending' ? (
+                          <CaretUpIcon
+                            className="h-4 w-4"
+                            data-testid="caret-up-icon"
+                          />
+                        ) : (
+                          <CaretDownIcon
+                            className="h-4 w-4"
+                            data-testid="caret-down-icon"
+                          />
+                        )
+                      ) : (
+                        <CaretSortIcon
+                          className="h-4 w-4"
+                          data-testid="caret-sort-icon"
+                        />
+                      )}
+                    </span>
+                  </div>
+                </th>
+              ))}
+              <th scope="col" className="px-6 py-3 text-right">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setShowColumnOptions(!showColumnOptions)}
+                >
+                  <span className="sr-only">List Columns</span>
+                  <ListFilter />
+                </Button>
+              </th>
+            </tr>
+          </thead>
+          <tbody className="[&_tr:last-child]:border-0">
+            {sortedDocuments
+              ? sortedDocuments.map((document) => (
+                  <tr
+                    key={document.slug}
+                    className="hover:bg-muted/50 border-b border-muted cursor-pointer"
+                    onClick={() => handleRowClick(document)}
+                  >
+                    {columns.map((column) => {
+                      return cellSwitch(column.value, document)
+                    })}
+                    <td
+                      className="pr-6 py-4 text-right"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <DeleteDocumentButton
+                        slug={document.slug}
+                        extension={document.extension as MDExtensions}
+                        disabled={false}
+                        onComplete={() => refetch()}
+                        collection={params.ost[0]}
+                      />
+                    </td>
+                  </tr>
+                ))
+              : null}
+          </tbody>
+        </table>
+        {showColumnOptions && (
+          <div
+            className={`absolute -top-12 max-w-full min-w-min capitalize right-0`}
+          >
+            <SortableSelect
+              selected={columns}
+              setSelected={setColumns}
+              allOptions={allColumns}
+              defaultValues={allColumns}
+              onChangeList={(e: any) => {
+                cookies.set(`ost_${params.ost[0]}_fields`, JSON.stringify(e))
+              }}
+              onBlur={() => setShowColumnOptions(false)}
+            />
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+const cellSwitch = (columnValue: string, document: OstDocument) => {
+  const item = document[columnValue] as
+    | string
+    | {
+        label: string
+      }[]
+  switch (columnValue) {
+    case 'status':
+      return (
+        <td
+          key="status"
+          className="px-6 py-4 text-base font-semibold text-foreground"
+          data-testid="status-cell"
+        >
+          {item as ReactNode}
+        </td>
+      )
+    default:
+      return (
+        <td
+          key={columnValue}
+          className="px-6 py-4 text-base font-semibold text-foreground"
+        >
+          {typeof item === 'object' && item !== null && Array.isArray(item)
+            ? item.map((item: { label: string }) => (
+                <span
+                  key={item.label}
+                  className="bg-muted text-muted-foreground font-medium me-2 px-2.5 py-0.5 rounded"
+                >
+                  {item.label}
+                </span>
+              ))
+            : typeof item === 'string'
+            ? item
+            : null}
+        </td>
+      )
+  }
+}

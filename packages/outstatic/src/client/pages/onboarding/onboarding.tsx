@@ -1,4 +1,4 @@
-import { AdminLayout } from '@/components'
+import { AdminLayout } from '@/components/admin-layout'
 import RepoOnboarding from './_components/repo-onboarding'
 
 export default function Onboarding() {
