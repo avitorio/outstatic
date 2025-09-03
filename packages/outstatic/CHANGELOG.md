@@ -1,5 +1,15 @@
 # outstatic
 
+## 2.0.10
+
+### Patch Changes
+
+- 6736633: chore: remove unused dependencies and refactor auth callback logic
+- 080c75b: feat: update branch search component style
+- 013ce65: Fix: Empty name error
+- 6139349: chore: replace hapi/iron with jose
+- b7de2a7: Refactor code
+
 ## 2.0.9
 
 ### Patch Changes
