@@ -98,7 +98,7 @@ export default function Login({ basePath }: { basePath?: string }) {
                       className={clsx(isLoading && 'animate-pulse')}
                     >
                       <svg
-                        className="mr-2 -ml-1 h-4 w-4"
+                        className="h-4 w-4"
                         aria-hidden="true"
                         focusable="false"
                         data-prefix="fab"
