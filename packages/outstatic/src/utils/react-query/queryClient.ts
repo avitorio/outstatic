@@ -9,6 +9,7 @@ export const queryClient = new QueryClient({
   queryCache: new QueryCache({
     onError: (error, query) => {
       if (query.state.error !== undefined) {
+        console.error(error)
         toast.error(
           (query?.meta?.errorMessage as string) ||
             `Something went wrong: ${error.message}`
