@@ -7,6 +7,7 @@ import { toast } from 'sonner'
 import { useCreateCommit } from './useCreateCommit'
 import { GET_FILE } from '@/graphql/queries/file'
 import { sentenceCase } from 'change-case'
+import { ClientError } from 'graphql-request'
 
 export type CollectionType = {
   title: string
@@ -122,9 +123,13 @@ export function useCollections(options?: UseCollectionsOptions) {
         }
         return []
       } catch (error) {
-        console.error('Error fetching collections:', error)
-        toast.error('Error fetching collections')
-        return []
+        if (error instanceof ClientError && error.response.status === 401) {
+          return []
+        } else {
+          console.error('Error fetching collections:', error)
+          toast.error('Error fetching collections')
+          return []
+        }
       }
     },
     enabled:

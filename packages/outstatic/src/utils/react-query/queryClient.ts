@@ -3,17 +3,22 @@ import { QueryCache, QueryClient } from '@tanstack/react-query'
 import { persistQueryClient } from '@tanstack/react-query-persist-client'
 import { compress, decompress } from 'lz-string'
 import { toast } from 'sonner'
+import { ClientError } from 'graphql-request'
 
 // Create a client
 export const queryClient = new QueryClient({
   queryCache: new QueryCache({
     onError: (error, query) => {
       if (query.state.error !== undefined) {
-        console.error(error)
-        toast.error(
-          (query?.meta?.errorMessage as string) ||
-            `Something went wrong: ${error.message}`
-        )
+        if (error instanceof ClientError && error.response.status === 401) {
+          return
+        } else {
+          console.error(error)
+          toast.error(
+            (query?.meta?.errorMessage as string) ||
+              `Something went wrong: ${error.message}`
+          )
+        }
       }
     }
   }),
