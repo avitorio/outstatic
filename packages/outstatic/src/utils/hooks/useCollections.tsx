@@ -37,10 +37,10 @@ export function useCollections(options?: UseCollectionsOptions) {
           isPending || !repoOwner || !repoSlug || !repoBranch
             ? null
             : await gqlClient.request(GET_FILE, {
-                owner: repoOwner,
-                name: repoSlug,
-                filePath: `${repoBranch}:${ostContent}/collections.json` || ''
-              })
+              owner: repoOwner,
+              name: repoSlug,
+              filePath: `${repoBranch}:${ostContent}/collections.json` || ''
+            })
 
         let collectionsData: CollectionsType = null
 
@@ -62,10 +62,10 @@ export function useCollections(options?: UseCollectionsOptions) {
             isPending || !repoOwner || !repoSlug || !repoBranch
               ? null
               : await gqlClient.request(GET_COLLECTIONS, {
-                  owner: repoOwner,
-                  name: repoSlug,
-                  contentPath: `${repoBranch}:${ostContent}` || ''
-                })
+                owner: repoOwner,
+                name: repoSlug,
+                contentPath: `${repoBranch}:${ostContent}` || ''
+              })
 
           if (!data || data?.repository?.object === null) {
             // We couldn't find the outstatic folder, so we return an empty array
@@ -80,14 +80,14 @@ export function useCollections(options?: UseCollectionsOptions) {
             .map((entry) =>
               entry.type === 'tree'
                 ? {
-                    title: sentenceCase(entry.name, {
-                      split: (str) =>
-                        str.split(/([^A-Za-z0-9\.]+)/g).filter(Boolean)
-                    }),
-                    slug: entry.name,
-                    path: `${ostContent}/${entry.name}`,
-                    children: []
-                  }
+                  title: sentenceCase(entry.name, {
+                    split: (str) =>
+                      str.split(/([^A-Za-z0-9\.]+)/g).filter(Boolean)
+                  }),
+                  slug: entry.name,
+                  path: `${ostContent}/${entry.name}`,
+                  children: []
+                }
                 : undefined
             )
             .filter(Boolean) as CollectionsType
@@ -124,7 +124,9 @@ export function useCollections(options?: UseCollectionsOptions) {
         return []
       } catch (error) {
         if (error instanceof ClientError && error.response.status === 401) {
-          return []
+          // Don't throw on 401 - let React Query return previous data
+          console.log('401 error in useCollections - returning previous data')
+          throw error // Still throw to trigger React Query's error handling, but with specific retry config
         } else {
           console.error('Error fetching collections:', error)
           toast.error('Error fetching collections')
@@ -133,6 +135,14 @@ export function useCollections(options?: UseCollectionsOptions) {
       }
     },
     enabled:
-      enabled && !!repoOwner && !!repoSlug && !!repoBranch && !!ostContent
+      enabled && !!repoOwner && !!repoSlug && !!repoBranch && !!ostContent,
+    retry: (failureCount, error) => {
+      // Don't retry on 401 errors
+      if (error instanceof ClientError && error.response.status === 401) {
+        return false
+      }
+      // Retry up to 3 times for other errors
+      return failureCount < 3
+    }
   })
 }

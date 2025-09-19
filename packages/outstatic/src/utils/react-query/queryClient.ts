@@ -11,9 +11,17 @@ export const queryClient = new QueryClient({
     onError: (error, query) => {
       if (query.state.error !== undefined) {
         if (error instanceof ClientError && error.response.status === 401) {
+          // Check if it's a token refresh failure - don't log these to console
+          const isTokenRefreshError =
+            error.response?.error === 'Token refresh failed' ||
+            error.message?.includes('Token refresh failed')
+
+          if (!isTokenRefreshError) {
+            console.log('401 error - queryClient', error, query)
+          }
           return
         } else {
-          console.error(error)
+          console.error('queryClient error', error, query)
           toast.error(
             (query?.meta?.errorMessage as string) ||
               `Something went wrong: ${error.message}`
