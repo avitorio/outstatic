@@ -45,7 +45,7 @@ async function getData() {
   const content = await markdownToHtml(page.content)
 
   const allPosts = await db
-    .find({ collection: 'posts' }, [
+    .find({ collection: 'posts', status: 'published' }, [
       'title',
       'publishedAt',
       'slug',
@@ -57,7 +57,7 @@ async function getData() {
     .toArray()
 
   const allProjects = await db
-    .find({ collection: 'projects' }, ['title', 'slug', 'coverImage'])
+    .find({ collection: 'projects', status: 'published' }, ['title', 'slug', 'coverImage'])
     .sort({ publishedAt: -1 })
     .toArray()
 

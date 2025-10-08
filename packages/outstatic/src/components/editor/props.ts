@@ -57,5 +57,7 @@ export const TiptapEditorProps: EditorProps = {
       }
       return false
     }
-  }
+  },
+  scrollThreshold: 120,
+  scrollMargin: 120
 }

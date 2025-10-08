@@ -1,5 +1,9 @@
-import Alert from '@/components/Alert'
-import { Card, CardContent, CardHeader } from '@/components/ui/shadcn/card'
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle
+} from '@/components/ui/shadcn/alert'
+import { Card, CardContent } from '@/components/ui/shadcn/card'
 import LoadingBackground from '@/components/ui/outstatic/loading-background'
 import { OUTSTATIC_API_PATH } from '@/utils/constants'
 import loginErrors from '@/utils/errors/loginErrors'
@@ -8,6 +12,7 @@ import Link from 'next/link'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/shadcn/button'
+import { AlertCircleIcon } from 'lucide-react'
 
 type Errors = keyof typeof loginErrors
 
@@ -48,12 +53,17 @@ export default function Login({ basePath }: { basePath?: string }) {
       <div id="outstatic">
         <LoadingBackground isLoading={isLoading}>
           <main className="relative z-10 flex h-screen items-center justify-center p-4">
-            <div className="relative flex flex-col items-center justify-center">
-              {error && loginErrors[error] ? (
-                <div className="absolute -top-4 -translate-y-full">
-                  <Alert type="error">{loginErrors[error]}</Alert>
+          {error && loginErrors[error] ? (
+                <div className="absolute top-0 max-w-full p-4 mx-auto">
+                  <Alert variant="destructive">
+                    <AlertCircleIcon />
+                    <AlertTitle>Something went wrong</AlertTitle>
+                    <AlertDescription><p>{loginErrors[error]}</p></AlertDescription>
+                  </Alert>
                 </div>
               ) : null}
+            <div className="relative flex flex-col items-center justify-center">
+              
               <h1 className="mb-8 text-center text-xl font-semibold text-white">
                 <svg
                   fill="none"
@@ -88,7 +98,7 @@ export default function Login({ basePath }: { basePath?: string }) {
                       className={clsx(isLoading && 'animate-pulse')}
                     >
                       <svg
-                        className="mr-2 -ml-1 h-4 w-4"
+                        className="h-4 w-4"
                         aria-hidden="true"
                         focusable="false"
                         data-prefix="fab"
