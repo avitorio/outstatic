@@ -8,7 +8,7 @@ import generate from '@/app/api/generate'
 import media from '@/app/api/media'
 import { GET as githubGet, POST as githubPost } from '@/app/api/github'
 import githubGraphql from '@/app/api/github/github-graphql'
-import { NextRequest, NextResponse } from 'next/server'
+import { NextRequest } from 'next/server'
 
 export interface Request extends NextRequest {
   session: any

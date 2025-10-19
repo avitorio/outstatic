@@ -1,5 +1,4 @@
 import { getLoginSession } from '@/utils/auth/auth'
-import { NextRequest } from 'next/server'
 import type { Request } from '@/app/api/index'
 
 export default async function GET(req: Request): Promise<Response> {
