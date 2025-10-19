@@ -1,5 +1,5 @@
 import { LoginSession, getLoginSession } from '@/utils/auth/auth'
-import { GITHUB_GQL_API_URL } from '@/utils/constants'
+import { GITHUB_GQL_API_URL, OST_PRO_API_KEY, OST_PRO_API_URL } from '@/utils/constants'
 import { EnvVarsType, envVars } from '@/utils/envVarsCheck'
 
 export type OutstaticData = {
@@ -20,6 +20,7 @@ export type OutstaticData = {
   githubGql: string
   publicMediaPath: string
   repoMediaPath: string
+  isPro: boolean
 }
 
 export async function Outstatic({
@@ -64,8 +65,9 @@ export async function Outstatic({
     ostDetach: process.env.OST_DETACH || false,
     pages: ['collections', 'settings', 'media-library'],
     dashboardRoute: '/outstatic',
-    githubGql: GITHUB_GQL_API_URL,
+    githubGql: session?.provider === 'magic-link' ? `${OST_PRO_API_URL}/github/parser` : GITHUB_GQL_API_URL,
     publicMediaPath: process.env.OST_PUBLIC_MEDIA_PATH || '',
-    repoMediaPath: process.env.OST_REPO_MEDIA_PATH || ''
+    repoMediaPath: process.env.OST_REPO_MEDIA_PATH || '',
+    isPro: !!OST_PRO_API_KEY
   } as OutstaticData
 }

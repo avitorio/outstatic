@@ -2,6 +2,8 @@ import callback from '@/app/api/auth/callback'
 import login from '@/app/api/auth/login'
 import signout from '@/app/api/auth/signout'
 import user from '@/app/api/auth/user'
+import magicLink from '@/app/api/auth/magic-link'
+import magicLinkCallback from '@/app/api/auth/magic-link-callback'
 import generate from '@/app/api/generate'
 import media from '@/app/api/media'
 import { GET as githubGet, POST as githubPost } from '@/app/api/github'
@@ -31,13 +33,15 @@ const getPaths: Record<string, RouteHandler> = {
   signout,
   user,
   media,
-  github: githubGet
+  github: githubGet,
+  'magic-link-callback': magicLinkCallback
 }
 
 const postPaths: Record<string, RouteHandler> = {
   generate,
   github: githubPost,
-  'github-graphql': githubGraphql
+  'github-graphql': githubGraphql,
+  'magic-link': magicLink
 }
 
 export const OutstaticApi = {

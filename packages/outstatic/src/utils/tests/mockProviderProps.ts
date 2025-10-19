@@ -23,7 +23,8 @@ const mockProviderProps = {
   githubGql: `${OUTSTATIC_API_PATH}/github-graphql`,
   csrfToken: null,
   publicMediaPath: 'anything',
-  repoMediaPath: 'anything'
+  repoMediaPath: 'anything',
+  isPro: false
 } as OutstaticData
 
 export default mockProviderProps
