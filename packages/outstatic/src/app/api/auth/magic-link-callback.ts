@@ -1,4 +1,4 @@
-import { setLoginSession } from '@/utils/auth/auth'
+import { LoginSession, setLoginSession } from '@/utils/auth/auth'
 import { OST_PRO_API_URL } from '@/utils/constants'
 import { NextRequest, NextResponse } from 'next/server'
 import {
@@ -47,14 +47,14 @@ export default async function GET(request: NextRequest) {
       ExchangeTokenResponseSchema.parse(responseData)
 
     // Create LoginSession object compatible with existing GitHub flow
-    const session = {
+    const session: LoginSession = {
       user: {
         name: user.name || user.email,
         login: user.email,
         email: user.email,
         image: user.avatar_url || '',
       },
-      provider: 'magic-link' as const,
+      provider: 'magic-link',
       access_token: sessionData.access_token,
       expires: new Date(sessionData.expires_at * 1000),
     }
