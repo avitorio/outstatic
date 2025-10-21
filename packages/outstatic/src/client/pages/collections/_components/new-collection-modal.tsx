@@ -1,4 +1,4 @@
-import Alert from '@/components/Alert'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/shadcn/alert'
 import { Input } from '@/components/ui/shadcn/input'
 import { SpinnerIcon } from '@/components/ui/outstatic/spinner-icon'
 import { Button } from '@/components/ui/shadcn/button'
@@ -36,7 +36,7 @@ import {
   FormLabel,
   FormMessage
 } from '@/components/ui/shadcn/form'
-import { Check } from 'lucide-react'
+import { AlertCircleIcon, Check } from 'lucide-react'
 import { Checkbox } from '@/components/ui/shadcn/checkbox'
 import { capitalCase } from 'change-case'
 import {
@@ -236,13 +236,15 @@ export default function NewCollectionModal({
       <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogContent className="md:max-w-xl">
           {error ? (
-            <Alert type="error">
-              <span className="font-medium">Oops!</span> We couldn&apos;t create
-              your collection. Please, make sure your settings are correct by{' '}
-              <Link href={`${dashboardRoute}/settings`}>
-                <span className="underline">clicking here</span>
-              </Link>{' '}
-              .
+            <Alert variant="destructive">
+              <AlertCircleIcon />
+              <AlertTitle>Something went wrong</AlertTitle>
+              <AlertDescription><p>We couldn&apos;t create
+                your collection. Please, make sure your settings are correct by{' '}
+                <Link href={`${dashboardRoute}/settings`}>
+                  <span className="underline">clicking here</span>
+                </Link>{' '}
+                . </p></AlertDescription>
             </Alert>
           ) : null}
           <DialogHeader>

@@ -1,4 +1,4 @@
-import Alert from '@/components/Alert'
+import { Alert, AlertTitle } from '@/components/ui/shadcn/alert'
 import { TagInput } from '@/components/ui/outstatic/tag-input'
 import { Button } from '@/components/ui/shadcn/button'
 import { Input } from '@/components/ui/shadcn/input'
@@ -40,6 +40,7 @@ import {
 import { zodResolver } from '@hookform/resolvers/zod'
 import { editCustomFieldSchema } from '@/utils/schemas/edit-custom-field-schema'
 import { Checkbox } from '@/components/ui/shadcn/checkbox'
+import { InfoCircledIcon } from '@radix-ui/react-icons'
 
 type CustomFieldForm = CustomFieldType<
   'string' | 'number' | 'array' | 'boolean'
@@ -137,13 +138,11 @@ export const EditCustomFieldDialog: React.FC<EditCustomFieldDialogProps> = ({
             onSubmit={methods.handleSubmit(onSubmit)}
             className="flex flex-col gap-4"
           >
-            <div className="pt-6">
-              <Alert type="info">
-                <>
-                  <span className="font-medium">Field name</span> and{' '}
-                  <span className="font-medium">Field type</span> editing are
-                  disabled to avoid data conflicts.
-                </>
+            <div>
+              <Alert variant="default">
+                <InfoCircledIcon />
+                <AlertTitle>Field name and field type editing are disabled to avoid data conflicts.</AlertTitle>
+                
               </Alert>
             </div>
             <div className="flex gap-4 mb-4">
