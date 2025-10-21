@@ -6,16 +6,12 @@ import generate from '@/app/api/generate'
 import media from '@/app/api/media'
 import { NextRequest } from 'next/server'
 
-export interface Request extends NextRequest {
-  session: any
-}
-
 export type GetParams = Promise<{
-  ost: ['callback', 'login', 'signout', 'user', 'media']
+  ost?: string[]
 }>
 
 export type PostParams = Promise<{
-  ost: ['generate']
+  ost?: string[]
 }>
 
 const getPaths = {
@@ -31,14 +27,28 @@ const postPaths = {
 }
 
 export const OutstaticApi = {
-  GET: async (req: Request, segmentData: { params: GetParams }) => {
+  GET: async (req: NextRequest, segmentData: { params: GetParams }) => {
     const { ost } = await segmentData.params
-    const rsp = getPaths[ost[0]](req)
+    if (!ost || ost.length === 0) {
+      return new Response('Invalid path', { status: 400 })
+    }
+    const handler = getPaths[ost[0] as keyof typeof getPaths]
+    if (!handler) {
+      return new Response('Not found', { status: 404 })
+    }
+    const rsp = handler(req)
     return rsp
   },
-  POST: async (req: Request, segmentData: { params: PostParams }) => {
+  POST: async (req: NextRequest, segmentData: { params: PostParams }) => {
     const { ost } = await segmentData.params
-    const rsp = postPaths[ost[0]](req)
+    if (!ost || ost.length === 0) {
+      return new Response('Invalid path', { status: 400 })
+    }
+    const handler = postPaths[ost[0] as keyof typeof postPaths]
+    if (!handler) {
+      return new Response('Not found', { status: 404 })
+    }
+    const rsp = handler(req)
     return rsp
   }
 }

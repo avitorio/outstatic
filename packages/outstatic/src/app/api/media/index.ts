@@ -1,9 +1,8 @@
 import { getLoginSession } from '@/utils/auth/auth'
-import { NextRequest, NextResponse } from 'next/server'
+import { NextRequest } from 'next/server'
 
 export default async function GET(
-  req: NextRequest,
-  res: NextResponse
+  req: NextRequest
 ): Promise<Response> {
   const session = await getLoginSession()
   const pathParts = req.nextUrl.pathname.split('/')
