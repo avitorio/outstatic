@@ -43,6 +43,12 @@ const loginErrors = {
       </a>
       .
     </>
+  ),
+  'invalid-api-key': (
+    <>
+      The Outstatic PRO API key is invalid or has been revoked. <br />
+      Please check your project settings and ensure you&apos;re using a valid API key.
+    </>
   )
 }
 

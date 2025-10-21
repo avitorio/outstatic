@@ -43,6 +43,17 @@ export default async function POST(request: NextRequest) {
     })
 
     if (!response.ok) {
+      // Check if it's an invalid API key error (401)
+      if (response.status === 401) {
+        const errorData = await response.json().catch(() => ({}))
+        if (errorData.error === 'Invalid API key') {
+          return NextResponse.json(
+            { error: 'invalid-api-key' },
+            { status: 401 }
+          )
+        }
+      }
+
       return NextResponse.json(
         { error: 'Failed to send magic link' },
         { status: 500 }

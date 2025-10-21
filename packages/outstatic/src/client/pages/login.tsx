@@ -76,6 +76,15 @@ export default function Login({
 
       if (response.ok) {
         setEmailSent(true)
+      } else {
+        // Check for specific error codes
+        const errorData = await response.json().catch(() => ({}))
+        if (errorData.error === 'invalid-api-key') {
+          // Redirect to login page with error parameter
+          const currentUrl = new URL(window.location.href)
+          currentUrl.searchParams.set('error', 'invalid-api-key')
+          router.push(currentUrl.pathname + currentUrl.search)
+        }
       }
     } catch {
     } finally {
