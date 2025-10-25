@@ -15,7 +15,7 @@ export type LoginSession = {
     email: string
     image: string
   }
-  provider?: 'github' | 'magic-link'
+  provider?: 'github' | 'magic-link' | 'seamless'
   access_token: string
   expires: Date
   refresh_token?: string

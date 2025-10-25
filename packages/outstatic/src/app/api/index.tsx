@@ -4,6 +4,7 @@ import signout from '@/app/api/auth/signout'
 import user from '@/app/api/auth/user'
 import magicLink from '@/app/api/auth/magic-link'
 import magicLinkCallback from '@/app/api/auth/magic-link-callback'
+import seamlessLoginCallback from '@/app/api/auth/seamless-login-callback'
 import generate from '@/app/api/generate'
 import media from '@/app/api/media'
 import { GET as githubGet, POST as githubPost } from '@/app/api/github'
@@ -34,7 +35,8 @@ const getPaths: Record<string, RouteHandler> = {
   user,
   media,
   github: githubGet,
-  'magic-link-callback': magicLinkCallback
+  'magic-link-callback': magicLinkCallback,
+  'seamless-login-callback': seamlessLoginCallback
 }
 
 const postPaths: Record<string, RouteHandler> = {
