@@ -9,9 +9,31 @@ import {
 } from 'lucide-react'
 import { useCallback } from 'react'
 import { EditorBubbleButton } from '../ui/editor-bubble-button'
+import { Transaction } from '@tiptap/pm/state'
 
 type TableMenuProps = {
   editor: Editor
+}
+
+function isInTableFirstRow(tr: Transaction): boolean {
+  const { anchor } = tr.selection;
+  let activeRow;
+  let activeTable;
+  tr.doc.descendants((node, pos) => {
+    if (node.type.name === "table" && anchor >= pos && anchor <= (pos + node.nodeSize)) {
+      activeTable = pos;
+    }
+    if (node.type.name === "tableRow" && anchor >= pos && anchor <= (pos + node.nodeSize)) {
+      activeRow = pos;
+    }
+  });
+
+  // we are not in a table
+  if (activeTable === undefined || activeRow === undefined) {
+    return true
+  }
+
+  return activeTable + 1 === activeRow;
 }
 
 const TableMenu = ({ editor }: TableMenuProps) => {
@@ -53,7 +75,16 @@ const TableMenu = ({ editor }: TableMenuProps) => {
         </EditorBubbleButton>
 
         <EditorBubbleButton
-          onSelect={() => editor.chain().focus().addRowBefore().run()}
+          onSelect={() => editor.chain().focus().command(({ tr, chain }) => {
+            // if we are in first row, we need to toggle header row off first
+            if (isInTableFirstRow(tr)) {
+              chain().toggleHeaderRow().addRowBefore().toggleHeaderRow();
+            } else {
+              chain().addRowBefore();
+            }
+
+            return true
+          }).run()}
           name="Add row before"
         >
           <PanelTopCloseIcon size={18} />
@@ -65,7 +96,14 @@ const TableMenu = ({ editor }: TableMenuProps) => {
           <PanelBottomClose size={18} />
         </EditorBubbleButton>
         <EditorBubbleButton
-          onSelect={() => editor.chain().focus().deleteRow().run()}
+          onSelect={() => editor.chain().focus().deleteRow().command(({ tr, chain }) => {
+            // if we are in first row, that means we deleted the header row
+            if (isInTableFirstRow(tr)) {
+              chain().toggleHeaderRow();
+            }
+
+            return true
+          }).run()}
           name="Delete row"
         >
           <ListX size={18} />
