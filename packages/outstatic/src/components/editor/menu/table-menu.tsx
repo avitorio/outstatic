@@ -30,7 +30,7 @@ function isInTableFirstRow(tr: Transaction): boolean {
 
   // we are not in a table
   if (activeTable === undefined || activeRow === undefined) {
-    return true
+    return false
   }
 
   return activeTable + 1 === activeRow;
