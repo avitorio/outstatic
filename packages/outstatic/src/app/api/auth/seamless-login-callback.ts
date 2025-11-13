@@ -81,25 +81,16 @@ export default async function GET(request: NextRequest) {
       provider: 'seamless',
       access_token: sessionData.access_token,
       expires: new Date(sessionData.expires_at * 1000),
+      refresh_token: sessionData.refresh_token,
+      refresh_token_expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days
     };
 
     // Store session cookie
     await setLoginSession(session);
 
-    // Store refresh token in a separate cookie for token refresh
-    const response_redirect = NextResponse.redirect(
+    return NextResponse.redirect(
       new URL('/outstatic', request.url),
     );
-
-    response_redirect.cookies.set('ost_refresh_token', sessionData.refresh_token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 30 * 24 * 60 * 60, // 30 days
-      path: '/',
-    });
-
-    return response_redirect;
   } catch (error) {
     // Handle Zod validation errors
     if (error instanceof ZodError) {

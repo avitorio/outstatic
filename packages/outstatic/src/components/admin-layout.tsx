@@ -1,4 +1,4 @@
-import { useOstSession } from '@/utils/auth/hooks'
+import { useAuth } from '@/utils/auth/auth-provider'
 import { useOutstatic } from '@/utils/hooks/useOutstatic'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
@@ -19,7 +19,7 @@ export function AdminLayout({
   className
 }: AdminLayoutProps) {
   const { dashboardRoute } = useOutstatic()
-  const { status } = useOstSession()
+  const { status } = useAuth()
   const { push } = useRouter()
 
   useEffect(() => {
@@ -27,10 +27,16 @@ export function AdminLayout({
     document.title = pageTitle
   }, [title])
 
-  if (status === 'unauthenticated') {
-    if (typeof window !== 'undefined') {
-      push(dashboardRoute)
+  useEffect(() => {
+    if (status === 'unauthenticated' && typeof window !== 'undefined') {
+      // Defer navigation to avoid updating Router during render
+      setTimeout(() => {
+        push(dashboardRoute)
+      }, 0)
     }
+  }, [status, dashboardRoute, push])
+
+  if (status === 'unauthenticated') {
     return null
   }
 
@@ -39,9 +45,8 @@ export function AdminLayout({
       {status === 'loading' ? null : (
         <>
           <main
-            className={`w-auto flex-auto p-5 pb-0 md:p-10 bg-background h-dvh max-h-[calc(100vh-56px)] overflow-y-scroll scrollbar-hide ${
-              className || ''
-            }`}
+            className={`w-auto flex-auto p-5 pb-0 md:p-10 bg-background h-dvh max-h-[calc(100vh-56px)] overflow-y-scroll scrollbar-hide ${className || ''
+              }`}
           >
             {error && (
               <div className="mb-6 border border-red-500 p-2">

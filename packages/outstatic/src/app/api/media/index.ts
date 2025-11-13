@@ -13,13 +13,8 @@ export default async function GET(req: Request): Promise<Response> {
 
   const mediaPath = pathParts.slice(mediaIndex + 1).join('/')
 
-  // Check if OST_PRO_API_KEY is set - if so, use the proxy mode
-  const ostProApiKey = process.env.OST_PRO_API_KEY
-
-  if (ostProApiKey && session?.provider !== 'github') {
+  if (session?.provider !== 'github') {
     // Proxy mode: forward request to the main app's API with authentication
-    const session = await getLoginSession()
-
     if (!session?.access_token) {
       return new Response('Unauthorized', { status: 401 })
     }

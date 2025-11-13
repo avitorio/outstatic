@@ -3,22 +3,15 @@ import { OutstaticData } from '@/app'
 import { AdminHeader } from '@/components/admin-header'
 import { Sidebar } from '@/components/sidebar'
 import { AdminLoading } from '@/components/admin-loading'
-import { InitialDataContext } from '@/utils/hooks/useInitialData'
 import { useOutstatic, useLocalData } from '@/utils/hooks/useOutstatic'
-import { queryClient } from '@/utils/react-query/queryClient'
-import { QueryClientProvider } from '@tanstack/react-query'
 import { useEffect } from 'react'
-import { Toaster } from 'sonner'
 import { Router } from '../router'
 import Login from './login'
 import Welcome from './welcome'
 import { useGetRepository } from '@/utils/hooks/useGetRepository'
 import Onboarding from './onboarding'
-import { NavigationGuardProvider } from 'next-navigation-guard'
-import { V2BreakingCheck } from '@/components/v2-breaking-check'
-import { ThemeProvider } from 'next-themes'
-import 'katex/dist/katex.min.css'
 import { SidebarProvider } from '@/components/ui/shadcn/sidebar'
+import { RootProvider } from './_components/root-provider'
 
 type OstClientProps = {
   ostData: OutstaticData
@@ -94,21 +87,8 @@ export const OstClient = ({ ostData, params }: OstClientProps) => {
   }
 
   return (
-    <InitialDataContext.Provider value={ostData}>
-      <ThemeProvider
-        attribute="class"
-        defaultTheme="system"
-        enableSystem
-        disableTransitionOnChange
-      >
-        <Toaster />
-        <QueryClientProvider client={queryClient}>
-          <NavigationGuardProvider>
-            <AdminArea params={params} />
-          </NavigationGuardProvider>
-        </QueryClientProvider>
-        <V2BreakingCheck />
-      </ThemeProvider>
-    </InitialDataContext.Provider>
+    <RootProvider ostData={ostData}>
+      <AdminArea params={params} />
+    </RootProvider>
   )
 }

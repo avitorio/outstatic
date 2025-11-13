@@ -1,4 +1,3 @@
-import { useOstSession, useOstSignOut } from '@/utils/auth/hooks'
 import {
   Menu,
   SlashIcon,
@@ -34,6 +33,7 @@ import { useTheme } from 'next-themes'
 import Link from 'next/link'
 import { useSidebar } from '@/components/ui/shadcn/sidebar'
 import { DiscordLogoIcon, GitHubLogoIcon } from '@radix-ui/react-icons'
+import { useAuth } from '@/utils/auth/auth-provider'
 
 const themes = [
   {
@@ -85,9 +85,8 @@ const community = [
 ]
 
 const AdminHeaderComponent = () => {
-  const { session, status } = useOstSession()
+  const { session, status, signOut } = useAuth()
   const { repoOwner, repoSlug } = useOutstatic()
-  const { signOut } = useOstSignOut()
   const [isMounted, setIsMounted] = useState(false)
   const { theme, setTheme } = useTheme()
   const { toggleSidebar } = useSidebar()

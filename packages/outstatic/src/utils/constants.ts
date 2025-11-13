@@ -7,8 +7,8 @@ export const OUTSTATIC_URL = 'https://outstatic.com'
 
 // Pro API configuration (server-side only)
 export const OST_PRO_API_KEY = process.env.OST_PRO_API_KEY
-export const OST_PRO_API_URL = 
-  process.env.OST_PRO_API_URL || 'https://api.outstatic.com'
+export const OST_PRO_API_URL =
+  process.env.OST_PRO_API_URL || 'https://outstatic.com/api'
 
 
 // API configuration

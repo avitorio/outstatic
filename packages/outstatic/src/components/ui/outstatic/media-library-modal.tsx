@@ -54,7 +54,7 @@ export default function MediaLibraryModal({
     publicMediaPath
   } = useOutstatic()
   const apiPath = `${basePath}${API_MEDIA_PATH}${repoOwner}/${repoSlug}/${repoBranch}/`
-  const { data, isLoading, error, refetch } = useGetMediaFiles()
+  const { data, isLoading, refetch } = useGetMediaFiles()
   const filteredFiles = useMemo(() => {
     if (!data) return []
 
@@ -72,9 +72,9 @@ export default function MediaLibraryModal({
         if (sortBy === 'date') {
           return sortDirection === 'asc'
             ? new Date(a.publishedAt).getTime() -
-                new Date(b.publishedAt).getTime()
+            new Date(b.publishedAt).getTime()
             : new Date(b.publishedAt).getTime() -
-                new Date(a.publishedAt).getTime()
+            new Date(a.publishedAt).getTime()
         } else {
           return sortDirection === 'asc'
             ? a.filename.localeCompare(b.filename)
@@ -163,13 +163,9 @@ export default function MediaLibraryModal({
               </Card>
             </div>
           </div>
-        ) : isLoading ? (
+        ) : isLoading && !data ? (
           <div className="flex items-center justify-center h-full">
             <SpinnerIcon size="2xl" />
-          </div>
-        ) : error ? (
-          <div className="flex items-center justify-center text-red-500 h-full">
-            Error loading media files. Please try again.
           </div>
         ) : filteredFiles.length === 0 ? (
           <div className="flex flex-col items-center justify-center text-gray-500 h-full">
@@ -190,11 +186,10 @@ export default function MediaLibraryModal({
                 {filteredFiles.map((file) => (
                   <div
                     key={file.filename}
-                    className={`space-y-1 p-2 bg-card rounded-lg overflow-hidden cursor-pointer group relative  ${
-                      selectedImage?.filename === file.filename
+                    className={`space-y-1 p-2 bg-card rounded-lg overflow-hidden cursor-pointer group relative  ${selectedImage?.filename === file.filename
                         ? 'ring-1 ring-primary bg-muted'
                         : ''
-                    }`}
+                      }`}
                     onClick={() => setSelectedImage(file)}
                   >
                     <div className="aspect-square">
