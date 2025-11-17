@@ -14,16 +14,17 @@ const mockProviderProps = {
   pages: [],
   hasOpenAIKey: false,
   hasChanges: false,
-  setHasChanges: () => {},
+  setHasChanges: () => { },
   basePath: '',
   missingEnvVars: { required: {}, optional: {} },
   ostDetach: false,
   ostContent: 'anything',
   dashboardRoute: '/outstatic',
-  githubGql: `${OUTSTATIC_API_PATH}/github-graphql`,
+  githubGql: 'https://api.github.com/graphql',
   csrfToken: null,
   publicMediaPath: 'anything',
-  repoMediaPath: 'anything'
+  repoMediaPath: 'anything',
+  isPro: false
 } as OutstaticData
 
 export default mockProviderProps

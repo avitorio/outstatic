@@ -2,11 +2,14 @@ import callback from '@/app/api/auth/callback'
 import login from '@/app/api/auth/login'
 import signout from '@/app/api/auth/signout'
 import user from '@/app/api/auth/user'
+import magicLink from '@/app/api/auth/magic-link'
+import magicLinkCallback from '@/app/api/auth/magic-link-callback'
+import seamlessLoginCallback from '@/app/api/auth/seamless-login-callback'
+import refresh from '@/app/api/auth/refresh'
 import generate from '@/app/api/generate'
 import media from '@/app/api/media'
 import { GET as githubGet, POST as githubPost } from '@/app/api/github'
-import githubGraphql from '@/app/api/github/github-graphql'
-import { NextRequest, NextResponse } from 'next/server'
+import { NextRequest } from 'next/server'
 
 export interface Request extends NextRequest {
   session: any
@@ -31,13 +34,16 @@ const getPaths: Record<string, RouteHandler> = {
   signout,
   user,
   media,
-  github: githubGet
+  github: githubGet,
+  'magic-link-callback': magicLinkCallback,
+  'seamless-login-callback': seamlessLoginCallback
 }
 
 const postPaths: Record<string, RouteHandler> = {
   generate,
   github: githubPost,
-  'github-graphql': githubGraphql
+  'magic-link': magicLink,
+  refresh
 }
 
 export const OutstaticApi = {

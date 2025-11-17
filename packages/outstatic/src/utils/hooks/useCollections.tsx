@@ -7,7 +7,6 @@ import { toast } from 'sonner'
 import { useCreateCommit } from './useCreateCommit'
 import { GET_FILE } from '@/graphql/queries/file'
 import { sentenceCase } from 'change-case'
-import { ClientError } from 'graphql-request'
 
 export type CollectionType = {
   title: string
@@ -32,117 +31,100 @@ export function useCollections(options?: UseCollectionsOptions) {
   return useQuery({
     queryKey: ['collections', { repoOwner, repoSlug, repoBranch, ostContent }],
     queryFn: async (): Promise<CollectionsType> => {
-      try {
-        const collectionJson =
-          isPending || !repoOwner || !repoSlug || !repoBranch
-            ? null
-            : await gqlClient.request(GET_FILE, {
-              owner: repoOwner,
-              name: repoSlug,
-              filePath: `${repoBranch}:${ostContent}/collections.json` || ''
-            })
-
-        let collectionsData: CollectionsType = null
-
-        const collectionsObject = collectionJson?.repository?.object as {
-          text?: string
-        }
-
-        if (collectionsObject?.text) {
-          collectionsData = JSON.parse(collectionsObject.text)
-          const collections = collectionsData ?? []
-
-          return collections
-        }
-
-        // If the collections.json file doesn't exist, fetch the collections from the outstatic folder
-        // and create the collections.json file
-        if (collectionJson === null || collectionsObject === null) {
-          const data =
-            isPending || !repoOwner || !repoSlug || !repoBranch
-              ? null
-              : await gqlClient.request(GET_COLLECTIONS, {
-                owner: repoOwner,
-                name: repoSlug,
-                contentPath: `${repoBranch}:${ostContent}` || ''
-              })
-
-          if (!data || data?.repository?.object === null) {
-            // We couldn't find the outstatic folder, so we return an empty array
-            return [] as CollectionsType
-          }
-
-          const { entries } = data?.repository?.object as {
-            entries: { name: string; type: string }[]
-          }
-
-          collectionsData = entries
-            .map((entry) =>
-              entry.type === 'tree'
-                ? {
-                  title: sentenceCase(entry.name, {
-                    split: (str) =>
-                      str.split(/([^A-Za-z0-9\.]+)/g).filter(Boolean)
-                  }),
-                  slug: entry.name,
-                  path: `${ostContent}/${entry.name}`,
-                  children: []
-                }
-                : undefined
-            )
-            .filter(Boolean) as CollectionsType
-
-          const oid = await fetchOid()
-
-          if (!oid) {
-            throw new Error('No oid found')
-          }
-
-          const commitApi = createCommitApi({
-            message: 'chore: Updates collections',
+      const collectionJson =
+        isPending || !repoOwner || !repoSlug || !repoBranch
+          ? null
+          : await gqlClient.request(GET_FILE, {
             owner: repoOwner,
             name: repoSlug,
-            branch: repoBranch,
-            oid
+            filePath: `${repoBranch}:${ostContent}/collections.json` || ''
           })
 
-          commitApi.replaceFile(
-            `${ostContent}/collections.json`,
-            JSON.stringify(collectionsData, null, 2)
-          )
+      let collectionsData: CollectionsType = null
 
-          const payload = commitApi.createInput()
-
-          toast.promise(mutation.mutateAsync(payload), {
-            loading: 'Updating collections',
-            success: 'Collections updated',
-            error: 'Error updating collections'
-          })
-
-          return collectionsData
-        }
-        return []
-      } catch (error) {
-        if (error instanceof ClientError && error.response.status === 401) {
-          // Don't throw on 401 - let React Query return previous data
-          console.log('401 error in useCollections - returning previous data')
-          throw error // Still throw to trigger React Query's error handling, but with specific retry config
-        } else {
-          console.error('Error fetching collections:', error)
-          toast.error('Error fetching collections')
-          return []
-        }
+      const collectionsObject = collectionJson?.repository?.object as {
+        text?: string
       }
+
+      if (collectionsObject?.text) {
+        collectionsData = JSON.parse(collectionsObject.text)
+        const collections = collectionsData ?? []
+
+        return collections
+      }
+
+      // If the collections.json file doesn't exist, fetch the collections from the outstatic folder
+      // and create the collections.json file
+      if (collectionJson === null || collectionsObject === null) {
+        const data =
+          isPending || !repoOwner || !repoSlug || !repoBranch
+            ? null
+            : await gqlClient.request(GET_COLLECTIONS, {
+              owner: repoOwner,
+              name: repoSlug,
+              contentPath: `${repoBranch}:${ostContent}` || ''
+            })
+
+        if (!data || data?.repository?.object === null) {
+          // We couldn't find the outstatic folder, so we return an empty array
+          return [] as CollectionsType
+        }
+
+        const { entries } = data?.repository?.object as {
+          entries: { name: string; type: string }[]
+        }
+
+        collectionsData = entries
+          .map((entry) =>
+            entry.type === 'tree'
+              ? {
+                title: sentenceCase(entry.name, {
+                  split: (str) =>
+                    str.split(/([^A-Za-z0-9\.]+)/g).filter(Boolean)
+                }),
+                slug: entry.name,
+                path: `${ostContent}/${entry.name}`,
+                children: []
+              }
+              : undefined
+          )
+          .filter(Boolean) as CollectionsType
+
+        const oid = await fetchOid()
+
+        if (!oid) {
+          throw new Error('No oid found')
+        }
+
+        const commitApi = createCommitApi({
+          message: 'chore: Updates collections',
+          owner: repoOwner,
+          name: repoSlug,
+          branch: repoBranch,
+          oid
+        })
+
+        commitApi.replaceFile(
+          `${ostContent}/collections.json`,
+          JSON.stringify(collectionsData, null, 2)
+        )
+
+        const payload = commitApi.createInput()
+
+        toast.promise(mutation.mutateAsync(payload), {
+          loading: 'Updating collections',
+          success: 'Collections updated',
+          error: 'Error updating collections'
+        })
+
+        return collectionsData
+      }
+      return []
+    },
+    meta: {
+      errorMessage: 'Failed to fetch collections'
     },
     enabled:
-      enabled && !!repoOwner && !!repoSlug && !!repoBranch && !!ostContent,
-    retry: (failureCount, error) => {
-      // Don't retry on 401 errors
-      if (error instanceof ClientError && error.response.status === 401) {
-        return false
-      }
-      // Retry up to 3 times for other errors
-      return failureCount < 3
-    }
+      enabled && !!repoOwner && !!repoSlug && !!repoBranch && !!ostContent
   })
 }

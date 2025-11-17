@@ -1,5 +1,5 @@
 import { LoginSession, getLoginSession } from '@/utils/auth/auth'
-import { GITHUB_GQL_API_URL } from '@/utils/constants'
+import { OST_PRO_API_KEY, OST_PRO_API_URL } from '@/utils/constants'
 import { EnvVarsType, envVars } from '@/utils/envVarsCheck'
 
 export type OutstaticData = {
@@ -20,6 +20,7 @@ export type OutstaticData = {
   githubGql: string
   publicMediaPath: string
   repoMediaPath: string
+  isPro: boolean
 }
 
 export async function Outstatic({
@@ -35,9 +36,8 @@ export async function Outstatic({
       process.env.VERCEL_GIT_REPO_SLUG ||
       '',
     OST_REPO_BRANCH: repoBranch || process.env.OST_REPO_BRANCH,
-    OST_CONTENT_PATH: `${repoBranch || process.env.OST_REPO_BRANCH}:${
-      process.env.OST_MONOREPO_PATH ? process.env.OST_MONOREPO_PATH + '/' : ''
-    }${process.env.OST_CONTENT_PATH || ''}`,
+    OST_CONTENT_PATH: `${repoBranch || process.env.OST_REPO_BRANCH}:${process.env.OST_MONOREPO_PATH ? process.env.OST_MONOREPO_PATH + '/' : ''
+      }${process.env.OST_CONTENT_PATH || ''}`,
     OST_MONOREPO_PATH: '',
     OST_BASE_PATH: ''
   }
@@ -64,8 +64,9 @@ export async function Outstatic({
     ostDetach: process.env.OST_DETACH || false,
     pages: ['collections', 'settings', 'media-library'],
     dashboardRoute: '/outstatic',
-    githubGql: GITHUB_GQL_API_URL,
+    githubGql: session?.provider !== 'github' ? `${OST_PRO_API_URL}/github/parser` : 'https://api.github.com/graphql',
     publicMediaPath: process.env.OST_PUBLIC_MEDIA_PATH || '',
-    repoMediaPath: process.env.OST_REPO_MEDIA_PATH || ''
+    repoMediaPath: process.env.OST_REPO_MEDIA_PATH || '',
+    isPro: !!OST_PRO_API_KEY
   } as OutstaticData
 }

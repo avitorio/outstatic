@@ -1,4 +1,4 @@
-import { setLoginSession } from '@/utils/auth/auth'
+import { LoginSession, setLoginSession } from '@/utils/auth/auth'
 import { getAccessToken, fetchGitHubUser } from '@/utils/auth/github'
 import { NextRequest, NextResponse } from 'next/server'
 
@@ -48,8 +48,9 @@ export default async function GET(request: NextRequest) {
 
     if (userData && userData.email && access_token) {
       const { name, login, email, avatar_url } = userData
-      const sessionData = {
+      const sessionData: LoginSession = {
         user: { name: name || '', login, email, image: avatar_url },
+        provider: 'github',
         access_token,
         refresh_token,
         expires: new Date(Date.now() + expires_in),

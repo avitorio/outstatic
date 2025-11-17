@@ -4,6 +4,13 @@ import { Document } from '@/types'
 export const OUTSTATIC_VERSION = '2.0.10'
 export const OUTSTATIC_URL = 'https://outstatic.com'
 
+
+// Pro API configuration (server-side only)
+export const OST_PRO_API_KEY = process.env.OST_PRO_API_KEY
+export const OST_PRO_API_URL =
+  process.env.OST_PRO_API_URL || 'https://outstatic.com/api'
+
+
 // API configuration
 export const OUTSTATIC_API_PATH =
   process.env.NEXT_PUBLIC_OST_API_PATH || '/api/outstatic'

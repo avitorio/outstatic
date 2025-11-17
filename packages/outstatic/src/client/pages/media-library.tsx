@@ -36,7 +36,7 @@ export default function MediaLibrary() {
   const apiPath = `${basePath}${API_MEDIA_PATH}${repoOwner}/${repoSlug}/${repoBranch}`
   const [notFoundFiles, setNotFoundFiles] = useState<Set<string>>(new Set())
   const [loadingImages, setLoadingImages] = useState<Set<string>>(new Set())
-  const { data, isLoading, error, refetch: refetchMedia } = useGetMediaFiles()
+  const { data, isLoading, refetch: refetchMedia } = useGetMediaFiles()
   const filteredFiles = useMemo(() => {
     if (!data) return []
 
@@ -54,9 +54,9 @@ export default function MediaLibrary() {
         if (sortBy === 'date') {
           return sortDirection === 'asc'
             ? new Date(a.publishedAt).getTime() -
-                new Date(b.publishedAt).getTime()
+            new Date(b.publishedAt).getTime()
             : new Date(b.publishedAt).getTime() -
-                new Date(a.publishedAt).getTime()
+            new Date(a.publishedAt).getTime()
         } else {
           return sortDirection === 'asc'
             ? a.filename.localeCompare(b.filename)
@@ -149,13 +149,9 @@ export default function MediaLibrary() {
             </CardContent>
           </Card>
         </div>
-      ) : isLoading ? (
+      ) : isLoading && !data ? (
         <div className="flex items-center justify-center h-[80%]">
           <SpinnerIcon size="2xl" />
-        </div>
-      ) : error ? (
-        <div className="flex items-center justify-center h-[80%] text-red-500">
-          Error loading media files. Please try again.
         </div>
       ) : filteredFiles.length === 0 ? (
         <div className="flex flex-col items-center justify-center h-[80%] text-gray-500">
