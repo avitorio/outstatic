@@ -21,6 +21,7 @@ export type OutstaticData = {
   publicMediaPath: string
   repoMediaPath: string
   isPro: boolean
+  projectId?: string
 }
 
 export async function Outstatic({

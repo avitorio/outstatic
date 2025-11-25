@@ -12,7 +12,9 @@ export default defineConfig((options) => {
       './src/client/client.tsx',
       './src/utils/server.ts',
       './src/utils/auth/auth.ts',
-      './src/utils/hooks/index.tsx'
+      './src/utils/auth/auth-provider.tsx',
+      './src/utils/hooks/index.tsx',
+      './src/components/index.tsx'
     ],
     external: [
       'react',

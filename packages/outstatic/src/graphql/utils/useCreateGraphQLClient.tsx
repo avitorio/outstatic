@@ -39,12 +39,17 @@ export function useCreateGraphQLClient(
       if (!githubHeaders['Accept']) {
         githubHeaders['Accept'] = 'application/vnd.github.v4+json'
       }
+    } else {
+      // For parser API, add project ID header if available
+      if (initialData?.projectId) {
+        githubHeaders['x-project-id'] = initialData.projectId
+      }
     }
 
     headersRef.current = githubHeaders
 
     return headersRef.current
-  }, [headers.authorization, githubGql, isGitHubAPI])
+  }, [headers.authorization, githubGql, isGitHubAPI, initialData?.projectId])
 
   // Create GraphQL client with interceptor
   const client = useMemo(() => {

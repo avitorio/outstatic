@@ -35,4 +35,5 @@ export const SeamlessLoginExchangeResponseSchema = z.object({
     })
     .optional()
     .nullable(),
+  return_url: z.string().url().optional().nullable(),
 });
