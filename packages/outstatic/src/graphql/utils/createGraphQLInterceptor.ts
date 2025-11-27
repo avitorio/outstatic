@@ -60,7 +60,8 @@ export function createGraphQLInterceptor(
         // Check if it's a 401/403 error that we should handle
         if (error instanceof ClientError) {
           const status = error.response?.status
-          const isAuthError = status === 401 || status === 403
+          const message = error.response?.message as string
+          const isAuthError = (status === 401 || status === 403) && message?.includes('credentials')
 
           // Only handle auth errors on first attempt
           if (isAuthError && attemptCount === 0) {

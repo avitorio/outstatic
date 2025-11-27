@@ -15,25 +15,30 @@ export const queryClient = new QueryClient({
         // (see createGraphQLInterceptor.ts) before reaching here. This handler
         // serves as a fallback for non-GraphQL errors or cases where the
         // interceptor fails to refresh the token.
-        const isAuthError =
-          (error instanceof ClientError &&
-            (error.response?.status === 401 || error.response?.status === 403)) ||
-          (error && typeof error === 'object' && 'status' in error &&
-            (error.status === 401 || error.status === 403))
+        if (error instanceof ClientError) {
+          const status = error.response?.status
+          const message = error.response?.message as string
+          const isAuthError = (status === 401 || status === 403) && message?.includes('credentials')
 
-        if (isAuthError) {
-          // Silently handle auth errors - don't show toast or log
-          // GraphQL interceptor handles refresh attempts, and if it fails,
-          // the user should be redirected to login (handled elsewhere)
-          return
+          if (isAuthError) {
+            // Silently handle auth errors - don't show toast or log
+            // GraphQL interceptor handles refresh attempts, and if it fails,
+            // the user should be redirected to login (handled elsewhere)
+            return
+          }
+
+          toast.error(
+            (error.response?.message as string),
+            {
+              id: 'error-toast',
+            }
+          )
+        } else {
+          toast.error(
+            (query?.meta?.errorMessage as string) ||
+            `Something went wrong: ${error.message}`
+          )
         }
-
-        // Handle other errors with toast notifications
-        console.error('queryClient error', error, query)
-        toast.error(
-          (query?.meta?.errorMessage as string) ||
-          `Something went wrong: ${error.message}`
-        )
       }
     }
   }),

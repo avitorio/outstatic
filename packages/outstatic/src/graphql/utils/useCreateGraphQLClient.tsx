@@ -32,13 +32,7 @@ export function useCreateGraphQLClient(
     }
 
     if (isGitHubAPI) {
-      // Add GitHub-specific headers if not already present
-      if (!githubHeaders['User-Agent']) {
-        githubHeaders['User-Agent'] = 'Outstatic-GitHub-API'
-      }
-      if (!githubHeaders['Accept']) {
-        githubHeaders['Accept'] = 'application/vnd.github.v4+json'
-      }
+      githubHeaders['Accept'] = 'application/vnd.github.v4+json'
     } else {
       // For parser API, add project ID header if available
       if (initialData?.projectId) {
