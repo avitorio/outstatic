@@ -17,8 +17,9 @@ export const queryClient = new QueryClient({
         // interceptor fails to refresh the token.
         if (error instanceof ClientError) {
           const status = error.response?.status
-          const message = error.response?.message as string
-          const isAuthError = (status === 401 || status === 403) && message?.includes('credentials')
+          const message = error.response?.message
+          const isAuthError = (status === 401 || status === 403) &&
+            typeof message === 'string' && message.includes('credentials')
 
           if (isAuthError) {
             // Silently handle auth errors - don't show toast or log
