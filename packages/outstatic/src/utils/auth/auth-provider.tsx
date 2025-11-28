@@ -55,26 +55,31 @@ export function AuthProvider({ children, initialSession, basePath }: AuthProvide
     }
 
     // Otherwise, fetch the session
+    let cancelled = false
+
     const fetchSession = async () => {
       try {
         const response = await fetch(`${basePath}${OUTSTATIC_API_PATH}/user`)
-        if (response.ok) {
+        if (response.ok && !cancelled) {
           const { session: fetchedSession } = await response.json()
           setSession(fetchedSession || null)
         }
       } catch (error) {
-        console.error('Failed to fetch initial session:', error)
+        if (!cancelled) {
+          console.error('Failed to fetch initial session:', error)
+        }
       } finally {
-        setIsInitializing(false)
+        if (!cancelled) setIsInitializing(false)
       }
     }
 
     fetchSession()
+    return () => { cancelled = true }
   }, [basePath, initialSession])
 
   // Initialize Broadcast Channel
   useEffect(() => {
-    if (typeof window === 'undefined') return
+    if (typeof window === 'undefined' || !window.BroadcastChannel) return
 
     const channel = new BroadcastChannel(BROADCAST_CHANNEL_NAME)
     channelRef.current = channel
