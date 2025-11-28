@@ -67,7 +67,14 @@ export default async function GET(request: NextRequest) {
     // Redirect to return_url if provided, otherwise fallback to /outstatic
     const redirectUrl = return_url ?? new URL('/outstatic', request.url).href
 
-    return NextResponse.redirect(redirectUrl)
+    // Validate it's a relative URL or same-origin
+    const validatedUrl = new URL(redirectUrl, request.url)
+    if (validatedUrl.origin !== new URL(request.url).origin) {
+      throw new Error('Invalid redirect URL')
+    }
+
+    return NextResponse.redirect(validatedUrl)
+
   } catch (error) {
     // Handle Zod validation errors
     if (error instanceof ZodError) {
