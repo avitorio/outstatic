@@ -1,6 +1,11 @@
+import { cache } from 'react'
 import { LoginSession, getLoginSession } from '@/utils/auth/auth'
 import { OST_PRO_API_KEY, OST_PRO_API_URL } from '@/utils/constants'
 import { EnvVarsType, envVars } from '@/utils/envVarsCheck'
+import {
+  getCachedProjectId,
+  setCachedProjectId
+} from '@/utils/cache/project-handshake-cache'
 
 export type OutstaticData = {
   repoOwner: string
@@ -23,6 +28,58 @@ export type OutstaticData = {
   isPro: boolean
   projectId?: string
 }
+
+/**
+ * Get project ID with caching
+ * Uses React's cache() for request-level memoization and in-memory cache for cross-request caching
+ */
+const getProjectIdWithCache = cache(
+  async (
+    apiKey: string,
+    apiUrl: string | undefined
+  ): Promise<string | undefined> => {
+    // Check in-memory cache first (cross-request caching)
+    const cachedProjectId = getCachedProjectId(apiKey)
+    if (cachedProjectId) {
+      return cachedProjectId
+    }
+
+    // Cache miss - perform handshake
+    try {
+      const apiBase = apiUrl?.endsWith('/') ? apiUrl : `${apiUrl ?? ''}/`
+      const handshakeUrl = new URL('outstatic/project', apiBase)
+
+      const response = await fetch(handshakeUrl.href, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${apiKey}`,
+        }
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        const projectId = data.project_id
+
+        // Cache the result for future requests (in-memory cache)
+        if (projectId) {
+          setCachedProjectId(apiKey, projectId)
+        }
+
+        return projectId
+      } else {
+        // Log error but don't fail - allow Outstatic to work without projectId
+        console.warn(
+          `Failed to get project ID from handshake: ${response.status} ${response.statusText}`
+        )
+        return undefined
+      }
+    } catch (error) {
+      // Log error but don't fail - allow Outstatic to work without projectId
+      console.warn('Error during project handshake:', error)
+      return undefined
+    }
+  }
+)
 
 export async function Outstatic({
   repoOwner = '',
@@ -52,35 +109,10 @@ export async function Outstatic({
   const session = await getLoginSession()
 
   // Perform handshake to get project ID if API key is present
-  let projectId: string | undefined
-  if (OST_PRO_API_KEY) {
-    try {
-      const apiBase = OST_PRO_API_URL?.endsWith('/')
-        ? OST_PRO_API_URL
-        : `${OST_PRO_API_URL ?? ''}/`
-      const handshakeUrl = new URL('outstatic/project', apiBase)
-
-      const response = await fetch(handshakeUrl.href, {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${OST_PRO_API_KEY}`,
-        },
-      })
-
-      if (response.ok) {
-        const data = await response.json()
-        projectId = data.project_id
-      } else {
-        // Log error but don't fail - allow Outstatic to work without projectId
-        console.warn(
-          `Failed to get project ID from handshake: ${response.status} ${response.statusText}`
-        )
-      }
-    } catch (error) {
-      // Log error but don't fail - allow Outstatic to work without projectId
-      console.warn('Error during project handshake:', error)
-    }
-  }
+  // Uses both in-memory cache (cross-request) and React cache (per-request)
+  const projectId = OST_PRO_API_KEY
+    ? await getProjectIdWithCache(OST_PRO_API_KEY, OST_PRO_API_URL)
+    : undefined
 
   return {
     repoOwner: ostConfig.OST_REPO_OWNER,
@@ -99,7 +131,7 @@ export async function Outstatic({
     githubGql: session?.provider !== 'github' ? `${OST_PRO_API_URL}/github/parser` : 'https://api.github.com/graphql',
     publicMediaPath: process.env.OST_PUBLIC_MEDIA_PATH || '',
     repoMediaPath: process.env.OST_REPO_MEDIA_PATH || '',
-    isPro: !!OST_PRO_API_KEY,
+    isPro: !!OST_PRO_API_KEY && !!projectId,
     projectId
   } as OutstaticData
 }
