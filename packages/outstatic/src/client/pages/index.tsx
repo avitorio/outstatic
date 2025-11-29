@@ -12,6 +12,7 @@ import { useGetRepository } from '@/utils/hooks/useGetRepository'
 import Onboarding from './onboarding'
 import { SidebarProvider } from '@/components/ui/shadcn/sidebar'
 import { RootProvider } from './_components/root-provider'
+import RedirectingPage from './redirect'
 
 type OstClientProps = {
   ostData: OutstaticData
@@ -84,6 +85,10 @@ export const OstClient = ({ ostData, params }: OstClientProps) => {
 
   if (!ostData?.session) {
     return <Login basePath={ostData?.basePath} isPro={ostData?.isPro} />
+  }
+
+  if (params?.ost?.includes('redirect')) {
+    return <RedirectingPage />
   }
 
   return (

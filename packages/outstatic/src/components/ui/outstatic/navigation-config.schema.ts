@@ -28,6 +28,9 @@ const RouteChild = z.object({
   collapsible: z.boolean().default(false).optional(),
   collapsed: z.boolean().default(false).optional(),
   renderAction: z.custom<React.ReactNode>().optional(),
+  badge: z.custom<React.ReactNode>().optional(),
+  dialog: z.custom<React.ReactNode>().optional(),
+  newTab: z.boolean().default(false).optional(),
 });
 
 const RouteGroup = z.object({
@@ -36,15 +39,17 @@ const RouteGroup = z.object({
   collapsed: z.boolean().optional(),
   children: z.array(RouteChild),
   renderAction: z.custom<React.ReactNode>().optional(),
+  badge: z.custom<React.ReactNode>().optional(),
+  dialog: z.custom<React.ReactNode>().optional(),
+  newTab: z.boolean().default(false).optional(),
 });
 
 export const NavigationConfigSchema = z.object({
   style: z.enum(['custom', 'sidebar', 'header']).default('sidebar'),
   sidebarCollapsed: z
-    .enum(['false', 'true'])
-    .default('true')
-    .optional()
-    .transform((value) => value === `true`),
+    .union([z.boolean(), z.enum(['false', 'true'])])
+    .default(true)
+    .transform(val => typeof val === 'string' ? val === 'true' : val),
   sidebarCollapsedStyle: z.enum(['offcanvas', 'icon', 'none']).default('icon'),
   routes: z.array(z.union([RouteGroup, Divider])),
 });
