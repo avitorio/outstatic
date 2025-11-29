@@ -77,53 +77,6 @@ export function clearAllCachedProjectInfo(): void {
 }
 
 /**
- * @deprecated Use getCachedProjectInfo instead
- * Get cached projectId for an API key (for backwards compatibility)
- */
-export function getCachedProjectId(apiKey: string): string | undefined {
-  const projectInfo = getCachedProjectInfo(apiKey)
-  return projectInfo?.projectId
-}
-
-/**
- * @deprecated Use setCachedProjectInfo instead
- * Cache a projectId for an API key (for backwards compatibility)
- */
-export function setCachedProjectId(
-  apiKey: string,
-  projectId: string,
-  ttlMs: number = DEFAULT_TTL_MS
-): void {
-  // This is a legacy function, so we'll create a minimal ProjectInfo
-  // Note: projectSlug and accountSlug will be empty strings
-  setCachedProjectInfo(
-    apiKey,
-    {
-      projectId,
-      projectSlug: '',
-      accountSlug: '',
-    },
-    ttlMs
-  )
-}
-
-/**
- * @deprecated Use clearCachedProjectInfo instead
- * Clear cached projectId for an API key (for backwards compatibility)
- */
-export function clearCachedProjectId(apiKey: string): void {
-  clearCachedProjectInfo(apiKey)
-}
-
-/**
- * @deprecated Use clearAllCachedProjectInfo instead
- * Clear all cached projectIds (for backwards compatibility)
- */
-export function clearAllCachedProjectIds(): void {
-  clearAllCachedProjectInfo()
-}
-
-/**
  * Clean up expired entries from the cache
  * This can be called periodically to prevent memory leaks
  */
