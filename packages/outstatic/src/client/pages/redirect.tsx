@@ -1,16 +1,32 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/shadcn/card'
 import LoadingBackground from '@/components/ui/outstatic/loading-background'
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { OUTSTATIC_APP_URL } from '@/utils/constants'
 
-export default function RedirectingPage({
-}) {
+export default function RedirectingPage() {
   useEffect(() => {
     document.title = 'Redirecting...'
   }, [])
 
-  const redirectTo = useSearchParams().get('redirectTo') || OUTSTATIC_APP_URL
+  const redirectToParam = useSearchParams().get('redirectTo') || OUTSTATIC_APP_URL
+
+  // Validate redirect URL
+  const redirectTo = useMemo(() => {
+    try {
+      const url = new URL(redirectToParam)
+      const currentOrigin = window.location.origin
+      const allowedOrigins = [currentOrigin, OUTSTATIC_APP_URL]
+
+      if (allowedOrigins.some(origin => url.href.startsWith(origin))) {
+        return url.href
+      }
+    } catch {
+      // Invalid URL
+    }
+    return OUTSTATIC_APP_URL
+  }, [redirectToParam])
+
   useEffect(() => {
     setTimeout(() => {
       window.location.href = redirectTo
