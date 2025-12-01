@@ -1,10 +1,8 @@
-import { cache } from 'react'
 import { LoginSession, getLoginSession } from '@/utils/auth/auth'
 import { OST_PRO_API_KEY, OST_PRO_API_URL } from '@/utils/constants'
 import { EnvVarsType, envVars } from '@/utils/envVarsCheck'
 import {
-  getCachedProjectInfo,
-  setCachedProjectInfo,
+  createCachedHandshake,
   type ProjectInfo
 } from '@/utils/cache/project-handshake-cache'
 
@@ -35,60 +33,53 @@ export type OutstaticData = {
 }
 
 /**
- * Get project info with caching
- * Uses React's cache() for request-level memoization and in-memory cache for cross-request caching
+ * Fetcher function for project handshake API
+ * This is the underlying fetch logic that will be wrapped with multi-layer caching
  */
-const getProjectInfoWithCache = cache(
-  async (
-    apiKey: string,
-    apiUrl: string | undefined
-  ): Promise<ProjectInfo | undefined> => {
-    // Check in-memory cache first (cross-request caching)
-    const cachedProjectInfo = getCachedProjectInfo(apiKey)
-    if (cachedProjectInfo) {
-      return cachedProjectInfo
-    }
+async function fetchProjectFromHandshake(apiKey: string): Promise<ProjectInfo | null> {
+  try {
+    const apiUrl = OST_PRO_API_URL
+    const apiBase = apiUrl?.endsWith('/') ? apiUrl : `${apiUrl ?? ''}/`
+    const handshakeUrl = new URL('outstatic/project', apiBase)
 
-    // Cache miss - perform handshake
-    try {
-      const apiBase = apiUrl?.endsWith('/') ? apiUrl : `${apiUrl ?? ''}/`
-      const handshakeUrl = new URL('outstatic/project', apiBase)
+    const response = await fetch(handshakeUrl.href, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+      },
+      cache: 'no-store', // Prevent double-caching at fetch level
+    })
 
-      const response = await fetch(handshakeUrl.href, {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${apiKey}`,
-        }
-      })
-
-      if (response.ok) {
-        const data = await response.json()
-        const projectInfo: ProjectInfo = {
-          projectId: data.project_id,
-          projectSlug: data.project_slug,
-          accountSlug: data.account_slug,
-        }
-
-        // Cache the result for future requests (in-memory cache)
-        if (projectInfo.projectId) {
-          setCachedProjectInfo(apiKey, projectInfo)
-        }
-
-        return projectInfo
-      } else {
-        // Log error but don't fail - allow Outstatic to work without projectInfo
-        console.warn(
-          `Failed to get project info from handshake: ${response.status} ${response.statusText}`
-        )
-        return undefined
+    if (response.ok) {
+      const data = await response.json()
+      return {
+        projectId: data.project_id,
+        projectSlug: data.project_slug,
+        accountSlug: data.account_slug,
       }
-    } catch (error) {
+    } else {
       // Log error but don't fail - allow Outstatic to work without projectInfo
-      console.warn('Error during project handshake:', error)
-      return undefined
+      console.warn(
+        `Failed to get project info from handshake: ${response.status} ${response.statusText}`
+      )
+      return null
     }
+  } catch (error) {
+    // Log error but don't fail - allow Outstatic to work without projectInfo
+    console.warn('Error during project handshake:', error)
+    return null
   }
-)
+}
+
+/**
+ * Get project info with multi-layer caching
+ *
+ * Three-layer caching strategy:
+ * 1. React cache() - Request-level deduplication
+ * 2. In-memory Map - Fast access for warm containers
+ * 3. Next.js unstable_cache - Persistent cache across cold starts
+ */
+const getProjectInfoWithCache = createCachedHandshake(fetchProjectFromHandshake)
 
 export async function Outstatic({
   repoOwner = '',
@@ -118,9 +109,9 @@ export async function Outstatic({
   const session = await getLoginSession()
 
   // Perform handshake to get project info if API key is present
-  // Uses both in-memory cache (cross-request) and React cache (per-request)
+  // Uses multi-layer caching: React cache (per-request) + in-memory + Next.js unstable_cache
   const projectInfo = OST_PRO_API_KEY
-    ? await getProjectInfoWithCache(OST_PRO_API_KEY, OST_PRO_API_URL)
+    ? await getProjectInfoWithCache(OST_PRO_API_KEY)
     : undefined
 
   return {
