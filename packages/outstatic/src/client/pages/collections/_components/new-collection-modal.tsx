@@ -234,7 +234,7 @@ export default function NewCollectionModal({
   return (
     <FormProvider {...form}>
       <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="max-w-2xl">
+        <DialogContent className="md:max-w-xl">
           {error ? (
             <Alert variant="destructive">
               <AlertCircleIcon />

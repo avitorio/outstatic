@@ -18,7 +18,7 @@ export default function RedirectingPage() {
       const currentOrigin = window.location.origin
       const allowedOrigins = [currentOrigin, OUTSTATIC_APP_URL]
 
-      if (allowedOrigins.some(origin => url.href.startsWith(origin))) {
+      if (allowedOrigins.includes(url.origin)) {
         return url.href
       }
     } catch {
@@ -30,7 +30,7 @@ export default function RedirectingPage() {
   useEffect(() => {
     setTimeout(() => {
       window.location.href = redirectTo
-    }, 4000)
+    }, 3000)
   }, [redirectTo])
 
   return (
