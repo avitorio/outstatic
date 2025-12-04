@@ -43,7 +43,7 @@ export default async function GET(request: NextRequest) {
     const responseData = await response.json()
 
     // Validate API response structure with Zod
-    const { user, session: sessionData } =
+    const { user, session: sessionData, return_url } =
       ExchangeTokenResponseSchema.parse(responseData)
 
     // Create LoginSession object compatible with existing GitHub flow
@@ -64,9 +64,17 @@ export default async function GET(request: NextRequest) {
     // Store session cookie
     await setLoginSession(session)
 
-    return NextResponse.redirect(
-      new URL('/outstatic', request.url)
-    )
+    // Redirect to return_url if provided, otherwise fallback to /outstatic
+    const redirectUrl = return_url ?? new URL('/outstatic', request.url).href
+
+    // Validate it's a relative URL or same-origin
+    const validatedUrl = new URL(redirectUrl, request.url)
+    if (validatedUrl.origin !== new URL(request.url).origin) {
+      throw new Error('Invalid redirect URL')
+    }
+
+    return NextResponse.redirect(validatedUrl)
+
   } catch (error) {
     // Handle Zod validation errors
     if (error instanceof ZodError) {

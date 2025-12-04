@@ -43,6 +43,16 @@
       "require": "./dist/utils/hooks/index.js",
       "types": "./dist/utils/hooks/index.d.ts"
     },
+    "./utils/auth/auth-provider": {
+      "import": "./dist/utils/auth/auth-provider.mjs",
+      "require": "./dist/utils/auth/auth-provider.js",
+      "types": "./dist/utils/auth/auth-provider.d.ts"
+    },
+    "./components": {
+      "import": "./dist/components/index.mjs",
+      "require": "./dist/components/index.js",
+      "types": "./dist/components/index.d.ts"
+    },
     "./outstatic.css": "./dist/outstatic.css"
   },
   "scripts": {

@@ -8,7 +8,7 @@ export default async function POST(request: NextRequest) {
     const body = await request.json()
 
     // Validate request body with Zod
-    const { email } = MagicLinkRequestSchema.parse(body)
+    const { email, returnUrl } = MagicLinkRequestSchema.parse(body)
 
     // Check if API key is configured
     if (!OST_PRO_API_KEY) {
@@ -29,6 +29,9 @@ export default async function POST(request: NextRequest) {
       'outstatic/auth/request-magic-link',
       apiBase,
     )
+    // Build default return URL if not provided
+    const effectiveReturnUrl = returnUrl ?? `${baseUrl}/outstatic`
+
     // Call apps/api endpoint with API key in Authorization header
     const response = await fetch(requestUrl.href, {
       method: 'POST',
@@ -39,6 +42,7 @@ export default async function POST(request: NextRequest) {
       body: JSON.stringify({
         email,
         callbackUrl,
+        returnUrl: effectiveReturnUrl,
       }),
     })
 

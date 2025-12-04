@@ -12,6 +12,7 @@ import { If } from './if'
 import {
   SidebarMenu,
   SidebarMenuAction,
+  SidebarMenuBadge,
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarMenuSub,
@@ -102,6 +103,12 @@ export function SidebarNavigation({
                   </SidebarGroupAction>
                 </If>
 
+                <If condition={item.badge}>
+                  <SidebarMenuBadge>
+                    {item.badge}
+                  </SidebarMenuBadge>
+                </If>
+
                 <SidebarGroupContent>
                   <SidebarMenu>
                     <ContentContainer>
@@ -172,7 +179,16 @@ export function SidebarNavigation({
                             )
                           }
 
+                          if ('dialog' in child && child.dialog) {
+                            return (
+                              <SidebarMenuButton tooltip={child.label}>
+                                {child.dialog}
+                              </SidebarMenuButton>
+                            )
+                          }
+
                           const path = 'path' in child ? child.path : ''
+                          const newTab = 'newTab' in child ? child.newTab : false
                           const end = 'end' in child ? child.end : false
 
                           const isActive = isRouteActive(path, currentPath, end)
@@ -188,6 +204,8 @@ export function SidebarNavigation({
                                   'mx-auto w-full gap-0! [&>svg]:flex-1': !open
                                 })}
                                 href={path}
+                                target={newTab ? '_blank' : '_self'}
+                                rel={newTab ? 'noopener noreferrer' : undefined}
                               >
                                 {child.Icon}
                                 <span
@@ -270,6 +288,11 @@ export function SidebarNavigation({
                                   {child.renderAction}
                                 </SidebarMenuAction>
                               </If>
+                              <If condition={child.badge}>
+                                <SidebarMenuBadge>
+                                  {child.badge}
+                                </SidebarMenuBadge>
+                              </If>
                             </SidebarMenuItem>
                           </Container>
                         )
@@ -282,7 +305,7 @@ export function SidebarNavigation({
               <If condition={!open && !isLast}>
                 <SidebarSeparator />
               </If>
-            </Container>
+            </Container >
           )
         }
       })}

@@ -9,6 +9,7 @@ export const MagicLinkRequestSchema = z.object({
     .min(1, 'Email is required')
     .email('Invalid email format')
     .max(255, 'Email is too long'),
+  returnUrl: z.string().url().optional(),
 })
 
 export type MagicLinkRequest = z.infer<typeof MagicLinkRequestSchema>
@@ -42,6 +43,7 @@ export const ExchangeTokenResponseSchema = z.object({
     refresh_token: z.string().min(1),
     expires_at: z.number().positive(),
   }),
+  return_url: z.string().url().optional().nullable(),
 })
 
 export type ExchangeTokenResponse = z.infer<typeof ExchangeTokenResponseSchema>

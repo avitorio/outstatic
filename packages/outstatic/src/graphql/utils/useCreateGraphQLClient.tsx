@@ -32,19 +32,18 @@ export function useCreateGraphQLClient(
     }
 
     if (isGitHubAPI) {
-      // Add GitHub-specific headers if not already present
-      if (!githubHeaders['User-Agent']) {
-        githubHeaders['User-Agent'] = 'Outstatic-GitHub-API'
-      }
-      if (!githubHeaders['Accept']) {
-        githubHeaders['Accept'] = 'application/vnd.github.v4+json'
+      githubHeaders['Accept'] = 'application/vnd.github.v4+json'
+    } else {
+      // For parser API, add project ID header if available
+      if (initialData?.projectInfo?.projectId) {
+        githubHeaders['x-project-id'] = initialData.projectInfo.projectId
       }
     }
 
     headersRef.current = githubHeaders
 
     return headersRef.current
-  }, [headers.authorization, githubGql, isGitHubAPI])
+  }, [headers.authorization, githubGql, isGitHubAPI, initialData?.projectInfo?.projectId])
 
   // Create GraphQL client with interceptor
   const client = useMemo(() => {
