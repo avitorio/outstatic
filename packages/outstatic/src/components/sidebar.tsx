@@ -104,12 +104,12 @@ export const Sidebar = ({
       children: [
         {
           label: 'Members',
-          path: `${dashboardRoute}/redirect?redirectTo=${OUTSTATIC_APP_URL}/home/${projectInfo?.accountSlug}/projects/${projectInfo?.projectSlug}/members`,
+          path: `${dashboardRoute}/redirect?redirectTo=${encodeURIComponent(`${OUTSTATIC_APP_URL}/home/${projectInfo?.accountSlug}/projects/${projectInfo?.projectSlug}/members`)}`,
           newTab: true,
           Icon: <Users className={'w-4'} />,
           badge: isPro ? undefined : <Badge variant="outline"><span className="text-xs font-mono">PRO</span></Badge>,
           dialog: isPro ? undefined :
-            <UpgradeDialog>
+            <UpgradeDialog accountSlug={projectInfo?.accountSlug} dashboardRoute={dashboardRoute}>
               <div className={cn('flex items-center gap-2 cursor-pointer')}>
                 <Users className={'w-4'} />
                 Members
@@ -118,12 +118,12 @@ export const Sidebar = ({
         },
         {
           label: 'API Keys',
-          path: `${dashboardRoute}/redirect?redirectTo=${OUTSTATIC_APP_URL}/home/${projectInfo?.accountSlug}/projects/${projectInfo?.projectSlug}/api-keys`,
+          path: `${dashboardRoute}/redirect?redirectTo=${encodeURIComponent(`${OUTSTATIC_APP_URL}/home/${projectInfo?.accountSlug}/projects/${projectInfo?.projectSlug}/api-keys`)}`,
           newTab: true,
           Icon: <Key className={'w-4'} />,
           badge: isPro ? undefined : <Badge variant="outline">PRO</Badge>,
           dialog: isPro ? undefined :
-            <UpgradeDialog title="Unlock API Keys">
+            <UpgradeDialog title="Unlock API Keys" accountSlug={projectInfo?.accountSlug} dashboardRoute={dashboardRoute}>
               <div className={cn('flex items-center gap-2 cursor-pointer')}>
                 <Key className={'w-4'} />
                 API Keys

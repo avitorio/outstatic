@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 
 import { ArrowRight, CheckCircle, Mail, Sparkles, Users } from 'lucide-react';
@@ -16,8 +16,6 @@ import {
 import { FeatureGrid } from '@/components/ui/outstatic/feature-grid';
 import Link from 'next/link';
 import { OUTSTATIC_APP_URL } from '@/utils/constants';
-import { useOutstatic } from '@/utils/hooks';
-import { cn } from '@/utils/ui';
 import { Button } from '../shadcn/button';
 
 const features = [
@@ -28,8 +26,8 @@ const features = [
   },
   {
     icon: <Mail className="h-5 w-5" />,
-    title: 'Social Login',
-    description: 'Google, GitHub, and email authentication for seamless access',
+    title: 'Email Authentication',
+    description: 'Email authentication for seamless access to your projects',
   },
   {
     icon: <Sparkles className="h-5 w-5" />,
@@ -39,18 +37,28 @@ const features = [
 ];
 
 export function UpgradeDialog({
+  open = false,
+  onOpenChange,
   children,
-  title
+  title,
+  accountSlug,
+  dashboardRoute
 }: React.PropsWithChildren<{
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
   title?: string;
+  accountSlug?: string;
+  dashboardRoute?: string;
 }>) {
-  const { projectInfo, dashboardRoute } = useOutstatic();
-  const accountSlug = projectInfo?.accountSlug;
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(open);
+
+  useEffect(() => {
+    setIsOpen(open);
+  }, [open]);
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen} modal>
-      <DialogTrigger asChild>{children}</DialogTrigger>
+    <Dialog open={isOpen} onOpenChange={(newOpen) => { setIsOpen(newOpen); onOpenChange?.(newOpen); }} modal>
+      {children && <DialogTrigger asChild>{children}</DialogTrigger>}
       <DialogContent
         className="max-w-2xl"
         onInteractOutside={(e) => e.preventDefault()}
@@ -100,8 +108,7 @@ export function UpgradeDialog({
 
           <Button variant="default" size="lg" className="w-full" asChild>
             <Link
-              target="_blank"
-              href={`${accountSlug ? `${dashboardRoute}/redirect?redirectTo=${OUTSTATIC_APP_URL}/home/${accountSlug}/billing` : `${dashboardRoute}/redirect?redirectTo=${OUTSTATIC_APP_URL}/auth/sign-up?provider=github`}`}
+              href={`${accountSlug ? `${dashboardRoute}/redirect?redirectTo=${encodeURIComponent(`${OUTSTATIC_APP_URL}/home/${accountSlug}/billing`)}` : `${dashboardRoute || '/outstatic'}/redirect?redirectTo=${encodeURIComponent(`${OUTSTATIC_APP_URL}/auth/sign-up?provider=github`)}`}`}
             >
               Upgrade to Pro
               <ArrowRight className="ml-2 h-4 w-4" />

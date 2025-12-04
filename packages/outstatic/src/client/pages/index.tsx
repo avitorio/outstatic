@@ -83,12 +83,12 @@ export const OstClient = ({ ostData, params }: OstClientProps) => {
     return <Welcome variables={ostData.missingEnvVars} />
   }
 
-  if (!ostData?.session) {
-    return <Login basePath={ostData?.basePath} isPro={ostData?.isPro} />
-  }
-
   if (params?.ost?.includes('redirect')) {
     return <RedirectingPage />
+  }
+
+  if (!ostData?.session) {
+    return <Login basePath={ostData?.basePath} isPro={ostData?.isPro} />
   }
 
   return (

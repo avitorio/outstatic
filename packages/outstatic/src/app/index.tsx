@@ -118,8 +118,6 @@ export async function Outstatic({
     ? await getProjectInfoWithCache(OST_PRO_API_KEY)
     : undefined
 
-  console.log('projectInfo', projectInfo)
-
   return {
     repoOwner: projectInfo?.repoOwner || ostConfig.OST_REPO_OWNER,
     repoSlug: projectInfo?.repoSlug || ostConfig.OST_REPO_SLUG,
