@@ -21,6 +21,8 @@ export type ProjectInfo = {
   projectId: string
   projectSlug: string
   accountSlug: string
+  repoOwner: string
+  repoSlug: string
 }
 
 export type HandshakeFetcher = (apiKey: string) => Promise<ProjectInfo | null>
@@ -32,8 +34,8 @@ interface CacheEntry {
 
 // Configuration
 const CONFIG = {
-  IN_MEMORY_TTL_MS: 60 * 60 * 1000,      // 1 hour
-  NEXT_CACHE_TTL_SECONDS: 3600,           // 1 hour
+  IN_MEMORY_TTL_MS: 30 * 60 * 1000,      // 30 minutes
+  NEXT_CACHE_TTL_SECONDS: 30 * 60,           // 30 minutes
   CACHE_TAG: 'project-handshake',
   CACHE_KEY_PREFIX: 'project-handshake',
 } as const
@@ -111,7 +113,9 @@ export function createCachedHandshake(
         return null
       }
     },
-    [CONFIG.CACHE_KEY_PREFIX], // Cache key prefix
+    process.env.NODE_ENV === "development"
+      ? [`${CONFIG.CACHE_KEY_PREFIX}-${Date.now()}`] // always miss
+      : [CONFIG.CACHE_KEY_PREFIX], // Cache key prefix
     {
       revalidate: CONFIG.NEXT_CACHE_TTL_SECONDS,
       tags: [CONFIG.CACHE_TAG],

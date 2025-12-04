@@ -29,6 +29,8 @@ export type OutstaticData = {
     projectId: string
     projectSlug: string
     accountSlug: string
+    repoOwner: string
+    repoSlug: string
   }
 }
 
@@ -56,6 +58,8 @@ async function fetchProjectFromHandshake(apiKey: string): Promise<ProjectInfo | 
         projectId: data.project_id,
         projectSlug: data.project_slug,
         accountSlug: data.account_slug,
+        repoOwner: data.repo_owner,
+        repoSlug: data.repo_slug,
       }
     } else {
       // Log error but don't fail - allow Outstatic to work without projectInfo
@@ -114,9 +118,11 @@ export async function Outstatic({
     ? await getProjectInfoWithCache(OST_PRO_API_KEY)
     : undefined
 
+  console.log('projectInfo', projectInfo)
+
   return {
-    repoOwner: ostConfig.OST_REPO_OWNER,
-    repoSlug: ostConfig.OST_REPO_SLUG,
+    repoOwner: projectInfo?.repoOwner || ostConfig.OST_REPO_OWNER,
+    repoSlug: projectInfo?.repoSlug || ostConfig.OST_REPO_SLUG,
     repoBranch: ostConfig.OST_REPO_BRANCH,
     ostPath: process.env.OST_OUTSTATIC_PATH || 'outstatic',
     contentPath: process.env.OST_CONTENT_PATH || 'outstatic/content',
