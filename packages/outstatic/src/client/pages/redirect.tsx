@@ -28,9 +28,11 @@ export default function RedirectingPage() {
   }, [redirectToParam])
 
   useEffect(() => {
-    setTimeout(() => {
+    const timer = setTimeout(() => {
       window.location.href = redirectTo
     }, 3000)
+
+    return () => clearTimeout(timer)
   }, [redirectTo])
 
   return (

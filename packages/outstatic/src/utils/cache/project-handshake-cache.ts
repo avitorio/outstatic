@@ -34,8 +34,8 @@ interface CacheEntry {
 
 // Configuration
 const CONFIG = {
-  IN_MEMORY_TTL_MS: 30 * 60 * 1000,      // 30 minutes
-  NEXT_CACHE_TTL_SECONDS: 30 * 60,           // 30 minutes
+  IN_MEMORY_TTL_MS: process.env.NODE_ENV === "development" ? 60 * 1000 : 30 * 60 * 1000,
+  NEXT_CACHE_TTL_SECONDS: process.env.NODE_ENV === "development" ? 10 : 30 * 60,
   CACHE_TAG: 'project-handshake',
   CACHE_KEY_PREFIX: 'project-handshake',
 } as const
@@ -114,8 +114,8 @@ export function createCachedHandshake(
       }
     },
     process.env.NODE_ENV === "development"
-      ? [`${CONFIG.CACHE_KEY_PREFIX}-${Date.now()}`] // always miss
-      : [CONFIG.CACHE_KEY_PREFIX], // Cache key prefix
+      ? [`${CONFIG.CACHE_KEY_PREFIX}-dev`]
+      : [CONFIG.CACHE_KEY_PREFIX],
     {
       revalidate: CONFIG.NEXT_CACHE_TTL_SECONDS,
       tags: [CONFIG.CACHE_TAG],
