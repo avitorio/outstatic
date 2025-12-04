@@ -29,7 +29,7 @@ export const queryClient = new QueryClient({
           }
 
           toast.error(
-            (error.response?.message as string),
+            (error.response?.message as string) || 'Something went wrong',
             {
               id: 'error-toast',
             }
@@ -37,7 +37,7 @@ export const queryClient = new QueryClient({
         } else {
           toast.error(
             (query?.meta?.errorMessage as string) ||
-            `Something went wrong: ${error.message}`
+              error.message ? `${error.message}` : 'Something went wrong'
           )
         }
       }
