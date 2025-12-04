@@ -110,7 +110,7 @@ export const Sidebar = ({
           badge: isPro ? undefined : <Badge variant="outline"><span className="text-xs font-mono">PRO</span></Badge>,
           dialog: isPro ? undefined :
             <UpgradeDialog accountSlug={projectInfo?.accountSlug} dashboardRoute={dashboardRoute}>
-              <div className={cn('flex items-center gap-2 cursor-pointer')}>
+              <div className={cn('flex items-center gap-2 cursor-pointer w-full')}>
                 <Users className={'w-4'} />
                 Members
               </div>
@@ -124,7 +124,7 @@ export const Sidebar = ({
           badge: isPro ? undefined : <Badge variant="outline">PRO</Badge>,
           dialog: isPro ? undefined :
             <UpgradeDialog title="Unlock API Keys" accountSlug={projectInfo?.accountSlug} dashboardRoute={dashboardRoute}>
-              <div className={cn('flex items-center gap-2 cursor-pointer')}>
+              <div className={cn('flex items-center gap-2 cursor-pointer w-full')}>
                 <Key className={'w-4'} />
                 API Keys
               </div>

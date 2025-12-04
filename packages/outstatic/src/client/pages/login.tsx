@@ -61,7 +61,7 @@ export default function Login({
 
   const handleEmailLogin = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!email) return
+    if (!email || !isPro) return
 
     setEmailLoading(true)
     try {
@@ -170,8 +170,8 @@ export default function Login({
                             <UpgradeDialog title="Send Magic Link" open={showUpgradeDialog} onOpenChange={setShowUpgradeDialog}>
                               <Button
                                 type="submit"
-                                disabled={emailLoading || !email}
                                 className="w-full"
+                                disabled={!email?.includes('@')}
                               >
                                 <Mail className="h-4 w-4 mr-2" />
                                 {emailLoading ? 'Sending...' : 'Send Magic Link'}
