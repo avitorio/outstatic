@@ -1,5 +1,11 @@
 # outstatic
 
+## 2.0.12
+
+### Patch Changes
+
+- f6267a4: Apply React RSC fix
+
 ## 2.0.11
 
 ### Patch Changes
