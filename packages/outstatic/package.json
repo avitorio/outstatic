@@ -197,7 +197,7 @@
     "node-mocks-http": "^1.11.0",
     "postcss-import": "^15.1.0",
     "react": "19.1.2",
-    "react-dom": "19.1.0",
+    "react-dom": "19.1.2",
     "react-test-renderer": "^18.2.0",
     "tailwindcss": "4.1.10",
     "ts-jest": "^29.1.2",

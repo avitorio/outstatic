@@ -24,7 +24,7 @@
     "next-themes": "0.4.6",
     "outstatic": "latest",
     "react": "19.1.2",
-    "react-dom": "19.1.0",
+    "react-dom": "19.1.2",
     "rehype-katex": "^7.0.1",
     "rehype-pretty-code": "^0.12.6",
     "remark": "^14.0.3",
