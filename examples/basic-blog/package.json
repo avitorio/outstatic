@@ -11,7 +11,7 @@
     "@tailwindcss/postcss": "^4.1.10",
     "date-fns": "^4.1.0",
     "gray-matter": "^4.0.3",
-    "next": "15.3.6",
+    "next": "15.3.8",
     "outstatic": "latest",
     "react": "19.1.2",
     "react-dom": "19.1.2",
