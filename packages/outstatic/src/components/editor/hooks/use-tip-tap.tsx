@@ -3,7 +3,7 @@ import { TiptapEditorProps } from '@/components/editor/props'
 import { getPrevText } from '@/components/editor/utils/getPrevText'
 import Placeholder from '@tiptap/extension-placeholder'
 import { Editor, EditorEvents, useEditor } from '@tiptap/react'
-import { useCompletion } from 'ai/react'
+import { useCompletion } from '@ai-sdk/react'
 import { useEffect, useRef, useCallback } from 'react'
 import { toast } from 'sonner'
 import { useDebouncedCallback } from 'use-debounce'
@@ -91,9 +91,8 @@ export const useTipTap = ({ ...rhfMethods }) => {
             return ''
           }
 
-          return `Press '/' for commands${
-            hasOpenAIKey ? ", or '++' for AI autocomplete..." : ''
-          }`
+          return `Press '/' for commands${hasOpenAIKey ? ", or '++' for AI autocomplete..." : ''
+            }`
         },
         includeChildren: false
       })

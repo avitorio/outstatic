@@ -1,6 +1,6 @@
 import { useOutstatic } from '@/utils/hooks/useOutstatic'
 import { Editor, Range } from '@tiptap/react'
-import { useCompletion } from 'ai/react'
+import { useCompletion } from '@ai-sdk/react'
 import {
   useCallback,
   useEffect,
@@ -34,21 +34,24 @@ export const BaseCommandList = ({
   const { hasOpenAIKey, basePath } = useOutstatic()
   const csrfToken = useCsrfToken()
 
+  const completionStartPos = useRef<number | null>(null)
+
   const { complete, isLoading } = useCompletion({
     id: 'outstatic',
     api: basePath + OUTSTATIC_API_PATH + '/generate',
     headers: csrfToken ? { 'X-CSRF-Token': csrfToken } : undefined,
-    onResponse: () => {
-      editor.chain().focus().deleteRange(range).run()
-    },
     onFinish: (_prompt, completion) => {
       // highlight the generated text
-      editor.commands.setTextSelection({
-        from: range.from,
-        to: range.from + completion.length
-      })
+      if (completionStartPos.current !== null) {
+        editor.commands.setTextSelection({
+          from: completionStartPos.current,
+          to: completionStartPos.current + completion.length
+        })
+        completionStartPos.current = null
+      }
     },
     onError: (e) => {
+      completionStartPos.current = null
       toast.error(e.message)
     }
   })
@@ -65,6 +68,9 @@ export const BaseCommandList = ({
           if (prevText === '') {
             toast.error('Write some content so the AI can continue.')
           } else {
+            // Store the position and delete the slash command range before starting completion
+            completionStartPos.current = range.from
+            editor.chain().focus().deleteRange(range).run()
             complete(prevText, {
               body: { option: 'continue', command: '' }
             })
@@ -77,7 +83,7 @@ export const BaseCommandList = ({
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [complete, isLoading, command, editor, items]
+    [complete, isLoading, command, editor, items, range]
   )
 
   useEffect(() => {
@@ -132,9 +138,8 @@ export const BaseCommandList = ({
           if (item.title === 'Continue writing' && !hasOpenAIKey) return null
           return (
             <button
-              className={`flex w-full items-center space-x-2 rounded-md px-2 py-1 text-left text-sm text-foreground hover:bg-muted ${
-                index === selectedIndex ? 'bg-muted text-foreground' : ''
-              }`}
+              className={`flex w-full items-center space-x-2 rounded-md px-2 py-1 text-left text-sm text-foreground hover:bg-muted ${index === selectedIndex ? 'bg-muted text-foreground' : ''
+                }`}
               key={index}
               onClick={() => selectItem(index)}
             >

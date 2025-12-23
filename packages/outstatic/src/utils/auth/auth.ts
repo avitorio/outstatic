@@ -17,7 +17,7 @@ export type LoginSession = {
     email: string
     image: string
   }
-  provider?: 'github' | 'magic-link' | 'seamless'
+  provider?: 'github' | 'magic-link'
   access_token: string
   expires: Date
   refresh_token?: string
@@ -156,8 +156,8 @@ export async function refreshToken(
       await setLoginSession(updatedSession)
       console.log('Session updated successfully')
       return updatedSession
-    } else if (session.provider === 'magic-link' || session.provider === 'seamless') {
-      // Magic link / Seamless login flow - call main SaaS app
+    } else if (session.provider === 'magic-link') {
+      // Magic link - call main SaaS app
       const response = await fetch(`${OST_PRO_API_URL}/outstatic/auth/refresh-token`, {
         method: 'POST',
         headers: {

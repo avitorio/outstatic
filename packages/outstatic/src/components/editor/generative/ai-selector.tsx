@@ -2,9 +2,9 @@
 
 import { Command, CommandInput } from '@/components/ui/shadcn/command'
 
-import { useCompletion } from 'ai/react'
+import { useCompletion } from '@ai-sdk/react'
 import { ArrowUp } from 'lucide-react'
-import { addAIHighlight } from 'novel/extensions'
+import { addAIHighlight } from '@/components/editor/extensions/ai-higlight'
 import { useState } from 'react'
 import Markdown from 'react-markdown'
 import { toast } from 'sonner'
@@ -34,12 +34,6 @@ export function AISelector({ onOpenChange }: AISelectorProps) {
   const { completion, complete, isLoading } = useCompletion({
     api: basePath + OUTSTATIC_API_PATH + '/generate',
     headers: csrfToken ? { 'X-CSRF-Token': csrfToken } : undefined,
-    onResponse: (response) => {
-      if (response.status === 429) {
-        toast.error('You have reached your request limit for the day.')
-        return
-      }
-    },
     onError: (e) => {
       toast.error(e.message)
     }

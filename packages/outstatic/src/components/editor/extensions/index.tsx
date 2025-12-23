@@ -17,7 +17,7 @@ import SlashCommand from '@/components/editor/extensions/slash-command'
 import { ToggleClass } from '@/components/editor/extensions/toggle-class'
 import { Mathematics } from '@/components/editor/extensions/mathematics'
 import LinkParser from '@/components/editor/extensions/link-parser'
-import { AIHighlight } from 'novel/extensions'
+import { AIHighlight } from '@/components/editor/extensions/ai-higlight'
 import { cn } from '@/utils/ui'
 
 export const TiptapExtensions = [
@@ -107,7 +107,7 @@ export const TiptapExtensions = [
     }
   }),
   Image.extend({
-    renderHTML({ HTMLAttributes }) {
+    renderHTML({ HTMLAttributes }: { HTMLAttributes: Record<string, string> }) {
       return [
         'img',
         {

@@ -18,7 +18,7 @@
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
     "gray-matter": "^4.0.3",
-    "lucide-react": "^0.516.0",
+    "lucide-react": "^0.561.0",
     "next": "15.3.8",
     "next-themes": "0.4.6",
     "outstatic": "workspace:*",
@@ -28,7 +28,7 @@
     "remark-gfm": "^4.0.0",
     "remark-html": "^15.0.2",
     "shikiji": "^0.9.19",
-    "tailwind-merge": "^3.3.1",
+    "tailwind-merge": "^3.4.0",
     "tailwindcss": "4.1.10",
     "tailwindcss-animate": "^1.0.7",
     "vaul": "^0.8.0"
@@ -39,7 +39,7 @@
     "@types/react": "19.1.8",
     "@types/react-dom": "19.1.6",
     "esbuild": "^0.15.18",
-    "eslint": "^9.29.0",
+    "eslint": "^9.39.1",
     "eslint-config-next": "15.3.3",
     "katex": "^0.16.22",
     "mdx-bundler": "^10.0.1",
@@ -50,6 +50,6 @@
     "rehype-pretty-code": "^0.12.6",
     "rehype-slug": "^5.1.0",
     "remark-math": "^6.0.0",
-    "typescript": "^5.8.3"
+    "typescript": "^5.9.3"
   }
 }

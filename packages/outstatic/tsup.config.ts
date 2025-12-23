@@ -21,7 +21,8 @@ export default defineConfig((options) => {
       'react-dom',
       'next',
       'tsup',
-      'tailwindcss'
+      'tailwindcss',
+      'tw-animate-css'
       // Add any other external dependencies your project uses
     ],
     format: ['cjs', 'esm'],
@@ -58,6 +59,7 @@ export default defineConfig((options) => {
           console.error(`Error processing ${file}:`, err)
         }
       }
-    }
+    },
+    conditions: ['style']
   } as Options
 })

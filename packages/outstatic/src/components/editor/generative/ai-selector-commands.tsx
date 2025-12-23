@@ -6,7 +6,7 @@ import {
   WrapText
 } from 'lucide-react'
 import { useEditor } from '@/components/editor/editor-context'
-import { getPrevText } from 'novel/utils'
+import { getPrevText } from '@/components/editor/utils/getPrevText'
 import {
   CommandList,
   CommandGroup,
@@ -73,7 +73,7 @@ const AISelectorCommands = ({ onSelect }: AISelectorCommandsProps) => {
         <CommandItem
           onSelect={() => {
             const pos = editor.state.selection.from
-            const text = getPrevText(editor, pos)
+            const text = getPrevText(editor, { chars: pos })
             onSelect(text, 'continue')
           }}
           value="continue"
