@@ -15,7 +15,6 @@ import {
 } from '@/components/editor/extensions/slash-command'
 import { getPrevText } from '@/components/editor/utils/getPrevText'
 import { OUTSTATIC_API_PATH } from '@/utils/constants'
-import { useCsrfToken } from '@/utils/hooks/useCsrfToken'
 
 export const BaseCommandList = ({
   items,
@@ -31,23 +30,23 @@ export const BaseCommandList = ({
   range: Range
 }) => {
   const [selectedIndex, setSelectedIndex] = useState(0)
-  const { hasOpenAIKey, basePath } = useOutstatic()
-  const csrfToken = useCsrfToken()
+  const { hasAIProviderKey, basePath, isPro } = useOutstatic()
 
   const completionStartPos = useRef<number | null>(null)
 
   const { complete, isLoading } = useCompletion({
     id: 'outstatic',
     api: basePath + OUTSTATIC_API_PATH + '/generate',
-    headers: csrfToken ? { 'X-CSRF-Token': csrfToken } : undefined,
     onFinish: (_prompt, completion) => {
       // highlight the generated text
-      if (completionStartPos.current !== null) {
+      if (editor) {
+        const start = editor.state.selection.from
+        editor.commands.insertContentAt(start, completion)
         editor.commands.setTextSelection({
-          from: completionStartPos.current,
-          to: completionStartPos.current + completion.length
+          from: start,
+          to: editor.state.selection.from
         })
-        completionStartPos.current = null
+        editor.commands.removeClass('completing')
       }
     },
     onError: (e) => {
@@ -135,7 +134,7 @@ export const BaseCommandList = ({
         className="z-50 h-auto max-h-[330px] w-72 overflow-y-auto rounded-md border border-muted bg-background px-1 py-2 shadow-md transition-all"
       >
         {items.map((item: CommandItemProps, index: number) => {
-          if (item.title === 'Continue writing' && !hasOpenAIKey) return null
+          if (item.title === 'Continue writing' && !(hasAIProviderKey || isPro)) return null
           return (
             <button
               className={`flex w-full items-center space-x-2 rounded-md px-2 py-1 text-left text-sm text-foreground hover:bg-muted ${index === selectedIndex ? 'bg-muted text-foreground' : ''

@@ -43,11 +43,17 @@
 }
 
 .ProseMirror *.completing:after {
-  content: 'O';
-  animation: completing 2s linear infinite;
+  content: '';
+  width: 18px;
+  height: 18px;
+  border: 2px solid #ccc;
+  border-top-color: #333;
+  border-radius: 50%;
+  animation: completing 0.8s linear infinite;
   position: relative;
   display: inline-block;
   margin-left: 5px;
+  vertical-align: middle;
 }
 
 @keyframes completing {

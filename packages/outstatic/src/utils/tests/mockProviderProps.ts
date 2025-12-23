@@ -12,7 +12,7 @@ const mockProviderProps = {
   initialApolloState: null,
   collections: ['collection1', 'collection2', 'collection3'],
   pages: [],
-  hasOpenAIKey: false,
+  hasAIProviderKey: false,
   hasChanges: false,
   setHasChanges: () => { },
   basePath: '',

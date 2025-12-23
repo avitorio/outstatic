@@ -154,7 +154,7 @@
     "tippy.js": "^6.3.7",
     "tiptap-markdown": "0.8.1",
     "transliteration": "2.3.5",
-    "ts-pattern": "^5.7.1",
+    "ts-pattern": "^5.9.0",
     "url-slug": "^3.0.6",
     "use-debounce": "^9.0.4",
     "use-resize-observer": "^9.1.0",

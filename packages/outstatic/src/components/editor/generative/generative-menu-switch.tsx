@@ -19,7 +19,7 @@ const GenerativeMenuSwitch = ({
   open,
   onOpenChange
 }: GenerativeMenuSwitchProps) => {
-  const { hasOpenAIKey } = useOutstatic()
+  const { hasAIProviderKey, isPro } = useOutstatic()
 
   useEffect(() => {
     if (!open) removeAIHighlight(editor)
@@ -40,7 +40,7 @@ const GenerativeMenuSwitch = ({
       {open && <AISelector open={open} onOpenChange={onOpenChange} />}
       {!open && (
         <Fragment>
-          {hasOpenAIKey && (
+          {(hasAIProviderKey || isPro) && (
             <EditorBubbleButton
               name="ask-ai"
               className="gap-1 rounded-none text-purple-500"

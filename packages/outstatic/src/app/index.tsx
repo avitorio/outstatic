@@ -16,7 +16,7 @@ export type OutstaticData = {
   session: LoginSession | null
   pages: string[]
   missingEnvVars: EnvVarsType | false
-  hasOpenAIKey: boolean
+  hasAIProviderKey: boolean
   basePath: string
   ostDetach: boolean
   ostContent?: string
@@ -127,7 +127,7 @@ export async function Outstatic({
     monorepoPath: process.env.OST_MONOREPO_PATH || '',
     session: session || null,
     missingEnvVars: false,
-    hasOpenAIKey: !!process.env.OPENAI_API_KEY,
+    hasAIProviderKey: !!process.env.OPENAI_API_KEY || !!process.env.AI_GATEWAY_API_KEY,
     basePath: process.env.OST_BASE_PATH || '',
     ostDetach: process.env.OST_DETACH || false,
     pages: ['collections', 'settings', 'media-library'],

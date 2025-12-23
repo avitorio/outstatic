@@ -9,14 +9,17 @@ import { toast } from 'sonner'
 import { useDebouncedCallback } from 'use-debounce'
 import { useOutstatic } from '@/utils/hooks/useOutstatic'
 import { OUTSTATIC_API_PATH } from '@/utils/constants'
-import { useCsrfToken } from '@/utils/hooks/useCsrfToken'
 
 export const useTipTap = ({ ...rhfMethods }) => {
-  const { hasOpenAIKey, basePath } = useOutstatic()
-  const csrfToken = useCsrfToken()
+  const { hasAIProviderKey, isPro, basePath } = useOutstatic()
   const { setValue } = rhfMethods
 
   const editorRef = useRef<Editor | null>(null)
+  const streamingStateRef = useRef<{
+    startPos: number
+    lastCompletion: string
+  } | null>(null)
+  const prevIsLoadingRef = useRef(false)
 
   const debouncedCallback = useDebouncedCallback(async ({ editor }) => {
     const val = editor.getHTML()
@@ -25,32 +28,115 @@ export const useTipTap = ({ ...rhfMethods }) => {
 
   const { complete, completion, isLoading, stop } = useCompletion({
     id: 'outstatic',
-    headers: csrfToken ? { 'X-CSRF-Token': csrfToken } : undefined,
     api: basePath + OUTSTATIC_API_PATH + '/generate',
-    onFinish: (_prompt, completion) => {
-      if (editorRef.current) {
-        const start = editorRef.current.state.selection.from
-        editorRef.current.commands.insertContentAt(start, completion)
-        editorRef.current.commands.setTextSelection({
-          from: start,
-          to: editorRef.current.state.selection.from
-        })
-        editorRef.current.commands.removeClass('completing')
-      }
-    },
     onError: (err) => {
-      editorRef.current?.commands.removeClass('completing')
+      const editor = editorRef.current
+      editor?.commands.removeClass('completing')
+      streamingStateRef.current = null
       toast.error(err.message)
     }
   })
 
+  // Handle loading state changes
+  useEffect(() => {
+    const wasLoading = prevIsLoadingRef.current
+    prevIsLoadingRef.current = isLoading
+
+    if (wasLoading && !isLoading) {
+      // Loading just finished - do final render with full markdown parsing
+      const editor = editorRef.current
+      const state = streamingStateRef.current
+
+      if (editor && state && completion) {
+        try {
+          // Calculate the end position of previously inserted content
+          // We need to find and remove any raw markdown text we inserted
+          const docSize = editor.state.doc.content.size
+          const deleteFrom = state.startPos
+          const deleteTo = Math.min(
+            state.startPos + state.lastCompletion.length,
+            docSize
+          )
+
+          if (deleteFrom < deleteTo && deleteFrom >= 0) {
+            editor.commands.deleteRange({
+              from: deleteFrom,
+              to: deleteTo
+            })
+          }
+
+          // Insert the final content with full markdown parsing
+          editor.commands.insertContentAt(state.startPos, completion, {
+            parseOptions: {
+              preserveWhitespace: false
+            }
+          })
+        } catch (error) {
+          console.error('Error inserting final completion:', error)
+        }
+      }
+
+      if (editor) {
+        editor.commands.removeClass('completing')
+        const val = editor.getHTML()
+        setValue('content', val && !editor.isEmpty ? val : '')
+      }
+      streamingStateRef.current = null
+    } else if (!wasLoading && isLoading) {
+      editorRef.current?.commands.addClass('completing')
+    }
+  }, [isLoading, setValue, completion])
+
+  // Stream the completion into the editor as it arrives (as plain text for speed)
+  useEffect(() => {
+    const editor = editorRef.current
+    const state = streamingStateRef.current
+
+    if (!editor || !state || !isLoading) return
+
+    const newText = completion
+    if (!newText || newText === state.lastCompletion) return
+
+    try {
+      const docSize = editor.state.doc.content.size
+      const deleteFrom = state.startPos
+      const deleteTo = Math.min(
+        state.startPos + state.lastCompletion.length,
+        docSize
+      )
+
+      // Delete previous plain text insertion
+      if (state.lastCompletion.length > 0 && deleteFrom < deleteTo && deleteFrom >= 0) {
+        const { tr } = editor.state
+        tr.delete(deleteFrom, deleteTo)
+        editor.view.dispatch(tr)
+      }
+
+      // Insert new text as plain text (fast, no parsing)
+      const insertPos = Math.min(state.startPos, editor.state.doc.content.size)
+      if (insertPos >= 0) {
+        const { tr } = editor.state
+        tr.insertText(newText, insertPos)
+        editor.view.dispatch(tr)
+      }
+
+      state.lastCompletion = newText
+    } catch (error) {
+      console.error('Error streaming completion:', error)
+    }
+  }, [completion, isLoading])
+
   const onUpdate = useCallback(
     ({ editor }: EditorEvents['update']) => {
+      if (streamingStateRef.current !== null) {
+        return
+      }
+
       const selection = editor.state.selection
       const lastTwo = getPrevText(editor, {
         chars: 2
       })
-      if (hasOpenAIKey && lastTwo === '++' && !isLoading) {
+      if ((hasAIProviderKey || isPro) && lastTwo === '++' && !isLoading) {
         editor.commands.deleteRange({
           from: selection.from - 2,
           to: selection.from
@@ -60,6 +146,11 @@ export const useTipTap = ({ ...rhfMethods }) => {
         if (prevText === '') {
           toast.error('Write some content so the AI can continue.')
         } else {
+          streamingStateRef.current = {
+            startPos: editor.state.selection.from,
+            lastCompletion: ''
+          }
+
           complete(prevText, {
             body: { option: 'continue', command: '' }
           })
@@ -68,7 +159,7 @@ export const useTipTap = ({ ...rhfMethods }) => {
         debouncedCallback({ editor })
       }
     },
-    [hasOpenAIKey, isLoading, complete, debouncedCallback]
+    [hasAIProviderKey, isPro, isLoading, complete, debouncedCallback]
   )
 
   const editor = useEditor({
@@ -91,13 +182,12 @@ export const useTipTap = ({ ...rhfMethods }) => {
             return ''
           }
 
-          return `Press '/' for commands${hasOpenAIKey ? ", or '++' for AI autocomplete..." : ''
+          return `Press '/' for commands${(hasAIProviderKey || isPro) ? ", or '++' for AI autocomplete..." : ''
             }`
         },
         includeChildren: false
       })
     ],
-    // shouldRerenderOnTransaction: false,
     editorProps: TiptapEditorProps,
     onUpdate,
     immediatelyRender: false
@@ -109,22 +199,30 @@ export const useTipTap = ({ ...rhfMethods }) => {
   }, [editor])
 
   useEffect(() => {
-    if (isLoading) {
-      editor?.commands.addClass('completing')
-    }
-  }, [isLoading])
-
-  useEffect(() => {
-    // if user presses escape or cmd + z and it's loading,
-    // stop the request, delete the completion, and insert back the "++"
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape' || (e.metaKey && e.key === 'z')) {
         stop()
         if (e.key === 'Escape') {
-          editor?.commands.deleteRange({
-            from: editor.state.selection.from - completion.length,
-            to: editor.state.selection.from
-          })
+          const editor = editorRef.current
+          const state = streamingStateRef.current
+
+          if (editor && state && state.lastCompletion.length > 0) {
+            try {
+              const docSize = editor.state.doc.content.size
+              const from = state.startPos
+              const to = Math.min(state.startPos + state.lastCompletion.length, docSize)
+
+              if (from >= 0 && from < to) {
+                const { tr } = editor.state
+                tr.delete(from, to)
+                editor.view.dispatch(tr)
+              }
+            } catch (error) {
+              console.error('Error deleting completion on cancel:', error)
+            }
+          }
+          editor?.commands.removeClass('completing')
+          streamingStateRef.current = null
           toast.message('AI writing cancelled.')
         }
       }
@@ -135,10 +233,17 @@ export const useTipTap = ({ ...rhfMethods }) => {
       stop()
       if (window.confirm('AI writing paused. Continue?')) {
         if (editor?.getText()) {
+          streamingStateRef.current = {
+            startPos: editor.state.selection.from,
+            lastCompletion: ''
+          }
           complete(editor.getText(), {
             body: { option: 'continue', command: '' }
           })
         }
+      } else {
+        editor?.commands.removeClass('completing')
+        streamingStateRef.current = null
       }
     }
     if (isLoading) {
@@ -152,7 +257,7 @@ export const useTipTap = ({ ...rhfMethods }) => {
       document.removeEventListener('keydown', onKeyDown)
       window.removeEventListener('mousedown', mousedownHandler)
     }
-  }, [stop, isLoading, editor, complete, completion.length])
+  }, [stop, isLoading, editor, complete])
 
   return { editor: editor as Editor }
 }

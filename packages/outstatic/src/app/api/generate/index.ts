@@ -1,5 +1,6 @@
 import { getLoginSession } from '@/utils/auth/auth'
-import { createOpenAI } from '@ai-sdk/openai'
+import { createOpenAI } from '@ai-sdk/openai';
+import { OST_PRO_API_URL } from '@/utils/constants'
 import { ModelMessage, streamText } from 'ai'
 import { match } from 'ts-pattern'
 
@@ -15,18 +16,28 @@ export default async function POST(req: Request): Promise<Response> {
   }
 
   // Check if the OPENAI_API_KEY is set, if not return 400
-  if (!process.env.OPENAI_API_KEY || process.env.OPENAI_API_KEY === '') {
+  if (!(process.env.OPENAI_API_KEY || process.env.OST_PRO_API_KEY || process.env.AI_GATEWAY_API_KEY)) {
     return new Response(
-      'Missing OPENAI_API_KEY - make sure to add it to your .env file.',
+      'AI Completion is not configured. Check your .env file.',
       {
         status: 400
       }
     )
   }
 
-  const openai = createOpenAI({
-    baseURL: process.env.OPENAI_BASE_URL || 'https://api.openai.com/v1'
-  })
+  if (process.env.OST_PRO_API_KEY) {
+    console.log('OST_PRO_API_KEY is set')
+    const apiPath = OST_PRO_API_URL + '/outstatic/generate'
+    return fetch(apiPath, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${process.env.OST_PRO_API_KEY}`
+      },
+      body: req.body,
+      duplex: 'half'
+    } as RequestInit)
+  }
 
   const { prompt, option, command } = await req.json()
   const messages = match(option)
@@ -110,8 +121,14 @@ export default async function POST(req: Request): Promise<Response> {
     ])
     .run() as ModelMessage[]
 
+  const openai = createOpenAI({
+    baseURL: process.env.OPENAI_BASE_URL || 'https://api.openai.com/v1'
+  })
+
+  const model = process.env.OPENAI_API_KEY ? openai('gpt-3.5-turbo') : 'openai/gpt-3.5-turbo';
+
   const result = streamText({
-    model: openai('gpt-3.5-turbo'),
+    model,
     messages,
     temperature: 0.7
   })
