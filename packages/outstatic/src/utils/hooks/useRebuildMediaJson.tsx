@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useCallback } from 'react'
 import { toast } from 'sonner'
 import useOid from './useOid'
-import { useOutstatic, useLocalData } from './useOutstatic'
+import { useOutstatic } from './useOutstatic'
 import { useCreateCommit } from './useCreateCommit'
 import { createCommitApi } from '../createCommitApi'
 import { hashFromUrl } from '../hashFromUrl'
@@ -32,11 +32,11 @@ export const useRebuildMediaJson = () => {
   const [processed, setProcessed] = useState(0)
   const fetchOid = useOid()
   const mutation = useCreateCommit()
-  const { data: localData } = useLocalData()
-  const { repoOwner, repoSlug, repoBranch, ostPath } = useOutstatic()
+  const { repoOwner, repoSlug, repoBranch, ostPath, repoMediaPath } =
+    useOutstatic()
 
   const { refetch, data } = useGetFiles({
-    path: localData?.repoMediaPath || '',
+    path: repoMediaPath || '',
     enabled: false
   })
 
