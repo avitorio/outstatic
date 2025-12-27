@@ -1,5 +1,11 @@
 # outstatic
 
+## 2.0.14
+
+### Patch Changes
+
+- fix: "Your document contains media files" keeps popping up
+
 ## 2.0.13
 
 ### Patch Changes
