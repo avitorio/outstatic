@@ -14,12 +14,13 @@ import NewCollectionModal from './_components/new-collection-modal'
 
 export default function Collections() {
   const { data: collections, isPending } = useCollections()
-  const { dashboardRoute } = useOutstatic()
+  const { dashboardRoute, session } = useOutstatic()
 
   const [selectedCollection, setSelectedCollection] =
     useState<CollectionType | null>(null)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [showNewCollectionModal, setShowNewCollectionModal] = useState(false)
+
   if (isPending) return <AdminLoading />
 
   return (
@@ -32,9 +33,11 @@ export default function Collections() {
         <>
           <div className="mb-8 flex h-12 items-center">
             <h1 className="mr-12 text-2xl text-foreground">Collections</h1>
-            <Button size="sm" onClick={() => setShowNewCollectionModal(true)}>
-              New Collection
-            </Button>
+            {session?.user?.permissions?.includes('collections.manage') ? (
+              <Button size="sm" onClick={() => setShowNewCollectionModal(true)}>
+                New Collection
+              </Button>
+            ) : null}
           </div>
           <div className="max-w-5xl w-full grid md:grid-cols-3 gap-6">
             {collections &&
@@ -50,28 +53,30 @@ export default function Collections() {
                         <span className="absolute top-0 bottom-0 left-0 right-16"></span>
                       </h5>
                     </Link>
-                    <div className="z-10 flex gap-2">
-                      <Button asChild size="icon" variant="ghost">
-                        <Link
-                          href={`${dashboardRoute}/collections/${collection.slug}`}
+                    {session?.user?.permissions?.includes('collections.manage') ? (
+                      <div className="z-10 flex gap-2">
+                        <Button asChild size="icon" variant="ghost">
+                          <Link
+                            href={`${dashboardRoute}/collections/${collection.slug}`}
+                          >
+                            <span className="sr-only">Edit collection</span>
+                            <Settings className="w-6 h-6" />
+                          </Link>
+                        </Button>
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          type="button"
+                          onClick={() => {
+                            setShowDeleteModal(true)
+                            setSelectedCollection(collection)
+                          }}
                         >
-                          <span className="sr-only">Edit collection</span>
-                          <Settings className="w-6 h-6" />
-                        </Link>
-                      </Button>
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        type="button"
-                        onClick={() => {
-                          setShowDeleteModal(true)
-                          setSelectedCollection(collection)
-                        }}
-                      >
-                        <span className="sr-only">Delete content</span>
-                        <Trash className="w-6 h-6" />
-                      </Button>
-                    </div>
+                          <span className="sr-only">Delete content</span>
+                          <Trash className="w-6 h-6" />
+                        </Button>
+                      </div>)
+                      : null}
                   </CardContent>
                 </Card>
               ))}

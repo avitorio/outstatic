@@ -143,7 +143,7 @@ const AdminHeaderComponent = () => {
                   className="relative flex shrink-0 overflow-hidden group-hover/trigger:border-background/50 rounded-md border border-transparent transition-colors mx-auto h-9 w-9 group-focus:ring-2"
                 >
                   <Avatar className="rounded-md">
-                    <AvatarImage src={session?.user?.image || ''} />
+                    <AvatarImage src={session?.user?.image || undefined} />
                     <AvatarFallback>
                       {session?.user?.name?.charAt(0)}
                     </AvatarFallback>

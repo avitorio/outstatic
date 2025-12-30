@@ -19,6 +19,8 @@ import { Badge } from './ui/shadcn/badge'
 import { OUTSTATIC_APP_URL } from '@/utils/constants'
 import { UpgradeDialog } from './ui/outstatic/upgrade-dialog'
 import { cn } from '@/utils/ui'
+import { useCallback } from 'react'
+import { AppPermissions } from '@/utils/auth/auth'
 
 type SidebarProps = {
   /** Additional routes to append or replace default settings routes */
@@ -38,8 +40,12 @@ export const Sidebar = ({
   sidebarCollapsed,
   sidebarCollapsedStyle
 }: SidebarProps) => {
-  const { dashboardRoute, isPro, projectInfo } = useOutstatic();
+  const { dashboardRoute, isPro, projectInfo, session } = useOutstatic();
   const { data: collections } = useCollections();
+  const hasPermission = useCallback((permission: AppPermissions) => {
+    return session?.user?.permissions?.includes(permission);
+  }, [session?.user?.permissions]);
+
 
   const routes = [
     {
@@ -99,7 +105,7 @@ export const Sidebar = ({
         }
       ].filter((route) => !!route)
     },
-    ...(additionalRoutes ? additionalRoutes : [{
+    ...(additionalRoutes ? additionalRoutes : hasPermission('settings.manage') ? [{
       label: 'Settings',
       children: [
         {
@@ -136,7 +142,7 @@ export const Sidebar = ({
           Icon: <Settings className={'w-4'} />
         }
       ].filter((route) => !!route)
-    }]),
+    }] : []),
 
   ] satisfies z.infer<typeof NavigationConfigSchema>['routes']
 
