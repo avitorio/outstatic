@@ -89,8 +89,6 @@ function validateSession(session: any): session is LoginSession {
     typeof session.access_token === 'string' &&
     isValidDate(session.expires)
 
-  console.log('session', session);
-
   if (!isValid) {
     console.warn('Session validation failed:', {
       hasSession: !!session,
