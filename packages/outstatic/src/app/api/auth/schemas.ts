@@ -37,6 +37,7 @@ export const ExchangeTokenResponseSchema = z.object({
       .nullable()
       .or(z.literal(''))
       .transform((val) => (val === '' ? null : val)),
+    permissions: z.array(z.string()).optional().nullable(),
   }),
   session: z.object({
     access_token: z.string().min(1),

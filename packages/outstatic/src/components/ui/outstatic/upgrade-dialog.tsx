@@ -22,7 +22,7 @@ const features = [
   {
     icon: <Users className="h-5 w-5" />,
     title: 'Invite Members',
-    description: 'Add unlimited team members to collaborate on your projects',
+    description: 'Add team members to your projects',
   },
   {
     icon: <Mail className="h-5 w-5" />,

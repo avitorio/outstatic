@@ -10,12 +10,22 @@ import {
 } from '@/utils/constants'
 import { getAccessToken } from './github'
 
+export type AppPermissions =
+  | "roles.manage"
+  | "settings.manage"
+  | "members.manage"
+  | "invites.manage"
+  | "collections.manage"
+  | "content.manage"
+  | "projects.manage"
+
 export type LoginSession = {
   user: {
     name: string
     login: string
     email: string
     image: string
+    permissions?: AppPermissions[]
   }
   provider?: 'github' | 'magic-link'
   access_token: string

@@ -18,6 +18,7 @@ import { useForm } from 'react-hook-form'
 import { AddCustomFieldDialog } from './_components/add-custom-field-dialog'
 import { DeleteCustomFieldDialog } from './_components/delete-custom-field-dialog'
 import { EditCustomFieldDialog } from './_components/edit-custom-field-dialog'
+import { useOutstatic } from '@/utils/hooks/useOutstatic'
 
 type CustomFieldsProps = {
   collection: string
@@ -43,12 +44,21 @@ export default function CustomFields({ collection, title }: CustomFieldsProps) {
   const [fieldName, setFieldName] = useState('')
 
   const { data: schema, isLoading } = useGetCollectionSchema({ collection })
+  const { session } = useOutstatic()
 
   useEffect(() => {
     if (schema) {
       setCustomFields(schema.properties)
     }
   }, [schema])
+
+  if (!session?.user?.permissions?.includes('collections.manage')) {
+    return <AdminLayout title="Add Custom Fields">
+      <div className="mb-8 flex h-12 items-center">
+        <h1 className="mr-12 text-2xl">You are not authorized to access this page</h1>
+      </div>
+    </AdminLayout>
+  }
 
   if (isLoading) {
     return <AdminLoading />

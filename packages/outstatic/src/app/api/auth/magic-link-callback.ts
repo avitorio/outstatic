@@ -1,4 +1,4 @@
-import { LoginSession, setLoginSession } from '@/utils/auth/auth'
+import { LoginSession, AppPermissions, setLoginSession } from '@/utils/auth/auth'
 import { OST_PRO_API_URL } from '@/utils/constants'
 import { NextRequest, NextResponse } from 'next/server'
 import {
@@ -53,6 +53,7 @@ export default async function GET(request: NextRequest) {
         login: user.email,
         email: user.email,
         image: user.avatar_url || '',
+        permissions: user.permissions as AppPermissions[] || []
       },
       provider: 'magic-link',
       access_token: sessionData.access_token,
