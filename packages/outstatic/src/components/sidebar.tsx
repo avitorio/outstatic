@@ -42,9 +42,10 @@ export const Sidebar = ({
 }: SidebarProps) => {
   const { dashboardRoute, isPro, projectInfo, session } = useOutstatic();
   const { data: collections } = useCollections();
+  const userPermissions = session?.user?.permissions;
   const hasPermission = useCallback((permission: AppPermissions) => {
-    return session?.user?.permissions?.includes(permission);
-  }, [session?.user?.permissions]);
+    return userPermissions?.includes(permission) ?? false;
+  }, [userPermissions]);
 
 
   const routes = [
