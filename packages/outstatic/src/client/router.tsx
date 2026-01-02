@@ -9,11 +9,12 @@ import List from './pages/list'
 import Settings from './pages/settings'
 import MediaLibrary from './pages/media-library'
 import { EditorProvider } from '@/components/editor/editor-context'
+import Dashboard from './pages/dashboard'
 
 const DEFAULT_PAGES: { [key: string]: ReactElement | undefined } = {
   settings: <Settings />,
   'media-library': <MediaLibrary />,
-  collections: undefined
+  collections: <Collections />
 }
 
 interface RouterProps {
@@ -75,9 +76,9 @@ const renderRoute = ({
   collections,
   pages
 }: RouteParams): ReactElement | undefined => {
-  // Default route - show collections
+  // Default route - show dashboard
   if (!slug) {
-    return <Collections />
+    return <Dashboard />
   }
 
   // Content routes (edit document or list)

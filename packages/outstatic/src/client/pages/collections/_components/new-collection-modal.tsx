@@ -1,4 +1,8 @@
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/shadcn/alert'
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle
+} from '@/components/ui/shadcn/alert'
 import { Input } from '@/components/ui/shadcn/input'
 import { SpinnerIcon } from '@/components/ui/outstatic/spinner-icon'
 import { Button } from '@/components/ui/shadcn/button'
@@ -25,7 +29,7 @@ import { useEffect, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { slugify } from 'transliteration'
-import * as z from 'zod'
+import * as z from 'zod/v4'
 import GithubExplorer from '@/components/ui/outstatic/github-explorer'
 import PathBreadcrumbs from '@/components/ui/outstatic/path-breadcrumb'
 import {
@@ -88,10 +92,13 @@ export default function NewCollectionModal({
   })
 
   const createCollectionSchema = z.object({
-    name: z.string().refine(
-      (val) => !pages.some((page) => page.toLowerCase() === val.toLowerCase()),
-      (val) => ({ message: `${val} is a reserved name.` })
-    ),
+    name: z
+      .string()
+      .refine(
+        (val) =>
+          !pages.some((page) => page.toLowerCase() === val.toLowerCase()),
+        { error: (val) => ({ message: `${val} is a reserved name.` }) }
+      ),
     contentPath: z.string().optional()
   })
 
@@ -239,12 +246,16 @@ export default function NewCollectionModal({
             <Alert variant="destructive">
               <AlertCircleIcon />
               <AlertTitle>Something went wrong</AlertTitle>
-              <AlertDescription><p>We couldn&apos;t create
-                your collection. Please, make sure your settings are correct by{' '}
-                <Link href={`${dashboardRoute}/settings`}>
-                  <span className="underline">clicking here</span>
-                </Link>{' '}
-                . </p></AlertDescription>
+              <AlertDescription>
+                <p>
+                  We couldn&apos;t create your collection. Please, make sure
+                  your settings are correct by{' '}
+                  <Link href={`${dashboardRoute}/settings`}>
+                    <span className="underline">clicking here</span>
+                  </Link>{' '}
+                  .{' '}
+                </p>
+              </AlertDescription>
             </Alert>
           ) : null}
           <DialogHeader>
