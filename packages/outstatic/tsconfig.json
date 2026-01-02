@@ -27,6 +27,6 @@
     "strict": true,
     "allowJs": true,
     "moduleDetection": "force",
-    "resolveJsonModule": true,
+    "resolveJsonModule": true
   }
 }
