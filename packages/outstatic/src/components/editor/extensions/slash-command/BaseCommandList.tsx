@@ -16,6 +16,7 @@ import {
 import { getPrevText } from '@/components/editor/utils/getPrevText'
 import { OUTSTATIC_API_PATH } from '@/utils/constants'
 import { useCsrfToken } from '@/utils/hooks/useCsrfToken'
+import { stringifyError } from '@/utils/errors/stringifyError'
 
 export const BaseCommandList = ({
   items,
@@ -49,7 +50,18 @@ export const BaseCommandList = ({
       })
     },
     onError: (e) => {
-      toast.error(e.message)
+      console.error('AI completion error', e)
+      const errorToast = toast.error(e.message, {
+        action: {
+          label: 'Copy Logs',
+          onClick: () => {
+            navigator.clipboard.writeText(`Error: ${stringifyError(e)}`)
+            toast.message('Logs copied to clipboard', {
+              id: errorToast
+            })
+          }
+        }
+      })
     }
   })
 
