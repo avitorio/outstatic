@@ -53,6 +53,11 @@
       "require": "./dist/components/index.js",
       "types": "./dist/components/index.d.ts"
     },
+    "./utils/token-refresh": {
+      "import": "./dist/graphql/utils/tokenRefreshUtility.mjs",
+      "require": "./dist/graphql/utils/tokenRefreshUtility.js",
+      "types": "./dist/graphql/utils/tokenRefreshUtility.d.ts"
+    },
     "./outstatic.css": "./dist/outstatic.css"
   },
   "scripts": {

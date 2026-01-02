@@ -14,7 +14,8 @@ export default defineConfig((options) => {
       './src/utils/auth/auth.ts',
       './src/utils/auth/auth-provider.tsx',
       './src/utils/hooks/index.tsx',
-      './src/components/index.tsx'
+      './src/components/index.tsx',
+      './src/graphql/utils/tokenRefreshUtility.ts'
     ],
     external: [
       'react',
