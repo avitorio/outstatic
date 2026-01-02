@@ -26,7 +26,6 @@ export default async function POST(req: Request): Promise<Response> {
   }
 
   if (process.env.OST_PRO_API_KEY) {
-    console.log('OST_PRO_API_KEY is set')
     const apiPath = OST_PRO_API_URL + '/outstatic/generate'
     return fetch(apiPath, {
       method: 'POST',
