@@ -1,4 +1,4 @@
-import { z } from 'zod'
+import { z } from 'zod/v4'
 import { slugRegex } from '@/utils/schemas/helpers/slug-regex'
 import { DocumentSchemaShape } from '@/types'
 
@@ -7,7 +7,7 @@ export const documentShape = {
   publishedAt: z.date().optional(),
   content: z.string().optional(),
   status: z.enum(['published', 'draft'], {
-    errorMap: () => ({ message: 'Status is missing.' })
+    error: () => 'Status is missing.'
   }),
   author: z.object({
     name: z.string().optional(),
