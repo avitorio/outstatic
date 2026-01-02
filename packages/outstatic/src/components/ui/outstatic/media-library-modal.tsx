@@ -30,6 +30,7 @@ import {
   CardTitle
 } from '../shadcn/card'
 import { MediaSettings } from '@/client/pages/settings/_components/media-settings'
+import { stringifyError } from '@/utils/errors/stringifyError'
 
 export default function MediaLibraryModal({
   open,
@@ -112,7 +113,24 @@ export default function MediaLibraryModal({
         try {
           await submitMedia(fileType)
         } catch (error) {
-          toast.error(`Failed to upload ${file.name}`)
+          console.error('Failed to upload media', error)
+          const errorToast = toast.error(`Failed to upload ${file.name}.`, {
+            action: {
+              label: 'Copy Logs',
+              onClick: () => {
+                navigator.clipboard.writeText(
+                  `File: ${JSON.stringify(
+                    { ...fileType, content: '...' },
+                    null,
+                    '  '
+                  )}\n\nError: ${stringifyError(error)}`
+                )
+                toast.message('Logs copied to clipboard', {
+                  id: errorToast
+                })
+              }
+            }
+          })
         }
       }
     }

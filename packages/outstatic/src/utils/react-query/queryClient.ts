@@ -3,16 +3,34 @@ import { QueryCache, QueryClient } from '@tanstack/react-query'
 import { persistQueryClient } from '@tanstack/react-query-persist-client'
 import { compress, decompress } from 'lz-string'
 import { toast } from 'sonner'
+import { stringifyError } from '@/utils/errors/stringifyError'
 
 // Create a client
 export const queryClient = new QueryClient({
   queryCache: new QueryCache({
     onError: (error, query) => {
       if (query.state.error !== undefined) {
-        toast.error(
+        const errorMessage =
           (query?.meta?.errorMessage as string) ||
-            `Something went wrong: ${error.message}`
-        )
+          `Something went wrong: ${error.message}`
+        console.error('Query error', { error, queryKey: query.queryKey })
+        const errorToast = toast.error(errorMessage, {
+          action: {
+            label: 'Copy Logs',
+            onClick: () => {
+              navigator.clipboard.writeText(
+                `Query Key: ${JSON.stringify(
+                  query.queryKey,
+                  null,
+                  '  '
+                )}\n\nError: ${stringifyError(error)}`
+              )
+              toast.message('Logs copied to clipboard', {
+                id: errorToast
+              })
+            }
+          }
+        })
       }
     }
   }),

@@ -20,6 +20,7 @@ import {
   CardDescription,
   CardContent
 } from '@/components/ui/shadcn/card'
+import { stringifyError } from '@/utils/errors/stringifyError'
 
 export default function MediaLibrary() {
   const [searchTerm, setSearchTerm] = useState('')
@@ -94,7 +95,24 @@ export default function MediaLibrary() {
         try {
           await submitMedia(fileType)
         } catch (error) {
-          toast.error(`Failed to upload ${file.name}`)
+          console.error('Failed to upload media', error)
+          const errorToast = toast.error(`Failed to upload ${file.name}.`, {
+            action: {
+              label: 'Copy Logs',
+              onClick: () => {
+                navigator.clipboard.writeText(
+                  `File: ${JSON.stringify(
+                    { ...fileType, content: '...' },
+                    null,
+                    '  '
+                  )}\n\nError: ${stringifyError(error)}`
+                )
+                toast.message('Logs copied to clipboard', {
+                  id: errorToast
+                })
+              }
+            }
+          })
         }
       }
     }
