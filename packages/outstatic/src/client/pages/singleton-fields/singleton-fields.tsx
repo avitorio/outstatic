@@ -9,26 +9,26 @@ import {
   CardTitle
 } from '@/components/ui/shadcn/card'
 import { CustomFieldType, CustomFieldsType } from '@/types'
-import { useGetCollectionSchema } from '@/utils/hooks/useGetCollectionSchema'
+import { useGetSingletonSchema } from '@/utils/hooks/useGetSingletonSchema'
 import { addCustomFieldSchema } from '@/utils/schemas/add-custom-field-schema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Trash } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { AddCustomFieldDialog } from './_components/add-custom-field-dialog'
-import { DeleteCustomFieldDialog } from './_components/delete-custom-field-dialog'
-import { EditCustomFieldDialog } from './_components/edit-custom-field-dialog'
+import { AddSingletonFieldDialog } from './_components/add-singleton-field-dialog'
+import { DeleteSingletonFieldDialog } from './_components/delete-singleton-field-dialog'
+import { EditSingletonFieldDialog } from './_components/edit-singleton-field-dialog'
+import { useSingletons } from '@/utils/hooks/useSingletons'
 
-type CustomFieldsProps = {
-  collection: string
-  title: string
+type SingletonFieldsProps = {
+  slug: string
 }
 
 type CustomFieldForm = CustomFieldType<
   'string' | 'number' | 'array' | 'boolean'
 > & { name: string }
 
-export default function CustomFields({ collection, title }: CustomFieldsProps) {
+export default function SingletonFields({ slug }: SingletonFieldsProps) {
   const [customFields, setCustomFields] = useState<CustomFieldsType>({})
   const methods = useForm<CustomFieldForm>({
     mode: 'onChange',
@@ -42,7 +42,11 @@ export default function CustomFields({ collection, title }: CustomFieldsProps) {
   const [selectedField, setSelectedField] = useState('')
   const [fieldName, setFieldName] = useState('')
 
-  const { data: schema, isLoading } = useGetCollectionSchema({ collection })
+  const { data: schema, isLoading } = useGetSingletonSchema({ slug })
+  const { data: singletons } = useSingletons()
+
+  const singletonTitle =
+    singletons?.find((s) => s.slug === slug)?.title || slug
 
   useEffect(() => {
     if (schema) {
@@ -57,7 +61,7 @@ export default function CustomFields({ collection, title }: CustomFieldsProps) {
   return (
     <AdminLayout title="Add Custom Fields">
       <div className="mb-8 flex h-12 items-center">
-        <h1 className="mr-12 text-2xl">{title} Fields</h1>
+        <h1 className="mr-12 text-2xl">{singletonTitle} Fields</h1>
         {Object.keys(customFields).length > 0 ? (
           <Button
             onClick={() => {
@@ -76,7 +80,9 @@ export default function CustomFields({ collection, title }: CustomFieldsProps) {
               <div className="relative">
                 <Card>
                   <CardHeader>
-                    <CardTitle>Add Custom Fields to your collection.</CardTitle>
+                    <CardTitle>
+                      Add Custom Fields to your singleton.
+                    </CardTitle>
                   </CardHeader>
                   <CardContent className="prose dark:prose-invert">
                     <p>
@@ -169,9 +175,9 @@ export default function CustomFields({ collection, title }: CustomFieldsProps) {
         </>
       ) : null}
       {showAddModal && (
-        <AddCustomFieldDialog
-          collection={collection}
-          documentTitle={title}
+        <AddSingletonFieldDialog
+          slug={slug}
+          title={singletonTitle}
           showAddModal={showAddModal}
           setShowAddModal={setShowAddModal}
           customFields={customFields}
@@ -179,8 +185,9 @@ export default function CustomFields({ collection, title }: CustomFieldsProps) {
         />
       )}
       {showEditModal && (
-        <EditCustomFieldDialog
-          collection={collection}
+        <EditSingletonFieldDialog
+          slug={slug}
+          title={singletonTitle}
           showEditModal={showEditModal}
           setShowEditModal={setShowEditModal}
           selectedField={selectedField}
@@ -189,8 +196,9 @@ export default function CustomFields({ collection, title }: CustomFieldsProps) {
         />
       )}
       {showDeleteModal && (
-        <DeleteCustomFieldDialog
-          collection={collection}
+        <DeleteSingletonFieldDialog
+          slug={slug}
+          title={singletonTitle}
           showDeleteModal={showDeleteModal}
           setShowDeleteModal={setShowDeleteModal}
           fieldName={fieldName}

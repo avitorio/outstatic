@@ -5,31 +5,27 @@ import { MDEditor } from '@/components/editor/editor'
 import { DocumentContext } from '@/context'
 import { CustomFieldsType, Document, MDExtensions } from '@/types'
 import { deepReplace } from '@/utils/deepReplace'
-import { useDocumentUpdateEffect } from '@/utils/hooks/useDocumentUpdateEffect'
+import { useSingletonUpdateEffect } from '@/utils/hooks/useSingletonUpdateEffect'
 import { useFileStore } from '@/utils/hooks/useFileStore'
-import { useGetCollectionSchema } from '@/utils/hooks/useGetCollectionSchema'
+import { useGetSingletonSchema } from '@/utils/hooks/useGetSingletonSchema'
 import { useOutstatic } from '@/utils/hooks/useOutstatic'
-import useSubmitDocument from '@/utils/hooks/useSubmitDocument'
+import useSubmitSingleton from '@/utils/hooks/useSubmitSingleton'
 import { useTipTap } from '@/components/editor/hooks/use-tip-tap'
 import { editDocumentSchema } from '@/utils/schemas/edit-document-schema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import Head from 'next/head'
-import { usePathname } from 'next/navigation'
-import { singular } from 'pluralize'
 import { useEffect, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { convertSchemaToZod } from '@/utils/zod'
 import { FormMessage } from '@/components/ui/shadcn/form'
 import { toast } from 'sonner'
-import { noCase } from 'change-case'
 import MediaSettingsDialog from '@/components/ui/outstatic/media-settings-dialog'
 import { useEditor } from '@/components/editor/editor-context'
+import { useSingletons } from '@/utils/hooks/useSingletons'
 
-export default function EditDocument({ collection }: { collection: string }) {
-  const pathname = usePathname()
-  const [slug, setSlug] = useState(
-    pathname.split('/').pop() || `/${collection}/new`
-  )
+export default function EditSingleton({ slug: initialSlug }: { slug: string }) {
+  const [slug, setSlug] = useState(initialSlug)
+  const isNew = initialSlug === 'new'
   const [loading, setLoading] = useState(false)
   const {
     basePath,
@@ -54,7 +50,7 @@ export default function EditDocument({ collection }: { collection: string }) {
 
   const [customFields, setCustomFields] = useState<CustomFieldsType>({})
   const files = useFileStore((state) => state.files)
-  const [extension, setExtension] = useState<MDExtensions>('mdx')
+  const [extension, setExtension] = useState<MDExtensions>('md')
   const [metadata, setMetadata] = useState<Record<string, any>>({})
   const [showMediaPathDialog, setShowMediaPathDialog] = useState(false)
   const editDocument = (property: string, value: any) => {
@@ -64,17 +60,22 @@ export default function EditDocument({ collection }: { collection: string }) {
   }
   const [mediaPathUpdated, setMediaPathUpdated] = useState(false)
 
-  const { data: schema } = useGetCollectionSchema({ collection })
+  const { data: schema } = useGetSingletonSchema({ slug, enabled: !isNew })
+  const { data: singletons } = useSingletons()
 
-  const onSubmit = useSubmitDocument({
+  const singletonTitle = isNew
+    ? 'New Singleton'
+    : (singletons?.find((s) => s.slug === slug)?.title || slug)
+
+  const onSubmit = useSubmitSingleton({
     session,
     slug,
     setSlug,
+    isNew,
     setShowDelete,
     setLoading,
     files,
     methods,
-    collection,
     customFields,
     setCustomFields,
     setHasChanges,
@@ -83,25 +84,28 @@ export default function EditDocument({ collection }: { collection: string }) {
     documentMetadata: metadata
   })
 
-  useEffect(() => {
-    window.history.replaceState(
-      {},
-      '',
-      `${basePath}${dashboardRoute}/${collection}/${slug}`
-    )
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [slug])
-
-  useDocumentUpdateEffect({
-    collection,
-    methods,
+  // Only fetch existing singleton data when editing (not creating new)
+  useSingletonUpdateEffect({
     slug,
+    methods,
     editor,
     setHasChanges,
     setShowDelete,
     setExtension,
-    setMetadata
+    setMetadata,
+    enabled: !isNew
   })
+
+  // Update URL when slug changes (after first save of new singleton)
+  useEffect(() => {
+    if (slug !== 'new' && slug !== initialSlug) {
+      window.history.replaceState(
+        {},
+        '',
+        `${basePath}${dashboardRoute}/singletons/${slug}`
+      )
+    }
+  }, [slug, initialSlug, basePath, dashboardRoute])
 
   // Add custom fields
   useEffect(() => {
@@ -195,17 +199,17 @@ export default function EditDocument({ collection }: { collection: string }) {
             editDocument,
             hasChanges,
             setHasChanges,
-            collection,
+            collection: '_singletons',
             extension
           }}
         >
           <FormProvider {...methods}>
             <FormMessage />
             <AdminLayout
-              title={methods.getValues('title')}
+              title={methods.getValues('title') || singletonTitle}
               settings={
                 <DocumentSettings
-                  title={methods.getValues('title')}
+                  title={methods.getValues('title') || singletonTitle}
                   loading={loading}
                   saveDocument={methods.handleSubmit(
                     (data) => {
@@ -234,6 +238,7 @@ export default function EditDocument({ collection }: { collection: string }) {
                   customFields={customFields}
                   setCustomFields={setCustomFields}
                   metadata={metadata}
+                  hiddenFields={['slug']}
                 />
               }
             >
@@ -241,12 +246,7 @@ export default function EditDocument({ collection }: { collection: string }) {
                 <DocumentTitleInput
                   id="title"
                   className="w-full resize-none outline-hidden text-5xl scrollbar-hide min-h-[55px] overflow-hidden"
-                  placeholder={`Your ${singular(
-                    noCase(collection, {
-                      split: (str) =>
-                        str.split(/([^A-Za-z0-9\.-]+)/g).filter(Boolean)
-                    })
-                  ).replace(/-/g, ' ')} title`}
+                  placeholder={`Your ${singletonTitle} title`}
                 />
                 <div className="min-h-full">
                   <MDEditor editor={editor} id="content" />

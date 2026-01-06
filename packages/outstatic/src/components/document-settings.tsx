@@ -51,21 +51,25 @@ import { cn } from '@/utils/ui'
 
 type DocumentSettingsProps = {
   saveDocument: () => void
+  title?: string
   loading: boolean
   registerOptions?: RegisterOptions
   showDelete: boolean
   customFields: CustomFieldsType
   setCustomFields: (fields: CustomFieldsType) => void
   metadata: Record<string, any>
+  hiddenFields?: string[]
 }
 
 export const DocumentSettings = ({
   saveDocument,
+  title,
   loading,
   showDelete,
   customFields,
   setCustomFields,
-  metadata
+  metadata,
+  hiddenFields = []
 }: DocumentSettingsProps) => {
   const {
     formState: { errors },
@@ -307,49 +311,51 @@ export const DocumentSettings = ({
               </AccordionContent>
             </AccordionItem>
           </Accordion>
-          <Accordion
-            type="single"
-            collapsible
-            className={cn(
-              'border-b first:border-t',
-              errors['slug']?.message && 'border-destructive'
-            )}
-          >
-            <AccordionItem value={'slug'}>
-              <AccordionTrigger className="hover:no-underline hover:bg-muted px-4 rounded-none data-[state=open]:bg-muted">
-                Slug*
-              </AccordionTrigger>
-              <AccordionContent className="p-4 border-top">
-                <FormField
-                  control={control}
-                  name="slug"
-                  defaultValue={document.slug || ''}
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormControl>
-                        <Input
-                          {...field}
-                          value={field.value ?? ''}
-                          onChange={(e) => {
-                            const lastChar = e.target.value.slice(-1)
-                            field.onChange(
-                              lastChar === ' ' || lastChar === '-'
-                                ? e.target.value
-                                : slugify(e.target.value, {
-                                    allowedChars: 'a-zA-Z0-9.'
-                                  })
-                            )
-                          }}
-                        />
-                      </FormControl>
-                      <FormDescription>The document slug</FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </AccordionContent>
-            </AccordionItem>
-          </Accordion>
+          {!hiddenFields.includes('slug') && (
+            <Accordion
+              type="single"
+              collapsible
+              className={cn(
+                'border-b first:border-t',
+                errors['slug']?.message && 'border-destructive'
+              )}
+            >
+              <AccordionItem value={'slug'}>
+                <AccordionTrigger className="hover:no-underline hover:bg-muted px-4 rounded-none data-[state=open]:bg-muted">
+                  Slug*
+                </AccordionTrigger>
+                <AccordionContent className="p-4 border-top">
+                  <FormField
+                    control={control}
+                    name="slug"
+                    defaultValue={document.slug || ''}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <Input
+                            {...field}
+                            value={field.value ?? ''}
+                            onChange={(e) => {
+                              const lastChar = e.target.value.slice(-1)
+                              field.onChange(
+                                lastChar === ' ' || lastChar === '-'
+                                  ? e.target.value
+                                  : slugify(e.target.value, {
+                                      allowedChars: 'a-zA-Z0-9.'
+                                    })
+                              )
+                            }}
+                          />
+                        </FormControl>
+                        <FormDescription>The document slug</FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+          )}
 
           {customFields &&
             Object.entries(customFields).map(([name, field]) => (
@@ -416,6 +422,7 @@ export const DocumentSettings = ({
         {showAddModal ? (
           <AddCustomFieldDialog
             collection={collection}
+            documentTitle={title}
             showAddModal={showAddModal}
             setShowAddModal={onModalChange}
             customFields={customFields}

@@ -5,10 +5,18 @@ import {
   SidebarContent,
   SidebarHeader
 } from '@/components/ui/shadcn/sidebar'
-import { Settings, Folder, LayoutDashboard, Plus, Images } from 'lucide-react'
+import {
+  Settings,
+  Folder,
+  LayoutDashboard,
+  Plus,
+  Images,
+  FileText
+} from 'lucide-react'
 import { SidebarNavigation } from '@/components/ui/outstatic/sidebar'
 
 import { useCollections } from '@/utils/hooks/useCollections'
+import { useSingletons } from '@/utils/hooks/useSingletons'
 import { NavigationConfigSchema } from '@/components/ui/outstatic/navigation-config.schema'
 import Link from 'next/link'
 import { TooltipContent, TooltipTrigger } from '@/components/ui/shadcn/tooltip'
@@ -19,9 +27,11 @@ import { singular } from 'pluralize'
 export const Sidebar = () => {
   const { dashboardRoute } = useOutstatic()
   const { data: collections } = useCollections()
+  const { data: singletons } = useSingletons()
 
   const hasCollections = collections && collections.length > 0
-  const hasContentTypes = hasCollections
+  const hasSingletons = singletons && singletons.length > 0
+  const hasContentTypes = hasCollections || hasSingletons
 
   const routes = [
     {
@@ -41,7 +51,7 @@ export const Sidebar = () => {
             label: 'Content',
             collapsible: false,
             children: [
-              ...(collections && collections.length > 0
+              ...(hasCollections
                 ? [
                     {
                       label: 'Collections',
@@ -73,6 +83,19 @@ export const Sidebar = () => {
                             </Tooltip>
                           </TooltipProvider>
                         )
+                      }))
+                    }
+                  ]
+                : []),
+              ...(hasSingletons
+                ? [
+                    {
+                      label: 'Singletons',
+                      collapsible: true,
+                      children: singletons.map((singleton) => ({
+                        label: singleton.title,
+                        path: `${dashboardRoute}/singletons/${singleton.slug}`,
+                        Icon: <FileText className={'w-4'} />
                       }))
                     }
                   ]

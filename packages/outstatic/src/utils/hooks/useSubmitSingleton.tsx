@@ -1,0 +1,358 @@
+import {
+  CustomFieldArrayValue,
+  CustomFieldsType,
+  Document,
+  FileType,
+  MDExtensions,
+  isArrayCustomField
+} from '@/types'
+import { createCommitApi } from '@/utils/createCommitApi'
+import { hashFromUrl } from '@/utils/hashFromUrl'
+import { useOutstatic } from '@/utils/hooks/useOutstatic'
+import { mergeMdMeta } from '@/utils/mergeMdMeta'
+import { stringifyMedia, stringifyMetadata } from '@/utils/metadata/stringify'
+import { LoginSession } from '@/utils/auth/auth'
+import { Editor } from '@tiptap/react'
+import matter from 'gray-matter'
+import MurmurHash3 from 'imurmurhash'
+import { useCallback } from 'react'
+import { UseFormReturn } from 'react-hook-form'
+import { useCreateCommit } from './useCreateCommit'
+import { useGetSingletonSchema } from './useGetSingletonSchema'
+import { useGetMetadata } from './useGetMetadata'
+import useOid from './useOid'
+import { useGetMediaFiles } from './useGetMediaFiles'
+import { useSingletons } from './useSingletons'
+import {
+  MediaItem,
+  MediaSchema,
+  MetadataSchema,
+  MetadataType
+} from '../metadata/types'
+import { toast } from 'sonner'
+import { slugify } from 'transliteration'
+
+type SubmitSingletonProps = {
+  session: LoginSession | null
+  slug: string
+  setSlug: (slug: string) => void
+  isNew: boolean
+  setShowDelete: (showDelete: boolean) => void
+  setLoading: (loading: boolean) => void
+  files: FileType[]
+  methods: UseFormReturn<Document, any, any>
+  customFields: CustomFieldsType
+  setCustomFields: (customFields: CustomFieldsType) => void
+  setHasChanges: (hasChanges: boolean) => void
+  editor: Editor | null
+  extension: MDExtensions
+  documentMetadata: Record<string, any>
+}
+
+function useSubmitSingleton({
+  session,
+  slug,
+  setSlug,
+  isNew,
+  setShowDelete,
+  setLoading,
+  files,
+  methods,
+  customFields,
+  setCustomFields,
+  setHasChanges,
+  editor,
+  extension,
+  documentMetadata
+}: SubmitSingletonProps) {
+  const createCommit = useCreateCommit()
+  const {
+    repoOwner,
+    repoSlug,
+    repoBranch,
+    monorepoPath,
+    ostContent,
+    basePath,
+    publicMediaPath,
+    repoMediaPath,
+    mediaJsonPath
+  } = useOutstatic()
+  const fetchOid = useOid()
+  let media: MediaItem[] = []
+
+  const { refetch: refetchSchema } = useGetSingletonSchema({
+    slug,
+    enabled: false
+  })
+  const { refetch: refetchMetadata } = useGetMetadata({ enabled: false })
+  const { refetch: refetchMedia } = useGetMediaFiles({ enabled: false })
+  const { data: existingSingletons, refetch: refetchSingletons } = useSingletons({ enabled: false })
+
+  const singletonsPath = `${ostContent}/_singletons`
+
+  const onSubmit = useCallback(
+    async (data: Document) => {
+      setLoading(true)
+
+      if (!editor) {
+        throw new Error('Editor is not initialized')
+      }
+
+      try {
+        // For new singletons, generate slug from title
+        let actualSlug = slug
+        if (isNew) {
+          const title = data.title || 'untitled'
+          actualSlug = slugify(title, { allowedChars: 'a-zA-Z0-9.' })
+
+          // Check if singleton already exists
+          const { data: singletons } = await refetchSingletons()
+          if (singletons?.find((s) => s.slug === actualSlug)) {
+            toast.error(`A singleton with slug "${actualSlug}" already exists.`)
+            setLoading(false)
+            return
+          }
+        }
+
+        const [
+          { data: schema, isError: schemaError },
+          { data: metadata, isError: metadataError }
+        ] = await Promise.all([
+          isNew ? Promise.resolve({ data: null, isError: false }) : refetchSchema(),
+          refetchMetadata()
+        ])
+
+        if ((!isNew && schemaError) || metadataError) {
+          throw new Error('Failed to fetch schema or metadata from GitHub')
+        }
+
+        const document = methods.getValues()
+        const mdContent = editor.storage.markdown.getMarkdown()
+        let content = mergeMdMeta({
+          data: { ...documentMetadata, ...data, content: mdContent },
+          basePath,
+          repoInfo: `${repoOwner}/${repoSlug}/${repoBranch}/${repoMediaPath}`,
+          publicMediaPath
+        })
+        const oid = await fetchOid()
+        const owner = repoOwner || session?.user?.login || ''
+
+        const capi = createCommitApi({
+          message: isNew ? `feat(singleton): create ${actualSlug}` : `chore: Updates singleton ${actualSlug}`,
+          owner,
+          oid: oid ?? '',
+          name: repoSlug,
+          branch: repoBranch
+        })
+
+        // For new singletons, create the schema.json file
+        if (isNew) {
+          const schemaJson = {
+            title: data.title || actualSlug,
+            type: 'object',
+            properties: {}
+          }
+          capi.replaceFile(
+            `${singletonsPath}/${actualSlug}.schema.json`,
+            JSON.stringify(schemaJson, null, 2) + '\n'
+          )
+        }
+
+        if (files.length > 0) {
+          files.forEach(({ filename, blob, type, content: fileContents }) => {
+            if (blob && content.search(blob) !== -1) {
+              const randString = window
+                .btoa(Math.random().toString())
+                .substring(10, 6)
+              const newFilename = filename
+                .toLowerCase()
+                .replace(/[^a-zA-Z0-9-_\.]/g, '-')
+                .replace(/(\.[^\.]*)?$/, `-${randString}$1`)
+
+              capi.replaceFile(
+                `${repoMediaPath}${newFilename}`,
+                fileContents,
+                false
+              )
+
+              media.push({
+                __outstatic: {
+                  hash: `${MurmurHash3(fileContents).result()}`,
+                  commit: '',
+                  path: `${repoMediaPath}${newFilename}`
+                },
+                filename: newFilename,
+                type: type,
+                publishedAt: new Date().toISOString(),
+                alt: ''
+              })
+
+              content = content.replace(
+                blob,
+                `/${publicMediaPath}${newFilename}`
+              )
+            }
+          })
+        }
+
+        const { data: matterData } = matter(content)
+
+        capi.replaceFile(`${singletonsPath}/${actualSlug}.${extension}`, content)
+
+        // Check if a new tag value was added
+        let hasNewTag = false
+        Object.entries(customFields).forEach(([key, field]) => {
+          const customField = customFields[key]
+          //@ts-ignore
+          let dataKey = data[key]
+          if (isArrayCustomField(field) && isArrayCustomField(customField)) {
+            if (!Array.isArray(dataKey)) {
+              matterData[key] = []
+              return
+            }
+
+            dataKey.forEach((selectedTag: CustomFieldArrayValue) => {
+              const exists = field.values.some(
+                (savedTag: CustomFieldArrayValue) =>
+                  savedTag.value === selectedTag.value
+              )
+
+              if (!exists) {
+                customField.values.push({
+                  value: selectedTag.value,
+                  label: selectedTag.label
+                })
+                customFields[key] = customField
+                setCustomFields({ ...customFields })
+                hasNewTag = true
+              }
+            })
+          }
+        })
+
+        if (hasNewTag && !isNew) {
+          const customFieldsJSON = JSON.stringify(
+            {
+              ...schema,
+              properties: { ...customFields }
+            },
+            null,
+            2
+          )
+
+          capi.replaceFile(
+            `${singletonsPath}/${actualSlug}.schema.json`,
+            customFieldsJSON + '\n'
+          )
+        }
+
+        // update metadata for this singleton
+        const m: MetadataSchema = {
+          metadata: (metadata?.metadata?.metadata || []) as MetadataType,
+          commit: '',
+          generated: new Date().toISOString()
+        }
+        m.commit = metadata ? hashFromUrl(metadata.commitUrl) : ''
+
+        const state = MurmurHash3(content)
+
+        const newMeta = Array.isArray(m.metadata)
+          ? m.metadata.filter(
+              (c) => c.collection !== '_singletons' || c.slug !== actualSlug
+            )
+          : []
+
+        newMeta.push({
+          ...matterData,
+          slug: actualSlug,
+          collection: '_singletons',
+          __outstatic: {
+            hash: `${state.result()}`,
+            commit: m.commit,
+            path: monorepoPath
+              ? `${singletonsPath}/${actualSlug}.${extension}`.replace(monorepoPath, '')
+              : `${singletonsPath}/${actualSlug}.${extension}`
+          }
+        })
+
+        capi.replaceFile(
+          `${ostContent}/metadata.json`,
+          stringifyMetadata({ ...m, metadata: newMeta })
+        )
+
+        // update media.json with new media
+        if (media.length > 0) {
+          const { data: mediaData } = await refetchMedia()
+
+          media.forEach((media) => {
+            media.__outstatic.commit = m.commit
+          })
+
+          const newMedia = [...(mediaData?.media?.media ?? []), ...media]
+
+          const mediaSchema = {
+            commit: m.commit,
+            generated: m.generated,
+            media: mediaData?.media?.media ?? []
+          } as MediaSchema
+
+          capi.replaceFile(
+            mediaJsonPath,
+            stringifyMedia({ ...mediaSchema, media: newMedia })
+          )
+        }
+
+        const input = capi.createInput()
+
+        toast.promise(createCommit.mutateAsync(input), {
+          loading: isNew ? 'Creating singleton...' : 'Saving changes...',
+          success: () => {
+            if (isNew) {
+              setSlug(actualSlug)
+              refetchSingletons()
+            }
+            return isNew ? 'Singleton created successfully!' : 'Changes saved successfully!'
+          },
+          error: isNew ? 'Failed to create singleton' : 'Failed to save changes'
+        })
+
+        setLoading(false)
+        setHasChanges(false)
+        setShowDelete(true)
+      } catch (error) {
+        setLoading(false)
+        console.log({ error })
+      }
+    },
+    [
+      repoOwner,
+      session,
+      slug,
+      setSlug,
+      isNew,
+      setShowDelete,
+      setLoading,
+      files,
+      createCommit,
+      fetchOid,
+      methods,
+      monorepoPath,
+      ostContent,
+      customFields,
+      setCustomFields,
+      repoSlug,
+      repoBranch,
+      setHasChanges,
+      editor,
+      basePath,
+      extension,
+      mediaJsonPath,
+      singletonsPath,
+      refetchSingletons
+    ]
+  )
+
+  return onSubmit
+}
+
+export default useSubmitSingleton

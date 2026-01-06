@@ -7,7 +7,7 @@ import {
   Document,
   customFieldTypes
 } from '@/types'
-import { useGetCollectionSchema } from '@/utils/hooks/useGetCollectionSchema'
+import { useGetSingletonSchema } from '@/utils/hooks/useGetSingletonSchema'
 import { useOutstatic } from '@/utils/hooks/useOutstatic'
 import { camelCase, capitalCase } from 'change-case'
 import { useEffect, useState } from 'react'
@@ -28,7 +28,7 @@ import {
   FormMessage
 } from '@/components/ui/shadcn/form'
 import { SpinnerIcon } from '@/components/ui/outstatic/spinner-icon'
-import { useCustomFieldCommit } from './use-custom-field-commit'
+import { useSingletonFieldCommit } from '@/utils/hooks/useSingletonFieldCommit'
 import {
   Dialog,
   DialogContent,
@@ -40,6 +40,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { addCustomFieldSchema } from '@/utils/schemas/add-custom-field-schema'
 import { DEFAULT_FIELDS } from '@/utils/constants'
 import { Checkbox } from '@/components/ui/shadcn/checkbox'
+
 type CustomFieldForm = CustomFieldType<
   'string' | 'number' | 'array' | 'boolean' | 'date' | 'image'
 > & { name: string; values?: CustomFieldArrayValue[] }
@@ -54,9 +55,9 @@ const fieldDataMap = {
   Image: 'image'
 } as const
 
-interface AddCustomFieldDialogProps {
-  collection: string
-  documentTitle?: string
+interface AddSingletonFieldDialogProps {
+  slug: string
+  title: string
   showAddModal: boolean
   setShowAddModal: (show: boolean) => void
   customFields: CustomFieldsType
@@ -64,9 +65,9 @@ interface AddCustomFieldDialogProps {
   fieldTitle?: string
 }
 
-export const AddCustomFieldDialog: React.FC<AddCustomFieldDialogProps> = ({
-  collection,
-  documentTitle,
+export const AddSingletonFieldDialog: React.FC<AddSingletonFieldDialogProps> = ({
+  slug,
+  title,
   showAddModal,
   setShowAddModal,
   customFields,
@@ -82,9 +83,9 @@ export const AddCustomFieldDialog: React.FC<AddCustomFieldDialogProps> = ({
     resolver: zodResolver(addCustomFieldSchema) as any
   })
 
-  const { data: schema } = useGetCollectionSchema({ collection })
+  const { data: schema } = useGetSingletonSchema({ slug })
 
-  const capiHelper = useCustomFieldCommit()
+  const capiHelper = useSingletonFieldCommit(slug)
 
   useEffect(() => {
     if (schema) {
@@ -96,8 +97,8 @@ export const AddCustomFieldDialog: React.FC<AddCustomFieldDialogProps> = ({
     data: CustomFieldForm
   ) => {
     setAdding(true)
-    const { title, fieldType, ...rest } = data
-    const fieldName = camelCase(title)
+    const { title: fieldTitle, fieldType, ...rest } = data
+    const fieldName = camelCase(fieldTitle)
 
     if (DEFAULT_FIELDS.includes(fieldName as keyof Document)) {
       methods.setError('title', {
@@ -135,9 +136,9 @@ export const AddCustomFieldDialog: React.FC<AddCustomFieldDialogProps> = ({
       await capiHelper({
         customFields,
         deleteField: false,
-        collection,
         fieldName,
-        selectedField: ''
+        selectedField: '',
+        title
       })
     } catch (error) {
       setError('add')
@@ -161,14 +162,7 @@ export const AddCustomFieldDialog: React.FC<AddCustomFieldDialogProps> = ({
     <Dialog open={showAddModal} onOpenChange={onOpenChange}>
       <DialogContent className="w-full md:max-w-2xl">
         <DialogHeader>
-          <DialogTitle>
-            Add Custom Field to{' '}
-            {collection === '_singletons'
-              ? documentTitle
-                ? capitalCase(documentTitle)
-                : 'the Singleton'
-              : capitalCase(collection)}
-          </DialogTitle>
+          <DialogTitle>Add Custom Field to {title}</DialogTitle>
         </DialogHeader>
         <FormProvider {...methods}>
           <form
