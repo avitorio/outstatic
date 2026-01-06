@@ -89,3 +89,5 @@ export function isArrayCustomField(obj: any): obj is CustomFieldType<'array'> {
 }
 
 export type MDExtensions = 'md' | 'mdx'
+
+export * from './singleton'

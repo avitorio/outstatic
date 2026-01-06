@@ -62,7 +62,7 @@ export async function Outstatic({
     hasOpenAIKey: !!process.env.OPENAI_API_KEY,
     basePath: process.env.OST_BASE_PATH || '',
     ostDetach: process.env.OST_DETACH || false,
-    pages: ['collections', 'settings', 'media-library'],
+    pages: ['collections', 'settings', 'media-library', 'singletons'],
     dashboardRoute: '/outstatic',
     githubGql: GITHUB_GQL_API_URL,
     publicMediaPath: process.env.OST_PUBLIC_MEDIA_PATH || '',

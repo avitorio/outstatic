@@ -141,8 +141,10 @@ export const EditCustomFieldDialog: React.FC<EditCustomFieldDialogProps> = ({
             <div>
               <Alert variant="default">
                 <InfoCircledIcon />
-                <AlertTitle>Field name and field type editing are disabled to avoid data conflicts.</AlertTitle>
-                
+                <AlertTitle>
+                  Field name and field type editing are disabled to avoid data
+                  conflicts.
+                </AlertTitle>
               </Alert>
             </div>
             <div className="flex gap-4 mb-4">

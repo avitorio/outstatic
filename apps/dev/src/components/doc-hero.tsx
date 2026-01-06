@@ -1,10 +1,13 @@
 import Image from 'next/image'
-import { OstDocument } from 'outstatic'
 import DateFormatter from './date-formatter'
 
 type Doc = {
-  tags: { value: string; label: string }[]
-} & OstDocument
+  title: string
+  publishedAt: string
+  author?: { name?: string; picture?: string }
+  tags?: { value: string; label: string }[]
+  coverImage?: string
+}
 
 export default function DocHero(doc: Doc) {
   return (

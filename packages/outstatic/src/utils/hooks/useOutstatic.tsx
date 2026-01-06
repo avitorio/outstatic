@@ -111,7 +111,7 @@ export const useLocalData = () => {
       }
 
       return {
-        pages: ['collections', 'settings'],
+        pages: ['collections', 'settings', 'singletons'],
         contentPath: 'outstatic/content',
         monorepoPath: '',
         repoSlug: '',

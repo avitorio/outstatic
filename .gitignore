@@ -14,6 +14,9 @@ out/
 build
 .swc/
 
+# outstatic
+.outstatic/
+
 # misc
 .DS_Store
 *.pem

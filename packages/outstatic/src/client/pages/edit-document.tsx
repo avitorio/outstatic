@@ -205,6 +205,7 @@ export default function EditDocument({ collection }: { collection: string }) {
               title={methods.getValues('title')}
               settings={
                 <DocumentSettings
+                  title={methods.getValues('title')}
                   loading={loading}
                   saveDocument={methods.handleSubmit(
                     (data) => {

@@ -12,14 +12,18 @@ export default defineConfig((options) => {
       './src/client/client.tsx',
       './src/utils/server.ts',
       './src/utils/auth/auth.ts',
-      './src/utils/hooks/index.tsx'
+      './src/utils/hooks/index.tsx',
+      './src/next-plugin.ts',
+      './src/typegen/index.ts',
+      './src/cli/index.ts'
     ],
     external: [
       'react',
       'react-dom',
       'next',
       'tsup',
-      'tailwindcss'
+      'tailwindcss',
+      '@parcel/watcher'
       // Add any other external dependencies your project uses
     ],
     format: ['cjs', 'esm'],

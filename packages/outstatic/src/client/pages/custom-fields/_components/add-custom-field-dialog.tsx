@@ -56,6 +56,7 @@ const fieldDataMap = {
 
 interface AddCustomFieldDialogProps {
   collection: string
+  documentTitle?: string
   showAddModal: boolean
   setShowAddModal: (show: boolean) => void
   customFields: CustomFieldsType
@@ -65,6 +66,7 @@ interface AddCustomFieldDialogProps {
 
 export const AddCustomFieldDialog: React.FC<AddCustomFieldDialogProps> = ({
   collection,
+  documentTitle,
   showAddModal,
   setShowAddModal,
   customFields,
@@ -160,7 +162,12 @@ export const AddCustomFieldDialog: React.FC<AddCustomFieldDialogProps> = ({
       <DialogContent className="w-full md:max-w-2xl">
         <DialogHeader>
           <DialogTitle>
-            Add Custom Field to {capitalCase(collection)}
+            Add Custom Field to{' '}
+            {collection === '_singletons'
+              ? documentTitle
+                ? capitalCase(documentTitle)
+                : 'the Singleton'
+              : capitalCase(collection)}
           </DialogTitle>
         </DialogHeader>
         <FormProvider {...methods}>
