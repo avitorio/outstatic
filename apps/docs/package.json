@@ -31,7 +31,7 @@
     "remark-html": "^15.0.2",
     "remark-math": "^6.0.0",
     "tailwind-merge": "^3.3.1",
-    "vaul": "^0.8.0"
+    "vaul": "^1.1.2"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.10",
@@ -42,7 +42,7 @@
     "esbuild": "^0.15.18",
     "eslint": "^9.29.0",
     "eslint-config-next": "15.3.3",
-    "mdx-bundler": "^10.0.1",
+    "mdx-bundler": "^10.1.1",
     "postcss": "^8.4.49",
     "rehype-autolink-headings": "^6.1.1",
     "rehype-prism-plus": "^1.6.3",

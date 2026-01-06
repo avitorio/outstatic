@@ -110,8 +110,8 @@ importers:
         specifier: ^1.0.7
         version: 1.0.7(tailwindcss@4.1.10)
       vaul:
-        specifier: ^0.8.0
-        version: 0.8.9(@types/react-dom@19.0.0)(@types/react@19.0.0)(react-dom@19.1.2(react@19.1.2))(react@19.1.2)
+        specifier: ^1.1.2
+        version: 1.1.2(@types/react-dom@19.0.0)(@types/react@19.0.0)(react-dom@19.1.2(react@19.1.2))(react@19.1.2)
     devDependencies:
       '@tailwindcss/typography':
         specifier: ^0.5.10
@@ -138,7 +138,7 @@ importers:
         specifier: ^0.16.22
         version: 0.16.22
       mdx-bundler:
-        specifier: ^10.0.1
+        specifier: ^10.1.1
         version: 10.1.1(acorn@8.15.0)(esbuild@0.15.18)
       postcss:
         specifier: ^8.4.49
@@ -231,8 +231,8 @@ importers:
         specifier: ^3.3.1
         version: 3.3.1
       vaul:
-        specifier: ^0.8.0
-        version: 0.8.9(@types/react-dom@19.0.0)(@types/react@19.0.0)(react-dom@19.1.2(react@19.1.2))(react@19.1.2)
+        specifier: ^1.1.2
+        version: 1.1.2(@types/react-dom@19.0.0)(@types/react@19.0.0)(react-dom@19.1.2(react@19.1.2))(react@19.1.2)
     devDependencies:
       '@tailwindcss/postcss':
         specifier: ^4.1.10
@@ -259,7 +259,7 @@ importers:
         specifier: 15.3.3
         version: 15.3.3(eslint@9.29.0(jiti@2.4.2))(typescript@5.8.3)
       mdx-bundler:
-        specifier: ^10.0.1
+        specifier: ^10.1.1
         version: 10.1.1(acorn@8.15.0)(esbuild@0.15.18)
       postcss:
         specifier: ^8.4.49
@@ -8476,11 +8476,11 @@ packages:
     resolution: {integrity: sha512-Z6Uz+TYwEqE7ZN50gwn+1LCVo9ZVrpxRPOhOLnncYkY1ZzOYtrX8Fwf/rFktZ8R5mJms6EZf5TqNOMeZmnPq9Q==}
     engines: {node: '>=12'}
 
-  vaul@0.8.9:
-    resolution: {integrity: sha512-gpmtmZRWDPP6niQh14JfRIFUYZVyfvAWyA/7rUINOfNlO/2K7uEvI5rLXEXkxZIRFyUZj+TPHLFMirkegPHjrw==}
+  vaul@1.1.2:
+    resolution: {integrity: sha512-ZFkClGpWyI2WUQjdLJ/BaGuV6AVQiJ3uELGk3OYtP+B6yCO7Cmn9vPFXVJkRaGkOJu3m8bQMgtyzNHixULceQA==}
     peerDependencies:
-      react: ^16.8 || ^17.0 || ^18.0
-      react-dom: ^16.8 || ^17.0 || ^18.0
+      react: ^16.8 || ^17.0 || ^18.0 || ^19.0.0 || ^19.0.0-rc
+      react-dom: ^16.8 || ^17.0 || ^18.0 || ^19.0.0 || ^19.0.0-rc
 
   vfile-location@4.1.0:
     resolution: {integrity: sha512-YF23YMyASIIJXpktBa4vIGLJ5Gs88UB/XePgqPmTa7cDA+JeO3yclbpheQYCHjVHBn/yePzrXuygIL+xbvRYHw==}
@@ -18405,7 +18405,7 @@ snapshots:
 
   value-or-promise@1.0.12: {}
 
-  vaul@0.8.9(@types/react-dom@19.0.0)(@types/react@19.0.0)(react-dom@19.1.2(react@19.1.2))(react@19.1.2):
+  vaul@1.1.2(@types/react-dom@19.0.0)(@types/react@19.0.0)(react-dom@19.1.2(react@19.1.2))(react@19.1.2):
     dependencies:
       '@radix-ui/react-dialog': 1.1.14(@types/react-dom@19.0.0)(@types/react@19.0.0)(react-dom@19.1.2(react@19.1.2))(react@19.1.2)
       react: 19.1.2
