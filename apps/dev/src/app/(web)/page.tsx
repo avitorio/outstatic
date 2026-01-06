@@ -44,7 +44,7 @@ async function getData() {
   const db = await load()
 
   // get content for the homepage
-  const home = getSingletonBySlug('home', ['content'] as const)
+  const home = getSingletonBySlug('home', ['content'])
 
   if (!home) {
     throw new Error('Home singleton not found')
@@ -62,7 +62,7 @@ async function getData() {
       'coverImage',
       'description',
       'tags'
-    ] as const)
+    ])
     .sort({ publishedAt: -1 })
     .limit(3)
     .toArray()
@@ -82,7 +82,7 @@ async function getData() {
         'slug',
         'coverImage',
         'description'
-      ] as const
+      ]
     )
     .sort({ publishedAt: -1 })
     .limit(3)
