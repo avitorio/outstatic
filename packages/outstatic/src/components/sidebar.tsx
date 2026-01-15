@@ -111,7 +111,7 @@ export const Sidebar = ({
       children: [
         {
           label: 'Members',
-          path: `${dashboardRoute}/redirect?redirectTo=${encodeURIComponent(`${OUTSTATIC_APP_URL}/home/${projectInfo?.accountSlug}/projects/${projectInfo?.projectSlug}/members`)}`,
+          path: `${dashboardRoute}/redirect?redirectTo=${encodeURIComponent(`${OUTSTATIC_APP_URL}/home/${projectInfo?.accountSlug}/${projectInfo?.projectSlug}/members`)}`,
           newTab: true,
           Icon: <Users className={'w-4'} />,
           badge: isPro ? undefined : <Badge variant="outline"><span className="text-xs font-mono">PRO</span></Badge>,
@@ -125,7 +125,7 @@ export const Sidebar = ({
         },
         {
           label: 'API Keys',
-          path: `${dashboardRoute}/redirect?redirectTo=${encodeURIComponent(`${OUTSTATIC_APP_URL}/home/${projectInfo?.accountSlug}/projects/${projectInfo?.projectSlug}/api-keys`)}`,
+          path: `${dashboardRoute}/redirect?redirectTo=${encodeURIComponent(`${OUTSTATIC_APP_URL}/home/${projectInfo?.accountSlug}/${projectInfo?.projectSlug}/api-keys`)}`,
           newTab: true,
           Icon: <Key className={'w-4'} />,
           badge: isPro ? undefined : <Badge variant="outline">PRO</Badge>,
