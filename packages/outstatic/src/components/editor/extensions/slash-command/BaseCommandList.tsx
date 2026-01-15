@@ -1,6 +1,6 @@
 import { useOutstatic } from '@/utils/hooks/useOutstatic'
 import { Editor, Range } from '@tiptap/react'
-import { useCompletion } from 'ai/react'
+import { useCompletion } from '@ai-sdk/react'
 import {
   useCallback,
   useEffect,
@@ -39,9 +39,6 @@ export const BaseCommandList = ({
     id: 'outstatic',
     api: basePath + OUTSTATIC_API_PATH + '/generate',
     headers: csrfToken ? { 'X-CSRF-Token': csrfToken } : undefined,
-    onResponse: () => {
-      editor.chain().focus().deleteRange(range).run()
-    },
     onFinish: (_prompt, completion) => {
       // highlight the generated text
       editor.commands.setTextSelection({
@@ -80,6 +77,7 @@ export const BaseCommandList = ({
             complete(prevText, {
               body: { option: 'continue', command: '' }
             })
+            editor.chain().focus().deleteRange(range).run()
           }
         } else if (item.title === 'Image') {
           setImageMenu(true)
