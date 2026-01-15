@@ -32,9 +32,164 @@ import {
   CollapsibleTrigger
 } from '../shadcn/collapsible'
 import { NavigationConfigSchema } from './navigation-config.schema'
-import { z } from 'zod'
+import { z } from 'zod/v4'
 
 export type SidebarConfig = z.infer<typeof NavigationConfigSchema>
+
+// Type guard to check if a child is a RouteGroup (has children but no path)
+function isRouteGroup(child: unknown): child is {
+  label: string
+  children: unknown[]
+  Icon?: React.ReactNode
+  collapsible?: boolean
+  collapsed?: boolean
+  renderAction?: React.ReactNode
+} {
+  return (
+    typeof child === 'object' &&
+    child !== null &&
+    'children' in child &&
+    !('path' in child)
+  )
+}
+
+// Type guard to check if a child is a RouteChild (has path)
+function isRouteChild(child: unknown): child is {
+  label: string
+  path: string
+  Icon?: React.ReactNode
+  end?: boolean | ((input: string) => boolean)
+  renderAction?: React.ReactNode
+} {
+  return typeof child === 'object' && child !== null && 'path' in child
+}
+
+// Recursive component for rendering sub-RouteGroups
+function SubRouteGroup({
+  group,
+  currentPath,
+  open,
+  depth
+}: {
+  group: {
+    label: string
+    children: unknown[]
+    Icon?: React.ReactNode
+    collapsible?: boolean
+    collapsed?: boolean
+    renderAction?: React.ReactNode
+  }
+  currentPath: string
+  open: boolean
+  depth: number
+}) {
+  const Container = (props: React.PropsWithChildren) => {
+    if (group.collapsible) {
+      return (
+        <Collapsible
+          defaultOpen={!group.collapsed}
+          className={'group/collapsible'}
+        >
+          {props.children}
+        </Collapsible>
+      )
+    }
+    return props.children
+  }
+
+  const ContentContainer = (props: React.PropsWithChildren) => {
+    if (group.collapsible) {
+      return <CollapsibleContent>{props.children}</CollapsibleContent>
+    }
+    return props.children
+  }
+
+  const linkClassName = cn('flex items-center', {
+    'mx-auto w-full gap-0! [&>svg]:flex-1': !open
+  })
+
+  const spanClassName = cn('w-auto transition-opacity duration-300', {
+    'w-0 opacity-0': !open
+  })
+
+  return (
+    <Container>
+      <SidebarMenuSubItem>
+        <If
+          condition={group.collapsible}
+          fallback={
+            <SidebarMenuSubButton asChild={false}>
+              <div className={linkClassName}>
+                {group.Icon}
+                <span className={spanClassName}>{group.label}</span>
+              </div>
+            </SidebarMenuSubButton>
+          }
+        >
+          <CollapsibleTrigger asChild>
+            <SidebarMenuSubButton asChild={false}>
+              <div className={linkClassName}>
+                {group.Icon}
+                <span className={spanClassName}>{group.label}</span>
+                <ChevronDown
+                  className={cn(
+                    'ml-auto size-3 transition-transform group-data-[state=open]/collapsible:rotate-180',
+                    { 'hidden size-0': !open }
+                  )}
+                />
+              </div>
+            </SidebarMenuSubButton>
+          </CollapsibleTrigger>
+        </If>
+
+        <ContentContainer>
+          <SidebarMenuSub
+            className={cn({
+              'mx-0 px-1.5': !open
+            })}
+          >
+            {group.children.map((child, childIndex) => {
+              // Recursively render sub-RouteGroups
+              if (isRouteGroup(child)) {
+                return (
+                  <SubRouteGroup
+                    key={`sub-group-${depth}-${childIndex}`}
+                    group={child}
+                    currentPath={currentPath}
+                    open={open}
+                    depth={depth + 1}
+                  />
+                )
+              }
+
+              // Render RouteChild items
+              if (isRouteChild(child)) {
+                const isActive = isRouteActive(
+                  child.path,
+                  currentPath,
+                  child.end
+                )
+
+                return (
+                  <SidebarMenuSubItem key={child.path}>
+                    <SidebarMenuSubButton isActive={isActive} asChild>
+                      <Link className={linkClassName} href={child.path}>
+                        {child.Icon}
+                        <span className={spanClassName}>{child.label}</span>
+                      </Link>
+                    </SidebarMenuSubButton>
+                  </SidebarMenuSubItem>
+                )
+              }
+
+              return null
+            })}
+          </SidebarMenuSub>
+        </ContentContainer>
+      </SidebarMenuSubItem>
+    </Container>
+  )
+}
 
 export function SidebarNavigation({
   config
@@ -218,48 +373,73 @@ export function SidebarNavigation({
                                         'mx-0 px-1.5': !open
                                       })}
                                     >
-                                      {children.map((child) => {
-                                        const isActive = isRouteActive(
-                                          child.path,
-                                          currentPath,
-                                          child.end
-                                        )
-
-                                        const linkClassName = cn(
-                                          'flex items-center',
-                                          {
-                                            'mx-auto w-full gap-0! [&>svg]:flex-1':
-                                              !open
+                                      {children.map(
+                                        (subChild, subChildIndex) => {
+                                          // Check if this is a sub-RouteGroup
+                                          if (isRouteGroup(subChild)) {
+                                            return (
+                                              <SubRouteGroup
+                                                key={`sub-group-${subChildIndex}`}
+                                                group={subChild}
+                                                currentPath={currentPath}
+                                                open={open}
+                                                depth={1}
+                                              />
+                                            )
                                           }
-                                        )
 
-                                        const spanClassName = cn(
-                                          'w-auto transition-opacity duration-300',
-                                          {
-                                            'w-0 opacity-0': !open
-                                          }
-                                        )
+                                          const isActive = isRouteActive(
+                                            subChild.path,
+                                            currentPath,
+                                            subChild.end
+                                          )
 
-                                        return (
-                                          <SidebarMenuSubItem key={child.path}>
-                                            <SidebarMenuSubButton
-                                              isActive={isActive}
-                                              asChild
+                                          const linkClassName = cn(
+                                            'flex items-center',
+                                            {
+                                              'mx-auto w-full gap-0! [&>svg]:flex-1':
+                                                !open
+                                            }
+                                          )
+
+                                          const spanClassName = cn(
+                                            'w-auto transition-opacity duration-300',
+                                            {
+                                              'w-0 opacity-0': !open
+                                            }
+                                          )
+
+                                          return (
+                                            <SidebarMenuSubItem
+                                              key={subChild.path}
+                                              className="group/sub-menu-item"
                                             >
-                                              <Link
-                                                className={linkClassName}
-                                                href={child.path}
+                                              <SidebarMenuSubButton
+                                                isActive={isActive}
+                                                asChild
                                               >
-                                                {child.Icon}
+                                                <Link
+                                                  className={linkClassName}
+                                                  href={subChild.path}
+                                                >
+                                                  {subChild.Icon}
 
-                                                <span className={spanClassName}>
-                                                  {child.label}
-                                                </span>
-                                              </Link>
-                                            </SidebarMenuSubButton>
-                                          </SidebarMenuSubItem>
-                                        )
-                                      })}
+                                                  <span
+                                                    className={spanClassName}
+                                                  >
+                                                    {subChild.label}
+                                                  </span>
+                                                </Link>
+                                              </SidebarMenuSubButton>
+                                              <If condition={subChild.renderAction}>
+                                                <SidebarMenuAction>
+                                                  {subChild.renderAction}
+                                                </SidebarMenuAction>
+                                              </If>
+                                            </SidebarMenuSubItem>
+                                          )
+                                        }
+                                      )}
                                     </SidebarMenuSub>
                                   )}
                                 </If>
