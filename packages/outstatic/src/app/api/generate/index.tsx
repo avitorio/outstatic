@@ -1,6 +1,6 @@
 import { getLoginSession } from '@/utils/auth/auth'
 import { createOpenAI } from '@ai-sdk/openai'
-import { CoreMessage, streamText } from 'ai'
+import { ModelMessage, streamText } from 'ai'
 import { match } from 'ts-pattern'
 
 export const maxDuration = 30
@@ -107,7 +107,7 @@ export default async function POST(req: Request): Promise<Response> {
         content: `For this text: ${prompt}. You have to respect the command: ${command}`
       }
     ])
-    .run() as CoreMessage[]
+    .run() as ModelMessage[]
 
   const result = streamText({
     model: openai('gpt-3.5-turbo'),
@@ -115,5 +115,5 @@ export default async function POST(req: Request): Promise<Response> {
     temperature: 0.7
   })
 
-  return result.toDataStreamResponse()
+  return result.toUIMessageStreamResponse()
 }

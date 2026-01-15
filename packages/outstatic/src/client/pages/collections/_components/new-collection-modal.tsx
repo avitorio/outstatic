@@ -22,6 +22,7 @@ import { useGetDocuments } from '@/utils/hooks/useGetDocuments'
 import useOid from '@/utils/hooks/useOid'
 import { useOutstatic } from '@/utils/hooks/useOutstatic'
 import { useRebuildMetadata } from '@/utils/hooks/useRebuildMetadata'
+import { stringifyError } from '@/utils/errors/stringifyError'
 import { zodResolver } from '@hookform/resolvers/zod'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -223,12 +224,21 @@ export default function NewCollectionModal({
         }
       })
     } catch (error) {
-      // TODO: Better error treatment
-      toast.error('Failed to create collection.')
+      console.error('Failed to create collection', error)
+      const errorToast = toast.error('Failed to create collection.', {
+        action: {
+          label: 'Copy Logs',
+          onClick: () => {
+            navigator.clipboard.writeText(`Error: ${stringifyError(error)}`)
+            toast.message('Logs copied to clipboard', {
+              id: errorToast
+            })
+          }
+        }
+      })
       setLoading(false)
       setHasChanges(false)
       setError(true)
-      console.log({ error })
     }
   }
 

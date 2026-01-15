@@ -2,7 +2,7 @@
 
 import { Command, CommandInput } from '@/components/ui/shadcn/command'
 
-import { useCompletion } from 'ai/react'
+import { useCompletion } from '@ai-sdk/react'
 import { ArrowUp } from 'lucide-react'
 import { addAIHighlight } from 'novel/extensions'
 import { useState } from 'react'
@@ -18,6 +18,7 @@ import { useEditor } from '@/components/editor/editor-context'
 import { useOutstatic } from '@/utils/hooks/useOutstatic'
 import { OUTSTATIC_API_PATH } from '@/utils/constants'
 import { useCsrfToken } from '@/utils/hooks/useCsrfToken'
+import { stringifyError } from '@/utils/errors/stringifyError'
 //TODO: I think it makes more sense to create a custom Tiptap extension for this functionality https://tiptap.dev/docs/editor/ai/introduction
 
 interface AISelectorProps {
@@ -34,14 +35,19 @@ export function AISelector({ onOpenChange }: AISelectorProps) {
   const { completion, complete, isLoading } = useCompletion({
     api: basePath + OUTSTATIC_API_PATH + '/generate',
     headers: csrfToken ? { 'X-CSRF-Token': csrfToken } : undefined,
-    onResponse: (response) => {
-      if (response.status === 429) {
-        toast.error('You have reached your request limit for the day.')
-        return
-      }
-    },
     onError: (e) => {
-      toast.error(e.message)
+      console.error('AI completion error', e)
+      const errorToast = toast.error(e.message, {
+        action: {
+          label: 'Copy Logs',
+          onClick: () => {
+            navigator.clipboard.writeText(`Error: ${stringifyError(e)}`)
+            toast.message('Logs copied to clipboard', {
+              id: errorToast
+            })
+          }
+        }
+      })
     }
   })
 
@@ -62,7 +68,7 @@ export function AISelector({ onOpenChange }: AISelectorProps) {
       )}
 
       {isLoading && (
-        <div className="flex h-12 w-full items-center px-4 text-sm font-medium text-muted-foreground text-purple-500">
+        <div className="flex h-12 w-full items-center px-4 text-sm font-medium text-purple-500">
           <Magic className="mr-2 h-4 w-4 shrink-0  " />
           AI is thinking
           <div className="ml-2 mt-1">
