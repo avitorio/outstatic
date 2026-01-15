@@ -55,8 +55,8 @@ export const Sidebar = () => {
                             <Tooltip>
                               <TooltipTrigger asChild>
                                 <Link
-                                  href={`/outstatic/${collection.slug}/new`}
-                                  className="invisible group-hover/menu-item:visible"
+                                  href={`${dashboardRoute}/${collection.slug}/new`}
+                                  className="invisible group-hover/sub-menu-item:visible"
                                   aria-label={`Create new item in collection ${collection.title}`}
                                 >
                                   <Plus className="w-3 h-3 pointer-events-none" />
