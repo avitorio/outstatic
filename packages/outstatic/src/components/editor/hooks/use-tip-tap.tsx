@@ -10,6 +10,7 @@ import { useDebouncedCallback } from 'use-debounce'
 import { useOutstatic } from '@/utils/hooks/useOutstatic'
 import { OUTSTATIC_API_PATH } from '@/utils/constants'
 import { useCsrfToken } from '@/utils/hooks/useCsrfToken'
+import { stringifyError } from '@/utils/errors/stringifyError'
 
 export const useTipTap = ({ ...rhfMethods }) => {
   const { hasOpenAIKey, basePath } = useOutstatic()
@@ -40,7 +41,18 @@ export const useTipTap = ({ ...rhfMethods }) => {
     },
     onError: (err) => {
       editorRef.current?.commands.removeClass('completing')
-      toast.error(err.message)
+      console.error('AI completion error', err)
+      const errorToast = toast.error(err.message, {
+        action: {
+          label: 'Copy Logs',
+          onClick: () => {
+            navigator.clipboard.writeText(`Error: ${stringifyError(err)}`)
+            toast.message('Logs copied to clipboard', {
+              id: errorToast
+            })
+          }
+        }
+      })
     }
   })
 
