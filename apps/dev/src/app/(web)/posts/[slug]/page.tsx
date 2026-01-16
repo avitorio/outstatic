@@ -4,7 +4,6 @@ import MDXServer from '@/lib/mdx-server'
 import { absoluteUrl, ogUrl } from '@/lib/utils'
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { OstDocument } from 'outstatic'
 import { getDocumentSlugs, load } from 'outstatic/server'
 
 type Params = Promise<{ slug: string }>
