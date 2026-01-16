@@ -34,6 +34,13 @@ jest.mock('@/utils/hooks/useCollections', () => ({
   })
 }))
 
+
+jest.mock('@/utils/hooks/useSingletons', () => ({
+  useSingletons: () => ({
+    data: []
+  })
+}))
+
 jest.mock('pluralize', () => ({
   singular: (str: string) => str
 }))
