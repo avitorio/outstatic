@@ -31,7 +31,7 @@ export default function SingletonOnboarding() {
           </p>
           <p>Create your first Singleton by clicking the button below.</p>
           <Button asChild>
-            <Link href={`${dashboardRoute}/singletons/new`}>
+            <Link href={`${dashboardRoute}/singletons/new`} className="no-underline">
               New Singleton
             </Link>
           </Button>
