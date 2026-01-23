@@ -32,7 +32,7 @@ export const useGetSingleton = ({
       const response = await gqlClient.request(GET_FILE, {
         owner: repoOwner || session?.user?.login || '',
         name: repoSlug,
-        filePath: `${repoBranch}:${filePath}/${slug}.${extension}`
+        filePath: `${repoBranch}:${filePath}`
       })
 
       const fileObject = response?.repository?.object as { text?: string } | null

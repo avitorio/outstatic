@@ -32,6 +32,7 @@ import { useCustomFieldCommit } from './use-custom-field-commit'
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle
@@ -158,6 +159,10 @@ export const AddCustomFieldDialog: React.FC<AddCustomFieldDialogProps> = ({
       methods.reset()
     }
     setShowAddModal(value)
+  }
+
+  if (singleton === 'new') {
+    return <SaveFirstModal open={showAddModal} onOpenChange={onOpenChange} />
   }
 
   return (
@@ -314,4 +319,23 @@ export const AddCustomFieldDialog: React.FC<AddCustomFieldDialogProps> = ({
       </DialogContent>
     </Dialog>
   )
+}
+
+export const SaveFirstModal = ({
+  open,
+  onOpenChange
+}: {
+  open: boolean
+  onOpenChange: (open: boolean) => void
+}) => {
+  return <Dialog open={open} onOpenChange={onOpenChange}>
+    <DialogContent>
+      <DialogHeader>
+        <DialogTitle>Save your singleton first</DialogTitle>
+      </DialogHeader>
+      <DialogDescription>
+        You need to save your singleton first before adding custom fields.
+      </DialogDescription>
+    </DialogContent>
+  </Dialog>
 }
