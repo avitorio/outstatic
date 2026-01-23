@@ -5,14 +5,20 @@ import { useSingletons } from '@/utils/hooks/useSingletons'
 import { Card, CardContent } from '@/components/ui/shadcn/card'
 import Link from 'next/link'
 import { useOutstatic } from '@/utils/hooks/useOutstatic'
-import { Settings } from 'lucide-react'
+import { FolderOpen, Settings } from 'lucide-react'
 import SingletonOnboarding from './_components/singleton-onboarding'
 import LineBackground from '@/components/ui/outstatic/line-background'
 import { DeleteDocumentButton } from '@/components/delete-document-button'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/shadcn/tooltip'
+import { useState } from 'react'
+import OpenFileModal from '../_components/open-file-modal'
+import { useRouter } from 'next/navigation'
 
 export default function Singletons() {
   const { data: singletons, isPending } = useSingletons()
-  const { dashboardRoute } = useOutstatic()
+  const { dashboardRoute, basePath } = useOutstatic()
+  const [showOpenFileModal, setShowOpenFileModal] = useState(false)
+  const router = useRouter()
 
   if (isPending) return <AdminLoading />
 
@@ -26,11 +32,28 @@ export default function Singletons() {
         <>
           <div className="mb-8 flex h-12 items-center">
             <h1 className="mr-12 text-2xl text-foreground">Singletons</h1>
-            <Button size="sm" asChild>
-              <Link href={`${dashboardRoute}/singletons/new`}>
-                New Singleton
-              </Link>
-            </Button>
+            <div className="flex gap-2">
+              <Button size="sm" asChild>
+                <Link href={`${dashboardRoute}/singletons/new`}>
+                  New Singleton
+                </Link>
+              </Button>
+
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    size="sm"
+                    onClick={() => setShowOpenFileModal(true)}
+                  >
+                    <span className="sr-only">Open from file</span>
+                    <FolderOpen className="w-6 h-6" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Open from file</p>
+                </TooltipContent>
+              </Tooltip>
+            </div>
           </div>
           <div className="max-w-5xl w-full grid md:grid-cols-3 gap-6">
             {singletons &&
@@ -69,6 +92,16 @@ export default function Singletons() {
           </div>
         </>
       )}
+      <OpenFileModal
+        open={showOpenFileModal}
+        onOpenChange={setShowOpenFileModal}
+        onSelect={(filePath) => {
+          setShowOpenFileModal(false)
+          router.push(
+            `${basePath}${dashboardRoute}/singletons/new?openFile=${encodeURIComponent(filePath)}`
+          )
+        }}
+      />
     </AdminLayout>
   )
 }
