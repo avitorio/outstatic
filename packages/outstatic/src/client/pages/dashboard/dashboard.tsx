@@ -11,6 +11,7 @@ import CollectionOnboarding from '../collections/_components/collection-onboardi
 import LineBackground from '@/components/ui/outstatic/line-background'
 import { singular } from 'pluralize'
 import SingletonOnboarding from '../singletons/_components/singleton-onboarding'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/shadcn/tooltip'
 
 export default function Dashboard() {
   const { data: collections, isPending: collectionsPending } = useCollections()
@@ -35,12 +36,19 @@ export default function Dashboard() {
         <>
           <div className="mb-8 flex h-12 items-center">
             <h1 className="mr-12 text-2xl text-foreground">Collections</h1>
-            <Button asChild size="icon" variant="ghost">
-              <Link href={`${dashboardRoute}/collections`}>
-                <span className="sr-only">Edit Collections</span>
-                <Settings className="w-6 h-6" />
-              </Link>
-            </Button>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button asChild size="icon" variant="ghost">
+                  <Link href={`${dashboardRoute}/collections`}>
+                    <span className="sr-only">Edit Collections</span>
+                    <Settings className="w-6 h-6" />
+                  </Link>
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Edit Collections</p>
+              </TooltipContent>
+            </Tooltip>
           </div>
           {collections && collections.length ? (
             <div className="max-w-5xl w-full grid md:grid-cols-3 gap-6 mb-12">
@@ -76,18 +84,32 @@ export default function Dashboard() {
 
           <div className="mb-8 flex h-12 items-center">
             <h1 className="mr-12 text-2xl text-foreground">Singletons</h1>
-            <Button asChild size="icon" variant="ghost">
-              <Link href={`${dashboardRoute}/singletons`}>
-                <span className="sr-only">Edit Singletons</span>
-                <Settings className="w-6 h-6" />
-              </Link>
-            </Button>
-            <Button asChild size="icon" variant="ghost">
-              <Link href={`${dashboardRoute}/singletons/new`}>
-                <span className="sr-only">New Singleton</span>
-                <Plus className="w-6 h-6" />
-              </Link>
-            </Button>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button asChild size="icon" variant="ghost">
+                  <Link href={`${dashboardRoute}/singletons`}>
+                    <span className="sr-only">Edit Singletons</span>
+                    <Settings className="w-6 h-6" />
+                  </Link>
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Edit Singletons</p>
+              </TooltipContent>
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button asChild size="icon" variant="ghost">
+                  <Link href={`${dashboardRoute}/singletons/new`}>
+                    <span className="sr-only">New Singleton</span>
+                    <Plus className="w-6 h-6" />
+                  </Link>
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>New Singleton</p>
+              </TooltipContent>
+            </Tooltip>
           </div>
 
           {singletons && singletons.length ? (
