@@ -49,6 +49,7 @@ type SubmitSingletonProps = {
   extension: MDExtensions
   documentMetadata: Record<string, any>
   path?: string
+  existingFilePath?: string
 }
 
 function useSubmitSingleton({
@@ -67,7 +68,8 @@ function useSubmitSingleton({
   editor,
   extension,
   documentMetadata,
-  path
+  path,
+  existingFilePath
 }: SubmitSingletonProps) {
   const createCommit = useCreateCommit()
   const {
@@ -149,10 +151,18 @@ function useSubmitSingleton({
           branch: repoBranch
         })
 
-        // Use custom content path if provided, otherwise use default singletons path
-        const contentFilePath = path
-          ? `${path}/${actualSlug}.${extension}`
-          : `${singletonsPath}/${actualSlug}.${extension}`
+        // Use existing file path if provided (for opening existing files),
+        // otherwise use custom content path or default singletons path
+        const contentFilePath = existingFilePath
+          ? existingFilePath
+          : path
+            ? `${path}/${actualSlug}.${extension}`
+            : `${singletonsPath}/${actualSlug}.${extension}`
+
+        // Extract directory from existing file path
+        const contentDirectory = existingFilePath
+          ? existingFilePath.substring(0, existingFilePath.lastIndexOf('/'))
+          : path ?? singletonsPath
 
         // For new singletons, create the schema.json file and update singletons.json
         if (isNew) {
@@ -172,7 +182,7 @@ function useSubmitSingleton({
           singletonsArray.push({
             title: data.title || actualSlug,
             slug: actualSlug,
-            directory: path ?? singletonsPath,
+            directory: contentDirectory,
             path: contentFilePath
           })
           capi.replaceFile(
@@ -374,7 +384,8 @@ function useSubmitSingleton({
       mediaJsonPath,
       singletonsPath,
       refetchSingletons,
-      path
+      path,
+      existingFilePath
     ]
   )
 

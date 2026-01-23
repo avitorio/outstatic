@@ -5,18 +5,23 @@ import { useCollections } from '@/utils/hooks/useCollections'
 import { useSingletons } from '@/utils/hooks/useSingletons'
 import { Card, CardContent } from '@/components/ui/shadcn/card'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { useOutstatic } from '@/utils/hooks/useOutstatic'
-import { Settings, Plus, FileText } from 'lucide-react'
+import { Settings, Plus, FileText, FolderOpen } from 'lucide-react'
 import CollectionOnboarding from '../collections/_components/collection-onboarding'
 import LineBackground from '@/components/ui/outstatic/line-background'
 import { singular } from 'pluralize'
 import SingletonOnboarding from '../singletons/_components/singleton-onboarding'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/shadcn/tooltip'
+import { useState } from 'react'
+import OpenFileModal from '../_components/open-file-modal'
 
 export default function Dashboard() {
   const { data: collections, isPending: collectionsPending } = useCollections()
   const { data: singletons, isPending: singletonsPending } = useSingletons()
-  const { dashboardRoute } = useOutstatic()
+  const { dashboardRoute, basePath } = useOutstatic()
+  const router = useRouter()
+  const [showOpenFileModal, setShowOpenFileModal] = useState(false)
 
   const isPending = collectionsPending || singletonsPending
   const hasCollections = collections && collections.length > 0
@@ -110,6 +115,21 @@ export default function Dashboard() {
                 <p>New Singleton</p>
               </TooltipContent>
             </Tooltip>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  onClick={() => setShowOpenFileModal(true)}
+                >
+                  <span className="sr-only">Open from file</span>
+                  <FolderOpen className="w-6 h-6" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Open from file</p>
+              </TooltipContent>
+            </Tooltip>
           </div>
 
           {singletons && singletons.length ? (
@@ -138,6 +158,16 @@ export default function Dashboard() {
           )}
         </>
       )}
+      <OpenFileModal
+        open={showOpenFileModal}
+        onOpenChange={setShowOpenFileModal}
+        onSelect={(filePath) => {
+          setShowOpenFileModal(false)
+          router.push(
+            `${basePath}${dashboardRoute}/singletons/new?openFile=${encodeURIComponent(filePath)}`
+          )
+        }}
+      />
     </AdminLayout>
   )
 }

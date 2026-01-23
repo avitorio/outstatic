@@ -23,6 +23,11 @@ import MediaSettingsDialog from '@/components/ui/outstatic/media-settings-dialog
 import { useEditor } from '@/components/editor/editor-context'
 import { useSingletons } from '@/utils/hooks/useSingletons'
 import NewSingletonModal from './_components/new-singleton-modal'
+import { useSearchParams } from 'next/navigation'
+import { useGetFileByPath } from '@/utils/hooks/useGetFileByPath'
+import { parseContent } from '@/utils/parseContent'
+import { getLocalDate } from '@/utils/getLocalDate'
+import matter from 'gray-matter'
 
 export default function EditSingleton({ slug: initialSlug }: { slug: string }) {
   const [slug, setSlug] = useState(initialSlug)
@@ -38,8 +43,16 @@ export default function EditSingleton({ slug: initialSlug }: { slug: string }) {
     setHasChanges,
     dashboardRoute,
     repoMediaPath,
-    publicMediaPath
+    publicMediaPath,
+    repoOwner,
+    repoSlug,
+    repoBranch
   } = useOutstatic()
+
+  // Get openFile query parameter for opening existing files
+  const searchParams = useSearchParams()
+  const openFilePath = searchParams?.get('openFile') ?? null
+  const [openFileLoaded, setOpenFileLoaded] = useState(false)
   const [showDelete, setShowDelete] = useState(false)
   const [documentSchema, setDocumentSchema] = useState(editDocumentSchema)
   const [showSingletonModal, setShowSingletonModal] = useState(false)
@@ -69,6 +82,12 @@ export default function EditSingleton({ slug: initialSlug }: { slug: string }) {
   const { data: schema } = useGetSingletonSchema({ slug, enabled: !isNew })
   const { data: singletons } = useSingletons()
 
+  // Fetch file content when opening from file
+  const { data: openedFileData } = useGetFileByPath({
+    filePath: openFilePath,
+    enabled: isNew && !!openFilePath && !openFileLoaded
+  })
+
   const singletonTitle = isNew
     ? 'New Singleton'
     : (singletons?.find((s) => s.slug === slug)?.title || slug)
@@ -89,7 +108,8 @@ export default function EditSingleton({ slug: initialSlug }: { slug: string }) {
     editor,
     extension,
     documentMetadata: metadata,
-    path: singletonContentPath
+    path: openFilePath ? undefined : singletonContentPath,
+    existingFilePath: openFilePath ?? undefined
   })
 
   // Only fetch existing singleton data when editing (not creating new)
@@ -101,9 +121,57 @@ export default function EditSingleton({ slug: initialSlug }: { slug: string }) {
     setShowDelete,
     setExtension,
     setMetadata,
-    enabled: !isNew,
+    enabled: !isNew && !openFilePath,
     setSingletonContentPath
   })
+
+  // Load content from opened file
+  useEffect(() => {
+    if (!openedFileData || !editor || openFileLoaded || !openFilePath) return
+
+    const { content: fileContent, extension: fileExtension } = openedFileData
+    const { data, content } = matter(fileContent)
+
+    setMetadata(data)
+    const parsedContent = parseContent({
+      content,
+      basePath,
+      repoOwner,
+      repoSlug,
+      repoBranch,
+      publicMediaPath,
+      repoMediaPath
+    })
+
+    // Extract title from frontmatter or filename
+    const filename = openFilePath.substring(openFilePath.lastIndexOf('/') + 1)
+    const titleFromFilename = filename.replace(/\.mdx?$/, '')
+    const title = data.title || titleFromFilename
+
+    const newDate = data.publishedAt
+      ? new Date(data.publishedAt)
+      : getLocalDate()
+
+    const newDocument = {
+      ...data,
+      title,
+      publishedAt: newDate,
+      content: parsedContent
+    }
+
+    // Set the singleton content path to the full file path
+    setSingletonContentPath(openFilePath)
+    setExtension(fileExtension)
+
+    Promise.resolve().then(() => {
+      methods.reset(newDocument)
+      editor.commands.setContent(parsedContent)
+      editor.commands.focus('start')
+    })
+
+    setHasChanges(false)
+    setOpenFileLoaded(true)
+  }, [openedFileData, editor, openFileLoaded, openFilePath, basePath, repoOwner, repoSlug, repoBranch, publicMediaPath, repoMediaPath, methods, setHasChanges])
 
   // Update URL when slug changes (after first save of new singleton)
   useEffect(() => {
@@ -175,9 +243,9 @@ export default function EditSingleton({ slug: initialSlug }: { slug: string }) {
     }
   }, [mediaPathUpdated])
 
-  // Submit the document after singleton content path is selected
+  // Submit the document after singleton content path is selected (not for openFile case)
   useEffect(() => {
-    if (singletonContentPath && isNew) {
+    if (singletonContentPath && isNew && !openFilePath) {
       onSubmit(methods.getValues())
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
