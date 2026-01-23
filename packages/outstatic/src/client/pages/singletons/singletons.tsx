@@ -2,23 +2,17 @@ import { AdminLayout } from '@/components/admin-layout'
 import { AdminLoading } from '@/components/admin-loading'
 import { Button } from '@/components/ui/shadcn/button'
 import { useSingletons } from '@/utils/hooks/useSingletons'
-import { SingletonType } from '@/types'
 import { Card, CardContent } from '@/components/ui/shadcn/card'
 import Link from 'next/link'
-import { useState } from 'react'
-import DeleteSingletonModal from './_components/delete-singleton-modal'
 import { useOutstatic } from '@/utils/hooks/useOutstatic'
-import { Settings, Trash } from 'lucide-react'
+import { Settings } from 'lucide-react'
 import SingletonOnboarding from './_components/singleton-onboarding'
 import LineBackground from '@/components/ui/outstatic/line-background'
+import { DeleteDocumentButton } from '@/components/delete-document-button'
 
 export default function Singletons() {
   const { data: singletons, isPending } = useSingletons()
   const { dashboardRoute } = useOutstatic()
-
-  const [selectedSingleton, setSelectedSingleton] =
-    useState<SingletonType | null>(null)
-  const [showDeleteModal, setShowDeleteModal] = useState(false)
 
   if (isPending) return <AdminLoading />
 
@@ -63,18 +57,11 @@ export default function Singletons() {
                           <Settings className="w-6 h-6" />
                         </Link>
                       </Button>
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        type="button"
-                        onClick={() => {
-                          setShowDeleteModal(true)
-                          setSelectedSingleton(singleton)
-                        }}
-                      >
-                        <span className="sr-only">Delete singleton</span>
-                        <Trash className="w-6 h-6" />
-                      </Button>
+                      <DeleteDocumentButton
+                        slug={singleton.slug}
+                        extension={singleton.path.endsWith('.mdx') ? 'mdx' : 'md'}
+                        collection={"_singletons"}
+                      />
                     </div>
                   </CardContent>
                 </Card>
@@ -82,14 +69,6 @@ export default function Singletons() {
           </div>
         </>
       )}
-
-      {showDeleteModal && selectedSingleton ? (
-        <DeleteSingletonModal
-          setShowDeleteModal={setShowDeleteModal}
-          setSelectedSingleton={setSelectedSingleton}
-          singleton={selectedSingleton}
-        />
-      ) : null}
     </AdminLayout>
   )
 }

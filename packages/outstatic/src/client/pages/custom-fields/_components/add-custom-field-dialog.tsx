@@ -62,6 +62,7 @@ interface AddCustomFieldDialogProps {
   customFields: CustomFieldsType
   setCustomFields: (fields: CustomFieldsType) => void
   fieldTitle?: string
+  singleton?: string
 }
 
 export const AddCustomFieldDialog: React.FC<AddCustomFieldDialogProps> = ({
@@ -71,7 +72,8 @@ export const AddCustomFieldDialog: React.FC<AddCustomFieldDialogProps> = ({
   setShowAddModal,
   customFields,
   setCustomFields,
-  fieldTitle
+  fieldTitle,
+  singleton
 }) => {
   const [adding, setAdding] = useState(false)
   const { setHasChanges } = useOutstatic()
@@ -137,7 +139,8 @@ export const AddCustomFieldDialog: React.FC<AddCustomFieldDialogProps> = ({
         deleteField: false,
         collection,
         fieldName,
-        selectedField: ''
+        selectedField: '',
+        singleton
       })
     } catch (error) {
       setError('add')

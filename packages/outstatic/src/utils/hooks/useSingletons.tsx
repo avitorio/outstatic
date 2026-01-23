@@ -1,61 +1,115 @@
-import { GET_COLLECTIONS } from '@/graphql/queries/collections'
-import { SingletonsType } from '@/types'
 import { useOutstatic } from '@/utils/hooks/useOutstatic'
 import { useQuery } from '@tanstack/react-query'
-import { sentenceCase } from 'change-case'
+import { createCommitApi } from '../createCommitApi'
+import useOid from './useOid'
+import { toast } from 'sonner'
+import { useCreateCommit } from './useCreateCommit'
+import { GET_FILE } from '@/graphql/queries/file'
+import { useGetDocuments } from './useGetDocuments'
 
-type UseSingletonsOptions = {
+
+export type SingletonType = {
+  title: string
+  slug: string
+  path: string
+  directory: string
+}
+
+type SingletonsType = SingletonType[] | null
+
+type UseGetSingletonsOptions = {
   enabled?: boolean
 }
 
 const MD_MDX_REGEXP = /\.mdx?$/i
 
-export function useSingletons(options?: UseSingletonsOptions) {
+export function useSingletons(options?: UseGetSingletonsOptions) {
   const { enabled = true } = options ?? {}
   const { repoOwner, repoSlug, repoBranch, isPending, gqlClient, ostContent } =
     useOutstatic()
+  const fetchOid = useOid()
+  const mutation = useCreateCommit()
+  const { refetch: refetchDocuments } = useGetDocuments({ enabled: false, collection: '_singletons' })
 
   return useQuery({
     queryKey: ['singletons', { repoOwner, repoSlug, repoBranch, ostContent }],
     queryFn: async (): Promise<SingletonsType> => {
       try {
-        // Query the _singletons directory to discover singleton files
-        const data =
+        const singletonsJson =
           isPending || !repoOwner || !repoSlug || !repoBranch
             ? null
-            : await gqlClient.request(GET_COLLECTIONS, {
-                owner: repoOwner,
-                name: repoSlug,
-                contentPath: `${repoBranch}:${ostContent}/_singletons`
-              })
+            : await gqlClient.request(GET_FILE, {
+              owner: repoOwner,
+              name: repoSlug,
+              filePath: `${repoBranch}:${ostContent}/singletons.json` || ''
+            })
 
-        if (!data || data?.repository?.object === null) {
-          // No _singletons folder exists yet
-          return []
+        let singletonsData: SingletonsType = null
+
+        const singletonsObject = singletonsJson?.repository?.object as {
+          text?: string
         }
 
-        const { entries } = data?.repository?.object as {
-          entries: { name: string; type: string }[]
+        if (singletonsObject?.text) {
+          singletonsData = JSON.parse(singletonsObject.text)
+          const singletons = singletonsData ?? []
+
+          return singletons
         }
 
-        // Filter for .md/.mdx files (blobs) and extract singleton info
-        const singletons = entries
-          .filter(
-            (entry) => entry.type === 'blob' && MD_MDX_REGEXP.test(entry.name)
-          )
-          .map((entry) => {
-            const slug = entry.name.replace(MD_MDX_REGEXP, '')
+        // If the singletons.json file doesn't exist, fetch the singletons from the outstatic folder
+        // and create the singletons.json file
+        if (singletonsJson === null || singletonsObject === null) {
+          const { data } = await refetchDocuments()
+
+          if (!data) {
+            return []
+          }
+
+          // Filter for .md/.mdx files (blobs) and extract singleton info
+          const singletons = data.documents?.map((entry) => {
+            const slug = entry.slug.replace(MD_MDX_REGEXP, '')
             return {
-              title: sentenceCase(slug, {
-                split: (str) => str.split(/([^A-Za-z0-9\.]+)/g).filter(Boolean)
-              }),
-              slug
+              title: entry.title,
+              slug,
+              path: `${ostContent}/_singletons/${entry.slug}.${entry.extension}`,
+              directory: `${ostContent}/_singletons`,
             }
+          }) ?? []
+
+          const oid = await fetchOid()
+
+          if (!oid) {
+            throw new Error('No oid found')
+          }
+
+          const commitApi = createCommitApi({
+            message: 'chore: Updates singletons',
+            owner: repoOwner,
+            name: repoSlug,
+            branch: repoBranch,
+            oid
           })
 
-        return singletons
+          commitApi.replaceFile(
+            `${ostContent}/singletons.json`,
+            JSON.stringify(singletons, null, 2)
+          )
+
+          const payload = commitApi.createInput()
+
+          toast.promise(mutation.mutateAsync(payload), {
+            loading: 'Updating singletons',
+            success: 'Singletons updated',
+            error: 'Error updating singletons'
+          })
+
+          return singletons
+        }
+        return []
       } catch (error) {
         console.error('Error fetching singletons:', error)
+        toast.error('Error fetching singletons')
         return []
       }
     },

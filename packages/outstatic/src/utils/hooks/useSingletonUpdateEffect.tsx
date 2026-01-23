@@ -7,6 +7,7 @@ import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { UseFormReturn } from 'react-hook-form'
 import { useGetSingleton } from './useGetSingleton'
 import { useOutstatic } from './useOutstatic'
+import { useSingletons } from './useSingletons'
 
 interface UseSingletonUpdateEffectProps {
   slug: string
@@ -17,6 +18,7 @@ interface UseSingletonUpdateEffectProps {
   setExtension: Dispatch<SetStateAction<MDExtensions>>
   setMetadata: Dispatch<SetStateAction<Record<string, any>>>
   enabled?: boolean
+  setSingletonContentPath: Dispatch<SetStateAction<string | undefined>>
 }
 
 export const useSingletonUpdateEffect = ({
@@ -27,7 +29,8 @@ export const useSingletonUpdateEffect = ({
   setShowDelete,
   setExtension,
   setMetadata,
-  enabled = true
+  enabled = true,
+  setSingletonContentPath
 }: UseSingletonUpdateEffectProps) => {
   const {
     basePath,
@@ -39,6 +42,7 @@ export const useSingletonUpdateEffect = ({
   } = useOutstatic()
 
   const [parsedContent, setParsedContent] = useState(false)
+  const { data: singletons } = useSingletons()
 
   const { data: document } = useGetSingleton({
     slug,
@@ -71,6 +75,11 @@ export const useSingletonUpdateEffect = ({
         publishedAt: newDate,
         content: parsedContent,
         slug
+      }
+
+      const singleton = singletons?.find((s) => s.slug === slug)
+      if (singleton) {
+        setSingletonContentPath(singleton.directory)
       }
 
       Promise.resolve().then(() => {

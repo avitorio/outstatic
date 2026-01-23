@@ -37,6 +37,7 @@ type SubmitSingletonProps = {
   slug: string
   setSlug: (slug: string) => void
   isNew: boolean
+  setIsNew: (isNew: boolean) => void
   setShowDelete: (showDelete: boolean) => void
   setLoading: (loading: boolean) => void
   files: FileType[]
@@ -47,6 +48,7 @@ type SubmitSingletonProps = {
   editor: Editor | null
   extension: MDExtensions
   documentMetadata: Record<string, any>
+  path?: string
 }
 
 function useSubmitSingleton({
@@ -54,6 +56,7 @@ function useSubmitSingleton({
   slug,
   setSlug,
   isNew,
+  setIsNew,
   setShowDelete,
   setLoading,
   files,
@@ -63,7 +66,8 @@ function useSubmitSingleton({
   setHasChanges,
   editor,
   extension,
-  documentMetadata
+  documentMetadata,
+  path
 }: SubmitSingletonProps) {
   const createCommit = useCreateCommit()
   const {
@@ -145,7 +149,12 @@ function useSubmitSingleton({
           branch: repoBranch
         })
 
-        // For new singletons, create the schema.json file
+        // Use custom content path if provided, otherwise use default singletons path
+        const contentFilePath = path
+          ? `${path}/${actualSlug}.${extension}`
+          : `${singletonsPath}/${actualSlug}.${extension}`
+
+        // For new singletons, create the schema.json file and update singletons.json
         if (isNew) {
           const schemaJson = {
             title: data.title || actualSlug,
@@ -155,6 +164,20 @@ function useSubmitSingleton({
           capi.replaceFile(
             `${singletonsPath}/${actualSlug}.schema.json`,
             JSON.stringify(schemaJson, null, 2) + '\n'
+          )
+
+          // Update singletons.json with the new singleton
+          const { data: currentSingletons } = await refetchSingletons()
+          const singletonsArray = currentSingletons ?? []
+          singletonsArray.push({
+            title: data.title || actualSlug,
+            slug: actualSlug,
+            directory: path ?? singletonsPath,
+            path: contentFilePath
+          })
+          capi.replaceFile(
+            `${ostContent}/singletons.json`,
+            JSON.stringify(singletonsArray, null, 2) + '\n'
           )
         }
 
@@ -197,7 +220,7 @@ function useSubmitSingleton({
 
         const { data: matterData } = matter(content)
 
-        capi.replaceFile(`${singletonsPath}/${actualSlug}.${extension}`, content)
+        capi.replaceFile(contentFilePath, content)
 
         // Check if a new tag value was added
         let hasNewTag = false
@@ -258,8 +281,8 @@ function useSubmitSingleton({
 
         const newMeta = Array.isArray(m.metadata)
           ? m.metadata.filter(
-              (c) => c.collection !== '_singletons' || c.slug !== actualSlug
-            )
+            (c) => c.collection !== '_singletons' || c.slug !== actualSlug
+          )
           : []
 
         newMeta.push({
@@ -270,8 +293,8 @@ function useSubmitSingleton({
             hash: `${state.result()}`,
             commit: m.commit,
             path: monorepoPath
-              ? `${singletonsPath}/${actualSlug}.${extension}`.replace(monorepoPath, '')
-              : `${singletonsPath}/${actualSlug}.${extension}`
+              ? contentFilePath.replace(monorepoPath, '')
+              : contentFilePath
           }
         })
 
@@ -319,6 +342,7 @@ function useSubmitSingleton({
         setLoading(false)
         setHasChanges(false)
         setShowDelete(true)
+        setIsNew(false)
       } catch (error) {
         setLoading(false)
         console.log({ error })
@@ -330,6 +354,7 @@ function useSubmitSingleton({
       slug,
       setSlug,
       isNew,
+      setIsNew,
       setShowDelete,
       setLoading,
       files,
@@ -348,7 +373,8 @@ function useSubmitSingleton({
       extension,
       mediaJsonPath,
       singletonsPath,
-      refetchSingletons
+      refetchSingletons,
+      path
     ]
   )
 

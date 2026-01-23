@@ -1,16 +1,8 @@
-import { GET_DOCUMENT } from '@/graphql/queries/document'
+import { GET_FILE } from '@/graphql/queries/file'
 import { MDExtensions } from '@/types'
 import { useOutstatic } from '@/utils/hooks/useOutstatic'
 import { useQuery } from '@tanstack/react-query'
-
-type Repository = {
-  fileMD: { text: string } | null
-  fileMDX: { text: string } | null
-}
-
-export type GetSingletonData = {
-  repository: Repository
-}
+import { useSingletons } from './useSingletons'
 
 type SingletonData = {
   mdDocument: string
@@ -24,38 +16,36 @@ export const useGetSingleton = ({
   slug: string
   enabled?: boolean
 }) => {
-  const { repoOwner, repoSlug, repoBranch, session, gqlClient, ostContent } =
-    useOutstatic()
-  const filePath = `${ostContent}/_singletons/${slug}`
+  const { repoOwner, repoSlug, repoBranch, session, gqlClient } = useOutstatic()
+  const { data: singletons, isPending: singletonsPending } = useSingletons()
+
+  const singleton = singletons?.find((s) => s.slug === slug)
+  const filePath = singleton?.path
 
   return useQuery({
-    queryKey: ['singleton', { slug }],
+    queryKey: ['singleton', { slug, filePath }],
     queryFn: async (): Promise<SingletonData> => {
-      const { repository } = await gqlClient.request<GetSingletonData>(
-        GET_DOCUMENT,
-        {
-          owner: repoOwner || session?.user?.login || '',
-          name: repoSlug,
-          mdPath: `${repoBranch}:${filePath}.md`,
-          mdxPath: `${repoBranch}:${filePath}.mdx`
-        }
-      )
+      if (!filePath) throw new Error('Singleton not found in singletons.json')
 
-      if (!repository) throw new Error('No singleton found')
+      const extension = filePath.endsWith('.mdx') ? 'mdx' : 'md'
 
-      const { fileMD, fileMDX } = repository
+      const response = await gqlClient.request(GET_FILE, {
+        owner: repoOwner || session?.user?.login || '',
+        name: repoSlug,
+        filePath: `${repoBranch}:${filePath}/${slug}.${extension}`
+      })
 
-      if (fileMD !== null) {
-        return { mdDocument: fileMD.text, extension: 'md' }
-      } else if (fileMDX !== null) {
-        return { mdDocument: fileMDX.text, extension: 'mdx' }
-      } else {
+      const fileObject = response?.repository?.object as { text?: string } | null
+
+      if (!fileObject?.text) {
         return null
       }
+
+      return { mdDocument: fileObject.text, extension }
     },
     meta: {
       errorMessage: `Failed to fetch singleton: ${slug}`
     },
-    enabled
+    enabled: enabled && !singletonsPending && !!filePath
   })
 }

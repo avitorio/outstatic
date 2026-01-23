@@ -47,62 +47,62 @@ export const Sidebar = () => {
     },
     ...(hasContentTypes
       ? [
-          {
-            label: 'Content',
-            collapsible: false,
-            children: [
-              ...(hasCollections
-                ? [
-                    {
-                      label: 'Collections',
-                      collapsible: true,
-                      children: collections.map((collection) => ({
-                        label: collection.title,
-                        path: `${dashboardRoute}/${collection.slug}`,
-                        Icon: <Folder className={'w-4'} />,
-                        renderAction: (
-                          <TooltipProvider>
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <Link
-                                  href={`/outstatic/${collection.slug}/new`}
-                                  className="invisible group-hover/menu-item:visible"
-                                  aria-label={`Create new item in collection ${collection.title}`}
-                                >
-                                  <Plus className="w-3 h-3 pointer-events-none" />
-                                </Link>
-                              </TooltipTrigger>
-                              <TooltipContent className="pointer-events-none">
-                                <p>
-                                  Create new{' '}
-                                  <span className="inline-block">
-                                    {singular(collection.title)}
-                                  </span>
-                                </p>
-                              </TooltipContent>
-                            </Tooltip>
-                          </TooltipProvider>
-                        )
-                      }))
-                    }
-                  ]
-                : []),
-              ...(hasSingletons
-                ? [
-                    {
-                      label: 'Singletons',
-                      collapsible: true,
-                      children: singletons.map((singleton) => ({
-                        label: singleton.title,
-                        path: `${dashboardRoute}/singletons/${singleton.slug}`,
-                        Icon: <FileText className={'w-4'} />
-                      }))
-                    }
-                  ]
-                : [])
-            ]
-          }
-        ]
+        {
+          label: 'Content',
+          collapsible: false,
+          children: [
+            ...(hasCollections
+              ? [
+                {
+                  label: 'Collections',
+                  collapsible: true,
+                  children: collections.map((collection) => ({
+                    label: collection.title,
+                    path: `${dashboardRoute}/${collection.slug}`,
+                    Icon: <Folder className={'w-4'} />,
+                    renderAction: (
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Link
+                              href={`/outstatic/${collection.slug}/new`}
+                              className="invisible group-hover/menu-item:visible"
+                              aria-label={`Create new item in collection ${collection.title}`}
+                            >
+                              <Plus className="w-3 h-3 pointer-events-none" />
+                            </Link>
+                          </TooltipTrigger>
+                          <TooltipContent className="pointer-events-none">
+                            <p>
+                              Create new{' '}
+                              <span className="inline-block">
+                                {singular(collection.title)}
+                              </span>
+                            </p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    )
+                  }))
+                }
+              ]
+              : []),
+            ...(hasSingletons
+              ? [
+                {
+                  label: 'Singletons',
+                  collapsible: true,
+                  children: singletons.map((singleton) => ({
+                    label: singleton.title,
+                    path: `${dashboardRoute}/singletons/${singleton.slug}`,
+                    Icon: <FileText className={'w-4'} />
+                  }))
+                }
+              ]
+              : [])
+          ]
+        }
+      ]
       : []),
     {
       label: 'Libraries',

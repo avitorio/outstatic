@@ -22,10 +22,14 @@ import { toast } from 'sonner'
 import MediaSettingsDialog from '@/components/ui/outstatic/media-settings-dialog'
 import { useEditor } from '@/components/editor/editor-context'
 import { useSingletons } from '@/utils/hooks/useSingletons'
+import NewSingletonModal from './_components/new-singleton-modal'
 
 export default function EditSingleton({ slug: initialSlug }: { slug: string }) {
   const [slug, setSlug] = useState(initialSlug)
-  const isNew = initialSlug === 'new'
+  const [isNew, setIsNew] = useState(initialSlug === 'new')
+  useEffect(() => {
+    setIsNew(initialSlug === 'new')
+  }, [initialSlug])
   const [loading, setLoading] = useState(false)
   const {
     basePath,
@@ -38,6 +42,8 @@ export default function EditSingleton({ slug: initialSlug }: { slug: string }) {
   } = useOutstatic()
   const [showDelete, setShowDelete] = useState(false)
   const [documentSchema, setDocumentSchema] = useState(editDocumentSchema)
+  const [showSingletonModal, setShowSingletonModal] = useState(false)
+  const [singletonContentPath, setSingletonContentPath] = useState<string | undefined>(undefined)
   //@ts-ignore
   const methods = useForm<Document>({ resolver: zodResolver(documentSchema) })
 
@@ -72,6 +78,7 @@ export default function EditSingleton({ slug: initialSlug }: { slug: string }) {
     slug,
     setSlug,
     isNew,
+    setIsNew,
     setShowDelete,
     setLoading,
     files,
@@ -81,7 +88,8 @@ export default function EditSingleton({ slug: initialSlug }: { slug: string }) {
     setHasChanges,
     editor,
     extension,
-    documentMetadata: metadata
+    documentMetadata: metadata,
+    path: singletonContentPath
   })
 
   // Only fetch existing singleton data when editing (not creating new)
@@ -93,7 +101,8 @@ export default function EditSingleton({ slug: initialSlug }: { slug: string }) {
     setShowDelete,
     setExtension,
     setMetadata,
-    enabled: !isNew
+    enabled: !isNew,
+    setSingletonContentPath
   })
 
   // Update URL when slug changes (after first save of new singleton)
@@ -166,6 +175,14 @@ export default function EditSingleton({ slug: initialSlug }: { slug: string }) {
     }
   }, [mediaPathUpdated])
 
+  // Submit the document after singleton content path is selected
+  useEffect(() => {
+    if (singletonContentPath && isNew) {
+      onSubmit(methods.getValues())
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [singletonContentPath])
+
   // Watch for changes in form values and update hasChanges state
   useEffect(() => {
     const subscription = methods.watch((value, { name, type }) => {
@@ -209,6 +226,7 @@ export default function EditSingleton({ slug: initialSlug }: { slug: string }) {
               title={methods.getValues('title') || singletonTitle}
               settings={
                 <DocumentSettings
+                  singleton={slug}
                   title={methods.getValues('title') || singletonTitle}
                   loading={loading}
                   saveDocument={methods.handleSubmit(
@@ -220,10 +238,14 @@ export default function EditSingleton({ slug: initialSlug }: { slug: string }) {
                       ) {
                         setShowMediaPathDialog(true)
                         return
-                      } else {
-                        // @ts-ignore
-                        return onSubmit(data)
                       }
+                      // Show modal for new singletons to select save location
+                      if (isNew && !singletonContentPath) {
+                        setShowSingletonModal(true)
+                        return
+                      }
+                      // @ts-ignore
+                      return onSubmit(data)
                     },
                     (data) => {
                       console.error({ data })
@@ -238,7 +260,6 @@ export default function EditSingleton({ slug: initialSlug }: { slug: string }) {
                   customFields={customFields}
                   setCustomFields={setCustomFields}
                   metadata={metadata}
-                  hiddenFields={['slug']}
                 />
               }
             >
@@ -260,6 +281,43 @@ export default function EditSingleton({ slug: initialSlug }: { slug: string }) {
               setShowMediaPathDialog={setShowMediaPathDialog}
               callbackFunction={() => {
                 setMediaPathUpdated(true)
+              }}
+            />
+            <NewSingletonModal
+              open={showSingletonModal}
+              onOpenChange={setShowSingletonModal}
+              loading={loading}
+              singletonTitle={methods.getValues('title') || 'Singleton'}
+              onSave={(path) => {
+                setSingletonContentPath(path)
+                setShowSingletonModal(false)
+                methods.handleSubmit(
+                  (data) => {
+                    if (
+                      !repoMediaPath &&
+                      !publicMediaPath &&
+                      files.length > 0
+                    ) {
+                      setShowMediaPathDialog(true)
+                      return
+                    }
+                    // Show modal for new singletons to select save location
+                    if (isNew && !singletonContentPath) {
+                      setShowSingletonModal(true)
+                      return
+                    }
+                    // @ts-ignore
+                    return onSubmit(data)
+                  },
+                  (data) => {
+                    console.error({ data })
+                    const firstKey = Object.keys(data)[0] as keyof typeof data
+                    const errorMessage =
+                      (data[firstKey] as { message?: string })?.message ||
+                      'Unknown error'
+                    toast.error(`Error in ${firstKey}: ${errorMessage}`)
+                  }
+                )
               }}
             />
           </FormProvider>
