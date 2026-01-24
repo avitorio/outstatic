@@ -38,6 +38,24 @@ jest.mock('@/utils/hooks/useCreateCommit', () => ({
   })
 }))
 
+jest.mock('@/utils/hooks/useCollections', () => ({
+  useCollections: () => ({
+    refetch: async () =>
+      Promise.resolve({
+        data: [{ slug: 'posts', path: 'outstatic/content/posts' }]
+      })
+  })
+}))
+
+jest.mock('@/utils/hooks/useSingletons', () => ({
+  useSingletons: () => ({
+    refetch: async () =>
+      Promise.resolve({
+        data: []
+      })
+  })
+}))
+
 // Mock createCommitApi
 jest.mock('@/utils/createCommitApi', () => ({
   createCommitApi: () => ({
