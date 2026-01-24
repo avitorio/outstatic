@@ -49,6 +49,19 @@ export const useSingletonUpdateEffect = ({
     enabled: enabled && !!slug && slug !== 'new'
   })
 
+  // Initialize publishedAt for new singletons
+  useEffect(() => {
+    if (!enabled && slug === 'new') {
+      const formData = methods.getValues()
+      if (!formData.publishedAt) {
+        methods.reset({
+          ...formData,
+          publishedAt: getLocalDate()
+        })
+      }
+    }
+  }, [enabled, slug, methods])
+
   useEffect(() => {
     if (!enabled || parsedContent) return
 

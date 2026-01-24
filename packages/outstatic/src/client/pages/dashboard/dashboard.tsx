@@ -7,11 +7,12 @@ import { Card, CardContent } from '@/components/ui/shadcn/card'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useOutstatic } from '@/utils/hooks/useOutstatic'
-import { Settings, Plus, FileText, FolderOpen } from 'lucide-react'
+import { Settings, Plus, FolderOpen } from 'lucide-react'
 import CollectionOnboarding from '../collections/_components/collection-onboarding'
 import LineBackground from '@/components/ui/outstatic/line-background'
 import { singular } from 'pluralize'
 import SingletonOnboarding from '../singletons/_components/singleton-onboarding'
+import { SingletonsTable } from '@/components/singletons-table'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/shadcn/tooltip'
 import { useState } from 'react'
 import OpenFileModal from '../_components/open-file-modal'
@@ -56,7 +57,7 @@ export default function Dashboard() {
             </Tooltip>
           </div>
           {collections && collections.length ? (
-            <div className="max-w-5xl w-full grid md:grid-cols-3 gap-6 mb-12">
+            <div className="w-full grid md:grid-cols-3 2xl:grid-cols-4 gap-6 mb-12">
               {collections.map((collection) => (
                 <Card
                   key={collection.slug}
@@ -133,25 +134,8 @@ export default function Dashboard() {
           </div>
 
           {singletons && singletons.length ? (
-            <div className="max-w-5xl w-full grid md:grid-cols-3 gap-6">
-              {singletons?.map((singleton) => (
-                <Card
-                  key={singleton.slug}
-                  className="hover:border-gray-500 transition-all duration-300"
-                >
-                  <CardContent className="relative flex justify-between items-center">
-                    <Link
-                      href={`${dashboardRoute}/singletons/${singleton.slug}`}
-                    >
-                      <h5 className="text-2xl cursor-pointer font-bold tracking-tight text-foreground flex items-center gap-2">
-                        <FileText className="w-5 h-5" />
-                        {singleton.title}
-                        <span className="absolute top-0 bottom-0 left-0 right-16"></span>
-                      </h5>
-                    </Link>
-                  </CardContent>
-                </Card>
-              ))}
+            <div className="relative sm:rounded-lg">
+              <SingletonsTable />
             </div>
           ) : (
             <SingletonOnboarding />

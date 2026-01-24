@@ -1,30 +1,36 @@
 import { AdminLayout } from '@/components/admin-layout'
 import { AdminLoading } from '@/components/admin-loading'
 import { Button } from '@/components/ui/shadcn/button'
-import { useSingletons } from '@/utils/hooks/useSingletons'
-import { Card, CardContent } from '@/components/ui/shadcn/card'
+import { useGetMetadata } from '@/utils/hooks/useGetMetadata'
 import Link from 'next/link'
 import { useOutstatic } from '@/utils/hooks/useOutstatic'
-import { FolderOpen, Settings } from 'lucide-react'
+import { FolderOpen } from 'lucide-react'
 import SingletonOnboarding from './_components/singleton-onboarding'
 import LineBackground from '@/components/ui/outstatic/line-background'
-import { DeleteDocumentButton } from '@/components/delete-document-button'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/shadcn/tooltip'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import OpenFileModal from '../_components/open-file-modal'
 import { useRouter } from 'next/navigation'
+import { SingletonsTable } from '@/components/singletons-table'
 
 export default function Singletons() {
-  const { data: singletons, isPending } = useSingletons()
+  const { data: metadataData, isPending } = useGetMetadata()
   const { dashboardRoute, basePath } = useOutstatic()
   const [showOpenFileModal, setShowOpenFileModal] = useState(false)
   const router = useRouter()
+
+  const singletons = useMemo(() => {
+    if (!metadataData?.metadata?.metadata) return []
+    return metadataData.metadata.metadata.filter(
+      (item) => item.collection === '_singletons'
+    )
+  }, [metadataData])
 
   if (isPending) return <AdminLoading />
 
   return (
     <AdminLayout title="Singletons">
-      {!singletons || singletons.length === 0 ? (
+      {singletons.length === 0 ? (
         <LineBackground>
           <SingletonOnboarding />
         </LineBackground>
@@ -55,40 +61,8 @@ export default function Singletons() {
               </Tooltip>
             </div>
           </div>
-          <div className="max-w-5xl w-full grid md:grid-cols-3 gap-6">
-            {singletons &&
-              singletons.map((singleton) => (
-                <Card
-                  key={singleton.slug}
-                  className="hover:border-gray-500 transition-all duration-300"
-                >
-                  <CardContent className="relative flex justify-between items-center">
-                    <Link
-                      href={`${dashboardRoute}/singletons/${singleton.slug}`}
-                    >
-                      <h5 className="text-2xl cursor-pointer font-bold tracking-tight text-foreground">
-                        {singleton.title}
-                        <span className="absolute top-0 bottom-0 left-0 right-16"></span>
-                      </h5>
-                    </Link>
-                    <div className="z-10 flex gap-2">
-                      <Button asChild size="icon" variant="ghost">
-                        <Link
-                          href={`${dashboardRoute}/singletons/${singleton.slug}/fields`}
-                        >
-                          <span className="sr-only">Edit singleton fields</span>
-                          <Settings className="w-6 h-6" />
-                        </Link>
-                      </Button>
-                      <DeleteDocumentButton
-                        slug={singleton.slug}
-                        extension={singleton.path.endsWith('.mdx') ? 'mdx' : 'md'}
-                        collection={"_singletons"}
-                      />
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
+          <div className="relative sm:rounded-lg">
+            <SingletonsTable />
           </div>
         </>
       )}
