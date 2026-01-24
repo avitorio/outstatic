@@ -1,6 +1,5 @@
 import { DeleteDocumentButton } from '@/components/delete-document-button'
-import { useGetMetadata } from '@/utils/hooks/useGetMetadata'
-import { sentenceCase } from 'change-case'
+import { useSingletons } from '@/utils/hooks/useSingletons'
 import cookies from 'js-cookie'
 import { ListFilter, Settings } from 'lucide-react'
 import { useState, useCallback, useMemo } from 'react'
@@ -38,29 +37,23 @@ const formatDate = (dateString: string): string => {
 }
 
 export const SingletonsTable = () => {
-  const { data: metadataData, refetch } = useGetMetadata()
+  const { data: singletonsData, refetch } = useSingletons()
   const { dashboardRoute } = useOutstatic()
   const router = useRouter()
 
   const [showColumnOptions, setShowColumnOptions] = useState(false)
 
-  const singletons = useMemo(() => {
-    if (!metadataData?.metadata?.metadata) return []
-    return metadataData.metadata.metadata.filter(
-      (item) => item.collection === '_singletons'
-    )
-  }, [metadataData])
-
   const documents = useMemo(() => {
-    return singletons.map((item): OstDocument => ({
-      slug: item.slug as string,
-      title: item.title as string,
-      status: item.status as string,
-      publishedAt: formatDate(item.publishedAt as string),
-      collection: item.collection as string,
+    if (!singletonsData) return []
+    return singletonsData.map((item): OstDocument => ({
+      slug: item.slug,
+      title: item.title,
+      status: item.status,
+      publishedAt: formatDate(item.publishedAt ?? ''),
+      collection: '_singletons',
       content: ''
     }))
-  }, [singletons])
+  }, [singletonsData])
 
   const [sortConfig, setSortConfig] = useState<SortConfig>({
     key: 'title',
@@ -95,7 +88,7 @@ export const SingletonsTable = () => {
 
   const [columns, setColumns] = useState<Column[]>(
     JSON.parse(cookies.get('ost_singletons_fields') || 'null') ??
-      allColumns.slice(0, 4)
+    allColumns.slice(0, 4)
   )
 
   return (

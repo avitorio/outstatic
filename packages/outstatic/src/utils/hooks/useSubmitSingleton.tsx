@@ -183,7 +183,9 @@ function useSubmitSingleton({
             title: data.title || actualSlug,
             slug: actualSlug,
             directory: contentDirectory,
-            path: contentFilePath
+            path: contentFilePath,
+            publishedAt: data.publishedAt?.toISOString(),
+            status: data.status
           })
           capi.replaceFile(
             `${ostContent}/singletons.json`,

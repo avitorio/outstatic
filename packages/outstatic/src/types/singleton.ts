@@ -4,6 +4,10 @@ export type SingletonType = {
   title: string
   slug: string
   description?: string
+  path: string
+  directory: string
+  publishedAt: string
+  status: 'published' | 'draft'
 }
 
 export type SingletonsType = SingletonType[] | null

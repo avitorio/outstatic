@@ -6,16 +6,7 @@ import { toast } from 'sonner'
 import { useCreateCommit } from './useCreateCommit'
 import { GET_FILE } from '@/graphql/queries/file'
 import { useGetDocuments } from './useGetDocuments'
-
-
-export type SingletonType = {
-  title: string
-  slug: string
-  path: string
-  directory: string
-}
-
-type SingletonsType = SingletonType[] | null
+import { SingletonsType } from '@/types/singleton'
 
 type UseGetSingletonsOptions = {
   enabled?: boolean
@@ -74,6 +65,8 @@ export function useSingletons(options?: UseGetSingletonsOptions) {
               slug,
               path: `${ostContent}/_singletons/${entry.slug}.${entry.extension}`,
               directory: `${ostContent}/_singletons`,
+              publishedAt: entry.publishedAt,
+              status: entry.status
             }
           }) ?? []
 
@@ -114,6 +107,7 @@ export function useSingletons(options?: UseGetSingletonsOptions) {
       }
     },
     enabled:
-      enabled && !!repoOwner && !!repoSlug && !!repoBranch && !!ostContent
+      enabled && !!repoOwner && !!repoSlug && !!repoBranch && !!ostContent,
+    staleTime: 1000 * 60 * 60 // 1 hour
   })
 }
