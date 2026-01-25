@@ -98,8 +98,16 @@ export function schemaToInterface(
  * Converts a slug to a PascalCase interface name
  */
 export function slugToInterfaceName(slug: string): string {
-  return slug
-    .split(/[-_]/)
+  let result = slug
+    .split(/[-_.]/)
+    .filter((part) => part.length > 0)
     .map((part) => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase())
     .join('')
+
+  // If result starts with a number, prefix with underscore
+  if (/^[0-9]/.test(result)) {
+    result = '_' + result
+  }
+
+  return result
 }

@@ -126,6 +126,18 @@ describe('schema-to-ts', () => {
       expect(slugToInterfaceName('POSTS')).toBe('Posts')
       expect(slugToInterfaceName('MyPosts')).toBe('Myposts')
     })
+
+    it('converts slugs with dots to valid identifiers', () => {
+      expect(slugToInterfaceName('v1.4')).toBe('V14')
+      expect(slugToInterfaceName('api.v2')).toBe('ApiV2')
+      expect(slugToInterfaceName('my-app.config')).toBe('MyAppConfig')
+    })
+
+    it('prefixes with underscore when result starts with number', () => {
+      expect(slugToInterfaceName('1.0')).toBe('_10')
+      expect(slugToInterfaceName('123-test')).toBe('_123Test')
+      expect(slugToInterfaceName('42')).toBe('_42')
+    })
   })
 
   describe('schemaToInterface', () => {

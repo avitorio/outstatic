@@ -121,6 +121,67 @@ export async function getStaticProps({ params }: Params) {
 
 Keep in mind that the content is returned as Markdown. In order to convert it to HTML you should use a library such as [remark](https://www.npmjs.com/package/remark). To see an example of how you can use remark to convert Markdown to html, please take a look at our [Blog Example template](https://github.com/avitorio/outstatic/blob/main/examples/basic-blog/src/lib/markdownToHtml.ts).
 
+### Fetching Singletons
+
+Use the `getSingletonBySlug` function to fetch singleton content. Singletons are unique, standalone content items (like a homepage or about page) as opposed to collections which contain multiple documents.
+
+**App directory example:**
+
+```javascript
+// /app/page.tsx
+
+import { getSingletonBySlug } from 'outstatic/server'
+
+export default async function HomePage() {
+  const home = await getData()
+  return (
+    <main>
+      <h1>{home.title}</h1>
+      <div dangerouslySetInnerHTML={{ __html: home.content }} />
+    </main>
+  )
+}
+
+async function getData() {
+  const home = getSingletonBySlug('home', [
+    'title',
+    'content',
+    'description'
+  ])
+
+  return home
+}
+```
+
+**Pages directory example:**
+
+```javascript
+// /pages/index.tsx
+
+import { getSingletonBySlug } from 'outstatic/server'
+
+export default function HomePage({ home }) {
+  return (
+    <main>
+      <h1>{home.title}</h1>
+      <div dangerouslySetInnerHTML={{ __html: home.content }} />
+    </main>
+  )
+}
+
+export const getStaticProps = async () => {
+  const home = getSingletonBySlug('home', [
+    'title',
+    'content',
+    'description'
+  ])
+
+  return {
+    props: { home }
+  }
+}
+```
+
 ### Getting paths to use with `getStaticPaths` or `generateStaticParams`
 
 We provide a simple helper function so you can easily get all the document paths for a specific collection. This is helpful to feed the array of slugs needed for Next.js to statically generate dynamic routes.
@@ -311,6 +372,12 @@ export async function getStaticPaths() {
 }
 ```
 
-## Usage examples:
+## Using TypeScript
+
+We highly recommend using TypeScript with Outstatic. With the `withOutstatic` plugin, you can automatically generate TypeScript types from your content schemas, giving you full type safety when fetching and working with your content.
+
+Learn how to set it up in the [Type Generation](/type-generation) documentation.
+
+## Usage examples
 
 If you'd like to check out examples of how to use these functions, please refer to our [Example Blog](https://github.com/avitorio/outstatic/tree/main/examples/basic-blog) repository.

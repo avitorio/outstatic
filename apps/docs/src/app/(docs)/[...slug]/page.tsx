@@ -1,10 +1,14 @@
 import Header from '@/components/header'
-import formatDate from '@/lib/formatDate'
 import { Metadata } from 'next'
 import { getDocumentBySlug, getDocumentSlugs, load } from 'outstatic/server'
 import { notFound } from 'next/navigation'
+import { OstDocument } from 'outstatic'
 
 type Params = Promise<{ slug: string[] }>
+
+type Document = {
+  description?: string
+} & OstDocument
 
 export async function generateMetadata(props: {
   params: Params
@@ -18,10 +22,10 @@ export async function generateMetadata(props: {
 
   return {
     title: `${doc.title} - Outstatic`,
-    description: doc.description,
+    description: doc?.description ?? '',
     openGraph: {
       title: `${doc.title} - Outstatic`,
-      description: doc.description,
+      description: doc?.description ?? '',
       type: 'article',
       url: `https://outstatic.com/docs/${doc.slug}`,
       images: [
@@ -36,7 +40,7 @@ export async function generateMetadata(props: {
     twitter: {
       card: 'summary_large_image',
       title: doc.title,
-      description: doc.description,
+      description: doc?.description ?? '',
       images: 'https://outstatic.com/images/og-image.png'
     }
   }
@@ -84,7 +88,7 @@ async function getData(params: { slug: string[] }) {
   const latest = slug.length === 1
 
   const doc = await db
-    .find(
+    .find<Document>(
       {
         collection: latest ? 'docs' : params.slug[0],
         slug: latest ? params.slug[0] : params.slug[1]
@@ -95,7 +99,8 @@ async function getData(params: { slug: string[] }) {
         'author',
         'content',
         'coverImage',
-        'collection'
+        'collection',
+        'description'
       ]
     )
     .first()
