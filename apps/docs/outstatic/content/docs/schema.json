@@ -1,5 +1,12 @@
 {
   "title": "docs",
   "type": "object",
-  "properties": {}
+  "properties": {
+    "description": {
+      "description": "Add a description",
+      "fieldType": "Text",
+      "dataType": "string",
+      "title": "Description"
+    }
+  }
 }
