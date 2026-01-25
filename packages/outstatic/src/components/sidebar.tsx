@@ -5,10 +5,18 @@ import {
   SidebarContent,
   SidebarHeader
 } from '@/components/ui/shadcn/sidebar'
-import { Settings, Folder, LayoutDashboard, Plus, Images } from 'lucide-react'
+import {
+  Settings,
+  Folder,
+  LayoutDashboard,
+  Plus,
+  Images,
+  FileText
+} from 'lucide-react'
 import { SidebarNavigation } from '@/components/ui/outstatic/sidebar'
 
 import { useCollections } from '@/utils/hooks/useCollections'
+import { useSingletons } from '@/utils/hooks/useSingletons'
 import { NavigationConfigSchema } from '@/components/ui/outstatic/navigation-config.schema'
 import Link from 'next/link'
 import { TooltipContent, TooltipTrigger } from '@/components/ui/shadcn/tooltip'
@@ -19,9 +27,11 @@ import { singular } from 'pluralize'
 export const Sidebar = () => {
   const { dashboardRoute } = useOutstatic()
   const { data: collections } = useCollections()
+  const { data: singletons } = useSingletons()
 
   const hasCollections = collections && collections.length > 0
-  const hasContentTypes = hasCollections
+  const hasSingletons = singletons && singletons.length > 0
+  const hasContentTypes = hasCollections || hasSingletons
 
   const routes = [
     {
@@ -37,49 +47,49 @@ export const Sidebar = () => {
     },
     ...(hasContentTypes
       ? [
-          {
-            label: 'Content',
-            collapsible: false,
-            children: [
-              ...(collections && collections.length > 0
-                ? [
-                    {
-                      label: 'Collections',
-                      collapsible: true,
-                      children: collections.map((collection) => ({
-                        label: collection.title,
-                        path: `${dashboardRoute}/${collection.slug}`,
-                        Icon: <Folder className={'w-4'} />,
-                        renderAction: (
-                          <TooltipProvider>
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <Link
-                                  href={`${dashboardRoute}/${collection.slug}/new`}
-                                  className="invisible group-hover/sub-menu-item:visible"
-                                  aria-label={`Create new item in collection ${collection.title}`}
-                                >
-                                  <Plus className="w-3 h-3 pointer-events-none" />
-                                </Link>
-                              </TooltipTrigger>
-                              <TooltipContent className="pointer-events-none">
-                                <p>
-                                  Create new{' '}
-                                  <span className="inline-block">
-                                    {singular(collection.title)}
-                                  </span>
-                                </p>
-                              </TooltipContent>
-                            </Tooltip>
-                          </TooltipProvider>
-                        )
-                      }))
-                    }
-                  ]
-                : [])
-            ]
-          }
-        ]
+        {
+          label: 'Content',
+          collapsible: false,
+          children: [
+            ...(collections && collections.length > 0
+              ? [
+                {
+                  label: 'Collections',
+                  collapsible: true,
+                  children: collections.map((collection) => ({
+                    label: collection.title,
+                    path: `${dashboardRoute}/${collection.slug}`,
+                    Icon: <Folder className={'w-4'} />,
+                    renderAction: (
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Link
+                              href={`${dashboardRoute}/${collection.slug}/new`}
+                              className="invisible group-hover/sub-menu-item:visible"
+                              aria-label={`Create new item in collection ${collection.title}`}
+                            >
+                              <Plus className="w-3 h-3 pointer-events-none" />
+                            </Link>
+                          </TooltipTrigger>
+                          <TooltipContent className="pointer-events-none">
+                            <p>
+                              Create new{' '}
+                              <span className="inline-block">
+                                {singular(collection.title)}
+                              </span>
+                            </p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    )
+                  }))
+                }
+              ]
+              : [])
+          ]
+        }
+      ]
       : []),
     {
       label: 'Libraries',

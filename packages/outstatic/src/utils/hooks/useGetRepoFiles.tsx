@@ -2,6 +2,7 @@ import { TreeDataItem } from '@/components/ui/outstatic/file-tree'
 import { GET_FILES } from '@/graphql/queries/files'
 import { useOutstatic } from '@/utils/hooks/useOutstatic'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { FileText } from 'lucide-react'
 
 type Tree = {
   path: string
@@ -46,51 +47,86 @@ function checkForTreeInEntries(entries: TreeEntry[]): boolean {
   return entries.some((entry) => entry.type === 'tree')
 }
 
-function filterFolders(entries: TreeEntry[]) {
-  const result = []
+function checkForMatchingFilesInEntries(
+  entries: TreeEntry[],
+  fileExtensions: string[]
+): boolean {
+  return entries.some(
+    (entry) =>
+      entry.type === 'blob' &&
+      fileExtensions.some((ext) => entry.name.endsWith(ext))
+  )
+}
+
+function filterEntries(entries: TreeEntry[], fileExtensions?: string[]) {
+  const folders: TreeDataItem[] = []
+  const files: TreeDataItem[] = []
 
   for (const entry of entries) {
     // Check if the entry is a folder (type 'tree')
     if (entry.type === 'tree' && entry.name !== '.github') {
-      const folder = {
+      const folder: TreeDataItem = {
         id: entry.path,
         name: entry.name
-      } as TreeDataItem
-
-      // Recursively get children if there are any
-      if (
-        entry.object?.entries &&
-        checkForTreeInEntries(entry.object?.entries)
-      ) {
-        folder.children = []
       }
 
-      result.push(folder)
+      // Add children property if there are subdirectories or matching files
+      if (entry.object?.entries) {
+        const hasSubfolders = checkForTreeInEntries(entry.object.entries)
+        const hasMatchingFiles =
+          fileExtensions &&
+          checkForMatchingFilesInEntries(entry.object.entries, fileExtensions)
+        if (hasSubfolders || hasMatchingFiles) {
+          folder.children = []
+        }
+      }
+
+      folders.push(folder)
+    }
+
+    // Check if the entry is a file (type 'blob') with matching extension
+    if (entry.type === 'blob' && fileExtensions) {
+      const matchesExtension = fileExtensions.some((ext) =>
+        entry.name.endsWith(ext)
+      )
+      if (matchesExtension) {
+        files.push({
+          id: entry.path,
+          name: entry.name,
+          icon: FileText
+        })
+      }
     }
   }
 
-  return result
+  // Return folders first, then files
+  return fileExtensions ? [...folders, ...files] : folders
 }
 
-export const useGetRepoFolders = ({
+export const useGetRepoFiles = ({
   path = '',
-  enabled = true
+  enabled = true,
+  fileExtensions
 }: {
   path?: string
   enabled?: boolean
+  /** When provided, also includes files with these extensions (e.g., ['.md', '.mdx']) */
+  fileExtensions?: string[]
 }) => {
   const queryClient = useQueryClient()
   const { repoOwner, repoSlug, repoBranch, session, gqlClient } = useOutstatic()
 
+  const extensionsKey = fileExtensions?.join(',') ?? ''
+
   return useQuery({
     queryKey: [
       `files_${repoOwner}/${repoSlug}/${repoBranch}/${path}`,
-      { path }
+      { path, extensions: extensionsKey }
     ],
     queryFn: async (): Promise<TreeDataItem[] | undefined> => {
       const currentTree = queryClient.getQueryData<TreeDataItem[]>([
         `files_${repoOwner}/${repoSlug}/${repoBranch}/${path}`,
-        { path }
+        { path, extensions: extensionsKey }
       ])
 
       if (currentTree) return currentTree
@@ -101,7 +137,7 @@ export const useGetRepoFolders = ({
 
       const parentTree = queryClient.getQueryData<TreeDataItem[]>([
         `files_${repoOwner}/${repoSlug}/${repoBranch}/${parentPath}`,
-        { path: parentPath }
+        { path: parentPath, extensions: extensionsKey }
       ])
 
       const { repository } = await gqlClient.request(GET_FILES, {
@@ -114,9 +150,9 @@ export const useGetRepoFolders = ({
 
       const { entries } = repository?.object as Tree
 
-      const folders = filterFolders(entries)
+      const items = filterEntries(entries, fileExtensions)
 
-      if (folders.length === 0) {
+      if (items.length === 0) {
         return parentTree
       }
 
@@ -126,15 +162,15 @@ export const useGetRepoFolders = ({
         // find the folder in the cached data
         const folder = findFolderByPath(pathArray, parentTree)
 
-        // if the folder is found, add the new folders to it
+        // if the folder is found, add the new items to it
         if (folder) {
-          folder.children = folders
+          folder.children = items
         }
 
         return parentTree
       }
 
-      return folders
+      return items
     },
     enabled,
     meta: {

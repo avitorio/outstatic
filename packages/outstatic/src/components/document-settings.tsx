@@ -51,21 +51,27 @@ import { cn } from '@/utils/ui'
 
 type DocumentSettingsProps = {
   saveDocument: () => void
+  title?: string
   loading: boolean
   registerOptions?: RegisterOptions
   showDelete: boolean
   customFields: CustomFieldsType
   setCustomFields: (fields: CustomFieldsType) => void
   metadata: Record<string, any>
+  hiddenFields?: string[]
+  singleton?: string
 }
 
 export const DocumentSettings = ({
   saveDocument,
+  title,
   loading,
   showDelete,
   customFields,
   setCustomFields,
-  metadata
+  metadata,
+  singleton,
+  hiddenFields = []
 }: DocumentSettingsProps) => {
   const {
     formState: { errors },
@@ -191,9 +197,8 @@ export const DocumentSettings = ({
         </div>
       </div>
       <aside
-        className={`${
-          isOpen ? 'block absolute' : 'hidden relative'
-        } md:block w-full border-l bg-background md:w-64 md:flex-none md:flex-col md:flex-wrap md:items-start md:justify-start md:border-b-0 md:border-l py-6 h-full max-h-[calc(100vh-128px)] md:max-h-[calc(100vh-56px)] no-scrollbar overflow-y-scroll`}
+        className={`${isOpen ? 'block absolute' : 'hidden relative'
+          } md:block w-full border-l bg-background md:w-64 md:flex-none md:flex-col md:flex-wrap md:items-start md:justify-start md:border-b-0 md:border-l py-6 h-full max-h-[calc(100vh-128px)] md:max-h-[calc(100vh-56px)] no-scrollbar overflow-y-scroll`}
       >
         <div className="relative w-full items-center justify-between mb-4 flex px-4">
           <label
@@ -239,9 +244,8 @@ export const DocumentSettings = ({
           />
         </div>
         <div
-          className={`flex w-full pb-4 px-4 ${
-            showDelete ? 'justify-between items-center' : 'justify-end'
-          }`}
+          className={`flex w-full pb-4 px-4 ${showDelete ? 'justify-between items-center' : 'justify-end'
+            }`}
         >
           {showDelete && (
             <DeleteDocumentButton
@@ -249,7 +253,7 @@ export const DocumentSettings = ({
               slug={document.slug}
               extension={extension}
               onComplete={() => {
-                router.push(`${dashboardRoute}/${collection}`)
+                router.push(`${dashboardRoute}/${singleton ? '' : collection}`)
               }}
               collection={collection}
               className="hover:bg-foreground/30 max-h-[2.25rem]"
@@ -307,49 +311,51 @@ export const DocumentSettings = ({
               </AccordionContent>
             </AccordionItem>
           </Accordion>
-          <Accordion
-            type="single"
-            collapsible
-            className={cn(
-              'border-b first:border-t',
-              errors['slug']?.message && 'border-destructive'
-            )}
-          >
-            <AccordionItem value={'slug'}>
-              <AccordionTrigger className="hover:no-underline hover:bg-muted px-4 rounded-none data-[state=open]:bg-muted">
-                Slug*
-              </AccordionTrigger>
-              <AccordionContent className="p-4 border-top">
-                <FormField
-                  control={control}
-                  name="slug"
-                  defaultValue={document.slug || ''}
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormControl>
-                        <Input
-                          {...field}
-                          value={field.value ?? ''}
-                          onChange={(e) => {
-                            const lastChar = e.target.value.slice(-1)
-                            field.onChange(
-                              lastChar === ' ' || lastChar === '-'
-                                ? e.target.value
-                                : slugify(e.target.value, {
+          {!hiddenFields.includes('slug') && (
+            <Accordion
+              type="single"
+              collapsible
+              className={cn(
+                'border-b first:border-t',
+                errors['slug']?.message && 'border-destructive'
+              )}
+            >
+              <AccordionItem value={'slug'}>
+                <AccordionTrigger className="hover:no-underline hover:bg-muted px-4 rounded-none data-[state=open]:bg-muted">
+                  Slug*
+                </AccordionTrigger>
+                <AccordionContent className="p-4 border-top">
+                  <FormField
+                    control={control}
+                    name="slug"
+                    defaultValue={document.slug || ''}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <Input
+                            {...field}
+                            value={field.value ?? ''}
+                            onChange={(e) => {
+                              const lastChar = e.target.value.slice(-1)
+                              field.onChange(
+                                lastChar === ' ' || lastChar === '-'
+                                  ? e.target.value
+                                  : slugify(e.target.value, {
                                     allowedChars: 'a-zA-Z0-9.'
                                   })
-                            )
-                          }}
-                        />
-                      </FormControl>
-                      <FormDescription>The document slug</FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </AccordionContent>
-            </AccordionItem>
-          </Accordion>
+                              )
+                            }}
+                          />
+                        </FormControl>
+                        <FormDescription>The document slug</FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+          )}
 
           {customFields &&
             Object.entries(customFields).map(([name, field]) => (
@@ -416,6 +422,8 @@ export const DocumentSettings = ({
         {showAddModal ? (
           <AddCustomFieldDialog
             collection={collection}
+            singleton={singleton}
+            documentTitle={title}
             showAddModal={showAddModal}
             setShowAddModal={onModalChange}
             customFields={customFields}

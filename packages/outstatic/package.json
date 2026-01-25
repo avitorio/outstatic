@@ -17,6 +17,9 @@
     "README.md",
     "license.md"
   ],
+  "bin": {
+    "outstatic": "./dist/cli/index.js"
+  },
   "exports": {
     ".": {
       "import": "./dist/index.mjs",
@@ -42,6 +45,16 @@
       "import": "./dist/utils/hooks/index.mjs",
       "require": "./dist/utils/hooks/index.js",
       "types": "./dist/utils/hooks/index.d.ts"
+    },
+    "./next-plugin": {
+      "import": "./dist/next-plugin.mjs",
+      "require": "./dist/next-plugin.js",
+      "types": "./dist/next-plugin.d.ts"
+    },
+    "./typegen": {
+      "import": "./dist/typegen/index.mjs",
+      "require": "./dist/typegen/index.js",
+      "types": "./dist/typegen/index.d.ts"
     },
     "./outstatic.css": "./dist/outstatic.css"
   },

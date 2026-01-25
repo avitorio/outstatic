@@ -1,4 +1,3 @@
-import { OstDocument } from '@/types/public'
 import fs from 'fs'
 import matter from 'gray-matter'
 import { join } from 'path'
@@ -87,12 +86,9 @@ export function getDocuments(collection: string, fields: string[] = []) {
           ...fields,
           'publishedAt',
           'status'
-        ]) as OstDocument | null
+        ])!
     )
-    .filter(
-      (document): document is OstDocument =>
-        document !== null && document.status === 'published'
-    )
+    .filter((document) => document !== null && document.status === 'published')
     // sort documents by date in descending order
     .sort((document1, document2) =>
       document1.publishedAt > document2.publishedAt ? -1 : 1
@@ -132,10 +128,83 @@ export const getCollections = () => {
   try {
     const collections = fs
       .readdirSync(CONTENT_PATH)
-      .filter((f) => !/\.json$/.test(f))
+      .filter((f) => !/\.json$/.test(f) && f !== '_singletons')
     return collections
   } catch (error) {
     console.error({ getCollections: error })
+    return []
+  }
+}
+
+const SINGLETONS_PATH = join(CONTENT_PATH, '_singletons')
+
+export function getSingletonBySlug(
+  slug: string,
+  fields: string[] = []
+): OutstaticSchema | null {
+  try {
+    const realSlug = slug.replace(MD_MDX_REGEXP, '')
+    const mdPath = join(SINGLETONS_PATH, `${realSlug}.md`)
+    const mdxPath = join(SINGLETONS_PATH, `${realSlug}.mdx`)
+
+    let fullPath: string
+
+    // Check which file exists
+    if (fs.existsSync(mdPath)) {
+      fullPath = mdPath
+    } else if (fs.existsSync(mdxPath)) {
+      fullPath = mdxPath
+    } else {
+      console.error('Neither .md nor .mdx file exists:', { mdPath, mdxPath })
+      return null
+    }
+
+    const fileContents = fs.readFileSync(fullPath, 'utf8')
+    const { data, content } = matter(fileContents)
+
+    type Items = {
+      [key: string]: string
+    }
+
+    const items: Items = {}
+
+    // Singletons don't have draft status check - they're always available
+    // But we still respect the status field if present
+    if (data['status'] === 'draft') {
+      return null
+    }
+
+    // Ensure only the minimal needed data is exposed
+    fields.forEach((field) => {
+      if (field === 'slug') {
+        items[field] = realSlug
+      }
+      if (field === 'content') {
+        items[field] = content
+      }
+
+      if (typeof data[field] !== 'undefined') {
+        items[field] = data[field]
+      }
+    })
+
+    return items as OutstaticSchema
+  } catch (error) {
+    console.error({ getSingletonBySlug: error })
+    return null
+  }
+}
+
+export function getSingletonSlugs(): string[] {
+  try {
+    if (!fs.existsSync(SINGLETONS_PATH)) {
+      return []
+    }
+    const mdMdxFiles = readMdMdxFiles(SINGLETONS_PATH)
+    const slugs = mdMdxFiles.map((file) => file.replace(MD_MDX_REGEXP, ''))
+    return slugs
+  } catch (error) {
+    console.error({ getSingletonSlugs: error })
     return []
   }
 }

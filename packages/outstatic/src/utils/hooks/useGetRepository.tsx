@@ -27,6 +27,6 @@ export const useGetRepository = (options?: { enabled?: boolean }) => {
       }
     },
     enabled: options?.enabled !== false && !!repoOwner && !!repoSlug,
-    staleTime: 1000 * 60 * 60
+    staleTime: 1000 * 60 * 60 // 1 hour
   })
 }

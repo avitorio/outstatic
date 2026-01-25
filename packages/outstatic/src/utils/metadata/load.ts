@@ -15,7 +15,9 @@ const METADATA_PATH = resolve(CONTENT_PATH, './metadata.json')
 export const load = async <TSchema extends {} = {}>() => {
   const m = await readFile(METADATA_PATH)
   const metadata = JSON.parse(m.toString())
-  const mdb: unknown[] = metadata?.metadata ?? []
+  const mdb: unknown[] = (metadata?.metadata ?? []).filter(
+    (x: any) => x?.collection !== '_singletons'
+  )
 
   return {
     /**
