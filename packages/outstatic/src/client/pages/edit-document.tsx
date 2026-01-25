@@ -222,12 +222,27 @@ export default function EditDocument({ collection }: { collection: string }) {
                       }
                     },
                     (data) => {
-                      console.error({ data })
+                      console.error('Failed to save document', { data })
                       const firstKey = Object.keys(data)[0] as keyof typeof data
                       const errorMessage =
                         (data[firstKey] as { message?: string })?.message ||
                         'Unknown error'
-                      toast.error(`Error in ${firstKey}: ${errorMessage}`)
+                      const errorToast = toast.error(
+                        `Error in ${firstKey}: ${errorMessage}`,
+                        {
+                          action: {
+                            label: 'Copy Logs',
+                            onClick: () => {
+                              navigator.clipboard.writeText(
+                                JSON.stringify(data, null, '  ')
+                              )
+                              toast.message('Logs copied to clipboard', {
+                                id: errorToast
+                              })
+                            }
+                          }
+                        }
+                      )
                     }
                   )}
                   showDelete={showDelete}

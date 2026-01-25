@@ -412,6 +412,7 @@ export function SidebarNavigation({
                                           return (
                                             <SidebarMenuSubItem
                                               key={subChild.path}
+                                              className="group/sub-menu-item"
                                             >
                                               <SidebarMenuSubButton
                                                 isActive={isActive}
@@ -430,6 +431,11 @@ export function SidebarNavigation({
                                                   </span>
                                                 </Link>
                                               </SidebarMenuSubButton>
+                                              <If condition={subChild.renderAction}>
+                                                <SidebarMenuAction>
+                                                  {subChild.renderAction}
+                                                </SidebarMenuAction>
+                                              </If>
                                             </SidebarMenuSubItem>
                                           )
                                         }

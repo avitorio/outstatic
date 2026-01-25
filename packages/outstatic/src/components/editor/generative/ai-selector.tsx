@@ -18,6 +18,7 @@ import { useEditor } from '@/components/editor/editor-context'
 import { useOutstatic } from '@/utils/hooks/useOutstatic'
 import { OUTSTATIC_API_PATH } from '@/utils/constants'
 import { useCsrfToken } from '@/utils/hooks/useCsrfToken'
+import { stringifyError } from '@/utils/errors/stringifyError'
 //TODO: I think it makes more sense to create a custom Tiptap extension for this functionality https://tiptap.dev/docs/editor/ai/introduction
 
 interface AISelectorProps {
@@ -35,7 +36,18 @@ export function AISelector({ onOpenChange }: AISelectorProps) {
     api: basePath + OUTSTATIC_API_PATH + '/generate',
     headers: csrfToken ? { 'X-CSRF-Token': csrfToken } : undefined,
     onError: (e) => {
-      toast.error(e.message)
+      console.error('AI completion error', e)
+      const errorToast = toast.error(e.message, {
+        action: {
+          label: 'Copy Logs',
+          onClick: () => {
+            navigator.clipboard.writeText(`Error: ${stringifyError(e)}`)
+            toast.message('Logs copied to clipboard', {
+              id: errorToast
+            })
+          }
+        }
+      })
     }
   })
 

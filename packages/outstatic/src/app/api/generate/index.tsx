@@ -115,5 +115,5 @@ export default async function POST(req: Request): Promise<Response> {
     temperature: 0.7
   })
 
-  return result.toTextStreamResponse()
+  return result.toUIMessageStreamResponse()
 }

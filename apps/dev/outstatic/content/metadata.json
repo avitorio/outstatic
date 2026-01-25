@@ -191,8 +191,9 @@
       "collection": "posts",
       "publishedAt": "2024-11-11T14:22:52.515Z",
       "slug": "test-post",
-      "status": "draft",
-      "tags": [],
+      "status": "published",
+      "tags": [
+      ],
       "title": "Test Post"
     }
   ]
