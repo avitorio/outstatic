@@ -1,5 +1,11 @@
 # outstatic
 
+## 2.0.16
+
+### Patch Changes
+
+- fix: typescript errors for compatibility
+
 ## 2.0.15
 
 ### Patch Changes

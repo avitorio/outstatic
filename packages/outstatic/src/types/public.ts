@@ -3,6 +3,8 @@ export type OstDocument<TSchema = { [key: string]: unknown }> = TSchema & {
   collection: string
   slug: string
   title: string
+  description?: string
+  coverImage?: string
   status: 'published' | 'draft'
   publishedAt: string
   author?: {
