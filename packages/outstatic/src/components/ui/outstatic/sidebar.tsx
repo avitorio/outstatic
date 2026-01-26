@@ -33,6 +33,7 @@ import {
 } from '../shadcn/collapsible'
 import { NavigationConfigSchema } from './navigation-config.schema'
 import { z } from 'zod/v4'
+import { useCollapsibleState } from '@/utils/hooks/useCollapsibleState'
 
 export type SidebarConfig = z.infer<typeof NavigationConfigSchema>
 
@@ -69,7 +70,8 @@ function SubRouteGroup({
   group,
   currentPath,
   open,
-  depth
+  depth,
+  parentKey
 }: {
   group: {
     label: string
@@ -82,12 +84,23 @@ function SubRouteGroup({
   currentPath: string
   open: boolean
   depth: number
+  parentKey: string
 }) {
+  const { isOpen, setOpen: setCollapsibleOpen } = useCollapsibleState()
+  const collapsibleKey = `${parentKey}-${group.label}-${depth}`
+  // Respect collapsed prop for initial state, but prefer persisted state
+  const defaultGroupOpen =
+    group.collapsed === undefined ? true : !group.collapsed
+  const isCollapsibleOpen = group.collapsible
+    ? isOpen(collapsibleKey) ?? defaultGroupOpen
+    : true
+
   const Container = (props: React.PropsWithChildren) => {
     if (group.collapsible) {
       return (
         <Collapsible
-          defaultOpen={!group.collapsed}
+          open={isCollapsibleOpen}
+          onOpenChange={(open) => setCollapsibleOpen(collapsibleKey, open)}
           className={'group/collapsible'}
         >
           {props.children}
@@ -158,6 +171,7 @@ function SubRouteGroup({
                     currentPath={currentPath}
                     open={open}
                     depth={depth + 1}
+                    parentKey={parentKey}
                   />
                 )
               }
@@ -198,6 +212,7 @@ export function SidebarNavigation({
 }>) {
   const currentPath = usePathname() ?? ''
   const { open } = useSidebar()
+  const { isOpen, setOpen: setCollapsibleOpen } = useCollapsibleState()
 
   return (
     <>
@@ -209,11 +224,19 @@ export function SidebarNavigation({
         }
 
         if ('children' in item) {
+          const itemKey = item.label
+          // Respect collapsed prop for initial state, but prefer persisted state
+          const defaultOpen = item.collapsed === undefined ? true : !item.collapsed
+          const isItemOpen = item.collapsible
+            ? isOpen(itemKey) ?? defaultOpen
+            : true
+
           const Container = (props: React.PropsWithChildren) => {
             if (item.collapsible) {
               return (
                 <Collapsible
-                  defaultOpen={!item.collapsed}
+                  open={isItemOpen}
+                  onOpenChange={(open) => setCollapsibleOpen(itemKey, open)}
                   className={'group/collapsible'}
                 >
                   {props.children}
@@ -261,11 +284,25 @@ export function SidebarNavigation({
                   <SidebarMenu>
                     <ContentContainer>
                       {item.children.map((child, childIndex) => {
+                        const childKey = `${itemKey}-${child.label}`
+                        // Respect collapsed prop for initial state, but prefer persisted state
+                        const defaultChildOpen =
+                          'collapsed' in child && child.collapsed !== undefined
+                            ? !child.collapsed
+                            : true
+                        const isChildOpen =
+                          'collapsible' in child && child.collapsible
+                            ? isOpen(childKey) ?? defaultChildOpen
+                            : true
+
                         const Container = (props: React.PropsWithChildren) => {
                           if ('collapsible' in child && child.collapsible) {
                             return (
                               <Collapsible
-                                defaultOpen={!child.collapsed}
+                                open={isChildOpen}
+                                onOpenChange={(open) =>
+                                  setCollapsibleOpen(childKey, open)
+                                }
                                 className={'group/collapsible'}
                               >
                                 {props.children}
@@ -390,6 +427,7 @@ export function SidebarNavigation({
                                                 currentPath={currentPath}
                                                 open={open}
                                                 depth={1}
+                                                parentKey={childKey}
                                               />
                                             )
                                           }
