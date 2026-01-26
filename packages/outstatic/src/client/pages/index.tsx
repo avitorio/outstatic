@@ -44,7 +44,7 @@ export const AdminArea = ({ params }: { params: { ost: string[] } }) => {
 
             <div className="dark:bg-background bg-background mx-auto flex w-full flex-col overflow-y-auto">
               <div className={'flex flex-1 overflow-y-auto'}>
-                <Dashboard params={params} />
+                <Main params={params} />
               </div>
             </div>
           </div>
@@ -54,7 +54,7 @@ export const AdminArea = ({ params }: { params: { ost: string[] } }) => {
   )
 }
 
-export const Dashboard = ({ params }: { params: { ost: string[] } }) => {
+export const Main = ({ params }: { params: { ost: string[] } }) => {
   const { repoSlug, repoOwner, repoBranch, isPending, session } = useOutstatic()
   const { data: repository } = useGetRepository()
   const { setData, data, isPending: localPending } = useLocalData()

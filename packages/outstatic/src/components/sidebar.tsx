@@ -1,14 +1,21 @@
 import { useOutstatic } from '@/utils/hooks/useOutstatic'
-import { z } from 'zod'
+import { z } from 'zod/v4'
 import {
   Sidebar as SidebarUI,
   SidebarContent,
   SidebarHeader
 } from '@/components/ui/shadcn/sidebar'
-import { Settings, Folder, LayoutDashboard, Plus, Images } from 'lucide-react'
+import {
+  Settings,
+  Folder,
+  LayoutDashboard,
+  Plus,
+  Images, File
+} from 'lucide-react'
 import { SidebarNavigation } from '@/components/ui/outstatic/sidebar'
 
 import { useCollections } from '@/utils/hooks/useCollections'
+import { useSingletons } from '@/utils/hooks/useSingletons'
 import { NavigationConfigSchema } from '@/components/ui/outstatic/navigation-config.schema'
 import Link from 'next/link'
 import { TooltipContent, TooltipTrigger } from '@/components/ui/shadcn/tooltip'
@@ -19,6 +26,11 @@ import { singular } from 'pluralize'
 export const Sidebar = () => {
   const { dashboardRoute } = useOutstatic()
   const { data: collections } = useCollections()
+  const { data: singletons } = useSingletons()
+
+  const hasCollections = collections && collections.length > 0
+  const hasSingletons = singletons && singletons.length > 0
+  const hasContentTypes = hasCollections || hasSingletons
 
   const routes = [
     {
@@ -32,41 +44,87 @@ export const Sidebar = () => {
         }
       ]
     },
-    ...(collections && collections.length > 0
+    ...(hasContentTypes
       ? [
-          {
-            label: 'Collections',
-            collapsible: true,
-            children: collections.map((collection) => ({
-              label: collection.title,
-              path: `${dashboardRoute}/${collection.slug}`,
-              Icon: <Folder className={'w-4'} />,
-              renderAction: (
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Link
-                        href={`/outstatic/${collection.slug}/new`}
-                        className="invisible group-hover/menu-item:visible"
-                        aria-label={`Create new item in collection ${collection.title}`}
-                      >
-                        <Plus className="w-3 h-3 pointer-events-none" />
-                      </Link>
-                    </TooltipTrigger>
-                    <TooltipContent className="pointer-events-none">
-                      <p>
-                        Create new{' '}
-                        <span className="inline-block">
-                          {singular(collection.title)}
-                        </span>
-                      </p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-              )
-            }))
-          }
-        ]
+        {
+          label: 'Content',
+          collapsible: false,
+          children: [
+            ...(collections && collections.length > 0
+              ? [
+                {
+                  label: 'Collections',
+                  collapsible: true,
+                  children: collections.map((collection) => ({
+                    label: collection.title,
+                    path: `${dashboardRoute}/${collection.slug}`,
+                    Icon: <Folder className={'w-4'} />,
+                    renderAction: (
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Link
+                              href={`${dashboardRoute}/${collection.slug}/new`}
+                              className="invisible group-hover/sub-menu-item:visible"
+                              aria-label={`Create new item in collection ${collection.title}`}
+                            >
+                              <Plus className="w-3 h-3 pointer-events-none" />
+                            </Link>
+                          </TooltipTrigger>
+                          <TooltipContent className="pointer-events-none">
+                            <p>
+                              Create new{' '}
+                              <span className="inline-block">
+                                {singular(collection.title)}
+                              </span>
+                            </p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    )
+                  }))
+                }
+              ]
+              : []),
+            ...(hasSingletons
+              ? [
+                {
+                  label: 'Singletons',
+                  collapsible: true,
+                  renderAction: (
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Link
+                            href={`${dashboardRoute}/singletons/new`}
+                            className="invisible group-hover/collapsible:visible"
+                            aria-label={`Create new singleton`}
+                          >
+                            <Plus className="w-3 h-3 pointer-events-none" />
+                          </Link>
+                        </TooltipTrigger>
+                        <TooltipContent className="pointer-events-none">
+                          <p>
+                            Create new{' '}
+                            <span className="inline-block">
+                              Singleton
+                            </span>
+                          </p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  ),
+                  children: singletons.map((singleton) => ({
+                    label: singleton.title,
+                    path: `${dashboardRoute}/singletons/${singleton.slug}`,
+                    Icon: <File className={'w-4'} />
+                  }))
+                }
+              ]
+              : [])
+          ]
+        }
+      ]
       : []),
     {
       label: 'Libraries',
@@ -76,7 +134,7 @@ export const Sidebar = () => {
           path: `${dashboardRoute}/media-library`,
           Icon: <Images className={'w-4'} />
         }
-      ].filter((route) => !!route)
+      ]
     },
     {
       label: 'Settings',
@@ -86,7 +144,7 @@ export const Sidebar = () => {
           path: `${dashboardRoute}/settings`,
           Icon: <Settings className={'w-4'} />
         }
-      ].filter((route) => !!route)
+      ]
     }
   ] satisfies z.infer<typeof NavigationConfigSchema>['routes']
 

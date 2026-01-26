@@ -2,11 +2,14 @@ import { Button } from '@/components/ui/button'
 import { ArrowRight } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
-import type { OstDocument } from 'outstatic'
 
 type Item = {
+  slug: string
+  title: string
+  description?: string
+  coverImage?: string
   tags?: { value: string; label: string }[]
-} & OstDocument
+}
 
 type Props = {
   collection: string
@@ -49,17 +52,18 @@ const ContentGrid = ({
                 height={180}
                 sizes="(min-width: 768px) 347px, 192px"
                 priority={priority && id <= 2}
+                unoptimized={!item.coverImage}
               />
               <div className="p-4">
                 {Array.isArray(item?.tags)
                   ? item.tags.map(({ label }) => (
-                      <span
-                        key={label}
-                        className="inline-block bg-gray-200 rounded-full px-2 py-0 text-sm font-semibold text-gray-700 mr-2 mb-4"
-                      >
-                        {label}
-                      </span>
-                    ))
+                    <span
+                      key={label}
+                      className="inline-block bg-gray-200 rounded-full px-2 py-0 text-sm font-semibold text-gray-700 mr-2 mb-4"
+                    >
+                      {label}
+                    </span>
+                  ))
                   : null}
                 <h3 className="text-xl mb-2 leading-snug font-bold hover:underline">
                   {item.title}

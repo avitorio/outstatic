@@ -15,7 +15,6 @@ import { useGetDocuments } from '@/utils/hooks/useGetDocuments'
 import { useCollections } from '@/utils/hooks/useCollections'
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -23,6 +22,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle
 } from '@/components/ui/shadcn/alert-dialog'
+import { useSingletons } from '@/utils/hooks/useSingletons'
 
 type DeleteDocumentButtonProps = {
   slug: string
@@ -37,7 +37,7 @@ export const DeleteDocumentButton = ({
   slug,
   extension,
   disabled = false,
-  onComplete = () => {},
+  onComplete = () => { },
   collection,
   className
 }: DeleteDocumentButtonProps) => {
@@ -52,19 +52,22 @@ export const DeleteDocumentButton = ({
   const { refetch: refetchDocuments } = useGetDocuments({ enabled: false })
   const { refetch: refetchMetadata } = useGetMetadata({ enabled: false })
   const { refetch: refetchCollections } = useCollections({ enabled: false })
+  const { refetch: refetchSingletons } = useSingletons({ enabled: false })
+  const isSingleton = collection === '_singletons'
+
 
   const deleteDocument = async (slug: string) => {
     setDeleting(true)
     try {
-      const [{ data }, oid, { data: collections }] = await Promise.all([
+      const [{ data }, oid, { data: documents }] = await Promise.all([
         refetchMetadata(),
         fetchOid(),
-        refetchCollections()
+        isSingleton ? refetchSingletons() : refetchCollections()
       ])
 
       if (!data) throw new Error('Failed to fetch metadata')
       if (!oid) throw new Error('Failed to fetch oid')
-      if (!collections) throw new Error('Failed to fetch schema')
+      if (!documents) throw new Error('Failed to fetch schema')
       const { metadata, commitUrl } = data
       const owner = repoOwner || session?.user?.login || ''
 
@@ -76,12 +79,29 @@ export const DeleteDocumentButton = ({
         branch: repoBranch
       })
 
-      const collectionPath = collections.find(
-        (col) => col.slug === collection
-      )?.path
+      const document = documents.find(
+        (col) => col.slug === (isSingleton ? slug : collection)
+      )
+
+      const { path } = document ?? {}
+
+      if (!path) throw new Error('Failed to fetch path or directory')
 
       // remove post markdown file
-      capi.removeFile(`${collectionPath}/${slug}.${extension}`)
+      capi.removeFile(isSingleton ? path : `${path}/${slug}.${extension}`)
+
+      // For singletons, remove from singletons.json and delete schema.json
+      if (isSingleton) {
+        const singletonsArray = documents as Array<{ title: string; slug: string; path?: string }>
+        const updatedSingletons = singletonsArray.filter((s) => s.slug !== slug)
+        capi.replaceFile(
+          `${ostContent}/singletons.json`,
+          JSON.stringify(updatedSingletons, null, 2) + '\n'
+        )
+
+        // Delete the schema.json file
+        capi.removeFile(`${ostContent}/_singletons/${slug}.schema.json`)
+      }
 
       // remove post from metadata.json
       metadata.generated = new Date().toISOString()
@@ -96,8 +116,11 @@ export const DeleteDocumentButton = ({
 
       toast.promise(mutation.mutateAsync(input), {
         loading: 'Deleting document...',
-        success: () => {
+        success: async () => {
           refetchDocuments()
+          if (isSingleton) {
+            await refetchSingletons()
+          }
           return 'Document deleted successfully'
         },
         error: 'Failed to delete document'
@@ -136,11 +159,12 @@ export const DeleteDocumentButton = ({
             <AlertDialogCancel onClick={() => setShowDeleteModal(false)}>
               Cancel
             </AlertDialogCancel>
-            <AlertDialogAction
+            <Button
+              variant="destructive"
               onClick={() => {
                 deleteDocument(slug)
               }}
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+
             >
               {deleting ? (
                 <>
@@ -150,7 +174,7 @@ export const DeleteDocumentButton = ({
               ) : (
                 'Delete'
               )}
-            </AlertDialogAction>
+            </Button>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

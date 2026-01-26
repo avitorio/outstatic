@@ -1,7 +1,7 @@
-import { z } from 'zod'
+import { z } from 'zod/v4'
 
 const RouteMatchingEnd = z
-  .union([z.boolean(), z.function().args(z.string()).returns(z.boolean())])
+  .union([z.boolean(), z.custom<(input: string) => boolean>()])
   .default(false)
   .optional()
 
@@ -34,10 +34,14 @@ const RouteGroup = z.object({
   label: z.string(),
   collapsible: z.boolean().optional(),
   collapsed: z.boolean().optional(),
-  children: z.array(RouteChild),
+  Icon: z.custom<React.ReactNode>().optional(),
+  get children(): z.ZodUnion<[z.ZodArray<typeof RouteChild>, z.ZodArray<typeof RouteGroup>]> {
+    return z.union([z.array(RouteChild), z.array(RouteGroup)])
+  },
   renderAction: z.custom<React.ReactNode>().optional()
 })
 
 export const NavigationConfigSchema = z.object({
+  // @ts-ignore
   routes: z.array(z.union([RouteGroup, Divider]))
 })
