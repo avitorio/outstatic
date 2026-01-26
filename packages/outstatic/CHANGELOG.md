@@ -1,5 +1,15 @@
 # outstatic
 
+## 2.0.15
+
+### Patch Changes
+
+- 22d76fa: Update the dependencies to work with nextjs 16 by @mathieudutour
+- fef254b: Separate content from settings by @mathieudutour
+- 9e65b10: feat: implement collapsible state management for sidebar navigation
+- 6090714: Add an action to copy the error logs on every toast.error by @mathieudutour
+- 1845b19: Singletons and types by @mathueudutour
+
 ## 2.0.14
 
 ### Patch Changes
