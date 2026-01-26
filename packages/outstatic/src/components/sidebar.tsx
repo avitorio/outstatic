@@ -10,8 +10,7 @@ import {
   Folder,
   LayoutDashboard,
   Plus,
-  Images,
-  FileText
+  Images, File
 } from 'lucide-react'
 import { SidebarNavigation } from '@/components/ui/outstatic/sidebar'
 
@@ -83,6 +82,42 @@ export const Sidebar = () => {
                         </Tooltip>
                       </TooltipProvider>
                     )
+                  }))
+                }
+              ]
+              : []),
+            ...(hasSingletons
+              ? [
+                {
+                  label: 'Singletons',
+                  collapsible: true,
+                  renderAction: (
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Link
+                            href={`${dashboardRoute}/singletons/new`}
+                            className="invisible group-hover/collapsible:visible"
+                            aria-label={`Create new singleton`}
+                          >
+                            <Plus className="w-3 h-3 pointer-events-none" />
+                          </Link>
+                        </TooltipTrigger>
+                        <TooltipContent className="pointer-events-none">
+                          <p>
+                            Create new{' '}
+                            <span className="inline-block">
+                              Singleton
+                            </span>
+                          </p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  ),
+                  children: singletons.map((singleton) => ({
+                    label: singleton.title,
+                    path: `${dashboardRoute}/singletons/${singleton.slug}`,
+                    Icon: <File className={'w-4'} />
                   }))
                 }
               ]

@@ -294,7 +294,7 @@ export function SidebarNavigation({
                           if ('collapsible' in child && child.collapsible) {
                             return (
                               <CollapsibleTrigger asChild>
-                                <SidebarMenuButton tooltip={child.label}>
+                                <SidebarMenuButton tooltip={child.label} className="group/sub-menu-item">
                                   <div
                                     className={cn('flex items-center gap-2', {
                                       'mx-auto w-full gap-0 [&>svg]:flex-1 [&>svg]:shrink-0':
@@ -321,6 +321,12 @@ export function SidebarNavigation({
                                         }
                                       )}
                                     />
+
+                                    <If condition={item.renderAction}>
+                                      <SidebarGroupAction title={item.label}>
+                                        {item.renderAction}
+                                      </SidebarGroupAction>
+                                    </If>
                                   </div>
                                 </SidebarMenuButton>
                               </CollapsibleTrigger>
