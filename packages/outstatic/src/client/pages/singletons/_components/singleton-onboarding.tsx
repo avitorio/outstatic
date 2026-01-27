@@ -22,7 +22,7 @@ export default function SingletonOnboarding() {
 
   return (
     <div className="max-w-2xl">
-      <Card className="border shadow-sm bg-white">
+      <Card className="border shadow-sm bg-background">
         <CardContent className="p-6">
           <div className="flex items-start gap-4">
             <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-muted">

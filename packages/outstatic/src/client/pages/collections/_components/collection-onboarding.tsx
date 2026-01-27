@@ -113,7 +113,7 @@ export default function CollectionOnboarding() {
                 <div className="w-full border-t border-border" />
               </div>
               <div className="relative flex justify-center">
-                <span className="bg-white px-3 text-xs text-muted-foreground mb-1">
+                <span className="bg-background px-3 text-xs text-muted-foreground mb-1">
                   or start with a standalone page
                 </span>
               </div>
