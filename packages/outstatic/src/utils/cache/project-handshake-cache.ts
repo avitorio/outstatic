@@ -170,7 +170,7 @@ export async function invalidateAllProjectCache(): Promise<void> {
 
   // Revalidate Next.js persistent cache
   try {
-    revalidateTag(CONFIG.CACHE_TAG)
+    revalidateTag(CONFIG.CACHE_TAG, 'default')
   } catch (error) {
     console.error('[project-handshake-cache] Error revalidating cache:', error)
   }

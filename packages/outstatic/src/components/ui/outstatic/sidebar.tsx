@@ -32,7 +32,12 @@ import {
   CollapsibleContent,
   CollapsibleTrigger
 } from '../shadcn/collapsible'
-import { NavigationConfigSchema } from './navigation-config.schema'
+import {
+  NavigationConfigSchema,
+  RouteChildType,
+  RouteGroupType,
+  RouteSubChildType
+} from './navigation-config.schema'
 import { z } from 'zod/v4'
 import { useCollapsibleState } from '@/utils/hooks/useCollapsibleState'
 
@@ -292,7 +297,7 @@ export function SidebarNavigation({
                 <SidebarGroupContent>
                   <SidebarMenu>
                     <ContentContainer>
-                      {item.children.map((child, childIndex) => {
+                      {item.children.map((child: RouteChildType | RouteGroupType, childIndex: number) => {
                         const childKey = `${itemKey}-${child.label}`
                         // Respect collapsed prop for initial state, but prefer persisted state
                         const defaultChildOpen =
@@ -438,7 +443,7 @@ export function SidebarNavigation({
                                       })}
                                     >
                                       {children.map(
-                                        (subChild, subChildIndex) => {
+                                        (subChild: RouteSubChildType | RouteGroupType, subChildIndex: number) => {
                                           // Check if this is a sub-RouteGroup
                                           if (isRouteGroup(subChild)) {
                                             return (

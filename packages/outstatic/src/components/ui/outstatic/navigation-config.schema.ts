@@ -51,3 +51,7 @@ export const NavigationConfigSchema = z.object({
   // @ts-ignore
   routes: z.array(z.union([RouteGroup, Divider]))
 })
+
+export type RouteChildType = z.infer<typeof RouteChild>
+export type RouteGroupType = z.infer<typeof RouteGroup>
+export type RouteSubChildType = z.infer<typeof RouteSubChild>
