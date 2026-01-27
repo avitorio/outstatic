@@ -11,7 +11,7 @@
     "@tailwindcss/postcss": "^4.1.10",
     "date-fns": "^4.1.0",
     "gray-matter": "^4.0.3",
-    "next": "15.3.8",
+    "next": "16.1.1",
     "outstatic": "latest",
     "react": "19.1.2",
     "react-dom": "19.1.2",
@@ -26,13 +26,7 @@
     "@types/react-dom": "19.1.6",
     "eslint": "^9.39.2",
     "eslint-config-next": "15.3.3",
-    "postcss": "8.4.49",
+    "postcss": "^8.4.49",
     "typescript": "^5.9.3"
-  },
-  "pnpm": {
-    "overrides": {
-      "@types/react": "19.0.12",
-      "@types/react-dom": "19.0.4"
-    }
   }
 }

@@ -26,9 +26,9 @@ type TreeEntry = {
   }
 }
 
-type Document = OstDocument & {
+type Document = OstDocument<{
   extension: MDExtensions
-}
+}>
 
 type FormattedData = Document & {
   [key: string]: any

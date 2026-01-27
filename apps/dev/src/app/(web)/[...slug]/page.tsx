@@ -6,10 +6,17 @@ import { absoluteUrl, ogUrl } from '@/lib/utils'
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { OstDocument } from 'outstatic'
-import { getCollections, load } from 'outstatic/server'
+import {
+  getCollections,
+  load,
+  getSingletonSlugs,
+  getSingletonBySlug
+} from 'outstatic/server'
 
 type Document = {
-  tags: { value: string; label: string }[]
+  tags?: { value: string; label: string }[]
+  description?: string
+  coverImage?: string
 } & OstDocument
 
 type Params = Promise<{ slug: string[] }>
@@ -112,7 +119,7 @@ async function getData(params: { slug: string[] }) {
 
   // check if we have two slugs, if not, we are on a collection archive or a page
   if (!params.slug || params.slug.length !== 2) {
-    if (collection !== 'pages') {
+    if (collection !== '_singletons') {
       const docs = await db
         .find({ collection, status: 'published' }, [
           'title',
@@ -135,25 +142,38 @@ async function getData(params: { slug: string[] }) {
       }
     }
 
-    // if we don't have docs, we are on a page
+    // if we don't have docs, we are on a singleton
     slug = params.slug[0]
-    collection = 'pages'
+    collection = '_singletons'
   }
 
   // get the document
-  const doc = await db
-    .find<Document>({ collection, slug }, [
-      'collection',
-      'title',
-      'publishedAt',
-      'description',
-      'slug',
-      'author',
-      'content',
-      'coverImage',
-      'tags'
-    ])
-    .first()
+  const doc: Document | null | undefined =
+    collection === '_singletons'
+      ? getSingletonBySlug(slug, [
+        'collection',
+        'title',
+        'publishedAt',
+        'description',
+        'slug',
+        'author',
+        'content',
+        'coverImage',
+        'tags'
+      ])
+      : await db
+        .find<Document>({ collection, slug }, [
+          'collection',
+          'title',
+          'publishedAt',
+          'description',
+          'slug',
+          'author',
+          'content',
+          'coverImage',
+          'tags'
+        ])
+        .first()
 
   if (!doc) {
     notFound()
@@ -162,19 +182,19 @@ async function getData(params: { slug: string[] }) {
   const content = await MDXServer(doc.content)
 
   const moreDocs =
-    collection === 'pages'
+    collection === '_singletons'
       ? []
       : await db
-          .find(
-            {
-              collection: params.slug[0],
-              slug: { $ne: params.slug[1] },
-              status: 'published'
-            },
-            ['title', 'slug', 'coverImage', 'description']
-          )
-          .sort({ publishedAt: -1 })
-          .toArray()
+        .find(
+          {
+            collection: params.slug[0],
+            slug: { $ne: params.slug[1] },
+            status: 'published'
+          },
+          ['title', 'slug', 'coverImage', 'description']
+        )
+        .sort({ publishedAt: -1 })
+        .toArray()
 
   return {
     doc: {
@@ -187,16 +207,17 @@ async function getData(params: { slug: string[] }) {
 
 export async function generateStaticParams() {
   const db = await load()
+  const singletons = getSingletonSlugs().filter((x) => x !== 'home')
   const collections = getCollections().filter(
     (collection) => collection !== 'pages'
   )
 
-  // get all documents, except those in the posts collection and the home page
+  // get all documents, except those in the posts collection
   // as we have a specific route for them (/posts)
   const items = await db
     .find(
       {
-        $nor: [{ collection: 'posts' }, { collection: 'pages', slug: 'home' }],
+        $nor: [{ collection: 'posts' }],
         status: 'published'
       },
       ['collection', 'slug']
@@ -205,12 +226,18 @@ export async function generateStaticParams() {
 
   // pages should be at the root level
   const slugs = items.map(({ collection, slug }) => ({
-    slug: collection === 'pages' ? [slug] : [collection, slug]
+    slug: [collection, slug]
   }))
 
   collections.forEach((collection) => {
     slugs.push({
       slug: [collection]
+    })
+  })
+
+  singletons.forEach((singleton) => {
+    slugs.push({
+      slug: [singleton]
     })
   })
 

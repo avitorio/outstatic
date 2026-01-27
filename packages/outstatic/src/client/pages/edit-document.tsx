@@ -8,7 +8,7 @@ import { deepReplace } from '@/utils/deepReplace'
 import { useDocumentUpdateEffect } from '@/utils/hooks/useDocumentUpdateEffect'
 import { useFileStore } from '@/utils/hooks/useFileStore'
 import { useGetCollectionSchema } from '@/utils/hooks/useGetCollectionSchema'
-import { useOutstatic, useLocalData } from '@/utils/hooks/useOutstatic'
+import { useOutstatic } from '@/utils/hooks/useOutstatic'
 import useSubmitDocument from '@/utils/hooks/useSubmitDocument'
 import { useTipTap } from '@/components/editor/hooks/use-tip-tap'
 import { editDocumentSchema } from '@/utils/schemas/edit-document-schema'
@@ -31,9 +31,15 @@ export default function EditDocument({ collection }: { collection: string }) {
     pathname.split('/').pop() || `/${collection}/new`
   )
   const [loading, setLoading] = useState(false)
-  const { basePath, session, hasChanges, setHasChanges, dashboardRoute } =
-    useOutstatic()
-  const { data: localData } = useLocalData()
+  const {
+    basePath,
+    session,
+    hasChanges,
+    setHasChanges,
+    dashboardRoute,
+    repoMediaPath,
+    publicMediaPath
+  } = useOutstatic()
   const [showDelete, setShowDelete] = useState(false)
   const [documentSchema, setDocumentSchema] = useState(editDocumentSchema)
   //@ts-ignore
@@ -199,12 +205,13 @@ export default function EditDocument({ collection }: { collection: string }) {
               title={methods.getValues('title')}
               settings={
                 <DocumentSettings
+                  title={methods.getValues('title')}
                   loading={loading}
                   saveDocument={methods.handleSubmit(
                     (data) => {
                       if (
-                        !localData?.repoMediaPath &&
-                        !localData?.publicMediaPath &&
+                        !repoMediaPath &&
+                        !publicMediaPath &&
                         files.length > 0
                       ) {
                         setShowMediaPathDialog(true)
@@ -215,12 +222,27 @@ export default function EditDocument({ collection }: { collection: string }) {
                       }
                     },
                     (data) => {
-                      console.error({ data })
+                      console.error('Failed to save document', { data })
                       const firstKey = Object.keys(data)[0] as keyof typeof data
                       const errorMessage =
                         (data[firstKey] as { message?: string })?.message ||
                         'Unknown error'
-                      toast.error(`Error in ${firstKey}: ${errorMessage}`)
+                      const errorToast = toast.error(
+                        `Error in ${firstKey}: ${errorMessage}`,
+                        {
+                          action: {
+                            label: 'Copy Logs',
+                            onClick: () => {
+                              navigator.clipboard.writeText(
+                                JSON.stringify(data, null, '  ')
+                              )
+                              toast.message('Logs copied to clipboard', {
+                                id: errorToast
+                              })
+                            }
+                          }
+                        }
+                      )
                     }
                   )}
                   showDelete={showDelete}

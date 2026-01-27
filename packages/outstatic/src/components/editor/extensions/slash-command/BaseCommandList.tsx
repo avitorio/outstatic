@@ -15,6 +15,7 @@ import {
 } from '@/components/editor/extensions/slash-command'
 import { getPrevText } from '@/components/editor/utils/getPrevText'
 import { OUTSTATIC_API_PATH } from '@/utils/constants'
+import { stringifyError } from '@/utils/errors/stringifyError'
 
 export const BaseCommandList = ({
   items,
@@ -51,7 +52,18 @@ export const BaseCommandList = ({
     },
     onError: (e) => {
       completionStartPos.current = null
-      toast.error(e.message)
+      console.error('AI completion error', e)
+      const errorToast = toast.error(e.message, {
+        action: {
+          label: 'Copy Logs',
+          onClick: () => {
+            navigator.clipboard.writeText(`Error: ${stringifyError(e)}`)
+            toast.message('Logs copied to clipboard', {
+              id: errorToast
+            })
+          }
+        }
+      })
     }
   })
 
@@ -73,6 +85,7 @@ export const BaseCommandList = ({
             complete(prevText, {
               body: { option: 'continue', command: '' }
             })
+            editor.chain().focus().deleteRange(range).run()
           }
         } else if (item.title === 'Image') {
           setImageMenu(true)

@@ -4,12 +4,7 @@ import MDXServer from '@/lib/mdx-server'
 import { absoluteUrl, ogUrl } from '@/lib/utils'
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { OstDocument } from 'outstatic'
 import { getDocumentSlugs, load } from 'outstatic/server'
-
-type Post = {
-  tags: { value: string; label: string }[]
-} & OstDocument
 
 type Params = Promise<{ slug: string }>
 
@@ -68,7 +63,7 @@ async function getData(params: { slug: string }) {
   const db = await load()
 
   const post = await db
-    .find<Post>({ collection: 'posts', slug: params.slug }, [
+    .find({ collection: 'posts', slug: params.slug }, [
       'title',
       'publishedAt',
       'description',

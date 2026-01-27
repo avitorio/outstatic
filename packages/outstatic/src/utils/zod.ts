@@ -1,5 +1,5 @@
 import { CustomFieldsType } from '@/types'
-import { z } from 'zod'
+import { z } from 'zod/v4'
 import { documentShape } from './schemas/edit-document-schema'
 
 export const convertSchemaToZod = (customFields: {
@@ -24,7 +24,7 @@ export const convertSchemaToZod = (customFields: {
         fieldSchema = z.array(z.any())
         break
       case 'date':
-        fieldSchema = z.date(z.any())
+        fieldSchema = z.date()
         break
       case 'image':
         fieldSchema = z.string()
@@ -42,15 +42,21 @@ export const convertSchemaToZod = (customFields: {
     }
 
     if (field.dataType === 'number') {
-      fieldSchema = fieldSchema.refine((val) => !isNaN(val), {
-        message: `${field.title} must be a valid number.`
-      })
+      fieldSchema = fieldSchema.refine(
+        (val) => typeof val === 'number' && !isNaN(val),
+        {
+          message: `${field.title} must be a valid number.`
+        }
+      )
     }
 
     if (field.dataType === 'array' && field.required) {
-      fieldSchema = fieldSchema.refine((val) => val.length > 0, {
-        message: `${field.title} is a required field.`
-      })
+      fieldSchema = fieldSchema.refine(
+        (val) => Array.isArray(val) && val.length > 0,
+        {
+          message: `${field.title} is a required field.`
+        }
+      )
     }
 
     shape[name] = fieldSchema

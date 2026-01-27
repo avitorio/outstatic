@@ -1,4 +1,6 @@
-import { OstDocument } from '@/types/public'
+import { OutstaticSchema } from '@/types/public'
+
+export type { OutstaticSchema } from '@/types/public'
 
 export type MetadataType<
   T extends { [key: string]: unknown } = { [key: string]: unknown }
@@ -11,17 +13,6 @@ export type MetadataSchema = {
 }
 
 export type Projection = Record<string, number> | string[]
-
-export type OutstaticSchema<
-  TSchema extends { [key: string]: unknown } = { [key: string]: unknown }
-> = TSchema &
-  OstDocument & {
-    __outstatic: {
-      hash: string
-      path: string
-      commit: string
-    }
-  }
 
 type SortDeclaration = {
   [key: string]: number

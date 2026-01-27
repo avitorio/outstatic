@@ -9,6 +9,7 @@ import { toast } from 'sonner'
 import { useDebouncedCallback } from 'use-debounce'
 import { useOutstatic } from '@/utils/hooks/useOutstatic'
 import { OUTSTATIC_API_PATH } from '@/utils/constants'
+import { stringifyError } from '@/utils/errors/stringifyError'
 
 export const useTipTap = ({ ...rhfMethods }) => {
   const { hasAIProviderKey, isPro, basePath } = useOutstatic()
@@ -33,7 +34,18 @@ export const useTipTap = ({ ...rhfMethods }) => {
       const editor = editorRef.current
       editor?.commands.removeClass('completing')
       streamingStateRef.current = null
-      toast.error(err.message)
+      console.error('AI completion error', err)
+      const errorToast = toast.error(err.message, {
+        action: {
+          label: 'Copy Logs',
+          onClick: () => {
+            navigator.clipboard.writeText(`Error: ${stringifyError(err)}`)
+            toast.message('Logs copied to clipboard', {
+              id: errorToast
+            })
+          }
+        }
+      })
     }
   })
 

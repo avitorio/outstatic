@@ -15,7 +15,10 @@ export default defineConfig((options) => {
       './src/utils/auth/auth-provider.tsx',
       './src/utils/hooks/index.tsx',
       './src/components/index.tsx',
-      './src/graphql/utils/tokenRefreshUtility.ts'
+      './src/graphql/utils/tokenRefreshUtility.ts',
+      './src/next-plugin.ts',
+      './src/typegen/index.ts',
+      './src/cli/index.ts'
     ],
     external: [
       'react',
@@ -23,7 +26,8 @@ export default defineConfig((options) => {
       'next',
       'tsup',
       'tailwindcss',
-      'tw-animate-css'
+      'tw-animate-css',
+      '@parcel/watcher'
       // Add any other external dependencies your project uses
     ],
     format: ['cjs', 'esm'],

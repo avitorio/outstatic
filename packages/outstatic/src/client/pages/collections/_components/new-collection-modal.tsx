@@ -1,4 +1,8 @@
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/shadcn/alert'
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle
+} from '@/components/ui/shadcn/alert'
 import { Input } from '@/components/ui/shadcn/input'
 import { SpinnerIcon } from '@/components/ui/outstatic/spinner-icon'
 import { Button } from '@/components/ui/shadcn/button'
@@ -18,6 +22,7 @@ import { useGetDocuments } from '@/utils/hooks/useGetDocuments'
 import useOid from '@/utils/hooks/useOid'
 import { useOutstatic } from '@/utils/hooks/useOutstatic'
 import { useRebuildMetadata } from '@/utils/hooks/useRebuildMetadata'
+import { stringifyError } from '@/utils/errors/stringifyError'
 import { zodResolver } from '@hookform/resolvers/zod'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -25,7 +30,7 @@ import { useEffect, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { slugify } from 'transliteration'
-import * as z from 'zod'
+import * as z from 'zod/v4'
 import GithubExplorer from '@/components/ui/outstatic/github-explorer'
 import PathBreadcrumbs from '@/components/ui/outstatic/path-breadcrumb'
 import {
@@ -88,10 +93,13 @@ export default function NewCollectionModal({
   })
 
   const createCollectionSchema = z.object({
-    name: z.string().refine(
-      (val) => !pages.some((page) => page.toLowerCase() === val.toLowerCase()),
-      (val) => ({ message: `${val} is a reserved name.` })
-    ),
+    name: z
+      .string()
+      .refine(
+        (val) =>
+          !pages.some((page) => page.toLowerCase() === val.toLowerCase()),
+        { error: (val) => ({ message: `${val} is a reserved name.` }) }
+      ),
     contentPath: z.string().optional()
   })
 
@@ -216,12 +224,21 @@ export default function NewCollectionModal({
         }
       })
     } catch (error) {
-      // TODO: Better error treatment
-      toast.error('Failed to create collection.')
+      console.error('Failed to create collection', error)
+      const errorToast = toast.error('Failed to create collection.', {
+        action: {
+          label: 'Copy Logs',
+          onClick: () => {
+            navigator.clipboard.writeText(`Error: ${stringifyError(error)}`)
+            toast.message('Logs copied to clipboard', {
+              id: errorToast
+            })
+          }
+        }
+      })
       setLoading(false)
       setHasChanges(false)
       setError(true)
-      console.log({ error })
     }
   }
 
@@ -239,12 +256,16 @@ export default function NewCollectionModal({
             <Alert variant="destructive">
               <AlertCircleIcon />
               <AlertTitle>Something went wrong</AlertTitle>
-              <AlertDescription><p>We couldn&apos;t create
-                your collection. Please, make sure your settings are correct by{' '}
-                <Link href={`${dashboardRoute}/settings`}>
-                  <span className="underline">clicking here</span>
-                </Link>{' '}
-                . </p></AlertDescription>
+              <AlertDescription>
+                <p>
+                  We couldn&apos;t create your collection. Please, make sure
+                  your settings are correct by{' '}
+                  <Link href={`${dashboardRoute}/settings`}>
+                    <span className="underline">clicking here</span>
+                  </Link>{' '}
+                  .{' '}
+                </p>
+              </AlertDescription>
             </Alert>
           ) : null}
           <DialogHeader>

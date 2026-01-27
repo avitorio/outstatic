@@ -32,6 +32,7 @@ import { useCustomFieldCommit } from './use-custom-field-commit'
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle
@@ -56,20 +57,24 @@ const fieldDataMap = {
 
 interface AddCustomFieldDialogProps {
   collection: string
+  documentTitle?: string
   showAddModal: boolean
   setShowAddModal: (show: boolean) => void
   customFields: CustomFieldsType
   setCustomFields: (fields: CustomFieldsType) => void
   fieldTitle?: string
+  singleton?: string
 }
 
 export const AddCustomFieldDialog: React.FC<AddCustomFieldDialogProps> = ({
   collection,
+  documentTitle,
   showAddModal,
   setShowAddModal,
   customFields,
   setCustomFields,
-  fieldTitle
+  fieldTitle,
+  singleton
 }) => {
   const [adding, setAdding] = useState(false)
   const { setHasChanges } = useOutstatic()
@@ -135,7 +140,8 @@ export const AddCustomFieldDialog: React.FC<AddCustomFieldDialogProps> = ({
         deleteField: false,
         collection,
         fieldName,
-        selectedField: ''
+        selectedField: '',
+        singleton
       })
     } catch (error) {
       setError('add')
@@ -155,12 +161,21 @@ export const AddCustomFieldDialog: React.FC<AddCustomFieldDialogProps> = ({
     setShowAddModal(value)
   }
 
+  if (singleton === 'new') {
+    return <SaveFirstModal open={showAddModal} onOpenChange={onOpenChange} />
+  }
+
   return (
     <Dialog open={showAddModal} onOpenChange={onOpenChange}>
       <DialogContent className="w-full md:max-w-2xl">
         <DialogHeader>
           <DialogTitle>
-            Add Custom Field to {capitalCase(collection)}
+            Add Custom Field to{' '}
+            {collection === '_singletons'
+              ? documentTitle
+                ? capitalCase(documentTitle)
+                : 'the Singleton'
+              : capitalCase(collection)}
           </DialogTitle>
         </DialogHeader>
         <FormProvider {...methods}>
@@ -304,4 +319,23 @@ export const AddCustomFieldDialog: React.FC<AddCustomFieldDialogProps> = ({
       </DialogContent>
     </Dialog>
   )
+}
+
+export const SaveFirstModal = ({
+  open,
+  onOpenChange
+}: {
+  open: boolean
+  onOpenChange: (open: boolean) => void
+}) => {
+  return <Dialog open={open} onOpenChange={onOpenChange}>
+    <DialogContent>
+      <DialogHeader>
+        <DialogTitle>Save your singleton first</DialogTitle>
+      </DialogHeader>
+      <DialogDescription>
+        You need to save your singleton first before adding custom fields.
+      </DialogDescription>
+    </DialogContent>
+  </Dialog>
 }
