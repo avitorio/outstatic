@@ -172,7 +172,6 @@ describe('Auth Utils', () => {
       const result = await getLoginSession()
 
       expect(result).toBeNull()
-      expect(console.log).toHaveBeenCalledWith('No token found in cookies')
     })
 
     it('should return session when token is valid and not expired', async () => {
@@ -548,6 +547,7 @@ describe('Auth Utils', () => {
     it('should refresh token if expired and refresh token is valid', async () => {
       const expiredSession = {
         ...mockSession,
+        provider: 'github' as const,
         expires: new Date(Date.now() - 1000) // Expired 1 second ago
       }
 
@@ -569,6 +569,7 @@ describe('Auth Utils', () => {
     it('should handle concurrent refresh requests for the same token', async () => {
       const expiredSession = {
         ...mockSession,
+        provider: 'github' as const,
         expires: new Date(Date.now() - 1000) // Expired 1 second ago
       }
 
@@ -600,25 +601,29 @@ describe('Auth Utils', () => {
     it('should throw error if refresh token is expired', async () => {
       const expiredSession = {
         ...mockSession,
+        provider: 'github' as const,
         expires: new Date(Date.now() - 1000), // Expired 1 second ago
         refresh_token_expires: new Date(Date.now() - 1000) // Refresh token also expired
       }
 
       await expect(refreshTokenIfNeeded(expiredSession)).rejects.toThrow(
-        'Token expired and no valid refresh token available'
+        'Refresh token is expired'
       )
     })
 
-    it('should throw error if no refresh token available', async () => {
+    it('should extend session if no refresh token available', async () => {
       const expiredSession = {
         ...mockSession,
         expires: new Date(Date.now() - 1000), // Expired 1 second ago
         refresh_token: undefined
       }
 
-      await expect(refreshTokenIfNeeded(expiredSession)).rejects.toThrow(
-        'Token expired and no valid refresh token available'
-      )
+      const result = await refreshTokenIfNeeded(expiredSession)
+
+      // Should extend the session instead of throwing
+      expect(result.expires.getTime()).toBeGreaterThan(Date.now())
+      expect(result.user).toEqual(expiredSession.user)
+      expect(result.access_token).toBe(expiredSession.access_token)
     })
   })
 })

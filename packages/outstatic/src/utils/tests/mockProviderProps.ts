@@ -8,7 +8,25 @@ const mockProviderProps = {
   contentPath: 'anything',
   monorepoPath: 'anything',
   ostPath: 'outstatic',
-  session: null,
+  session: {
+    user: {
+      name: 'Test User',
+      login: 'testuser',
+      email: 'test@example.com',
+      image: 'https://example.com/avatar.jpg',
+      permissions: [
+        'roles.manage',
+        'settings.manage',
+        'members.manage',
+        'invites.manage',
+        'collections.manage',
+        'content.manage',
+        'projects.manage'
+      ]
+    },
+    access_token: 'mock-access-token',
+    expires: new Date(Date.now() + 3600000)
+  },
   initialApolloState: null,
   collections: ['collection1', 'collection2', 'collection3'],
   pages: [],
