@@ -11,22 +11,23 @@ import { GET as githubGet, POST as githubPost } from '@/app/api/github'
 import { NextRequest } from 'next/server'
 
 export interface Request extends NextRequest {
-  session: any
+  session?: unknown
   remainingPath?: string[]
 }
 
 // Updated to support nested routing with remaining path segments
 export type GetParams = Promise<{
-  ost: string[]
+  ost?: string[]
 }>
 
 export type PostParams = Promise<{
-  ost: string[]
+  ost?: string[]
 }>
 
 // Handler function type that matches existing handlers
 type RouteHandler = (req: Request) => Promise<Response>
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const getPaths: Record<string, RouteHandler> = {
   callback,
   login,
@@ -35,18 +36,22 @@ const getPaths: Record<string, RouteHandler> = {
   media,
   github: githubGet,
   'magic-link-callback': magicLinkCallback
-}
+} as any
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const postPaths: Record<string, RouteHandler> = {
   generate,
   github: githubPost,
   'magic-link': magicLink,
   refresh
-}
+} as any
 
 export const OutstaticApi = {
-  GET: async (req: Request, segmentData: { params: GetParams }) => {
-    const { ost } = await segmentData.params
+  GET: async (
+    req: globalThis.Request,
+    segmentData: { params: GetParams }
+  ): Promise<Response> => {
+    const { ost = [] } = await segmentData.params
     const [firstSegment, ...remainingSegments] = ost
 
     const handler = getPaths[firstSegment]
@@ -55,12 +60,16 @@ export const OutstaticApi = {
     }
 
     // Add remaining path to request object for handlers that need it
-    req.remainingPath = remainingSegments
+    const extendedReq = req as Request
+    extendedReq.remainingPath = remainingSegments
 
-    return handler(req)
+    return handler(extendedReq)
   },
-  POST: async (req: Request, segmentData: { params: PostParams }) => {
-    const { ost } = await segmentData.params
+  POST: async (
+    req: globalThis.Request,
+    segmentData: { params: PostParams }
+  ): Promise<Response> => {
+    const { ost = [] } = await segmentData.params
     const [firstSegment, ...remainingSegments] = ost
 
     const handler = postPaths[firstSegment]
@@ -69,8 +78,9 @@ export const OutstaticApi = {
     }
 
     // Add remaining path to request object for handlers that need it
-    req.remainingPath = remainingSegments
+    const extendedReq = req as Request
+    extendedReq.remainingPath = remainingSegments
 
-    return handler(req)
+    return handler(extendedReq)
   }
 }
