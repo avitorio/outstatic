@@ -28,6 +28,7 @@ import { useGetFileByPath } from '@/utils/hooks/useGetFileByPath'
 import { parseContent } from '@/utils/parseContent'
 import { getLocalDate } from '@/utils/getLocalDate'
 import matter from 'gray-matter'
+import { slugify } from 'transliteration'
 
 export default function EditSingleton({ slug: initialSlug }: { slug: string }) {
   const [slug, setSlug] = useState(initialSlug)
@@ -148,6 +149,9 @@ export default function EditSingleton({ slug: initialSlug }: { slug: string }) {
     const titleFromFilename = filename.replace(/\.mdx?$/, '')
     const title = data.title || titleFromFilename
 
+    // Generate slug from title if not present in frontmatter
+    const slug = data.slug || slugify(title, { allowedChars: 'a-zA-Z0-9.' })
+
     const newDate = data.publishedAt
       ? new Date(data.publishedAt)
       : getLocalDate()
@@ -155,8 +159,14 @@ export default function EditSingleton({ slug: initialSlug }: { slug: string }) {
     const newDocument = {
       ...data,
       title,
+      slug,
+      status: data.status || 'draft',
       publishedAt: newDate,
-      content: parsedContent
+      content: parsedContent,
+      author: {
+        name: data.author?.name || session?.user?.name || '',
+        picture: data.author?.picture || session?.user?.image || ''
+      }
     }
 
     // Set the singleton content path to the full file path
@@ -169,7 +179,9 @@ export default function EditSingleton({ slug: initialSlug }: { slug: string }) {
       editor.commands.focus('start')
     })
 
-    setHasChanges(false)
+    // Set hasChanges to true when opening a file so save button is enabled
+    // and content lock is active (prevents navigation without saving)
+    setHasChanges(true)
     setOpenFileLoaded(true)
   }, [openedFileData, editor, openFileLoaded, openFilePath, basePath, repoOwner, repoSlug, repoBranch, publicMediaPath, repoMediaPath, methods, setHasChanges])
 
@@ -308,7 +320,8 @@ export default function EditSingleton({ slug: initialSlug }: { slug: string }) {
                         return
                       }
                       // Show modal for new singletons to select save location
-                      if (isNew && !singletonContentPath) {
+                      // Skip modal if we're opening an existing file (openFilePath is present)
+                      if (isNew && !singletonContentPath && !openFilePath) {
                         setShowSingletonModal(true)
                         return
                       }
