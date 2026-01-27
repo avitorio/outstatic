@@ -25,7 +25,7 @@ function GithubExplorer({
 }: GithubExplorerProps) {
   const [items, setItems] = useState<TreeDataItem[]>([])
 
-  const { data, isPending } = useGetRepoFiles({ path, fileExtensions })
+  const { data, isFetching } = useGetRepoFiles({ path, fileExtensions })
 
   const isFile = (item: TreeDataItem) => {
     if (!fileExtensions) return false
@@ -57,7 +57,7 @@ function GithubExplorer({
 
   return (
     <Tree
-      isPending={isPending}
+      isPending={isFetching}
       data={items}
       className={cn('shrink-0 w-full h-64 border-[1px]', className)}
       onSelectChange={(item) => handleSelectChange(item)}
