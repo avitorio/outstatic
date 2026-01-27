@@ -151,6 +151,18 @@ async function getData(params: { slug: string[] }) {
   const doc: Document | null | undefined =
     collection === '_singletons'
       ? getSingletonBySlug(slug, [
+        'collection',
+        'title',
+        'publishedAt',
+        'description',
+        'slug',
+        'author',
+        'content',
+        'coverImage',
+        'tags'
+      ])
+      : await db
+        .find<Document>({ collection, slug }, [
           'collection',
           'title',
           'publishedAt',
@@ -161,19 +173,7 @@ async function getData(params: { slug: string[] }) {
           'coverImage',
           'tags'
         ])
-      : await db
-          .find<Document>({ collection, slug }, [
-            'collection',
-            'title',
-            'publishedAt',
-            'description',
-            'slug',
-            'author',
-            'content',
-            'coverImage',
-            'tags'
-          ])
-          .first()
+        .first()
 
   if (!doc) {
     notFound()
@@ -185,16 +185,16 @@ async function getData(params: { slug: string[] }) {
     collection === '_singletons'
       ? []
       : await db
-          .find(
-            {
-              collection: params.slug[0],
-              slug: { $ne: params.slug[1] },
-              status: 'published'
-            },
-            ['title', 'slug', 'coverImage', 'description']
-          )
-          .sort({ publishedAt: -1 })
-          .toArray()
+        .find(
+          {
+            collection: params.slug[0],
+            slug: { $ne: params.slug[1] },
+            status: 'published'
+          },
+          ['title', 'slug', 'coverImage', 'description']
+        )
+        .sort({ publishedAt: -1 })
+        .toArray()
 
   return {
     doc: {

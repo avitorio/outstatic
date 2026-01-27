@@ -150,8 +150,8 @@ importers:
         specifier: ^7.0.1
         version: 7.0.1
       rehype-pretty-code:
-        specifier: ^0.12.6
-        version: 0.12.6(shikiji@0.9.19)
+        specifier: ^0.14.1
+        version: 0.14.1(shiki@3.21.0)
       rehype-slug:
         specifier: ^5.1.0
         version: 5.1.0
@@ -210,8 +210,8 @@ importers:
         specifier: ^7.0.1
         version: 7.0.1
       rehype-pretty-code:
-        specifier: ^0.12.6
-        version: 0.12.6(shikiji@0.9.19)
+        specifier: ^0.14.1
+        version: 0.14.1(shiki@3.21.0)
       remark:
         specifier: ^14.0.3
         version: 14.0.3
@@ -273,6 +273,340 @@ importers:
       tailwindcss:
         specifier: 4.1.10
         version: 4.1.10
+      typescript:
+        specifier: ^5.8.3
+        version: 5.8.3
+
+  examples/advanced-blog:
+    dependencies:
+      '@radix-ui/react-dialog':
+        specifier: ^1.1.14
+        version: 1.1.14(@types/react-dom@19.0.0)(@types/react@19.0.0)(react-dom@19.1.2(react@19.1.2))(react@19.1.2)
+      '@radix-ui/react-slot':
+        specifier: ^1.2.3
+        version: 1.2.3(@types/react@19.0.0)(react@19.1.2)
+      '@tailwindcss/postcss':
+        specifier: ^4.1.10
+        version: 4.1.10
+      class-variance-authority:
+        specifier: ^0.7.1
+        version: 0.7.1
+      clsx:
+        specifier: ^2.1.1
+        version: 2.1.1
+      date-fns:
+        specifier: ^4.1.0
+        version: 4.1.0
+      gray-matter:
+        specifier: ^4.0.3
+        version: 4.0.3
+      katex:
+        specifier: ^0.16.22
+        version: 0.16.22
+      lucide-react:
+        specifier: ^0.516.0
+        version: 0.516.0(react@19.1.2)
+      next:
+        specifier: 16.1.1
+        version: 16.1.1(@babel/core@7.27.4)(@opentelemetry/api@1.9.0)(babel-plugin-macros@3.1.0)(react-dom@19.1.2(react@19.1.2))(react@19.1.2)
+      next-themes:
+        specifier: 0.4.6
+        version: 0.4.6(react-dom@19.1.2(react@19.1.2))(react@19.1.2)
+      outstatic:
+        specifier: latest
+        version: 2.0.16(@types/react-dom@19.0.0)(@types/react@19.0.0)(next-themes@0.4.6(react-dom@19.1.2(react@19.1.2))(react@19.1.2))(next@16.1.1(@opentelemetry/api@1.9.0)(react-dom@19.1.2(react@19.1.2))(react@19.1.2))(react-dom@19.1.2(react@19.1.2))(react@19.1.2)(tailwindcss@4.1.10)
+      react:
+        specifier: 19.1.2
+        version: 19.1.2
+      react-dom:
+        specifier: 19.1.2
+        version: 19.1.2(react@19.1.2)
+      rehype-katex:
+        specifier: ^7.0.1
+        version: 7.0.1
+      remark:
+        specifier: ^14.0.3
+        version: 14.0.3
+      remark-gfm:
+        specifier: ^4.0.0
+        version: 4.0.1
+      remark-html:
+        specifier: ^15.0.2
+        version: 15.0.2
+      remark-math:
+        specifier: ^6.0.0
+        version: 6.0.0
+      tailwind-merge:
+        specifier: ^3.3.1
+        version: 3.3.1
+      tailwindcss:
+        specifier: 4.1.10
+        version: 4.1.10
+      tailwindcss-animate:
+        specifier: ^1.0.7
+        version: 1.0.7(tailwindcss@4.1.10)
+      vaul:
+        specifier: ^1.1.2
+        version: 1.1.2(@types/react-dom@19.0.0)(@types/react@19.0.0)(react-dom@19.1.2(react@19.1.2))(react@19.1.2)
+    devDependencies:
+      '@tailwindcss/typography':
+        specifier: ^0.5.10
+        version: 0.5.16(tailwindcss@4.1.10)
+      '@types/node':
+        specifier: ^24.0.1
+        version: 24.0.3
+      '@types/react':
+        specifier: 19.0.0
+        version: 19.0.0
+      '@types/react-dom':
+        specifier: 19.0.0
+        version: 19.0.0
+      esbuild:
+        specifier: ^0.15.18
+        version: 0.15.18
+      eslint:
+        specifier: ^9.29.0
+        version: 9.29.0(jiti@2.4.2)
+      eslint-config-next:
+        specifier: 15.3.3
+        version: 15.3.3(eslint@9.29.0(jiti@2.4.2))(typescript@5.8.3)
+      mdx-bundler:
+        specifier: ^10.1.1
+        version: 10.1.1(acorn@8.15.0)(esbuild@0.15.18)
+      postcss:
+        specifier: ^8.4.49
+        version: 8.4.49
+      postcss-nesting:
+        specifier: ^12.0.2
+        version: 12.1.5(postcss@8.4.49)
+      rehype-autolink-headings:
+        specifier: ^6.1.1
+        version: 6.1.1
+      rehype-pretty-code:
+        specifier: ^0.14.1
+        version: 0.14.1(shiki@3.21.0)
+      rehype-slug:
+        specifier: ^5.1.0
+        version: 5.1.0
+      typescript:
+        specifier: ^5.8.3
+        version: 5.8.3
+
+  examples/basic-blog:
+    dependencies:
+      '@tailwindcss/postcss':
+        specifier: ^4.1.10
+        version: 4.1.10
+      date-fns:
+        specifier: ^4.1.0
+        version: 4.1.0
+      gray-matter:
+        specifier: ^4.0.3
+        version: 4.0.3
+      next:
+        specifier: 16.1.1
+        version: 16.1.1(@babel/core@7.27.4)(@opentelemetry/api@1.9.0)(babel-plugin-macros@3.1.0)(react-dom@19.1.2(react@19.1.2))(react@19.1.2)
+      outstatic:
+        specifier: latest
+        version: 2.0.16(@types/react-dom@19.0.0)(@types/react@19.0.0)(next-themes@0.4.6(react-dom@19.1.2(react@19.1.2))(react@19.1.2))(next@16.1.1(@opentelemetry/api@1.9.0)(react-dom@19.1.2(react@19.1.2))(react@19.1.2))(react-dom@19.1.2(react@19.1.2))(react@19.1.2)(tailwindcss@4.1.10)
+      react:
+        specifier: 19.1.2
+        version: 19.1.2
+      react-dom:
+        specifier: 19.1.2
+        version: 19.1.2(react@19.1.2)
+      remark:
+        specifier: ^14.0.3
+        version: 14.0.3
+      remark-html:
+        specifier: ^15.0.2
+        version: 15.0.2
+      tailwindcss:
+        specifier: 4.1.10
+        version: 4.1.10
+    devDependencies:
+      '@tailwindcss/typography':
+        specifier: ^0.5.10
+        version: 0.5.16(tailwindcss@4.1.10)
+      '@types/node':
+        specifier: ^24.0.1
+        version: 24.0.3
+      '@types/react':
+        specifier: 19.0.0
+        version: 19.0.0
+      '@types/react-dom':
+        specifier: 19.0.0
+        version: 19.0.0
+      eslint:
+        specifier: ^9.29.0
+        version: 9.29.0(jiti@2.4.2)
+      eslint-config-next:
+        specifier: 15.3.3
+        version: 15.3.3(eslint@9.29.0(jiti@2.4.2))(typescript@5.8.3)
+      postcss:
+        specifier: ^8.4.49
+        version: 8.4.49
+      typescript:
+        specifier: ^5.8.3
+        version: 5.8.3
+
+  examples/docs:
+    dependencies:
+      '@radix-ui/react-icons':
+        specifier: ^1.3.2
+        version: 1.3.2(react@19.1.2)
+      '@radix-ui/react-select':
+        specifier: ^2.2.5
+        version: 2.2.5(@types/react-dom@19.0.0)(@types/react@19.0.0)(react-dom@19.1.2(react@19.1.2))(react@19.1.2)
+      '@radix-ui/react-slot':
+        specifier: ^1.2.3
+        version: 1.2.3(@types/react@19.0.0)(react@19.1.2)
+      class-variance-authority:
+        specifier: ^0.7.1
+        version: 0.7.1
+      clsx:
+        specifier: ^2.1.1
+        version: 2.1.1
+      date-fns:
+        specifier: ^4.1.0
+        version: 4.1.0
+      eslint-config-next:
+        specifier: 15.3.3
+        version: 15.3.3(eslint@9.29.0(jiti@2.4.2))(typescript@5.8.3)
+      gray-matter:
+        specifier: ^4.0.3
+        version: 4.0.3
+      katex:
+        specifier: ^0.16.22
+        version: 0.16.22
+      lucide-react:
+        specifier: ^0.516.0
+        version: 0.516.0(react@19.1.2)
+      next:
+        specifier: 16.1.1
+        version: 16.1.1(@babel/core@7.27.4)(@opentelemetry/api@1.9.0)(babel-plugin-macros@3.1.0)(react-dom@19.1.2(react@19.1.2))(react@19.1.2)
+      next-themes:
+        specifier: 0.4.6
+        version: 0.4.6(react-dom@19.1.2(react@19.1.2))(react@19.1.2)
+      outstatic:
+        specifier: latest
+        version: 2.0.16(@types/react-dom@19.0.0)(@types/react@19.0.0)(next-themes@0.4.6(react-dom@19.1.2(react@19.1.2))(react@19.1.2))(next@16.1.1(@opentelemetry/api@1.9.0)(react-dom@19.1.2(react@19.1.2))(react@19.1.2))(react-dom@19.1.2(react@19.1.2))(react@19.1.2)(tailwindcss@4.1.10)
+      react:
+        specifier: 19.1.2
+        version: 19.1.2
+      react-dom:
+        specifier: 19.1.2
+        version: 19.1.2(react@19.1.2)
+      rehype-katex:
+        specifier: ^7.0.1
+        version: 7.0.1
+      rehype-pretty-code:
+        specifier: ^0.14.1
+        version: 0.14.1(shiki@3.21.0)
+      remark:
+        specifier: ^14.0.3
+        version: 14.0.3
+      remark-gfm:
+        specifier: ^4.0.0
+        version: 4.0.1
+      remark-html:
+        specifier: ^15.0.2
+        version: 15.0.2
+      remark-math:
+        specifier: ^6.0.0
+        version: 6.0.0
+      tailwind-merge:
+        specifier: ^3.3.1
+        version: 3.3.1
+      vaul:
+        specifier: ^1.1.2
+        version: 1.1.2(@types/react-dom@19.0.0)(@types/react@19.0.0)(react-dom@19.1.2(react@19.1.2))(react@19.1.2)
+    devDependencies:
+      '@tailwindcss/postcss':
+        specifier: ^4.1.10
+        version: 4.1.10
+      '@tailwindcss/typography':
+        specifier: ^0.5.10
+        version: 0.5.16(tailwindcss@4.1.10)
+      '@types/node':
+        specifier: ^24.0.1
+        version: 24.0.3
+      '@types/react':
+        specifier: 19.0.0
+        version: 19.0.0
+      '@types/react-dom':
+        specifier: 19.0.0
+        version: 19.0.0
+      esbuild:
+        specifier: ^0.15.18
+        version: 0.15.18
+      eslint:
+        specifier: ^9.29.0
+        version: 9.29.0(jiti@2.4.2)
+      mdx-bundler:
+        specifier: ^10.1.1
+        version: 10.1.1(acorn@8.15.0)(esbuild@0.15.18)
+      postcss:
+        specifier: ^8.4.49
+        version: 8.4.49
+      rehype-autolink-headings:
+        specifier: ^6.1.1
+        version: 6.1.1
+      rehype-prism-plus:
+        specifier: ^1.6.3
+        version: 1.6.3
+      rehype-slug:
+        specifier: ^5.1.0
+        version: 5.1.0
+      tailwindcss:
+        specifier: 4.1.10
+        version: 4.1.10
+      typescript:
+        specifier: ^5.8.3
+        version: 5.8.3
+
+  examples/outstatic-dashboard:
+    dependencies:
+      '@tailwindcss/postcss':
+        specifier: ^4.1.10
+        version: 4.1.10
+      next:
+        specifier: 16.1.1
+        version: 16.1.1(@babel/core@7.27.4)(@opentelemetry/api@1.9.0)(babel-plugin-macros@3.1.0)(react-dom@19.1.2(react@19.1.2))(react@19.1.2)
+      outstatic:
+        specifier: latest
+        version: 2.0.16(@types/react-dom@19.0.0)(@types/react@19.0.0)(next-themes@0.4.6(react-dom@19.1.2(react@19.1.2))(react@19.1.2))(next@16.1.1(@opentelemetry/api@1.9.0)(react-dom@19.1.2(react@19.1.2))(react@19.1.2))(react-dom@19.1.2(react@19.1.2))(react@19.1.2)(tailwindcss@4.1.10)
+      react:
+        specifier: 19.1.2
+        version: 19.1.2
+      react-dom:
+        specifier: 19.1.2
+        version: 19.1.2(react@19.1.2)
+      tailwindcss:
+        specifier: 4.1.10
+        version: 4.1.10
+    devDependencies:
+      '@tailwindcss/typography':
+        specifier: ^0.5.10
+        version: 0.5.16(tailwindcss@4.1.10)
+      '@types/node':
+        specifier: ^24.0.1
+        version: 24.0.3
+      '@types/react':
+        specifier: 19.0.0
+        version: 19.0.0
+      '@types/react-dom':
+        specifier: 19.0.0
+        version: 19.0.0
+      eslint:
+        specifier: ^9.29.0
+        version: 9.29.0(jiti@2.4.2)
+      eslint-config-next:
+        specifier: 15.3.3
+        version: 15.3.3(eslint@9.29.0(jiti@2.4.2))(typescript@5.8.3)
+      postcss:
+        specifier: ^8.4.49
+        version: 8.4.49
       typescript:
         specifier: ^5.8.3
         version: 5.8.3
@@ -2836,6 +3170,27 @@ packages:
   '@scena/matrix@1.1.1':
     resolution: {integrity: sha512-JVKBhN0tm2Srl+Yt+Ywqu0oLgLcdemDQlD1OxmN9jaCTwaFPZ7tY8n6dhVgMEaR9qcR7r+kAlMXnSfNyYdE+Vg==}
 
+  '@shikijs/core@3.21.0':
+    resolution: {integrity: sha512-AXSQu/2n1UIQekY8euBJlvFYZIw0PHY63jUzGbrOma4wPxzznJXTXkri+QcHeBNaFxiiOljKxxJkVSoB3PjbyA==}
+
+  '@shikijs/engine-javascript@3.21.0':
+    resolution: {integrity: sha512-ATwv86xlbmfD9n9gKRiwuPpWgPENAWCLwYCGz9ugTJlsO2kOzhOkvoyV/UD+tJ0uT7YRyD530x6ugNSffmvIiQ==}
+
+  '@shikijs/engine-oniguruma@3.21.0':
+    resolution: {integrity: sha512-OYknTCct6qiwpQDqDdf3iedRdzj6hFlOPv5hMvI+hkWfCKs5mlJ4TXziBG9nyabLwGulrUjHiCq3xCspSzErYQ==}
+
+  '@shikijs/langs@3.21.0':
+    resolution: {integrity: sha512-g6mn5m+Y6GBJ4wxmBYqalK9Sp0CFkUqfNzUy2pJglUginz6ZpWbaWjDB4fbQ/8SHzFjYbtU6Ddlp1pc+PPNDVA==}
+
+  '@shikijs/themes@3.21.0':
+    resolution: {integrity: sha512-BAE4cr9EDiZyYzwIHEk7JTBJ9CzlPuM4PchfcA5ao1dWXb25nv6hYsoDiBq2aZK9E3dlt3WB78uI96UESD+8Mw==}
+
+  '@shikijs/types@3.21.0':
+    resolution: {integrity: sha512-zGrWOxZ0/+0ovPY7PvBU2gIS9tmhSUUt30jAcNV0Bq0gb2S98gwfjIs1vxlmH5zM7/4YxLamT6ChlqqAJmPPjA==}
+
+  '@shikijs/vscode-textmate@10.0.2':
+    resolution: {integrity: sha512-83yeghZ2xxin3Nj8z1NMd/NCuca+gsYXswywDy5bHvwlWL8tpTQmzGeUuHd9FC3E/SBEMvzJRwWEOz5gGes9Qg==}
+
   '@sinclair/typebox@0.27.8':
     resolution: {integrity: sha512-+Fj43pSMwJs4KRrH/938Uf+uAELIgVBmQzg/q1YG10djyfA3TnrU8N8XzqCh/okZdszqBQTZf96idMfE5lnwTA==}
 
@@ -5326,6 +5681,9 @@ packages:
   hast-util-to-html@8.0.4:
     resolution: {integrity: sha512-4tpQTUOr9BMjtYyNlt0P50mH7xj0Ks2xpo8M943Vykljf99HW6EzulIoJP1N3eKOSScEHzyzi9dm7/cn0RfGwA==}
 
+  hast-util-to-html@9.0.5:
+    resolution: {integrity: sha512-OguPdidb+fbHQSU4Q4ZiLKnzWo8Wwsf5bZfbvu7//a9oTYoqD/fWpe96NuHkoS9h0ccGOTe0C4NGXdtS0iObOw==}
+
   hast-util-to-jsx-runtime@2.3.6:
     resolution: {integrity: sha512-zl6s8LwNyo1P9uw+XJGvZtdFF1GdAkOg8ujOw+4Pyb76874fLps4ueHXDhXWdk6YHQ6OgUtinliG7RsYvCbbBg==}
 
@@ -5378,6 +5736,9 @@ packages:
 
   html-void-elements@2.0.1:
     resolution: {integrity: sha512-0quDb7s97CfemeJAnW9wC0hw78MtW7NU3hqtCD75g2vFlDLt36llsYD7uB7SUzojLMP24N5IatXf7ylGXiGG9A==}
+
+  html-void-elements@3.0.0:
+    resolution: {integrity: sha512-bEqo66MRXsUGxWHV5IP0PUiAWwoEjba4VCzg0LjFJBpchPaTfyfCKTG6bc5F8ucKec3q5y6qOdGyYTSBEvhCrg==}
 
   http-proxy-agent@5.0.0:
     resolution: {integrity: sha512-n2hY8YdoRE1i7r6M0w9DIw5GgZN0G25P8zLCRQ8rjXtTU3vsNFBI/vWK/UIeE6g5MUUz6avwAPXmL6Fy9D/90w==}
@@ -6793,6 +7154,12 @@ packages:
     resolution: {integrity: sha512-1FlR+gjXK7X+AsAHso35MnyN5KqGwJRi/31ft6x0M194ht7S+rWAvd7PHss9xSKMzE0asv1pyIHaJYq+BbacAQ==}
     engines: {node: '>=12'}
 
+  oniguruma-parser@0.12.1:
+    resolution: {integrity: sha512-8Unqkvk1RYc6yq2WBYRj4hdnsAxVze8i7iPfQr8e4uSP3tRv0rpZcbGUDvxfQQcdwHt/e9PrMvGCsa8OqG9X3w==}
+
+  oniguruma-to-es@4.3.4:
+    resolution: {integrity: sha512-3VhUGN3w2eYxnTzHn+ikMI+fp/96KoRSVK9/kMTcFqj1NRDh2IhQCKvYxDnWePKRXY/AqH+Fuiyb7VHSzBjHfA==}
+
   optionator@0.9.4:
     resolution: {integrity: sha512-6IpQ7mKUxRcZNLIObR0hz7lxsapSSIYNZJwXPGeF0mTVqGKFIXj1DQcMoT22S3ROcLyY/rz0PWaWZ9ayWmad9g==}
     engines: {node: '>= 0.8.0'}
@@ -6810,6 +7177,16 @@ packages:
 
   outdent@0.5.0:
     resolution: {integrity: sha512-/jHxFIzoMXdqPzTaCpFzAAWhpkSjZPF4Vsn6jAfNpmbH/ymsmd7Qc6VE9BGn0L6YMj6uwpQLxCECpus4ukKS9Q==}
+
+  outstatic@2.0.16:
+    resolution: {integrity: sha512-8YGYmBMRYiDBZMhDnXwQzWidA6W+WdXj3KhClju0U0mUE7cNrlvC88Kwx31rvgZT9H+OseZVVnJtRTA1dJAInQ==}
+    hasBin: true
+    peerDependencies:
+      next: ^15 | ^16
+      next-themes: ^0.4.6
+      react: ^19
+      react-dom: ^19
+      tailwindcss: ^4.1.10
 
   outvariant@1.4.3:
     resolution: {integrity: sha512-+Sl2UErvtsoajRDKCE5/dBz4DIvHXQQnAxtQTF04OJxY0+DyZXSo5P5Bb7XYWOh81syohlYL24hbDwxedPUJCA==}
@@ -7349,6 +7726,15 @@ packages:
   refractor@4.9.0:
     resolution: {integrity: sha512-nEG1SPXFoGGx+dcjftjv8cAjEusIh6ED1xhf5DG3C0x/k+rmZ2duKnc3QLpt6qeHv5fPb8uwN3VWN2BT7fr3Og==}
 
+  regex-recursion@6.0.2:
+    resolution: {integrity: sha512-0YCaSCq2VRIebiaUviZNs0cBz1kg5kVS2UKUfNIx8YVs1cN3AV7NTctO5FOKBA+UT2BPJIWZauYHPqJODG50cg==}
+
+  regex-utilities@2.3.0:
+    resolution: {integrity: sha512-8VhliFJAWRaUiVvREIiW2NXXTmHs4vMNnSzuJVhscgmGav3g9VDxLrQndI3dZZVVdp0ZO/5v0xmX516/7M9cng==}
+
+  regex@6.1.0:
+    resolution: {integrity: sha512-6VwtthbV4o/7+OaAF9I5L5V3llLEsoPyq9P1JVXkedTP33c7MfCG0/5NOPcSJn0TzXcG9YUrR0gQSWioew3LDg==}
+
   regexp.prototype.flags@1.5.4:
     resolution: {integrity: sha512-dYqgNSZbDwkaJ2ceRd9ojCGjBq+mOm9LmtXnAnEGyHhN/5R7iDW2TRw3h+o/jCFxus3P2LfWIIiwowAjANm7IA==}
     engines: {node: '>= 0.4'}
@@ -7373,11 +7759,11 @@ packages:
   rehype-parse@9.0.1:
     resolution: {integrity: sha512-ksCzCD0Fgfh7trPDxr2rSylbwq9iYDkSn8TCDmEJ49ljEUBxDVCzCHv7QNzZOfODanX4+bWQ4WZqLCRWYLfhag==}
 
-  rehype-pretty-code@0.12.6:
-    resolution: {integrity: sha512-AW18s4eXwnb4PGwL0Y8BoUzBJr23epWNXndCKaZ52S4kl/4tsgM+406oCp5NdtPZsB0ItpaY+hCMv3kw58DLrA==}
+  rehype-pretty-code@0.14.1:
+    resolution: {integrity: sha512-IpG4OL0iYlbx78muVldsK86hdfNoht0z63AP7sekQNW2QOTmjxB7RbTO+rhIYNGRljgHxgVZoPwUl6bIC9SbjA==}
     engines: {node: '>=18'}
     peerDependencies:
-      shikiji: ^0.7.0 || ^0.8.0 || ^0.9.0 || ^0.10.0
+      shiki: ^1.0.0 || ^2.0.0 || ^3.0.0
 
   rehype-prism-plus@1.6.3:
     resolution: {integrity: sha512-F6tn376zimnvy+xW0bSnryul+rvVL7NhDIkavc9kAuzDx5zIZW04A6jdXPkcFBhojcqZB8b6pHt6CLqiUx+Tbw==}
@@ -7617,13 +8003,8 @@ packages:
     resolution: {integrity: sha512-ObmnIF4hXNg1BqhnHmgbDETF8dLPCggZWBjkQfhZpbszZnYur5DUljTcCHii5LC3J5E0yeO/1LIMyH+UvHQgyw==}
     engines: {node: '>= 0.4'}
 
-  shikiji-core@0.9.19:
-    resolution: {integrity: sha512-AFJu/vcNT21t0e6YrfadZ+9q86gvPum6iywRyt1OtIPjPFe25RQnYJyxHQPMLKCCWA992TPxmEmbNcOZCAJclw==}
-    deprecated: Shikiji is merged back to Shiki v1.0, please migrate over to get the latest updates
-
-  shikiji@0.9.19:
-    resolution: {integrity: sha512-Kw2NHWktdcdypCj1GkKpXH4o6Vxz8B8TykPlPuLHOGSV8VkhoCLcFOH4k19K4LXAQYRQmxg+0X/eM+m2sLhAkg==}
-    deprecated: Deprecated, use shiki instead
+  shiki@3.21.0:
+    resolution: {integrity: sha512-N65B/3bqL/TI2crrXr+4UivctrAGEjmsib5rPMMPpFp1xAx/w03v8WZ9RDDFYteXoEgY7qZ4HGgl5KBIu1153w==}
 
   side-channel-list@1.0.0:
     resolution: {integrity: sha512-FCLHtRD/gnpCiCHEiJLOwdmFP+wzCmDEkc9y7NsYxeF4u7Btsn1ZuwgwJGxImImHicJArLP4R0yX4c2KCrMrTA==}
@@ -11335,6 +11716,39 @@ snapshots:
     dependencies:
       '@daybrush/utils': 1.13.0
 
+  '@shikijs/core@3.21.0':
+    dependencies:
+      '@shikijs/types': 3.21.0
+      '@shikijs/vscode-textmate': 10.0.2
+      '@types/hast': 3.0.4
+      hast-util-to-html: 9.0.5
+
+  '@shikijs/engine-javascript@3.21.0':
+    dependencies:
+      '@shikijs/types': 3.21.0
+      '@shikijs/vscode-textmate': 10.0.2
+      oniguruma-to-es: 4.3.4
+
+  '@shikijs/engine-oniguruma@3.21.0':
+    dependencies:
+      '@shikijs/types': 3.21.0
+      '@shikijs/vscode-textmate': 10.0.2
+
+  '@shikijs/langs@3.21.0':
+    dependencies:
+      '@shikijs/types': 3.21.0
+
+  '@shikijs/themes@3.21.0':
+    dependencies:
+      '@shikijs/types': 3.21.0
+
+  '@shikijs/types@3.21.0':
+    dependencies:
+      '@shikijs/vscode-textmate': 10.0.2
+      '@types/hast': 3.0.4
+
+  '@shikijs/vscode-textmate@10.0.2': {}
+
   '@sinclair/typebox@0.27.8': {}
 
   '@sinonjs/commons@3.0.1':
@@ -14172,6 +14586,20 @@ snapshots:
       stringify-entities: 4.0.4
       zwitch: 2.0.4
 
+  hast-util-to-html@9.0.5:
+    dependencies:
+      '@types/hast': 3.0.4
+      '@types/unist': 3.0.3
+      ccount: 2.0.1
+      comma-separated-tokens: 2.0.3
+      hast-util-whitespace: 3.0.0
+      html-void-elements: 3.0.0
+      mdast-util-to-hast: 13.2.0
+      property-information: 7.1.0
+      space-separated-tokens: 2.0.2
+      stringify-entities: 4.0.4
+      zwitch: 2.0.4
+
   hast-util-to-jsx-runtime@2.3.6:
     dependencies:
       '@types/estree': 1.0.8
@@ -14260,6 +14688,8 @@ snapshots:
   html-url-attributes@3.0.1: {}
 
   html-void-elements@2.0.1: {}
+
+  html-void-elements@3.0.0: {}
 
   http-proxy-agent@5.0.0:
     dependencies:
@@ -16317,6 +16747,14 @@ snapshots:
     dependencies:
       mimic-fn: 4.0.0
 
+  oniguruma-parser@0.12.1: {}
+
+  oniguruma-to-es@4.3.4:
+    dependencies:
+      oniguruma-parser: 0.12.1
+      regex: 6.1.0
+      regex-recursion: 6.0.2
+
   optionator@0.9.4:
     dependencies:
       deep-is: 0.1.4
@@ -16343,6 +16781,116 @@ snapshots:
   os-tmpdir@1.0.2: {}
 
   outdent@0.5.0: {}
+
+  outstatic@2.0.16(@types/react-dom@19.0.0)(@types/react@19.0.0)(next-themes@0.4.6(react-dom@19.1.2(react@19.1.2))(react@19.1.2))(next@16.1.1(@opentelemetry/api@1.9.0)(react-dom@19.1.2(react@19.1.2))(react@19.1.2))(react-dom@19.1.2(react@19.1.2))(react@19.1.2)(tailwindcss@4.1.10):
+    dependencies:
+      '@ai-sdk/openai': 3.0.2(zod@3.25.76)
+      '@ai-sdk/react': 3.0.5(react@19.1.2)(zod@3.25.76)
+      '@catalystic/json-to-yaml': 1.0.0
+      '@dnd-kit/core': 6.3.1(react-dom@19.1.2(react@19.1.2))(react@19.1.2)
+      '@dnd-kit/modifiers': 7.0.0(@dnd-kit/core@6.3.1(react-dom@19.1.2(react@19.1.2))(react@19.1.2))(react@19.1.2)
+      '@dnd-kit/sortable': 8.0.0(@dnd-kit/core@6.3.1(react-dom@19.1.2(react@19.1.2))(react@19.1.2))(react@19.1.2)
+      '@dnd-kit/utilities': 3.2.2(react@19.1.2)
+      '@graphql-typed-document-node/core': 3.2.0(graphql@16.11.0)
+      '@hookform/resolvers': 5.1.1(react-hook-form@7.58.1(react@19.1.2))
+      '@radix-ui/react-accordion': 1.2.11(@types/react-dom@19.0.0)(@types/react@19.0.0)(react-dom@19.1.2(react@19.1.2))(react@19.1.2)
+      '@radix-ui/react-alert-dialog': 1.1.14(@types/react-dom@19.0.0)(@types/react@19.0.0)(react-dom@19.1.2(react@19.1.2))(react@19.1.2)
+      '@radix-ui/react-avatar': 1.1.10(@types/react-dom@19.0.0)(@types/react@19.0.0)(react-dom@19.1.2(react@19.1.2))(react@19.1.2)
+      '@radix-ui/react-checkbox': 1.3.2(@types/react-dom@19.0.0)(@types/react@19.0.0)(react-dom@19.1.2(react@19.1.2))(react@19.1.2)
+      '@radix-ui/react-collapsible': 1.1.11(@types/react-dom@19.0.0)(@types/react@19.0.0)(react-dom@19.1.2(react@19.1.2))(react@19.1.2)
+      '@radix-ui/react-dialog': 1.1.14(@types/react-dom@19.0.0)(@types/react@19.0.0)(react-dom@19.1.2(react@19.1.2))(react@19.1.2)
+      '@radix-ui/react-dropdown-menu': 2.1.15(@types/react-dom@19.0.0)(@types/react@19.0.0)(react-dom@19.1.2(react@19.1.2))(react@19.1.2)
+      '@radix-ui/react-icons': 1.3.2(react@19.1.2)
+      '@radix-ui/react-label': 2.1.7(@types/react-dom@19.0.0)(@types/react@19.0.0)(react-dom@19.1.2(react@19.1.2))(react@19.1.2)
+      '@radix-ui/react-popover': 1.1.14(@types/react-dom@19.0.0)(@types/react@19.0.0)(react-dom@19.1.2(react@19.1.2))(react@19.1.2)
+      '@radix-ui/react-radio-group': 1.3.7(@types/react-dom@19.0.0)(@types/react@19.0.0)(react-dom@19.1.2(react@19.1.2))(react@19.1.2)
+      '@radix-ui/react-scroll-area': 1.2.9(@types/react-dom@19.0.0)(@types/react@19.0.0)(react-dom@19.1.2(react@19.1.2))(react@19.1.2)
+      '@radix-ui/react-select': 2.2.5(@types/react-dom@19.0.0)(@types/react@19.0.0)(react-dom@19.1.2(react@19.1.2))(react@19.1.2)
+      '@radix-ui/react-separator': 1.1.7(@types/react-dom@19.0.0)(@types/react@19.0.0)(react-dom@19.1.2(react@19.1.2))(react@19.1.2)
+      '@radix-ui/react-slot': 1.2.3(@types/react@19.0.0)(react@19.1.2)
+      '@radix-ui/react-tooltip': 1.2.7(@types/react-dom@19.0.0)(@types/react@19.0.0)(react-dom@19.1.2(react@19.1.2))(react@19.1.2)
+      '@radix-ui/react-visually-hidden': 1.2.3(@types/react-dom@19.0.0)(@types/react@19.0.0)(react-dom@19.1.2(react@19.1.2))(react@19.1.2)
+      '@tanstack/query-sync-storage-persister': 5.80.7
+      '@tanstack/react-query': 5.80.7(react@19.1.2)
+      '@tanstack/react-query-persist-client': 5.80.7(@tanstack/react-query@5.80.7(react@19.1.2))(react@19.1.2)
+      '@tiptap/core': 2.14.0(@tiptap/pm@2.14.0)
+      '@tiptap/extension-bubble-menu': 2.14.0(@tiptap/core@2.14.0(@tiptap/pm@2.14.0))(@tiptap/pm@2.14.0)
+      '@tiptap/extension-code-block': 2.14.0(@tiptap/core@2.14.0(@tiptap/pm@2.14.0))(@tiptap/pm@2.14.0)
+      '@tiptap/extension-code-block-lowlight': 2.14.0(@tiptap/core@2.14.0(@tiptap/pm@2.14.0))(@tiptap/extension-code-block@2.14.0(@tiptap/core@2.14.0(@tiptap/pm@2.14.0))(@tiptap/pm@2.14.0))(@tiptap/pm@2.14.0)(highlight.js@11.11.1)(lowlight@3.3.0)
+      '@tiptap/extension-gapcursor': 2.14.0(@tiptap/core@2.14.0(@tiptap/pm@2.14.0))(@tiptap/pm@2.14.0)
+      '@tiptap/extension-highlight': 2.14.0(@tiptap/core@2.14.0(@tiptap/pm@2.14.0))
+      '@tiptap/extension-horizontal-rule': 2.14.0(@tiptap/core@2.14.0(@tiptap/pm@2.14.0))(@tiptap/pm@2.14.0)
+      '@tiptap/extension-image': 2.14.0(@tiptap/core@2.14.0(@tiptap/pm@2.14.0))
+      '@tiptap/extension-link': 2.14.0(@tiptap/core@2.14.0(@tiptap/pm@2.14.0))(@tiptap/pm@2.14.0)
+      '@tiptap/extension-placeholder': 2.14.0(@tiptap/core@2.14.0(@tiptap/pm@2.14.0))(@tiptap/pm@2.14.0)
+      '@tiptap/extension-table': 2.14.0(@tiptap/core@2.14.0(@tiptap/pm@2.14.0))(@tiptap/pm@2.14.0)
+      '@tiptap/extension-table-cell': 2.14.0(@tiptap/core@2.14.0(@tiptap/pm@2.14.0))
+      '@tiptap/extension-table-header': 2.14.0(@tiptap/core@2.14.0(@tiptap/pm@2.14.0))
+      '@tiptap/extension-table-row': 2.14.0(@tiptap/core@2.14.0(@tiptap/pm@2.14.0))
+      '@tiptap/extension-underline': 2.14.0(@tiptap/core@2.14.0(@tiptap/pm@2.14.0))
+      '@tiptap/pm': 2.14.0
+      '@tiptap/react': 2.14.0(@tiptap/core@2.14.0(@tiptap/pm@2.14.0))(@tiptap/pm@2.14.0)(react-dom@19.1.2(react@19.1.2))(react@19.1.2)
+      '@tiptap/starter-kit': 2.14.0
+      '@tiptap/suggestion': 2.14.0(@tiptap/core@2.14.0(@tiptap/pm@2.14.0))(@tiptap/pm@2.14.0)
+      ai: 6.0.5(zod@3.25.76)
+      change-case: 5.4.4
+      class-variance-authority: 0.7.1
+      clsx: 2.1.1
+      cmdk: 1.1.1(@types/react-dom@19.0.0)(@types/react@19.0.0)(react-dom@19.1.2(react@19.1.2))(react@19.1.2)
+      cookie: 0.5.0
+      cross-fetch: 4.1.0(encoding@0.1.13)
+      date-fns: 4.1.0
+      dompurify: 2.5.8
+      encoding: 0.1.13
+      graphql: 16.11.0
+      graphql-request: 6.1.0(encoding@0.1.13)(graphql@16.11.0)
+      gray-matter: 4.0.3
+      highlight.js: 11.11.1
+      imurmurhash: 0.1.4
+      jose: 5.10.0
+      js-base64: 3.7.7
+      js-cookie: 3.0.5
+      json-stable-stringify: 1.3.0
+      katex: 0.16.22
+      lowlight: 3.3.0
+      lucide-react: 0.516.0(react@19.1.2)
+      lz-string: 1.5.0
+      next: 16.1.1(@babel/core@7.27.4)(@opentelemetry/api@1.9.0)(babel-plugin-macros@3.1.0)(react-dom@19.1.2(react@19.1.2))(react@19.1.2)
+      next-navigation-guard: 0.2.0(next@16.1.1(@babel/core@7.27.4)(@opentelemetry/api@1.9.0)(babel-plugin-macros@3.1.0)(react-dom@19.1.2(react@19.1.2))(react@19.1.2))(react@19.1.2)
+      next-remove-imports: 1.0.12(webpack@5.99.9(esbuild@0.17.19))
+      next-themes: 0.4.6(react-dom@19.1.2(react@19.1.2))(react@19.1.2)
+      novel: 0.5.0(@tiptap/extension-code-block@2.14.0(@tiptap/core@2.14.0(@tiptap/pm@2.14.0))(@tiptap/pm@2.14.0))(@types/react@19.0.0)(highlight.js@11.11.1)(lowlight@3.3.0)(react-dom@19.1.2(react@19.1.2))(react@19.1.2)
+      pluralize: 8.0.0
+      postcss: 8.4.49
+      react: 19.1.2
+      react-day-picker: 9.7.0(react@19.1.2)
+      react-dom: 19.1.2(react@19.1.2)
+      react-hook-form: 7.58.1(react@19.1.2)
+      react-markdown: 9.1.0(@types/react@19.0.0)(react@19.1.2)
+      react-select: 5.10.1(@types/react@19.0.0)(react-dom@19.1.2(react@19.1.2))(react@19.1.2)
+      react-textarea-autosize: 8.5.9(@types/react@19.0.0)(react@19.1.2)
+      sift: 16.0.1
+      sonner: 1.7.4(react-dom@19.1.2(react@19.1.2))(react@19.1.2)
+      tailwind-merge: 3.3.1
+      tailwindcss: 4.1.10
+      tailwindcss-animate: 1.0.7(tailwindcss@4.1.10)
+      thenby: 1.3.4
+      tippy.js: 6.3.7
+      tiptap-markdown: 0.8.1(@tiptap/core@2.14.0(@tiptap/pm@2.14.0))
+      transliteration: 2.3.5
+      ts-pattern: 5.7.1
+      url-slug: 3.0.6
+      use-debounce: 9.0.4(react@19.1.2)
+      use-resize-observer: 9.1.0(react-dom@19.1.2(react@19.1.2))(react@19.1.2)
+      yaml: 2.8.0
+      zod: 3.25.76
+      zustand: 4.5.7(@types/react@19.0.0)(react@19.1.2)
+    transitivePeerDependencies:
+      - '@types/react'
+      - '@types/react-dom'
+      - immer
+      - supports-color
+      - webpack
 
   outvariant@1.4.3: {}
 
@@ -16992,6 +17540,16 @@ snapshots:
       hastscript: 7.2.0
       parse-entities: 4.0.2
 
+  regex-recursion@6.0.2:
+    dependencies:
+      regex-utilities: 2.3.0
+
+  regex-utilities@2.3.0: {}
+
+  regex@6.1.0:
+    dependencies:
+      regex-utilities: 2.3.0
+
   regexp.prototype.flags@1.5.4:
     dependencies:
       call-bind: 1.0.8
@@ -17042,13 +17600,13 @@ snapshots:
       hast-util-from-html: 2.0.3
       unified: 11.0.5
 
-  rehype-pretty-code@0.12.6(shikiji@0.9.19):
+  rehype-pretty-code@0.14.1(shiki@3.21.0):
     dependencies:
       '@types/hast': 3.0.4
       hast-util-to-string: 3.0.1
       parse-numeric-range: 1.3.0
       rehype-parse: 9.0.1
-      shikiji: 0.9.19
+      shiki: 3.21.0
       unified: 11.0.5
       unist-util-visit: 5.0.0
 
@@ -17410,11 +17968,16 @@ snapshots:
 
   shell-quote@1.8.3: {}
 
-  shikiji-core@0.9.19: {}
-
-  shikiji@0.9.19:
+  shiki@3.21.0:
     dependencies:
-      shikiji-core: 0.9.19
+      '@shikijs/core': 3.21.0
+      '@shikijs/engine-javascript': 3.21.0
+      '@shikijs/engine-oniguruma': 3.21.0
+      '@shikijs/langs': 3.21.0
+      '@shikijs/themes': 3.21.0
+      '@shikijs/types': 3.21.0
+      '@shikijs/vscode-textmate': 10.0.2
+      '@types/hast': 3.0.4
 
   side-channel-list@1.0.0:
     dependencies:
