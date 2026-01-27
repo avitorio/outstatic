@@ -36,7 +36,6 @@ export default function Dashboard() {
       {!hasContent ? (
         <LineBackground>
           <CollectionOnboarding />
-          <SingletonOnboarding />
         </LineBackground>
       ) : (
         <>
