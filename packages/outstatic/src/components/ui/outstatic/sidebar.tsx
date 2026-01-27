@@ -187,7 +187,9 @@ function SubRouteGroup({
                 return (
                   <SidebarMenuSubItem key={child.path}>
                     <SidebarMenuSubButton isActive={isActive} asChild>
-                      <Link className={linkClassName} href={child.path}>
+                      <Link className={cn(linkClassName, {
+                        'pointer-events-none': isActive
+                      })} href={child.path}>
                         {child.Icon}
                         <span className={spanClassName}>{child.label}</span>
                       </Link>
@@ -383,7 +385,8 @@ export function SidebarNavigation({
                             >
                               <Link
                                 className={cn('flex items-center', {
-                                  'mx-auto w-full gap-0! [&>svg]:flex-1': !open
+                                  'mx-auto w-full gap-0! [&>svg]:flex-1': !open,
+                                  'pointer-events-none': isActive
                                 })}
                                 href={path}
                               >
@@ -463,7 +466,9 @@ export function SidebarNavigation({
                                                 asChild
                                               >
                                                 <Link
-                                                  className={linkClassName}
+                                                  className={cn(linkClassName, {
+                                                    'pointer-events-none': isActive
+                                                  })}
                                                   href={subChild.path}
                                                 >
                                                   {subChild.Icon}
