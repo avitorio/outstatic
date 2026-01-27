@@ -130,7 +130,7 @@ export async function Outstatic({
     hasAIProviderKey: !!process.env.OPENAI_API_KEY || !!process.env.AI_GATEWAY_API_KEY,
     basePath: process.env.OST_BASE_PATH || '',
     ostDetach: process.env.OST_DETACH || false,
-    pages: ['collections', 'settings', 'media-library'],
+    pages: ['collections', 'settings', 'media-library', 'singletons'],
     dashboardRoute: '/outstatic',
     githubGql: session?.provider !== 'github' ? `${OST_PRO_API_URL}/github/parser` : 'https://api.github.com/graphql',
     publicMediaPath: process.env.OST_PUBLIC_MEDIA_PATH || '',

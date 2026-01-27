@@ -1,11 +1,5 @@
 [
   {
-    "title": "Pages",
-    "slug": "pages",
-    "path": "apps/dev/outstatic/content/pages",
-    "children": []
-  },
-  {
     "title": "Posts",
     "slug": "posts",
     "path": "apps/dev/outstatic/content/posts",

@@ -7,6 +7,7 @@ import { toast } from 'sonner'
 import { useCreateCommit } from './useCreateCommit'
 import { GET_FILE } from '@/graphql/queries/file'
 import { sentenceCase } from 'change-case'
+import { stringifyError } from '@/utils/errors/stringifyError'
 
 export type CollectionType = {
   title: string
@@ -31,95 +32,111 @@ export function useCollections(options?: UseCollectionsOptions) {
   return useQuery({
     queryKey: ['collections', { repoOwner, repoSlug, repoBranch, ostContent }],
     queryFn: async (): Promise<CollectionsType> => {
-      const collectionJson =
-        isPending || !repoOwner || !repoSlug || !repoBranch
-          ? null
-          : await gqlClient.request(GET_FILE, {
-            owner: repoOwner,
-            name: repoSlug,
-            filePath: `${repoBranch}:${ostContent}/collections.json` || ''
-          })
-
-      let collectionsData: CollectionsType = null
-
-      const collectionsObject = collectionJson?.repository?.object as {
-        text?: string
-      }
-
-      if (collectionsObject?.text) {
-        collectionsData = JSON.parse(collectionsObject.text)
-        const collections = collectionsData ?? []
-
-        return collections
-      }
-
-      // If the collections.json file doesn't exist, fetch the collections from the outstatic folder
-      // and create the collections.json file
-      if (collectionJson === null || collectionsObject === null) {
-        const data =
+      try {
+        const collectionJson =
           isPending || !repoOwner || !repoSlug || !repoBranch
             ? null
-            : await gqlClient.request(GET_COLLECTIONS, {
+            : await gqlClient.request(GET_FILE, {
               owner: repoOwner,
               name: repoSlug,
-              contentPath: `${repoBranch}:${ostContent}` || ''
+              filePath: `${repoBranch}:${ostContent}/collections.json` || ''
             })
 
-        if (!data || data?.repository?.object === null) {
-          // We couldn't find the outstatic folder, so we return an empty array
-          return [] as CollectionsType
+        let collectionsData: CollectionsType = null
+
+        const collectionsObject = collectionJson?.repository?.object as {
+          text?: string
         }
 
-        const { entries } = data?.repository?.object as {
-          entries: { name: string; type: string }[]
+        if (collectionsObject?.text) {
+          collectionsData = JSON.parse(collectionsObject.text)
+          const collections = collectionsData ?? []
+
+          return collections
         }
 
-        collectionsData = entries
-          .map((entry) =>
-            entry.type === 'tree'
-              ? {
-                title: sentenceCase(entry.name, {
-                  split: (str) =>
-                    str.split(/([^A-Za-z0-9\.]+)/g).filter(Boolean)
-                }),
-                slug: entry.name,
-                path: `${ostContent}/${entry.name}`,
-                children: []
-              }
-              : undefined
+        // If the collections.json file doesn't exist, fetch the collections from the outstatic folder
+        // and create the collections.json file
+        if (collectionJson === null || collectionsObject === null) {
+          const data =
+            isPending || !repoOwner || !repoSlug || !repoBranch
+              ? null
+              : await gqlClient.request(GET_COLLECTIONS, {
+                owner: repoOwner,
+                name: repoSlug,
+                contentPath: `${repoBranch}:${ostContent}` || ''
+              })
+
+          if (!data || data?.repository?.object === null) {
+            // We couldn't find the outstatic folder, so we return an empty array
+            return [] as CollectionsType
+          }
+
+          const { entries } = data?.repository?.object as {
+            entries: { name: string; type: string }[]
+          }
+
+          collectionsData = entries
+            .map((entry) =>
+              entry.type === 'tree'
+                ? {
+                  title: sentenceCase(entry.name, {
+                    split: (str) =>
+                      str.split(/([^A-Za-z0-9\.]+)/g).filter(Boolean)
+                  }),
+                  slug: entry.name,
+                  path: `${ostContent}/${entry.name}`,
+                  children: []
+                }
+                : undefined
+            )
+            .filter(Boolean) as CollectionsType
+
+          const oid = await fetchOid()
+
+          if (!oid) {
+            throw new Error('No oid found')
+          }
+
+          const commitApi = createCommitApi({
+            message: 'chore: Updates collections',
+            owner: repoOwner,
+            name: repoSlug,
+            branch: repoBranch,
+            oid
+          })
+
+          commitApi.replaceFile(
+            `${ostContent}/collections.json`,
+            JSON.stringify(collectionsData, null, 2)
           )
-          .filter(Boolean) as CollectionsType
 
-        const oid = await fetchOid()
+          const payload = commitApi.createInput()
 
-        if (!oid) {
-          throw new Error('No oid found')
+          toast.promise(mutation.mutateAsync(payload), {
+            loading: 'Updating collections',
+            success: 'Collections updated',
+            error: 'Error updating collections'
+          })
+
+          return collectionsData
         }
-
-        const commitApi = createCommitApi({
-          message: 'chore: Updates collections',
-          owner: repoOwner,
-          name: repoSlug,
-          branch: repoBranch,
-          oid
+        return []
+      } catch (error) {
+        console.error('Error fetching collections:', error)
+        const errorToast = toast.error('Error fetching collections', {
+          action: {
+            label: 'Copy Logs',
+            onClick: () => {
+              navigator.clipboard.writeText(`Error: ${stringifyError(error)}`)
+              toast.message('Logs copied to clipboard', {
+                id: errorToast
+              })
+            }
+          }
         })
-
-        commitApi.replaceFile(
-          `${ostContent}/collections.json`,
-          JSON.stringify(collectionsData, null, 2)
-        )
-
-        const payload = commitApi.createInput()
-
-        toast.promise(mutation.mutateAsync(payload), {
-          loading: 'Updating collections',
-          success: 'Collections updated',
-          error: 'Error updating collections'
-        })
-
-        return collectionsData
+        return []
       }
-      return []
     },
     meta: {
       errorMessage: 'Failed to fetch collections'

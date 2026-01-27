@@ -25,6 +25,6 @@ export const useGetRepository = (options?: { enabled?: boolean }) => {
       errorMessage: 'Failed to fetch repository information'
     },
     enabled: options?.enabled !== false && !!repoOwner && !!repoSlug,
-    staleTime: 1000 * 60 * 60
+    staleTime: 1000 * 60 * 60 // 1 hour
   })
 }

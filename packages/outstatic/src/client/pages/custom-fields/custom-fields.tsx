@@ -181,6 +181,7 @@ export default function CustomFields({ collection, title }: CustomFieldsProps) {
       {showAddModal && (
         <AddCustomFieldDialog
           collection={collection}
+          documentTitle={title}
           showAddModal={showAddModal}
           setShowAddModal={setShowAddModal}
           customFields={customFields}

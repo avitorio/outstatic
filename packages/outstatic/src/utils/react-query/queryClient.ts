@@ -4,6 +4,7 @@ import { persistQueryClient } from '@tanstack/react-query-persist-client'
 import { compress, decompress } from 'lz-string'
 import { toast } from 'sonner'
 import { ClientError } from 'graphql-request'
+import { stringifyError } from '@/utils/errors/stringifyError'
 
 // Create a client
 export const queryClient = new QueryClient({
@@ -35,11 +36,29 @@ export const queryClient = new QueryClient({
             }
           )
         } else {
-          toast.error(
+          const errorMessage =
             (query?.meta?.errorMessage as string) ||
-              error.message ? `${error.message}` : 'Something went wrong'
-          )
+            `Something went wrong: ${error.message}`
+          console.error('Query error', { error, queryKey: query.queryKey })
+          const errorToast = toast.error(errorMessage, {
+            action: {
+              label: 'Copy Logs',
+              onClick: () => {
+                navigator.clipboard.writeText(
+                  `Query Key: ${JSON.stringify(
+                    query.queryKey,
+                    null,
+                    '  '
+                  )}\n\nError: ${stringifyError(error)}`
+                )
+                toast.message('Logs copied to clipboard', {
+                  id: errorToast
+                })
+              }
+            }
+          })
         }
+
       }
     }
   }),
