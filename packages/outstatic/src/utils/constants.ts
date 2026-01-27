@@ -1,7 +1,7 @@
 import { Document } from '@/types'
 
 // Outstatic configuration
-export const OUTSTATIC_VERSION = '2.0.16'
+export const OUTSTATIC_VERSION = '2.0.17'
 export const OUTSTATIC_URL = 'https://outstatic.com'
 
 // API configuration

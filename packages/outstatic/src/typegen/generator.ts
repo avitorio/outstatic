@@ -266,7 +266,7 @@ function generateApiFile(
   lines.push(`/** Fluent API for querying documents */`)
   lines.push(`interface FindAPI<T, P = T> {`)
   lines.push(`  /** Sort results by field(s) */`)
-  lines.push(`  sort(sort: { [K in keyof P]?: 1 | -1 } | (keyof P)[] | keyof P): FindAPI<T, P>`)
+  lines.push(`  sort(sort: { [K in keyof T]?: 1 | -1 } | (keyof T)[] | keyof T): FindAPI<T, P>`)
   lines.push(`  /** Select fields to return (use 'as const' for type narrowing) */`)
   lines.push(`  project<K extends keyof T>(projection: readonly K[]): FindAPI<T, Pick<T, K>>`)
   lines.push(`  project(projection: Record<string, number>): FindAPI<T, Partial<T>>`)

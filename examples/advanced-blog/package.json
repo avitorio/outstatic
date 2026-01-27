@@ -41,11 +41,11 @@
     "esbuild": "^0.15.18",
     "eslint": "^9.29.0",
     "eslint-config-next": "15.3.3",
-    "mdx-bundler": "^10.0.1",
+    "mdx-bundler": "^10.1.1",
     "postcss": "^8.4.49",
     "postcss-nesting": "^12.0.2",
     "rehype-autolink-headings": "^6.1.1",
-    "rehype-pretty-code": "^0.12.6",
+    "rehype-pretty-code": "^0.14.1",
     "rehype-slug": "^5.1.0",
     "typescript": "^5.8.3"
   }

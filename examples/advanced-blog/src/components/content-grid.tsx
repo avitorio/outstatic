@@ -1,27 +1,30 @@
-import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
-import type { OstDocument } from "outstatic";
+import { Button } from '@/components/ui/button'
+import { ArrowRight } from 'lucide-react'
+import Image from 'next/image'
+import Link from 'next/link'
 
 type Item = {
-  tags?: { value: string; label: string }[];
-} & OstDocument;
+  slug: string
+  title: string
+  description?: string
+  coverImage?: string
+  tags?: { value: string; label: string }[]
+}
 
 type Props = {
-  collection: string;
-  title?: string;
-  items: Item[];
-  priority?: boolean;
-  viewAll?: boolean;
-};
+  collection: string
+  title?: string
+  items: Item[]
+  priority?: boolean
+  viewAll?: boolean
+}
 
 const ContentGrid = ({
-  title = "More",
+  title = 'More',
   items,
   collection,
   priority = false,
-  viewAll = false,
+  viewAll = false
 }: Props) => {
   return (
     <section id={collection} className="mb-24">
@@ -49,7 +52,6 @@ const ContentGrid = ({
                 height={180}
                 sizes="(min-width: 768px) 347px, 192px"
                 priority={priority && id <= 2}
-                unoptimized={!item.coverImage}
               />
               <div className="p-4">
                 {Array.isArray(item?.tags)
@@ -84,7 +86,7 @@ const ContentGrid = ({
         </Button>
       ) : null}
     </section>
-  );
-};
+  )
+}
 
-export default ContentGrid;
+export default ContentGrid

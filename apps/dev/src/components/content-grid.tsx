@@ -52,7 +52,6 @@ const ContentGrid = ({
                 height={180}
                 sizes="(min-width: 768px) 347px, 192px"
                 priority={priority && id <= 2}
-                unoptimized={!item.coverImage}
               />
               <div className="p-4">
                 {Array.isArray(item?.tags)

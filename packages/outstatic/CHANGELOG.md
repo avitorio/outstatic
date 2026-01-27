@@ -1,5 +1,17 @@
 # outstatic
 
+## 2.0.17
+
+### Patch Changes
+
+- 46b4560: Update examples and fix errors
+
+## 2.0.17-canary.0
+
+### Patch Changes
+
+- Update examples and fix errors
+
 ## 2.0.16
 
 ### Patch Changes
