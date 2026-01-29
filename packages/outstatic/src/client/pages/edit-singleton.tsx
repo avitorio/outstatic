@@ -57,7 +57,9 @@ export default function EditSingleton({ slug: initialSlug }: { slug: string }) {
   const [showDelete, setShowDelete] = useState(false)
   const [documentSchema, setDocumentSchema] = useState(editDocumentSchema)
   const [showSingletonModal, setShowSingletonModal] = useState(false)
-  const [singletonContentPath, setSingletonContentPath] = useState<string | undefined>(undefined)
+  const [singletonContentPath, setSingletonContentPath] = useState<
+    string | undefined
+  >(undefined)
   //@ts-ignore
   const methods = useForm<Document>({ resolver: zodResolver(documentSchema) })
 
@@ -91,7 +93,7 @@ export default function EditSingleton({ slug: initialSlug }: { slug: string }) {
 
   const singletonTitle = isNew
     ? 'New Singleton'
-    : (singletons?.find((s) => s.slug === slug)?.title || slug)
+    : singletons?.find((s) => s.slug === slug)?.title || slug
 
   const onSubmit = useSubmitSingleton({
     session,
@@ -183,7 +185,20 @@ export default function EditSingleton({ slug: initialSlug }: { slug: string }) {
     // and content lock is active (prevents navigation without saving)
     setHasChanges(true)
     setOpenFileLoaded(true)
-  }, [openedFileData, editor, openFileLoaded, openFilePath, basePath, repoOwner, repoSlug, repoBranch, publicMediaPath, repoMediaPath, methods, setHasChanges])
+  }, [
+    openedFileData,
+    editor,
+    openFileLoaded,
+    openFilePath,
+    basePath,
+    repoOwner,
+    repoSlug,
+    repoBranch,
+    publicMediaPath,
+    repoMediaPath,
+    methods,
+    setHasChanges
+  ])
 
   // Update URL when slug changes (after first save of new singleton)
   useEffect(() => {

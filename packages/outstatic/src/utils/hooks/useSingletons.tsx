@@ -20,7 +20,10 @@ export function useSingletons(options?: UseGetSingletonsOptions) {
     useOutstatic()
   const fetchOid = useOid()
   const mutation = useCreateCommit()
-  const { refetch: refetchDocuments } = useGetDocuments({ enabled: false, collection: '_singletons' })
+  const { refetch: refetchDocuments } = useGetDocuments({
+    enabled: false,
+    collection: '_singletons'
+  })
 
   return useQuery({
     queryKey: ['singletons', { repoOwner, repoSlug, repoBranch, ostContent }],
@@ -30,10 +33,10 @@ export function useSingletons(options?: UseGetSingletonsOptions) {
           isPending || !repoOwner || !repoSlug || !repoBranch
             ? null
             : await gqlClient.request(GET_FILE, {
-              owner: repoOwner,
-              name: repoSlug,
-              filePath: `${repoBranch}:${ostContent}/singletons.json` || ''
-            })
+                owner: repoOwner,
+                name: repoSlug,
+                filePath: `${repoBranch}:${ostContent}/singletons.json` || ''
+              })
 
         let singletonsData: SingletonsType = null
 
@@ -58,17 +61,18 @@ export function useSingletons(options?: UseGetSingletonsOptions) {
           }
 
           // Filter for .md/.mdx files (blobs) and extract singleton info
-          const singletons = data.documents?.map((entry) => {
-            const slug = entry.slug.replace(MD_MDX_REGEXP, '')
-            return {
-              title: entry.title,
-              slug,
-              path: `${ostContent}/_singletons/${entry.slug}.${entry.extension}`,
-              directory: `${ostContent}/_singletons`,
-              publishedAt: entry.publishedAt,
-              status: entry.status
-            }
-          }) ?? []
+          const singletons =
+            data.documents?.map((entry) => {
+              const slug = entry.slug.replace(MD_MDX_REGEXP, '')
+              return {
+                title: entry.title,
+                slug,
+                path: `${ostContent}/_singletons/${entry.slug}.${entry.extension}`,
+                directory: `${ostContent}/_singletons`,
+                publishedAt: entry.publishedAt,
+                status: entry.status
+              }
+            }) ?? []
 
           const oid = await fetchOid()
 

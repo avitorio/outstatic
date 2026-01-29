@@ -1,28 +1,28 @@
-import useCopyToClipboard from "@/hooks/useCopyToClipboard";
-import clsx from "clsx";
-import { Check, Copy } from "lucide-react";
-import { ComponentPropsWithRef, useRef, useState } from "react";
+import useCopyToClipboard from '@/hooks/useCopyToClipboard'
+import clsx from 'clsx'
+import { Check, Copy } from 'lucide-react'
+import { ComponentPropsWithRef, useRef, useState } from 'react'
 
-export const Pre = (props: ComponentPropsWithRef<"pre">) => {
-  const preRef = useRef<HTMLPreElement>(null);
-  const [isCopied, setIsCopied] = useState(false);
-  const [copy] = useCopyToClipboard();
+export const Pre = (props: ComponentPropsWithRef<'pre'>) => {
+  const preRef = useRef<HTMLPreElement>(null)
+  const [isCopied, setIsCopied] = useState(false)
+  const [copy] = useCopyToClipboard()
   return (
     <div className="p-0 relative">
       <div className="flex absolute top-2 right-4 rounded-md border border-gray-600">
         <button
           onClick={() => {
-            copy(preRef?.current?.textContent ?? "").then(() => {
-              setIsCopied(true);
-              setTimeout(() => setIsCopied(false), 1500);
-            });
+            copy(preRef?.current?.textContent ?? '').then(() => {
+              setIsCopied(true)
+              setTimeout(() => setIsCopied(false), 1500)
+            })
           }}
           title="Copy code"
           className={clsx([
-            "hidden rounded px-1 transition-colors md:flex items-center gap-1 text-sm",
-            "border border-gray-300 dark:border-gray-600",
-            "text-gray-700",
-            "bg-gray-50 hover:bg-gray-300",
+            'hidden rounded px-1 transition-colors md:flex items-center gap-1 text-sm',
+            'border border-gray-300 dark:border-gray-600',
+            'text-gray-700',
+            'bg-gray-50 hover:bg-gray-300'
           ])}
         >
           {isCopied ? (
@@ -40,16 +40,16 @@ export const Pre = (props: ComponentPropsWithRef<"pre">) => {
         {props.children}
       </pre>
     </div>
-  );
-};
+  )
+}
 
-export function CustomCode(props: ComponentPropsWithRef<"code">) {
-  const language = props.className?.includes("language")
-    ? props.className.replace("language-", "").replace(" code-highlight", "")
-    : null;
+export function CustomCode(props: ComponentPropsWithRef<'code'>) {
+  const language = props.className?.includes('language')
+    ? props.className.replace('language-', '').replace(' code-highlight', '')
+    : null
 
   return (
-    <code {...props} data-code-type={language && "code-block"}>
+    <code {...props} data-code-type={language && 'code-block'}>
       {language ? (
         <div className="overflow-x-auto pt-4">{props.children}</div>
       ) : (
@@ -63,5 +63,5 @@ export function CustomCode(props: ComponentPropsWithRef<"code">) {
         </div>
       ) : null}
     </code>
-  );
+  )
 }

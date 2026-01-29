@@ -85,6 +85,7 @@ export const DocumentSettingsImageSelection = ({
       resolvedImage?.startsWith('http') ||
       resolvedImage?.startsWith(`${basePath}${API_MEDIA_PATH}`)
     ) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       handleImageSelect(resolvedImage, false)
       return
     }

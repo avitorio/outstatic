@@ -1,2 +1,9 @@
 coverage/
 pnpm-lock.yaml
+.next
+dist
+apps/dev/outstatic/
+apps/docs/outstatic/
+examples/basic-blog/outstatic/
+examples/advanced-blog/outstatic/
+examples/docs/outstatic/

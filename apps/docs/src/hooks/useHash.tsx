@@ -12,6 +12,7 @@ const useHash = () => {
   const params = useParams()
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsClient(true)
     setHash(getHash())
   }, [params])

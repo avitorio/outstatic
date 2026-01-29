@@ -206,8 +206,8 @@ const cellSwitch = (columnValue: string, document: OstDocument) => {
                 </span>
               ))
             : typeof item === 'string'
-            ? item
-            : null}
+              ? item
+              : null}
         </td>
       )
   }

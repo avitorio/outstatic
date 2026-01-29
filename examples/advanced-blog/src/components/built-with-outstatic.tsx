@@ -2,8 +2,8 @@ export const BuiltWithOutstatic = ({ fixed = true }: { fixed: boolean }) => (
   <div
     className={
       fixed
-        ? "hidden md:block max-w-min sticky right-2 bottom-2 left-full pr-2"
-        : "relative"
+        ? 'hidden md:block max-w-min sticky right-2 bottom-2 left-full pr-2'
+        : 'relative'
     }
   >
     <a
@@ -13,7 +13,7 @@ export const BuiltWithOutstatic = ({ fixed = true }: { fixed: boolean }) => (
     >
       <div className="absolute hidden md:flex items-center border rounded-l-md border-r-0 bg-white dark:bg-[#1e293b] left-0 -translate-x-[1px] md:group-hover:-translate-x-[80%] transition duration-1000 ease-in-out h-8 p-2">
         <span className="opacity-0 md:group-hover:opacity-100 transition duration-1000 ease-in-out ">
-          Built with{" "}
+          Built with{' '}
         </span>
       </div>
       <svg
@@ -39,4 +39,4 @@ export const BuiltWithOutstatic = ({ fixed = true }: { fixed: boolean }) => (
       </svg>
     </a>
   </div>
-);
+)

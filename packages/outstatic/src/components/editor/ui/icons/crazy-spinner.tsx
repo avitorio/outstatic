@@ -5,7 +5,7 @@ const CrazySpinner = () => {
       <div className="h-1.5 w-1.5 animate-bounce rounded-full bg-purple-500 [animation-delay:-0.15s]" />
       <div className="h-1.5 w-1.5 animate-bounce rounded-full bg-purple-500" />
     </div>
-  );
-};
+  )
+}
 
-export default CrazySpinner;
+export default CrazySpinner

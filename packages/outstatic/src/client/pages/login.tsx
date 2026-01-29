@@ -53,17 +53,18 @@ export default function Login({ basePath }: { basePath?: string }) {
       <div id="outstatic">
         <LoadingBackground isLoading={isLoading}>
           <main className="relative z-10 flex h-screen items-center justify-center p-4">
-          {error && loginErrors[error] ? (
-                <div className="absolute top-0 max-w-full p-4 mx-auto">
-                  <Alert variant="destructive">
-                    <AlertCircleIcon />
-                    <AlertTitle>Something went wrong</AlertTitle>
-                    <AlertDescription><p>{loginErrors[error]}</p></AlertDescription>
-                  </Alert>
-                </div>
-              ) : null}
+            {error && loginErrors[error] ? (
+              <div className="absolute top-0 max-w-full p-4 mx-auto">
+                <Alert variant="destructive">
+                  <AlertCircleIcon />
+                  <AlertTitle>Something went wrong</AlertTitle>
+                  <AlertDescription>
+                    <p>{loginErrors[error]}</p>
+                  </AlertDescription>
+                </Alert>
+              </div>
+            ) : null}
             <div className="relative flex flex-col items-center justify-center">
-              
               <h1 className="mb-8 text-center text-xl font-semibold text-white">
                 <svg
                   fill="none"

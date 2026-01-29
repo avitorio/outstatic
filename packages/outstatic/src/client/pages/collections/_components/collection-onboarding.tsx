@@ -38,8 +38,7 @@ export default function CollectionOnboarding() {
         {confirmBranch ? (
           <div className="space-y-6">
             <div className="mb-8 flex flex-col gap-2 h-12 items-start">
-              <h1 className="mr-12 text-2xl">Start your site
-              </h1>
+              <h1 className="mr-12 text-2xl">Start your site</h1>
               <p>Most sites start with a Collection like Blog or Projects.</p>
             </div>
             <Card className="relative border-2 border-primary/20 shadow-sm p-6">
@@ -52,19 +51,30 @@ export default function CollectionOnboarding() {
                     <div className="flex items-start justify-between gap-4">
                       <div className="space-y-1">
                         <div className="flex items-center gap-2">
-                          <h2 className="text-lg font-semibold">Create a Collection</h2>
-                          <Badge variant="secondary" className="text-xs font-medium">
+                          <h2 className="text-lg font-semibold">
+                            Create a Collection
+                          </h2>
+                          <Badge
+                            variant="secondary"
+                            className="text-xs font-medium"
+                          >
                             Recommended
                           </Badge>
                           <Tooltip>
                             <TooltipTrigger asChild>
                               <button className="text-muted-foreground hover:text-foreground transition-colors">
                                 <Info className="h-4 w-4" />
-                                <span className="sr-only">Learn about collections</span>
+                                <span className="sr-only">
+                                  Learn about collections
+                                </span>
                               </button>
                             </TooltipTrigger>
                             <TooltipContent side="top" className="max-w-xs">
-                              <p>Collections are groups of similar content that share the same structure. Perfect for blog posts, products, or team members.</p>
+                              <p>
+                                Collections are groups of similar content that
+                                share the same structure. Perfect for blog
+                                posts, products, or team members.
+                              </p>
                             </TooltipContent>
                           </Tooltip>
                         </div>
@@ -128,7 +138,8 @@ export default function CollectionOnboarding() {
             </CardHeader>
             <CardContent className="prose prose-sm dark:prose-invert">
               <p>
-                Hey! Just so you know, Outstatic saves everything to GitHub.{' '}
+                Hey! Just so you know, Outstatic saves everything to
+                GitHub.{' '}
               </p>
               <p>
                 If you&apos;re new here, try creating a new branch to play with.

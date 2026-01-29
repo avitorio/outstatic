@@ -51,60 +51,11 @@ export const useRebuildMediaJson = () => {
     }
     if (processed === total && total > 0 && processed > 0) {
       toast.dismiss(toastId)
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setTotal(0)
       setProcessed(0)
     }
   }, [processed, total])
-
-  const rebuildMediaJson = useCallback(
-    async ({
-      onComplete
-    }: {
-      onComplete?: () => void
-    } = {}) => {
-      return new Promise((resolve, reject) => {
-        toast.promise(
-          refetch().then(({ data }) => {
-            if (!data) {
-              console.log('No data found')
-              reject('No data found')
-              return
-            }
-
-            const files = extractFiles(data)
-            if (files.length === 0) {
-              console.log('No files found')
-              reject('No files found')
-              return
-            }
-
-            return toast.promise(
-              processFiles(files, () => onComplete?.()),
-              {
-                id: toastId,
-                duration: 4000,
-                loading: `Processing files...`,
-                success: 'Files processed successfully',
-                error: 'Error processing files'
-              }
-            )
-          }),
-          {
-            loading: 'Fetching image files...',
-            success: () => {
-              resolve(undefined)
-              return 'Images fetched successfully'
-            },
-            error: (err) => {
-              reject(err)
-              return 'Failed to fetch images'
-            }
-          }
-        )
-      })
-    },
-    [refetch]
-  )
 
   const extractFiles = (data: any): FileData[] => {
     const object = data?.repository?.object
@@ -177,6 +128,57 @@ export const useRebuildMediaJson = () => {
       }
     }
   }
+
+  const rebuildMediaJson = useCallback(
+    // eslint-disable-next-line react-hooks/preserve-manual-memoization
+    async ({
+      onComplete
+    }: {
+      onComplete?: () => void
+    } = {}) => {
+      return new Promise((resolve, reject) => {
+        toast.promise(
+          refetch().then(({ data }) => {
+            if (!data) {
+              console.log('No data found')
+              reject('No data found')
+              return
+            }
+
+            const files = extractFiles(data)
+            if (files.length === 0) {
+              console.log('No files found')
+              reject('No files found')
+              return
+            }
+
+            return toast.promise(
+              processFiles(files, () => onComplete?.()),
+              {
+                id: toastId,
+                duration: 4000,
+                loading: `Processing files...`,
+                success: 'Files processed successfully',
+                error: 'Error processing files'
+              }
+            )
+          }),
+          {
+            loading: 'Fetching image files...',
+            success: () => {
+              resolve(undefined)
+              return 'Images fetched successfully'
+            },
+            error: (err) => {
+              reject(err)
+              return 'Failed to fetch images'
+            }
+          }
+        )
+      })
+    },
+    [refetch]
+  )
 
   return rebuildMediaJson
 }
