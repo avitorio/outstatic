@@ -174,6 +174,7 @@ const ImageCommandList = ({
   }, [])
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setSelectedIndex(0)
   }, [items])
 

@@ -7,7 +7,11 @@ import { useOutstatic } from '@/utils/hooks/useOutstatic'
 import { FolderOpen } from 'lucide-react'
 import SingletonOnboarding from '@/client/pages/singletons/_components/singleton-onboarding'
 import LineBackground from '@/components/ui/outstatic/line-background'
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/shadcn/tooltip'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger
+} from '@/components/ui/shadcn/tooltip'
 import { useMemo, useState } from 'react'
 import OpenFileModal from '@/client/pages/_components/open-file-modal'
 import { useRouter } from 'next/navigation'
@@ -47,10 +51,7 @@ export default function Singletons() {
 
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Button
-                    size="sm"
-                    onClick={() => setShowOpenFileModal(true)}
-                  >
+                  <Button size="sm" onClick={() => setShowOpenFileModal(true)}>
                     <span className="sr-only">Open from file</span>
                     <FolderOpen className="w-6 h-6" />
                   </Button>
@@ -72,7 +73,9 @@ export default function Singletons() {
         onSelect={(filePath) => {
           setShowOpenFileModal(false)
           router.push(
-            `${basePath}${dashboardRoute}/singletons/new?openFile=${encodeURIComponent(filePath)}`
+            `${basePath}${dashboardRoute}/singletons/new?openFile=${encodeURIComponent(
+              filePath
+            )}`
           )
         }}
       />

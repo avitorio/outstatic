@@ -84,7 +84,11 @@ const isSingletonRoute = (
   singletons: any[]
 ): boolean => {
   // Allow 'new' for creating new singletons, or match existing singleton slugs
-  return slug === 'singletons' && !!slug2 && (slug2 === 'new' || singletons?.find((s) => s.slug === slug2))
+  return (
+    slug === 'singletons' &&
+    !!slug2 &&
+    (slug2 === 'new' || singletons?.find((s) => s.slug === slug2))
+  )
 }
 
 const isSingletonFieldsRoute = (

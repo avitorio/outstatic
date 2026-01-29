@@ -109,7 +109,6 @@ export default function Login({
               </div>
             ) : null}
             <div className="relative flex flex-col items-center justify-center">
-
               <h1 className="mb-8 text-center text-xl font-semibold text-white">
                 <svg
                   fill="none"

@@ -121,6 +121,7 @@ export const AddCustomFieldDialog: React.FC<AddCustomFieldDialogProps> = ({
     }
 
     try {
+      // eslint-disable-next-line react-hooks/immutability
       customFields[fieldName] = {
         ...rest,
         fieldType,
@@ -328,14 +329,16 @@ export const SaveFirstModal = ({
   open: boolean
   onOpenChange: (open: boolean) => void
 }) => {
-  return <Dialog open={open} onOpenChange={onOpenChange}>
-    <DialogContent>
-      <DialogHeader>
-        <DialogTitle>Save your singleton first</DialogTitle>
-      </DialogHeader>
-      <DialogDescription>
-        You need to save your singleton first before adding custom fields.
-      </DialogDescription>
-    </DialogContent>
-  </Dialog>
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Save your singleton first</DialogTitle>
+        </DialogHeader>
+        <DialogDescription>
+          You need to save your singleton first before adding custom fields.
+        </DialogDescription>
+      </DialogContent>
+    </Dialog>
+  )
 }

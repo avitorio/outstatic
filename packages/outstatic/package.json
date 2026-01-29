@@ -79,7 +79,7 @@
     "clean": "rm -rf dist",
     "test": "jest",
     "typecheck": "tsc --project tsconfig.json --noEmit",
-    "lint": "TIMING=1 eslint \"src/**/*.ts*\"",
+    "lint": "eslint .",
     "generate": "graphql-codegen",
     "prestart": "pnpm generate"
   },

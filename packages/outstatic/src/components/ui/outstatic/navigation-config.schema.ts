@@ -38,7 +38,9 @@ const RouteGroup = z.object({
   collapsible: z.boolean().optional(),
   collapsed: z.boolean().optional(),
   Icon: z.custom<React.ReactNode>().optional(),
-  get children(): z.ZodUnion<[z.ZodArray<typeof RouteChild>, z.ZodArray<typeof RouteGroup>]> {
+  get children(): z.ZodUnion<
+    [z.ZodArray<typeof RouteChild>, z.ZodArray<typeof RouteGroup>]
+  > {
     return z.union([z.array(RouteChild), z.array(RouteGroup)])
   },
   renderAction: z.custom<React.ReactNode>().optional(),

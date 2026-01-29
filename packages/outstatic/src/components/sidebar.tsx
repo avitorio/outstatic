@@ -128,9 +128,7 @@ export const Sidebar = ({
                         <TooltipContent className="pointer-events-none">
                           <p>
                             Create new{' '}
-                            <span className="inline-block">
-                              Singleton
-                            </span>
+                            <span className="inline-block">Singleton</span>
                           </p>
                         </TooltipContent>
                       </Tooltip>

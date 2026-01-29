@@ -73,4 +73,3 @@ export function useCollapsibleState() {
     setOpen
   }
 }
-
