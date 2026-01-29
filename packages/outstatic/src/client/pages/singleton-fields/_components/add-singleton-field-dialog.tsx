@@ -65,7 +65,9 @@ interface AddSingletonFieldDialogProps {
   fieldTitle?: string
 }
 
-export const AddSingletonFieldDialog: React.FC<AddSingletonFieldDialogProps> = ({
+export const AddSingletonFieldDialog: React.FC<
+  AddSingletonFieldDialogProps
+> = ({
   slug,
   title,
   showAddModal,
@@ -119,6 +121,7 @@ export const AddSingletonFieldDialog: React.FC<AddSingletonFieldDialogProps> = (
     }
 
     try {
+      // eslint-disable-next-line react-hooks/immutability
       customFields[fieldName] = {
         ...rest,
         fieldType,

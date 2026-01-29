@@ -28,5 +28,5 @@ export default function Magic({ className }: { className: string }) {
         fill="currentColor"
       />
     </svg>
-  );
+  )
 }

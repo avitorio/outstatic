@@ -3,8 +3,10 @@ import { Slot } from '@radix-ui/react-slot'
 import { useEditor } from '../editor-context'
 import { Editor } from '@tiptap/react'
 
-export interface ButtonProps
-  extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'onSelect'> {
+export interface ButtonProps extends Omit<
+  React.ButtonHTMLAttributes<HTMLButtonElement>,
+  'onSelect'
+> {
   name: string
   attributes?: Record<string, string>
   asChild?: boolean

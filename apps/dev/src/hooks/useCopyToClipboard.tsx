@@ -9,7 +9,6 @@ export default function useCopyToClipboard(): [CopyFn, CopiedValue] {
 
   const copy: CopyFn = async (text) => {
     if (!navigator?.clipboard) {
-      // eslint-disable-next-line no-console
       console.warn('Clipboard not supported')
       return false
     }
@@ -20,7 +19,6 @@ export default function useCopyToClipboard(): [CopyFn, CopiedValue] {
       setCopiedText(text)
       return true
     } catch (error) {
-      // eslint-disable-next-line no-console
       console.warn('Copy failed', error)
       setCopiedText(null)
       return false

@@ -56,7 +56,9 @@ interface EditSingletonFieldDialogProps {
   setCustomFields: (fields: CustomFieldsType) => void
 }
 
-export const EditSingletonFieldDialog: React.FC<EditSingletonFieldDialogProps> = ({
+export const EditSingletonFieldDialog: React.FC<
+  EditSingletonFieldDialogProps
+> = ({
   slug,
   title,
   showEditModal,
@@ -93,6 +95,7 @@ export const EditSingletonFieldDialog: React.FC<EditSingletonFieldDialogProps> =
     const { title: fieldTitle, ...rest } = data
 
     try {
+      // eslint-disable-next-line react-hooks/immutability
       customFields[selectedField] = {
         ...customFields[selectedField],
         ...rest,

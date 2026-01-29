@@ -14,6 +14,7 @@ export function useCreateGraphQLClient(
   const csrfToken = useCsrfToken()
 
   if (githubGql !== GITHUB_GQL_API_URL && csrfToken) {
+    // eslint-disable-next-line react-hooks/immutability
     headers['X-CSRF-Token'] = csrfToken
   }
 

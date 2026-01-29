@@ -48,7 +48,6 @@ describe('generateTypes', () => {
       if (p === path.join(contentPath, 'posts/schema.json')) return true
       return false
     })
-
     ;(mockFs.readdirSync as jest.Mock).mockImplementation((p: string) => {
       if (p === contentPath) {
         return [createMockDirent('posts', true)]
@@ -82,8 +81,8 @@ describe('generateTypes', () => {
 
     // Check that posts.ts was written
     const writeFileCalls = mockFs.writeFileSync.mock.calls
-    const postsTypeFile = writeFileCalls.find(
-      (call) => String(call[0]).includes('posts.ts')
+    const postsTypeFile = writeFileCalls.find((call) =>
+      String(call[0]).includes('posts.ts')
     )
     expect(postsTypeFile).toBeDefined()
 
@@ -99,7 +98,6 @@ describe('generateTypes', () => {
       if (p === singletonsPath) return true
       return false
     })
-
     ;(mockFs.readdirSync as jest.Mock).mockImplementation((p: string) => {
       if (p === contentPath) {
         return []
@@ -137,7 +135,9 @@ describe('generateTypes', () => {
     // Check that home.ts was written in _singletons
     const writeFileCalls = mockFs.writeFileSync.mock.calls
     const singletonTypeFile = writeFileCalls.find(
-      (call) => String(call[0]).includes('_singletons') && String(call[0]).includes('home.ts')
+      (call) =>
+        String(call[0]).includes('_singletons') &&
+        String(call[0]).includes('home.ts')
     )
     expect(singletonTypeFile).toBeDefined()
 
@@ -154,10 +154,12 @@ describe('generateTypes', () => {
       if (p === path.join(contentPath, 'pages/schema.json')) return true
       return false
     })
-
     ;(mockFs.readdirSync as jest.Mock).mockImplementation((p: string) => {
       if (p === contentPath) {
-        return [createMockDirent('posts', true), createMockDirent('pages', true)]
+        return [
+          createMockDirent('posts', true),
+          createMockDirent('pages', true)
+        ]
       }
       return []
     })
@@ -176,8 +178,8 @@ describe('generateTypes', () => {
 
     // Find collections.ts write call
     const writeFileCalls = mockFs.writeFileSync.mock.calls
-    const collectionsFile = writeFileCalls.find(
-      (call) => String(call[0]).endsWith('collections.ts')
+    const collectionsFile = writeFileCalls.find((call) =>
+      String(call[0]).endsWith('collections.ts')
     )
     expect(collectionsFile).toBeDefined()
 
@@ -197,7 +199,6 @@ describe('generateTypes', () => {
       if (p === path.join(contentPath, 'posts/schema.json')) return true
       return false
     })
-
     ;(mockFs.readdirSync as jest.Mock).mockImplementation((p: string) => {
       if (p === contentPath) {
         return [createMockDirent('posts', true)]
@@ -219,8 +220,8 @@ describe('generateTypes', () => {
 
     // Find api.d.ts write call
     const writeFileCalls = mockFs.writeFileSync.mock.calls
-    const apiFile = writeFileCalls.find(
-      (call) => String(call[0]).endsWith('api.d.ts')
+    const apiFile = writeFileCalls.find((call) =>
+      String(call[0]).endsWith('api.d.ts')
     )
     expect(apiFile).toBeDefined()
 
@@ -241,7 +242,6 @@ describe('generateTypes', () => {
       if (p === path.join(contentPath, 'posts/schema.json')) return true
       return false
     })
-
     ;(mockFs.readdirSync as jest.Mock).mockImplementation((p: string) => {
       if (p === contentPath) {
         return [createMockDirent('posts', true)]
@@ -263,8 +263,8 @@ describe('generateTypes', () => {
 
     // Find index.ts write call
     const writeFileCalls = mockFs.writeFileSync.mock.calls
-    const indexFile = writeFileCalls.find(
-      (call) => String(call[0]).endsWith('index.ts')
+    const indexFile = writeFileCalls.find((call) =>
+      String(call[0]).endsWith('index.ts')
     )
     expect(indexFile).toBeDefined()
 
@@ -285,7 +285,6 @@ describe('generateTypes', () => {
       if (p === path.join(customContentPath, 'blog/schema.json')) return true
       return false
     })
-
     ;(mockFs.readdirSync as jest.Mock).mockImplementation((p: string) => {
       if (p === customContentPath) {
         return [createMockDirent('blog', true)]
@@ -317,7 +316,9 @@ describe('generateTypes', () => {
     // Check files were written to custom output path
     const writeFileCalls = mockFs.writeFileSync.mock.calls
     const blogTypeFile = writeFileCalls.find(
-      (call) => String(call[0]).includes('custom/types') && String(call[0]).includes('blog.ts')
+      (call) =>
+        String(call[0]).includes('custom/types') &&
+        String(call[0]).includes('blog.ts')
     )
     expect(blogTypeFile).toBeDefined()
 
@@ -333,7 +334,6 @@ describe('generateTypes', () => {
       if (p === path.join(contentPath, 'posts/schema.json')) return true
       return false
     })
-
     ;(mockFs.readdirSync as jest.Mock).mockImplementation((p: string) => {
       if (p === contentPath) {
         return [createMockDirent('posts', true)]
@@ -367,10 +367,12 @@ describe('generateTypes', () => {
       if (p === path.join(contentPath, '_singletons')) return false
       return false
     })
-
     ;(mockFs.readdirSync as jest.Mock).mockImplementation((p: string) => {
       if (p === contentPath) {
-        return [createMockDirent('.hidden', true), createMockDirent('posts', true)]
+        return [
+          createMockDirent('.hidden', true),
+          createMockDirent('posts', true)
+        ]
       }
       return []
     })
@@ -389,8 +391,8 @@ describe('generateTypes', () => {
 
     // Should not create a type file for .hidden
     const writeFileCalls = mockFs.writeFileSync.mock.calls
-    const hiddenFile = writeFileCalls.find(
-      (call) => String(call[0]).includes('.hidden')
+    const hiddenFile = writeFileCalls.find((call) =>
+      String(call[0]).includes('.hidden')
     )
     expect(hiddenFile).toBeUndefined()
 

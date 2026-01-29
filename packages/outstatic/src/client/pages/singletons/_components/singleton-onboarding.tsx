@@ -1,8 +1,5 @@
 import { Button } from '@/components/ui/shadcn/button'
-import {
-  Card,
-  CardContent
-} from '@/components/ui/shadcn/card'
+import { Card, CardContent } from '@/components/ui/shadcn/card'
 import { useOutstatic } from '@/utils/hooks/useOutstatic'
 import Link from 'next/link'
 import OpenFileModal from '@/client/pages/_components/open-file-modal'
@@ -40,7 +37,11 @@ export default function SingletonOnboarding() {
                       </button>
                     </TooltipTrigger>
                     <TooltipContent side="top" className="max-w-xs">
-                      <p>Singletons are one-off documents that exist independently. Use them for pages that don&apos;t repeat.</p>
+                      <p>
+                        Singletons are one-off documents that exist
+                        independently. Use them for pages that don&apos;t
+                        repeat.
+                      </p>
                     </TooltipContent>
                   </Tooltip>
                 </div>
@@ -68,7 +69,10 @@ export default function SingletonOnboarding() {
               {/* Secondary actions */}
               <div className="flex items-center gap-3">
                 <Button variant="outline" size="sm" asChild>
-                  <Link href={`${dashboardRoute}/singletons/new`} className="no-underline">
+                  <Link
+                    href={`${dashboardRoute}/singletons/new`}
+                    className="no-underline"
+                  >
                     New Singleton
                   </Link>
                 </Button>
@@ -95,7 +99,9 @@ export default function SingletonOnboarding() {
         onSelect={(filePath) => {
           setShowOpenFileModal(false)
           router.push(
-            `${basePath}${dashboardRoute}/singletons/new?openFile=${encodeURIComponent(filePath)}`
+            `${basePath}${dashboardRoute}/singletons/new?openFile=${encodeURIComponent(
+              filePath
+            )}`
           )
         }}
       />

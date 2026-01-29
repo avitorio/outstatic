@@ -17,6 +17,7 @@ export const V2BreakingCheck = () => {
     const bodyElement = document.querySelector('body')
     if (!bodyElement?.id?.includes('outstatic')) {
       bodyElement?.setAttribute('id', 'outstatic')
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setShowOverlay(true)
     }
   }, [])

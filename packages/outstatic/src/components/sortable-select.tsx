@@ -33,7 +33,9 @@ const MultiValue = (props: MultiValueProps<Column>) => {
     })
 
   if (transform) {
+    // eslint-disable-next-line react-hooks/immutability
     transform.scaleX = 1
+    // eslint-disable-next-line react-hooks/immutability
     transform.scaleY = 1
   }
 
@@ -203,7 +205,7 @@ export const SortableSelect = ({
                 '&:hover': {
                   border: 'none'
                 }
-              } as CSSObjectWithLabel),
+              }) as CSSObjectWithLabel,
             option: (base: any) =>
               ({
                 ...base,
@@ -213,7 +215,7 @@ export const SortableSelect = ({
                   backgroundColor: 'hsl(var(--muted))'
                 },
                 border: 'none'
-              } as CSSObjectWithLabel)
+              }) as CSSObjectWithLabel
           }}
         />
       </SortableContext>
