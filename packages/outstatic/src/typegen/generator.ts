@@ -559,6 +559,7 @@ function ensureDir(dirPath: string): void {
  * Main type generation function
  */
 export function generateTypes(options: GenerateTypesOptions = {}): void {
+  const now = Date.now()
   const cwd = options.cwd || process.cwd()
   const contentPath = path.join(
     cwd,
@@ -609,7 +610,11 @@ export function generateTypes(options: GenerateTypesOptions = {}): void {
   fs.writeFileSync(path.join(outputPath, 'index.ts'), indexContent)
 
   console.log(
-    `Generated types for ${collections.length} collection(s) and ${singletons.length} singleton(s) in ${outputPath}`
+    `✓ Generated Outstatic types for ${collections.length} collection${
+      collections.length === 1 ? '' : 's'
+    } and ${singletons.length} singleton${
+      singletons.length === 1 ? '' : 's'
+    } in ${(Date.now() - now).toFixed(1)}ms`
   )
 }
 
