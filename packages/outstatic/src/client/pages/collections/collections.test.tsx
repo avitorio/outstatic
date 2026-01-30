@@ -68,11 +68,7 @@ describe('Collections', () => {
     expect(screen.getByTestId('admin-loading')).toBeInTheDocument()
   })
 
-  it('shows onboarding when no collections exist and no repo branch', async () => {
-    // Mock useInitialData hook
-    ;(useInitialData as jest.Mock).mockReturnValue(() => ({
-      repoBranch: null
-    }))
+  it('shows collection onboarding when no collections exist', async () => {
     ;(useCollections as jest.Mock).mockReturnValue({
       isPending: false,
       data: []
@@ -84,8 +80,9 @@ describe('Collections', () => {
       </TestWrapper>
     )
 
-    // Update to match the exact text in the component
-    expect(await screen.findByText('Confirm your Branch')).toBeInTheDocument()
+    // CollectionOnboarding now shows just the collection creation card (no branch confirmation)
+    expect(await screen.findByText('Create a Collection')).toBeInTheDocument()
+    expect(screen.getByText('Recommended')).toBeInTheDocument()
   })
 
   it('renders collections list correctly', () => {
