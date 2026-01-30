@@ -1,5 +1,5 @@
 import { getLoginSession } from '@/utils/auth/auth'
-import { createOpenAI } from '@ai-sdk/openai';
+import { createOpenAI } from '@ai-sdk/openai'
 import { OST_PRO_API_URL } from '@/utils/constants'
 import { ModelMessage, streamText } from 'ai'
 import { match } from 'ts-pattern'
@@ -16,7 +16,13 @@ export default async function POST(req: Request): Promise<Response> {
   }
 
   // Check if the OPENAI_API_KEY is set, if not return 400
-  if (!(process.env.OPENAI_API_KEY || process.env.OST_PRO_API_KEY || process.env.AI_GATEWAY_API_KEY)) {
+  if (
+    !(
+      process.env.OPENAI_API_KEY ||
+      process.env.OST_PRO_API_KEY ||
+      process.env.AI_GATEWAY_API_KEY
+    )
+  ) {
     return new Response(
       'AI Completion is not configured. Check your .env file.',
       {
@@ -31,7 +37,7 @@ export default async function POST(req: Request): Promise<Response> {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${process.env.OST_PRO_API_KEY}`
+        Authorization: `Bearer ${process.env.OST_PRO_API_KEY}`
       },
       body: req.body,
       duplex: 'half'
@@ -124,7 +130,9 @@ export default async function POST(req: Request): Promise<Response> {
     baseURL: process.env.OPENAI_BASE_URL || 'https://api.openai.com/v1'
   })
 
-  const model = process.env.OPENAI_API_KEY ? openai('gpt-3.5-turbo') : 'openai/gpt-3.5-turbo';
+  const model = process.env.OPENAI_API_KEY
+    ? openai('gpt-3.5-turbo')
+    : 'openai/gpt-3.5-turbo'
 
   const result = streamText({
     model,

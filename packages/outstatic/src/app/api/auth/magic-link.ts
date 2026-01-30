@@ -23,12 +23,10 @@ export default async function POST(request: NextRequest) {
     const baseUrl = `${url.protocol}//${url.host}`
     const callbackUrl = `${baseUrl}/api/outstatic/magic-link-callback`
 
-    const apiBase =
-      (OST_PRO_API_URL?.endsWith('/') ? OST_PRO_API_URL : `${OST_PRO_API_URL ?? ''}/`)
-    const requestUrl = new URL(
-      'outstatic/auth/request-magic-link',
-      apiBase,
-    )
+    const apiBase = OST_PRO_API_URL?.endsWith('/')
+      ? OST_PRO_API_URL
+      : `${OST_PRO_API_URL ?? ''}/`
+    const requestUrl = new URL('outstatic/auth/request-magic-link', apiBase)
     // Build default return URL if not provided
     const effectiveReturnUrl = returnUrl ?? `${baseUrl}/outstatic`
 
@@ -37,13 +35,13 @@ export default async function POST(request: NextRequest) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${OST_PRO_API_KEY}`,
+        Authorization: `Bearer ${OST_PRO_API_KEY}`
       },
       body: JSON.stringify({
         email,
         callbackUrl,
-        returnUrl: effectiveReturnUrl,
-      }),
+        returnUrl: effectiveReturnUrl
+      })
     })
 
     if (!response.ok) {

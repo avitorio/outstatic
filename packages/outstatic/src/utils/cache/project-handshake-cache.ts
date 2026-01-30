@@ -34,10 +34,11 @@ interface CacheEntry {
 
 // Configuration
 const CONFIG = {
-  IN_MEMORY_TTL_MS: process.env.NODE_ENV === "development" ? 60 * 1000 : 30 * 60 * 1000,
-  NEXT_CACHE_TTL_SECONDS: process.env.NODE_ENV === "development" ? 10 : 30 * 60,
+  IN_MEMORY_TTL_MS:
+    process.env.NODE_ENV === 'development' ? 60 * 1000 : 30 * 60 * 1000,
+  NEXT_CACHE_TTL_SECONDS: process.env.NODE_ENV === 'development' ? 10 : 30 * 60,
   CACHE_TAG: 'project-handshake',
-  CACHE_KEY_PREFIX: 'project-handshake',
+  CACHE_KEY_PREFIX: 'project-handshake'
 } as const
 
 // Layer 2: In-memory cache (warm containers)
@@ -109,21 +110,26 @@ export function createCachedHandshake(
         const result = await fetcher(apiKey)
         return result
       } catch (error) {
-        console.error('[project-handshake-cache] Error fetching from API:', error)
+        console.error(
+          '[project-handshake-cache] Error fetching from API:',
+          error
+        )
         return null
       }
     },
-    process.env.NODE_ENV === "development"
+    process.env.NODE_ENV === 'development'
       ? [`${CONFIG.CACHE_KEY_PREFIX}-dev`]
       : [CONFIG.CACHE_KEY_PREFIX],
     {
       revalidate: CONFIG.NEXT_CACHE_TTL_SECONDS,
-      tags: [CONFIG.CACHE_TAG],
+      tags: [CONFIG.CACHE_TAG]
     }
   )
 
   // Layer 2 + 3: Combined fetcher that checks memory first
-  const memoryAndPersistentFetcher = async (apiKey: string): Promise<ProjectInfo | null> => {
+  const memoryAndPersistentFetcher = async (
+    apiKey: string
+  ): Promise<ProjectInfo | null> => {
     // Check in-memory cache first (Layer 2)
     const memoryResult = getFromMemory(apiKey)
     if (memoryResult) {
@@ -198,7 +204,10 @@ export function cleanupExpiredEntries(): void {
  * Returns the current size of the in-memory cache and all cached keys.
  * Note: This only reflects the in-memory layer, not the persistent cache.
  */
-export function getCacheStats(): { inMemorySize: number; inMemoryKeys: string[] } {
+export function getCacheStats(): {
+  inMemorySize: number
+  inMemoryKeys: string[]
+} {
   return {
     inMemorySize: inMemoryCache.size,
     inMemoryKeys: Array.from(inMemoryCache.keys())

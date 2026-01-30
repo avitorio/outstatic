@@ -23,7 +23,12 @@ export default async function refresh(request: Request): Promise<Response> {
       )
     }
 
-    console.log('Refresh token request - Provider:', session.provider, 'Has refresh token:', !!session.refresh_token)
+    console.log(
+      'Refresh token request - Provider:',
+      session.provider,
+      'Has refresh token:',
+      !!session.refresh_token
+    )
 
     // Attempt to refresh the token
     let refreshedSession: LoginSession
@@ -68,4 +73,3 @@ export default async function refresh(request: Request): Promise<Response> {
     )
   }
 }
-

@@ -25,8 +25,8 @@ export default async function GET(req: Request): Promise<Response> {
     try {
       const response = await fetch(proxyUrl, {
         headers: {
-          'Authorization': `Bearer ${session.access_token}`,
-          'Referer': req.headers.get('referer') || req.nextUrl.href
+          Authorization: `Bearer ${session.access_token}`,
+          Referer: req.headers.get('referer') || req.nextUrl.href
         }
       })
 

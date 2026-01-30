@@ -1,9 +1,8 @@
-'use client';
+'use client'
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react'
 
-
-import { ArrowRight, CheckCircle, Mail, Sparkles, Users } from 'lucide-react';
+import { ArrowRight, CheckCircle, Mail, Sparkles, Users } from 'lucide-react'
 
 import {
   Dialog,
@@ -11,30 +10,30 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/shadcn/dialog';
-import { FeatureGrid } from '@/components/ui/outstatic/feature-grid';
-import Link from 'next/link';
-import { OUTSTATIC_APP_URL } from '@/utils/constants';
-import { Button } from '../shadcn/button';
+  DialogTrigger
+} from '@/components/ui/shadcn/dialog'
+import { FeatureGrid } from '@/components/ui/outstatic/feature-grid'
+import Link from 'next/link'
+import { OUTSTATIC_APP_URL } from '@/utils/constants'
+import { Button } from '../shadcn/button'
 
 const features = [
   {
     icon: <Users className="h-5 w-5" />,
     title: 'Invite Members',
-    description: 'Add team members to your projects',
+    description: 'Add team members to your projects'
   },
   {
     icon: <Mail className="h-5 w-5" />,
     title: 'Email Authentication',
-    description: 'Email authentication for seamless access to your projects',
+    description: 'Email authentication for seamless access to your projects'
   },
   {
     icon: <Sparkles className="h-5 w-5" />,
     title: 'AI Completions',
-    description: 'Smart content suggestions and auto-completion powered by AI',
-  },
-];
+    description: 'Smart content suggestions and auto-completion powered by AI'
+  }
+]
 
 export function UpgradeDialog({
   open = false,
@@ -44,20 +43,27 @@ export function UpgradeDialog({
   accountSlug,
   dashboardRoute
 }: React.PropsWithChildren<{
-  open?: boolean;
-  onOpenChange?: (open: boolean) => void;
-  title?: string;
-  accountSlug?: string;
-  dashboardRoute?: string;
+  open?: boolean
+  onOpenChange?: (open: boolean) => void
+  title?: string
+  accountSlug?: string
+  dashboardRoute?: string
 }>) {
-  const [isOpen, setIsOpen] = useState(open);
+  const [isOpen, setIsOpen] = useState(open)
 
   useEffect(() => {
-    setIsOpen(open);
-  }, [open]);
+    setIsOpen(open)
+  }, [open])
 
   return (
-    <Dialog open={isOpen} onOpenChange={(newOpen) => { setIsOpen(newOpen); onOpenChange?.(newOpen); }} modal>
+    <Dialog
+      open={isOpen}
+      onOpenChange={(newOpen) => {
+        setIsOpen(newOpen)
+        onOpenChange?.(newOpen)
+      }}
+      modal
+    >
       {children && <DialogTrigger asChild>{children}</DialogTrigger>}
       <DialogContent
         className="max-w-2xl"
@@ -68,7 +74,8 @@ export function UpgradeDialog({
             {title || 'Unlock Team Collaboration'}
           </DialogTitle>
           <DialogDescription className="text-muted-foreground mx-auto max-w-sm text-base">
-            Upgrade to Pro and unlock powerful features to grow your team and boost productivity.
+            Upgrade to Pro and unlock powerful features to grow your team and
+            boost productivity.
           </DialogDescription>
         </DialogHeader>
 
@@ -117,5 +124,5 @@ export function UpgradeDialog({
         </div>
       </DialogContent>
     </Dialog>
-  );
+  )
 }

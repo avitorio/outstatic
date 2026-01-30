@@ -11,13 +11,13 @@ import {
 import { getAccessToken } from './github'
 
 export type AppPermissions =
-  | "roles.manage"
-  | "settings.manage"
-  | "members.manage"
-  | "invites.manage"
-  | "collections.manage"
-  | "content.manage"
-  | "projects.manage"
+  | 'roles.manage'
+  | 'settings.manage'
+  | 'members.manage'
+  | 'invites.manage'
+  | 'collections.manage'
+  | 'content.manage'
+  | 'projects.manage'
 
 export type LoginSession = {
   user: {
@@ -168,21 +168,24 @@ export async function refreshToken(
       return updatedSession
     } else if (session.provider === 'magic-link') {
       // Magic link - call main SaaS app
-      const response = await fetch(`${OST_PRO_API_URL}/outstatic/auth/refresh-token`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          refresh_token: session.refresh_token,
-        }),
-      })
+      const response = await fetch(
+        `${OST_PRO_API_URL}/outstatic/auth/refresh-token`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            refresh_token: session.refresh_token
+          })
+        }
+      )
 
       if (!response.ok) {
         console.error(
           'Failed to refresh token:',
           response.status,
-          await response.text(),
+          await response.text()
         )
         throw new Error('Failed to refresh access token')
       }
@@ -195,7 +198,7 @@ export async function refreshToken(
         access_token: data.session.access_token,
         expires: new Date(data.session.expires_at * 1000),
         refresh_token: data.session.refresh_token || session.refresh_token,
-        refresh_token_expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days
+        refresh_token_expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) // 30 days
       }
 
       // Save the updated session
@@ -227,7 +230,10 @@ export async function refreshTokenIfNeeded(
   // If no refresh token is available (e.g., standard GitHub OAuth App)
   // extend the session without refreshing since these tokens don't expire
   if (!session.refresh_token) {
-    console.log('No refresh token available. Extending session for provider:', session.provider)
+    console.log(
+      'No refresh token available. Extending session for provider:',
+      session.provider
+    )
 
     // For GitHub OAuth Apps and other providers without refresh tokens,
     // the access token typically doesn't expire or lasts a very long time
@@ -298,7 +304,10 @@ export async function setLoginSession(session: LoginSession): Promise<boolean> {
   } catch (error) {
     // Cookies can only be modified in Server Actions or Route Handlers
     // If we're in a Server Component, this will fail - that's expected
-    console.warn('Unable to set session cookie (likely called from Server Component)', error instanceof Error ? error.message : error)
+    console.warn(
+      'Unable to set session cookie (likely called from Server Component)',
+      error instanceof Error ? error.message : error
+    )
     return false
   }
 }

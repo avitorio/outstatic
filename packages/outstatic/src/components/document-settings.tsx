@@ -378,27 +378,31 @@ export const DocumentSettings = ({
                       <ArrowDown className="h-4 w-4" />
                       <p className="semiblod text-sm">Set up Custom Fields</p>
                     </div>
-                    {Object.entries(missingCustomFields).map(([name, field]) => {
-                      return (
-                        <div
-                          key={name}
-                          className="w-full flex items-center justify-between px-4 py-2 gap-2"
-                        >
-                          <p className="semiblod text-sm truncate">{field.title}</p>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            className="text-xs flex gap-2"
-                            onClick={() => {
-                              setFieldTitle(field.title)
-                              setShowAddModal(true)
-                            }}
+                    {Object.entries(missingCustomFields).map(
+                      ([name, field]) => {
+                        return (
+                          <div
+                            key={name}
+                            className="w-full flex items-center justify-between px-4 py-2 gap-2"
                           >
-                            <PlusCircle className="h-4 w-4" /> Create
-                          </Button>
-                        </div>
-                      )
-                    })}
+                            <p className="semiblod text-sm truncate">
+                              {field.title}
+                            </p>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="text-xs flex gap-2"
+                              onClick={() => {
+                                setFieldTitle(field.title)
+                                setShowAddModal(true)
+                              }}
+                            >
+                              <PlusCircle className="h-4 w-4" /> Create
+                            </Button>
+                          </div>
+                        )
+                      }
+                    )}
                   </>
                 )}
 
@@ -422,7 +426,8 @@ export const DocumentSettings = ({
                   </Tooltip>
                 </TooltipProvider>
               </div>
-            </>)}
+            </>
+          )}
         </div>
         {showAddModal ? (
           <AddCustomFieldDialog

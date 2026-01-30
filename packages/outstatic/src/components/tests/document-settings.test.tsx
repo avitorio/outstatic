@@ -153,7 +153,11 @@ describe('<DocumentSettings />', () => {
         user: {
           name: 'Test User',
           image: 'https://example.com/avatar.jpg',
-          permissions: ['collections.manage', 'content.manage', 'settings.manage']
+          permissions: [
+            'collections.manage',
+            'content.manage',
+            'settings.manage'
+          ]
         }
       }
     })

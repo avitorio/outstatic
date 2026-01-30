@@ -54,11 +54,15 @@ export default function CustomFields({ collection, title }: CustomFieldsProps) {
   }, [schema])
 
   if (!session?.user?.permissions?.includes('collections.manage')) {
-    return <AdminLayout title="Add Custom Fields">
-      <div className="mb-8 flex h-12 items-center">
-        <h1 className="mr-12 text-2xl">You are not authorized to access this page</h1>
-      </div>
-    </AdminLayout>
+    return (
+      <AdminLayout title="Add Custom Fields">
+        <div className="mb-8 flex h-12 items-center">
+          <h1 className="mr-12 text-2xl">
+            You are not authorized to access this page
+          </h1>
+        </div>
+      </AdminLayout>
+    )
   }
 
   if (isLoading) {

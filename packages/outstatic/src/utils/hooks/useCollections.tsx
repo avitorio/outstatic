@@ -37,10 +37,10 @@ export function useCollections(options?: UseCollectionsOptions) {
           isPending || !repoOwner || !repoSlug || !repoBranch
             ? null
             : await gqlClient.request(GET_FILE, {
-              owner: repoOwner,
-              name: repoSlug,
-              filePath: `${repoBranch}:${ostContent}/collections.json` || ''
-            })
+                owner: repoOwner,
+                name: repoSlug,
+                filePath: `${repoBranch}:${ostContent}/collections.json` || ''
+              })
 
         let collectionsData: CollectionsType = null
 
@@ -62,10 +62,10 @@ export function useCollections(options?: UseCollectionsOptions) {
             isPending || !repoOwner || !repoSlug || !repoBranch
               ? null
               : await gqlClient.request(GET_COLLECTIONS, {
-                owner: repoOwner,
-                name: repoSlug,
-                contentPath: `${repoBranch}:${ostContent}` || ''
-              })
+                  owner: repoOwner,
+                  name: repoSlug,
+                  contentPath: `${repoBranch}:${ostContent}` || ''
+                })
 
           if (!data || data?.repository?.object === null) {
             // We couldn't find the outstatic folder, so we return an empty array
@@ -80,14 +80,14 @@ export function useCollections(options?: UseCollectionsOptions) {
             .map((entry) =>
               entry.type === 'tree'
                 ? {
-                  title: sentenceCase(entry.name, {
-                    split: (str) =>
-                      str.split(/([^A-Za-z0-9\.]+)/g).filter(Boolean)
-                  }),
-                  slug: entry.name,
-                  path: `${ostContent}/${entry.name}`,
-                  children: []
-                }
+                    title: sentenceCase(entry.name, {
+                      split: (str) =>
+                        str.split(/([^A-Za-z0-9\.]+)/g).filter(Boolean)
+                    }),
+                    slug: entry.name,
+                    path: `${ostContent}/${entry.name}`,
+                    children: []
+                  }
                 : undefined
             )
             .filter(Boolean) as CollectionsType

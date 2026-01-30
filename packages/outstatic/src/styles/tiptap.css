@@ -16,8 +16,8 @@
   vertical-align: top;
 }
 
-.tiptap table td>*,
-.tiptap table th>* {
+.tiptap table td > *,
+.tiptap table th > * {
   margin-bottom: 0;
 }
 

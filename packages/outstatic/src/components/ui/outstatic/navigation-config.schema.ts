@@ -3,11 +3,11 @@ import { z } from 'zod/v4'
 const RouteMatchingEnd = z
   .union([z.boolean(), z.custom<(input: string) => boolean>()])
   .default(false)
-  .optional();
+  .optional()
 
 const Divider = z.object({
-  divider: z.literal(true),
-});
+  divider: z.literal(true)
+})
 
 const RouteSubChild = z.object({
   label: z.string(),
@@ -15,8 +15,8 @@ const RouteSubChild = z.object({
   Icon: z.custom<React.ReactNode>().optional(),
   action: z.custom<React.ReactNode>().optional(),
   end: RouteMatchingEnd,
-  renderAction: z.custom<React.ReactNode>().optional(),
-});
+  renderAction: z.custom<React.ReactNode>().optional()
+})
 
 const RouteChild = z.object({
   label: z.string(),
@@ -30,8 +30,8 @@ const RouteChild = z.object({
   renderAction: z.custom<React.ReactNode>().optional(),
   badge: z.custom<React.ReactNode>().optional(),
   dialog: z.custom<React.ReactNode>().optional(),
-  newTab: z.boolean().default(false).optional(),
-});
+  newTab: z.boolean().default(false).optional()
+})
 
 const RouteGroup = z.object({
   label: z.string(),
@@ -46,7 +46,7 @@ const RouteGroup = z.object({
   renderAction: z.custom<React.ReactNode>().optional(),
   badge: z.custom<React.ReactNode>().optional(),
   dialog: z.custom<React.ReactNode>().optional(),
-  newTab: z.boolean().default(false).optional(),
+  newTab: z.boolean().default(false).optional()
 })
 
 export const NavigationConfigSchema = z.object({

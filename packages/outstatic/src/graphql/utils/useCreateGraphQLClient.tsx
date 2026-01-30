@@ -21,9 +21,10 @@ export function useCreateGraphQLClient(
   // Update headers ref when authorization changes
   // GitHub API uses 'token' prefix, other APIs use 'Bearer'
   const currentHeaders = useMemo(() => {
-    const authHeader = isGitHubAPI && headers.authorization.startsWith('Bearer ')
-      ? headers.authorization.replace('Bearer ', 'token ')
-      : headers.authorization
+    const authHeader =
+      isGitHubAPI && headers.authorization.startsWith('Bearer ')
+        ? headers.authorization.replace('Bearer ', 'token ')
+        : headers.authorization
 
     // GitHub GraphQL API requires specific headers
     const githubHeaders: HeadersType = {
@@ -43,11 +44,18 @@ export function useCreateGraphQLClient(
     headersRef.current = githubHeaders
 
     return headersRef.current
-  }, [headers.authorization, githubGql, isGitHubAPI, initialData?.projectInfo?.projectId])
+  }, [
+    headers.authorization,
+    githubGql,
+    isGitHubAPI,
+    initialData?.projectInfo?.projectId
+  ])
 
   // Create GraphQL client with interceptor
   const client = useMemo(() => {
-    const graphQLClient = new GraphQLClient(githubGql, { headers: currentHeaders })
+    const graphQLClient = new GraphQLClient(githubGql, {
+      headers: currentHeaders
+    })
 
     // Wrap with interceptor for automatic token refresh
     return createGraphQLInterceptor(graphQLClient, {
@@ -56,11 +64,12 @@ export function useCreateGraphQLClient(
       getCurrentHeaders: () => headersRef.current,
       updateHeaders: (newHeaders) => {
         // Convert HeadersInit to Record<string, string>
-        const newHeadersObj = newHeaders instanceof Headers
-          ? Object.fromEntries(newHeaders.entries())
-          : Array.isArray(newHeaders)
-            ? Object.fromEntries(newHeaders)
-            : newHeaders
+        const newHeadersObj =
+          newHeaders instanceof Headers
+            ? Object.fromEntries(newHeaders.entries())
+            : Array.isArray(newHeaders)
+              ? Object.fromEntries(newHeaders)
+              : newHeaders
 
         headersRef.current = { ...headersRef.current, ...newHeadersObj }
         // Headers will be used on next request via getCurrentHeaders

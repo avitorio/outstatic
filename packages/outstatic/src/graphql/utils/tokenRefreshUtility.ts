@@ -47,7 +47,10 @@ function getBroadcastChannel(): BroadcastChannel | null {
 
       if (message.type === 'REFRESH_LOCK') {
         // Another tab is refreshing
-        if (message.tabId !== tabId && (!refreshLock || message.timestamp > refreshLock.timestamp)) {
+        if (
+          message.tabId !== tabId &&
+          (!refreshLock || message.timestamp > refreshLock.timestamp)
+        ) {
           refreshLock = {
             timestamp: message.timestamp,
             tabId: message.tabId
@@ -94,7 +97,9 @@ export async function refreshTokenWithCoordination(
             reject(new Error('Token refresh failed'))
           } else {
             // Fetch updated session
-            fetchUpdatedSession(basePath, onSessionUpdate).then(resolve).catch(reject)
+            fetchUpdatedSession(basePath, onSessionUpdate)
+              .then(resolve)
+              .catch(reject)
           }
         }
       }, 100)

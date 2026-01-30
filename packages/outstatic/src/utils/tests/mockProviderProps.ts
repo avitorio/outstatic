@@ -32,7 +32,7 @@ const mockProviderProps = {
   pages: [],
   hasAIProviderKey: false,
   hasChanges: false,
-  setHasChanges: () => { },
+  setHasChanges: () => {},
   basePath: '',
   missingEnvVars: { required: {}, optional: {} },
   ostDetach: false,

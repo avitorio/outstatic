@@ -5,7 +5,8 @@ import { OID } from '@/graphql/queries/oid'
 import { Commit, CreateBranchMutation } from '@/graphql/gql/graphql'
 
 export const useCreateBranch = () => {
-  const { repoOwner, repoSlug, repoBranch, gqlClient, session, isPro } = useOutstatic()
+  const { repoOwner, repoSlug, repoBranch, gqlClient, session, isPro } =
+    useOutstatic()
 
   return useMutation({
     mutationFn: async ({ branchName }: { branchName: string }) => {

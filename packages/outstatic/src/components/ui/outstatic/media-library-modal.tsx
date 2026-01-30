@@ -73,9 +73,9 @@ export default function MediaLibraryModal({
         if (sortBy === 'date') {
           return sortDirection === 'asc'
             ? new Date(a.publishedAt).getTime() -
-            new Date(b.publishedAt).getTime()
+                new Date(b.publishedAt).getTime()
             : new Date(b.publishedAt).getTime() -
-            new Date(a.publishedAt).getTime()
+                new Date(a.publishedAt).getTime()
         } else {
           return sortDirection === 'asc'
             ? a.filename.localeCompare(b.filename)
@@ -204,10 +204,11 @@ export default function MediaLibraryModal({
                 {filteredFiles.map((file) => (
                   <div
                     key={file.filename}
-                    className={`space-y-1 p-2 bg-card rounded-lg overflow-hidden cursor-pointer group relative  ${selectedImage?.filename === file.filename
+                    className={`space-y-1 p-2 bg-card rounded-lg overflow-hidden cursor-pointer group relative  ${
+                      selectedImage?.filename === file.filename
                         ? 'ring-1 ring-primary bg-muted'
                         : ''
-                      }`}
+                    }`}
                     onClick={() => setSelectedImage(file)}
                   >
                     <div className="aspect-square">
