@@ -74,9 +74,7 @@ describe('ContentOnboarding', () => {
         </TestWrapper>
       )
 
-      expect(
-        screen.getByRole('button', { name: 'Select' })
-      ).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: 'Select' })).toBeInTheDocument()
       expect(
         screen.getByRole('button', { name: 'Create Branch' })
       ).toBeInTheDocument()

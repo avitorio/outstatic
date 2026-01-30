@@ -59,7 +59,8 @@ export default function ContentOnboarding() {
             </CardHeader>
             <CardContent className="prose prose-sm dark:prose-invert">
               <p>
-                Hey! Just so you know, Outstatic saves everything to GitHub.{' '}
+                Hey! Just so you know, Outstatic saves everything to
+                GitHub.{' '}
               </p>
               <p>
                 If you&apos;re new here, try creating a new branch to play with.

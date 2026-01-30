@@ -33,7 +33,6 @@ export default function Collections() {
             </Button>
           </div>
           <CollectionOnboarding />
-
         </LineBackground>
       ) : (
         <>
