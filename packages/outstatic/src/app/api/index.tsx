@@ -27,7 +27,6 @@ export type PostParams = Promise<{
 // Handler function type that matches existing handlers
 type RouteHandler = (req: Request) => Promise<Response>
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const getPaths: Record<string, RouteHandler> = {
   callback,
   login,
@@ -38,7 +37,6 @@ const getPaths: Record<string, RouteHandler> = {
   'magic-link-callback': magicLinkCallback
 } as any
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const postPaths: Record<string, RouteHandler> = {
   generate,
   github: githubPost,

@@ -1,124 +1,139 @@
-import { type Editor, Mark, markInputRule, markPasteRule, mergeAttributes } from "@tiptap/core";
+import {
+  type Editor,
+  Mark,
+  markInputRule,
+  markPasteRule,
+  mergeAttributes
+} from '@tiptap/core'
 
 export interface AIHighlightOptions {
-  HTMLAttributes: Record<string, string>;
+  HTMLAttributes: Record<string, string>
 }
 
-declare module "@tiptap/core" {
+declare module '@tiptap/core' {
   interface Commands<ReturnType> {
     AIHighlight: {
       /**
        * Set a AIHighlight mark
        */
-      setAIHighlight: (attributes?: { color: string }) => ReturnType;
+      setAIHighlight: (attributes?: { color: string }) => ReturnType
       /**
        * Toggle a AIHighlight mark
        */
-      toggleAIHighlight: (attributes?: { color: string }) => ReturnType;
+      toggleAIHighlight: (attributes?: { color: string }) => ReturnType
       /**
        * Unset a AIHighlight mark
        */
-      unsetAIHighlight: () => ReturnType;
-    };
+      unsetAIHighlight: () => ReturnType
+    }
   }
 }
 
-export const inputRegex = /(?:^|\s)((?:==)((?:[^~=]+))(?:==))$/;
-export const pasteRegex = /(?:^|\s)((?:==)((?:[^~=]+))(?:==))/g;
+export const inputRegex = /(?:^|\s)((?:==)((?:[^~=]+))(?:==))$/
+export const pasteRegex = /(?:^|\s)((?:==)((?:[^~=]+))(?:==))/g
 
 export const AIHighlight = Mark.create<AIHighlightOptions>({
-  name: "ai-highlight",
+  name: 'ai-highlight',
 
   addOptions() {
     return {
-      HTMLAttributes: {},
-    };
+      HTMLAttributes: {}
+    }
   },
 
   addAttributes() {
     return {
       color: {
         default: null,
-        parseHTML: (element) => element.getAttribute("data-color") || element.style.backgroundColor,
+        parseHTML: (element) =>
+          element.getAttribute('data-color') || element.style.backgroundColor,
         renderHTML: (attributes) => {
           if (!attributes.color) {
-            return {};
+            return {}
           }
 
           return {
-            "data-color": attributes.color,
-            style: `background-color: ${attributes.color}; color: inherit`,
-          };
-        },
-      },
-    };
+            'data-color': attributes.color,
+            style: `background-color: ${attributes.color}; color: inherit`
+          }
+        }
+      }
+    }
   },
 
   parseHTML() {
     return [
       {
-        tag: "mark",
-      },
-    ];
+        tag: 'mark'
+      }
+    ]
   },
 
   renderHTML({ HTMLAttributes }) {
-    return ["mark", mergeAttributes(this.options.HTMLAttributes, HTMLAttributes), 0];
+    return [
+      'mark',
+      mergeAttributes(this.options.HTMLAttributes, HTMLAttributes),
+      0
+    ]
   },
 
   addCommands() {
     return {
       setAIHighlight:
         (attributes) =>
-          ({ commands }) => {
-            return commands.setMark(this.name, attributes);
-          },
+        ({ commands }) => {
+          return commands.setMark(this.name, attributes)
+        },
       toggleAIHighlight:
         (attributes) =>
-          ({ commands }) => {
-            return commands.toggleMark(this.name, attributes);
-          },
+        ({ commands }) => {
+          return commands.toggleMark(this.name, attributes)
+        },
       unsetAIHighlight:
         () =>
-          ({ commands }) => {
-            return commands.unsetMark(this.name);
-          },
-    };
+        ({ commands }) => {
+          return commands.unsetMark(this.name)
+        }
+    }
   },
 
   addKeyboardShortcuts() {
     return {
-      "Mod-Shift-h": () => this.editor.commands.toggleAIHighlight(),
-    };
+      'Mod-Shift-h': () => this.editor.commands.toggleAIHighlight()
+    }
   },
 
   addInputRules() {
     return [
       markInputRule({
         find: inputRegex,
-        type: this.type,
-      }),
-    ];
+        type: this.type
+      })
+    ]
   },
 
   addPasteRules() {
     return [
       markPasteRule({
         find: pasteRegex,
-        type: this.type,
-      }),
-    ];
-  },
-});
+        type: this.type
+      })
+    ]
+  }
+})
 
 export const removeAIHighlight = (editor: Editor) => {
-  const tr = editor.state.tr;
-  tr.removeMark(0, editor.state.doc.nodeSize - 2, editor.state.schema.marks["ai-highlight"]);
-  editor.view.dispatch(tr);
-};
+  const tr = editor.state.tr
+  tr.removeMark(
+    0,
+    editor.state.doc.nodeSize - 2,
+    editor.state.schema.marks['ai-highlight']
+  )
+  editor.view.dispatch(tr)
+}
 export const addAIHighlight = (editor: Editor, color?: string) => {
   editor
     .chain()
-    .setAIHighlight({ color: color ?? "#c1ecf970" })
-    .run();
-};
+    .setAIHighlight({ color: color ?? '#c1ecf970' })
+    .run()
+}

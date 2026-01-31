@@ -121,8 +121,8 @@ export const GitHubBranchSearch = ({
         <SearchCombobox
           data={[]}
           value=""
-          setValue={() => { }}
-          onValueChange={() => { }}
+          setValue={() => {}}
+          onValueChange={() => {}}
           isLoading={false}
           disabled={true}
           selectPlaceholder="Select a branch"
@@ -132,7 +132,7 @@ export const GitHubBranchSearch = ({
           variant={initialRepoBranch ? 'hidden' : variant}
           size={size}
           isOpen={false}
-          onOpenChange={() => { }}
+          onOpenChange={() => {}}
         />
       </div>
     )
@@ -156,34 +156,36 @@ export const GitHubBranchSearch = ({
         loadingPlaceholder={size !== 'sm' ? 'loading...' : value}
         variant={initialRepoBranch ? 'hidden' : variant}
         size={size}
-        scrollFooter={() => session?.user?.permissions?.includes('projects.manage') && (
-          <div
-            className="rounded-t-none border border-t px-3 hover:cursor-pointer relative flex cursor-default select-none items-center rounded-sm py-1.5 text-sm outline-hidden hover:bg-accent hover:text-accent-foreground"
-            onClick={() => {
-              setIsOpen(false)
-              setIsLoading(true)
-              setShowCreateBranchDialog(true)
-            }}
-          >
-            <div className="flex gap-2 items-center">
-              {query !== repoBranch &&
+        scrollFooter={() =>
+          session?.user?.permissions?.includes('projects.manage') && (
+            <div
+              className="rounded-t-none border border-t px-3 hover:cursor-pointer relative flex cursor-default select-none items-center rounded-sm py-1.5 text-sm outline-hidden hover:bg-accent hover:text-accent-foreground"
+              onClick={() => {
+                setIsOpen(false)
+                setIsLoading(true)
+                setShowCreateBranchDialog(true)
+              }}
+            >
+              <div className="flex gap-2 items-center">
+                {query !== repoBranch &&
                 query !== '' &&
                 !suggestions.some((branch) => branch.name === query) ? (
-                <span className="grow font-normal break-words">
-                  <PlusCircle className="mr-2 h-4 w-4 min-w-[1rem] inline-block select-none align-text-bottom overflow-visible" />
-                  <span>Create branch&nbsp;</span>
-                  <span className="font-semibold">{query}</span> from{' '}
-                  <span className="font-semibold">{repoBranch}</span>
-                </span>
-              ) : (
-                <>
-                  <PlusCircle className="h-4 w-4 min-w-[1rem] inline-block select-none align-text-bottom overflow-visible" />
-                  <span>Create a new branch</span>
-                </>
-              )}
+                  <span className="grow font-normal break-words">
+                    <PlusCircle className="mr-2 h-4 w-4 min-w-[1rem] inline-block select-none align-text-bottom overflow-visible" />
+                    <span>Create branch&nbsp;</span>
+                    <span className="font-semibold">{query}</span> from{' '}
+                    <span className="font-semibold">{repoBranch}</span>
+                  </span>
+                ) : (
+                  <>
+                    <PlusCircle className="h-4 w-4 min-w-[1rem] inline-block select-none align-text-bottom overflow-visible" />
+                    <span>Create a new branch</span>
+                  </>
+                )}
+              </div>
             </div>
-          </div>
-        )}
+          )
+        }
         isOpen={isOpen}
         onOpenChange={setIsOpen}
       />

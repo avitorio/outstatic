@@ -1,4 +1,8 @@
-import { LoginSession, setLoginSession, AppPermissions } from '@/utils/auth/auth'
+import {
+  LoginSession,
+  setLoginSession,
+  AppPermissions
+} from '@/utils/auth/auth'
 import {
   getAccessToken,
   fetchGitHubUser,
@@ -145,9 +149,7 @@ export default async function GET(request: NextRequest) {
 
       // Determine which repo to check collaborator status against
       const repoOwner =
-        projectInfo?.repoOwner ||
-        process.env.OST_REPO_OWNER ||
-        ''
+        projectInfo?.repoOwner || process.env.OST_REPO_OWNER || ''
       const repoSlug =
         projectInfo?.repoSlug ||
         process.env.OST_REPO_SLUG ||
@@ -213,7 +215,10 @@ export default async function GET(request: NextRequest) {
         : `${OST_PRO_API_URL ?? ''}/`
 
       try {
-        const validateUrl = new URL('outstatic/auth/validate-github-user', apiBase)
+        const validateUrl = new URL(
+          'outstatic/auth/validate-github-user',
+          apiBase
+        )
         const callbackUrl = `${origin}${basePath}/api/outstatic/callback`
 
         const validateResponse = await fetch(validateUrl.href, {
@@ -241,7 +246,10 @@ export default async function GET(request: NextRequest) {
         }
 
         // Exchange the token for a Supabase session
-        const exchangeResult = await exchangeToken(validation.exchange_token, callbackUrl)
+        const exchangeResult = await exchangeToken(
+          validation.exchange_token,
+          callbackUrl
+        )
 
         if (!exchangeResult) {
           const redirectUrl = `${origin}${basePath}/outstatic?error=session-error`
@@ -254,7 +262,10 @@ export default async function GET(request: NextRequest) {
             name: validation.user.name || exchangeResult.user.name || email,
             login: validation.user.login || email,
             email: exchangeResult.user.email,
-            image: validation.user.avatar_url || exchangeResult.user.avatar_url || '',
+            image:
+              validation.user.avatar_url ||
+              exchangeResult.user.avatar_url ||
+              '',
             permissions: exchangeResult.user.permissions || []
           },
           provider: 'magic-link', // This makes the client use the parser endpoint

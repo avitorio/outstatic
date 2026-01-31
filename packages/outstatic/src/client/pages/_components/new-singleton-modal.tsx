@@ -78,7 +78,9 @@ export default function NewSingletonModal({
 
         {step === 1 && (
           <div className="space-y-4">
-            <Label>Where would you like to save "{singletonTitle}"?</Label>
+            <Label>
+              Where would you like to save &quot;{singletonTitle}&quot;?
+            </Label>
             <RadioGroup
               className="grid gap-4 md:grid-cols-2 -ml-2"
               defaultValue="outstatic-folder"
@@ -108,24 +110,26 @@ export default function NewSingletonModal({
                 />
                 <Label htmlFor="outstatic-folder">
                   <Card
-                    className={`h-full cursor-pointer transition-all shadow-none group relative ${outstaticFolder ? 'border-primary' : ''
-                      }`}
+                    className={`h-full cursor-pointer transition-all shadow-none group relative ${
+                      outstaticFolder ? 'border-primary' : ''
+                    }`}
                   >
                     <CardHeader>
                       <div
-                        className={`absolute right-2 top-2 w-6 h-6 rounded-full border-2 border-primary flex items-center justify-center transition-all ${outstaticFolder
-                          ? 'bg-primary text-primary-foreground opacity-100'
-                          : 'opacity-0'
-                          }`}
+                        className={`absolute right-2 top-2 w-6 h-6 rounded-full border-2 border-primary flex items-center justify-center transition-all ${
+                          outstaticFolder
+                            ? 'bg-primary text-primary-foreground opacity-100'
+                            : 'opacity-0'
+                        }`}
                       >
                         <Check className="w-4 h-4" />
                       </div>
-                      <CardTitle className="text-xl">Outstatic Folder</CardTitle>
+                      <CardTitle className="text-xl">
+                        Outstatic Folder
+                      </CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <CardDescription>
-                        Default Outstatic setup
-                      </CardDescription>
+                      <CardDescription>Default Outstatic setup</CardDescription>
                       <ul className="mt-2 space-y-1 text-sm">
                         <li>
                           Stores singleton in the outstatic/content/_singletons
@@ -144,15 +148,17 @@ export default function NewSingletonModal({
                 />
                 <Label htmlFor="select-folder">
                   <Card
-                    className={`h-full cursor-pointer transition-all shadow-none group relative ${!outstaticFolder ? 'border-primary' : ''
-                      }`}
+                    className={`h-full cursor-pointer transition-all shadow-none group relative ${
+                      !outstaticFolder ? 'border-primary' : ''
+                    }`}
                   >
                     <CardHeader>
                       <div
-                        className={`absolute right-2 top-2 w-6 h-6 rounded-full border-2 border-primary flex items-center justify-center transition-all ${!outstaticFolder
-                          ? 'bg-primary text-primary-foreground opacity-100'
-                          : 'opacity-0'
-                          }`}
+                        className={`absolute right-2 top-2 w-6 h-6 rounded-full border-2 border-primary flex items-center justify-center transition-all ${
+                          !outstaticFolder
+                            ? 'bg-primary text-primary-foreground opacity-100'
+                            : 'opacity-0'
+                        }`}
                       >
                         <Check className="w-4 h-4" />
                       </div>
@@ -163,9 +169,7 @@ export default function NewSingletonModal({
                         Custom location for your singleton
                       </CardDescription>
                       <ul className="mt-2 space-y-1 text-sm">
-                        <li>
-                          Choose any folder in your repository.
-                        </li>
+                        <li>Choose any folder in your repository.</li>
                       </ul>
                     </CardContent>
                   </Card>

@@ -70,9 +70,9 @@ export default function Login({
         {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json',
+            'Content-Type': 'application/json'
           },
-          body: JSON.stringify({ email }),
+          body: JSON.stringify({ email })
         }
       )
 
@@ -104,12 +104,13 @@ export default function Login({
                 <Alert variant="destructive">
                   <AlertCircleIcon />
                   <AlertTitle>Something went wrong</AlertTitle>
-                  <AlertDescription><p>{loginErrors[error]}</p></AlertDescription>
+                  <AlertDescription>
+                    <p>{loginErrors[error]}</p>
+                  </AlertDescription>
                 </Alert>
               </div>
             ) : null}
             <div className="relative flex flex-col items-center justify-center">
-
               <h1 className="mb-8 text-center text-xl font-semibold text-white">
                 <svg
                   fill="none"
@@ -139,7 +140,10 @@ export default function Login({
                       <p className="mb-5 text-center">
                         Sign in to access your&nbsp;dashboard.
                       </p>
-                      <form onSubmit={handleEmailLogin} className="w-full max-w-sm">
+                      <form
+                        onSubmit={handleEmailLogin}
+                        className="w-full max-w-sm"
+                      >
                         <div className="mb-4">
                           <Input
                             type="email"
@@ -156,8 +160,8 @@ export default function Login({
                             }}
                           />
                         </div>
-                        {isPro ?
-                          (<>
+                        {isPro ? (
+                          <>
                             <Button
                               type="submit"
                               disabled={emailLoading || !email}
@@ -166,18 +170,23 @@ export default function Login({
                               <Mail className="h-4 w-4 mr-2" />
                               {emailLoading ? 'Sending...' : 'Send Magic Link'}
                             </Button>
-                          </>) : (
-                            <UpgradeDialog title="Send Magic Link" open={showUpgradeDialog} onOpenChange={setShowUpgradeDialog}>
-                              <Button
-                                type="submit"
-                                className="w-full"
-                                disabled={!email?.includes('@')}
-                              >
-                                <Mail className="h-4 w-4 mr-2" />
-                                {emailLoading ? 'Sending...' : 'Send Magic Link'}
-                              </Button>
-                            </UpgradeDialog>
-                          )}
+                          </>
+                        ) : (
+                          <UpgradeDialog
+                            title="Send Magic Link"
+                            open={showUpgradeDialog}
+                            onOpenChange={setShowUpgradeDialog}
+                          >
+                            <Button
+                              type="submit"
+                              className="w-full"
+                              disabled={!email?.includes('@')}
+                            >
+                              <Mail className="h-4 w-4 mr-2" />
+                              {emailLoading ? 'Sending...' : 'Send Magic Link'}
+                            </Button>
+                          </UpgradeDialog>
+                        )}
                       </form>
                       <div className="my-2 text-center">
                         <p className="text-sm text-gray-400">or</p>
@@ -186,7 +195,10 @@ export default function Login({
                         <Link
                           href={`${OUTSTATIC_API_PATH}/login`}
                           onClick={handleLogin}
-                          className={clsx(isLoading && 'animate-pulse', 'w-full')}
+                          className={clsx(
+                            isLoading && 'animate-pulse',
+                            'w-full'
+                          )}
                         >
                           <svg
                             className="h-4 w-4 mr-2"
@@ -210,8 +222,12 @@ export default function Login({
                   ) : (
                     <>
                       <p className="mb-5 text-center">
-                        Check your email for a login link.<br />
-                        <span className="text-foreground/60">If you are a member of this project, you will receive a login link shortly.</span>
+                        Check your email for a login link.
+                        <br />
+                        <span className="text-foreground/60">
+                          If you are a member of this project, you will receive
+                          a login link shortly.
+                        </span>
                       </p>
                       <Button
                         onClick={() => {

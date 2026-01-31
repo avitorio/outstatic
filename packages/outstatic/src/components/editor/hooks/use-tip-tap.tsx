@@ -118,7 +118,11 @@ export const useTipTap = ({ ...rhfMethods }) => {
       )
 
       // Delete previous plain text insertion
-      if (state.lastCompletion.length > 0 && deleteFrom < deleteTo && deleteFrom >= 0) {
+      if (
+        state.lastCompletion.length > 0 &&
+        deleteFrom < deleteTo &&
+        deleteFrom >= 0
+      ) {
         const { tr } = editor.state
         tr.delete(deleteFrom, deleteTo)
         editor.view.dispatch(tr)
@@ -194,8 +198,9 @@ export const useTipTap = ({ ...rhfMethods }) => {
             return ''
           }
 
-          return `Press '/' for commands${(hasAIProviderKey || isPro) ? ", or '++' for AI autocomplete..." : ''
-            }`
+          return `Press '/' for commands${
+            hasAIProviderKey || isPro ? ", or '++' for AI autocomplete..." : ''
+          }`
         },
         includeChildren: false
       })
@@ -222,7 +227,10 @@ export const useTipTap = ({ ...rhfMethods }) => {
             try {
               const docSize = editor.state.doc.content.size
               const from = state.startPos
-              const to = Math.min(state.startPos + state.lastCompletion.length, docSize)
+              const to = Math.min(
+                state.startPos + state.lastCompletion.length,
+                docSize
+              )
 
               if (from >= 0 && from < to) {
                 const { tr } = editor.state

@@ -51,7 +51,11 @@ describe('Collections', () => {
           login: 'testuser',
           email: 'test@example.com',
           image: 'https://example.com/avatar.jpg',
-          permissions: ['collections.manage', 'content.manage', 'settings.manage']
+          permissions: [
+            'collections.manage',
+            'content.manage',
+            'settings.manage'
+          ]
         },
         access_token: 'mock-access-token',
         expires: new Date(Date.now() + 3600000)

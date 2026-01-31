@@ -197,8 +197,9 @@ export const DocumentSettings = ({
         </div>
       </div>
       <aside
-        className={`${isOpen ? 'block absolute' : 'hidden relative'
-          } md:block w-full border-l bg-background md:w-64 md:flex-none md:flex-col md:flex-wrap md:items-start md:justify-start md:border-b-0 md:border-l py-6 h-full max-h-[calc(100vh-128px)] md:max-h-[calc(100vh-56px)] no-scrollbar overflow-y-scroll`}
+        className={`${
+          isOpen ? 'block absolute' : 'hidden relative'
+        } md:block w-full border-l bg-background md:w-64 md:flex-none md:flex-col md:flex-wrap md:items-start md:justify-start md:border-b-0 md:border-l py-6 h-full max-h-[calc(100vh-128px)] md:max-h-[calc(100vh-56px)] no-scrollbar overflow-y-scroll`}
       >
         <div className="relative w-full items-center justify-between mb-4 flex px-4">
           <label
@@ -244,8 +245,9 @@ export const DocumentSettings = ({
           />
         </div>
         <div
-          className={`flex w-full pb-4 px-4 ${showDelete ? 'justify-between items-center' : 'justify-end'
-            }`}
+          className={`flex w-full pb-4 px-4 ${
+            showDelete ? 'justify-between items-center' : 'justify-end'
+          }`}
         >
           {showDelete && (
             <DeleteDocumentButton
@@ -341,8 +343,8 @@ export const DocumentSettings = ({
                                 lastChar === ' ' || lastChar === '-'
                                   ? e.target.value
                                   : slugify(e.target.value, {
-                                    allowedChars: 'a-zA-Z0-9.'
-                                  })
+                                      allowedChars: 'a-zA-Z0-9.'
+                                    })
                               )
                             }}
                           />
@@ -376,27 +378,31 @@ export const DocumentSettings = ({
                       <ArrowDown className="h-4 w-4" />
                       <p className="semiblod text-sm">Set up Custom Fields</p>
                     </div>
-                    {Object.entries(missingCustomFields).map(([name, field]) => {
-                      return (
-                        <div
-                          key={name}
-                          className="w-full flex items-center justify-between px-4 py-2 gap-2"
-                        >
-                          <p className="semiblod text-sm truncate">{field.title}</p>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            className="text-xs flex gap-2"
-                            onClick={() => {
-                              setFieldTitle(field.title)
-                              setShowAddModal(true)
-                            }}
+                    {Object.entries(missingCustomFields).map(
+                      ([name, field]) => {
+                        return (
+                          <div
+                            key={name}
+                            className="w-full flex items-center justify-between px-4 py-2 gap-2"
                           >
-                            <PlusCircle className="h-4 w-4" /> Create
-                          </Button>
-                        </div>
-                      )
-                    })}
+                            <p className="semiblod text-sm truncate">
+                              {field.title}
+                            </p>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="text-xs flex gap-2"
+                              onClick={() => {
+                                setFieldTitle(field.title)
+                                setShowAddModal(true)
+                              }}
+                            >
+                              <PlusCircle className="h-4 w-4" /> Create
+                            </Button>
+                          </div>
+                        )
+                      }
+                    )}
                   </>
                 )}
 
@@ -420,7 +426,8 @@ export const DocumentSettings = ({
                   </Tooltip>
                 </TooltipProvider>
               </div>
-            </>)}
+            </>
+          )}
         </div>
         {showAddModal ? (
           <AddCustomFieldDialog

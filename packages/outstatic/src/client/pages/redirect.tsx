@@ -1,4 +1,10 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/shadcn/card'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle
+} from '@/components/ui/shadcn/card'
 import LoadingBackground from '@/components/ui/outstatic/loading-background'
 import { useEffect, useMemo } from 'react'
 import { useSearchParams } from 'next/navigation'
@@ -9,7 +15,8 @@ export default function RedirectingPage() {
     document.title = 'Redirecting...'
   }, [])
 
-  const redirectToParam = useSearchParams().get('redirectTo') || OUTSTATIC_APP_URL
+  const redirectToParam =
+    useSearchParams().get('redirectTo') || OUTSTATIC_APP_URL
 
   // Validate redirect URL
   const redirectTo = useMemo(() => {

@@ -22,7 +22,12 @@ export const MDEditor = ({ id, editor }: MDEditorProps) => {
       {editor && <EditorMenu editor={editor} />}
       {editor && <TableMenu editor={editor} />}
       {editor && <ImageMenu editor={editor} />}
-      <EditorContent name="content" className='prose prose-base dark:prose-invert' value={watchContent} editor={editor} />
+      <EditorContent
+        name="content"
+        className="prose prose-base dark:prose-invert"
+        value={watchContent}
+        editor={editor}
+      />
       <div className="mt-1">
         {errors[id]?.message && (
           <span className="text-sm text-red-500">

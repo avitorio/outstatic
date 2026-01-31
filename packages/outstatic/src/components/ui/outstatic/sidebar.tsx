@@ -98,7 +98,7 @@ function SubRouteGroup({
   const defaultGroupOpen =
     group.collapsed === undefined ? true : !group.collapsed
   const isCollapsibleOpen = group.collapsible
-    ? isOpen(collapsibleKey) ?? defaultGroupOpen
+    ? (isOpen(collapsibleKey) ?? defaultGroupOpen)
     : true
 
   const Container = (props: React.PropsWithChildren) => {
@@ -132,6 +132,7 @@ function SubRouteGroup({
   })
 
   return (
+    // eslint-disable-next-line react-hooks/static-components
     <Container>
       <SidebarMenuSubItem>
         <If
@@ -161,6 +162,7 @@ function SubRouteGroup({
           </CollapsibleTrigger>
         </If>
 
+        {/* eslint-disable-next-line react-hooks/static-components */}
         <ContentContainer>
           <SidebarMenuSub
             className={cn({
@@ -193,9 +195,12 @@ function SubRouteGroup({
                 return (
                   <SidebarMenuSubItem key={child.path}>
                     <SidebarMenuSubButton isActive={isActive} asChild>
-                      <Link className={cn(linkClassName, {
-                        'pointer-events-none': isActive
-                      })} href={child.path}>
+                      <Link
+                        className={cn(linkClassName, {
+                          'pointer-events-none': isActive
+                        })}
+                        href={child.path}
+                      >
                         {child.Icon}
                         <span className={spanClassName}>{child.label}</span>
                       </Link>
@@ -234,9 +239,10 @@ export function SidebarNavigation({
         if ('children' in item) {
           const itemKey = item.label
           // Respect collapsed prop for initial state, but prefer persisted state
-          const defaultOpen = item.collapsed === undefined ? true : !item.collapsed
+          const defaultOpen =
+            item.collapsed === undefined ? true : !item.collapsed
           const isItemOpen = item.collapsible
-            ? isOpen(itemKey) ?? defaultOpen
+            ? (isOpen(itemKey) ?? defaultOpen)
             : true
 
           const Container = (props: React.PropsWithChildren) => {
@@ -289,248 +295,278 @@ export function SidebarNavigation({
                 </If>
 
                 <If condition={item.badge}>
-                  <SidebarMenuBadge>
-                    {item.badge}
-                  </SidebarMenuBadge>
+                  <SidebarMenuBadge>{item.badge}</SidebarMenuBadge>
                 </If>
 
                 <SidebarGroupContent>
                   <SidebarMenu>
                     <ContentContainer>
-                      {item.children.map((child: RouteChildType | RouteGroupType, childIndex: number) => {
-                        const childKey = `${itemKey}-${child.label}`
-                        // Respect collapsed prop for initial state, but prefer persisted state
-                        const defaultChildOpen =
-                          'collapsed' in child && child.collapsed !== undefined
-                            ? !child.collapsed
-                            : true
-                        const isChildOpen =
-                          'collapsible' in child && child.collapsible
-                            ? isOpen(childKey) ?? defaultChildOpen
-                            : true
-
-                        const Container = (props: React.PropsWithChildren) => {
-                          if ('collapsible' in child && child.collapsible) {
-                            return (
-                              <Collapsible
-                                open={isChildOpen}
-                                onOpenChange={(open) =>
-                                  setCollapsibleOpen(childKey, open)
-                                }
-                                className={'group/collapsible'}
-                              >
-                                {props.children}
-                              </Collapsible>
-                            )
-                          }
-
-                          return props.children
-                        }
-
-                        const ContentContainer = (
-                          props: React.PropsWithChildren
+                      {item.children.map(
+                        (
+                          child: RouteChildType | RouteGroupType,
+                          childIndex: number
                         ) => {
-                          if ('collapsible' in child && child.collapsible) {
-                            return (
-                              <CollapsibleContent>
-                                {props.children}
-                              </CollapsibleContent>
-                            )
+                          const childKey = `${itemKey}-${child.label}`
+                          // Respect collapsed prop for initial state, but prefer persisted state
+                          const defaultChildOpen =
+                            'collapsed' in child &&
+                            child.collapsed !== undefined
+                              ? !child.collapsed
+                              : true
+                          const isChildOpen =
+                            'collapsible' in child && child.collapsible
+                              ? (isOpen(childKey) ?? defaultChildOpen)
+                              : true
+
+                          const Container = (
+                            props: React.PropsWithChildren
+                          ) => {
+                            if ('collapsible' in child && child.collapsible) {
+                              return (
+                                <Collapsible
+                                  open={isChildOpen}
+                                  onOpenChange={(open) =>
+                                    setCollapsibleOpen(childKey, open)
+                                  }
+                                  className={'group/collapsible'}
+                                >
+                                  {props.children}
+                                </Collapsible>
+                              )
+                            }
+
+                            return props.children
                           }
 
-                          return props.children
-                        }
+                          const ContentContainer = (
+                            props: React.PropsWithChildren
+                          ) => {
+                            if ('collapsible' in child && child.collapsible) {
+                              return (
+                                <CollapsibleContent>
+                                  {props.children}
+                                </CollapsibleContent>
+                              )
+                            }
 
-                        const TriggerItem = () => {
-                          if ('collapsible' in child && child.collapsible) {
-                            return (
-                              <CollapsibleTrigger asChild>
-                                <SidebarMenuButton tooltip={child.label} className="group/sub-menu-item">
-                                  <div
-                                    className={cn('flex items-center gap-2', {
-                                      'mx-auto w-full gap-0 [&>svg]:flex-1 [&>svg]:shrink-0':
-                                        !open
-                                    })}
+                            return props.children
+                          }
+
+                          const TriggerItem = () => {
+                            if ('collapsible' in child && child.collapsible) {
+                              return (
+                                <CollapsibleTrigger asChild>
+                                  <SidebarMenuButton
+                                    tooltip={child.label}
+                                    className="group/sub-menu-item"
                                   >
-                                    {child.Icon}
-                                    <span
-                                      className={cn(
-                                        'transition-width w-auto transition-opacity duration-500',
-                                        {
-                                          'w-0 opacity-0': !open
-                                        }
-                                      )}
+                                    <div
+                                      className={cn('flex items-center gap-2', {
+                                        'mx-auto w-full gap-0 [&>svg]:flex-1 [&>svg]:shrink-0':
+                                          !open
+                                      })}
                                     >
-                                      {child.label}
-                                    </span>
+                                      {child.Icon}
+                                      <span
+                                        className={cn(
+                                          'transition-width w-auto transition-opacity duration-500',
+                                          {
+                                            'w-0 opacity-0': !open
+                                          }
+                                        )}
+                                      >
+                                        {child.label}
+                                      </span>
 
-                                    <ChevronDown
-                                      className={cn(
-                                        'ml-auto size-4 transition-transform group-data-[state=open]/collapsible:rotate-180',
-                                        {
-                                          'hidden size-0': !open
-                                        }
-                                      )}
-                                    />
+                                      <ChevronDown
+                                        className={cn(
+                                          'ml-auto size-4 transition-transform group-data-[state=open]/collapsible:rotate-180',
+                                          {
+                                            'hidden size-0': !open
+                                          }
+                                        )}
+                                      />
 
-                                    <If condition={item.renderAction}>
-                                      <SidebarGroupAction title={item.label}>
-                                        {item.renderAction}
-                                      </SidebarGroupAction>
-                                    </If>
-                                  </div>
+                                      <If condition={item.renderAction}>
+                                        <SidebarGroupAction title={item.label}>
+                                          {item.renderAction}
+                                        </SidebarGroupAction>
+                                      </If>
+                                    </div>
+                                  </SidebarMenuButton>
+                                </CollapsibleTrigger>
+                              )
+                            }
+
+                            if ('dialog' in child && child.dialog) {
+                              return (
+                                <SidebarMenuButton tooltip={child.label}>
+                                  {child.dialog}
                                 </SidebarMenuButton>
-                              </CollapsibleTrigger>
-                            )
-                          }
+                              )
+                            }
 
-                          if ('dialog' in child && child.dialog) {
+                            const path = 'path' in child ? child.path : ''
+                            const newTab =
+                              'newTab' in child ? child.newTab : false
+                            const end = 'end' in child ? child.end : false
+
+                            const isActive = isRouteActive(
+                              path,
+                              currentPath,
+                              end
+                            )
+
                             return (
-                              <SidebarMenuButton tooltip={child.label}>
-                                {child.dialog}
+                              <SidebarMenuButton
+                                asChild
+                                isActive={isActive}
+                                tooltip={child.label}
+                              >
+                                <Link
+                                  className={cn('flex items-center', {
+                                    'mx-auto w-full gap-0! [&>svg]:flex-1':
+                                      !open,
+                                    'pointer-events-none': isActive
+                                  })}
+                                  href={path}
+                                  target={newTab ? '_blank' : '_self'}
+                                  rel={
+                                    newTab ? 'noopener noreferrer' : undefined
+                                  }
+                                >
+                                  {child.Icon}
+                                  <span
+                                    className={cn(
+                                      'w-auto transition-opacity duration-300',
+                                      {
+                                        'w-0 opacity-0': !open
+                                      }
+                                    )}
+                                  >
+                                    {child.label}
+                                  </span>
+                                </Link>
                               </SidebarMenuButton>
                             )
                           }
 
-                          const path = 'path' in child ? child.path : ''
-                          const newTab = 'newTab' in child ? child.newTab : false
-                          const end = 'end' in child ? child.end : false
-
-                          const isActive = isRouteActive(path, currentPath, end)
-
                           return (
-                            <SidebarMenuButton
-                              asChild
-                              isActive={isActive}
-                              tooltip={child.label}
-                            >
-                              <Link
-                                className={cn('flex items-center', {
-                                  'mx-auto w-full gap-0! [&>svg]:flex-1': !open,
-                                  'pointer-events-none': isActive
-                                })}
-                                href={path}
-                                target={newTab ? '_blank' : '_self'}
-                                rel={newTab ? 'noopener noreferrer' : undefined}
-                              >
-                                {child.Icon}
-                                <span
-                                  className={cn(
-                                    'w-auto transition-opacity duration-300',
-                                    {
-                                      'w-0 opacity-0': !open
-                                    }
-                                  )}
-                                >
-                                  {child.label}
-                                </span>
-                              </Link>
-                            </SidebarMenuButton>
-                          )
-                        }
+                            <Container key={`group-${index}-${childIndex}`}>
+                              <SidebarMenuItem>
+                                <TriggerItem />
 
-                        return (
-                          <Container key={`group-${index}-${childIndex}`}>
-                            <SidebarMenuItem>
-                              <TriggerItem />
+                                <ContentContainer>
+                                  <If condition={child.children}>
+                                    {(children) => (
+                                      <SidebarMenuSub
+                                        className={cn({
+                                          'mx-0 px-1.5': !open
+                                        })}
+                                      >
+                                        {children.map(
+                                          (
+                                            subChild:
+                                              | RouteSubChildType
+                                              | RouteGroupType,
+                                            subChildIndex: number
+                                          ) => {
+                                            // Check if this is a sub-RouteGroup
+                                            if (isRouteGroup(subChild)) {
+                                              return (
+                                                <SubRouteGroup
+                                                  key={`sub-group-${subChildIndex}`}
+                                                  group={subChild}
+                                                  currentPath={currentPath}
+                                                  open={open}
+                                                  depth={1}
+                                                  parentKey={childKey}
+                                                />
+                                              )
+                                            }
 
-                              <ContentContainer>
-                                <If condition={child.children}>
-                                  {(children) => (
-                                    <SidebarMenuSub
-                                      className={cn({
-                                        'mx-0 px-1.5': !open
-                                      })}
-                                    >
-                                      {children.map(
-                                        (subChild: RouteSubChildType | RouteGroupType, subChildIndex: number) => {
-                                          // Check if this is a sub-RouteGroup
-                                          if (isRouteGroup(subChild)) {
+                                            const isActive = isRouteActive(
+                                              subChild.path,
+                                              currentPath,
+                                              subChild.end
+                                            )
+
+                                            const linkClassName = cn(
+                                              'flex items-center',
+                                              {
+                                                'mx-auto w-full gap-0! [&>svg]:flex-1':
+                                                  !open
+                                              }
+                                            )
+
+                                            const spanClassName = cn(
+                                              'w-auto transition-opacity duration-300',
+                                              {
+                                                'w-0 opacity-0': !open
+                                              }
+                                            )
+
                                             return (
-                                              <SubRouteGroup
-                                                key={`sub-group-${subChildIndex}`}
-                                                group={subChild}
-                                                currentPath={currentPath}
-                                                open={open}
-                                                depth={1}
-                                                parentKey={childKey}
-                                              />
+                                              <SidebarMenuSubItem
+                                                key={subChild.path}
+                                                className="group/sub-menu-item"
+                                              >
+                                                <SidebarMenuSubButton
+                                                  isActive={isActive}
+                                                  asChild
+                                                >
+                                                  <Link
+                                                    className={cn(
+                                                      linkClassName,
+                                                      {
+                                                        'pointer-events-none':
+                                                          isActive
+                                                      }
+                                                    )}
+                                                    href={subChild.path}
+                                                  >
+                                                    {subChild.Icon}
+
+                                                    <span
+                                                      className={spanClassName}
+                                                    >
+                                                      {subChild.label}
+                                                    </span>
+                                                  </Link>
+                                                </SidebarMenuSubButton>
+                                                <If
+                                                  condition={
+                                                    subChild.renderAction
+                                                  }
+                                                >
+                                                  <SidebarMenuAction>
+                                                    {subChild.renderAction}
+                                                  </SidebarMenuAction>
+                                                </If>
+                                              </SidebarMenuSubItem>
                                             )
                                           }
+                                        )}
+                                      </SidebarMenuSub>
+                                    )}
+                                  </If>
+                                </ContentContainer>
 
-                                          const isActive = isRouteActive(
-                                            subChild.path,
-                                            currentPath,
-                                            subChild.end
-                                          )
-
-                                          const linkClassName = cn(
-                                            'flex items-center',
-                                            {
-                                              'mx-auto w-full gap-0! [&>svg]:flex-1':
-                                                !open
-                                            }
-                                          )
-
-                                          const spanClassName = cn(
-                                            'w-auto transition-opacity duration-300',
-                                            {
-                                              'w-0 opacity-0': !open
-                                            }
-                                          )
-
-                                          return (
-                                            <SidebarMenuSubItem
-                                              key={subChild.path}
-                                              className="group/sub-menu-item"
-                                            >
-                                              <SidebarMenuSubButton
-                                                isActive={isActive}
-                                                asChild
-                                              >
-                                                <Link
-                                                  className={cn(linkClassName, {
-                                                    'pointer-events-none': isActive
-                                                  })}
-                                                  href={subChild.path}
-                                                >
-                                                  {subChild.Icon}
-
-                                                  <span
-                                                    className={spanClassName}
-                                                  >
-                                                    {subChild.label}
-                                                  </span>
-                                                </Link>
-                                              </SidebarMenuSubButton>
-                                              <If condition={subChild.renderAction}>
-                                                <SidebarMenuAction>
-                                                  {subChild.renderAction}
-                                                </SidebarMenuAction>
-                                              </If>
-                                            </SidebarMenuSubItem>
-                                          )
-                                        }
-                                      )}
-                                    </SidebarMenuSub>
-                                  )}
+                                <If condition={child.renderAction}>
+                                  <SidebarMenuAction>
+                                    {child.renderAction}
+                                  </SidebarMenuAction>
                                 </If>
-                              </ContentContainer>
-
-                              <If condition={child.renderAction}>
-                                <SidebarMenuAction>
-                                  {child.renderAction}
-                                </SidebarMenuAction>
-                              </If>
-                              <If condition={child.badge}>
-                                <SidebarMenuBadge>
-                                  {child.badge}
-                                </SidebarMenuBadge>
-                              </If>
-                            </SidebarMenuItem>
-                          </Container>
-                        )
-                      })}
+                                <If condition={child.badge}>
+                                  <SidebarMenuBadge>
+                                    {child.badge}
+                                  </SidebarMenuBadge>
+                                </If>
+                              </SidebarMenuItem>
+                            </Container>
+                          )
+                        }
+                      )}
                     </ContentContainer>
                   </SidebarMenu>
                 </SidebarGroupContent>
@@ -539,7 +575,7 @@ export function SidebarNavigation({
               <If condition={!open && !isLast}>
                 <SidebarSeparator />
               </If>
-            </Container >
+            </Container>
           )
         }
       })}

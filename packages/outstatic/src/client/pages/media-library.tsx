@@ -55,9 +55,9 @@ export default function MediaLibrary() {
         if (sortBy === 'date') {
           return sortDirection === 'asc'
             ? new Date(a.publishedAt).getTime() -
-            new Date(b.publishedAt).getTime()
+                new Date(b.publishedAt).getTime()
             : new Date(b.publishedAt).getTime() -
-            new Date(a.publishedAt).getTime()
+                new Date(a.publishedAt).getTime()
         } else {
           return sortDirection === 'asc'
             ? a.filename.localeCompare(b.filename)

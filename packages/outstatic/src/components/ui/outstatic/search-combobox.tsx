@@ -81,20 +81,20 @@ export function SearchCombobox({
           {isLoading
             ? loadingPlaceholder
             : value
-            ? (() => {
-                const selectedRecord = data.find(
-                  (dataRecord) => dataRecord.value === value
-                )
-                return (
-                  <>
-                    {selectedRecord?.icon && (
-                      <selectedRecord.icon className="h-4 w-4 inline-block" />
-                    )}
-                    {selectedRecord?.label}
-                  </>
-                )
-              })()
-            : selectPlaceholder}
+              ? (() => {
+                  const selectedRecord = data.find(
+                    (dataRecord) => dataRecord.value === value
+                  )
+                  return (
+                    <>
+                      {selectedRecord?.icon && (
+                        <selectedRecord.icon className="h-4 w-4 inline-block" />
+                      )}
+                      {selectedRecord?.label}
+                    </>
+                  )
+                })()
+              : selectPlaceholder}
         </span>
       ) : null}
       <Popover open={open} onOpenChange={setOpen} modal>
@@ -120,20 +120,20 @@ export function SearchCombobox({
               {isLoading
                 ? loadingPlaceholder
                 : value
-                ? (() => {
-                    const selectedRecord = data.find(
-                      (dataRecord) => dataRecord.value === value
-                    )
-                    return (
-                      <>
-                        {selectedRecord?.icon && (
-                          <selectedRecord.icon className="h-4 w-4 inline-block" />
-                        )}
-                        {selectedRecord?.label}
-                      </>
-                    )
-                  })()
-                : selectPlaceholder}
+                  ? (() => {
+                      const selectedRecord = data.find(
+                        (dataRecord) => dataRecord.value === value
+                      )
+                      return (
+                        <>
+                          {selectedRecord?.icon && (
+                            <selectedRecord.icon className="h-4 w-4 inline-block" />
+                          )}
+                          {selectedRecord?.label}
+                        </>
+                      )
+                    })()
+                  : selectPlaceholder}
             </span>
             <div>
               <CaretSortIcon className={cn('h-4 w-4 shrink-0 opacity-50')} />

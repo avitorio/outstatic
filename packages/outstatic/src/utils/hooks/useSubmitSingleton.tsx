@@ -92,7 +92,8 @@ function useSubmitSingleton({
   })
   const { refetch: refetchMetadata } = useGetMetadata({ enabled: false })
   const { refetch: refetchMedia } = useGetMediaFiles({ enabled: false })
-  const { data: existingSingletons, refetch: refetchSingletons } = useSingletons({ enabled: false })
+  const { data: existingSingletons, refetch: refetchSingletons } =
+    useSingletons({ enabled: false })
 
   const singletonsPath = `${ostContent}/_singletons`
 
@@ -124,7 +125,9 @@ function useSubmitSingleton({
           { data: schema, isError: schemaError },
           { data: metadata, isError: metadataError }
         ] = await Promise.all([
-          isNew ? Promise.resolve({ data: null, isError: false }) : refetchSchema(),
+          isNew
+            ? Promise.resolve({ data: null, isError: false })
+            : refetchSchema(),
           refetchMetadata()
         ])
 
@@ -144,7 +147,9 @@ function useSubmitSingleton({
         const owner = repoOwner || session?.user?.login || ''
 
         const capi = createCommitApi({
-          message: isNew ? `feat(singleton): create ${actualSlug}` : `chore: Updates singleton ${actualSlug}`,
+          message: isNew
+            ? `feat(singleton): create ${actualSlug}`
+            : `chore: Updates singleton ${actualSlug}`,
           owner,
           oid: oid ?? '',
           name: repoSlug,
@@ -162,7 +167,7 @@ function useSubmitSingleton({
         // Extract directory from existing file path
         const contentDirectory = existingFilePath
           ? existingFilePath.substring(0, existingFilePath.lastIndexOf('/'))
-          : path ?? singletonsPath
+          : (path ?? singletonsPath)
 
         // For new singletons, create the schema.json file and update singletons.json
         if (isNew) {
@@ -293,8 +298,8 @@ function useSubmitSingleton({
 
         const newMeta = Array.isArray(m.metadata)
           ? m.metadata.filter(
-            (c) => c.collection !== '_singletons' || c.slug !== actualSlug
-          )
+              (c) => c.collection !== '_singletons' || c.slug !== actualSlug
+            )
           : []
 
         newMeta.push({
@@ -346,7 +351,9 @@ function useSubmitSingleton({
               setSlug(actualSlug)
               refetchSingletons()
             }
-            return isNew ? 'Singleton created successfully!' : 'Changes saved successfully!'
+            return isNew
+              ? 'Singleton created successfully!'
+              : 'Changes saved successfully!'
           },
           error: isNew ? 'Failed to create singleton' : 'Failed to save changes'
         })

@@ -53,7 +53,9 @@ export default function Collections() {
                         <span className="absolute top-0 bottom-0 left-0 right-16"></span>
                       </h5>
                     </Link>
-                    {session?.user?.permissions?.includes('collections.manage') ? (
+                    {session?.user?.permissions?.includes(
+                      'collections.manage'
+                    ) ? (
                       <div className="z-10 flex gap-2">
                         <Button asChild size="icon" variant="ghost">
                           <Link
@@ -75,8 +77,8 @@ export default function Collections() {
                           <span className="sr-only">Delete content</span>
                           <Trash className="w-6 h-6" />
                         </Button>
-                      </div>)
-                      : null}
+                      </div>
+                    ) : null}
                   </CardContent>
                 </Card>
               ))}

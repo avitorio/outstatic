@@ -85,6 +85,7 @@ export const DocumentSettingsImageSelection = ({
       resolvedImage?.startsWith('http') ||
       resolvedImage?.startsWith(`${basePath}${API_MEDIA_PATH}`)
     ) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       handleImageSelect(resolvedImage, false)
       return
     }
@@ -165,7 +166,7 @@ export const DocumentSettingsImageSelection = ({
           <FormDescription>Image URL</FormDescription>
           <FormMessage />
 
-          <div className="w-full flex justify-between mt-2">
+          <div className="w-full flex justify-between mt-2 gap-2">
             <Button
               variant="outline"
               onClick={() => {
@@ -192,7 +193,7 @@ export const DocumentSettingsImageSelection = ({
 
   // Render image selection options
   const renderImageOptions = () => (
-    <div className="w-full flex justify-between mt-2">
+    <div className="w-full flex justify-between mt-2 gap-2">
       <Button onClick={() => setShowImageLibrary(true)} type="button">
         From library
       </Button>

@@ -95,9 +95,7 @@ describe('Singletons', () => {
       </TestWrapper>
     )
 
-    expect(
-      await screen.findByText('Create a Singleton')
-    ).toBeInTheDocument()
+    expect(await screen.findByText('Create a Singleton')).toBeInTheDocument()
   })
 
   it('renders singletons list correctly', async () => {
@@ -137,9 +135,10 @@ describe('Singletons', () => {
     )
 
     // Check New Singleton link
-    expect(
-      screen.getByRole('link', { name: 'New Singleton' })
-    ).toHaveAttribute('href', '/outstatic/singletons/new')
+    expect(screen.getByRole('link', { name: 'New Singleton' })).toHaveAttribute(
+      'href',
+      '/outstatic/singletons/new'
+    )
   })
 
   it('renders open from file button when singletons exist', () => {
@@ -158,7 +157,9 @@ describe('Singletons', () => {
       </TestWrapper>
     )
 
-    const openFileButton = screen.getByRole('button', { name: /open from file/i })
+    const openFileButton = screen.getByRole('button', {
+      name: /open from file/i
+    })
     expect(openFileButton).toBeInTheDocument()
   })
 })

@@ -1,7 +1,7 @@
 import { GraphQLClient } from 'graphql-request'
 import { useInitialData } from '@/utils/hooks/useInitialData'
 import { createGraphQLInterceptor } from './createGraphQLInterceptor'
-import { useRef, useMemo } from 'react'
+import { useRef, useMemo, useEffect, useState } from 'react'
 
 type HeadersType = Record<string, string>
 
@@ -18,16 +18,28 @@ export function useCreateGraphQLClient(
   // Use ref to store mutable headers that can be updated by interceptor
   const headersRef = useRef<HeadersType>({ ...headers })
 
-  // Update headers ref when authorization changes
+  // Refs to hold callback functions - updated via useEffect to avoid ref access during render
+  const callbacksRef = useRef<{
+    getCurrentHeaders: () => HeadersType
+    updateHeaders: (newHeaders: HeadersInit) => void
+    onSessionUpdate: (session: { access_token?: string } | null) => void
+  }>({
+    getCurrentHeaders: () => headers,
+    updateHeaders: () => {},
+    onSessionUpdate: () => {}
+  })
+
+  // Compute current headers without reading from ref during render
   // GitHub API uses 'token' prefix, other APIs use 'Bearer'
   const currentHeaders = useMemo(() => {
-    const authHeader = isGitHubAPI && headers.authorization.startsWith('Bearer ')
-      ? headers.authorization.replace('Bearer ', 'token ')
-      : headers.authorization
+    const authHeader =
+      isGitHubAPI && headers.authorization.startsWith('Bearer ')
+        ? headers.authorization.replace('Bearer ', 'token ')
+        : headers.authorization
 
     // GitHub GraphQL API requires specific headers
     const githubHeaders: HeadersType = {
-      ...headersRef.current,
+      ...headers,
       authorization: authHeader
     }
 
@@ -40,33 +52,28 @@ export function useCreateGraphQLClient(
       }
     }
 
-    headersRef.current = githubHeaders
+    return githubHeaders
+  }, [headers, isGitHubAPI, initialData])
 
-    return headersRef.current
-  }, [headers.authorization, githubGql, isGitHubAPI, initialData?.projectInfo?.projectId])
+  // Update refs outside render phase so interceptor has latest headers
+  useEffect(() => {
+    headersRef.current = currentHeaders
 
-  // Create GraphQL client with interceptor
-  const client = useMemo(() => {
-    const graphQLClient = new GraphQLClient(githubGql, { headers: currentHeaders })
-
-    // Wrap with interceptor for automatic token refresh
-    return createGraphQLInterceptor(graphQLClient, {
-      basePath,
-      endpoint: githubGql,
+    // Update callback functions with current closure values
+    callbacksRef.current = {
       getCurrentHeaders: () => headersRef.current,
       updateHeaders: (newHeaders) => {
         // Convert HeadersInit to Record<string, string>
-        const newHeadersObj = newHeaders instanceof Headers
-          ? Object.fromEntries(newHeaders.entries())
-          : Array.isArray(newHeaders)
-            ? Object.fromEntries(newHeaders)
-            : newHeaders
+        const newHeadersObj =
+          newHeaders instanceof Headers
+            ? Object.fromEntries(newHeaders.entries())
+            : Array.isArray(newHeaders)
+              ? Object.fromEntries(newHeaders)
+              : newHeaders
 
         headersRef.current = { ...headersRef.current, ...newHeadersObj }
-        // Headers will be used on next request via getCurrentHeaders
       },
       onSessionUpdate: (session) => {
-        // Update headers with new token
         if (session?.access_token) {
           // GitHub API uses 'token' prefix, other APIs use 'Bearer'
           const authHeader = isGitHubAPI
@@ -79,8 +86,35 @@ export function useCreateGraphQLClient(
           }
         }
       }
+    }
+  }, [currentHeaders, isGitHubAPI])
+
+  // Create stable wrapper functions once at mount using useState lazy initializer
+  // These delegate to callbacksRef which is updated in useEffect
+  const [stableCallbacks] = useState(() => ({
+    getCurrentHeaders: () => callbacksRef.current.getCurrentHeaders(),
+    updateHeaders: (newHeaders: HeadersInit) =>
+      callbacksRef.current.updateHeaders(newHeaders),
+    onSessionUpdate: (session: { access_token?: string } | null) =>
+      callbacksRef.current.onSessionUpdate(session)
+  }))
+
+  // Create GraphQL client with interceptor
+  const client = useMemo(() => {
+    const graphQLClient = new GraphQLClient(githubGql, {
+      headers: currentHeaders
     })
-  }, [githubGql, basePath, currentHeaders, isGitHubAPI])
+
+    // Wrap with interceptor for automatic token refresh
+    // Use stable callbacks that delegate to the latest implementations
+    return createGraphQLInterceptor(graphQLClient, {
+      basePath,
+      endpoint: githubGql,
+      getCurrentHeaders: stableCallbacks.getCurrentHeaders,
+      updateHeaders: stableCallbacks.updateHeaders,
+      onSessionUpdate: stableCallbacks.onSessionUpdate
+    })
+  }, [githubGql, basePath, currentHeaders, stableCallbacks])
 
   return client
 }

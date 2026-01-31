@@ -314,15 +314,17 @@ export default function NewCollectionModal({
                   />
                   <Label htmlFor="outstatic-folder">
                     <Card
-                      className={`h-full cursor-pointer transition-all shadow-none group relative ${outstaticFolder ? 'border-primary' : ''
-                        }`}
+                      className={`h-full cursor-pointer transition-all shadow-none group relative ${
+                        outstaticFolder ? 'border-primary' : ''
+                      }`}
                     >
                       <CardHeader>
                         <div
-                          className={`absolute right-2 top-2 w-6 h-6 rounded-full border-2 border-primary flex items-center justify-center transition-all ${outstaticFolder
-                            ? 'bg-primary text-primary-foreground opacity-100'
-                            : 'opacity-0'
-                            }`}
+                          className={`absolute right-2 top-2 w-6 h-6 rounded-full border-2 border-primary flex items-center justify-center transition-all ${
+                            outstaticFolder
+                              ? 'bg-primary text-primary-foreground opacity-100'
+                              : 'opacity-0'
+                          }`}
                         >
                           <Check className="w-4 h-4" />
                         </div>
@@ -352,15 +354,17 @@ export default function NewCollectionModal({
                   />
                   <Label htmlFor="select-folder">
                     <Card
-                      className={`h-full cursor-pointer transition-all shadow-none group relative ${!outstaticFolder ? 'border-primary' : ''
-                        }`}
+                      className={`h-full cursor-pointer transition-all shadow-none group relative ${
+                        !outstaticFolder ? 'border-primary' : ''
+                      }`}
                     >
                       <CardHeader>
                         <div
-                          className={`absolute right-2 top-2 w-6 h-6 rounded-full border-2 border-primary flex items-center justify-center transition-all ${!outstaticFolder
-                            ? 'bg-primary text-primary-foreground opacity-100'
-                            : 'opacity-0'
-                            }`}
+                          className={`absolute right-2 top-2 w-6 h-6 rounded-full border-2 border-primary flex items-center justify-center transition-all ${
+                            !outstaticFolder
+                              ? 'bg-primary text-primary-foreground opacity-100'
+                              : 'opacity-0'
+                          }`}
                         >
                           <Check className="w-4 h-4" />
                         </div>
@@ -483,16 +487,16 @@ export default function NewCollectionModal({
                   path={
                     outstaticFolder
                       ? ostContent +
-                      '/' +
-                      slugify(form.getValues('name') || 'your-collection', {
-                        allowedChars: 'a-zA-Z0-9.'
-                      })
-                      : createFolder
-                        ? '/' +
-                        (path ? path + '/' : '') +
+                        '/' +
                         slugify(form.getValues('name') || 'your-collection', {
                           allowedChars: 'a-zA-Z0-9.'
                         })
+                      : createFolder
+                        ? '/' +
+                          (path ? path + '/' : '') +
+                          slugify(form.getValues('name') || 'your-collection', {
+                            allowedChars: 'a-zA-Z0-9.'
+                          })
                         : '/' + path
                   }
                 />

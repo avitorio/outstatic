@@ -132,7 +132,7 @@
 
 .ProseMirror .hljs-comment,
 .ProseMirror .hljs-quote,
-.ProseMirror code>div {
+.ProseMirror code > div {
   color: #ccc;
 }
 
@@ -238,7 +238,7 @@
   height: 0;
 }
 
-ul[data-type='taskList'] li[data-checked='true']>div>p {
+ul[data-type='taskList'] li[data-checked='true'] > div > p {
   color: #9ca3af;
   text-decoration: line-through;
   text-decoration-thickness: 2px;

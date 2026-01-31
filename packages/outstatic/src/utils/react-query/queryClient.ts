@@ -1,5 +1,9 @@
 import { createSyncStoragePersister } from '@tanstack/query-sync-storage-persister'
-import { QueryCache, QueryClient, keepPreviousData } from '@tanstack/react-query'
+import {
+  QueryCache,
+  QueryClient,
+  keepPreviousData
+} from '@tanstack/react-query'
 import { persistQueryClient } from '@tanstack/react-query-persist-client'
 import { compress, decompress } from 'lz-string'
 import { toast } from 'sonner'
@@ -19,8 +23,10 @@ export const queryClient = new QueryClient({
         if (error instanceof ClientError) {
           const status = error.response?.status
           const message = error.response?.message
-          const isAuthError = (status === 401 || status === 403) &&
-            typeof message === 'string' && message.includes('credentials')
+          const isAuthError =
+            (status === 401 || status === 403) &&
+            typeof message === 'string' &&
+            message.includes('credentials')
 
           if (isAuthError) {
             // Silently handle auth errors - don't show toast or log
@@ -32,7 +38,7 @@ export const queryClient = new QueryClient({
           toast.error(
             (error.response?.message as string) || 'Something went wrong',
             {
-              id: 'error-toast',
+              id: 'error-toast'
             }
           )
         } else {
@@ -58,7 +64,6 @@ export const queryClient = new QueryClient({
             }
           })
         }
-
       }
     }
   }),

@@ -3,7 +3,15 @@
 import { OUTSTATIC_API_PATH } from '@/utils/constants'
 import { queryClient } from '@/utils/react-query/queryClient'
 import { LoginSession } from '@/utils/auth/auth'
-import { ReactNode, createContext, useContext, useEffect, useState, useCallback, useRef } from 'react'
+import {
+  ReactNode,
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  useCallback,
+  useRef
+} from 'react'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 
@@ -32,19 +40,22 @@ type AuthProviderProps = {
   basePath: string
 }
 
-export function AuthProvider({ children, initialSession, basePath }: AuthProviderProps) {
+export function AuthProvider({
+  children,
+  initialSession,
+  basePath
+}: AuthProviderProps) {
   const router = useRouter()
   const [session, setSession] = useState<LoginSession | null>(initialSession)
   const [isInitializing, setIsInitializing] = useState(true)
   const channelRef = useRef<BroadcastChannel | null>(null)
 
   // Determine status based on session
-  const status: 'loading' | 'unauthenticated' | 'authenticated' =
-    isInitializing
-      ? 'loading'
-      : session
-        ? 'authenticated'
-        : 'unauthenticated'
+  const status: 'loading' | 'unauthenticated' | 'authenticated' = isInitializing
+    ? 'loading'
+    : session
+      ? 'authenticated'
+      : 'unauthenticated'
 
   // Initialize session on mount
   useEffect(() => {
@@ -74,7 +85,9 @@ export function AuthProvider({ children, initialSession, basePath }: AuthProvide
     }
 
     fetchSession()
-    return () => { cancelled = true }
+    return () => {
+      cancelled = true
+    }
   }, [basePath, initialSession])
 
   // Initialize Broadcast Channel
@@ -91,7 +104,9 @@ export function AuthProvider({ children, initialSession, basePath }: AuthProvide
         case 'REFRESH_SUCCESS': {
           // Another tab successfully refreshed - fetch updated session
           try {
-            const sessionResponse = await fetch(`${basePath}${OUTSTATIC_API_PATH}/user`)
+            const sessionResponse = await fetch(
+              `${basePath}${OUTSTATIC_API_PATH}/user`
+            )
             if (sessionResponse.ok) {
               const { session: updatedSession } = await sessionResponse.json()
               if (updatedSession) {
@@ -101,7 +116,10 @@ export function AuthProvider({ children, initialSession, basePath }: AuthProvide
               }
             }
           } catch (error) {
-            console.error('Failed to fetch updated session in cross-tab listener:', error)
+            console.error(
+              'Failed to fetch updated session in cross-tab listener:',
+              error
+            )
           }
           break
         }
@@ -191,9 +209,7 @@ export function AuthProvider({ children, initialSession, basePath }: AuthProvide
   }
 
   return (
-    <AuthContext.Provider value={contextValue}>
-      {children}
-    </AuthContext.Provider>
+    <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
   )
 }
 
@@ -204,4 +220,3 @@ export function useAuth() {
   }
   return context
 }
-

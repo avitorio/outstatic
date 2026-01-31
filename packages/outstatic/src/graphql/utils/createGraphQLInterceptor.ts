@@ -1,4 +1,9 @@
-import { GraphQLClient, ClientError, RequestDocument, Variables } from 'graphql-request'
+import {
+  GraphQLClient,
+  ClientError,
+  RequestDocument,
+  Variables
+} from 'graphql-request'
 import { refreshTokenWithCoordination } from './tokenRefreshUtility'
 import { getSessionUpdateCallback } from '@/utils/hooks/useInitialData'
 
@@ -12,7 +17,7 @@ type InterceptorOptions = {
 
 /**
  * Creates a GraphQL client with automatic token refresh interceptor
- * 
+ *
  * Wraps the GraphQLClient.request method to intercept 401/403 errors,
  * refresh the token, and retry the original request.
  */
@@ -20,7 +25,13 @@ export function createGraphQLInterceptor(
   client: GraphQLClient,
   options: InterceptorOptions
 ): GraphQLClient {
-  const { basePath, endpoint, getCurrentHeaders, updateHeaders, onSessionUpdate } = options
+  const {
+    basePath,
+    endpoint,
+    getCurrentHeaders,
+    updateHeaders,
+    onSessionUpdate
+  } = options
 
   // Store original request method
   const originalRequest = client.request.bind(client)
@@ -40,7 +51,9 @@ export function createGraphQLInterceptor(
       try {
         // Extract variables and headers from arguments
         const variables = variablesAndRequestHeaders[0] as V | undefined
-        const requestHeaders = variablesAndRequestHeaders[1] as HeadersInit | undefined
+        const requestHeaders = variablesAndRequestHeaders[1] as
+          | HeadersInit
+          | undefined
 
         // Merge current headers with request headers
         const headers = {
@@ -61,14 +74,17 @@ export function createGraphQLInterceptor(
         if (error instanceof ClientError) {
           const status = error.response?.status
           const message = error.response?.message
-          const isAuthError = (status === 401 || status === 403) &&
-            typeof message === 'string' && message.includes('credentials')
+          const isAuthError =
+            (status === 401 || status === 403) &&
+            typeof message === 'string' &&
+            message.includes('credentials')
 
           // Only handle auth errors on first attempt
           if (isAuthError && attemptCount === 0) {
             try {
               // Get session update callback from global registry or use provided one
-              const sessionUpdate = onSessionUpdate || getSessionUpdateCallback()
+              const sessionUpdate =
+                onSessionUpdate || getSessionUpdateCallback()
 
               // Attempt to refresh token
               const newSession = await refreshTokenWithCoordination({
@@ -78,9 +94,13 @@ export function createGraphQLInterceptor(
 
               // Update headers with new token
               if (newSession?.access_token) {
-                const currentHeaders = getCurrentHeaders() as Record<string, string>
+                const currentHeaders = getCurrentHeaders() as Record<
+                  string,
+                  string
+                >
                 // GitHub API uses 'token' prefix, not 'Bearer'
-                const isGitHubAPI = endpoint?.includes('api.github.com') ?? false
+                const isGitHubAPI =
+                  endpoint?.includes('api.github.com') ?? false
                 const authHeader = isGitHubAPI
                   ? `token ${newSession.access_token}`
                   : `Bearer ${newSession.access_token}`
@@ -116,4 +136,3 @@ export function createGraphQLInterceptor(
 
   return client
 }
-

@@ -24,13 +24,13 @@ export default function DocHero(doc: Doc) {
       </div>
       {Array.isArray(doc?.tags)
         ? doc.tags.map(({ label }) => (
-          <span
-            key={label}
-            className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2 mt-4"
-          >
-            {label}
-          </span>
-        ))
+            <span
+              key={label}
+              className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2 mt-4"
+            >
+              {label}
+            </span>
+          ))
         : null}
       <h1 className="font-primary text-2xl font-bold md:text-4xl mb-2">
         {doc.title}

@@ -37,7 +37,7 @@ export const DeleteDocumentButton = ({
   slug,
   extension,
   disabled = false,
-  onComplete = () => { },
+  onComplete = () => {},
   collection,
   className
 }: DeleteDocumentButtonProps) => {
@@ -54,7 +54,6 @@ export const DeleteDocumentButton = ({
   const { refetch: refetchCollections } = useCollections({ enabled: false })
   const { refetch: refetchSingletons } = useSingletons({ enabled: false })
   const isSingleton = collection === '_singletons'
-
 
   const deleteDocument = async (slug: string) => {
     setDeleting(true)
@@ -92,7 +91,11 @@ export const DeleteDocumentButton = ({
 
       // For singletons, remove from singletons.json and delete schema.json
       if (isSingleton) {
-        const singletonsArray = documents as Array<{ title: string; slug: string; path?: string }>
+        const singletonsArray = documents as Array<{
+          title: string
+          slug: string
+          path?: string
+        }>
         const updatedSingletons = singletonsArray.filter((s) => s.slug !== slug)
         capi.replaceFile(
           `${ostContent}/singletons.json`,
@@ -164,7 +167,6 @@ export const DeleteDocumentButton = ({
               onClick={() => {
                 deleteDocument(slug)
               }}
-
             >
               {deleting ? (
                 <>

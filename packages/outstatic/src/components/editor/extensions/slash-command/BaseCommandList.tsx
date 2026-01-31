@@ -147,11 +147,13 @@ export const BaseCommandList = ({
         className="z-50 h-auto max-h-[330px] w-72 overflow-y-auto rounded-md border border-muted bg-background px-1 py-2 shadow-md transition-all"
       >
         {items.map((item: CommandItemProps, index: number) => {
-          if (item.title === 'Continue writing' && !(hasAIProviderKey || isPro)) return null
+          if (item.title === 'Continue writing' && !(hasAIProviderKey || isPro))
+            return null
           return (
             <button
-              className={`flex w-full items-center space-x-2 rounded-md px-2 py-1 text-left text-sm text-foreground hover:bg-muted ${index === selectedIndex ? 'bg-muted text-foreground' : ''
-                }`}
+              className={`flex w-full items-center space-x-2 rounded-md px-2 py-1 text-left text-sm text-foreground hover:bg-muted ${
+                index === selectedIndex ? 'bg-muted text-foreground' : ''
+              }`}
               key={index}
               onClick={() => selectItem(index)}
             >

@@ -13,7 +13,11 @@ import LineBackground from '@/components/ui/outstatic/line-background'
 import { singular } from 'pluralize'
 import SingletonOnboarding from '../singletons/_components/singleton-onboarding'
 import { SingletonsTable } from '@/components/singletons-table'
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/shadcn/tooltip'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger
+} from '@/components/ui/shadcn/tooltip'
 import { useState } from 'react'
 import OpenFileModal from '../_components/open-file-modal'
 
@@ -147,7 +151,9 @@ export default function Dashboard() {
         onSelect={(filePath) => {
           setShowOpenFileModal(false)
           router.push(
-            `${basePath}${dashboardRoute}/singletons/new?openFile=${encodeURIComponent(filePath)}`
+            `${basePath}${dashboardRoute}/singletons/new?openFile=${encodeURIComponent(
+              filePath
+            )}`
           )
         }}
       />
