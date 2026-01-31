@@ -10,7 +10,7 @@ import { queryClient } from '@/utils/react-query/queryClient'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { NavigationGuardProvider } from 'next-navigation-guard'
 import { ThemeProvider } from 'next-themes'
-import { ReactNode, useEffect, useState, useCallback } from 'react'
+import { ReactNode, useEffect, useMemo, useCallback } from 'react'
 import { Toaster } from 'sonner'
 import 'katex/dist/katex.min.css'
 
@@ -22,15 +22,12 @@ type RootProviderProps = {
 // Inner component that uses the AuthProvider context
 function RootProviderInner({ ostData, children }: RootProviderProps) {
   const { session, updateSession } = useAuth()
-  const [currentOstData, setCurrentOstData] = useState(ostData)
 
-  // Sync AuthProvider session with OutstaticData
-  useEffect(() => {
-    setCurrentOstData((prev) => ({
-      ...prev,
-      session
-    }))
-  }, [session])
+  // Derive currentOstData from ostData and session
+  const currentOstData = useMemo(
+    () => ({ ...ostData, session }),
+    [ostData, session]
+  )
 
   // Set up session update callback for token refresh interceptor
   const handleSessionUpdate = useCallback(
