@@ -18,7 +18,7 @@ type TreeEntry = {
   object: TreeEntry
 }
 
-function deepCloneTree(items: TreeDataItem[]): TreeDataItem[] {
+export function deepCloneTree(items: TreeDataItem[]): TreeDataItem[] {
   return items.map((item) => ({
     ...item,
     children: item.children ? deepCloneTree(item.children) : undefined
