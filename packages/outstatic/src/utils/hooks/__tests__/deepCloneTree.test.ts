@@ -119,8 +119,7 @@ describe('deepCloneTree', () => {
 
     expect(result).toEqual(items)
     const deepChild = result[0].children![0].children![0].children![0]
-    const originalDeepChild =
-      items[0].children![0].children![0].children![0]
+    const originalDeepChild = items[0].children![0].children![0].children![0]
     expect(deepChild).not.toBe(originalDeepChild)
     expect(deepChild.id).toBe('level4')
   })

@@ -34,7 +34,9 @@ describe('MarkdownExtensionDialog', () => {
   })
 
   it('should display the filename with current extension', () => {
-    render(<MarkdownExtensionDialog {...defaultProps} fileName="test-doc.mdx" />)
+    render(
+      <MarkdownExtensionDialog {...defaultProps} fileName="test-doc.mdx" />
+    )
 
     expect(screen.getByText('test-doc.mdx')).toBeInTheDocument()
   })
@@ -48,7 +50,9 @@ describe('MarkdownExtensionDialog', () => {
 
   it('should update filename preview when changing format', async () => {
     const user = userEvent.setup()
-    render(<MarkdownExtensionDialog {...defaultProps} fileName="document.mdx" />)
+    render(
+      <MarkdownExtensionDialog {...defaultProps} fileName="document.mdx" />
+    )
 
     // Initially shows .mdx
     expect(screen.getByText('document.mdx')).toBeInTheDocument()

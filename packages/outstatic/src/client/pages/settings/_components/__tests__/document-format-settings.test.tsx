@@ -38,7 +38,9 @@ describe('DocumentFormatSettings', () => {
 
     expect(screen.getByText('Default Document Format')).toBeInTheDocument()
     expect(
-      screen.getByText('The default file format used when creating new documents.')
+      screen.getByText(
+        'The default file format used when creating new documents.'
+      )
     ).toBeInTheDocument()
   })
 
@@ -173,7 +175,11 @@ describe('DocumentFormatSettings', () => {
     // Make updateConfig set loading state
     let setLoadingFn: ((loading: boolean) => void) | null = null
     jest.mock('@/utils/hooks/useUpdateConfig', () => ({
-      useUpdateConfig: ({ setLoading }: { setLoading: (loading: boolean) => void }) => {
+      useUpdateConfig: ({
+        setLoading
+      }: {
+        setLoading: (loading: boolean) => void
+      }) => {
         setLoadingFn = setLoading
         return mockUpdateConfig
       }

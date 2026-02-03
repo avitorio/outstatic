@@ -261,29 +261,32 @@ export default function EditDocument({ collection }: { collection: string }) {
                 <DocumentSettings
                   title={methods.getValues('title')}
                   loading={loading}
-                  saveDocument={methods.handleSubmit(handleSave as any, (data) => {
-                    console.error('Failed to save document', { data })
-                    const firstKey = Object.keys(data)[0] as keyof typeof data
-                    const errorMessage =
-                      (data[firstKey] as { message?: string })?.message ||
-                      'Unknown error'
-                    const errorToast = toast.error(
-                      `Error in ${firstKey}: ${errorMessage}`,
-                      {
-                        action: {
-                          label: 'Copy Logs',
-                          onClick: () => {
-                            navigator.clipboard.writeText(
-                              JSON.stringify(data, null, '  ')
-                            )
-                            toast.message('Logs copied to clipboard', {
-                              id: errorToast
-                            })
+                  saveDocument={methods.handleSubmit(
+                    handleSave as any,
+                    (data) => {
+                      console.error('Failed to save document', { data })
+                      const firstKey = Object.keys(data)[0] as keyof typeof data
+                      const errorMessage =
+                        (data[firstKey] as { message?: string })?.message ||
+                        'Unknown error'
+                      const errorToast = toast.error(
+                        `Error in ${firstKey}: ${errorMessage}`,
+                        {
+                          action: {
+                            label: 'Copy Logs',
+                            onClick: () => {
+                              navigator.clipboard.writeText(
+                                JSON.stringify(data, null, '  ')
+                              )
+                              toast.message('Logs copied to clipboard', {
+                                id: errorToast
+                              })
+                            }
                           }
                         }
-                      }
-                    )
-                  })}
+                      )
+                    }
+                  )}
                   showDelete={showDelete}
                   customFields={customFields}
                   setCustomFields={setCustomFields}

@@ -32,7 +32,9 @@ export function DocumentFormatSettings() {
 
   const hasChanges = useMemo(() => {
     if (localExtension === null) return false
-    return localExtension !== 'not-set' && localExtension !== config?.mdExtension
+    return (
+      localExtension !== 'not-set' && localExtension !== config?.mdExtension
+    )
   }, [localExtension, config?.mdExtension])
 
   const handleExtensionChange = (value: string) => {

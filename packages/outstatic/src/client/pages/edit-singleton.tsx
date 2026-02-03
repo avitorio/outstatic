@@ -390,14 +390,17 @@ export default function EditSingleton({ slug: initialSlug }: { slug: string }) {
                   singleton={slug}
                   title={methods.getValues('title') || singletonTitle}
                   loading={loading}
-                  saveDocument={methods.handleSubmit(handleSave as any, (data) => {
-                    console.error({ data })
-                    const firstKey = Object.keys(data)[0] as keyof typeof data
-                    const errorMessage =
-                      (data[firstKey] as { message?: string })?.message ||
-                      'Unknown error'
-                    toast.error(`Error in ${firstKey}: ${errorMessage}`)
-                  })}
+                  saveDocument={methods.handleSubmit(
+                    handleSave as any,
+                    (data) => {
+                      console.error({ data })
+                      const firstKey = Object.keys(data)[0] as keyof typeof data
+                      const errorMessage =
+                        (data[firstKey] as { message?: string })?.message ||
+                        'Unknown error'
+                      toast.error(`Error in ${firstKey}: ${errorMessage}`)
+                    }
+                  )}
                   showDelete={showDelete}
                   customFields={customFields}
                   setCustomFields={setCustomFields}
