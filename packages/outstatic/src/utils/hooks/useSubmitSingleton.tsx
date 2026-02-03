@@ -15,6 +15,7 @@ import { LoginSession } from '@/utils/auth/auth'
 import { Editor } from '@tiptap/react'
 import matter from 'gray-matter'
 import MurmurHash3 from 'imurmurhash'
+import stringify from 'json-stable-stringify'
 import { useCallback } from 'react'
 import { UseFormReturn } from 'react-hook-form'
 import { useCreateCommit } from './useCreateCommit'
@@ -22,8 +23,10 @@ import { useGetSingletonSchema } from './useGetSingletonSchema'
 import { useGetMetadata } from './useGetMetadata'
 import useOid from './useOid'
 import { useGetMediaFiles } from './useGetMediaFiles'
+import { useGetConfig } from './useGetConfig'
 import { useSingletons } from './useSingletons'
 import {
+  ConfigType,
   MediaItem,
   MediaSchema,
   MetadataSchema,
@@ -50,6 +53,10 @@ type SubmitSingletonProps = {
   documentMetadata: Record<string, any>
   path?: string
   existingFilePath?: string
+}
+
+type OnSubmitOptions = {
+  configUpdate?: Partial<ConfigType>
 }
 
 function useSubmitSingleton({
@@ -81,7 +88,8 @@ function useSubmitSingleton({
     basePath,
     publicMediaPath,
     repoMediaPath,
-    mediaJsonPath
+    mediaJsonPath,
+    configJsonPath
   } = useOutstatic()
   const fetchOid = useOid()
   let media: MediaItem[] = []
@@ -92,13 +100,15 @@ function useSubmitSingleton({
   })
   const { refetch: refetchMetadata } = useGetMetadata({ enabled: false })
   const { refetch: refetchMedia } = useGetMediaFiles({ enabled: false })
+  const { refetch: refetchConfig } = useGetConfig({ enabled: false })
   const { data: existingSingletons, refetch: refetchSingletons } =
     useSingletons({ enabled: false })
 
   const singletonsPath = `${ostContent}/_singletons`
 
   const onSubmit = useCallback(
-    async (data: Document) => {
+    async (data: Document, options?: OnSubmitOptions) => {
+      const { configUpdate } = options ?? {}
       setLoading(true)
 
       if (!editor) {
@@ -298,8 +308,8 @@ function useSubmitSingleton({
 
         const newMeta = Array.isArray(m.metadata)
           ? m.metadata.filter(
-              (c) => c.collection !== '_singletons' || c.slug !== actualSlug
-            )
+            (c) => c.collection !== '_singletons' || c.slug !== actualSlug
+          )
           : []
 
         newMeta.push({
@@ -339,6 +349,20 @@ function useSubmitSingleton({
           capi.replaceFile(
             mediaJsonPath,
             stringifyMedia({ ...mediaSchema, media: newMedia })
+          )
+        }
+
+        // update config.json if configUpdate is provided
+        if (configUpdate && Object.keys(configUpdate).length > 0) {
+          const { data: config } = await refetchConfig()
+          const updatedConfig = {
+            ...(config ?? {}),
+            ...configUpdate
+          }
+          capi.replaceFile(
+            configJsonPath,
+            // @ts-ignore
+            stringify(updatedConfig, { space: 2 })
           )
         }
 
@@ -391,6 +415,7 @@ function useSubmitSingleton({
       basePath,
       extension,
       mediaJsonPath,
+      configJsonPath,
       singletonsPath,
       refetchSingletons,
       path,

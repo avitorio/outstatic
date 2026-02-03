@@ -42,6 +42,7 @@
     "@types/react-dom": "19.1.6",
     "esbuild": "^0.15.18",
     "eslint": "^9.39.2",
+    "eslint-config-next": "^16.1.6",
     "mdx-bundler": "^10.1.1",
     "postcss": "^8.4.49",
     "rehype-autolink-headings": "^6.1.1",

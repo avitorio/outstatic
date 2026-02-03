@@ -25,8 +25,8 @@ export function useCreateGraphQLClient(
     onSessionUpdate: (session: { access_token?: string } | null) => void
   }>({
     getCurrentHeaders: () => headers,
-    updateHeaders: () => {},
-    onSessionUpdate: () => {}
+    updateHeaders: () => { },
+    onSessionUpdate: () => { }
   })
 
   // Compute current headers without reading from ref during render

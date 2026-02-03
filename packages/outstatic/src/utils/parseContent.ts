@@ -6,8 +6,8 @@ interface ParseContentParams {
   repoOwner: string
   repoSlug: string
   repoBranch: string
-  publicMediaPath: string
-  repoMediaPath: string
+  publicMediaPath?: string
+  repoMediaPath?: string
 }
 
 export const parseContent = ({
@@ -19,6 +19,11 @@ export const parseContent = ({
   publicMediaPath,
   repoMediaPath
 }: ParseContentParams) => {
+  // If media paths are not configured, return content unchanged
+  if (!publicMediaPath || !repoMediaPath) {
+    return content
+  }
+
   // Prepare regex
   const mediaRegex = new RegExp(
     `(\\!\\[[^\\]]*\\]\\()/${publicMediaPath.replace(/\//g, '\\/')}([^)]+)`,

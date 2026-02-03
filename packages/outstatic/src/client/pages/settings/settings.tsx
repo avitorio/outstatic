@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/shadcn/button'
 import { useCollections } from '@/utils/hooks/useCollections'
 import { useState } from 'react'
 import { MediaSettings } from './_components/media-settings'
+import { DocumentFormatSettings } from './_components/document-format-settings'
 import { useRebuildMetadata } from '@/utils/hooks/useRebuildMetadata'
 import { Card } from '@/components/ui/shadcn/card'
 
@@ -45,6 +46,10 @@ export default function Settings() {
         <Card className="mb-8 max-w-2xl p-8 px-4 md:p-8 prose prose-base">
           <h2 className="text-foreground">Media Library</h2>
           <MediaSettings />
+        </Card>
+        <Card className="mb-8 max-w-2xl p-8 px-4 md:p-8 prose prose-base">
+          <h2 className="text-foreground">Documents</h2>
+          <DocumentFormatSettings />
         </Card>
 
         {collections && collections.length > 0 ? (

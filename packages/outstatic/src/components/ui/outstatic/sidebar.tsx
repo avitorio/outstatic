@@ -310,7 +310,7 @@ export function SidebarNavigation({
                           // Respect collapsed prop for initial state, but prefer persisted state
                           const defaultChildOpen =
                             'collapsed' in child &&
-                            child.collapsed !== undefined
+                              child.collapsed !== undefined
                               ? !child.collapsed
                               : true
                           const isChildOpen =

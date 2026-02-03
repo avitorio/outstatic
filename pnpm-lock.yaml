@@ -23,17 +23,17 @@ importers:
         specifier: ^9.39.2
         version: 9.39.2(jiti@2.4.2)
       eslint-config-next:
-        specifier: ^16.1.5
+        specifier: ^16.1.6
         version: 16.1.6(@typescript-eslint/parser@8.54.0(eslint@9.39.2(jiti@2.4.2))(typescript@5.9.3))(eslint@9.39.2(jiti@2.4.2))(typescript@5.9.3)
       eslint-config-prettier:
-        specifier: ^10.0.1
+        specifier: ^10.0.8
         version: 10.1.5(eslint@9.39.2(jiti@2.4.2))
       eslint-config-turbo:
-        specifier: latest
+        specifier: ^2.8.0
         version: 2.8.0(eslint@9.39.2(jiti@2.4.2))(turbo@2.8.0)
       eslint-plugin-react:
-        specifier: 7.37.4
-        version: 7.37.4(eslint@9.39.2(jiti@2.4.2))
+        specifier: ^7.37.5
+        version: 7.37.5(eslint@9.39.2(jiti@2.4.2))
       lint-staged:
         specifier: ^13.3.0
         version: 13.3.0(enquirer@2.4.1)
@@ -129,7 +129,7 @@ importers:
         specifier: ^9.39.2
         version: 9.39.2(jiti@2.4.2)
       eslint-config-next:
-        specifier: ^16.1.5
+        specifier: ^16.1.6
         version: 16.1.6(@typescript-eslint/parser@8.54.0(eslint@9.39.2(jiti@2.4.2))(typescript@5.9.3))(eslint@9.39.2(jiti@2.4.2))(typescript@5.9.3)
       katex:
         specifier: ^0.16.22
@@ -253,7 +253,7 @@ importers:
         specifier: ^9.39.2
         version: 9.39.2(jiti@2.4.2)
       eslint-config-next:
-        specifier: ^16.1.5
+        specifier: ^16.1.6
         version: 16.1.6(@typescript-eslint/parser@8.54.0(eslint@9.39.2(jiti@2.4.2))(typescript@5.9.3))(eslint@9.39.2(jiti@2.4.2))(typescript@5.9.3)
       mdx-bundler:
         specifier: ^10.1.1
@@ -659,17 +659,17 @@ importers:
         specifier: ^9.39.2
         version: 9.39.2(jiti@2.4.2)
       eslint-config-next:
-        specifier: ^16.1.5
+        specifier: ^16.1.6
         version: 16.1.6(@typescript-eslint/parser@8.54.0(eslint@9.39.2(jiti@2.4.2))(typescript@5.9.3))(eslint@9.39.2(jiti@2.4.2))(typescript@5.9.3)
       eslint-config-prettier:
-        specifier: ^10.0.1
+        specifier: ^10.0.8
         version: 10.1.5(eslint@9.39.2(jiti@2.4.2))
       eslint-config-turbo:
-        specifier: latest
+        specifier: ^2.8.0
         version: 2.8.0(eslint@9.39.2(jiti@2.4.2))(turbo@2.8.0)
       eslint-plugin-react:
-        specifier: 7.37.4
-        version: 7.37.4(eslint@9.39.2(jiti@2.4.2))
+        specifier: ^7.37.5
+        version: 7.37.5(eslint@9.39.2(jiti@2.4.2))
       jest:
         specifier: ^29.7.0
         version: 29.7.0(@types/node@24.0.3)(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@types/node@24.0.3)(typescript@5.9.3))
@@ -1454,12 +1454,6 @@ packages:
 
   '@eslint-community/eslint-utils@4.7.0':
     resolution: {integrity: sha512-dyybb3AcajC7uha6CvhdVRJqaKyn7w2YKqKyAN37NKYgZT36w+iRb0Dymmc5qEJ549c/S31cMMSFd75bteCpCw==}
-    engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
-    peerDependencies:
-      eslint: ^6.0.0 || ^7.0.0 || >=8.0.0
-
-  '@eslint-community/eslint-utils@4.9.0':
-    resolution: {integrity: sha512-ayVFHdtZ+hsq1t2Dy24wCmGXGe4q9Gu3smhLYALJrr473ZH27MsnSL+LKUlimp4BWJqMDMLmPpx/Q9R3OAlL4g==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     peerDependencies:
       eslint: ^6.0.0 || ^7.0.0 || >=8.0.0
@@ -4840,8 +4834,8 @@ packages:
     peerDependencies:
       eslint: ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0-0 || ^9.0.0
 
-  eslint-plugin-react@7.37.4:
-    resolution: {integrity: sha512-BGP0jRmfYyvOyvMoRX/uoUeW+GqNj9y16bPQzqAHf3AYII/tDs+jMN0dBVkl88/OZwNGwrVFxE7riHsXVfy/LQ==}
+  eslint-plugin-react@7.37.5:
+    resolution: {integrity: sha512-Qteup0SqU15kdocexFNAJMvCJEfa2xUKNV4CC1xsVMrIIqEy3SQ/rqyxCWNzfrd3/ldy6HMlD2e0JDVpDg2qIA==}
     engines: {node: '>=4'}
     peerDependencies:
       eslint: ^3 || ^4 || ^5 || ^6 || ^7 || ^8 || ^9.7
@@ -8752,6 +8746,9 @@ packages:
   zod@3.25.67:
     resolution: {integrity: sha512-idA2YXwpCdqUSKRCACDE6ItZD9TZzy3OZMtpfLoh6oPR47lipysRrJfjzMqFxQ3uJuUPyUeWe1r9vLH33xO/Qw==}
 
+  zod@3.25.76:
+    resolution: {integrity: sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==}
+
   zustand@4.5.7:
     resolution: {integrity: sha512-CHOUy7mu3lbD6o6LJLfllpjkzhHXSBlX8B9+qPddUsIfeF5S/UZ5q0kmCsnRqT1UHFQZchNFDDzMbQsuesHWlw==}
     engines: {node: '>=12.7.0'}
@@ -9648,11 +9645,6 @@ snapshots:
     optional: true
 
   '@eslint-community/eslint-utils@4.7.0(eslint@9.39.2(jiti@2.4.2))':
-    dependencies:
-      eslint: 9.39.2(jiti@2.4.2)
-      eslint-visitor-keys: 3.4.3
-
-  '@eslint-community/eslint-utils@4.9.0(eslint@9.39.2(jiti@2.4.2))':
     dependencies:
       eslint: 9.39.2(jiti@2.4.2)
       eslint-visitor-keys: 3.4.3
@@ -13507,7 +13499,7 @@ snapshots:
       eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import@2.32.0)(eslint@9.39.2(jiti@2.4.2))
       eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.54.0(eslint@9.39.2(jiti@2.4.2))(typescript@5.9.3))(eslint-import-resolver-typescript@3.10.1)(eslint@9.39.2(jiti@2.4.2))
       eslint-plugin-jsx-a11y: 6.10.2(eslint@9.39.2(jiti@2.4.2))
-      eslint-plugin-react: 7.37.4(eslint@9.39.2(jiti@2.4.2))
+      eslint-plugin-react: 7.37.5(eslint@9.39.2(jiti@2.4.2))
       eslint-plugin-react-hooks: 7.0.1(eslint@9.39.2(jiti@2.4.2))
       globals: 16.4.0
       typescript-eslint: 8.54.0(eslint@9.39.2(jiti@2.4.2))(typescript@5.9.3)
@@ -13617,12 +13609,12 @@ snapshots:
       '@babel/parser': 7.27.5
       eslint: 9.39.2(jiti@2.4.2)
       hermes-parser: 0.25.1
-      zod: 3.25.67
-      zod-validation-error: 4.0.2(zod@3.25.67)
+      zod: 3.25.76
+      zod-validation-error: 4.0.2(zod@3.25.76)
     transitivePeerDependencies:
       - supports-color
 
-  eslint-plugin-react@7.37.4(eslint@9.39.2(jiti@2.4.2)):
+  eslint-plugin-react@7.37.5(eslint@9.39.2(jiti@2.4.2)):
     dependencies:
       array-includes: 3.1.9
       array.prototype.findlast: 1.2.5
@@ -13666,7 +13658,7 @@ snapshots:
 
   eslint@9.39.2(jiti@2.4.2):
     dependencies:
-      '@eslint-community/eslint-utils': 4.9.0(eslint@9.39.2(jiti@2.4.2))
+      '@eslint-community/eslint-utils': 4.9.1(eslint@9.39.2(jiti@2.4.2))
       '@eslint-community/regexpp': 4.12.1
       '@eslint/config-array': 0.21.1
       '@eslint/config-helpers': 0.4.2
@@ -18679,11 +18671,13 @@ snapshots:
 
   yocto-queue@1.2.1: {}
 
-  zod-validation-error@4.0.2(zod@3.25.67):
+  zod-validation-error@4.0.2(zod@3.25.76):
     dependencies:
-      zod: 3.25.67
+      zod: 3.25.76
 
   zod@3.25.67: {}
+
+  zod@3.25.76: {}
 
   zustand@4.5.7(@types/react@19.0.0)(react@19.1.2):
     dependencies:
