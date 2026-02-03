@@ -15,6 +15,7 @@ import { LoginSession } from '@/utils/auth/auth'
 import { Editor } from '@tiptap/react'
 import matter from 'gray-matter'
 import MurmurHash3 from 'imurmurhash'
+import stringify from 'json-stable-stringify'
 import { useCallback } from 'react'
 import { UseFormReturn } from 'react-hook-form'
 import { useCreateCommit } from './useCreateCommit'
@@ -22,7 +23,9 @@ import { useGetCollectionSchema } from './useGetCollectionSchema'
 import { useGetMetadata } from './useGetMetadata'
 import useOid from './useOid'
 import { useGetMediaFiles } from './useGetMediaFiles'
+import { useGetConfig } from './useGetConfig'
 import {
+  ConfigType,
   MediaItem,
   MediaSchema,
   MetadataSchema,
@@ -46,6 +49,10 @@ type SubmitDocumentProps = {
   editor: Editor | null
   extension: MDExtensions
   documentMetadata: Record<string, any>
+}
+
+type OnSubmitOptions = {
+  configUpdate?: Partial<ConfigType>
 }
 
 function useSubmitDocument({
@@ -75,7 +82,8 @@ function useSubmitDocument({
     basePath,
     publicMediaPath,
     repoMediaPath,
-    mediaJsonPath
+    mediaJsonPath,
+    configJsonPath
   } = useOutstatic()
   const fetchOid = useOid()
   let media: MediaItem[] = []
@@ -84,9 +92,11 @@ function useSubmitDocument({
   const { refetch: refetchMetadata } = useGetMetadata({ enabled: false })
   const { refetch: refetchMedia } = useGetMediaFiles({ enabled: false })
   const { refetch: refetchCollections } = useCollections({ enabled: false })
+  const { refetch: refetchConfig } = useGetConfig({ enabled: false })
 
   const onSubmit = useCallback(
-    async (data: Document) => {
+    async (data: Document, options?: OnSubmitOptions) => {
+      const { configUpdate } = options ?? {}
       setLoading(true)
 
       if (!editor) {
@@ -299,6 +309,20 @@ function useSubmitDocument({
           )
         }
 
+        // update config.json if configUpdate is provided
+        if (configUpdate && Object.keys(configUpdate).length > 0) {
+          const { data: config } = await refetchConfig()
+          const updatedConfig = {
+            ...(config ?? {}),
+            ...configUpdate
+          }
+          capi.replaceFile(
+            configJsonPath,
+            // @ts-ignore
+            stringify(updatedConfig, { space: 2 })
+          )
+        }
+
         const input = capi.createInput()
 
         toast.promise(createCommit.mutateAsync(input), {
@@ -341,7 +365,8 @@ function useSubmitDocument({
       editor,
       basePath,
       extension,
-      mediaJsonPath
+      mediaJsonPath,
+      configJsonPath
     ]
   )
 

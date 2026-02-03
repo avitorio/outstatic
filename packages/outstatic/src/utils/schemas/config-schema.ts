@@ -6,11 +6,14 @@ export const ConfigSchema = z.object({
     .min(1)
     .refine((path) => path.endsWith('/'), {
       message: "Path must end with '/'"
-    }),
+    })
+    .optional(),
   repoMediaPath: z
     .string()
     .min(1)
     .refine((path) => path.endsWith('/'), {
       message: "Path must end with '/'"
     })
+    .optional(),
+  mdExtension: z.union([z.literal('md'), z.literal('mdx')]).optional()
 })

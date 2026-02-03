@@ -58,7 +58,10 @@ export type MediaSchema = {
   media: MediaItem[]
 }
 
+export type MDExtensions = 'md' | 'mdx'
+
 export type ConfigType = {
-  publicMediaPath: string
-  repoMediaPath: string
+  publicMediaPath?: string
+  repoMediaPath?: string
+  mdExtension?: MDExtensions
 }
