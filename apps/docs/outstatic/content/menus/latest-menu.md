@@ -32,6 +32,8 @@ publishedAt: '2024-11-06T03:00:00.000Z'
 
 - [Custom Fields ⚡︎](/custom-fields)
 
+- [API Keys](/api-keys)
+
 - [Environment Variables](/environment-variables)
 
 - [FAQs](/faqs)
