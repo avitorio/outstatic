@@ -61,6 +61,7 @@ cd packages/outstatic && pnpm graphql-codegen
 ### Environment Setup for apps/dev
 
 Create `.env.local` in `/apps/dev`:
+
 ```
 OST_GITHUB_ID=YOUR_GITHUB_OAUTH_ID
 OST_GITHUB_SECRET=YOUR_GITHUB_OAUTH_SECRET
@@ -108,6 +109,7 @@ OST_MONOREPO_PATH=apps/dev
 
 **Client Router** ([src/client/router.tsx](packages/outstatic/src/client/router.tsx)):
 Custom client-side router using URL segments (`params.ost[]`). Routes include:
+
 - `/` - Dashboard
 - `/collections` - Collections list
 - `/collections/{slug}` - Custom fields for a collection
@@ -120,11 +122,13 @@ Custom client-side router using URL segments (`params.ost[]`). Routes include:
 
 **API Handler** ([src/app/api/index.tsx](packages/outstatic/src/app/api/index.tsx)):
 `OutstaticApi` exports GET/POST handlers that route to:
+
 - `callback`, `login`, `signout`, `user` - Auth endpoints
 - `media` - Media handling
 - `generate` - AI generation (POST)
 
 **Client Entry** ([src/client/pages/index.tsx](packages/outstatic/src/client/pages/index.tsx)):
+
 - `OstClient` - Main entry point wrapping providers (QueryClient, ThemeProvider, NavigationGuard)
 - `AdminArea` - Layout with header and sidebar
 - `Main` - Handles loading states, onboarding, and renders the Router
@@ -132,6 +136,7 @@ Custom client-side router using URL segments (`params.ost[]`). Routes include:
 ### GraphQL Code Generation
 
 When creating or modifying GraphQL queries/mutations:
+
 1. Write queries in `src/graphql/queries/` or `src/graphql/mutations/`
 2. Run `pnpm graphql-codegen` from `/packages/outstatic`
 3. Generated types appear in `src/graphql/gql/`
