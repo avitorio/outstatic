@@ -308,8 +308,8 @@ function useSubmitSingleton({
 
         const newMeta = Array.isArray(m.metadata)
           ? m.metadata.filter(
-            (c) => c.collection !== '_singletons' || c.slug !== actualSlug
-          )
+              (c) => c.collection !== '_singletons' || c.slug !== actualSlug
+            )
           : []
 
         newMeta.push({
