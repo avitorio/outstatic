@@ -8,6 +8,8 @@ import { deepReplace } from '@/utils/deepReplace'
 import { useDocumentUpdateEffect } from '@/utils/hooks/useDocumentUpdateEffect'
 import { useFileStore } from '@/utils/hooks/useFileStore'
 import { useGetCollectionSchema } from '@/utils/hooks/useGetCollectionSchema'
+import { useGetConfig } from '@/utils/hooks/useGetConfig'
+import { useUpdateConfig } from '@/utils/hooks/useUpdateConfig'
 import { useOutstatic } from '@/utils/hooks/useOutstatic'
 import useSubmitDocument from '@/utils/hooks/useSubmitDocument'
 import { useTipTap } from '@/components/editor/hooks/use-tip-tap'
@@ -16,13 +18,14 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import Head from 'next/head'
 import { usePathname } from 'next/navigation'
 import { singular } from 'pluralize'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { convertSchemaToZod } from '@/utils/zod'
 import { FormMessage } from '@/components/ui/shadcn/form'
 import { toast } from 'sonner'
 import { noCase } from 'change-case'
 import MediaSettingsDialog from '@/components/ui/outstatic/media-settings-dialog'
+import { MarkdownExtensionDialog } from '@/components/ui/outstatic/markdown-extension-dialog'
 import { useEditor } from '@/components/editor/editor-context'
 
 export default function EditDocument({ collection }: { collection: string }) {
@@ -57,6 +60,8 @@ export default function EditDocument({ collection }: { collection: string }) {
   const [extension, setExtension] = useState<MDExtensions>('mdx')
   const [metadata, setMetadata] = useState<Record<string, any>>({})
   const [showMediaPathDialog, setShowMediaPathDialog] = useState(false)
+  const [showExtensionDialog, setShowExtensionDialog] = useState(false)
+  const pendingFormDataRef = useRef<Document | null>(null)
   const editDocument = (property: string, value: any) => {
     const formValues = methods.getValues()
     const newValue = deepReplace(formValues, property, value)
@@ -65,6 +70,8 @@ export default function EditDocument({ collection }: { collection: string }) {
   const [mediaPathUpdated, setMediaPathUpdated] = useState(false)
 
   const { data: schema } = useGetCollectionSchema({ collection })
+  const { data: config } = useGetConfig()
+  const updateConfig = useUpdateConfig({ setLoading })
 
   const onSubmit = useSubmitDocument({
     session,
@@ -172,6 +179,53 @@ export default function EditDocument({ collection }: { collection: string }) {
     return () => subscription.unsubscribe()
   }, [methods, setHasChanges])
 
+  // Set extension from config when available (for new documents)
+  useEffect(() => {
+    if (slug === 'new' && config?.mdExtension) {
+      setExtension(config.mdExtension)
+    }
+  }, [slug, config?.mdExtension])
+
+  const isNewDocument = slug === 'new'
+
+  const handleSave = (data: Document) => {
+    // Check media paths first
+    if (!repoMediaPath && !publicMediaPath && files.length > 0) {
+      setShowMediaPathDialog(true)
+      return
+    }
+
+    // For new documents without config.mdExtension, show the extension dialog
+    if (isNewDocument && !config?.mdExtension) {
+      pendingFormDataRef.current = data
+      setShowExtensionDialog(true)
+      return
+    }
+
+    // For existing documents without config.mdExtension, silently update it
+    if (!isNewDocument && !config?.mdExtension) {
+      // @ts-ignore
+      return onSubmit(data, { configUpdate: { mdExtension: extension } })
+    }
+
+    // Normal save
+    // @ts-ignore
+    return onSubmit(data)
+  }
+
+  const handleExtensionDialogSave = (selectedExtension: MDExtensions) => {
+    setExtension(selectedExtension)
+
+    // Save document and update config in parallel
+    if (pendingFormDataRef.current) {
+      // @ts-ignore
+      onSubmit(pendingFormDataRef.current, {
+        configUpdate: { mdExtension: selectedExtension }
+      })
+      pendingFormDataRef.current = null
+    }
+  }
+
   return (
     <>
       <Head>
@@ -208,19 +262,7 @@ export default function EditDocument({ collection }: { collection: string }) {
                   title={methods.getValues('title')}
                   loading={loading}
                   saveDocument={methods.handleSubmit(
-                    (data) => {
-                      if (
-                        !repoMediaPath &&
-                        !publicMediaPath &&
-                        files.length > 0
-                      ) {
-                        setShowMediaPathDialog(true)
-                        return
-                      } else {
-                        // @ts-ignore
-                        return onSubmit(data)
-                      }
-                    },
+                    handleSave as any,
                     (data) => {
                       console.error('Failed to save document', { data })
                       const firstKey = Object.keys(data)[0] as keyof typeof data
@@ -276,6 +318,12 @@ export default function EditDocument({ collection }: { collection: string }) {
               callbackFunction={() => {
                 setMediaPathUpdated(true)
               }}
+            />
+            <MarkdownExtensionDialog
+              open={showExtensionDialog}
+              onOpenChange={setShowExtensionDialog}
+              fileName={`${methods.getValues('slug') || 'document'}.${extension}`}
+              onSave={handleExtensionDialogSave}
             />
           </FormProvider>
         </DocumentContext.Provider>
