@@ -41,12 +41,12 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        {process.env.NEXT_PUBLIC_TINYBIRD_TOKEN ? (
+        {process.env.NEXT_PUBLIC_UMAMI_HOST &&
+        process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID ? (
           <Script
             defer
-            src="https://unpkg.com/@tinybirdco/flock.js"
-            data-host="https://api.tinybird.co"
-            data-token={process.env.NEXT_PUBLIC_TINYBIRD_TOKEN}
+            src={process.env.NEXT_PUBLIC_UMAMI_HOST}
+            data-website-id={process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID}
           />
         ) : null}
       </head>

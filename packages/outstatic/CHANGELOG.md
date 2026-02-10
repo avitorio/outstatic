@@ -1,5 +1,14 @@
 # outstatic
 
+## 2.0.18
+
+### Patch Changes
+
+- 01a866b: Add configurable default markdown extension (md/mdx) for new documents. Users are prompted to choose their preferred format on first save, and can change it later in Settings.
+- 1d8c62c: Refactored the onboarding flow with clear separation
+- c0eb97e: update onboarding
+- 937b475: Nicer type generation output by @mathieudutour
+
 ## 2.0.17
 
 ### Patch Changes

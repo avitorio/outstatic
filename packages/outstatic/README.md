@@ -89,3 +89,5 @@ Please see our [CONTRIBUTING.md](/CONTRIBUTING.md).
 <a href="https://github.com/avitorio/outstatic/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=avitorio/outstatic" />
 </a>
+
+<img src="https://cloud.umami.is/p/x8oBdKH6E" />
