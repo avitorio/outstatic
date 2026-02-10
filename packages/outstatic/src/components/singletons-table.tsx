@@ -45,14 +45,16 @@ export const SingletonsTable = () => {
 
   const documents = useMemo(() => {
     if (!singletonsData) return []
-    return singletonsData.map((item): OstDocument => ({
-      slug: item.slug,
-      title: item.title,
-      status: item.status,
-      publishedAt: formatDate(item.publishedAt ?? ''),
-      collection: '_singletons',
-      content: ''
-    }))
+    return singletonsData.map(
+      (item): OstDocument => ({
+        slug: item.slug,
+        title: item.title,
+        status: item.status,
+        publishedAt: formatDate(item.publishedAt ?? ''),
+        collection: '_singletons',
+        content: ''
+      })
+    )
   }, [singletonsData])
 
   const [sortConfig, setSortConfig] = useState<SortConfig>({
@@ -88,7 +90,7 @@ export const SingletonsTable = () => {
 
   const [columns, setColumns] = useState<Column[]>(
     JSON.parse(cookies.get('ost_singletons_fields') || 'null') ??
-    allColumns.slice(0, 4)
+      allColumns.slice(0, 4)
   )
 
   return (
@@ -165,7 +167,9 @@ export const SingletonsTable = () => {
                 >
                   <div className="flex justify-end gap-2">
                     <Button asChild size="icon" variant="ghost">
-                      <Link href={`${dashboardRoute}/singletons/${document.slug}/fields`}>
+                      <Link
+                        href={`${dashboardRoute}/singletons/${document.slug}/fields`}
+                      >
                         <span className="sr-only">Edit singleton fields</span>
                         <Settings className="w-6 h-6" />
                       </Link>

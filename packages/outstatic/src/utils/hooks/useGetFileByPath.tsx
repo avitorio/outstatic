@@ -30,7 +30,9 @@ export const useGetFileByPath = ({
         filePath: `${repoBranch}:${filePath}`
       })
 
-      const fileObject = response?.repository?.object as { text?: string } | null
+      const fileObject = response?.repository?.object as {
+        text?: string
+      } | null
 
       if (!fileObject?.text) {
         return null

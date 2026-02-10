@@ -10,7 +10,8 @@ import {
   Folder,
   LayoutDashboard,
   Plus,
-  Images, File
+  Images,
+  File
 } from 'lucide-react'
 import { SidebarNavigation } from '@/components/ui/outstatic/sidebar'
 
@@ -46,85 +47,83 @@ export const Sidebar = () => {
     },
     ...(hasContentTypes
       ? [
-        {
-          label: 'Content',
-          collapsible: false,
-          children: [
-            ...(collections && collections.length > 0
-              ? [
-                {
-                  label: 'Collections',
-                  collapsible: true,
-                  children: collections.map((collection) => ({
-                    label: collection.title,
-                    path: `${dashboardRoute}/${collection.slug}`,
-                    Icon: <Folder className={'w-4'} />,
-                    renderAction: (
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Link
-                              href={`${dashboardRoute}/${collection.slug}/new`}
-                              className="invisible group-hover/sub-menu-item:visible"
-                              aria-label={`Create new item in collection ${collection.title}`}
-                            >
-                              <Plus className="w-3 h-3 pointer-events-none" />
-                            </Link>
-                          </TooltipTrigger>
-                          <TooltipContent className="pointer-events-none">
-                            <p>
-                              Create new{' '}
-                              <span className="inline-block">
-                                {singular(collection.title)}
-                              </span>
-                            </p>
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
-                    )
-                  }))
-                }
-              ]
-              : []),
-            ...(hasSingletons
-              ? [
-                {
-                  label: 'Singletons',
-                  collapsible: true,
-                  renderAction: (
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Link
-                            href={`${dashboardRoute}/singletons/new`}
-                            className="invisible group-hover/collapsible:visible"
-                            aria-label={`Create new singleton`}
-                          >
-                            <Plus className="w-3 h-3 pointer-events-none" />
-                          </Link>
-                        </TooltipTrigger>
-                        <TooltipContent className="pointer-events-none">
-                          <p>
-                            Create new{' '}
-                            <span className="inline-block">
-                              Singleton
-                            </span>
-                          </p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                  ),
-                  children: singletons.map((singleton) => ({
-                    label: singleton.title,
-                    path: `${dashboardRoute}/singletons/${singleton.slug}`,
-                    Icon: <File className={'w-4'} />
-                  }))
-                }
-              ]
-              : [])
-          ]
-        }
-      ]
+          {
+            label: 'Content',
+            collapsible: false,
+            children: [
+              ...(collections && collections.length > 0
+                ? [
+                    {
+                      label: 'Collections',
+                      collapsible: true,
+                      children: collections.map((collection) => ({
+                        label: collection.title,
+                        path: `${dashboardRoute}/${collection.slug}`,
+                        Icon: <Folder className={'w-4'} />,
+                        renderAction: (
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Link
+                                  href={`${dashboardRoute}/${collection.slug}/new`}
+                                  className="invisible group-hover/sub-menu-item:visible"
+                                  aria-label={`Create new item in collection ${collection.title}`}
+                                >
+                                  <Plus className="w-3 h-3 pointer-events-none" />
+                                </Link>
+                              </TooltipTrigger>
+                              <TooltipContent className="pointer-events-none">
+                                <p>
+                                  Create new{' '}
+                                  <span className="inline-block">
+                                    {singular(collection.title)}
+                                  </span>
+                                </p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
+                        )
+                      }))
+                    }
+                  ]
+                : []),
+              ...(hasSingletons
+                ? [
+                    {
+                      label: 'Singletons',
+                      collapsible: true,
+                      renderAction: (
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Link
+                                href={`${dashboardRoute}/singletons/new`}
+                                className="invisible group-hover/collapsible:visible"
+                                aria-label={`Create new singleton`}
+                              >
+                                <Plus className="w-3 h-3 pointer-events-none" />
+                              </Link>
+                            </TooltipTrigger>
+                            <TooltipContent className="pointer-events-none">
+                              <p>
+                                Create new{' '}
+                                <span className="inline-block">Singleton</span>
+                              </p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      ),
+                      children: singletons.map((singleton) => ({
+                        label: singleton.title,
+                        path: `${dashboardRoute}/singletons/${singleton.slug}`,
+                        Icon: <File className={'w-4'} />
+                      }))
+                    }
+                  ]
+                : [])
+            ]
+          }
+        ]
       : []),
     {
       label: 'Libraries',

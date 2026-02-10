@@ -45,11 +45,11 @@ export default function SingletonFields({ slug }: SingletonFieldsProps) {
   const { data: schema, isLoading } = useGetSingletonSchema({ slug })
   const { data: singletons } = useSingletons()
 
-  const singletonTitle =
-    singletons?.find((s) => s.slug === slug)?.title || slug
+  const singletonTitle = singletons?.find((s) => s.slug === slug)?.title || slug
 
   useEffect(() => {
     if (schema) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setCustomFields(schema.properties)
     }
   }, [schema])
@@ -80,9 +80,7 @@ export default function SingletonFields({ slug }: SingletonFieldsProps) {
               <div className="relative">
                 <Card>
                   <CardHeader>
-                    <CardTitle>
-                      Add Custom Fields to your singleton.
-                    </CardTitle>
+                    <CardTitle>Add Custom Fields to your singleton.</CardTitle>
                   </CardHeader>
                   <CardContent className="prose dark:prose-invert">
                     <p>

@@ -18,7 +18,7 @@ export const useCustomFieldCommit = () => {
     collection,
     fieldName,
     selectedField,
-    singleton,
+    singleton
   }: {
     customFields: any
     deleteField?: boolean
@@ -40,8 +40,9 @@ export const useCustomFieldCommit = () => {
       )
 
       const capi = createCommitApi({
-        message: `feat(${collection}): ${deleteField ? 'delete' : 'add'
-          } ${fieldName} field`,
+        message: `feat(${collection}): ${
+          deleteField ? 'delete' : 'add'
+        } ${fieldName} field`,
         owner: repoOwner || session?.user?.login || '',
         oid: oid ?? '',
         name: repoSlug,
@@ -49,27 +50,33 @@ export const useCustomFieldCommit = () => {
       })
 
       capi.replaceFile(
-        `${ostContent}/${collection}/${singleton ? singleton + '.' : ''}schema.json`,
+        `${ostContent}/${collection}/${
+          singleton ? singleton + '.' : ''
+        }schema.json`,
         customFieldsJSON + '\n'
       )
 
       const input = capi.createInput()
 
       toast.promise(createCommit.mutateAsync(input), {
-        loading: `${deleteField ? 'Deleting' : selectedField ? 'Editing' : 'Adding'
-          } field...`,
+        loading: `${
+          deleteField ? 'Deleting' : selectedField ? 'Editing' : 'Adding'
+        } field...`,
         success: () => {
           refetchSchema()
-          return `Field ${deleteField ? 'deleted' : selectedField ? 'edited' : 'added'
-            } successfully`
+          return `Field ${
+            deleteField ? 'deleted' : selectedField ? 'edited' : 'added'
+          } successfully`
         },
-        error: `Failed to ${deleteField ? 'delete' : selectedField ? 'edit' : 'add'
-          } field`
+        error: `Failed to ${
+          deleteField ? 'delete' : selectedField ? 'edit' : 'add'
+        } field`
       })
 
       if (createCommit.isError) {
         throw new Error(
-          `Failed to ${deleteField ? 'delete' : selectedField ? 'edit' : 'add'
+          `Failed to ${
+            deleteField ? 'delete' : selectedField ? 'edit' : 'add'
           } field`
         )
       }

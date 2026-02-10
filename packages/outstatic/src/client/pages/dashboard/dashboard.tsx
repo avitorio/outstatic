@@ -9,11 +9,16 @@ import { useRouter } from 'next/navigation'
 import { useOutstatic } from '@/utils/hooks/useOutstatic'
 import { Settings, Plus, FolderOpen } from 'lucide-react'
 import CollectionOnboarding from '../collections/_components/collection-onboarding'
+import ContentOnboarding from '../_components/content-onboarding'
 import LineBackground from '@/components/ui/outstatic/line-background'
 import { singular } from 'pluralize'
 import SingletonOnboarding from '../singletons/_components/singleton-onboarding'
 import { SingletonsTable } from '@/components/singletons-table'
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/shadcn/tooltip'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger
+} from '@/components/ui/shadcn/tooltip'
 import { useState } from 'react'
 import OpenFileModal from '../_components/open-file-modal'
 
@@ -35,8 +40,7 @@ export default function Dashboard() {
     <AdminLayout title="Dashboard">
       {!hasContent ? (
         <LineBackground>
-          <CollectionOnboarding />
-          <SingletonOnboarding />
+          <ContentOnboarding />
         </LineBackground>
       ) : (
         <>
@@ -88,7 +92,7 @@ export default function Dashboard() {
             <CollectionOnboarding />
           )}
 
-          <div className="mb-8 flex h-12 items-center">
+          <div className="mb-8 flex h-12 items-center mt-8">
             <h1 className="mr-12 text-2xl text-foreground">Singletons</h1>
             <Tooltip>
               <TooltipTrigger asChild>
@@ -148,7 +152,9 @@ export default function Dashboard() {
         onSelect={(filePath) => {
           setShowOpenFileModal(false)
           router.push(
-            `${basePath}${dashboardRoute}/singletons/new?openFile=${encodeURIComponent(filePath)}`
+            `${basePath}${dashboardRoute}/singletons/new?openFile=${encodeURIComponent(
+              filePath
+            )}`
           )
         }}
       />

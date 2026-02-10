@@ -1,5 +1,14 @@
 # outstatic
 
+## 2.0.18
+
+### Patch Changes
+
+- 01a866b: Add configurable default markdown extension (md/mdx) for new documents. Users are prompted to choose their preferred format on first save, and can change it later in Settings.
+- 1d8c62c: Refactored the onboarding flow with clear separation
+- c0eb97e: update onboarding
+- 937b475: Nicer type generation output by @mathieudutour
+
 ## 2.0.17
 
 ### Patch Changes
@@ -52,7 +61,6 @@
 
 - badf81d: refactor: retire old alert component
 - ce51c83: fix: improve API route error handling and type safety for Next.js 15.5.6
-
   - Add proper validation for route parameters in GET and POST handlers
   - Return appropriate 400/404 status codes for invalid requests
   - Remove unused Request interface and NextResponse import

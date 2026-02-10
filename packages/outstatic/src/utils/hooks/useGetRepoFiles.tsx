@@ -18,6 +18,13 @@ type TreeEntry = {
   object: TreeEntry
 }
 
+export function deepCloneTree(items: TreeDataItem[]): TreeDataItem[] {
+  return items.map((item) => ({
+    ...item,
+    children: item.children ? deepCloneTree(item.children) : undefined
+  }))
+}
+
 function findFolderByPath(
   path: string[],
   folders: TreeDataItem[]
@@ -29,17 +36,14 @@ function findFolderByPath(
       return folder.name === part
     })
     if (!foundFolder) {
-      // If no folder is found at any stage, return undefined
       return undefined
     }
     if (path[path.length - 1] === part) {
       return foundFolder
     }
-    // Navigate to the next level
     currentFolders = foundFolder.children || []
   }
 
-  // Return the last found folder if the entire path is matched
   return currentFolders.length > 0 ? currentFolders[0] : undefined
 }
 
@@ -158,16 +162,18 @@ export const useGetRepoFiles = ({
 
       if (parentTree) {
         const pathArray = path.split('/')
+        // Clone to ensure React sees a new reference
+        const clonedTree = deepCloneTree(parentTree)
 
-        // find the folder in the cached data
-        const folder = findFolderByPath(pathArray, parentTree)
+        // find the folder in the cloned data
+        const folder = findFolderByPath(pathArray, clonedTree)
 
         // if the folder is found, add the new items to it
         if (folder) {
           folder.children = items
         }
 
-        return parentTree
+        return clonedTree
       }
 
       return items

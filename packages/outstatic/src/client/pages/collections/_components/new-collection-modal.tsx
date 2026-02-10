@@ -492,12 +492,12 @@ export default function NewCollectionModal({
                           allowedChars: 'a-zA-Z0-9.'
                         })
                       : createFolder
-                      ? '/' +
-                        (path ? path + '/' : '') +
-                        slugify(form.getValues('name') || 'your-collection', {
-                          allowedChars: 'a-zA-Z0-9.'
-                        })
-                      : '/' + path
+                        ? '/' +
+                          (path ? path + '/' : '') +
+                          slugify(form.getValues('name') || 'your-collection', {
+                            allowedChars: 'a-zA-Z0-9.'
+                          })
+                        : '/' + path
                   }
                 />
                 <FormDescription>

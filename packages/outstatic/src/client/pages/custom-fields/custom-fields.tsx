@@ -46,6 +46,7 @@ export default function CustomFields({ collection, title }: CustomFieldsProps) {
 
   useEffect(() => {
     if (schema) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setCustomFields(schema.properties)
     }
   }, [schema])

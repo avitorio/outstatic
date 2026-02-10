@@ -91,6 +91,7 @@ export const EditCustomFieldDialog: React.FC<EditCustomFieldDialogProps> = ({
     const { title, ...rest } = data
 
     try {
+      // eslint-disable-next-line react-hooks/immutability
       customFields[selectedField] = {
         ...customFields[selectedField],
         ...rest,

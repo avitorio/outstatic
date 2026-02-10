@@ -92,7 +92,7 @@ function SubRouteGroup({
   const defaultGroupOpen =
     group.collapsed === undefined ? true : !group.collapsed
   const isCollapsibleOpen = group.collapsible
-    ? isOpen(collapsibleKey) ?? defaultGroupOpen
+    ? (isOpen(collapsibleKey) ?? defaultGroupOpen)
     : true
 
   const Container = (props: React.PropsWithChildren) => {
@@ -126,6 +126,7 @@ function SubRouteGroup({
   })
 
   return (
+    // eslint-disable-next-line react-hooks/static-components
     <Container>
       <SidebarMenuSubItem>
         <If
@@ -155,6 +156,7 @@ function SubRouteGroup({
           </CollapsibleTrigger>
         </If>
 
+        {/* eslint-disable-next-line react-hooks/static-components */}
         <ContentContainer>
           <SidebarMenuSub
             className={cn({
@@ -187,7 +189,12 @@ function SubRouteGroup({
                 return (
                   <SidebarMenuSubItem key={child.path}>
                     <SidebarMenuSubButton isActive={isActive} asChild>
-                      <Link className={linkClassName} href={child.path}>
+                      <Link
+                        className={cn(linkClassName, {
+                          'pointer-events-none': isActive
+                        })}
+                        href={child.path}
+                      >
                         {child.Icon}
                         <span className={spanClassName}>{child.label}</span>
                       </Link>
@@ -226,9 +233,10 @@ export function SidebarNavigation({
         if ('children' in item) {
           const itemKey = item.label
           // Respect collapsed prop for initial state, but prefer persisted state
-          const defaultOpen = item.collapsed === undefined ? true : !item.collapsed
+          const defaultOpen =
+            item.collapsed === undefined ? true : !item.collapsed
           const isItemOpen = item.collapsible
-            ? isOpen(itemKey) ?? defaultOpen
+            ? (isOpen(itemKey) ?? defaultOpen)
             : true
 
           const Container = (props: React.PropsWithChildren) => {
@@ -292,7 +300,7 @@ export function SidebarNavigation({
                             : true
                         const isChildOpen =
                           'collapsible' in child && child.collapsible
-                            ? isOpen(childKey) ?? defaultChildOpen
+                            ? (isOpen(childKey) ?? defaultChildOpen)
                             : true
 
                         const Container = (props: React.PropsWithChildren) => {
@@ -331,7 +339,10 @@ export function SidebarNavigation({
                           if ('collapsible' in child && child.collapsible) {
                             return (
                               <CollapsibleTrigger asChild>
-                                <SidebarMenuButton tooltip={child.label} className="group/sub-menu-item">
+                                <SidebarMenuButton
+                                  tooltip={child.label}
+                                  className="group/sub-menu-item"
+                                >
                                   <div
                                     className={cn('flex items-center gap-2', {
                                       'mx-auto w-full gap-0 [&>svg]:flex-1 [&>svg]:shrink-0':
@@ -383,7 +394,8 @@ export function SidebarNavigation({
                             >
                               <Link
                                 className={cn('flex items-center', {
-                                  'mx-auto w-full gap-0! [&>svg]:flex-1': !open
+                                  'mx-auto w-full gap-0! [&>svg]:flex-1': !open,
+                                  'pointer-events-none': isActive
                                 })}
                                 href={path}
                               >
@@ -463,7 +475,10 @@ export function SidebarNavigation({
                                                 asChild
                                               >
                                                 <Link
-                                                  className={linkClassName}
+                                                  className={cn(linkClassName, {
+                                                    'pointer-events-none':
+                                                      isActive
+                                                  })}
                                                   href={subChild.path}
                                                 >
                                                   {subChild.Icon}
@@ -475,7 +490,11 @@ export function SidebarNavigation({
                                                   </span>
                                                 </Link>
                                               </SidebarMenuSubButton>
-                                              <If condition={subChild.renderAction}>
+                                              <If
+                                                condition={
+                                                  subChild.renderAction
+                                                }
+                                              >
                                                 <SidebarMenuAction>
                                                   {subChild.renderAction}
                                                 </SidebarMenuAction>

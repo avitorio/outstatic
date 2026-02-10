@@ -245,7 +245,9 @@ describe('schema-to-ts', () => {
 
       const result = schemaToInterface(schema, 'Posts')
 
-      expect(result).toContain("Array<{ label: string; value: 'tech' | 'news' }>")
+      expect(result).toContain(
+        "Array<{ label: string; value: 'tech' | 'news' }>"
+      )
     })
   })
 })

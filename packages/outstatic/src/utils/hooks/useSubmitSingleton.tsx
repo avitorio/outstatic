@@ -15,6 +15,7 @@ import { LoginSession } from '@/utils/auth/auth'
 import { Editor } from '@tiptap/react'
 import matter from 'gray-matter'
 import MurmurHash3 from 'imurmurhash'
+import stringify from 'json-stable-stringify'
 import { useCallback } from 'react'
 import { UseFormReturn } from 'react-hook-form'
 import { useCreateCommit } from './useCreateCommit'
@@ -22,8 +23,10 @@ import { useGetSingletonSchema } from './useGetSingletonSchema'
 import { useGetMetadata } from './useGetMetadata'
 import useOid from './useOid'
 import { useGetMediaFiles } from './useGetMediaFiles'
+import { useGetConfig } from './useGetConfig'
 import { useSingletons } from './useSingletons'
 import {
+  ConfigType,
   MediaItem,
   MediaSchema,
   MetadataSchema,
@@ -50,6 +53,10 @@ type SubmitSingletonProps = {
   documentMetadata: Record<string, any>
   path?: string
   existingFilePath?: string
+}
+
+type OnSubmitOptions = {
+  configUpdate?: Partial<ConfigType>
 }
 
 function useSubmitSingleton({
@@ -81,7 +88,8 @@ function useSubmitSingleton({
     basePath,
     publicMediaPath,
     repoMediaPath,
-    mediaJsonPath
+    mediaJsonPath,
+    configJsonPath
   } = useOutstatic()
   const fetchOid = useOid()
   let media: MediaItem[] = []
@@ -92,12 +100,15 @@ function useSubmitSingleton({
   })
   const { refetch: refetchMetadata } = useGetMetadata({ enabled: false })
   const { refetch: refetchMedia } = useGetMediaFiles({ enabled: false })
-  const { data: existingSingletons, refetch: refetchSingletons } = useSingletons({ enabled: false })
+  const { refetch: refetchConfig } = useGetConfig({ enabled: false })
+  const { data: existingSingletons, refetch: refetchSingletons } =
+    useSingletons({ enabled: false })
 
   const singletonsPath = `${ostContent}/_singletons`
 
   const onSubmit = useCallback(
-    async (data: Document) => {
+    async (data: Document, options?: OnSubmitOptions) => {
+      const { configUpdate } = options ?? {}
       setLoading(true)
 
       if (!editor) {
@@ -124,7 +135,9 @@ function useSubmitSingleton({
           { data: schema, isError: schemaError },
           { data: metadata, isError: metadataError }
         ] = await Promise.all([
-          isNew ? Promise.resolve({ data: null, isError: false }) : refetchSchema(),
+          isNew
+            ? Promise.resolve({ data: null, isError: false })
+            : refetchSchema(),
           refetchMetadata()
         ])
 
@@ -144,7 +157,9 @@ function useSubmitSingleton({
         const owner = repoOwner || session?.user?.login || ''
 
         const capi = createCommitApi({
-          message: isNew ? `feat(singleton): create ${actualSlug}` : `chore: Updates singleton ${actualSlug}`,
+          message: isNew
+            ? `feat(singleton): create ${actualSlug}`
+            : `chore: Updates singleton ${actualSlug}`,
           owner,
           oid: oid ?? '',
           name: repoSlug,
@@ -162,7 +177,7 @@ function useSubmitSingleton({
         // Extract directory from existing file path
         const contentDirectory = existingFilePath
           ? existingFilePath.substring(0, existingFilePath.lastIndexOf('/'))
-          : path ?? singletonsPath
+          : (path ?? singletonsPath)
 
         // For new singletons, create the schema.json file and update singletons.json
         if (isNew) {
@@ -293,8 +308,8 @@ function useSubmitSingleton({
 
         const newMeta = Array.isArray(m.metadata)
           ? m.metadata.filter(
-            (c) => c.collection !== '_singletons' || c.slug !== actualSlug
-          )
+              (c) => c.collection !== '_singletons' || c.slug !== actualSlug
+            )
           : []
 
         newMeta.push({
@@ -337,6 +352,20 @@ function useSubmitSingleton({
           )
         }
 
+        // update config.json if configUpdate is provided
+        if (configUpdate && Object.keys(configUpdate).length > 0) {
+          const { data: config } = await refetchConfig()
+          const updatedConfig = {
+            ...(config ?? {}),
+            ...configUpdate
+          }
+          capi.replaceFile(
+            configJsonPath,
+            // @ts-ignore
+            stringify(updatedConfig, { space: 2 })
+          )
+        }
+
         const input = capi.createInput()
 
         toast.promise(createCommit.mutateAsync(input), {
@@ -346,7 +375,9 @@ function useSubmitSingleton({
               setSlug(actualSlug)
               refetchSingletons()
             }
-            return isNew ? 'Singleton created successfully!' : 'Changes saved successfully!'
+            return isNew
+              ? 'Singleton created successfully!'
+              : 'Changes saved successfully!'
           },
           error: isNew ? 'Failed to create singleton' : 'Failed to save changes'
         })
@@ -384,6 +415,7 @@ function useSubmitSingleton({
       basePath,
       extension,
       mediaJsonPath,
+      configJsonPath,
       singletonsPath,
       refetchSingletons,
       path,

@@ -61,6 +61,7 @@
         "OST_TOKEN_SECRET",
         "VERCEL_GIT_REPO_SLUG",
         "OPENAI_API_KEY",
+        "OPENAI_BASE_URL",
         "OST_GITHUB_CALLBACK_URL",
         "OST_BASE_PATH",
         "OST_DETACH",
