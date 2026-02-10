@@ -90,4 +90,4 @@ Please see our [CONTRIBUTING.md](/CONTRIBUTING.md).
   <img src="https://contrib.rocks/image?repo=avitorio/outstatic" />
 </a>
 
-<img src="https://cloud.umami.is/p/o4IQZKY4e">
+<img src="https://cloud.umami.is/p/x8oBdKH6E" />
