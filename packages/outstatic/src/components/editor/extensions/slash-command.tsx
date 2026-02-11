@@ -215,6 +215,16 @@ const renderItems = () => {
     onExit: () => {
       popup?.[0]?.destroy()
       component?.destroy()
+
+      // Clean up dialog container if it exists
+      if (dialogRoot) {
+        dialogRoot.unmount()
+        dialogRoot = null
+      }
+      if (dialogContainer) {
+        dialogContainer.remove()
+        dialogContainer = null
+      }
     }
   }
 }
