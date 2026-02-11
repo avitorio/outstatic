@@ -2,7 +2,6 @@
 
 import {
   createContext,
-  useCallback,
   useContext,
   useMemo,
   useState,
@@ -49,35 +48,28 @@ export function UpgradeDialogProvider({
     dashboardRoute?: string
   } | null>(null)
 
-  const openUpgradeDialog = useCallback<UpgradeDialogHandler>(
-    (accountSlug, overrideDashboardRoute) => {
-      if (accountSlug || overrideDashboardRoute) {
-        setOverrides({
-          accountSlug,
-          dashboardRoute: overrideDashboardRoute
-        })
-      } else {
-        setOverrides(null)
-      }
-      setIsUpgradeDialogOpen(true)
-    },
-    []
-  )
-
-  const setUpgradeDialogOpen = useCallback((open: boolean) => {
-    setIsUpgradeDialogOpen(open)
-    if (!open) {
-      setOverrides(null)
-    }
-  }, [])
-
-  const contextValue = useMemo(
+  const contextValue = useMemo<UpgradeDialogContextValue>(
     () => ({
       isUpgradeDialogOpen,
-      openUpgradeDialog,
-      setUpgradeDialogOpen
+      openUpgradeDialog: (accountSlug, overrideDashboardRoute) => {
+        if (accountSlug || overrideDashboardRoute) {
+          setOverrides({
+            accountSlug,
+            dashboardRoute: overrideDashboardRoute
+          })
+        } else {
+          setOverrides(null)
+        }
+        setIsUpgradeDialogOpen(true)
+      },
+      setUpgradeDialogOpen: (open: boolean) => {
+        setIsUpgradeDialogOpen(open)
+        if (!open) {
+          setOverrides(null)
+        }
+      }
     }),
-    [isUpgradeDialogOpen, openUpgradeDialog, setUpgradeDialogOpen]
+    [isUpgradeDialogOpen]
   )
 
   const resolvedAccountSlug = overrides?.accountSlug ?? projectInfo?.accountSlug
@@ -89,7 +81,7 @@ export function UpgradeDialogProvider({
       <UpgradeDialog
         title={title ?? 'Write faster with AI'}
         open={isUpgradeDialogOpen}
-        onOpenChange={setUpgradeDialogOpen}
+        onOpenChange={contextValue.setUpgradeDialogOpen}
         accountSlug={resolvedAccountSlug}
         dashboardRoute={resolvedDashboardRoute}
       />

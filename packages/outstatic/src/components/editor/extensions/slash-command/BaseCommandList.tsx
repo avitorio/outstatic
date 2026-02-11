@@ -93,7 +93,6 @@ export const BaseCommandList = ({
             complete(prevText, {
               body: { option: 'continue', command: '' }
             })
-            editor.chain().focus().deleteRange(range).run()
           }
         } else if (item.title === 'Image') {
           setImageMenu(true)
