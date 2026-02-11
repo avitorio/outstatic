@@ -23,6 +23,11 @@ export type CommandProps = {
   range: Range
 }
 
+export type UpgradeDialogHandler = (
+  accountSlug?: string,
+  dashboardRoute?: string
+) => void
+
 const Command = Extension.create({
   name: 'slash-command',
   addOptions() {
@@ -78,7 +83,7 @@ const CommandList = ({
   command: any
   editor: Editor
   range: Range
-  onShowUpgradeDialog: (accountSlug?: string, dashboardRoute?: string) => void
+  onShowUpgradeDialog: UpgradeDialogHandler
 }) => {
   const [imageMenu, setImageMenu] = useState(false)
 
@@ -125,7 +130,7 @@ const UpgradeDialogWrapper = ({
   )
 }
 
-const renderItems = () => {
+const renderItems = (onShowUpgradeDialog?: UpgradeDialogHandler) => {
   let component: ReactRenderer | null = null
   let popup: any | null = null
   let dialogContainer: HTMLDivElement | null = null
@@ -136,6 +141,12 @@ const renderItems = () => {
   } | null = null
 
   const showUpgradeDialog = (accountSlug?: string, dashboardRoute?: string) => {
+    if (onShowUpgradeDialog) {
+      popup?.[0]?.hide()
+      onShowUpgradeDialog(accountSlug, dashboardRoute)
+      return
+    }
+
     upgradeDialogData = { accountSlug, dashboardRoute }
 
     // Close the popup first
@@ -229,11 +240,18 @@ const renderItems = () => {
   }
 }
 
-const SlashCommand = Command.configure({
-  suggestion: {
-    items: getSuggestionItems,
-    render: renderItems
-  }
-})
+export const createSlashCommand = ({
+  onShowUpgradeDialog
+}: {
+  onShowUpgradeDialog?: UpgradeDialogHandler
+} = {}) =>
+  Command.configure({
+    suggestion: {
+      items: getSuggestionItems,
+      render: () => renderItems(onShowUpgradeDialog)
+    }
+  })
+
+const SlashCommand = createSlashCommand()
 
 export default SlashCommand

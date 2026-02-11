@@ -1,12 +1,12 @@
 import { EditorBubble } from '../ui/editor-bubble'
 import { removeAIHighlight } from '@/components/editor/extensions/ai-higlight'
-import { Fragment, type ReactNode, useEffect, useState } from 'react'
+import { Fragment, type ReactNode, useEffect } from 'react'
 import Magic from '../ui/icons/magic'
 import { AISelector } from './ai-selector'
 import { Editor } from '@tiptap/react'
 import { useOutstatic } from '@/utils/hooks/useOutstatic'
 import { EditorBubbleButton } from '@/components/editor/ui/editor-bubble-button'
-import { UpgradeDialog } from '@/components/ui/outstatic/upgrade-dialog'
+import { useUpgradeDialog } from '@/components/ui/outstatic/upgrade-dialog-context'
 
 interface GenerativeMenuSwitchProps {
   editor: Editor
@@ -20,8 +20,8 @@ const GenerativeMenuSwitch = ({
   open,
   onOpenChange
 }: GenerativeMenuSwitchProps) => {
-  const { hasAIProviderKey, isPro, dashboardRoute, projectInfo } = useOutstatic()
-  const [showUpgradeDialog, setShowUpgradeDialog] = useState(false)
+  const { hasAIProviderKey, isPro } = useOutstatic()
+  const { openUpgradeDialog } = useUpgradeDialog()
 
   useEffect(() => {
     if (!open) removeAIHighlight(editor)
@@ -53,7 +53,7 @@ const GenerativeMenuSwitch = ({
                   // Collapse selection to hide bubble menu
                   const { from } = editor.state.selection
                   editor.chain().setTextSelection(from).run()
-                  setShowUpgradeDialog(true)
+                  openUpgradeDialog()
                 }
               }}
             >
@@ -64,13 +64,6 @@ const GenerativeMenuSwitch = ({
           </Fragment>
         )}
       </EditorBubble>
-      <UpgradeDialog
-        title="Write faster with AI"
-        open={showUpgradeDialog}
-        onOpenChange={setShowUpgradeDialog}
-        accountSlug={projectInfo?.accountSlug}
-        dashboardRoute={dashboardRoute}
-      />
     </>
   )
 }

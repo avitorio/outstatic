@@ -1,18 +1,20 @@
-import { TiptapExtensions } from '@/components/editor/extensions/index'
+import { getTiptapExtensions } from '@/components/editor/extensions/index'
 import { TiptapEditorProps } from '@/components/editor/props'
 import { getPrevText } from '@/components/editor/utils/getPrevText'
 import Placeholder from '@tiptap/extension-placeholder'
 import { Editor, EditorEvents, useEditor } from '@tiptap/react'
 import { useCompletion } from '@ai-sdk/react'
-import { useEffect, useRef, useCallback, useState } from 'react'
+import { useEffect, useRef, useCallback } from 'react'
 import { toast } from 'sonner'
 import { useDebouncedCallback } from 'use-debounce'
 import { useOutstatic } from '@/utils/hooks/useOutstatic'
 import { OUTSTATIC_API_PATH } from '@/utils/constants'
 import { stringifyError } from '@/utils/errors/stringifyError'
+import { useUpgradeDialog } from '@/components/ui/outstatic/upgrade-dialog-context'
 
 export const useTipTap = ({ ...rhfMethods }) => {
   const { hasAIProviderKey, isPro, basePath } = useOutstatic()
+  const { openUpgradeDialog } = useUpgradeDialog()
   const { setValue } = rhfMethods
 
   const editorRef = useRef<Editor | null>(null)
@@ -21,7 +23,6 @@ export const useTipTap = ({ ...rhfMethods }) => {
     lastCompletion: string
   } | null>(null)
   const prevIsLoadingRef = useRef(false)
-  const [showUpgradeDialog, setShowUpgradeDialog] = useState(false)
 
   const debouncedCallback = useDebouncedCallback(async ({ editor }) => {
     const val = editor.getHTML()
@@ -160,7 +161,7 @@ export const useTipTap = ({ ...rhfMethods }) => {
         })
 
         if (!(hasAIProviderKey || isPro)) {
-          setShowUpgradeDialog(true)
+          openUpgradeDialog()
           return
         }
 
@@ -182,12 +183,14 @@ export const useTipTap = ({ ...rhfMethods }) => {
         debouncedCallback({ editor })
       }
     },
-    [hasAIProviderKey, isPro, isLoading, complete, debouncedCallback]
+    [hasAIProviderKey, isPro, isLoading, complete, debouncedCallback, openUpgradeDialog]
   )
 
   const editor = useEditor({
     extensions: [
-      ...TiptapExtensions,
+      ...getTiptapExtensions({
+        onShowUpgradeDialog: openUpgradeDialog
+      }),
       Placeholder.configure({
         placeholder: ({ editor, node }) => {
           if (editor.isActive('tableCell') || editor.isActive('tableHeader')) {
@@ -284,5 +287,5 @@ export const useTipTap = ({ ...rhfMethods }) => {
     }
   }, [stop, isLoading, editor, complete])
 
-  return { editor: editor as Editor, showUpgradeDialog, setShowUpgradeDialog }
+  return { editor: editor as Editor }
 }

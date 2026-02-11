@@ -26,7 +26,6 @@ import { toast } from 'sonner'
 import { noCase } from 'change-case'
 import MediaSettingsDialog from '@/components/ui/outstatic/media-settings-dialog'
 import { MarkdownExtensionDialog } from '@/components/ui/outstatic/markdown-extension-dialog'
-import { UpgradeDialog } from '@/components/ui/outstatic/upgrade-dialog'
 import { useEditor } from '@/components/editor/editor-context'
 
 export default function EditDocument({ collection }: { collection: string }) {
@@ -43,7 +42,6 @@ export default function EditDocument({ collection }: { collection: string }) {
     dashboardRoute,
     repoMediaPath,
     publicMediaPath,
-    projectInfo
   } = useOutstatic()
   const [showDelete, setShowDelete] = useState(false)
   const [documentSchema, setDocumentSchema] = useState(editDocumentSchema)
@@ -51,11 +49,7 @@ export default function EditDocument({ collection }: { collection: string }) {
   const methods = useForm<Document>({ resolver: zodResolver(documentSchema) })
 
   const { editor, setEditor } = useEditor()
-  const {
-    editor: tiptapEditor,
-    showUpgradeDialog,
-    setShowUpgradeDialog
-  } = useTipTap({ ...methods })
+  const { editor: tiptapEditor } = useTipTap({ ...methods })
 
   useEffect(() => {
     setEditor(tiptapEditor)
@@ -330,13 +324,6 @@ export default function EditDocument({ collection }: { collection: string }) {
               onOpenChange={setShowExtensionDialog}
               fileName={`${methods.getValues('slug') || 'document'}.${extension}`}
               onSave={handleExtensionDialogSave}
-            />
-            <UpgradeDialog
-              title="Write faster with AI"
-              open={showUpgradeDialog}
-              onOpenChange={setShowUpgradeDialog}
-              accountSlug={projectInfo?.accountSlug}
-              dashboardRoute={dashboardRoute}
             />
           </FormProvider>
         </DocumentContext.Provider>

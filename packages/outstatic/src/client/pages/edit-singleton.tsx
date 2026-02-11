@@ -22,7 +22,6 @@ import { FormMessage } from '@/components/ui/shadcn/form'
 import { toast } from 'sonner'
 import MediaSettingsDialog from '@/components/ui/outstatic/media-settings-dialog'
 import { MarkdownExtensionDialog } from '@/components/ui/outstatic/markdown-extension-dialog'
-import { UpgradeDialog } from '@/components/ui/outstatic/upgrade-dialog'
 import { useEditor } from '@/components/editor/editor-context'
 import { useSingletons } from '@/utils/hooks/useSingletons'
 import NewSingletonModal from './_components/new-singleton-modal'
@@ -50,8 +49,7 @@ export default function EditSingleton({ slug: initialSlug }: { slug: string }) {
     publicMediaPath,
     repoOwner,
     repoSlug,
-    repoBranch,
-    projectInfo
+    repoBranch
   } = useOutstatic()
 
   // Get openFile query parameter for opening existing files
@@ -68,11 +66,7 @@ export default function EditSingleton({ slug: initialSlug }: { slug: string }) {
   const methods = useForm<Document>({ resolver: zodResolver(documentSchema) })
 
   const { editor, setEditor } = useEditor()
-  const {
-    editor: tiptapEditor,
-    showUpgradeDialog,
-    setShowUpgradeDialog
-  } = useTipTap({ ...methods })
+  const { editor: tiptapEditor } = useTipTap({ ...methods })
 
   useEffect(() => {
     setEditor(tiptapEditor)
@@ -451,13 +445,6 @@ export default function EditSingleton({ slug: initialSlug }: { slug: string }) {
               onOpenChange={setShowExtensionDialog}
               fileName={`${methods.getValues('slug') || 'singleton'}.${extension}`}
               onSave={handleExtensionDialogSave}
-            />
-            <UpgradeDialog
-              title="Write faster with AI"
-              open={showUpgradeDialog}
-              onOpenChange={setShowUpgradeDialog}
-              accountSlug={projectInfo?.accountSlug}
-              dashboardRoute={dashboardRoute}
             />
           </FormProvider>
         </DocumentContext.Provider>
