@@ -4,7 +4,7 @@ import { getPrevText } from '@/components/editor/utils/getPrevText'
 import Placeholder from '@tiptap/extension-placeholder'
 import { Editor, EditorEvents, useEditor } from '@tiptap/react'
 import { useCompletion } from '@ai-sdk/react'
-import { useEffect, useRef, useCallback } from 'react'
+import { useEffect, useRef, useCallback, useState } from 'react'
 import { toast } from 'sonner'
 import { useDebouncedCallback } from 'use-debounce'
 import { useOutstatic } from '@/utils/hooks/useOutstatic'
@@ -21,6 +21,7 @@ export const useTipTap = ({ ...rhfMethods }) => {
     lastCompletion: string
   } | null>(null)
   const prevIsLoadingRef = useRef(false)
+  const [showUpgradeDialog, setShowUpgradeDialog] = useState(false)
 
   const debouncedCallback = useDebouncedCallback(async ({ editor }) => {
     const val = editor.getHTML()
@@ -152,11 +153,17 @@ export const useTipTap = ({ ...rhfMethods }) => {
       const lastTwo = getPrevText(editor, {
         chars: 2
       })
-      if ((hasAIProviderKey || isPro) && lastTwo === '++' && !isLoading) {
+      if (lastTwo === '++' && !isLoading) {
         editor.commands.deleteRange({
           from: selection.from - 2,
           to: selection.from
         })
+
+        if (!(hasAIProviderKey || isPro)) {
+          setShowUpgradeDialog(true)
+          return
+        }
+
         const prevText = getPrevText(editor, { chars: 5000 })
 
         if (prevText === '') {
@@ -198,9 +205,7 @@ export const useTipTap = ({ ...rhfMethods }) => {
             return ''
           }
 
-          return `Press '/' for commands${
-            hasAIProviderKey || isPro ? ", or '++' for AI autocomplete..." : ''
-          }`
+          return "Press '/' for commands, or '++' for AI autocomplete..."
         },
         includeChildren: false
       })
@@ -279,5 +284,5 @@ export const useTipTap = ({ ...rhfMethods }) => {
     }
   }, [stop, isLoading, editor, complete])
 
-  return { editor: editor as Editor }
+  return { editor: editor as Editor, showUpgradeDialog, setShowUpgradeDialog }
 }

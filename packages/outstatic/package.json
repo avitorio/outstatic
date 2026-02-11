@@ -162,6 +162,7 @@
     "openai-edge": "^1.2.3",
     "pluralize": "^8.0.0",
     "postcss": "^8.4.49",
+    "radix-ui": "^1.4.3",
     "react-day-picker": "^9.13.0",
     "react-hook-form": "^7.68.0",
     "react-markdown": "^9.1.0",

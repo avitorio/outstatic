@@ -22,16 +22,19 @@ export const BaseCommandList = ({
   command,
   setImageMenu,
   editor,
-  range
+  range,
+  onShowUpgradeDialog
 }: {
   items: CommandItemProps[]
   setImageMenu: (value: boolean) => void
   command: any
   editor: Editor
   range: Range
+  onShowUpgradeDialog: (accountSlug?: string, dashboardRoute?: string) => void
 }) => {
   const [selectedIndex, setSelectedIndex] = useState(0)
-  const { hasAIProviderKey, basePath, isPro } = useOutstatic()
+  const { hasAIProviderKey, basePath, isPro, dashboardRoute, projectInfo } =
+    useOutstatic()
 
   const completionStartPos = useRef<number | null>(null)
 
@@ -72,6 +75,10 @@ export const BaseCommandList = ({
       const item = items[index]
       if (item) {
         if (item.title === 'Continue writing') {
+          if (!(hasAIProviderKey || isPro)) {
+            onShowUpgradeDialog(projectInfo?.accountSlug, dashboardRoute)
+            return
+          }
           if (isLoading) return
 
           const prevText = getPrevText(editor, { chars: 5000, offset: 1 })
@@ -94,8 +101,19 @@ export const BaseCommandList = ({
         }
       }
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [complete, isLoading, command, editor, items, range]
+    [
+      complete,
+      isLoading,
+      command,
+      editor,
+      items,
+      range,
+      hasAIProviderKey,
+      isPro,
+      onShowUpgradeDialog,
+      dashboardRoute,
+      projectInfo
+    ]
   )
 
   useEffect(() => {
@@ -147,8 +165,6 @@ export const BaseCommandList = ({
         className="z-50 h-auto max-h-[330px] w-72 overflow-y-auto rounded-md border border-muted bg-background px-1 py-2 shadow-md transition-all"
       >
         {items.map((item: CommandItemProps, index: number) => {
-          if (item.title === 'Continue writing' && !(hasAIProviderKey || isPro))
-            return null
           return (
             <button
               className={`flex w-full items-center space-x-2 rounded-md px-2 py-1 text-left text-sm text-foreground hover:bg-muted ${
