@@ -1,6 +1,6 @@
 {
   "name": "outstatic",
-  "version": "2.0.17",
+  "version": "2.0.18",
   "description": "Static site CMS",
   "author": "Andre Vitorio <andre@vitorio.net>",
   "license": "FSL-1.1-ALv2",
@@ -162,6 +162,7 @@
     "openai-edge": "^1.2.3",
     "pluralize": "^8.0.0",
     "postcss": "^8.4.49",
+    "radix-ui": "^1.4.3",
     "react-day-picker": "^9.13.0",
     "react-hook-form": "^7.68.0",
     "react-markdown": "^9.1.0",

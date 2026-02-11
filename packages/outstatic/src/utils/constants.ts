@@ -1,10 +1,10 @@
 import { Document } from '@/types'
 
 // Outstatic configuration
-export const OUTSTATIC_VERSION = '2.0.17'
+export const OUTSTATIC_VERSION = '2.0.18'
 export const OUTSTATIC_URL = 'https://outstatic.com'
 export const OUTSTATIC_APP_URL =
-  process.env.NEXT_PUBLIC_OST_APP_URL ?? `https://app.outstatic.com`
+  process.env.NEXT_PUBLIC_OST_APP_URL ?? `https://outstatic.com`
 
 // Pro API configuration (server-side only)
 export const OST_PRO_API_KEY = process.env.OST_PRO_API_KEY

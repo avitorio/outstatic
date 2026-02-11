@@ -1,4 +1,4 @@
-import { TiptapExtensions } from '@/components/editor/extensions/index'
+import { getTiptapExtensions } from '@/components/editor/extensions/index'
 import { TiptapEditorProps } from '@/components/editor/props'
 import { getPrevText } from '@/components/editor/utils/getPrevText'
 import Placeholder from '@tiptap/extension-placeholder'
@@ -10,9 +10,11 @@ import { useDebouncedCallback } from 'use-debounce'
 import { useOutstatic } from '@/utils/hooks/useOutstatic'
 import { OUTSTATIC_API_PATH } from '@/utils/constants'
 import { stringifyError } from '@/utils/errors/stringifyError'
+import { useUpgradeDialog } from '@/components/ui/outstatic/upgrade-dialog-context'
 
 export const useTipTap = ({ ...rhfMethods }) => {
   const { hasAIProviderKey, isPro, basePath } = useOutstatic()
+  const { openUpgradeDialog } = useUpgradeDialog()
   const { setValue } = rhfMethods
 
   const editorRef = useRef<Editor | null>(null)
@@ -152,11 +154,17 @@ export const useTipTap = ({ ...rhfMethods }) => {
       const lastTwo = getPrevText(editor, {
         chars: 2
       })
-      if ((hasAIProviderKey || isPro) && lastTwo === '++' && !isLoading) {
+      if (lastTwo === '++' && !isLoading) {
         editor.commands.deleteRange({
           from: selection.from - 2,
           to: selection.from
         })
+
+        if (!(hasAIProviderKey || isPro)) {
+          openUpgradeDialog()
+          return
+        }
+
         const prevText = getPrevText(editor, { chars: 5000 })
 
         if (prevText === '') {
@@ -175,12 +183,14 @@ export const useTipTap = ({ ...rhfMethods }) => {
         debouncedCallback({ editor })
       }
     },
-    [hasAIProviderKey, isPro, isLoading, complete, debouncedCallback]
+    [hasAIProviderKey, isPro, isLoading, complete, debouncedCallback, openUpgradeDialog]
   )
 
   const editor = useEditor({
     extensions: [
-      ...TiptapExtensions,
+      ...getTiptapExtensions({
+        onShowUpgradeDialog: openUpgradeDialog
+      }),
       Placeholder.configure({
         placeholder: ({ editor, node }) => {
           if (editor.isActive('tableCell') || editor.isActive('tableHeader')) {
@@ -198,9 +208,7 @@ export const useTipTap = ({ ...rhfMethods }) => {
             return ''
           }
 
-          return `Press '/' for commands${
-            hasAIProviderKey || isPro ? ", or '++' for AI autocomplete..." : ''
-          }`
+          return "Press '/' for commands, or '++' for AI autocomplete..."
         },
         includeChildren: false
       })
@@ -266,13 +274,11 @@ export const useTipTap = ({ ...rhfMethods }) => {
         streamingStateRef.current = null
       }
     }
-    if (isLoading) {
-      document.addEventListener('keydown', onKeyDown)
-      window.addEventListener('mousedown', mousedownHandler)
-    } else {
-      document.removeEventListener('keydown', onKeyDown)
-      window.removeEventListener('mousedown', mousedownHandler)
-    }
+    if (!isLoading) return
+
+    document.addEventListener('keydown', onKeyDown)
+    window.addEventListener('mousedown', mousedownHandler)
+
     return () => {
       document.removeEventListener('keydown', onKeyDown)
       window.removeEventListener('mousedown', mousedownHandler)

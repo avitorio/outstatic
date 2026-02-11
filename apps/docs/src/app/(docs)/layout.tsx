@@ -1,5 +1,6 @@
 import { BuiltWithOutstatic } from '@/components/built-with-outstatic'
 import { ThemeProvider } from '@/components/theme-provider'
+import { getUmamiScriptConfig } from '@/lib/analytics'
 import '@/styles/style.css'
 import { Metadata } from 'next'
 import Script from 'next/script'
@@ -38,15 +39,19 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+  const umamiScript = getUmamiScriptConfig()
+
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        {process.env.NEXT_PUBLIC_TINYBIRD_TOKEN ? (
+        {umamiScript ? (
           <Script
             defer
-            src="https://unpkg.com/@tinybirdco/flock.js"
-            data-host="https://api.tinybird.co"
-            data-token={process.env.NEXT_PUBLIC_TINYBIRD_TOKEN}
+            src={umamiScript.src}
+            data-website-id={umamiScript.websiteId}
+            onError={() => {
+              console.error('Failed to load Umami analytics')
+            }}
           />
         ) : null}
       </head>

@@ -1,5 +1,0 @@
----
-'outstatic': patch
----
-
-update onboarding

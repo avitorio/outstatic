@@ -41,7 +41,7 @@ export default function EditDocument({ collection }: { collection: string }) {
     setHasChanges,
     dashboardRoute,
     repoMediaPath,
-    publicMediaPath
+    publicMediaPath,
   } = useOutstatic()
   const [showDelete, setShowDelete] = useState(false)
   const [documentSchema, setDocumentSchema] = useState(editDocumentSchema)
@@ -49,7 +49,7 @@ export default function EditDocument({ collection }: { collection: string }) {
   const methods = useForm<Document>({ resolver: zodResolver(documentSchema) })
 
   const { editor, setEditor } = useEditor()
-  const tiptapEditor = useTipTap({ ...methods }).editor
+  const { editor: tiptapEditor } = useTipTap({ ...methods })
 
   useEffect(() => {
     setEditor(tiptapEditor)
