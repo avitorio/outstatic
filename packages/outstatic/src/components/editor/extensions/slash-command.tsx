@@ -2,7 +2,7 @@ import { Extension, Range } from '@tiptap/core'
 import { Editor, ReactRenderer } from '@tiptap/react'
 import Suggestion from '@tiptap/suggestion'
 import { ReactNode, useState } from 'react'
-import tippy from 'tippy.js'
+import tippy, { type Instance as TippyInstance } from 'tippy.js'
 import { BaseCommandList } from '@/components/editor/extensions/slash-command/BaseCommandList'
 import ImageCommandList from '@/components/editor/extensions/slash-command/ImageCommandList'
 import { getSuggestionItems } from '@/components/editor/extensions/slash-command/getSuggestionItems'
@@ -20,6 +20,10 @@ export type CommandItemProps = {
 export type CommandProps = {
   editor: Editor
   range: Range
+}
+
+type CommandListRef = {
+  onKeyDown: (props: { event: KeyboardEvent }) => boolean
 }
 
 const Command = Extension.create({
@@ -102,15 +106,21 @@ const CommandList = ({
 }
 
 const renderItems = (onShowUpgradeDialog: UpgradeDialogHandler) => {
-  let component: ReactRenderer | null = null
-  let popup: any | null = null
+  let component: ReactRenderer<CommandListRef> | null = null
+  let popup: TippyInstance[] | null = null
 
   return {
-    onStart: (props: { editor: Editor; clientRect: DOMRect }) => {
+    onStart: (props: {
+      editor: Editor
+      clientRect: (() => DOMRect | null) | null
+    }) => {
       component = new ReactRenderer(CommandList, {
         props: {
           ...props,
-          onShowUpgradeDialog: (accountSlug?: string, dashboardRoute?: string) => {
+          onShowUpgradeDialog: (
+            accountSlug?: string,
+            dashboardRoute?: string
+          ) => {
             popup?.[0]?.hide()
             onShowUpgradeDialog(accountSlug, dashboardRoute)
           }
@@ -118,9 +128,8 @@ const renderItems = (onShowUpgradeDialog: UpgradeDialogHandler) => {
         editor: props.editor
       })
 
-      // @ts-ignore
       popup = tippy('body', {
-        getReferenceClientRect: props.clientRect,
+        getReferenceClientRect: props.clientRect as () => DOMRect,
         appendTo: () => document.body,
         content: component.element,
         showOnCreate: true,
@@ -129,19 +138,24 @@ const renderItems = (onShowUpgradeDialog: UpgradeDialogHandler) => {
         placement: 'bottom-start'
       })
     },
-    onUpdate: (props: { editor: Editor; clientRect: DOMRect }) => {
+    onUpdate: (props: {
+      editor: Editor
+      clientRect: (() => DOMRect | null) | null
+    }) => {
       component?.updateProps({
         ...props,
-        onShowUpgradeDialog: (accountSlug?: string, dashboardRoute?: string) => {
+        onShowUpgradeDialog: (
+          accountSlug?: string,
+          dashboardRoute?: string
+        ) => {
           popup?.[0]?.hide()
           onShowUpgradeDialog(accountSlug, dashboardRoute)
         }
       })
 
-      popup &&
-        popup[0].setProps({
-          getReferenceClientRect: props.clientRect
-        })
+      popup?.[0]?.setProps({
+        getReferenceClientRect: props.clientRect as () => DOMRect
+      })
     },
     onKeyDown: (props: { event: KeyboardEvent }) => {
       if (props.event.key === 'Escape') {
@@ -150,7 +164,6 @@ const renderItems = (onShowUpgradeDialog: UpgradeDialogHandler) => {
         return true
       }
 
-      // @ts-ignore
       return component?.ref?.onKeyDown(props)
     },
     onExit: () => {
