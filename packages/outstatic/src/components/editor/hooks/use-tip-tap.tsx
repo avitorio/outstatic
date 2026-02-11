@@ -274,13 +274,11 @@ export const useTipTap = ({ ...rhfMethods }) => {
         streamingStateRef.current = null
       }
     }
-    if (isLoading) {
-      document.addEventListener('keydown', onKeyDown)
-      window.addEventListener('mousedown', mousedownHandler)
-    } else {
-      document.removeEventListener('keydown', onKeyDown)
-      window.removeEventListener('mousedown', mousedownHandler)
-    }
+    if (!isLoading) return
+
+    document.addEventListener('keydown', onKeyDown)
+    window.addEventListener('mousedown', mousedownHandler)
+
     return () => {
       document.removeEventListener('keydown', onKeyDown)
       window.removeEventListener('mousedown', mousedownHandler)

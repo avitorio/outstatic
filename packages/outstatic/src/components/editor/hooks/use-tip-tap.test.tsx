@@ -61,6 +61,9 @@ function HookHarness({ setValue }: { setValue: jest.Mock }) {
   return null
 }
 
+const countEventCalls = (spy: jest.SpyInstance, eventType: string) =>
+  spy.mock.calls.filter(([event]) => event === eventType).length
+
 describe('useTipTap AI gating', () => {
   const complete = jest.fn()
   const stop = jest.fn()
@@ -74,9 +77,12 @@ describe('useTipTap AI gating', () => {
       }
     },
     commands: {
-      deleteRange: jest.fn()
+      deleteRange: jest.fn(),
+      addClass: jest.fn(),
+      removeClass: jest.fn()
     },
     getHTML: jest.fn(() => ''),
+    getText: jest.fn(() => 'Existing text'),
     isEmpty: false
   } as any
 
@@ -159,5 +165,66 @@ describe('useTipTap AI gating', () => {
     expect(complete).toHaveBeenCalledWith('Existing text', {
       body: { option: 'continue', command: '' }
     })
+  })
+
+  it('attaches and removes global listeners only during loading', () => {
+    const loadingState = { isLoading: false }
+
+    mockUseCompletion.mockImplementation(() => ({
+      complete,
+      completion: '',
+      isLoading: loadingState.isLoading,
+      stop
+    }))
+
+    const addDocumentListenerSpy = jest.spyOn(document, 'addEventListener')
+    const removeDocumentListenerSpy = jest.spyOn(document, 'removeEventListener')
+    const addWindowListenerSpy = jest.spyOn(window, 'addEventListener')
+    const removeWindowListenerSpy = jest.spyOn(window, 'removeEventListener')
+
+    const { rerender } = render(<HookHarness setValue={setValue} />)
+
+    const keydownAddsBefore = countEventCalls(addDocumentListenerSpy, 'keydown')
+    const mouseDownAddsBefore = countEventCalls(
+      addWindowListenerSpy,
+      'mousedown'
+    )
+    const keydownRemovesBefore = countEventCalls(
+      removeDocumentListenerSpy,
+      'keydown'
+    )
+    const mouseDownRemovesBefore = countEventCalls(
+      removeWindowListenerSpy,
+      'mousedown'
+    )
+
+    act(() => {
+      loadingState.isLoading = true
+      rerender(<HookHarness setValue={setValue} />)
+    })
+
+    expect(countEventCalls(addDocumentListenerSpy, 'keydown')).toBe(
+      keydownAddsBefore + 1
+    )
+    expect(countEventCalls(addWindowListenerSpy, 'mousedown')).toBe(
+      mouseDownAddsBefore + 1
+    )
+
+    act(() => {
+      loadingState.isLoading = false
+      rerender(<HookHarness setValue={setValue} />)
+    })
+
+    expect(countEventCalls(removeDocumentListenerSpy, 'keydown')).toBe(
+      keydownRemovesBefore + 1
+    )
+    expect(countEventCalls(removeWindowListenerSpy, 'mousedown')).toBe(
+      mouseDownRemovesBefore + 1
+    )
+
+    addDocumentListenerSpy.mockRestore()
+    removeDocumentListenerSpy.mockRestore()
+    addWindowListenerSpy.mockRestore()
+    removeWindowListenerSpy.mockRestore()
   })
 })
