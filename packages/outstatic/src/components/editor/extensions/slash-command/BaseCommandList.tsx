@@ -76,6 +76,7 @@ export const BaseCommandList = ({
       if (item) {
         if (item.title === 'Continue writing') {
           if (!(hasAIProviderKey || isPro)) {
+            editor.chain().focus().deleteRange(range).run()
             onShowUpgradeDialog(projectInfo?.accountSlug, dashboardRoute)
             return
           }
