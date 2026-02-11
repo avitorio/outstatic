@@ -17,6 +17,17 @@ import Link from 'next/link'
 import { OUTSTATIC_APP_URL } from '@/utils/constants'
 import { Button } from '../shadcn/button'
 
+const getUpgradeUrl = (
+  accountSlug: string | undefined,
+  dashboardRoute: string | undefined
+) => {
+  const baseRoute = dashboardRoute || '/outstatic'
+  const destination = accountSlug
+    ? `${OUTSTATIC_APP_URL}/home/${accountSlug}/billing`
+    : `${OUTSTATIC_APP_URL}/auth/sign-up?provider=github`
+  return `${baseRoute}/redirect?redirectTo=${encodeURIComponent(destination)}`
+}
+
 const features = [
   {
     icon: <Users className="h-5 w-5" />,
@@ -115,7 +126,7 @@ export function UpgradeDialog({
 
           <Button variant="default" size="lg" className="w-full" asChild>
             <Link
-              href={`${accountSlug ? `${dashboardRoute}/redirect?redirectTo=${encodeURIComponent(`${OUTSTATIC_APP_URL}/home/${accountSlug}/billing`)}` : `${dashboardRoute || '/outstatic'}/redirect?redirectTo=${encodeURIComponent(`${OUTSTATIC_APP_URL}/auth/sign-up?provider=github`)}`}`}
+              href={getUpgradeUrl(accountSlug, dashboardRoute)}
             >
               Upgrade to Pro
               <ArrowRight className="ml-2 h-4 w-4" />
