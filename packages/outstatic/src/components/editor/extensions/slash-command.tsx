@@ -2,12 +2,11 @@ import { Extension, Range } from '@tiptap/core'
 import { Editor, ReactRenderer } from '@tiptap/react'
 import Suggestion from '@tiptap/suggestion'
 import { ReactNode, useState } from 'react'
-import { createRoot, Root } from 'react-dom/client'
 import tippy from 'tippy.js'
 import { BaseCommandList } from '@/components/editor/extensions/slash-command/BaseCommandList'
 import ImageCommandList from '@/components/editor/extensions/slash-command/ImageCommandList'
 import { getSuggestionItems } from '@/components/editor/extensions/slash-command/getSuggestionItems'
-import { UpgradeDialog } from '@/components/ui/outstatic/upgrade-dialog'
+import type { UpgradeDialogHandler } from '@/components/ui/outstatic/upgrade-dialog-context'
 
 export type CommandItemProps = {
   title: string
@@ -22,11 +21,6 @@ export type CommandProps = {
   editor: Editor
   range: Range
 }
-
-export type UpgradeDialogHandler = (
-  accountSlug?: string,
-  dashboardRoute?: string
-) => void
 
 const Command = Extension.create({
   name: 'slash-command',
@@ -107,85 +101,19 @@ const CommandList = ({
   ) : null
 }
 
-// Standalone upgrade dialog component for rendering outside the popup
-const UpgradeDialogWrapper = ({
-  open,
-  onOpenChange,
-  accountSlug,
-  dashboardRoute
-}: {
-  open: boolean
-  onOpenChange: (open: boolean) => void
-  accountSlug?: string
-  dashboardRoute?: string
-}) => {
-  return (
-    <UpgradeDialog
-      open={open}
-      onOpenChange={onOpenChange}
-      accountSlug={accountSlug}
-      dashboardRoute={dashboardRoute}
-      title="Write faster with AI"
-    />
-  )
-}
-
-const renderItems = (onShowUpgradeDialog?: UpgradeDialogHandler) => {
+const renderItems = (onShowUpgradeDialog: UpgradeDialogHandler) => {
   let component: ReactRenderer | null = null
   let popup: any | null = null
-  let dialogContainer: HTMLDivElement | null = null
-  let dialogRoot: Root | null = null
-  let upgradeDialogData: {
-    accountSlug?: string
-    dashboardRoute?: string
-  } | null = null
-
-  const showUpgradeDialog = (accountSlug?: string, dashboardRoute?: string) => {
-    if (onShowUpgradeDialog) {
-      popup?.[0]?.hide()
-      onShowUpgradeDialog(accountSlug, dashboardRoute)
-      return
-    }
-
-    upgradeDialogData = { accountSlug, dashboardRoute }
-
-    // Close the popup first
-    popup?.[0]?.hide()
-
-    // Create container for dialog if it doesn't exist
-    if (!dialogContainer) {
-      dialogContainer = document.createElement('div')
-      dialogContainer.id = 'slash-command-upgrade-dialog'
-      document.body.appendChild(dialogContainer)
-      dialogRoot = createRoot(dialogContainer)
-    }
-
-    // Render the dialog
-    dialogRoot?.render(
-      <UpgradeDialogWrapper
-        open={true}
-        onOpenChange={(open) => {
-          if (!open) {
-            // Unmount the dialog when closed
-            dialogRoot?.unmount()
-            dialogContainer?.remove()
-            dialogContainer = null
-            dialogRoot = null
-          }
-        }}
-        accountSlug={upgradeDialogData?.accountSlug}
-        dashboardRoute={upgradeDialogData?.dashboardRoute}
-      />
-    )
-  }
 
   return {
     onStart: (props: { editor: Editor; clientRect: DOMRect }) => {
       component = new ReactRenderer(CommandList, {
         props: {
           ...props,
-          onShowUpgradeDialog: (accountSlug?: string, dashboardRoute?: string) =>
-            showUpgradeDialog(accountSlug, dashboardRoute)
+          onShowUpgradeDialog: (accountSlug?: string, dashboardRoute?: string) => {
+            popup?.[0]?.hide()
+            onShowUpgradeDialog(accountSlug, dashboardRoute)
+          }
         },
         editor: props.editor
       })
@@ -204,8 +132,10 @@ const renderItems = (onShowUpgradeDialog?: UpgradeDialogHandler) => {
     onUpdate: (props: { editor: Editor; clientRect: DOMRect }) => {
       component?.updateProps({
         ...props,
-        onShowUpgradeDialog: (accountSlug?: string, dashboardRoute?: string) =>
-          showUpgradeDialog(accountSlug, dashboardRoute)
+        onShowUpgradeDialog: (accountSlug?: string, dashboardRoute?: string) => {
+          popup?.[0]?.hide()
+          onShowUpgradeDialog(accountSlug, dashboardRoute)
+        }
       })
 
       popup &&
@@ -226,16 +156,6 @@ const renderItems = (onShowUpgradeDialog?: UpgradeDialogHandler) => {
     onExit: () => {
       popup?.[0]?.destroy()
       component?.destroy()
-
-      // Clean up dialog container if it exists
-      if (dialogRoot) {
-        dialogRoot.unmount()
-        dialogRoot = null
-      }
-      if (dialogContainer) {
-        dialogContainer.remove()
-        dialogContainer = null
-      }
     }
   }
 }
@@ -243,15 +163,11 @@ const renderItems = (onShowUpgradeDialog?: UpgradeDialogHandler) => {
 export const createSlashCommand = ({
   onShowUpgradeDialog
 }: {
-  onShowUpgradeDialog?: UpgradeDialogHandler
-} = {}) =>
+  onShowUpgradeDialog: UpgradeDialogHandler
+}) =>
   Command.configure({
     suggestion: {
       items: getSuggestionItems,
       render: () => renderItems(onShowUpgradeDialog)
     }
   })
-
-const SlashCommand = createSlashCommand()
-
-export default SlashCommand

@@ -13,10 +13,8 @@ import StarterKit from '@tiptap/starter-kit'
 import { common, createLowlight } from 'lowlight'
 import { Markdown } from 'tiptap-markdown'
 import CodeBlock from '@/components/editor/extensions/code-block'
-import {
-  createSlashCommand,
-  type UpgradeDialogHandler
-} from '@/components/editor/extensions/slash-command'
+import { createSlashCommand } from '@/components/editor/extensions/slash-command'
+import type { UpgradeDialogHandler } from '@/components/ui/outstatic/upgrade-dialog-context'
 import { ToggleClass } from '@/components/editor/extensions/toggle-class'
 import { Mathematics } from '@/components/editor/extensions/mathematics'
 import LinkParser from '@/components/editor/extensions/link-parser'
@@ -24,11 +22,11 @@ import { AIHighlight } from '@/components/editor/extensions/ai-higlight'
 import { cn } from '@/utils/ui'
 
 export type TiptapExtensionsOptions = {
-  onShowUpgradeDialog?: UpgradeDialogHandler
+  onShowUpgradeDialog: UpgradeDialogHandler
 }
 
 export const getTiptapExtensions = (
-  options: TiptapExtensionsOptions = {}
+  options: TiptapExtensionsOptions
 ) => [
   Markdown.configure({
     html: false,
@@ -145,5 +143,3 @@ export const getTiptapExtensions = (
   TableHeader,
   TableCell
 ] as AnyExtension[] // TODO: fix this type
-
-export const TiptapExtensions = getTiptapExtensions()
