@@ -53,6 +53,10 @@ export const Sidebar = ({ additionalRoutes }: SidebarProps) => {
   const hasCollections = collections && collections.length > 0
   const hasSingletons = singletons && singletons.length > 0
   const hasContentTypes = hasCollections || hasSingletons
+  const apiKeysRedirectPath =
+    projectInfo?.accountSlug && projectInfo?.projectSlug
+      ? `${OUTSTATIC_APP_URL}/home/${projectInfo.accountSlug}/${projectInfo.projectSlug}/api-keys`
+      : `${OUTSTATIC_APP_URL}/auth/sign-up?provider=github&feature=api-keys`
 
   const routes = [
     {
@@ -68,83 +72,83 @@ export const Sidebar = ({ additionalRoutes }: SidebarProps) => {
     },
     ...(hasContentTypes
       ? [
-          {
-            label: 'Content',
-            collapsible: false,
-            children: [
-              ...(collections && collections.length > 0
-                ? [
-                    {
-                      label: 'Collections',
-                      collapsible: true,
-                      children: collections.map((collection) => ({
-                        label: collection.title,
-                        path: `${dashboardRoute}/${collection.slug}`,
-                        Icon: <Folder className={'w-4'} />,
-                        renderAction: (
-                          <TooltipProvider>
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <Link
-                                  href={`${dashboardRoute}/${collection.slug}/new`}
-                                  className="invisible group-hover/sub-menu-item:visible"
-                                  aria-label={`Create new item in collection ${collection.title}`}
-                                >
-                                  <Plus className="w-3 h-3 pointer-events-none" />
-                                </Link>
-                              </TooltipTrigger>
-                              <TooltipContent className="pointer-events-none">
-                                <p>
-                                  Create new{' '}
-                                  <span className="inline-block">
-                                    {singular(collection.title)}
-                                  </span>
-                                </p>
-                              </TooltipContent>
-                            </Tooltip>
-                          </TooltipProvider>
-                        )
-                      }))
-                    }
-                  ]
-                : []),
-              ...(hasSingletons
-                ? [
-                    {
-                      label: 'Singletons',
-                      collapsible: true,
-                      renderAction: (
-                        <TooltipProvider>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <Link
-                                href={`${dashboardRoute}/singletons/new`}
-                                className="invisible group-hover/collapsible:visible"
-                                aria-label={`Create new singleton`}
-                              >
-                                <Plus className="w-3 h-3 pointer-events-none" />
-                              </Link>
-                            </TooltipTrigger>
-                            <TooltipContent className="pointer-events-none">
-                              <p>
-                                Create new{' '}
-                                <span className="inline-block">Singleton</span>
-                              </p>
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
-                      ),
-                      children: singletons.map((singleton) => ({
-                        label: singleton.title,
-                        path: `${dashboardRoute}/singletons/${singleton.slug}`,
-                        Icon: <File className={'w-4'} />
-                      }))
-                    }
-                  ]
-                : [])
-            ]
-          }
-        ]
+        {
+          label: 'Content',
+          collapsible: false,
+          children: [
+            ...(collections && collections.length > 0
+              ? [
+                {
+                  label: 'Collections',
+                  collapsible: true,
+                  children: collections.map((collection) => ({
+                    label: collection.title,
+                    path: `${dashboardRoute}/${collection.slug}`,
+                    Icon: <Folder className={'w-4'} />,
+                    renderAction: (
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Link
+                              href={`${dashboardRoute}/${collection.slug}/new`}
+                              className="invisible group-hover/sub-menu-item:visible"
+                              aria-label={`Create new item in collection ${collection.title}`}
+                            >
+                              <Plus className="w-3 h-3 pointer-events-none" />
+                            </Link>
+                          </TooltipTrigger>
+                          <TooltipContent className="pointer-events-none">
+                            <p>
+                              Create new{' '}
+                              <span className="inline-block">
+                                {singular(collection.title)}
+                              </span>
+                            </p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    )
+                  }))
+                }
+              ]
+              : []),
+            ...(hasSingletons
+              ? [
+                {
+                  label: 'Singletons',
+                  collapsible: true,
+                  renderAction: (
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Link
+                            href={`${dashboardRoute}/singletons/new`}
+                            className="invisible group-hover/collapsible:visible"
+                            aria-label={`Create new singleton`}
+                          >
+                            <Plus className="w-3 h-3 pointer-events-none" />
+                          </Link>
+                        </TooltipTrigger>
+                        <TooltipContent className="pointer-events-none">
+                          <p>
+                            Create new{' '}
+                            <span className="inline-block">Singleton</span>
+                          </p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  ),
+                  children: singletons.map((singleton) => ({
+                    label: singleton.title,
+                    path: `${dashboardRoute}/singletons/${singleton.slug}`,
+                    Icon: <File className={'w-4'} />
+                  }))
+                }
+              ]
+              : [])
+          ]
+        }
+      ]
       : []),
     {
       label: 'Libraries',
@@ -160,68 +164,49 @@ export const Sidebar = ({ additionalRoutes }: SidebarProps) => {
       ? additionalRoutes
       : hasPermission('settings.manage')
         ? [
-            {
-              label: 'Settings',
-              children: [
-                {
-                  label: 'Members',
-                  path: `${dashboardRoute}/redirect?redirectTo=${encodeURIComponent(`${OUTSTATIC_APP_URL}/home/${projectInfo?.accountSlug}/${projectInfo?.projectSlug}/members`)}`,
-                  newTab: true,
-                  Icon: <Users className={'w-4'} />,
-                  badge: isPro ? undefined : (
-                    <Badge variant="outline">
-                      <span className="text-xs font-mono">PRO</span>
-                    </Badge>
-                  ),
-                  dialog: isPro ? undefined : (
-                    <UpgradeDialog
-                      accountSlug={projectInfo?.accountSlug}
-                      dashboardRoute={dashboardRoute}
+          {
+            label: 'Settings',
+            children: [
+              {
+                label: 'Members',
+                path: `${dashboardRoute}/redirect?redirectTo=${encodeURIComponent(`${OUTSTATIC_APP_URL}/home/${projectInfo?.accountSlug}/${projectInfo?.projectSlug}/members`)}`,
+                newTab: true,
+                Icon: <Users className={'w-4'} />,
+                badge: isPro ? undefined : (
+                  <Badge variant="outline">
+                    <span className="text-xs font-mono">PRO</span>
+                  </Badge>
+                ),
+                dialog: isPro ? undefined : (
+                  <UpgradeDialog
+                    accountSlug={projectInfo?.accountSlug}
+                    dashboardRoute={dashboardRoute}
+                  >
+                    <div
+                      className={cn(
+                        'flex items-center gap-2 cursor-pointer w-full'
+                      )}
                     >
-                      <div
-                        className={cn(
-                          'flex items-center gap-2 cursor-pointer w-full'
-                        )}
-                      >
-                        <Users className={'w-4'} />
-                        Members
-                      </div>
-                    </UpgradeDialog>
-                  )
-                },
-                {
-                  label: 'API Keys',
-                  path: `${dashboardRoute}/redirect?redirectTo=${encodeURIComponent(`${OUTSTATIC_APP_URL}/home/${projectInfo?.accountSlug}/${projectInfo?.projectSlug}/api-keys`)}`,
-                  newTab: true,
-                  Icon: <Key className={'w-4'} />,
-                  badge: isPro ? undefined : (
-                    <Badge variant="outline">PRO</Badge>
-                  ),
-                  dialog: isPro ? undefined : (
-                    <UpgradeDialog
-                      title="Unlock API Keys"
-                      accountSlug={projectInfo?.accountSlug}
-                      dashboardRoute={dashboardRoute}
-                    >
-                      <div
-                        className={cn(
-                          'flex items-center gap-2 cursor-pointer w-full'
-                        )}
-                      >
-                        <Key className={'w-4'} />
-                        API Keys
-                      </div>
-                    </UpgradeDialog>
-                  )
-                },
-                {
-                  label: 'Settings',
-                  path: `${dashboardRoute}/settings`,
-                  Icon: <Settings className={'w-4'} />
-                }
-              ].filter((route) => !!route)
-            }
-          ]
+                      <Users className={'w-4'} />
+                      Members
+                    </div>
+                  </UpgradeDialog>
+                )
+              },
+              {
+                label: 'API Keys',
+                path: `${dashboardRoute}/redirect?redirectTo=${encodeURIComponent(apiKeysRedirectPath)}`,
+                newTab: true,
+                Icon: <Key className={'w-4'} />
+              },
+              {
+                label: 'Settings',
+                path: `${dashboardRoute}/settings`,
+                Icon: <Settings className={'w-4'} />
+              }
+            ].filter((route) => !!route)
+          }
+        ]
         : [])
   ] satisfies z.infer<typeof NavigationConfigSchema>['routes']
 

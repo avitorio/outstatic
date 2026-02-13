@@ -23,6 +23,7 @@ export type ProjectInfo = {
   accountSlug: string
   repoOwner: string
   repoSlug: string
+  isPro: boolean
 }
 
 export type HandshakeFetcher = (apiKey: string) => Promise<ProjectInfo | null>
@@ -35,7 +36,7 @@ interface CacheEntry {
 // Configuration
 const CONFIG = {
   IN_MEMORY_TTL_MS:
-    process.env.NODE_ENV === 'development' ? 60 * 1000 : 30 * 60 * 1000,
+    process.env.NODE_ENV === 'development' ? 0 : 30 * 60 * 1000,
   NEXT_CACHE_TTL_SECONDS: process.env.NODE_ENV === 'development' ? 10 : 30 * 60,
   CACHE_TAG: 'project-handshake',
   CACHE_KEY_PREFIX: 'project-handshake'

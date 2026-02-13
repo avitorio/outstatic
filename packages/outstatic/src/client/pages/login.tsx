@@ -173,7 +173,7 @@ export default function Login({
                           </>
                         ) : (
                           <UpgradeDialog
-                            title="Send Magic Link"
+                            feature="team"
                             open={showUpgradeDialog}
                             onOpenChange={setShowUpgradeDialog}
                           >

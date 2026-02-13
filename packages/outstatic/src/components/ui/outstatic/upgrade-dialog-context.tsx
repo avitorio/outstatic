@@ -8,7 +8,10 @@ import {
   type ReactNode
 } from 'react'
 
-import { UpgradeDialog } from '@/components/ui/outstatic/upgrade-dialog'
+import {
+  UpgradeDialog,
+  type UpgradeFeature
+} from '@/components/ui/outstatic/upgrade-dialog'
 import { useOutstatic } from '@/utils/hooks/useOutstatic'
 
 export type UpgradeDialogHandler = (
@@ -22,24 +25,26 @@ type UpgradeDialogContextValue = {
   setUpgradeDialogOpen: (open: boolean) => void
 }
 
-const UpgradeDialogContext = createContext<UpgradeDialogContextValue | undefined>(
-  undefined
-)
+const UpgradeDialogContext = createContext<
+  UpgradeDialogContextValue | undefined
+>(undefined)
 
 export function useUpgradeDialog() {
   const context = useContext(UpgradeDialogContext)
   if (context === undefined) {
-    throw new Error('useUpgradeDialog must be used within UpgradeDialogProvider')
+    throw new Error(
+      'useUpgradeDialog must be used within UpgradeDialogProvider'
+    )
   }
   return context
 }
 
 export function UpgradeDialogProvider({
   children,
-  title
+  feature = 'team'
 }: {
   children: ReactNode
-  title?: string
+  feature?: UpgradeFeature
 }) {
   const { dashboardRoute, projectInfo } = useOutstatic()
   const [isUpgradeDialogOpen, setIsUpgradeDialogOpen] = useState(false)
@@ -79,7 +84,7 @@ export function UpgradeDialogProvider({
     <UpgradeDialogContext.Provider value={contextValue}>
       {children}
       <UpgradeDialog
-        title={title ?? 'Write faster with AI'}
+        feature={feature}
         open={isUpgradeDialogOpen}
         onOpenChange={contextValue.setUpgradeDialogOpen}
         accountSlug={resolvedAccountSlug}

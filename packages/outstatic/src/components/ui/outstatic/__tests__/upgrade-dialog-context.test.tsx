@@ -14,20 +14,20 @@ jest.mock('@/components/ui/outstatic/upgrade-dialog', () => ({
   UpgradeDialog: ({
     open = false,
     onOpenChange,
-    title,
+    feature,
     accountSlug,
     dashboardRoute
   }: {
     open?: boolean
     onOpenChange?: (open: boolean) => void
-    title?: string
+    feature?: 'team' | 'api-keys' | 'ai'
     accountSlug?: string
     dashboardRoute?: string
   }) => (
     <div
       data-testid="upgrade-dialog"
       data-open={String(open)}
-      data-title={title ?? ''}
+      data-feature={feature ?? ''}
       data-account-slug={accountSlug ?? ''}
       data-dashboard-route={dashboardRoute ?? ''}
     >
@@ -94,7 +94,7 @@ describe('UpgradeDialog context', () => {
     consoleErrorSpy.mockRestore()
   })
 
-  it('uses the default dialog title when no title prop is provided', () => {
+  it('uses the default feature when no feature prop is provided', () => {
     render(
       <UpgradeDialogProvider>
         <TestConsumer />
@@ -102,14 +102,14 @@ describe('UpgradeDialog context', () => {
     )
 
     expect(screen.getByTestId('upgrade-dialog')).toHaveAttribute(
-      'data-title',
-      'Write faster with AI'
+      'data-feature',
+      'team'
     )
   })
 
   it('opens the dialog with project defaults via openUpgradeDialog', () => {
     render(
-      <UpgradeDialogProvider title="Upgrade Title">
+      <UpgradeDialogProvider feature="ai">
         <TestConsumer />
       </UpgradeDialogProvider>
     )
@@ -130,8 +130,8 @@ describe('UpgradeDialog context', () => {
       '/outstatic'
     )
     expect(screen.getByTestId('upgrade-dialog')).toHaveAttribute(
-      'data-title',
-      'Upgrade Title'
+      'data-feature',
+      'ai'
     )
   })
 

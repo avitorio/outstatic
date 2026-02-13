@@ -72,7 +72,7 @@ const renderContentRoute = (slug: string, slug2: string, title: string) => {
   if (slug2) {
     return (
       <EditorProvider>
-        <UpgradeDialogProvider title="Write faster with AI">
+        <UpgradeDialogProvider feature="ai">
           <EditDocument collection={slug} />
         </UpgradeDialogProvider>
       </EditorProvider>
@@ -129,7 +129,7 @@ const renderRoute = ({
   if (isSingletonRoute(slug, slug2, singletons)) {
     return (
       <EditorProvider>
-        <UpgradeDialogProvider title="Write faster with AI">
+        <UpgradeDialogProvider feature="ai">
           <EditSingleton slug={slug2} />
         </UpgradeDialogProvider>
       </EditorProvider>

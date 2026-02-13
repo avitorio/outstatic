@@ -17,15 +17,28 @@ import Link from 'next/link'
 import { OUTSTATIC_APP_URL } from '@/utils/constants'
 import { Button } from '../shadcn/button'
 
+export type UpgradeFeature = 'team' | 'api-keys' | 'ai'
+
+const headline: Record<UpgradeFeature, string> = {
+  team: 'Unlock Team Collaboration',
+  'api-keys': 'Unlock API Keys',
+  ai: 'Write faster with AI'
+}
+
 const getUpgradeUrl = (
   accountSlug: string | undefined,
-  dashboardRoute: string | undefined
+  dashboardRoute: string | undefined,
+  feature: UpgradeFeature
 ) => {
   const baseRoute = dashboardRoute || '/outstatic'
+
   const destination = accountSlug
-    ? `${OUTSTATIC_APP_URL}/home/${accountSlug}/billing`
-    : `${OUTSTATIC_APP_URL}/auth/sign-up?provider=github`
-  return `${baseRoute}/redirect?redirectTo=${encodeURIComponent(destination)}`
+    ? new URL(`${OUTSTATIC_APP_URL}/home/${accountSlug}/billing`)
+    : new URL(`${OUTSTATIC_APP_URL}/auth/sign-up?provider=github`)
+
+  destination.searchParams.set('feature', feature)
+
+  return `${baseRoute}/redirect?redirectTo=${encodeURIComponent(destination.toString())}`
 }
 
 const features = [
@@ -50,13 +63,13 @@ export function UpgradeDialog({
   open = false,
   onOpenChange,
   children,
-  title,
+  feature = 'team',
   accountSlug,
   dashboardRoute
 }: React.PropsWithChildren<{
   open?: boolean
   onOpenChange?: (open: boolean) => void
-  title?: string
+  feature?: UpgradeFeature
   accountSlug?: string
   dashboardRoute?: string
 }>) {
@@ -80,9 +93,9 @@ export function UpgradeDialog({
         className="max-w-2xl"
         onInteractOutside={(e) => e.preventDefault()}
       >
-        <DialogHeader className="text-center">
+        <DialogHeader className="text-center sm:text-center">
           <DialogTitle className="text-2xl font-semibold">
-            {title || 'Unlock Team Collaboration'}
+            {headline[feature]}
           </DialogTitle>
           <DialogDescription className="text-muted-foreground mx-auto max-w-sm text-base">
             Upgrade to Pro and unlock powerful features to grow your team and
@@ -90,7 +103,7 @@ export function UpgradeDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <div className="mt-6">
+        <div>
           <FeatureGrid className="flex flex-col gap-4">
             {features.map((feature) => (
               <div
@@ -114,7 +127,7 @@ export function UpgradeDialog({
           </FeatureGrid>
         </div>
 
-        <div className="mt-6 space-y-4">
+        <div className="space-y-4">
           <div className="from-primary/10 to-primary/5 rounded-lg bg-gradient-to-r p-4 text-center">
             <p className="text-foreground text-sm font-medium">
               Ready to scale your team?
@@ -125,9 +138,7 @@ export function UpgradeDialog({
           </div>
 
           <Button variant="default" size="lg" className="w-full" asChild>
-            <Link
-              href={getUpgradeUrl(accountSlug, dashboardRoute)}
-            >
+            <Link target="_blank" rel="noopener noreferrer" href={getUpgradeUrl(accountSlug, dashboardRoute, feature)}>
               Upgrade to Pro
               <ArrowRight className="ml-2 h-4 w-4" />
             </Link>

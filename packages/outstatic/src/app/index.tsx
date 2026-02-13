@@ -61,7 +61,8 @@ async function fetchProjectFromHandshake(
         projectSlug: data.project_slug,
         accountSlug: data.account_slug,
         repoOwner: data.repo_owner,
-        repoSlug: data.repo_slug
+        repoSlug: data.repo_slug,
+        isPro: data.is_pro
       }
     } else {
       // Log error but don't fail - allow Outstatic to work without projectInfo
@@ -100,9 +101,8 @@ export async function Outstatic({
       process.env.VERCEL_GIT_REPO_SLUG ||
       '',
     OST_REPO_BRANCH: repoBranch || process.env.OST_REPO_BRANCH,
-    OST_CONTENT_PATH: `${repoBranch || process.env.OST_REPO_BRANCH}:${
-      process.env.OST_MONOREPO_PATH ? process.env.OST_MONOREPO_PATH + '/' : ''
-    }${process.env.OST_CONTENT_PATH || ''}`,
+    OST_CONTENT_PATH: `${repoBranch || process.env.OST_REPO_BRANCH}:${process.env.OST_MONOREPO_PATH ? process.env.OST_MONOREPO_PATH + '/' : ''
+      }${process.env.OST_CONTENT_PATH || ''}`,
     OST_MONOREPO_PATH: '',
     OST_BASE_PATH: ''
   }
@@ -142,13 +142,13 @@ export async function Outstatic({
         : 'https://api.github.com/graphql',
     publicMediaPath: process.env.OST_PUBLIC_MEDIA_PATH || '',
     repoMediaPath: process.env.OST_REPO_MEDIA_PATH || '',
-    isPro: !!OST_PRO_API_KEY && !!projectInfo,
+    isPro: projectInfo?.isPro || false,
     projectInfo: projectInfo
       ? {
-          projectId: projectInfo.projectId,
-          projectSlug: projectInfo.projectSlug,
-          accountSlug: projectInfo.accountSlug
-        }
+        projectId: projectInfo.projectId,
+        projectSlug: projectInfo.projectSlug,
+        accountSlug: projectInfo.accountSlug
+      }
       : undefined
   } as OutstaticData
 }
