@@ -7,9 +7,9 @@ export const OUTSTATIC_APP_URL =
   process.env.NEXT_PUBLIC_OST_APP_URL ?? `https://outstatic.com`
 
 // Pro API configuration (server-side only)
-export const OST_PRO_API_KEY = process.env.OST_PRO_API_KEY
-export const OST_PRO_API_URL =
-  process.env.OST_PRO_API_URL || `${OUTSTATIC_APP_URL}/api`
+export const OUTSTATIC_API_KEY = process.env.OUTSTATIC_API_KEY
+export const OUTSTATIC_API_URL =
+  process.env.OUTSTATIC_API_URL || `${OUTSTATIC_APP_URL}/api`
 
 // API configuration
 export const OUTSTATIC_API_PATH =

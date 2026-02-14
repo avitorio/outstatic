@@ -15,6 +15,7 @@ import { Button } from '@/components/ui/shadcn/button'
 import { AlertCircleIcon, Mail } from 'lucide-react'
 import { Input } from '@/components/ui/shadcn/input'
 import { UpgradeDialog } from '@/components/ui/outstatic/upgrade-dialog'
+import { ApiKeyLoginDialog } from '@/components/ui/outstatic/api-key-login-dialog'
 
 type Errors = keyof typeof loginErrors
 
@@ -34,12 +35,24 @@ export default function Login({
   const [emailSent, setEmailSent] = useState(false)
   const [emailLoading, setEmailLoading] = useState(false)
   const [showUpgradeDialog, setShowUpgradeDialog] = useState(false)
+  const [showApiKeyDialog, setShowApiKeyDialog] = useState(false)
 
   const router = useRouter()
 
   useEffect(() => {
     document.title = 'Outstatic | Login'
   }, [])
+
+  const navigateToError = (errorCode: string) => {
+    if (errorCode === 'auth-not-configured') {
+      setShowApiKeyDialog(true)
+      return
+    }
+
+    const currentUrl = new URL(window.location.href)
+    currentUrl.searchParams.set('error', errorCode)
+    router.push(currentUrl.pathname + currentUrl.search)
+  }
 
   const handleLogin = async (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault()
@@ -49,12 +62,31 @@ export default function Login({
       const response = await fetch(
         `${basePath ? basePath + '/' : ''}${OUTSTATIC_API_PATH}/login`
       )
-      const data = await response.json()
+      const data = await response.json().catch(() => null)
 
-      if (data.url) {
-        router.push(data.url)
+      if (!response.ok) {
+        const errorCode =
+          data && typeof data.error === 'string'
+            ? data.error
+            : 'github-relay-failed'
+        navigateToError(errorCode)
+        setIsLoading(false)
+        return
       }
+
+      if (data && typeof data.url === 'string') {
+        router.push(data.url)
+        return
+      }
+
+      const errorCode =
+        data && typeof data.error === 'string'
+          ? data.error
+          : 'github-relay-failed'
+      navigateToError(errorCode)
+      setIsLoading(false)
     } catch {
+      navigateToError('github-relay-failed')
       setIsLoading(false)
     }
   }
@@ -96,6 +128,11 @@ export default function Login({
 
   return (
     <>
+      <ApiKeyLoginDialog
+        open={showApiKeyDialog}
+        onOpenChange={setShowApiKeyDialog}
+        basePath={basePath}
+      />
       <div id="outstatic">
         <LoadingBackground isLoading={isLoading}>
           <main className="relative z-10 flex h-screen items-center justify-center p-4">

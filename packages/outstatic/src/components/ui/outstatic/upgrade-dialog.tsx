@@ -33,7 +33,7 @@ const getUpgradeUrl = (
   const baseRoute = dashboardRoute || '/outstatic'
 
   const destination = accountSlug
-    ? new URL(`${OUTSTATIC_APP_URL}/home/${accountSlug}/billing`)
+    ? new URL(`${OUTSTATIC_APP_URL}/home/${accountSlug}/`)
     : new URL(`${OUTSTATIC_APP_URL}/auth/sign-up?provider=github`)
 
   destination.searchParams.set('feature', feature)

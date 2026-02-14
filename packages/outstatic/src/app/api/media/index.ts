@@ -1,6 +1,6 @@
 import { getLoginSession } from '@/utils/auth/auth'
 import type { Request } from '@/app/api/index'
-import { OST_PRO_API_URL } from '@/utils/constants'
+import { OUTSTATIC_API_URL } from '@/utils/constants'
 
 export default async function GET(req: Request): Promise<Response> {
   const session = await getLoginSession()
@@ -20,7 +20,7 @@ export default async function GET(req: Request): Promise<Response> {
     }
 
     // Just pass the media path - the API will lookup the project from repo owner/slug
-    const proxyUrl = `${OST_PRO_API_URL}/outstatic/media/${mediaPath}`
+    const proxyUrl = `${OUTSTATIC_API_URL}/outstatic/media/${mediaPath}`
 
     try {
       const response = await fetch(proxyUrl, {

@@ -5,7 +5,7 @@ import {
   TOKEN_NAME,
   COOKIE_SETTINGS,
   SESSION_ERROR_MESSAGES,
-  OST_PRO_API_URL,
+  OUTSTATIC_API_URL,
   MAX_AGE
 } from '@/utils/constants'
 import { getAccessToken } from './github'
@@ -169,7 +169,7 @@ export async function refreshToken(
     } else if (session.provider === 'magic-link') {
       // Magic link - call main SaaS app
       const response = await fetch(
-        `${OST_PRO_API_URL}/outstatic/auth/refresh-token`,
+        `${OUTSTATIC_API_URL}/outstatic/auth/refresh-token`,
         {
           method: 'POST',
           headers: {

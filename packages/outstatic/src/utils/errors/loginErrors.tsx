@@ -50,6 +50,42 @@ const loginErrors = {
       Please check your project settings and ensure you&apos;re using a valid
       API key.
     </>
+  ),
+  'auth-not-configured': (
+    <>
+      Login is not configured. <br />
+      Add <code>OST_GITHUB_ID</code> and <code>OST_GITHUB_SECRET</code>, or set{' '}
+      <code>OUTSTATIC_API_KEY</code> to use GitHub relay login.
+    </>
+  ),
+  'project-url-not-configured': (
+    <>
+      Callback origins are not configured for this project. <br />
+      Add callback base URLs in outstatic.com and ensure each one ends with{' '}
+      <code>/outstatic</code>.
+    </>
+  ),
+  'invalid-callback-domain': (
+    <>
+      The login callback URL does not match your configured callback origins.{' '}
+      <br />
+      Ensure this deployment URL is added in outstatic.com and ends with{' '}
+      <code>/outstatic</code>.
+    </>
+  ),
+  'invalid-callback-target': (
+    <>
+      Invalid callback target. <br />
+      GitHub relay requires a callback route ending in{' '}
+      <code>/api/outstatic/callback</code>.
+    </>
+  ),
+  'github-relay-failed': (
+    <>
+      GitHub relay login failed. <br />
+      Please try again. If the problem persists, check your callback origins and
+      API key configuration.
+    </>
   )
 }
 

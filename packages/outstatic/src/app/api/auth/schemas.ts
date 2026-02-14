@@ -29,6 +29,7 @@ export type MagicLinkCallback = z.infer<typeof MagicLinkCallbackSchema>
 export const ExchangeTokenResponseSchema = z.object({
   user: z.object({
     email: z.string().email(),
+    login: z.string().optional().nullable(),
     name: z.string().optional().nullable(),
     avatar_url: z
       .string()

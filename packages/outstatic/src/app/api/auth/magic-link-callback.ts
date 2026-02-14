@@ -3,12 +3,15 @@ import {
   AppPermissions,
   setLoginSession
 } from '@/utils/auth/auth'
-import { OST_PRO_API_URL } from '@/utils/constants'
+import { OUTSTATIC_API_URL } from '@/utils/constants'
 import { NextRequest, NextResponse } from 'next/server'
 import { MagicLinkCallbackSchema, ExchangeTokenResponseSchema } from './schemas'
 import { ZodError } from 'zod'
 
 export default async function GET(request: NextRequest) {
+  const basePath = (process.env.OST_BASE_PATH || '').replace(/\/+$/, '')
+  const dashboardPath = `${basePath}/outstatic`
+
   try {
     const url = new URL(request.url)
     const queryParams = Object.fromEntries(url.searchParams.entries())
@@ -18,9 +21,9 @@ export default async function GET(request: NextRequest) {
       MagicLinkCallbackSchema.parse(queryParams)
 
     // Exchange the one-time token for session tokens
-    const apiBase = OST_PRO_API_URL?.endsWith('/')
-      ? OST_PRO_API_URL
-      : `${OST_PRO_API_URL ?? ''}/`
+    const apiBase = OUTSTATIC_API_URL?.endsWith('/')
+      ? OUTSTATIC_API_URL
+      : `${OUTSTATIC_API_URL ?? ''}/`
 
     const exchangeUrl = new URL('outstatic/auth/exchange-token', apiBase)
 
@@ -37,7 +40,7 @@ export default async function GET(request: NextRequest) {
 
     if (!response.ok) {
       return NextResponse.redirect(
-        new URL('/outstatic?error=invalid_token', request.url)
+        new URL(`${dashboardPath}?error=invalid_token`, request.url)
       )
     }
 
@@ -54,7 +57,7 @@ export default async function GET(request: NextRequest) {
     const session: LoginSession = {
       user: {
         name: user.name || user.email,
-        login: user.email,
+        login: user.login || user.email,
         email: user.email,
         image: user.avatar_url || '',
         permissions: (user.permissions as AppPermissions[]) || []
@@ -70,7 +73,7 @@ export default async function GET(request: NextRequest) {
     await setLoginSession(session)
 
     // Redirect to return_url if provided, otherwise fallback to /outstatic
-    const redirectUrl = return_url ?? new URL('/outstatic', request.url).href
+    const redirectUrl = return_url ?? new URL(dashboardPath, request.url).href
 
     // Validate it's a relative URL or same-origin
     const validatedUrl = new URL(redirectUrl, request.url)
@@ -84,7 +87,7 @@ export default async function GET(request: NextRequest) {
     if (error instanceof ZodError) {
       console.error('Magic link callback validation error:', error.errors)
       return NextResponse.redirect(
-        new URL('/outstatic?error=invalid_data', request.url)
+        new URL(`${dashboardPath}?error=invalid_data`, request.url)
       )
     }
 
@@ -92,7 +95,7 @@ export default async function GET(request: NextRequest) {
     console.error('Magic link callback error:', error)
 
     return NextResponse.redirect(
-      new URL('/outstatic?error=callback_error', request.url)
+      new URL(`${dashboardPath}?error=callback_error`, request.url)
     )
   }
 }

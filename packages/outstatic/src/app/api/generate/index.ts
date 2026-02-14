@@ -1,6 +1,6 @@
 import { getLoginSession } from '@/utils/auth/auth'
 import { createOpenAI } from '@ai-sdk/openai'
-import { OST_PRO_API_URL } from '@/utils/constants'
+import { OUTSTATIC_API_URL } from '@/utils/constants'
 import { ModelMessage, streamText } from 'ai'
 import { match } from 'ts-pattern'
 
@@ -19,7 +19,7 @@ export default async function POST(req: Request): Promise<Response> {
   if (
     !(
       process.env.OPENAI_API_KEY ||
-      process.env.OST_PRO_API_KEY ||
+      process.env.OUTSTATIC_API_KEY ||
       process.env.AI_GATEWAY_API_KEY
     )
   ) {
@@ -31,13 +31,13 @@ export default async function POST(req: Request): Promise<Response> {
     )
   }
 
-  if (process.env.OST_PRO_API_KEY) {
-    const apiPath = OST_PRO_API_URL + '/outstatic/generate'
+  if (process.env.OUTSTATIC_API_KEY) {
+    const apiPath = OUTSTATIC_API_URL + '/outstatic/generate'
     return fetch(apiPath, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${process.env.OST_PRO_API_KEY}`
+        Authorization: `Bearer ${process.env.OUTSTATIC_API_KEY}`
       },
       body: req.body,
       duplex: 'half'
