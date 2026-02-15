@@ -77,8 +77,7 @@ export function ApiKeyLoginDialog({
             Connect GitHub in 3 quick steps
           </DialogTitle>
           <DialogDescription className="text-base">
-            Use an Outstatic API key to enable GitHub login for your self-hosted
-            dashboard.
+            Use an Outstatic API key to enable GitHub login for your dashboard.
           </DialogDescription>
         </DialogHeader>
         <div className="space-y-3">
