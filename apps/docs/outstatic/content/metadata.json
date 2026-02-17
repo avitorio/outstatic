@@ -1,6 +1,6 @@
 {
-  "commit": "09f662a9f8ce658cfc5469fb35b290ac899f854b",
-  "generated": "2026-01-25T01:24:32.080Z",
+  "commit": "7ae6e5a7f5362efe73cfb8dc2a9f4fe2f9f4b3ce",
+  "generated": "2026-02-17T14:42:03.515Z",
   "metadata": [
     {
       "__outstatic": {
@@ -422,22 +422,6 @@
     },
     {
       "__outstatic": {
-        "commit": "a0b1902d7fd49c79aafeaa0be18e16d846cdd045",
-        "hash": "1770191890",
-        "path": "/outstatic/content/docs/getting-started-with-next-js.mdx"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "docs",
-      "publishedAt": "2025-03-26T03:00:00.000Z",
-      "slug": "getting-started-with-next-js",
-      "status": "published",
-      "title": "Getting started with Next.js"
-    },
-    {
-      "__outstatic": {
         "commit": "051ca0a3c621db5de18718975b4f584245187147",
         "hash": "1502496",
         "path": "/outstatic/content/docs/the-content-editor.md"
@@ -489,6 +473,22 @@
       "slug": "getting-started",
       "status": "published",
       "title": "Getting started"
+    },
+    {
+      "__outstatic": {
+        "commit": "7ae6e5a7f5362efe73cfb8dc2a9f4fe2f9f4b3ce",
+        "hash": "2382414497",
+        "path": "/outstatic/content/docs/getting-started-with-next-js.mdx"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "publishedAt": "2026-02-17T03:00:00.000Z",
+      "slug": "getting-started-with-next-js",
+      "status": "published",
+      "title": "Getting started with Next.js"
     }
   ]
 }
