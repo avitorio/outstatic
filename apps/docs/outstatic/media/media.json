@@ -1,6 +1,6 @@
 {
-  "commit": "74a0e3fd04f8998159c2160d558fea24c29cf971",
-  "generated": "2026-02-20T23:56:59.071Z",
+  "commit": "074c792ec74ba24ea14ab210584f980d2718e0ac",
+  "generated": "2026-02-20T23:57:05.454Z",
   "media": [
     {
       "__outstatic": {
@@ -154,17 +154,6 @@
       "alt": "",
       "filename": "login-screen-I1NT.webp",
       "publishedAt": "2026-02-20T23:50:22.608Z",
-      "type": "image"
-    },
-    {
-      "__outstatic": {
-        "commit": "cfad97f84bb92cfb071b7f23e4cd11b42fa5fdd5",
-        "hash": "3502174447",
-        "path": "apps/docs/apps/docs/public/images/login-screen-IwNz.webp"
-      },
-      "alt": "",
-      "filename": "login-screen-IwNz.webp",
-      "publishedAt": "2026-02-20T17:59:15.783Z",
       "type": "image"
     },
     {
