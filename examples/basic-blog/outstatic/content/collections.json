@@ -2,19 +2,19 @@
   {
     "title": "Pages",
     "slug": "pages",
-    "path": "examples/basic-blog/outstatic/content/pages",
+    "path": "outstatic/content/pages",
     "children": []
   },
   {
     "title": "Posts",
     "slug": "posts",
-    "path": "examples/basic-blog/outstatic/content/posts",
+    "path": "outstatic/content/posts",
     "children": []
   },
   {
     "title": "Projects",
     "slug": "projects",
-    "path": "examples/basic-blog/outstatic/content/projects",
+    "path": "outstatic/content/projects",
     "children": []
   }
 ]
