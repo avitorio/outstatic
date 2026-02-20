@@ -1,6 +1,6 @@
 {
-  "commit": "1aaaa5265fc4b691e4d249affb7ba573121a25f7",
-  "generated": "2026-02-20T19:55:26.532Z",
+  "commit": "128195c3cd1efc210acd05e0876921815751d732",
+  "generated": "2026-02-20T19:55:33.065Z",
   "metadata": [
     {
       "__outstatic": {
@@ -545,8 +545,8 @@
     },
     {
       "__outstatic": {
-        "commit": "1aaaa5265fc4b691e4d249affb7ba573121a25f7",
-        "hash": "4196285654",
+        "commit": "128195c3cd1efc210acd05e0876921815751d732",
+        "hash": "46805662",
         "path": "/outstatic/content/docs/getting-started.md"
       },
       "author": {
@@ -556,7 +556,7 @@
       "collection": "docs",
       "coverImage": "",
       "description": "Get started with Outstatic",
-      "publishedAt": "2025-02-17T03:00:00.000Z",
+      "publishedAt": "2026-02-20T03:00:00.000Z",
       "slug": "getting-started",
       "status": "published",
       "title": "Getting started"

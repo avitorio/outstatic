@@ -7,7 +7,7 @@ author:
 slug: "getting-started"
 description: "Get started with Outstatic"
 coverImage: ""
-publishedAt: "2025-02-17T03:00:00.000Z"
+publishedAt: "2026-02-20T03:00:00.000Z"
 ---
 
 \
