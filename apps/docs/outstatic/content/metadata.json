@@ -1,6 +1,6 @@
 {
-  "commit": "d590a6fff567d5817d4323208969241f69f9b6d4",
-  "generated": "2026-02-20T19:58:55.154Z",
+  "commit": "9843d907e59b7cf91a80111bed71c4b3b81e990c",
+  "generated": "2026-02-20T20:12:46.389Z",
   "metadata": [
     {
       "__outstatic": {
@@ -71,22 +71,6 @@
       "slug": "custom-fields",
       "status": "published",
       "title": "Custom Fields"
-    },
-    {
-      "__outstatic": {
-        "commit": "afcadd61981bb85254f0255f32e5cce726690535",
-        "hash": "3403896368",
-        "path": "/outstatic/content/docs/deploy-a-starter-outstatic-website-on-vercel.mdx"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "docs",
-      "publishedAt": "2024-10-30T18:31:58.875Z",
-      "slug": "deploy-a-starter-outstatic-website-on-vercel",
-      "status": "published",
-      "title": "Deploy a starter Outstatic website on Vercel"
     },
     {
       "__outstatic": {
@@ -576,6 +560,22 @@
       "slug": "deploy-a-starter-outstatic-website-on-vercel-with-github-oauth",
       "status": "published",
       "title": "Deploy a starter Outstatic website on Vercel with GitHub OAuth"
+    },
+    {
+      "__outstatic": {
+        "commit": "9843d907e59b7cf91a80111bed71c4b3b81e990c",
+        "hash": "156548369",
+        "path": "/outstatic/content/docs/deploy-a-starter-outstatic-website-on-vercel.mdx"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "publishedAt": "2024-10-30T18:31:58.875Z",
+      "slug": "deploy-a-starter-outstatic-website-on-vercel",
+      "status": "published",
+      "title": "Deploy a starter Outstatic website on Vercel"
     }
   ]
 }
