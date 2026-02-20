@@ -10,17 +10,18 @@ slug: "deploy-a-starter-outstatic-website-on-vercel"
 
 To deploy with Vercel, start by clicking the button below and follow the setup steps:
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/avitorio/outstatic/tree/main/examples/basic-blog&env=OST_GITHUB_ID,OST_GITHUB_SECRET&project-name=outstatic-blog&repo-name=outstatic-basic-blog&demo-title=Outstatic%20Basic%20Blog%20Demo&demo-description=A%20statically%20generated%20blog%20example%20using%20Outstatic&demo-url=https://outstatic-dev-blog.vercel.app/&demo-image=https://outstatic.com/images/outstatic-demo.png&envDescription=API%20Keys%20needed%20for%20installation&envLink=https://outstatic.com/docs/environment-variables)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/avitorio/outstatic/tree/main/examples/basic-blog&env=OUTSTATIC_API_KEY&project-name=outstatic-blog&repo-name=outstatic-basic-blog&demo-title=Outstatic%20Basic%20Blog%20Demo&demo-description=A%20statically%20generated%20blog%20example%20using%20Outstatic&demo-url=https://outstatic-dev-blog.vercel.app/&demo-image=https://outstatic.com/images/outstatic-demo.png&envDescription=API%20Keys%20needed%20for%20installation&envLink=https://outstatic.com/docs/environment-variables)
 
-1. Select GitHub as your git service. Then, type the name of your repository (ex: `outstatic-blog`) and click **create**.
-2. Log in to your [Outstatic](https://outstatic.com/auth/sign-up?provider=github) and create a project for the recently created repository.
-3. Go to API Keys, add this callback URL: \
+1. Select **GitHub** as your Git service. Enter your repository name (for example, `outstatic-blog`) and click **Create**.
+2. After the repo is created, sign in to [Outstatic](https://outstatic.com/auth/sign-up?provider=github) and create a new project linked to that repository.
+3. In your Outstatic project, open **API Keys** and add this callback URL for now:\
    `https://localhost:3000/outstatic`
-4. Generate an API Key and paste it in the 
+4. Generate an **API Key**. In Vercel, go to **Add Environment Variables** and paste the `ost_*****` portion to the **Value** field: \
+   \
+   ![](/docs/images/cleanshot-2026-02-20-at-17.21.16-2x-E0Mz.png)
+5. Click deploy.
 
-You can now visit your site.
-
-To login to your Dashboard add `/outstatic` to the end of your site url:
+When the deploy finishes, open your site. To access the dashboard, add `/outstatic` to your site URL:
 
 Example: `https://myblog.vercel.app/outstatic`
 
@@ -28,35 +29,8 @@ You should see this page:
 
 ![](/docs/api/outstatic/media/avitorio/outstatic-secret/outstatic-2.1/apps/docs/apps/docs/public/images/login-screen-IwNz.webp)
 
-There are two ways you can access your dashboard. With GitHub via Outstatic (recommended), or using [Github OAuth](/setting-up-github-authentication).
-
-### Accessing with GitHub via Outstatic (Recommended)
-
-1. On the `/outstatic` page, click **Sign in with GitHub**.
-2. Follow the flow to create a free Outstatic account and generate an API key for your project.
-3. Copy the API key and add it to your `.env`:
-
-```bash
-OUTSTATIC_API_KEY=ost_******************************
-```
-
-1. Go back to `/outstatic`, refresh the page, and click **Sign in with GitHub** again.
-
-If everything is set up correctly, you will land in your Dashboard.
-
-You are ready to start creating and editing content. Next, learn how Outstatic manages content.
-
-### Access the dashboard from a deployed site
-
-If you also want to use the dashboard on your production or preview deployment:
-
-1. In the dashboard sidebar, open **API Keys**.
-
-2. Add your deployed site URL as a **Callback Origin URL**.
-
-3. Make sure `OUTSTATIC_API_KEY` is set in the environment variables for that deployment.
-
-To learn more about all available environment variables, see the [Environment Variables ](https://outstatic.com/environment-variables)section of the docs.
+1. Now go back to **API Keys** in Outstatic and add your production callback URL: `https://myblog.vercel.app/outstatic`
+2. Return to `/outstatic`, and click **Sign in with GitHub** again.
 
 Congratulations! Now you have a website with a full-featured dashboard to edit your content.
 
