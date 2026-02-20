@@ -1,6 +1,6 @@
 {
-  "commit": "8079a13ab4ef41f640cb79a6d387c6819239680b",
-  "generated": "2026-02-20T20:33:08.156Z",
+  "commit": "9863de053d5728d1a5635404f34a2995b8cedccb",
+  "generated": "2026-02-20T21:01:18.456Z",
   "metadata": [
     {
       "__outstatic": {
@@ -161,24 +161,6 @@
       "slug": "the-content-editor",
       "status": "published",
       "title": "The content editor"
-    },
-    {
-      "__outstatic": {
-        "commit": "5b338ea37847338e26cf47e2c2c6fd85105b3d0a",
-        "hash": "191850098",
-        "path": "/outstatic/content/docs/local-development.md"
-      },
-      "author": {
-        "name": "leplay",
-        "picture": "https://avatars.githubusercontent.com/u/284475?v=4"
-      },
-      "collection": "docs",
-      "coverImage": "",
-      "description": "",
-      "publishedAt": "2023-11-25T09:42:29.000Z",
-      "slug": "local-development",
-      "status": "published",
-      "title": "Local Development"
     },
     {
       "__outstatic": {
@@ -576,6 +558,24 @@
       "slug": "deploy-a-starter-outstatic-website-on-vercel",
       "status": "published",
       "title": "Deploy a starter Outstatic website on Vercel"
+    },
+    {
+      "__outstatic": {
+        "commit": "9863de053d5728d1a5635404f34a2995b8cedccb",
+        "hash": "397452078",
+        "path": "/outstatic/content/docs/local-development.md"
+      },
+      "author": {
+        "name": "leplay",
+        "picture": "https://avatars.githubusercontent.com/u/284475?v=4"
+      },
+      "collection": "docs",
+      "coverImage": "",
+      "description": "",
+      "publishedAt": "2026-02-20T03:00:00.000Z",
+      "slug": "local-development",
+      "status": "published",
+      "title": "Local Development"
     }
   ]
 }
