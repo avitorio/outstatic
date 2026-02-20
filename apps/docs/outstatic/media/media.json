@@ -1,6 +1,6 @@
 {
-  "commit": "8079a13ab4ef41f640cb79a6d387c6819239680b",
-  "generated": "2026-02-20T20:33:08.156Z",
+  "commit": "fde6957cb701398b62ab49e838ee653431507bf1",
+  "generated": "2026-02-20T23:50:22.608Z",
   "media": [
     {
       "__outstatic": {
@@ -154,6 +154,17 @@
       "alt": "",
       "filename": "image-menu-U2ND.gif",
       "publishedAt": "2024-10-31T19:16:45.944Z",
+      "type": "image"
+    },
+    {
+      "__outstatic": {
+        "commit": "fde6957cb701398b62ab49e838ee653431507bf1",
+        "hash": "3502174447",
+        "path": "apps/docs/public/images/login-screen-I1NT.webp"
+      },
+      "alt": "",
+      "filename": "login-screen-I1NT.webp",
+      "publishedAt": "2026-02-20T23:50:22.608Z",
       "type": "image"
     },
     {
