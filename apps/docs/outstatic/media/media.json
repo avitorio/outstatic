@@ -1,6 +1,6 @@
 {
-  "commit": "c971f310f5125390dac7c47e185de621fea0e695",
-  "generated": "2024-11-05T01:36:06.868Z",
+  "commit": "cfad97f84bb92cfb071b7f23e4cd11b42fa5fdd5",
+  "generated": "2026-02-20T17:59:15.783Z",
   "media": [
     {
       "__outstatic": {
@@ -143,6 +143,17 @@
       "alt": "",
       "filename": "image-menu-U2ND.gif",
       "publishedAt": "2024-10-31T19:16:45.944Z",
+      "type": "image"
+    },
+    {
+      "__outstatic": {
+        "commit": "cfad97f84bb92cfb071b7f23e4cd11b42fa5fdd5",
+        "hash": "3502174447",
+        "path": "apps/docs/apps/docs/public/images/login-screen-IwNz.webp"
+      },
+      "alt": "",
+      "filename": "login-screen-IwNz.webp",
+      "publishedAt": "2026-02-20T17:59:15.783Z",
       "type": "image"
     },
     {
