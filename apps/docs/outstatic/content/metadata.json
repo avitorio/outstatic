@@ -1,6 +1,6 @@
 {
-  "commit": "9843d907e59b7cf91a80111bed71c4b3b81e990c",
-  "generated": "2026-02-20T20:12:46.389Z",
+  "commit": "8079a13ab4ef41f640cb79a6d387c6819239680b",
+  "generated": "2026-02-20T20:33:08.156Z",
   "metadata": [
     {
       "__outstatic": {
@@ -563,8 +563,8 @@
     },
     {
       "__outstatic": {
-        "commit": "9843d907e59b7cf91a80111bed71c4b3b81e990c",
-        "hash": "156548369",
+        "commit": "8079a13ab4ef41f640cb79a6d387c6819239680b",
+        "hash": "2656621519",
         "path": "/outstatic/content/docs/deploy-a-starter-outstatic-website-on-vercel.mdx"
       },
       "author": {
