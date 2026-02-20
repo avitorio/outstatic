@@ -1,7 +1,8 @@
 import {
   LoginSession,
   setLoginSession,
-  AppPermissions
+  AppPermissions,
+  resolveRefreshTokenExpiry
 } from '@/utils/auth/auth'
 import {
   getAccessToken,
@@ -62,6 +63,8 @@ type ExchangeTokenResponse = {
     access_token: string
     refresh_token: string
     expires_at: number
+    refresh_token_expires_in?: number | null
+    refresh_token_expires_at?: number | null
   }
 }
 
@@ -133,7 +136,7 @@ export default async function GET(request: NextRequest) {
       access_token: exchangeResult.session.access_token,
       refresh_token: exchangeResult.session.refresh_token,
       expires: new Date(exchangeResult.session.expires_at * 1000),
-      refresh_token_expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
+      refresh_token_expires: resolveRefreshTokenExpiry(exchangeResult.session)
     }
 
     await setLoginSession(sessionData)
@@ -305,7 +308,9 @@ export default async function GET(request: NextRequest) {
           access_token: exchangeResult.session.access_token,
           refresh_token: exchangeResult.session.refresh_token,
           expires: new Date(exchangeResult.session.expires_at * 1000),
-          refresh_token_expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) // 30 days
+          refresh_token_expires: resolveRefreshTokenExpiry(
+            exchangeResult.session
+          )
         }
 
         await setLoginSession(sessionData)

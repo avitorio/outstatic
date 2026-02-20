@@ -24,7 +24,16 @@ async function setupMagicLinkRoute(
   })
 
   jest.doMock('@/utils/auth/auth', () => ({
-    setLoginSession: jest.fn()
+    setLoginSession: jest.fn(),
+    resolveRefreshTokenExpiry: jest.fn((session) => {
+      if (session?.refresh_token_expires_at) {
+        return new Date(session.refresh_token_expires_at * 1000)
+      }
+
+      return session?.refresh_token_expires_in
+        ? new Date(Date.now() + session.refresh_token_expires_in)
+        : undefined
+    })
   }))
 
   const { default: magicLinkCallbackRoute } =
@@ -62,7 +71,8 @@ describe('/api/outstatic/magic-link-callback', () => {
         session: {
           access_token: 'access-token',
           refresh_token: 'refresh-token',
-          expires_at: 2_000_000_000
+          expires_at: 2_000_000_000,
+          refresh_token_expires_at: 2_100_000_000
         },
         return_url: 'https://self-host.dev/outstatic/collections'
       })
@@ -84,6 +94,7 @@ describe('/api/outstatic/magic-link-callback', () => {
     expect(setLoginSessionMock).toHaveBeenCalledWith(
       expect.objectContaining({
         provider: 'magic-link',
+        refresh_token_expires: new Date(2_100_000_000 * 1000),
         user: expect.objectContaining({
           login: 'member-login',
           email: 'member@example.com'

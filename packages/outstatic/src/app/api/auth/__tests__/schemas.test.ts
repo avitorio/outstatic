@@ -59,6 +59,27 @@ describe('ExchangeTokenResponseSchema', () => {
 
     expect(parsed.user.avatar_url).toBeNull()
   })
+
+  it('accepts optional refresh token expiry session fields', () => {
+    const parsed = ExchangeTokenResponseSchema.parse({
+      user: {
+        email: 'member@example.com',
+        name: 'Member User',
+        avatar_url: 'https://example.com/avatar.png',
+        permissions: []
+      },
+      session: {
+        access_token: 'access-token',
+        refresh_token: 'refresh-token',
+        expires_at: 2_000_000_000,
+        refresh_token_expires_in: 2_592_000_000,
+        refresh_token_expires_at: 2_100_000_000
+      }
+    })
+
+    expect(parsed.session.refresh_token_expires_in).toBe(2_592_000_000)
+    expect(parsed.session.refresh_token_expires_at).toBe(2_100_000_000)
+  })
 })
 
 describe('GoogleLoginRequestSchema', () => {

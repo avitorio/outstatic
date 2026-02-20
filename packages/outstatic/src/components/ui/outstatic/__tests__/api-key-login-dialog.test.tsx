@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react'
+import { fireEvent, render, screen } from '@testing-library/react'
 import type { ReactNode } from 'react'
 
 import { OUTSTATIC_APP_URL } from '@/utils/constants'
@@ -70,5 +70,29 @@ describe('<ApiKeyLoginDialog />', () => {
     expect(ctaUrl.searchParams.get('callback_origin')).toBe(
       'http://localhost/outstatic'
     )
+  })
+
+  it('resets CTA loading state after close and reopen', async () => {
+    const { rerender } = render(
+      <ApiKeyLoginDialog open onOpenChange={jest.fn()} />
+    )
+
+    const cta = screen.getByRole('link', {
+      name: /create a free api key on outstatic\.com/i
+    })
+
+    expect(cta).toHaveAttribute('aria-busy', 'false')
+
+    fireEvent.click(cta)
+    expect(cta).toHaveAttribute('aria-busy', 'true')
+
+    rerender(<ApiKeyLoginDialog open={false} onOpenChange={jest.fn()} />)
+    rerender(<ApiKeyLoginDialog open onOpenChange={jest.fn()} />)
+
+    expect(
+      screen.getByRole('link', {
+        name: /create a free api key on outstatic\.com/i
+      })
+    ).toHaveAttribute('aria-busy', 'false')
   })
 })

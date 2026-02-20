@@ -1,7 +1,8 @@
 import {
   LoginSession,
   AppPermissions,
-  setLoginSession
+  setLoginSession,
+  resolveRefreshTokenExpiry
 } from '@/utils/auth/auth'
 import { OUTSTATIC_API_URL } from '@/utils/constants'
 import { NextRequest, NextResponse } from 'next/server'
@@ -66,7 +67,7 @@ export default async function GET(request: NextRequest) {
       access_token: sessionData.access_token,
       expires: new Date(sessionData.expires_at * 1000),
       refresh_token: sessionData.refresh_token,
-      refresh_token_expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) // 30 days
+      refresh_token_expires: resolveRefreshTokenExpiry(sessionData)
     }
 
     // Store session cookie

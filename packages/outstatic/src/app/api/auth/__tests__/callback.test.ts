@@ -29,7 +29,16 @@ async function setupCallbackRoute(
   })
 
   jest.doMock('@/utils/auth/auth', () => ({
-    setLoginSession: jest.fn()
+    setLoginSession: jest.fn(),
+    resolveRefreshTokenExpiry: jest.fn((session) => {
+      if (session?.refresh_token_expires_at) {
+        return new Date(session.refresh_token_expires_at * 1000)
+      }
+
+      return session?.refresh_token_expires_in
+        ? new Date(Date.now() + session.refresh_token_expires_in)
+        : undefined
+    })
   }))
 
   jest.doMock('@/utils/auth/github', () => ({
@@ -98,7 +107,8 @@ describe('/api/outstatic/callback', () => {
         session: {
           access_token: 'access-token',
           refresh_token: 'refresh-token',
-          expires_at: 2000000000
+          expires_at: 2000000000,
+          refresh_token_expires_at: 2100000000
         }
       })
     )
@@ -130,6 +140,7 @@ describe('/api/outstatic/callback', () => {
     expect(setLoginSessionMock).toHaveBeenCalledWith(
       expect.objectContaining({
         provider: 'magic-link',
+        refresh_token_expires: new Date(2100000000 * 1000),
         user: expect.objectContaining({
           login: 'github-login',
           email: 'test@example.com'
@@ -316,7 +327,8 @@ describe('/api/outstatic/callback', () => {
             session: {
               access_token: 'relay-access-token',
               refresh_token: 'relay-refresh-token',
-              expires_at: 2000000000
+              expires_at: 2000000000,
+              refresh_token_expires_at: 2100000000
             }
           })
         }
@@ -357,6 +369,7 @@ describe('/api/outstatic/callback', () => {
       expect.objectContaining({
         provider: 'magic-link',
         access_token: 'relay-access-token',
+        refresh_token_expires: new Date(2100000000 * 1000),
         user: expect.objectContaining({
           login: 'relay-login',
           email: 'relay@example.com'

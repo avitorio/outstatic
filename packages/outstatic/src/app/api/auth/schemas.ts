@@ -52,7 +52,9 @@ export const ExchangeTokenResponseSchema = z.object({
   session: z.object({
     access_token: z.string().min(1),
     refresh_token: z.string().min(1),
-    expires_at: z.number().positive()
+    expires_at: z.number().positive(),
+    refresh_token_expires_in: z.number().positive().optional().nullable(),
+    refresh_token_expires_at: z.number().positive().optional().nullable()
   }),
   return_url: z.string().url().optional().nullable()
 })

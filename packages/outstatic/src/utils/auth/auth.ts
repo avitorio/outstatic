@@ -48,6 +48,38 @@ export type TokenRefreshResponse = {
   expires_in: number
   refresh_token?: string
   refresh_token_expires_in?: number
+  refresh_token_expires_at?: number
+}
+
+type RefreshTokenExpiryInput = {
+  refresh_token_expires_in?: number | null
+  refresh_token_expires_at?: number | null
+}
+
+function dateFromEpochSecondsOrMilliseconds(value: number): Date {
+  return value > 1_000_000_000_000 ? new Date(value) : new Date(value * 1000)
+}
+
+export function resolveRefreshTokenExpiry(
+  input: RefreshTokenExpiryInput
+): Date | undefined {
+  if (
+    typeof input.refresh_token_expires_at === 'number' &&
+    Number.isFinite(input.refresh_token_expires_at) &&
+    input.refresh_token_expires_at > 0
+  ) {
+    return dateFromEpochSecondsOrMilliseconds(input.refresh_token_expires_at)
+  }
+
+  if (
+    typeof input.refresh_token_expires_in === 'number' &&
+    Number.isFinite(input.refresh_token_expires_in) &&
+    input.refresh_token_expires_in > 0
+  ) {
+    return new Date(Date.now() + input.refresh_token_expires_in)
+  }
+
+  return undefined
 }
 
 // Helper function to check if a value is a valid date (Date object or date string)
@@ -191,6 +223,7 @@ export async function refreshToken(
       }
 
       const data = await response.json()
+      const refreshTokenExpires = resolveRefreshTokenExpiry(data.session)
 
       // Update the session with new tokens
       const updatedSession: LoginSession = {
@@ -198,7 +231,8 @@ export async function refreshToken(
         access_token: data.session.access_token,
         expires: new Date(data.session.expires_at * 1000),
         refresh_token: data.session.refresh_token || session.refresh_token,
-        refresh_token_expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) // 30 days
+        refresh_token_expires:
+          refreshTokenExpires ?? session.refresh_token_expires
       }
 
       // Save the updated session

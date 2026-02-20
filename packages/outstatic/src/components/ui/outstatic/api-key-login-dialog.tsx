@@ -46,14 +46,52 @@ const setupSteps = [
   }
 ] as const
 
+type CreateApiKeyButtonProps = {
+  apiKeysUrl: string
+}
+
+function CreateApiKeyButton({ apiKeysUrl }: CreateApiKeyButtonProps) {
+  const [isCreatingApiKey, setIsCreatingApiKey] = useState(false)
+
+  return (
+    <Button asChild size="lg" className="w-full">
+      <Link
+        target="_blank"
+        rel="noopener noreferrer"
+        href={apiKeysUrl}
+        aria-busy={isCreatingApiKey}
+        aria-label="Create a FREE API Key on Outstatic.com"
+        onClick={(event) => {
+          if (isCreatingApiKey) {
+            event.preventDefault()
+            return
+          }
+
+          setIsCreatingApiKey(true)
+        }}
+      >
+        {isCreatingApiKey ? (
+          <Loader2 className="h-4 w-4 animate-spin" />
+        ) : (
+          <>
+            Create a <span className="font-bold">FREE</span> API Key on
+            Outstatic.com
+            <ArrowUpRight className="ml-2 h-4 w-4" />
+          </>
+        )}
+      </Link>
+    </Button>
+  )
+}
+
 export function ApiKeyLoginDialog({
   open,
   onOpenChange,
   triggerLabel,
   basePath
 }: ApiKeyLoginDialogProps) {
-  const [isCreatingApiKey, setIsCreatingApiKey] = useState(false)
   const clientOrigin = useClientOrigin()
+
   const callbackOrigin = useMemo(() => {
     if (!clientOrigin) {
       return undefined
@@ -123,32 +161,7 @@ export function ApiKeyLoginDialog({
           </p>
         </div>
         <DialogFooter>
-          <Button asChild size="lg" className="w-full">
-            <Link
-              target="_blank"
-              rel="noopener noreferrer"
-              href={apiKeysUrl}
-              aria-busy={isCreatingApiKey}
-              aria-label="Create a FREE API Key on Outstatic.com"
-              onClick={(event) => {
-                if (isCreatingApiKey) {
-                  event.preventDefault()
-                  return
-                }
-                setIsCreatingApiKey(true)
-              }}
-            >
-              {isCreatingApiKey ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                <>
-                  Create a <span className="font-bold">FREE</span> API Key on
-                  Outstatic.com
-                  <ArrowUpRight className="ml-2 h-4 w-4" />
-                </>
-              )}
-            </Link>
-          </Button>
+          <CreateApiKeyButton apiKeysUrl={apiKeysUrl} />
         </DialogFooter>
       </DialogContent>
     </Dialog>

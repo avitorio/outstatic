@@ -197,19 +197,3 @@ export function cleanupExpiredEntries(): void {
     }
   }
 }
-
-/**
- * Get cache statistics for debugging
- *
- * Returns the current size of the in-memory cache and all cached keys.
- * Note: This only reflects the in-memory layer, not the persistent cache.
- */
-export function getCacheStats(): {
-  inMemorySize: number
-  inMemoryKeys: string[]
-} {
-  return {
-    inMemorySize: inMemoryCache.size,
-    inMemoryKeys: Array.from(inMemoryCache.keys())
-  }
-}
