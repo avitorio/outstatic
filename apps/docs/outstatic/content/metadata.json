@@ -1,6 +1,6 @@
 {
-  "commit": "fc9137e0bce4d1f90350e109944d03ed8839421c",
-  "generated": "2026-02-20T19:36:20.818Z",
+  "commit": "1aaaa5265fc4b691e4d249affb7ba573121a25f7",
+  "generated": "2026-02-20T19:55:26.532Z",
   "metadata": [
     {
       "__outstatic": {
@@ -105,24 +105,6 @@
       "slug": "faqs",
       "status": "published",
       "title": "FAQs"
-    },
-    {
-      "__outstatic": {
-        "commit": "68612eccad39a00f7f8d09f7cf8946ea0e915aed",
-        "hash": "47138265",
-        "path": "/outstatic/content/docs/getting-started.md"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "docs",
-      "coverImage": "",
-      "description": "Get started with Outstatic",
-      "publishedAt": "2025-02-17T03:00:00.000Z",
-      "slug": "getting-started",
-      "status": "published",
-      "title": "Getting started"
     },
     {
       "__outstatic": {
@@ -560,6 +542,24 @@
       "slug": "using-outstatic-for-markdown-content",
       "status": "published",
       "title": "Using Outstatic for Markdown content"
+    },
+    {
+      "__outstatic": {
+        "commit": "1aaaa5265fc4b691e4d249affb7ba573121a25f7",
+        "hash": "4196285654",
+        "path": "/outstatic/content/docs/getting-started.md"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "coverImage": "",
+      "description": "Get started with Outstatic",
+      "publishedAt": "2025-02-17T03:00:00.000Z",
+      "slug": "getting-started",
+      "status": "published",
+      "title": "Getting started"
     }
   ]
 }
