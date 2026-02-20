@@ -29,7 +29,7 @@ const SocialLinks = () => {
       </Button>
       <Button asChild variant="ghost" size="icon">
         <a
-          href="https://x.com/outstatic"
+          href="https://x.com/AndreVitorio"
           target="_blank"
           aria-label="X.com"
           rel="noreferrer"

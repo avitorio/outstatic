@@ -117,15 +117,13 @@ async function getData(params: { slug: string[] }) {
 
   const docMdx = await MDXServer(doc?.content)
 
-  const menuMdx = menu ? await MDXServer(menu?.content) : ''
-
   return {
     doc: {
       ...doc,
       content: docMdx
     },
     menu: {
-      content: menuMdx
+      content: menu?.content ?? ''
     }
   }
 }

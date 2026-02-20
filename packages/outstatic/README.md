@@ -76,7 +76,7 @@ Outstatic is built on the following stack:
 The Outstatic community can be found on [GitHub Discussions](https://github.com/avitorio/outstatic/discussions), where you can ask questions, voice ideas, and share your projects.
 
 To chat with other community members you can join the [Outstatic Discord](https://discord.gg/qEjtpn7E6F).
-You can also follow us on [X / Twitter](https://x.com/outstatic).
+You can also follow us on [X / Twitter](https://x.com/AndreVitorio).
 
 ## Author
 

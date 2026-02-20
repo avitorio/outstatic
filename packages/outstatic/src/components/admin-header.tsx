@@ -75,7 +75,7 @@ const community = [
       </svg>
     ),
     name: 'X',
-    href: 'https://x.com/outstatic'
+    href: 'https://x.com/AndreVitorio'
   },
   {
     icon: DiscordLogoIcon,
