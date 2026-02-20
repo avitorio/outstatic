@@ -1,6 +1,6 @@
 {
-  "commit": "",
-  "generated": "Fri, 20 Feb 2026 17:20:35 GMT",
+  "commit": "3d5957ccc0123a2c2efb718f7ec0b3ebb951a795",
+  "generated": "2026-02-20T17:28:18.020Z",
   "metadata": [
     {
       "__outstatic": {
@@ -332,24 +332,6 @@
     },
     {
       "__outstatic": {
-        "commit": "8fbe82fb5205dac55df37f91cf94b8ef9ff8a3af",
-        "hash": "256445213",
-        "path": "/outstatic/content/menus/latest-menu.md"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "menus",
-      "coverImage": "",
-      "description": "",
-      "publishedAt": "2024-11-06T03:00:00.000Z",
-      "slug": "latest-menu",
-      "status": "published",
-      "title": "Latest Menu"
-    },
-    {
-      "__outstatic": {
         "commit": "e7ffdfb9e9444fd4e30e343a6db7cb9807e47af4",
         "hash": "2299452863",
         "path": "/outstatic/content/menus/v1.4-menu.mdx"
@@ -543,6 +525,24 @@
       "slug": "using-with-next-js-12",
       "status": "published",
       "title": "Using with Next.js 12"
+    },
+    {
+      "__outstatic": {
+        "commit": "3d5957ccc0123a2c2efb718f7ec0b3ebb951a795",
+        "hash": "3325075345",
+        "path": "/outstatic/content/menus/latest-menu.md"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "menus",
+      "coverImage": "",
+      "description": "",
+      "publishedAt": "2024-11-06T03:00:00.000Z",
+      "slug": "latest-menu",
+      "status": "published",
+      "title": "Latest Menu"
     }
   ]
 }
