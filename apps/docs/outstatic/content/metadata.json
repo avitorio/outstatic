@@ -1,6 +1,6 @@
 {
-  "commit": "b5974cc3cf62482e02885164afb020e95fa6c0b1",
-  "generated": "2026-02-20T19:23:53.182Z",
+  "commit": "2c9a8d784290dcf9f3ebfa58670ee19cb5703e50",
+  "generated": "2026-02-20T19:33:17.354Z",
   "metadata": [
     {
       "__outstatic": {
@@ -547,8 +547,8 @@
     },
     {
       "__outstatic": {
-        "commit": "b5974cc3cf62482e02885164afb020e95fa6c0b1",
-        "hash": "3026719469",
+        "commit": "2c9a8d784290dcf9f3ebfa58670ee19cb5703e50",
+        "hash": "4245383802",
         "path": "/outstatic/content/docs/getting-started-with-next-js.mdx"
       },
       "author": {

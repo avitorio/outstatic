@@ -8,15 +8,17 @@ author:
 slug: "getting-started-with-next-js"
 ---
 
-**Recommended:** Starting with Outstatic 2.0, we recommend installing the standalone Outstatic Dashboard. [Follow this quick tutorial](http://localhost:3001/docs/using-outstatic-for-markdown-content), then connect it to your app’s repository to manage content. Your main app can still use [Outstatic’s data fetching utilities](/fetching-data) as usual.
+**Recommended:** Starting with Outstatic 2.0, install the standalone  Outstatic Dashboard. [Follow the quick tutorial](http://localhost:3001/docs/using-outstatic-for-markdown-content), then connect it to your app’s GitHub repository to manage content. Your main app can still use [Outstatic’s data fetching utilities](/fetching-data) as usual.
 
-If you prefer to run Outstatic inside your main app, follow the steps below to get started with Outstatic on Next.js.
+If you prefer to run Outstatic inside your Next.js app, follow the steps below.
 
-## Adding Outstatic to a Next.js website
+## Add Outstatic to a Next.js app (App Router)
 
-Before we start, you should know Outstatic saves content as markdown files to your GitHub repository. To understand how this works please read our [introduction](https://outstatic.com/introduction) article.
+Before you start: Outstatic stores your content as Markdown files in your GitHub repository. Read the [introduction](https://outstatic.com/introduction) to understand how the workflow works. 
 
-First install the Outstatic package and dependencies:
+### 1) Install Outstatic
+
+Choose one:
 
 ```bash
 npm install outstatic
@@ -34,12 +36,14 @@ pnpm install outstatic
 bun add outstatic
 ```
 
-Once installed, you'll need to add three files to your `/app` folder. We recommend you keep your app and outstatic install in different [route groups](https://nextjs.org/docs/app/building-your-application/routing/route-groups) so layouts don't interfere with each other. Here we've named the route group `(cms)`:
+### Create the dashboard routes
 
-`/app/(cms)/layout.tsx`
+Add these three files under `/app`. We recommend placing Outstatic in its own route group so layouts don’t interfere with your main app. In this example, the route group is `(cms)` and the dashboard lives at `/outstatic`.
 
-```javascript
-export default function RootLayout({ children }) {
+#### `/app/(cms)/layout.tsx`
+
+```
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html suppressHydrationWarning>
       <body id="outstatic">{children}</body>
@@ -48,35 +52,43 @@ export default function RootLayout({ children }) {
 }
 ```
 
-`/app/(cms)/outstatic/[[...ost]]/page.tsx`
+#### `/app/(cms)/outstatic/[[...ost]]/page.tsx`
 
-```javascript
+```
 import 'outstatic/outstatic.css'
 import { Outstatic } from 'outstatic'
 import { OstClient } from 'outstatic/client'
 
-export default async function Page(props: { params: Promise<{ ost: string[] }> }) {
-  const params = await props.params;
+export default async function Page({
+  params,
+}: {
+  params: { ost?: string[] }
+}) {
   const ostData = await Outstatic()
   return <OstClient ostData={ostData} params={params} />
 }
 ```
 
-And lastly, the api route (outside of the route group): `/app/api/outstatic/[[...ost]]/route.ts`
+#### `/app/api/outstatic/[[...ost]]/route.ts` (outside the route group)
 
-```javascript
+```
 import { OutstaticApi } from 'outstatic'
 
 export const GET = OutstaticApi.GET
-
 export const POST = OutstaticApi.POST
 ```
 
-Start your dev server. Assuming you're on `http://localhost:3000` you can access your dashboard at `https://localhost:3000/outstatic`.
+### 3) Run the app
 
-You should see this page:
+Start your dev server. If you’re running on `http://localhost:3000`, open:
+
+`http://localhost:3000/outstatic`
+
+You should see the Outstatic sign-in screen.
 
 ![](/docs/api/outstatic/media/avitorio/outstatic-secret/outstatic-2.1/apps/docs/apps/docs/public/images/login-screen-IwNz.webp)
+
+## Sign in options
 
 There are two ways you can access your dashboard. With GitHub via Outstatic (recommended), or using [Github OAuth](/setting-up-github-authentication).
 
@@ -100,8 +112,8 @@ We recommend you learn how Outstatic [manages content](/introduction).
 
 ### Accessing the Outstatic dashboard from your live site
 
-If you also want to access your Outstatic dashboard through a deployed site you'll need to click the **API Keys** button in your Outstatic dashboard sidebar and add a new **Callback Origin URL**.
+If you want to access your Outstatic dashboard from a deployed site, open your Outstatic dashboard, go to **API Keys** in the sidebar, and add your site’s URL as a **Callback Origin**.
 
-Don't forget to add your API Key to your .env where you are deploying your website.
+Then add the API key to the `.env` file in the environment where your site is deployed.
 
 To learn more about all the available environment variables, see the [Environment Variables ](https://outstatic.com/environment-variables)section of the docs.
