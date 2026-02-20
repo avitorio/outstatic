@@ -13,7 +13,11 @@ import {
   DialogTrigger
 } from '@/components/ui/shadcn/dialog'
 import { Button } from '@/components/ui/shadcn/button'
-import { OUTSTATIC_APP_URL } from '@/utils/constants'
+import {
+  buildApiKeySignupUrl,
+  buildOutstaticCallbackOrigin
+} from '@/utils/buildApiKeySignupUrl'
+import { useClientOrigin } from '@/utils/hooks/useClientOrigin'
 
 type ApiKeyLoginDialogProps = {
   open?: boolean
@@ -49,20 +53,23 @@ export function ApiKeyLoginDialog({
   basePath
 }: ApiKeyLoginDialogProps) {
   const [isCreatingApiKey, setIsCreatingApiKey] = useState(false)
-  const apiKeysUrl = useMemo(() => {
-    const url = new URL('/auth/sign-up', OUTSTATIC_APP_URL)
-    url.searchParams.set('provider', 'github')
-    url.searchParams.set('feature', 'api-keys')
-    url.searchParams.set('auto_generate_api_key', '1')
-
-    if (typeof window !== 'undefined') {
-      const normalizedBasePath = (basePath ?? '').replace(/\/+$/, '')
-      const callbackOrigin = `${window.location.origin}${normalizedBasePath}/outstatic`
-      url.searchParams.set('callback_origin', callbackOrigin)
+  const clientOrigin = useClientOrigin()
+  const callbackOrigin = useMemo(() => {
+    if (!clientOrigin) {
+      return undefined
     }
 
-    return url.toString()
-  }, [basePath])
+    return buildOutstaticCallbackOrigin(clientOrigin, basePath)
+  }, [basePath, clientOrigin])
+
+  const apiKeysUrl = useMemo(
+    () =>
+      buildApiKeySignupUrl({
+        autoGenerateApiKey: true,
+        callbackOrigin
+      }),
+    [callbackOrigin]
+  )
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

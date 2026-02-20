@@ -31,6 +31,11 @@ import { UpgradeDialog } from './ui/outstatic/upgrade-dialog'
 import { cn } from '@/utils/ui'
 import { useCallback, useMemo } from 'react'
 import { AppPermissions } from '@/utils/auth/auth'
+import {
+  buildApiKeySignupUrl,
+  buildOutstaticCallbackOrigin
+} from '@/utils/buildApiKeySignupUrl'
+import { useClientOrigin } from '@/utils/hooks/useClientOrigin'
 
 type SidebarProps = {
   /** Additional routes to append or replace default settings routes */
@@ -44,6 +49,7 @@ export const Sidebar = ({ additionalRoutes }: SidebarProps) => {
   const { data: collections } = useCollections()
   const { data: singletons } = useSingletons()
   const userPermissions = session?.user?.permissions
+  const clientOrigin = useClientOrigin()
 
   const hasPermission = useCallback(
     (permission: AppPermissions) => {
@@ -54,19 +60,21 @@ export const Sidebar = ({ additionalRoutes }: SidebarProps) => {
   const hasCollections = collections && collections.length > 0
   const hasSingletons = singletons && singletons.length > 0
   const hasContentTypes = hasCollections || hasSingletons
-  const signUpForApiKeysUrl = useMemo(() => {
-    const url = new URL('/auth/sign-up', OUTSTATIC_APP_URL)
-    url.searchParams.set('provider', 'github')
-    url.searchParams.set('feature', 'api-keys')
-
-    if (typeof window !== 'undefined') {
-      const normalizedBasePath = (basePath ?? '').replace(/\/+$/, '')
-      const callbackOrigin = `${window.location.origin}${normalizedBasePath}/outstatic`
-      url.searchParams.set('callback_origin', callbackOrigin)
+  const callbackOrigin = useMemo(() => {
+    if (!clientOrigin) {
+      return undefined
     }
 
-    return url.toString()
-  }, [basePath])
+    return buildOutstaticCallbackOrigin(clientOrigin, basePath)
+  }, [basePath, clientOrigin])
+
+  const signUpForApiKeysUrl = useMemo(
+    () =>
+      buildApiKeySignupUrl({
+        callbackOrigin
+      }),
+    [callbackOrigin]
+  )
   const apiKeysRedirectPath =
     projectInfo?.accountSlug && projectInfo?.projectSlug
       ? `${OUTSTATIC_APP_URL}/home/${projectInfo.accountSlug}/${projectInfo.projectSlug}/api-keys`
