@@ -16,14 +16,10 @@ I have a website which uses Markdown (.md, .mdx) files for content **(recommende
 
 - [Use Outstatic as a CMS to edit Markdown on any GitHub repository.](/using-outstatic-for-markdown-content)
 
-I'm just curious, or I'm starting from scratch.
-
-- [Deploy a starter Outstatic website on Vercel](/deploy-a-starter-outstatic-website-on-vercel)
-
 I'm using Next.js and I want to add Outstatic to my website.
 
 - [Adding Outstatic to your Next.js website](/getting-started-with-next-js)
 
-### Older versions
+I'm just curious, or I'm starting from scratch.
 
-If you are using Next.js 14 please refer to the [Before v1.4](/v1.4/introduction) documentation.
+- [Deploy a starter Outstatic website on Vercel](/deploy-a-starter-outstatic-website-on-vercel)

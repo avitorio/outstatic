@@ -14,9 +14,9 @@ publishedAt: '2024-11-06T03:00:00.000Z'
   - [Introduction](/introduction)
     - [How does Outstatic work?](/introduction#how-does-outstatic-work)
   - [Getting started](/getting-started)
-    - [Deploy a starter website](/deploy-a-starter-outstatic-website-on-vercel)
     - [Use on any GitHub repository](/using-outstatic-for-markdown-content)
     - [Add to a Next.js project](/getting-started-with-next-js)
+    - [Deploy a starter website](/deploy-a-starter-outstatic-website-on-vercel)
 
 - Editing & Modeling
   - [The Content Editor](/the-content-editor)
