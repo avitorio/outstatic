@@ -1,11 +1,10 @@
-import { useEffect, useState } from 'react'
+import { useSyncExternalStore } from 'react'
 
-export const useClientOrigin = () => {
-  const [origin, setOrigin] = useState('')
+const subscribe = () => () => {}
 
-  useEffect(() => {
-    setOrigin(window.location.origin)
-  }, [])
-
-  return origin
-}
+export const useClientOrigin = () =>
+  useSyncExternalStore(
+    subscribe,
+    () => window.location.origin,
+    () => ''
+  )
