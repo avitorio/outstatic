@@ -1,6 +1,6 @@
 {
-  "commit": "3d5957ccc0123a2c2efb718f7ec0b3ebb951a795",
-  "generated": "2026-02-20T17:28:18.020Z",
+  "commit": "9846124ea943764db902a409ec937e5cdef97751",
+  "generated": "2026-02-20T17:52:40.173Z",
   "metadata": [
     {
       "__outstatic": {
@@ -543,6 +543,23 @@
       "slug": "latest-menu",
       "status": "published",
       "title": "Latest Menu"
+    },
+    {
+      "__outstatic": {
+        "commit": "9846124ea943764db902a409ec937e5cdef97751",
+        "hash": "668778604",
+        "path": "/outstatic/content/docs/setting-up-github-authentication.mdx"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "description": "Setting up GitHub Authentication for Outstatic.",
+      "publishedAt": "2026-02-20T17:31:40.746Z",
+      "slug": "setting-up-github-authentication",
+      "status": "published",
+      "title": "Setting up GitHub Authentication"
     }
   ]
 }
