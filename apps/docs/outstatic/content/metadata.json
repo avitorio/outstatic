@@ -1,6 +1,6 @@
 {
-  "commit": "3b2d34b6ab5b6ee718f4be54adf86e429f660829",
-  "generated": "2026-02-20T19:58:21.087Z",
+  "commit": "d590a6fff567d5817d4323208969241f69f9b6d4",
+  "generated": "2026-02-20T19:58:55.154Z",
   "metadata": [
     {
       "__outstatic": {
@@ -560,6 +560,22 @@
       "slug": "getting-started",
       "status": "published",
       "title": "Getting started"
+    },
+    {
+      "__outstatic": {
+        "commit": "d590a6fff567d5817d4323208969241f69f9b6d4",
+        "hash": "4269890586",
+        "path": "/outstatic/content/docs/deploy-a-starter-outstatic-website-on-vercel-with-github-oauth.mdx"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "publishedAt": "2026-02-20T19:40:12.602Z",
+      "slug": "deploy-a-starter-outstatic-website-on-vercel-with-github-oauth",
+      "status": "published",
+      "title": "Deploy a starter Outstatic website on Vercel with GitHub OAuth"
     }
   ]
 }
