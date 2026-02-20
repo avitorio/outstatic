@@ -1,6 +1,6 @@
 {
-  "commit": "128195c3cd1efc210acd05e0876921815751d732",
-  "generated": "2026-02-20T19:55:33.065Z",
+  "commit": "3b2d34b6ab5b6ee718f4be54adf86e429f660829",
+  "generated": "2026-02-20T19:58:21.087Z",
   "metadata": [
     {
       "__outstatic": {
@@ -545,8 +545,8 @@
     },
     {
       "__outstatic": {
-        "commit": "128195c3cd1efc210acd05e0876921815751d732",
-        "hash": "46805662",
+        "commit": "3b2d34b6ab5b6ee718f4be54adf86e429f660829",
+        "hash": "960927893",
         "path": "/outstatic/content/docs/getting-started.md"
       },
       "author": {
