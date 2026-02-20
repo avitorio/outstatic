@@ -5,6 +5,7 @@ import {
   StepForward,
   WrapText
 } from 'lucide-react'
+import { useEffect } from 'react'
 import { useEditor } from '@/components/editor/editor-context'
 import { getPrevText } from '@/components/editor/utils/getPrevText'
 import {
@@ -40,10 +41,25 @@ const options = [
 
 interface AISelectorCommandsProps {
   onSelect: (value: string, option: string) => void
+  onClose: () => void
 }
 
-const AISelectorCommands = ({ onSelect }: AISelectorCommandsProps) => {
+const AISelectorCommands = ({ onSelect, onClose }: AISelectorCommandsProps) => {
   const { editor } = useEditor()
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== 'Escape') return
+      event.preventDefault()
+      onClose()
+    }
+
+    document.addEventListener('keydown', handleKeyDown)
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [onClose])
 
   if (!editor) return null
 
@@ -63,7 +79,7 @@ const AISelectorCommands = ({ onSelect }: AISelectorCommandsProps) => {
             key={option.value}
             value={option.value}
           >
-            <option.icon className="h-4 w-4 text-purple-500" />
+            <option.icon className="h-4 w-4 text-black" />
             {option.label}
           </CommandItem>
         ))}
@@ -79,7 +95,7 @@ const AISelectorCommands = ({ onSelect }: AISelectorCommandsProps) => {
           value="continue"
           className="gap-2 px-4"
         >
-          <StepForward className="h-4 w-4 text-purple-500" />
+          <StepForward className="h-4 w-4 text-black" />
           Continue writing
         </CommandItem>
       </CommandGroup>

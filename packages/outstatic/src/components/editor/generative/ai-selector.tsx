@@ -122,6 +122,10 @@ export function AISelector({ onOpenChange }: AISelectorProps) {
               onSelect={(value, option) =>
                 complete(value, { body: { option } })
               }
+              onClose={() => {
+                editor.chain().unsetHighlight().focus().run()
+                onOpenChange(false)
+              }}
             />
           )}
         </>
