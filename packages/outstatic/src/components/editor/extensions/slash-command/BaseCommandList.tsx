@@ -36,9 +36,7 @@ export const BaseCommandList = ({
   const { hasAIProviderKey, basePath, isPro, dashboardRoute, projectInfo } =
     useOutstatic()
   const selectedIndex =
-    items.length === 0
-      ? 0
-      : Math.min(selectedIndexState, items.length - 1)
+    items.length === 0 ? 0 : Math.min(selectedIndexState, items.length - 1)
 
   const completionStartPos = useRef<number | null>(null)
 
