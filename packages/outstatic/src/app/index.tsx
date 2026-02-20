@@ -101,8 +101,9 @@ export async function Outstatic({
       process.env.VERCEL_GIT_REPO_SLUG ||
       '',
     OST_REPO_BRANCH: repoBranch || process.env.OST_REPO_BRANCH,
-    OST_CONTENT_PATH: `${repoBranch || process.env.OST_REPO_BRANCH}:${process.env.OST_MONOREPO_PATH ? process.env.OST_MONOREPO_PATH + '/' : ''
-      }${process.env.OST_CONTENT_PATH || ''}`,
+    OST_CONTENT_PATH: `${repoBranch || process.env.OST_REPO_BRANCH}:${
+      process.env.OST_MONOREPO_PATH ? process.env.OST_MONOREPO_PATH + '/' : ''
+    }${process.env.OST_CONTENT_PATH || ''}`,
     OST_MONOREPO_PATH: '',
     OST_BASE_PATH: ''
   }
@@ -139,10 +140,10 @@ export async function Outstatic({
     isPro: projectInfo?.isPro || false,
     projectInfo: projectInfo
       ? {
-        projectId: projectInfo.projectId,
-        projectSlug: projectInfo.projectSlug,
-        accountSlug: projectInfo.accountSlug
-      }
+          projectId: projectInfo.projectId,
+          projectSlug: projectInfo.projectSlug,
+          accountSlug: projectInfo.accountSlug
+        }
       : undefined
   } as OutstaticData
 }

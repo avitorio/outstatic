@@ -123,11 +123,7 @@ export function ApiKeyLoginDialog({
           </p>
         </div>
         <DialogFooter>
-          <Button
-            asChild
-            size="lg"
-            className="w-full"
-          >
+          <Button asChild size="lg" className="w-full">
             <Link
               target="_blank"
               rel="noopener noreferrer"

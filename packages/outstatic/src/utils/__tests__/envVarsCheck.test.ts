@@ -1,6 +1,8 @@
 import { ORIGINAL_ENV } from '@/app/api/auth/test-helpers'
 
-async function loadEnvVarsModule(overrides: Record<string, string | undefined>) {
+async function loadEnvVarsModule(
+  overrides: Record<string, string | undefined>
+) {
   jest.resetModules()
   process.env = {
     ...ORIGINAL_ENV,

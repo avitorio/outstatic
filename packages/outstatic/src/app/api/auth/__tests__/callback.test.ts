@@ -44,11 +44,14 @@ async function setupCallbackRoute(
   const githubModule = await import('@/utils/auth/github')
 
   return {
-    callbackRoute: callbackRoute as unknown as (request: Request) => Promise<Response>,
+    callbackRoute: callbackRoute as unknown as (
+      request: Request
+    ) => Promise<Response>,
     setLoginSessionMock: authModule.setLoginSession as unknown as jest.Mock,
     getAccessTokenMock: githubModule.getAccessToken as unknown as jest.Mock,
     fetchGitHubUserMock: githubModule.fetchGitHubUser as unknown as jest.Mock,
-    checkCollaboratorMock: githubModule.checkCollaborator as unknown as jest.Mock,
+    checkCollaboratorMock:
+      githubModule.checkCollaborator as unknown as jest.Mock,
     checkCollaboratorWithRepoMock:
       githubModule.checkCollaboratorWithRepo as unknown as jest.Mock
   }
@@ -82,7 +85,7 @@ describe('/api/outstatic/callback', () => {
   })
 
   it('handles exchange_token callback and stores magic-link session', async () => {
-    ; (global.fetch as jest.Mock).mockResolvedValueOnce(
+    ;(global.fetch as jest.Mock).mockResolvedValueOnce(
       jsonResponse({
         user: {
           id: 'user-id',
@@ -111,7 +114,9 @@ describe('/api/outstatic/callback', () => {
     )
 
     expect(response.status).toBe(307)
-    expect(getLocationHeader(response)).toBe('https://self-host.dev/cms/outstatic')
+    expect(getLocationHeader(response)).toBe(
+      'https://self-host.dev/cms/outstatic'
+    )
     expect(global.fetch).toHaveBeenCalledWith(
       'https://outstatic.com/api/outstatic/auth/exchange-token',
       expect.objectContaining({
@@ -134,7 +139,7 @@ describe('/api/outstatic/callback', () => {
   })
 
   it('falls back to email when exchange payload has no user.login', async () => {
-    ; (global.fetch as jest.Mock).mockResolvedValueOnce(
+    ;(global.fetch as jest.Mock).mockResolvedValueOnce(
       jsonResponse({
         user: {
           id: 'user-id',
@@ -170,7 +175,7 @@ describe('/api/outstatic/callback', () => {
   })
 
   it('redirects to session-error when exchange_token exchange fails', async () => {
-    ; (global.fetch as jest.Mock).mockResolvedValueOnce(
+    ;(global.fetch as jest.Mock).mockResolvedValueOnce(
       jsonResponse(
         {
           error: 'invalid_exchange'
@@ -272,48 +277,53 @@ describe('/api/outstatic/callback', () => {
   })
 
   it('creates magic-link session for validated non-collaborators with pro key', async () => {
-    ; (global.fetch as jest.Mock).mockImplementation(async (input: URL | string) => {
-      const url = input.toString()
+    ;(global.fetch as jest.Mock).mockImplementation(
+      async (input: URL | string) => {
+        const url = input.toString()
 
-      if (url === 'https://outstatic.com/api/outstatic/project') {
-        return jsonResponse({
-          repo_owner: 'outstatic',
-          repo_slug: 'repo'
-        })
+        if (url === 'https://outstatic.com/api/outstatic/project') {
+          return jsonResponse({
+            repo_owner: 'outstatic',
+            repo_slug: 'repo'
+          })
+        }
+
+        if (
+          url ===
+          'https://outstatic.com/api/outstatic/auth/validate-github-user'
+        ) {
+          return jsonResponse({
+            valid: true,
+            exchange_token: 'relay-token',
+            user: {
+              name: 'Relay User',
+              login: 'relay-login',
+              avatar_url: 'https://example.com/relay.png'
+            }
+          })
+        }
+
+        if (url === 'https://outstatic.com/api/outstatic/auth/exchange-token') {
+          return jsonResponse({
+            user: {
+              id: 'user-id',
+              email: 'relay@example.com',
+              login: 'exchange-login',
+              name: 'Exchange Name',
+              avatar_url: 'https://example.com/exchange.png',
+              permissions: ['content.manage']
+            },
+            session: {
+              access_token: 'relay-access-token',
+              refresh_token: 'relay-refresh-token',
+              expires_at: 2000000000
+            }
+          })
+        }
+
+        throw new Error(`Unexpected fetch URL: ${url}`)
       }
-
-      if (url === 'https://outstatic.com/api/outstatic/auth/validate-github-user') {
-        return jsonResponse({
-          valid: true,
-          exchange_token: 'relay-token',
-          user: {
-            name: 'Relay User',
-            login: 'relay-login',
-            avatar_url: 'https://example.com/relay.png'
-          }
-        })
-      }
-
-      if (url === 'https://outstatic.com/api/outstatic/auth/exchange-token') {
-        return jsonResponse({
-          user: {
-            id: 'user-id',
-            email: 'relay@example.com',
-            login: 'exchange-login',
-            name: 'Exchange Name',
-            avatar_url: 'https://example.com/exchange.png',
-            permissions: ['content.manage']
-          },
-          session: {
-            access_token: 'relay-access-token',
-            refresh_token: 'relay-refresh-token',
-            expires_at: 2000000000
-          }
-        })
-      }
-
-      throw new Error(`Unexpected fetch URL: ${url}`)
-    })
+    )
 
     const {
       callbackRoute,
@@ -357,7 +367,9 @@ describe('/api/outstatic/callback', () => {
     const validateCall = (global.fetch as jest.Mock).mock.calls.find((call) =>
       call[0]
         .toString()
-        .includes('https://outstatic.com/api/outstatic/auth/validate-github-user')
+        .includes(
+          'https://outstatic.com/api/outstatic/auth/validate-github-user'
+        )
     )
 
     const validatePayload = JSON.parse(validateCall?.[1]?.body ?? '{}')
@@ -368,27 +380,32 @@ describe('/api/outstatic/callback', () => {
   })
 
   it('redirects to not-collaborator when SaaS validate call fails', async () => {
-    ; (global.fetch as jest.Mock).mockImplementation(async (input: URL | string) => {
-      const url = input.toString()
+    ;(global.fetch as jest.Mock).mockImplementation(
+      async (input: URL | string) => {
+        const url = input.toString()
 
-      if (url === 'https://outstatic.com/api/outstatic/project') {
-        return jsonResponse({
-          repo_owner: 'outstatic',
-          repo_slug: 'repo'
-        })
+        if (url === 'https://outstatic.com/api/outstatic/project') {
+          return jsonResponse({
+            repo_owner: 'outstatic',
+            repo_slug: 'repo'
+          })
+        }
+
+        if (
+          url ===
+          'https://outstatic.com/api/outstatic/auth/validate-github-user'
+        ) {
+          return jsonResponse(
+            {
+              valid: false
+            },
+            { status: 403 }
+          )
+        }
+
+        throw new Error(`Unexpected fetch URL: ${url}`)
       }
-
-      if (url === 'https://outstatic.com/api/outstatic/auth/validate-github-user') {
-        return jsonResponse(
-          {
-            valid: false
-          },
-          { status: 403 }
-        )
-      }
-
-      throw new Error(`Unexpected fetch URL: ${url}`)
-    })
+    )
 
     const {
       callbackRoute,
@@ -422,39 +439,44 @@ describe('/api/outstatic/callback', () => {
   })
 
   it('redirects to session-error when validate succeeds but exchange fails', async () => {
-    ; (global.fetch as jest.Mock).mockImplementation(async (input: URL | string) => {
-      const url = input.toString()
+    ;(global.fetch as jest.Mock).mockImplementation(
+      async (input: URL | string) => {
+        const url = input.toString()
 
-      if (url === 'https://outstatic.com/api/outstatic/project') {
-        return jsonResponse({
-          repo_owner: 'outstatic',
-          repo_slug: 'repo'
-        })
+        if (url === 'https://outstatic.com/api/outstatic/project') {
+          return jsonResponse({
+            repo_owner: 'outstatic',
+            repo_slug: 'repo'
+          })
+        }
+
+        if (
+          url ===
+          'https://outstatic.com/api/outstatic/auth/validate-github-user'
+        ) {
+          return jsonResponse({
+            valid: true,
+            exchange_token: 'relay-token',
+            user: {
+              name: 'Relay User',
+              login: 'relay-login',
+              avatar_url: ''
+            }
+          })
+        }
+
+        if (url === 'https://outstatic.com/api/outstatic/auth/exchange-token') {
+          return jsonResponse(
+            {
+              error: 'invalid_exchange'
+            },
+            { status: 401 }
+          )
+        }
+
+        throw new Error(`Unexpected fetch URL: ${url}`)
       }
-
-      if (url === 'https://outstatic.com/api/outstatic/auth/validate-github-user') {
-        return jsonResponse({
-          valid: true,
-          exchange_token: 'relay-token',
-          user: {
-            name: 'Relay User',
-            login: 'relay-login',
-            avatar_url: ''
-          }
-        })
-      }
-
-      if (url === 'https://outstatic.com/api/outstatic/auth/exchange-token') {
-        return jsonResponse(
-          {
-            error: 'invalid_exchange'
-          },
-          { status: 401 }
-        )
-      }
-
-      throw new Error(`Unexpected fetch URL: ${url}`)
-    })
+    )
 
     const {
       callbackRoute,

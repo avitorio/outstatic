@@ -107,9 +107,18 @@ type SidebarMenuButtonProps = React.ComponentProps<'button'> &
     isActive?: boolean
   }
 
-const SidebarMenuButton = React.forwardRef<HTMLButtonElement, SidebarMenuButtonProps>(
+const SidebarMenuButton = React.forwardRef<
+  HTMLButtonElement,
+  SidebarMenuButtonProps
+>(
   (
-    { className, asChild = false, isActive = false, size = 'default', ...props },
+    {
+      className,
+      asChild = false,
+      isActive = false,
+      size = 'default',
+      ...props
+    },
     ref
   ) => {
     const Comp = asChild ? Slot : 'button'

@@ -65,7 +65,7 @@ describe('/api/outstatic/login', () => {
   })
 
   it('calls relay endpoint when only OUTSTATIC_API_KEY is configured', async () => {
-    ; (global.fetch as jest.Mock).mockResolvedValueOnce(
+    ;(global.fetch as jest.Mock).mockResolvedValueOnce(
       jsonResponse({
         url: 'https://outstatic.com/api/outstatic/auth/github-exchange?token=abc123'
       })
@@ -133,7 +133,7 @@ describe('/api/outstatic/login', () => {
   ])(
     'passes through relay error code "%s"',
     async (relayErrorCode, relayStatus) => {
-      ; (global.fetch as jest.Mock).mockResolvedValueOnce(
+      ;(global.fetch as jest.Mock).mockResolvedValueOnce(
         jsonResponse(
           {
             error: relayErrorCode
@@ -161,7 +161,7 @@ describe('/api/outstatic/login', () => {
   )
 
   it('falls back to github-relay-failed for unknown relay errors', async () => {
-    ; (global.fetch as jest.Mock).mockResolvedValueOnce(
+    ;(global.fetch as jest.Mock).mockResolvedValueOnce(
       jsonResponse(
         {
           error: 'unexpected-error'
@@ -188,7 +188,7 @@ describe('/api/outstatic/login', () => {
   })
 
   it('falls back to github-relay-failed for malformed relay success payload', async () => {
-    ; (global.fetch as jest.Mock).mockResolvedValueOnce(jsonResponse({}))
+    ;(global.fetch as jest.Mock).mockResolvedValueOnce(jsonResponse({}))
 
     resetEnv({
       OST_GITHUB_ID: undefined,
@@ -208,7 +208,7 @@ describe('/api/outstatic/login', () => {
   })
 
   it('falls back to github-relay-failed when relay request throws', async () => {
-    ; (global.fetch as jest.Mock).mockRejectedValueOnce(
+    ;(global.fetch as jest.Mock).mockRejectedValueOnce(
       new Error('network failure')
     )
 

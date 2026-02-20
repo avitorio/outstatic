@@ -1,4 +1,7 @@
-import { ExchangeTokenResponseSchema, GoogleLoginRequestSchema } from '../schemas'
+import {
+  ExchangeTokenResponseSchema,
+  GoogleLoginRequestSchema
+} from '../schemas'
 
 describe('ExchangeTokenResponseSchema', () => {
   it('accepts payloads without user.login', () => {

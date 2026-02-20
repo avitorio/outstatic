@@ -274,7 +274,9 @@ describe('AuthProvider', () => {
         timestamp: expect.any(Number)
       })
     )
-    expect(mockPush).toHaveBeenCalledWith(`${basePath}${OUTSTATIC_API_PATH}/signout`)
+    expect(mockPush).toHaveBeenCalledWith(
+      `${basePath}${OUTSTATIC_API_PATH}/signout`
+    )
   })
 
   it('handles SESSION_UPDATE message from another tab', async () => {
@@ -301,7 +303,6 @@ describe('AuthProvider', () => {
     await waitFor(() =>
       expect(screen.getByTestId('status')).toHaveTextContent('authenticated')
     )
-
     ;(global.fetch as jest.Mock).mockResolvedValueOnce({
       ok: true,
       json: async () => ({ session: refreshedSession })

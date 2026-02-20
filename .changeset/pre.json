@@ -6,7 +6,5 @@
     "docs": "1.0.5",
     "outstatic": "2.0.18"
   },
-  "changesets": [
-    "wise-ads-grow"
-  ]
+  "changesets": ["wise-ads-grow"]
 }

@@ -138,7 +138,11 @@ export function UpgradeDialog({
           </div>
 
           <Button variant="default" size="lg" className="w-full" asChild>
-            <Link target="_blank" rel="noopener noreferrer" href={getUpgradeUrl(accountSlug, dashboardRoute, feature)}>
+            <Link
+              target="_blank"
+              rel="noopener noreferrer"
+              href={getUpgradeUrl(accountSlug, dashboardRoute, feature)}
+            >
               Upgrade to Pro
               <ArrowRight className="ml-2 h-4 w-4" />
             </Link>

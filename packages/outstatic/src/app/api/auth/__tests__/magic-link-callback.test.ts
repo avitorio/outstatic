@@ -27,12 +27,14 @@ async function setupMagicLinkRoute(
     setLoginSession: jest.fn()
   }))
 
-  const { default: magicLinkCallbackRoute } = await import('../magic-link-callback')
+  const { default: magicLinkCallbackRoute } =
+    await import('../magic-link-callback')
   const authModule = await import('@/utils/auth/auth')
 
   return {
-    magicLinkCallbackRoute:
-      magicLinkCallbackRoute as unknown as (request: Request) => Promise<Response>,
+    magicLinkCallbackRoute: magicLinkCallbackRoute as unknown as (
+      request: Request
+    ) => Promise<Response>,
     setLoginSessionMock: authModule.setLoginSession as unknown as jest.Mock
   }
 }
@@ -48,7 +50,7 @@ describe('/api/outstatic/magic-link-callback', () => {
   })
 
   it('creates a session and redirects to same-origin return_url', async () => {
-    ; (global.fetch as jest.Mock).mockResolvedValueOnce(
+    ;(global.fetch as jest.Mock).mockResolvedValueOnce(
       jsonResponse({
         user: {
           email: 'member@example.com',
@@ -94,14 +96,15 @@ describe('/api/outstatic/magic-link-callback', () => {
         method: 'POST',
         body: JSON.stringify({
           exchange_token: 'exchange-123',
-          callback_url: 'https://self-host.dev/api/outstatic/magic-link-callback'
+          callback_url:
+            'https://self-host.dev/api/outstatic/magic-link-callback'
         })
       })
     )
   })
 
   it('falls back to user email when login is missing', async () => {
-    ; (global.fetch as jest.Mock).mockResolvedValueOnce(
+    ;(global.fetch as jest.Mock).mockResolvedValueOnce(
       jsonResponse({
         user: {
           email: 'fallback@example.com',
@@ -138,7 +141,7 @@ describe('/api/outstatic/magic-link-callback', () => {
   })
 
   it('rejects cross-origin return_url values', async () => {
-    ; (global.fetch as jest.Mock).mockResolvedValueOnce(
+    ;(global.fetch as jest.Mock).mockResolvedValueOnce(
       jsonResponse({
         user: {
           email: 'member@example.com',
@@ -173,7 +176,7 @@ describe('/api/outstatic/magic-link-callback', () => {
   })
 
   it('redirects with invalid_data for malformed exchange payloads', async () => {
-    ; (global.fetch as jest.Mock).mockResolvedValueOnce(
+    ;(global.fetch as jest.Mock).mockResolvedValueOnce(
       jsonResponse({
         user: {
           email: 'member@example.com'

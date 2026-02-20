@@ -61,7 +61,11 @@ const normalizeMenuGroups = (items: DocsMenuItem[]) => {
   return groups
 }
 
-export const DocsMenu = ({ content, className = '', onNavigate }: DocsMenuProps) => {
+export const DocsMenu = ({
+  content,
+  className = '',
+  onNavigate
+}: DocsMenuProps) => {
   const pathname = usePathname()
   const hash = useHash()
   const items = useMemo(() => parseMenuMarkdown(content), [content])
@@ -110,14 +114,18 @@ export const DocsMenu = ({ content, className = '', onNavigate }: DocsMenuProps)
     return group.items.some(itemHasActiveDescendant)
   }
 
-  const [groupVisibility, setGroupVisibility] = useState<Record<string, boolean>>({})
+  const [groupVisibility, setGroupVisibility] = useState<
+    Record<string, boolean>
+  >({})
 
   const renderItems = (menuItems: DocsMenuItem[], depth = 0): ReactNode => {
     if (depth === 0) {
       return (
         <SidebarMenu>
           {menuItems.map((item, index) => (
-            <SidebarMenuItem key={`${item.title}-${item.href ?? 'group'}-${index}`}>
+            <SidebarMenuItem
+              key={`${item.title}-${item.href ?? 'group'}-${index}`}
+            >
               {item.href ? (
                 <SidebarMenuButton asChild isActive={isActiveHref(item.href)}>
                   <Link
@@ -138,7 +146,9 @@ export const DocsMenu = ({ content, className = '', onNavigate }: DocsMenuProps)
                   {item.title}
                 </SidebarMenuButton>
               )}
-              {item.items.length > 0 ? renderItems(item.items, depth + 1) : null}
+              {item.items.length > 0
+                ? renderItems(item.items, depth + 1)
+                : null}
             </SidebarMenuItem>
           ))}
         </SidebarMenu>
@@ -148,7 +158,9 @@ export const DocsMenu = ({ content, className = '', onNavigate }: DocsMenuProps)
     return (
       <SidebarMenuSub>
         {menuItems.map((item, index) => (
-          <SidebarMenuSubItem key={`${item.title}-${item.href ?? depth}-${index}`}>
+          <SidebarMenuSubItem
+            key={`${item.title}-${item.href ?? depth}-${index}`}
+          >
             {item.href ? (
               <SidebarMenuSubButton asChild isActive={isActiveHref(item.href)}>
                 <Link
@@ -177,7 +189,8 @@ export const DocsMenu = ({ content, className = '', onNavigate }: DocsMenuProps)
       {groups.map((group, index) => {
         const groupKey = `${index}-${toKey(group.title)}`
         const scopedGroupKey = `${pathname}:${groupKey}`
-        const isOpen = groupVisibility[scopedGroupKey] ?? groupHasActiveItem(group)
+        const isOpen =
+          groupVisibility[scopedGroupKey] ?? groupHasActiveItem(group)
 
         return (
           <SidebarGroup key={groupKey}>

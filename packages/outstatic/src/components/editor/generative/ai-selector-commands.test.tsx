@@ -7,16 +7,12 @@ jest.mock('@/components/editor/editor-context', () => ({
 }))
 
 jest.mock('@/components/ui/shadcn/command', () => ({
-  CommandList: ({
-    children
-  }: {
-    children: React.ReactNode
-  }) => <div>{children}</div>,
-  CommandGroup: ({
-    children
-  }: {
-    children: React.ReactNode
-  }) => <div>{children}</div>,
+  CommandList: ({ children }: { children: React.ReactNode }) => (
+    <div>{children}</div>
+  ),
+  CommandGroup: ({ children }: { children: React.ReactNode }) => (
+    <div>{children}</div>
+  ),
   CommandItem: ({
     children,
     className

@@ -8,7 +8,9 @@ export type DocsMenuItem = {
 
 const LINK_PATTERN = /^\[([^\]]+)\]\(([^)]+)\)$/
 
-const parseMenuLine = (rawLine: string): { depth: number; value: string } | null => {
+const parseMenuLine = (
+  rawLine: string
+): { depth: number; value: string } | null => {
   const lineMatch = rawLine.match(/^(\s*)-\s+(.*)$/)
 
   if (!lineMatch) {
@@ -61,7 +63,10 @@ export function parseMenuMarkdown(rawContent: string): DocsMenuItem[] {
 
     const item = parseMenuValue(parsedLine.value)
 
-    while (stack.length > 0 && stack[stack.length - 1].depth >= parsedLine.depth) {
+    while (
+      stack.length > 0 &&
+      stack[stack.length - 1].depth >= parsedLine.depth
+    ) {
       stack.pop()
     }
 

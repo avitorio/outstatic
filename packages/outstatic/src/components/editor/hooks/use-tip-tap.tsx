@@ -183,7 +183,14 @@ export const useTipTap = ({ ...rhfMethods }) => {
         debouncedCallback({ editor })
       }
     },
-    [hasAIProviderKey, isPro, isLoading, complete, debouncedCallback, openUpgradeDialog]
+    [
+      hasAIProviderKey,
+      isPro,
+      isLoading,
+      complete,
+      debouncedCallback,
+      openUpgradeDialog
+    ]
   )
 
   const editor = useEditor({

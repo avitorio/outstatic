@@ -1,14 +1,8 @@
 {
   "tasks": {
     "build": {
-      "dependsOn": [
-        "^build"
-      ],
-      "outputs": [
-        "dist/**",
-        ".next/**",
-        "!.next/cache/**"
-      ]
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**", ".next/**", "!.next/cache/**"]
     },
     "lint": {
       "outputs": []
@@ -18,10 +12,7 @@
     },
     "dev": {
       "cache": false,
-      "env": [
-        "NEXT_PUBLIC_APP_URL",
-        "OUTSTATIC_API_URL"
-      ]
+      "env": ["NEXT_PUBLIC_APP_URL", "OUTSTATIC_API_URL"]
     },
     "clean": {
       "cache": false
