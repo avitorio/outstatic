@@ -1,7 +1,7 @@
 import { Document } from '@/types'
 
 // Outstatic configuration
-export const OUTSTATIC_VERSION = '2.0.18'
+export const OUTSTATIC_VERSION = '2.1.0-canary.0'
 export const OUTSTATIC_URL = 'https://outstatic.com'
 export const OUTSTATIC_APP_URL =
   process.env.NEXT_PUBLIC_OST_APP_URL ?? `https://outstatic.com`
