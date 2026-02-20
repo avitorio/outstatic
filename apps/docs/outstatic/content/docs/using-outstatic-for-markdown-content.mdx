@@ -8,7 +8,7 @@ author:
 slug: "using-outstatic-for-markdown-content"
 ---
 
-Clone the `outstatic-dashboard` project to your machine:
+Clone the Outstatic Dashboard to your machine:
 
 ```bash
 git clone git@github.com:avitorio/outstatic-dashboard.git
@@ -17,7 +17,9 @@ pnpm install
 pnpm dev
 ```
 
-Start your dev server. Assuming you're on `http://localhost:3000` you can access your dashboard at `https://localhost:3000/outstatic`.
+Start the dev server. If it is running at `http://localhost:3000`, open your dashboard at:
+
+`http://localhost:3000/outstatic`
 
 You should see this page:
 
@@ -27,26 +29,28 @@ There are two ways you can access your dashboard. With GitHub via Outstatic (rec
 
 ### Accessing with GitHub via Outstatic (Recommended)
 
-Click on **Sign in with Github** and follow the steps to create a free [Outstatic.com](http://Outstatic.com) account and generate an API key for your project.
-
-Copy the `OUTSTATIC_API_KEY` and update your `.env` file.
+1. On the `/outstatic` page, click **Sign in with GitHub**.
+2. Follow the flow to create a free Outstatic account and generate an API key for your project.
+3. Copy the API key and add it to your `.env`:
 
 ```bash
 OUTSTATIC_API_KEY=ost_******************************
 ```
 
-Now go back to the `/outstatic` page, reload it and click on **Sign in with Github** again.
+1. Go back to `/outstatic`, refresh the page, and click **Sign in with GitHub** again.
 
-If everything is setup correctly you'll be able to access your Dashboard.
+If everything is set up correctly, you will land in your Dashboard.
 
-Congratulations! Your Outstatic installation is ready and you can now start creating and editing content.
+You are ready to start creating and editing content. Next, learn how Outstatic manages content.
 
-We recommend you learn how Outstatic [manages content](/introduction).
+### Access the dashboard from a deployed site
 
-### Deploying the Outstatic dashboard from your live site
+If you also want to use the dashboard on your production or preview deployment:
 
-If you also want to access your Outstatic dashboard through a deployed site you'll need to click the **API Keys** button in your Outstatic dashboard sidebar and add a new **Callback Origin URL**.
+1. In the dashboard sidebar, open **API Keys**.
 
-Don't forget to add your API Key to your .env where you are deploying your website.
+2. Add your deployed site URL as a **Callback Origin URL**.
 
-To learn more about all the available environment variables, see the [Environment Variables ](https://outstatic.com/environment-variables)section of the docs.
+3. Make sure `OUTSTATIC_API_KEY` is set in the environment variables for that deployment.
+
+To learn more about all available environment variables, see the [Environment Variables ](https://outstatic.com/environment-variables)section of the docs.
