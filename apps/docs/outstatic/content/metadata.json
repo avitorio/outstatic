@@ -1,6 +1,6 @@
 {
   "commit": "97c399052d94293307b0ce7a9946ff66ba61bb3d",
-  "generated": "2026-02-17T14:42:26.020Z",
+  "generated": "2026-02-20T00:17:00.000Z",
   "metadata": [
     {
       "__outstatic": {
@@ -489,6 +489,60 @@
       "slug": "getting-started-with-next-js",
       "status": "published",
       "title": "Getting started with Next.js"
+    },
+    {
+      "__outstatic": {
+        "commit": "d75af61ce2f600e677f425a22c3df1c40c3b5b20",
+        "hash": "1478479573",
+        "path": "/outstatic/content/docs/api-keys.md"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "coverImage": "",
+      "description": "Learn how API keys work and unlock PRO features for your self-hosted Outstatic instance.",
+      "publishedAt": "2025-02-03T12:00:00.000Z",
+      "slug": "api-keys",
+      "status": "published",
+      "title": "API Keys"
+    },
+    {
+      "__outstatic": {
+        "commit": "1845b19cb5e4d49a452e61ee41ec3e548efd2f42",
+        "hash": "198496804",
+        "path": "/outstatic/content/docs/type-generation.md"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "coverImage": "",
+      "description": "Generate TypeScript types from your content schemas",
+      "publishedAt": "2026-01-24T12:00:00.000Z",
+      "slug": "type-generation",
+      "status": "published",
+      "title": "Type Generation"
+    },
+    {
+      "__outstatic": {
+        "commit": "a75364f531b0b95c8d026564b0ce375952b59bea",
+        "hash": "1551793474",
+        "path": "/outstatic/content/docs/roles.mdx"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "coverImage": "",
+      "description": "Learn how roles in Outstatic PRO help your team work faster and safer.",
+      "publishedAt": "2026-02-20T12:00:00.000Z",
+      "slug": "roles",
+      "status": "published",
+      "title": "Roles & Permissions"
     }
   ]
 }

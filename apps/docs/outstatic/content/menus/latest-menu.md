@@ -34,6 +34,8 @@ publishedAt: '2024-11-06T03:00:00.000Z'
 
 - [API Keys](/api-keys)
 
+- [Roles & Permissions](/roles)
+
 - [Environment Variables](/environment-variables)
 
 - [FAQs](/faqs)
