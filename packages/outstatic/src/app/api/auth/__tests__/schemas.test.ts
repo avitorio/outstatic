@@ -1,4 +1,4 @@
-import { ExchangeTokenResponseSchema } from '../schemas'
+import { ExchangeTokenResponseSchema, GoogleLoginRequestSchema } from '../schemas'
 
 describe('ExchangeTokenResponseSchema', () => {
   it('accepts payloads without user.login', () => {
@@ -55,5 +55,20 @@ describe('ExchangeTokenResponseSchema', () => {
     })
 
     expect(parsed.user.avatar_url).toBeNull()
+  })
+})
+
+describe('GoogleLoginRequestSchema', () => {
+  it('accepts empty request payload', () => {
+    const parsed = GoogleLoginRequestSchema.parse({})
+    expect(parsed.returnUrl).toBeUndefined()
+  })
+
+  it('accepts a valid returnUrl', () => {
+    const parsed = GoogleLoginRequestSchema.parse({
+      returnUrl: 'https://self-host.dev/outstatic'
+    })
+
+    expect(parsed.returnUrl).toBe('https://self-host.dev/outstatic')
   })
 })

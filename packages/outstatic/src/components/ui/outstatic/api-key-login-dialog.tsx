@@ -119,7 +119,7 @@ export function ApiKeyLoginDialog({
           <Button
             asChild
             size="lg"
-            className="w-full bg-gradient-to-r from-cyan-500 via-blue-500 to-indigo-500 text-white hover:from-cyan-600 hover:via-blue-600 hover:to-indigo-600"
+            className="w-full"
           >
             <Link
               target="_blank"

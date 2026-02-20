@@ -39,8 +39,16 @@ jest.mock('@/components/ui/outstatic/loading-background', () => ({
 }))
 
 jest.mock('@/components/ui/outstatic/upgrade-dialog', () => ({
-  UpgradeDialog: ({ children }: { children: ReactNode }) => (
-    <>{children}</>
+  UpgradeDialog: ({
+    children,
+    open = false
+  }: {
+    children?: ReactNode
+    open?: boolean
+  }) => (
+    <div data-testid="upgrade-dialog" data-open={String(open)}>
+      {children}
+    </div>
   )
 }))
 
@@ -58,7 +66,23 @@ describe('<Login />', () => {
     window.history.pushState({}, '', '/outstatic')
   })
 
-  it('opens API key dialog when backend returns auth-not-configured', async () => {
+  it('renders GitHub link and Google sign-in action', () => {
+    render(<Login />)
+
+    expect(
+      screen.getByRole('link', {
+        name: /sign in with github/i
+      })
+    ).toBeInTheDocument()
+
+    expect(
+      screen.getByRole('button', {
+        name: /sign in with google/i
+      })
+    ).toBeInTheDocument()
+  })
+
+  it('opens API key dialog when GitHub backend returns auth-not-configured', async () => {
     ;(global.fetch as jest.Mock).mockResolvedValueOnce({
       ok: false,
       status: 400,
@@ -89,7 +113,7 @@ describe('<Login />', () => {
     })
   })
 
-  it('redirects known login errors to query string', async () => {
+  it('redirects known GitHub login errors to query string', async () => {
     ;(global.fetch as jest.Mock).mockResolvedValueOnce({
       ok: false,
       status: 401,
@@ -111,7 +135,7 @@ describe('<Login />', () => {
     })
   })
 
-  it('routes unknown failures to github-relay-failed', async () => {
+  it('routes unknown GitHub failures to github-relay-failed', async () => {
     ;(global.fetch as jest.Mock).mockRejectedValueOnce(
       new Error('network unavailable')
     )
@@ -131,7 +155,7 @@ describe('<Login />', () => {
     })
   })
 
-  it('pushes backend login URL when request succeeds', async () => {
+  it('pushes backend GitHub login URL when request succeeds', async () => {
     ;(global.fetch as jest.Mock).mockResolvedValueOnce({
       ok: true,
       status: 200,
@@ -152,6 +176,113 @@ describe('<Login />', () => {
       expect(pushMock).toHaveBeenCalledWith(
         'https://outstatic.com/api/outstatic/auth/github-exchange?token=abc'
       )
+    })
+  })
+
+  it('pushes backend Google login URL when request succeeds', async () => {
+    ;(global.fetch as jest.Mock).mockResolvedValueOnce({
+      ok: true,
+      status: 200,
+      json: async () => ({
+        url: 'https://outstatic.com/api/outstatic/auth/google-exchange?token=abc'
+      })
+    })
+
+    render(<Login basePath="/cms" isPro />)
+
+    fireEvent.click(
+      screen.getByRole('link', {
+        name: /sign in with google/i
+      })
+    )
+
+    await waitFor(() => {
+      expect(pushMock).toHaveBeenCalledWith(
+        'https://outstatic.com/api/outstatic/auth/google-exchange?token=abc'
+      )
+    })
+
+    expect(global.fetch).toHaveBeenCalledWith(
+      '/cms/api/outstatic/google-login',
+      expect.objectContaining({
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({})
+      })
+    )
+  })
+
+  it('opens API key dialog when Google backend returns auth-not-configured', async () => {
+    ;(global.fetch as jest.Mock).mockResolvedValueOnce({
+      ok: false,
+      status: 400,
+      json: async () => ({
+        error: 'auth-not-configured'
+      })
+    })
+
+    render(<Login isPro />)
+
+    const googleButton = screen.getByRole('link', {
+      name: /sign in with google/i
+    })
+
+    fireEvent.click(googleButton)
+
+    await waitFor(() => {
+      expect(screen.getByTestId('api-key-dialog')).toHaveAttribute(
+        'data-open',
+        'true'
+      )
+    })
+  })
+
+  it('routes unknown Google failures to google-relay-failed', async () => {
+    ;(global.fetch as jest.Mock).mockRejectedValueOnce(
+      new Error('network unavailable')
+    )
+
+    render(<Login isPro />)
+
+    fireEvent.click(
+      screen.getByRole('link', {
+        name: /sign in with google/i
+      })
+    )
+
+    await waitFor(() => {
+      expect(pushMock).toHaveBeenCalledWith(
+        '/outstatic?error=google-relay-failed'
+      )
+    })
+  })
+
+  it('shows upgrade flow for Google sign-in when not pro', async () => {
+    render(<Login />)
+
+    fireEvent.click(
+      screen.getByRole('button', {
+        name: /sign in with google/i
+      })
+    )
+
+    await waitFor(() => {
+      expect(global.fetch).not.toHaveBeenCalled()
+    })
+  })
+
+  it('opens upgrade dialog when non-pro user focuses email input', async () => {
+    render(<Login />)
+
+    const upgradeDialog = screen.getByTestId('upgrade-dialog')
+    expect(upgradeDialog).toHaveAttribute('data-open', 'false')
+
+    fireEvent.focus(screen.getByPlaceholderText(/enter your email/i))
+
+    await waitFor(() => {
+      expect(upgradeDialog).toHaveAttribute('data-open', 'true')
     })
   })
 })

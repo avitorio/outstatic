@@ -15,6 +15,15 @@ export const MagicLinkRequestSchema = z.object({
 export type MagicLinkRequest = z.infer<typeof MagicLinkRequestSchema>
 
 /**
+ * Schema for Google login request body
+ */
+export const GoogleLoginRequestSchema = z.object({
+  returnUrl: z.string().url().optional()
+})
+
+export type GoogleLoginRequest = z.infer<typeof GoogleLoginRequestSchema>
+
+/**
  * Schema for magic-link callback query parameters
  */
 export const MagicLinkCallbackSchema = z.object({

@@ -4,6 +4,7 @@ import signout from '@/app/api/auth/signout'
 import user from '@/app/api/auth/user'
 import magicLink from '@/app/api/auth/magic-link'
 import magicLinkCallback from '@/app/api/auth/magic-link-callback'
+import googleLogin from '@/app/api/auth/google-login'
 import refresh from '@/app/api/auth/refresh'
 import generate from '@/app/api/generate'
 import media from '@/app/api/media'
@@ -41,6 +42,7 @@ const postPaths: Record<string, RouteHandler> = {
   generate,
   github: githubPost,
   'magic-link': magicLink,
+  'google-login': googleLogin,
   refresh
 } as any
 

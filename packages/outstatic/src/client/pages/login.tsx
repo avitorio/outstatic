@@ -30,12 +30,17 @@ export default function Login({
 
   const error = searchParams.get('error') as Errors
 
-  const [isLoading, setIsLoading] = useState(false)
+  const [githubLoading, setGithubLoading] = useState(false)
+  const [googleLoading, setGoogleLoading] = useState(false)
   const [email, setEmail] = useState('')
   const [emailSent, setEmailSent] = useState(false)
   const [emailLoading, setEmailLoading] = useState(false)
   const [showUpgradeDialog, setShowUpgradeDialog] = useState(false)
   const [showApiKeyDialog, setShowApiKeyDialog] = useState(false)
+  const isLoading = githubLoading || googleLoading
+  const apiBasePath = basePath
+    ? `${basePath.replace(/\/+$/, '')}${OUTSTATIC_API_PATH}`
+    : OUTSTATIC_API_PATH
 
   const router = useRouter()
 
@@ -54,13 +59,13 @@ export default function Login({
     router.push(currentUrl.pathname + currentUrl.search)
   }
 
-  const handleLogin = async (e: React.MouseEvent<HTMLAnchorElement>) => {
+  const handleGithubLogin = async (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault()
-    setIsLoading(true)
+    setGithubLoading(true)
 
     try {
       const response = await fetch(
-        `${basePath ? basePath + '/' : ''}${OUTSTATIC_API_PATH}/login`
+        `${apiBasePath}/login`
       )
       const data = await response.json().catch(() => null)
 
@@ -70,7 +75,6 @@ export default function Login({
             ? data.error
             : 'github-relay-failed'
         navigateToError(errorCode)
-        setIsLoading(false)
         return
       }
 
@@ -84,10 +88,53 @@ export default function Login({
           ? data.error
           : 'github-relay-failed'
       navigateToError(errorCode)
-      setIsLoading(false)
     } catch {
       navigateToError('github-relay-failed')
-      setIsLoading(false)
+    } finally {
+      setGithubLoading(false)
+    }
+  }
+
+  const handleGoogleLogin = async (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault()
+    setGoogleLoading(true)
+
+    try {
+      const response = await fetch(
+        `${apiBasePath}/google-login`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({})
+        }
+      )
+      const data = await response.json().catch(() => null)
+
+      if (!response.ok) {
+        const errorCode =
+          data && typeof data.error === 'string'
+            ? data.error
+            : 'google-relay-failed'
+        navigateToError(errorCode)
+        return
+      }
+
+      if (data && typeof data.url === 'string') {
+        router.push(data.url)
+        return
+      }
+
+      const errorCode =
+        data && typeof data.error === 'string'
+          ? data.error
+          : 'google-relay-failed'
+      navigateToError(errorCode)
+    } catch {
+      navigateToError('google-relay-failed')
+    } finally {
+      setGoogleLoading(false)
     }
   }
 
@@ -98,7 +145,7 @@ export default function Login({
     setEmailLoading(true)
     try {
       const response = await fetch(
-        `${basePath ? basePath + '/' : ''}${OUTSTATIC_API_PATH}/magic-link`,
+        `${apiBasePath}/magic-link`,
         {
           method: 'POST',
           headers: {
@@ -177,6 +224,77 @@ export default function Login({
                       <p className="mb-5 text-center">
                         Sign in to access your&nbsp;dashboard.
                       </p>
+                      <div className="flex flex-col gap-2 w-full">
+                        <Button variant="outline" asChild>
+                          <Link
+                            href={`${OUTSTATIC_API_PATH}/login`}
+                            onClick={handleGithubLogin}
+                            className={clsx(
+                              githubLoading && 'animate-pulse',
+                              'w-full'
+                            )}
+                          >
+                            <svg
+                              className="h-4 w-4 mr-2"
+                              aria-hidden="true"
+                              focusable="false"
+                              data-prefix="fab"
+                              data-icon="github"
+                              role="img"
+                              xmlns="http://www.w3.org/2000/svg"
+                              viewBox="0 0 496 512"
+                            >
+                              <path
+                                fill="currentColor"
+                                d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3 .3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5 .3-6.2 2.3zm44.2-1.7c-2.9 .7-4.9 2.6-4.6 4.9 .3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3 .7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3 .3 2.9 2.3 3.9 1.6 1 3.6 .7 4.3-.7 .7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3 .7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3 .7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"
+                              ></path>
+                            </svg>
+                            Sign in with GitHub
+                          </Link>
+                        </Button>
+                        {isPro ? (
+                          <Button asChild variant="outline" className="mt-2">
+                            <Link
+                              href={`${OUTSTATIC_API_PATH}/google-login`}
+                              onClick={handleGoogleLogin}
+                              className={clsx(
+                                googleLoading && 'animate-pulse',
+                                'w-full'
+                              )}
+                            >
+                              <svg className="h-4 w-4 mr-2" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+                                <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
+                                <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
+                                <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" />
+                                <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
+                                <path d="M1 1h22v22H1z" fill="none" />
+                              </svg>
+                              Sign in with Google
+                            </Link>
+                          </Button>
+                        ) : (
+                          <UpgradeDialog
+                            feature="team"
+                            open={showUpgradeDialog}
+                            onOpenChange={setShowUpgradeDialog}
+                          >
+                            <Button variant="outline" className="mt-2 w-full">
+                              <svg className="h-4 w-4 mr-2" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+                                <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
+                                <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
+                                <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" />
+                                <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
+                                <path d="M1 1h22v22H1z" fill="none" />
+                              </svg>
+                              Sign in with Google
+                            </Button>
+                          </UpgradeDialog>
+                        )}
+                      </div>
+                      <div className="my-2 text-center">
+                        <p className="text-sm text-gray-400">or</p>
+                      </div>
+
                       <form
                         onSubmit={handleEmailLogin}
                         className="w-full max-w-sm"
@@ -187,6 +305,11 @@ export default function Login({
                             placeholder="Enter your email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
+                            onFocus={() => {
+                              if (!isPro) {
+                                setShowUpgradeDialog(true)
+                              }
+                            }}
                             required
                             className="w-full"
                             onKeyDown={(e) => {
@@ -209,52 +332,16 @@ export default function Login({
                             </Button>
                           </>
                         ) : (
-                          <UpgradeDialog
-                            feature="team"
-                            open={showUpgradeDialog}
-                            onOpenChange={setShowUpgradeDialog}
+                          <Button
+                            type="button"
+                            className="w-full"
+                            disabled={!email?.includes('@')}
                           >
-                            <Button
-                              type="submit"
-                              className="w-full"
-                              disabled={!email?.includes('@')}
-                            >
-                              <Mail className="h-4 w-4 mr-2" />
-                              {emailLoading ? 'Sending...' : 'Send Magic Link'}
-                            </Button>
-                          </UpgradeDialog>
+                            <Mail className="h-4 w-4 mr-2" />
+                            {emailLoading ? 'Sending...' : 'Send Magic Link'}
+                          </Button>
                         )}
                       </form>
-                      <div className="my-2 text-center">
-                        <p className="text-sm text-gray-400">or</p>
-                      </div>
-                      <Button asChild>
-                        <Link
-                          href={`${OUTSTATIC_API_PATH}/login`}
-                          onClick={handleLogin}
-                          className={clsx(
-                            isLoading && 'animate-pulse',
-                            'w-full'
-                          )}
-                        >
-                          <svg
-                            className="h-4 w-4 mr-2"
-                            aria-hidden="true"
-                            focusable="false"
-                            data-prefix="fab"
-                            data-icon="github"
-                            role="img"
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 496 512"
-                          >
-                            <path
-                              fill="currentColor"
-                              d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3 .3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5 .3-6.2 2.3zm44.2-1.7c-2.9 .7-4.9 2.6-4.6 4.9 .3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3 .7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3 .3 2.9 2.3 3.9 1.6 1 3.6 .7 4.3-.7 .7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3 .7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3 .7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"
-                            ></path>
-                          </svg>
-                          Sign in with GitHub
-                        </Link>
-                      </Button>
                     </>
                   ) : (
                     <>

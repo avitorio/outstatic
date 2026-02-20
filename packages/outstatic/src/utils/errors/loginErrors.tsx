@@ -55,7 +55,7 @@ const loginErrors = {
     <>
       Login is not configured. <br />
       Add <code>OST_GITHUB_ID</code> and <code>OST_GITHUB_SECRET</code>, or set{' '}
-      <code>OUTSTATIC_API_KEY</code> to use GitHub relay login.
+      <code>OUTSTATIC_API_KEY</code> to use GitHub and Google relay login.
     </>
   ),
   'project-url-not-configured': (
@@ -83,6 +83,13 @@ const loginErrors = {
   'github-relay-failed': (
     <>
       GitHub relay login failed. <br />
+      Please try again. If the problem persists, check your callback origins and
+      API key configuration.
+    </>
+  ),
+  'google-relay-failed': (
+    <>
+      Google relay login failed. <br />
       Please try again. If the problem persists, check your callback origins and
       API key configuration.
     </>
