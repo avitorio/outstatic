@@ -1,10 +1,30 @@
 import { fireEvent, render } from '@testing-library/react'
 import { useEditor } from '@/components/editor/editor-context'
-import { Command } from '@/components/ui/shadcn/command'
 import AISelectorCommands from './ai-selector-commands'
 
 jest.mock('@/components/editor/editor-context', () => ({
   useEditor: jest.fn()
+}))
+
+jest.mock('@/components/ui/shadcn/command', () => ({
+  CommandList: ({
+    children
+  }: {
+    children: React.ReactNode
+  }) => <div>{children}</div>,
+  CommandGroup: ({
+    children
+  }: {
+    children: React.ReactNode
+  }) => <div>{children}</div>,
+  CommandItem: ({
+    children,
+    className
+  }: {
+    children: React.ReactNode
+    className?: string
+  }) => <div className={className}>{children}</div>,
+  CommandSeparator: () => <hr />
 }))
 
 const mockUseEditor = useEditor as unknown as jest.Mock
@@ -34,11 +54,7 @@ describe('AISelectorCommands', () => {
   it('closes the selector when Escape is pressed', () => {
     const onClose = jest.fn()
 
-    render(
-      <Command>
-        <AISelectorCommands onSelect={jest.fn()} onClose={onClose} />
-      </Command>
-    )
+    render(<AISelectorCommands onSelect={jest.fn()} onClose={onClose} />)
 
     fireEvent.keyDown(document, { key: 'Escape' })
 
@@ -47,9 +63,7 @@ describe('AISelectorCommands', () => {
 
   it('renders command icons with black color', () => {
     const { container } = render(
-      <Command>
-        <AISelectorCommands onSelect={jest.fn()} onClose={jest.fn()} />
-      </Command>
+      <AISelectorCommands onSelect={jest.fn()} onClose={jest.fn()} />
     )
 
     const icons = container.querySelectorAll('svg')
