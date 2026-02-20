@@ -10,6 +10,20 @@ type GoogleRelayErrorCode =
   | 'invalid-callback-target'
   | 'google-relay-failed'
 
+type GoogleLoginErrorCode = GoogleRelayErrorCode | 'auth-not-configured'
+
+type GoogleLoginResult =
+  | {
+      ok: true
+      url: string
+    }
+  | {
+      ok: false
+      error: GoogleLoginErrorCode
+      status: number
+      returnUrl: string
+    }
+
 function parseRelayError(payload: unknown): GoogleRelayErrorCode {
   if (!payload || typeof payload !== 'object') {
     return 'google-relay-failed'
@@ -29,28 +43,41 @@ function parseRelayError(payload: unknown): GoogleRelayErrorCode {
   return 'google-relay-failed'
 }
 
-export default async function POST(request: NextRequest) {
-  try {
-    const rawBody = await request.text()
-    const parsedBody = rawBody ? JSON.parse(rawBody) : {}
+function buildUrls(request: NextRequest, returnUrl?: string) {
+  const url = new URL(request.url)
+  const baseUrl = `${url.protocol}//${url.host}`
+  const basePath = (process.env.OST_BASE_PATH || '').replace(/\/+$/, '')
+  const callbackUrl = `${baseUrl}${basePath}/api/outstatic/callback`
+  const defaultReturnUrl = `${baseUrl}${basePath}/outstatic`
+  const effectiveReturnUrl = returnUrl ?? defaultReturnUrl
 
-    const { returnUrl } = GoogleLoginRequestSchema.parse(parsedBody)
+  return {
+    callbackUrl,
+    effectiveReturnUrl
+  }
+}
 
-    if (!OUTSTATIC_API_KEY) {
-      return Response.json({ error: 'auth-not-configured' }, { status: 400 })
+async function startGoogleLogin(
+  request: NextRequest,
+  returnUrl?: string
+): Promise<GoogleLoginResult> {
+  const { callbackUrl, effectiveReturnUrl } = buildUrls(request, returnUrl)
+
+  if (!OUTSTATIC_API_KEY) {
+    return {
+      ok: false,
+      error: 'auth-not-configured',
+      status: 400,
+      returnUrl: effectiveReturnUrl
     }
+  }
 
-    const url = new URL(request.url)
-    const baseUrl = `${url.protocol}//${url.host}`
-    const basePath = (process.env.OST_BASE_PATH || '').replace(/\/+$/, '')
-    const callbackUrl = `${baseUrl}${basePath}/api/outstatic/callback`
-    const effectiveReturnUrl = returnUrl ?? `${baseUrl}${basePath}/outstatic`
+  const apiBase = OUTSTATIC_API_URL?.endsWith('/')
+    ? OUTSTATIC_API_URL
+    : `${OUTSTATIC_API_URL ?? ''}/`
+  const requestUrl = new URL('outstatic/auth/google-exchange', apiBase)
 
-    const apiBase = OUTSTATIC_API_URL?.endsWith('/')
-      ? OUTSTATIC_API_URL
-      : `${OUTSTATIC_API_URL ?? ''}/`
-    const requestUrl = new URL('outstatic/auth/google-exchange', apiBase)
-
+  try {
     const response = await fetch(requestUrl.href, {
       method: 'POST',
       headers: {
@@ -67,15 +94,77 @@ export default async function POST(request: NextRequest) {
       const payload = await response.json().catch(() => null)
       const error = parseRelayError(payload)
 
-      return Response.json({ error }, { status: response.status })
+      return {
+        ok: false,
+        error,
+        status: response.status,
+        returnUrl: effectiveReturnUrl
+      }
     }
 
     const data = await response.json().catch(() => null)
     if (!data || typeof data.url !== 'string') {
-      return Response.json({ error: 'google-relay-failed' }, { status: 500 })
+      return {
+        ok: false,
+        error: 'google-relay-failed',
+        status: 500,
+        returnUrl: effectiveReturnUrl
+      }
     }
 
-    return Response.json({ url: data.url })
+    return { ok: true, url: data.url }
+  } catch {
+    return {
+      ok: false,
+      error: 'google-relay-failed',
+      status: 500,
+      returnUrl: effectiveReturnUrl
+    }
+  }
+}
+
+export async function GET(request: NextRequest) {
+  const url = new URL(request.url)
+  const parsedReturnUrl = GoogleLoginRequestSchema.safeParse({
+    returnUrl: url.searchParams.get('returnUrl') ?? undefined
+  })
+  const returnUrl = parsedReturnUrl.success
+    ? parsedReturnUrl.data.returnUrl
+    : undefined
+
+  const result = await startGoogleLogin(request, returnUrl)
+  if (!result.ok) {
+    const destination = new URL(result.returnUrl)
+    destination.searchParams.set('error', result.error)
+    return new Response(null, {
+      status: 302,
+      headers: {
+        Location: destination.toString()
+      }
+    })
+  }
+
+  return new Response(null, {
+    status: 302,
+    headers: {
+      Location: result.url
+    }
+  })
+}
+
+export async function POST(request: NextRequest) {
+  try {
+    const rawBody = await request.text()
+    const parsedBody = rawBody ? JSON.parse(rawBody) : {}
+
+    const { returnUrl } = GoogleLoginRequestSchema.parse(parsedBody)
+
+    const result = await startGoogleLogin(request, returnUrl)
+    if (!result.ok) {
+      return Response.json({ error: result.error }, { status: result.status })
+    }
+
+    return Response.json({ url: result.url })
   } catch (error) {
     if (error instanceof ZodError) {
       const firstError = error.errors[0]
@@ -88,3 +177,5 @@ export default async function POST(request: NextRequest) {
     return Response.json({ error: 'google-relay-failed' }, { status: 500 })
   }
 }
+
+export default POST

@@ -1,7 +1,9 @@
 import type { NextRequest } from 'next/server'
 
 import {
+  createNextRequest,
   ensureWebApiGlobals,
+  getLocationHeader,
   jsonResponse,
   ORIGINAL_ENV,
   resetEnv
@@ -21,6 +23,10 @@ function createPostRequest(
     }),
     text: async () => JSON.stringify(body)
   } as unknown as NextRequest
+}
+
+function createGetRequest(url: string): NextRequest {
+  return createNextRequest(url, { method: 'GET' })
 }
 
 async function readJsonBody(response: Response) {
@@ -227,5 +233,57 @@ describe('/api/outstatic/google-login', () => {
 
     expect(response.status).toBe(500)
     expect(data).toEqual({ error: 'google-relay-failed' })
+  })
+
+  it('redirects GET requests directly to Google exchange URL', async () => {
+    ;(global.fetch as jest.Mock).mockResolvedValueOnce(
+      jsonResponse({
+        url: 'https://outstatic.com/api/outstatic/auth/google-exchange?token=abc123'
+      })
+    )
+
+    resetEnv({
+      OUTSTATIC_API_KEY: 'pro-key',
+      OUTSTATIC_API_URL: 'https://outstatic.com/api',
+      OST_BASE_PATH: '/cms'
+    })
+
+    const { GET: googleLoginGetRoute } = await import('../google-login')
+    const response = await googleLoginGetRoute(
+      createGetRequest('https://self-host.dev/cms/api/outstatic/google-login')
+    )
+
+    expect(response.status).toBe(302)
+    expect(getLocationHeader(response)).toBe(
+      'https://outstatic.com/api/outstatic/auth/google-exchange?token=abc123'
+    )
+  })
+
+  it('redirects GET failures to returnUrl with an error code', async () => {
+    ;(global.fetch as jest.Mock).mockResolvedValueOnce(
+      jsonResponse(
+        {
+          error: 'invalid-api-key'
+        },
+        { status: 401 }
+      )
+    )
+
+    resetEnv({
+      OUTSTATIC_API_KEY: 'pro-key',
+      OUTSTATIC_API_URL: 'https://outstatic.com/api'
+    })
+
+    const { GET: googleLoginGetRoute } = await import('../google-login')
+    const response = await googleLoginGetRoute(
+      createGetRequest(
+        'https://self-host.dev/api/outstatic/google-login?returnUrl=https%3A%2F%2Fself-host.dev%2Foutstatic%3Ffoo%3Dbar'
+      )
+    )
+
+    expect(response.status).toBe(302)
+    expect(getLocationHeader(response)).toBe(
+      'https://self-host.dev/outstatic?foo=bar&error=invalid-api-key'
+    )
   })
 })
