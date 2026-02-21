@@ -350,7 +350,10 @@ export default function Login({
                               }
                             }}
                             required
-                            className={clsx('w-full', showPlanBadges && 'pr-16')}
+                            className={clsx(
+                              'w-full',
+                              showPlanBadges && 'pr-16'
+                            )}
                             onKeyDown={(e) => {
                               if (e.key === 'Enter' && !isPro) {
                                 setShowUpgradeDialog(true)
