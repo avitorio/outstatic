@@ -1,7 +1,18 @@
 {
-  "commit": "074c792ec74ba24ea14ab210584f980d2718e0ac",
-  "generated": "2026-02-20T23:57:05.454Z",
+  "commit": "2b28c51a8ac794b1ec3a3af9d5e247f78ade969e",
+  "generated": "2026-02-21T00:19:46.353Z",
   "media": [
+    {
+      "__outstatic": {
+        "commit": "2b28c51a8ac794b1ec3a3af9d5e247f78ade969e",
+        "hash": "3899767563",
+        "path": "apps/docs/public/images/add-env-vars-vercel-QzOT.webp"
+      },
+      "alt": "",
+      "filename": "add-env-vars-vercel-QzOT.webp",
+      "publishedAt": "2026-02-21T00:19:46.353Z",
+      "type": "image"
+    },
     {
       "__outstatic": {
         "commit": "",
