@@ -42,12 +42,27 @@ describe('Collections', () => {
   ]
 
   beforeEach(() => {
-    // Mock useOutstatic hook
+    // Mock useOutstatic hook with session containing permissions
     ;(useOutstatic as jest.Mock).mockReturnValue({
-      dashboardRoute: '/outstatic'
+      dashboardRoute: '/outstatic',
+      session: {
+        user: {
+          name: 'Test User',
+          login: 'testuser',
+          email: 'test@example.com',
+          image: 'https://example.com/avatar.jpg',
+          permissions: [
+            'collections.manage',
+            'content.manage',
+            'settings.manage'
+          ]
+        },
+        access_token: 'mock-access-token',
+        expires: new Date(Date.now() + 3600000)
+      }
     })
 
-    // Mock useOutstatic hook
+    // Mock useLocalData hook
     ;(useLocalData as jest.Mock).mockReturnValue({
       setData: jest.fn()
     })

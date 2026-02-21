@@ -22,7 +22,6 @@ function useSubmitMedia({ setLoading, file }: SubmitDocumentProps) {
     repoOwner,
     repoSlug,
     repoBranch,
-    monorepoPath,
     ostContent,
     contentPath,
     basePath,
@@ -62,9 +61,7 @@ function useSubmitMedia({ setLoading, file }: SubmitDocumentProps) {
           .replace(/[^a-zA-Z0-9-_\.]/g, '-')
           .replace(/(\.[^\.]*)?$/, `-${randString}$1`)
 
-        const filePath = `${
-          monorepoPath ? monorepoPath + '/' : ''
-        }${repoMediaPath}${newFilename}`
+        const filePath = `${repoMediaPath}${newFilename}`
 
         capi.replaceFile(filePath, fileContents, false)
 
@@ -129,7 +126,6 @@ function useSubmitMedia({ setLoading, file }: SubmitDocumentProps) {
       file,
       createCommit,
       fetchOid,
-      monorepoPath,
       contentPath,
       ostContent,
       repoSlug,

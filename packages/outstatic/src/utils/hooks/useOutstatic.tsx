@@ -190,14 +190,10 @@ const useGetInitialConfig = ({
         const config = ConfigSchema.parse(JSON.parse(text))
         return config
       } catch (error) {
-        console.error('Failed to parse config:', error)
-        return null
+        throw error
       }
     },
     staleTime: 1000 * 10,
-    meta: {
-      errorMessage: `Failed to fetch config.`
-    },
     enabled: !!(repoOwner && repoSlug && repoBranch)
   })
 }

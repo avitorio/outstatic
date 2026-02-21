@@ -17,6 +17,48 @@ import { TextEncoder, TextDecoder } from 'util'
 global.TextEncoder = TextEncoder
 global.TextDecoder = TextDecoder as any
 
+// Polyfill crypto.randomUUID for tests
+if (typeof crypto === 'undefined') {
+  // @ts-ignore
+  global.crypto = {}
+}
+if (!crypto.randomUUID) {
+  crypto.randomUUID = () => {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+      const r = (Math.random() * 16) | 0
+      const v = c === 'x' ? r : (r & 0x3) | 0x8
+      return v.toString(16)
+    })
+  }
+}
+
+// Mock next/cache to avoid Next.js internal dependencies in test environment
+jest.mock('next/cache', () => ({
+  unstable_cache: (fn: Function) => fn,
+  revalidateTag: jest.fn()
+}))
+
+// Mock auth-provider to avoid AuthProvider dependency issues in tests
+jest.mock('@/utils/auth/auth-provider', () => ({
+  AuthProvider: ({ children }: { children: React.ReactNode }) => children,
+  useAuth: () => ({
+    session: {
+      user: {
+        name: 'Test User',
+        login: 'testuser',
+        email: 'test@example.com',
+        image: 'https://example.com/avatar.jpg'
+      },
+      access_token: 'mock-access-token',
+      expires: new Date(Date.now() + 3600000)
+    },
+    updateSession: jest.fn(),
+    signOut: jest.fn(),
+    basePath: '',
+    status: 'authenticated' as const
+  })
+}))
+
 // Mock matchMedia for tests
 Object.defineProperty(window, 'matchMedia', {
   writable: true,

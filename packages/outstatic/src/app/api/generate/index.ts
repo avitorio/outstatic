@@ -1,5 +1,6 @@
 import { getLoginSession } from '@/utils/auth/auth'
 import { createOpenAI } from '@ai-sdk/openai'
+import { OUTSTATIC_API_URL } from '@/utils/constants'
 import { ModelMessage, streamText } from 'ai'
 import { match } from 'ts-pattern'
 
@@ -15,18 +16,33 @@ export default async function POST(req: Request): Promise<Response> {
   }
 
   // Check if the OPENAI_API_KEY is set, if not return 400
-  if (!process.env.OPENAI_API_KEY || process.env.OPENAI_API_KEY === '') {
+  if (
+    !(
+      process.env.OPENAI_API_KEY ||
+      process.env.OUTSTATIC_API_KEY ||
+      process.env.AI_GATEWAY_API_KEY
+    )
+  ) {
     return new Response(
-      'Missing OPENAI_API_KEY - make sure to add it to your .env file.',
+      'AI Completion is not configured. Check your .env file.',
       {
         status: 400
       }
     )
   }
 
-  const openai = createOpenAI({
-    baseURL: process.env.OPENAI_BASE_URL || 'https://api.openai.com/v1'
-  })
+  if (process.env.OUTSTATIC_API_KEY) {
+    const apiPath = OUTSTATIC_API_URL + '/outstatic/generate'
+    return fetch(apiPath, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${process.env.OUTSTATIC_API_KEY}`
+      },
+      body: req.body,
+      duplex: 'half'
+    } as RequestInit)
+  }
 
   const { prompt, option, command } = await req.json()
   const messages = match(option)
@@ -37,7 +53,7 @@ export default async function POST(req: Request): Promise<Response> {
           'You are an AI writing assistant that continues existing text based on context from prior text. ' +
           'Give more weight/priority to the later characters than the beginning ones. ' +
           'Limit your response to no more than 200 characters, but make sure to construct complete sentences.' +
-          'Use Markdown formatting when appropriate.'
+          'Prefer plain text. Use Markdown sparingly and only for structure when clearly helpful. Do not use any word-level formatting like bold, italics, underline, or strikethrough.'
       },
       {
         role: 'user',
@@ -50,7 +66,7 @@ export default async function POST(req: Request): Promise<Response> {
         content:
           'You are an AI writing assistant that improves existing text. ' +
           'Limit your response to no more than 200 characters, but make sure to construct complete sentences.' +
-          'Use Markdown formatting when appropriate.'
+          'Prefer plain text. Use Markdown sparingly and only for structure when clearly helpful. Do not use any word-level formatting like bold, italics, underline, or strikethrough.'
       },
       {
         role: 'user',
@@ -62,7 +78,7 @@ export default async function POST(req: Request): Promise<Response> {
         role: 'system',
         content:
           'You are an AI writing assistant that shortens existing text. ' +
-          'Use Markdown formatting when appropriate.'
+          'Prefer plain text. Use Markdown sparingly and only for structure when clearly helpful. Do not use any word-level formatting like bold, italics, underline, or strikethrough.'
       },
       {
         role: 'user',
@@ -74,7 +90,7 @@ export default async function POST(req: Request): Promise<Response> {
         role: 'system',
         content:
           'You are an AI writing assistant that lengthens existing text. ' +
-          'Use Markdown formatting when appropriate.'
+          'Prefer plain text. Use Markdown sparingly and only for structure when clearly helpful. Do not use any word-level formatting like bold, italics, underline, or strikethrough.'
       },
       {
         role: 'user',
@@ -86,8 +102,9 @@ export default async function POST(req: Request): Promise<Response> {
         role: 'system',
         content:
           'You are an AI writing assistant that fixes grammar and spelling errors in existing text. ' +
+          'Only return the corrected text, nothing else.' +
           'Limit your response to no more than 200 characters, but make sure to construct complete sentences.' +
-          'Use Markdown formatting when appropriate.'
+          'Prefer plain text. Use Markdown sparingly and only for structure when clearly helpful. Do not use any word-level formatting like bold, italics, underline, or strikethrough.'
       },
       {
         role: 'user',
@@ -100,7 +117,7 @@ export default async function POST(req: Request): Promise<Response> {
         content:
           'You area an AI writing assistant that generates text based on a prompt. ' +
           'You take an input from the user and a command for manipulating the text' +
-          'Use Markdown formatting when appropriate.'
+          'Prefer plain text. Use Markdown sparingly and only for structure when clearly helpful. Do not use any word-level formatting like bold, italics, underline, or strikethrough.'
       },
       {
         role: 'user',
@@ -109,8 +126,16 @@ export default async function POST(req: Request): Promise<Response> {
     ])
     .run() as ModelMessage[]
 
+  const openai = createOpenAI({
+    baseURL: process.env.OPENAI_BASE_URL || 'https://api.openai.com/v1'
+  })
+
+  const model = process.env.OPENAI_API_KEY
+    ? openai('gpt-3.5-turbo')
+    : 'openai/gpt-3.5-turbo'
+
   const result = streamText({
-    model: openai('gpt-3.5-turbo'),
+    model,
     messages,
     temperature: 0.7
   })

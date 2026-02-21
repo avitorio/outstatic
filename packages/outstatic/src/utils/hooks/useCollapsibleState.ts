@@ -11,32 +11,35 @@ type CollapsibleState = Record<string, boolean>
  * Similar to how SidebarProvider manages sidebar open state
  */
 export function useCollapsibleState() {
-  const [state, setState] = useState<CollapsibleState>(() => {
-    // Initialize from localStorage on mount
-    if (typeof window === 'undefined') {
-      return {}
-    }
+  // Keep initial client render identical to SSR to avoid hydration mismatch.
+  const [state, setState] = useState<CollapsibleState>({})
+  const [hasHydratedStorage, setHasHydratedStorage] = useState(false)
 
+  useEffect(() => {
     try {
       const stored = localStorage.getItem(STORAGE_KEY)
       if (stored) {
-        return JSON.parse(stored)
+        setState(JSON.parse(stored))
       }
     } catch (error) {
       console.warn('Failed to load collapsible state from localStorage:', error)
+    } finally {
+      setHasHydratedStorage(true)
     }
-
-    return {}
-  })
+  }, [])
 
   // Persist to localStorage whenever state changes
   useEffect(() => {
+    if (!hasHydratedStorage) {
+      return
+    }
+
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state))
     } catch (error) {
       console.warn('Failed to save collapsible state to localStorage:', error)
     }
-  }, [state])
+  }, [hasHydratedStorage, state])
 
   const isOpen = useCallback(
     (key: string): boolean | undefined => {

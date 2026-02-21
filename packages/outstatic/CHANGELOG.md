@@ -1,5 +1,11 @@
 # outstatic
 
+## 2.1.0-canary.0
+
+### Minor Changes
+
+- Adds support for Outstatic PRO
+
 ## 2.0.18
 
 ### Patch Changes

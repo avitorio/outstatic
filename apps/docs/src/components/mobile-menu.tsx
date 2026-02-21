@@ -8,11 +8,6 @@ import {
 } from '@/components/ui/drawer'
 import { Menu, XIcon } from 'lucide-react'
 import { useEffect, useState } from 'react'
-import useHash from '@/hooks/useHash'
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-import { CustomLinkProps } from './mdx/custom-link'
-import MDXComponent from './mdx/mdx-component'
 import SocialLinks from './social-links'
 import { ThemeToggle } from './theme-toggle'
 import { Button } from './ui/button'
@@ -24,49 +19,12 @@ import {
   SelectTrigger,
   SelectValue
 } from './ui/select'
-import { useRouter } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
+import { DocsMenu } from './docs-menu'
 
 type MobileMenuProps = {
   content: string
   hideVersionSelect?: boolean
-}
-
-export const Paragraph = ({ children }: CustomLinkProps) => {
-  return <p className="m-0">{children}</p>
-}
-
-export const SidebarLink = ({
-  children,
-  href,
-  openNewTab,
-  className = '',
-  ...rest
-}: CustomLinkProps) => {
-  const pathname = usePathname()
-  const hash = useHash()
-
-  const isVersionPath = VERSIONS.some(
-    (v) => pathname.startsWith(`${v.path}`) && v.path !== '/'
-  )
-
-  if (isVersionPath) {
-    const version = pathname.split('/')[1]
-    href = `/${version}${href}`
-  }
-
-  return (
-    <Link
-      href={href}
-      className={`border border-secondary font-normal -ml-2 block rounded-md px-2 py-1 no-underline hover:bg-secondary hover:text-secondary-foreground ${className}${
-        `${pathname}${hash || ''}` === href
-          ? 'bg-secondary text-foreground'
-          : ' text-foreground '
-      }`}
-      {...rest}
-    >
-      {children}
-    </Link>
-  )
 }
 
 export const MobileMenu = ({
@@ -132,10 +90,12 @@ export const MobileMenu = ({
           </div>
           <DrawerContent>
             <div className="sidebar overflow-x-scroll">
-              <div className="prose prose-sm max-h-[calc(70vh-100px)] max-w-full overflow-y-scroll px-2 pr-4">
-                <MDXComponent
+              <div className="max-h-[calc(70vh-100px)] max-w-full overflow-y-auto px-1 pr-2">
+                <DocsMenu
                   content={content}
-                  components={{ a: SidebarLink, p: Paragraph }}
+                  onNavigate={() => {
+                    setOpen(false)
+                  }}
                 />
               </div>
             </div>

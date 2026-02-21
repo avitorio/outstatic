@@ -15,7 +15,8 @@ type EnvVarsObjType = {
 const initialEnvVars: EnvVarsType = {
   required: {
     OST_GITHUB_ID: false,
-    OST_GITHUB_SECRET: false
+    OST_GITHUB_SECRET: false,
+    OUTSTATIC_API_KEY: false
   },
   optional: {
     OST_CONTENT_PATH: false,
@@ -34,11 +35,14 @@ export const envVars = (function () {
 
   Object.entries(initialEnvVars.required).forEach(([key]) => {
     envVarsObj.envVars.required[key] = !!process.env[key]
-
-    if (!process.env[key]) {
-      envVarsObj.hasMissingEnvVars = true
-    }
   })
+
+  const hasGithubOAuthCredentials =
+    !!process.env.OST_GITHUB_ID && !!process.env.OST_GITHUB_SECRET
+  const hasProRelayCredentials = !!process.env.OUTSTATIC_API_KEY
+
+  envVarsObj.hasMissingEnvVars =
+    !hasGithubOAuthCredentials && !hasProRelayCredentials
 
   Object.entries(initialEnvVars.optional).forEach(([key]) => {
     envVarsObj.envVars.optional[key] = !!process.env[key]

@@ -12,6 +12,8 @@ import StarterKit from '@tiptap/starter-kit'
 import { NavigationGuardProvider } from 'next-navigation-guard'
 import { ReactNode } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
+import { InitialDataContext } from '@/utils/hooks/useInitialData'
+import mockProviderProps from './mockProviderProps'
 
 export const documentExample: Document = {
   publishedAt: new Date('2022-07-14'),
@@ -170,13 +172,27 @@ const TestSidebarProvider = ({ children }: { children: React.ReactNode }) => {
   return <SidebarProvider>{children}</SidebarProvider>
 }
 
+const TestInitialDataProvider = ({
+  children
+}: {
+  children: React.ReactNode
+}) => {
+  return (
+    <InitialDataContext.Provider value={mockProviderProps}>
+      {children}
+    </InitialDataContext.Provider>
+  )
+}
+
 export const TestWrapper = (props: { children: ReactNode }) => (
   <TestProviders.ReactQuery>
-    <TestProviders.DocumentContext>
-      <TestProviders.Form>
-        <TestSidebarProvider>{props.children}</TestSidebarProvider>
-      </TestProviders.Form>
-    </TestProviders.DocumentContext>
+    <TestProviders.InitialData>
+      <TestProviders.DocumentContext>
+        <TestProviders.Form>
+          <TestSidebarProvider>{props.children}</TestSidebarProvider>
+        </TestProviders.Form>
+      </TestProviders.DocumentContext>
+    </TestProviders.InitialData>
   </TestProviders.ReactQuery>
 )
 
@@ -185,5 +201,6 @@ export const TestProviders = {
   DocumentContext: TestDocumentContextProvider,
   Form: TestFormProvider,
   NavigationGuard: TestNavigationGuardProvider,
-  Sidebar: TestSidebarProvider
+  Sidebar: TestSidebarProvider,
+  InitialData: TestInitialDataProvider
 }

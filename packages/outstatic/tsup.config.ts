@@ -12,7 +12,10 @@ export default defineConfig((options) => {
       './src/client/client.tsx',
       './src/utils/server.ts',
       './src/utils/auth/auth.ts',
+      './src/utils/auth/auth-provider.tsx',
       './src/utils/hooks/index.tsx',
+      './src/components/index.tsx',
+      './src/graphql/utils/tokenRefreshUtility.ts',
       './src/next-plugin.ts',
       './src/typegen/index.ts',
       './src/cli/index.ts'
@@ -23,6 +26,7 @@ export default defineConfig((options) => {
       'next',
       'tsup',
       'tailwindcss',
+      'tw-animate-css',
       '@parcel/watcher'
       // Add any other external dependencies your project uses
     ],
@@ -60,6 +64,7 @@ export default defineConfig((options) => {
           console.error(`Error processing ${file}:`, err)
         }
       }
-    }
+    },
+    conditions: ['style']
   } as Options
 })

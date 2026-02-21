@@ -4,9 +4,20 @@ import {
   TOKEN_SECRET,
   TOKEN_NAME,
   COOKIE_SETTINGS,
-  SESSION_ERROR_MESSAGES
+  SESSION_ERROR_MESSAGES,
+  OUTSTATIC_API_URL,
+  MAX_AGE
 } from '@/utils/constants'
 import { getAccessToken } from './github'
+
+export type AppPermissions =
+  | 'roles.manage'
+  | 'settings.manage'
+  | 'members.manage'
+  | 'invites.manage'
+  | 'collections.manage'
+  | 'content.manage'
+  | 'projects.manage'
 
 export type LoginSession = {
   user: {
@@ -14,7 +25,9 @@ export type LoginSession = {
     login: string
     email: string
     image: string
+    permissions?: AppPermissions[]
   }
+  provider?: 'github' | 'magic-link'
   access_token: string
   expires: Date
   refresh_token?: string
@@ -35,6 +48,49 @@ export type TokenRefreshResponse = {
   expires_in: number
   refresh_token?: string
   refresh_token_expires_in?: number
+  refresh_token_expires_at?: number
+}
+
+type RefreshTokenExpiryInput = {
+  refresh_token_expires_in?: number | null
+  refresh_token_expires_at?: number | null
+}
+
+const MAX_REASONABLE_EXPIRES_IN_SECONDS = 31_536_000 // 1 year
+
+function dateFromEpochSecondsOrMilliseconds(value: number): Date {
+  return value > 1_000_000_000_000 ? new Date(value) : new Date(value * 1000)
+}
+
+function durationFromSecondsOrMilliseconds(value: number): number {
+  // OAuth providers usually return *_expires_in values in seconds.
+  // Some local call sites already normalize to milliseconds before reaching this helper.
+  return value <= MAX_REASONABLE_EXPIRES_IN_SECONDS ? value * 1000 : value
+}
+
+export function resolveRefreshTokenExpiry(
+  input: RefreshTokenExpiryInput
+): Date | undefined {
+  if (
+    typeof input.refresh_token_expires_at === 'number' &&
+    Number.isFinite(input.refresh_token_expires_at) &&
+    input.refresh_token_expires_at > 0
+  ) {
+    return dateFromEpochSecondsOrMilliseconds(input.refresh_token_expires_at)
+  }
+
+  if (
+    typeof input.refresh_token_expires_in === 'number' &&
+    Number.isFinite(input.refresh_token_expires_in) &&
+    input.refresh_token_expires_in > 0
+  ) {
+    return new Date(
+      Date.now() +
+        durationFromSecondsOrMilliseconds(input.refresh_token_expires_in)
+    )
+  }
+
+  return undefined
 }
 
 // Helper function to check if a value is a valid date (Date object or date string)
@@ -94,6 +150,175 @@ function validateSession(session: any): session is LoginSession {
   return isValid
 }
 
+// Helper function to check if token is expired
+export function isTokenExpired(expires: Date): boolean {
+  return Date.now() >= expires.getTime()
+}
+
+// Helper function to check if refresh token is valid
+export function isRefreshTokenValid(session: LoginSession): boolean {
+  if (!session.refresh_token) return false
+
+  if (!session.refresh_token_expires) return true
+
+  return Date.now() < session.refresh_token_expires.getTime()
+}
+
+// Helper function to refresh token
+export async function refreshToken(
+  session: LoginSession
+): Promise<LoginSession> {
+  if (!session.refresh_token) {
+    throw new Error('No refresh token available')
+  }
+
+  if (!isRefreshTokenValid(session)) {
+    throw new Error('Refresh token is expired')
+  }
+
+  try {
+    // Handle different providers
+    if (session.provider === 'github') {
+      // GitHub OAuth flow
+      const {
+        access_token,
+        expires_in,
+        refresh_token,
+        refresh_token_expires_in
+      } = await getAccessToken({
+        refresh_token: session.refresh_token,
+        grant_type: 'refresh_token'
+      })
+
+      if (!access_token) {
+        throw new Error('Failed to refresh access token')
+      }
+
+      // Update the session with new tokens
+      const updatedSession: LoginSession = {
+        ...session,
+        access_token,
+        expires: new Date(Date.now() + expires_in),
+        refresh_token: refresh_token || session.refresh_token,
+        refresh_token_expires: refresh_token_expires_in
+          ? new Date(Date.now() + refresh_token_expires_in)
+          : session.refresh_token_expires
+      }
+
+      // Save the updated session
+      await setLoginSession(updatedSession)
+      console.log('Session updated successfully')
+      return updatedSession
+    } else if (session.provider === 'magic-link') {
+      // Magic link - call main SaaS app
+      const response = await fetch(
+        `${OUTSTATIC_API_URL}/outstatic/auth/refresh-token`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            refresh_token: session.refresh_token
+          })
+        }
+      )
+
+      if (!response.ok) {
+        console.error(
+          'Failed to refresh token:',
+          response.status,
+          await response.text()
+        )
+        throw new Error('Failed to refresh access token')
+      }
+
+      const data = await response.json()
+      const refreshTokenExpires = resolveRefreshTokenExpiry(data.session)
+
+      // Update the session with new tokens
+      const updatedSession: LoginSession = {
+        ...session,
+        access_token: data.session.access_token,
+        expires: new Date(data.session.expires_at * 1000),
+        refresh_token: data.session.refresh_token || session.refresh_token,
+        refresh_token_expires:
+          refreshTokenExpires ?? session.refresh_token_expires
+      }
+
+      // Save the updated session
+      await setLoginSession(updatedSession)
+      console.log('Session updated successfully')
+      return updatedSession
+    } else {
+      throw new Error(`Unknown provider: ${session.provider}`)
+    }
+  } catch (error) {
+    console.error('Failed to refresh token:', error)
+    throw new Error('Token refresh failed')
+  }
+}
+
+// Map to track ongoing refresh operations to prevent multiple concurrent refreshes
+const refreshOperations = new Map<string, Promise<LoginSession>>()
+
+// Helper function to refresh token with concurrent request handling
+// This is only called from the /api/outstatic/auth/refresh endpoint (never directly from components)
+export async function refreshTokenIfNeeded(
+  session: LoginSession
+): Promise<LoginSession> {
+  // If token is not expired, return the session as is
+  if (!isTokenExpired(session.expires)) {
+    return session
+  }
+
+  // If no refresh token is available (e.g., standard GitHub OAuth App)
+  // extend the session without refreshing since these tokens don't expire
+  if (!session.refresh_token) {
+    console.log(
+      'No refresh token available. Extending session for provider:',
+      session.provider
+    )
+
+    // For GitHub OAuth Apps and other providers without refresh tokens,
+    // the access token typically doesn't expire or lasts a very long time
+    // We extend the session cookie to keep the user logged in
+    const extendedSession: LoginSession = {
+      ...session,
+      expires: new Date(Date.now() + MAX_AGE * 1000) // Extend by MAX_AGE (30 days)
+    }
+
+    await setLoginSession(extendedSession)
+    return extendedSession
+  }
+
+  // If refresh token is expired, throw error
+  if (!isRefreshTokenValid(session)) {
+    throw new Error('Refresh token is expired')
+  }
+
+  // Create a unique key for this refresh operation based on the refresh token
+  const refreshKey = session.refresh_token!
+
+  // Check if there's already a refresh operation in progress for this token
+  if (refreshOperations.has(refreshKey)) {
+    // Wait for the existing refresh operation to complete
+    return await refreshOperations.get(refreshKey)!
+  }
+
+  // Start a new refresh operation
+  const refreshPromise = refreshToken(session)
+  refreshOperations.set(refreshKey, refreshPromise)
+
+  try {
+    const refreshedSession = await refreshPromise
+    return refreshedSession
+  } finally {
+    // Clean up the refresh operation from the map
+    refreshOperations.delete(refreshKey)
+  }
+}
+
 export async function setLoginSession(session: LoginSession): Promise<boolean> {
   if (!validateSession(session)) {
     throw new Error(SESSION_ERROR_MESSAGES.INVALID_SESSION)
@@ -114,13 +339,22 @@ export async function setLoginSession(session: LoginSession): Promise<boolean> {
     0 // Ensure maxAge is never negative
   )
 
-  cookieStore.set(TOKEN_NAME, token, {
-    maxAge: Math.floor(maxAge / 1000), // Convert to seconds
-    expires: session.refresh_token_expires ?? session.expires,
-    ...COOKIE_SETTINGS
-  })
-
-  return true
+  try {
+    cookieStore.set(TOKEN_NAME, token, {
+      maxAge: Math.floor(maxAge / 1000), // Convert to seconds
+      expires: session.refresh_token_expires ?? session.expires,
+      ...COOKIE_SETTINGS
+    })
+    return true
+  } catch (error) {
+    // Cookies can only be modified in Server Actions or Route Handlers
+    // If we're in a Server Component, this will fail - that's expected
+    console.warn(
+      'Unable to set session cookie (likely called from Server Component)',
+      error instanceof Error ? error.message : error
+    )
+    return false
+  }
 }
 
 export async function getLoginSession(): Promise<LoginSession | null> {
@@ -128,7 +362,6 @@ export async function getLoginSession(): Promise<LoginSession | null> {
   const token = cookieStore.get(TOKEN_NAME)?.value
 
   if (!token) {
-    console.log('No token found in cookies')
     return null
   }
 
@@ -145,54 +378,7 @@ export async function getLoginSession(): Promise<LoginSession | null> {
       return null
     }
 
-    const expires = session.expires.getTime()
-    const now = Date.now()
-
-    if (now <= expires) {
-      return session
-    }
-
-    // If the access token is expired but we have a valid refresh token, try to refresh it
-    if (
-      now > expires &&
-      session.refresh_token &&
-      (!session.refresh_token_expires ||
-        now <= session.refresh_token_expires.getTime())
-    ) {
-      try {
-        const {
-          access_token,
-          expires_in,
-          refresh_token,
-          refresh_token_expires_in
-        } = await getAccessToken({
-          refresh_token: session.refresh_token,
-          grant_type: 'refresh_token'
-        })
-
-        if (access_token) {
-          // Update the session with new tokens
-          const updatedSession: LoginSession = {
-            ...session,
-            access_token,
-            expires: new Date(now + expires_in),
-            refresh_token: refresh_token || session.refresh_token,
-            refresh_token_expires: refresh_token_expires_in
-              ? new Date(now + refresh_token_expires_in)
-              : session.refresh_token_expires
-          }
-
-          // Save the updated session
-          await setLoginSession(updatedSession)
-          return updatedSession
-        }
-      } catch (refreshError) {
-        console.error('Failed to refresh token:', refreshError)
-        // Continue to throw session expired error
-      }
-    }
-
-    throw new Error(SESSION_ERROR_MESSAGES.SESSION_EXPIRED)
+    return session
   } catch (error) {
     console.error('Session validation error:', error)
     return null

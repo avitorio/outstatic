@@ -4,7 +4,7 @@ import { Command, CommandInput } from '@/components/ui/shadcn/command'
 
 import { useCompletion } from '@ai-sdk/react'
 import { ArrowUp } from 'lucide-react'
-import { addAIHighlight } from 'novel/extensions'
+import { addAIHighlight } from '@/components/editor/extensions/ai-higlight'
 import { useState } from 'react'
 import Markdown from 'react-markdown'
 import { toast } from 'sonner'
@@ -17,7 +17,6 @@ import AISelectorCommands from './ai-selector-commands'
 import { useEditor } from '@/components/editor/editor-context'
 import { useOutstatic } from '@/utils/hooks/useOutstatic'
 import { OUTSTATIC_API_PATH } from '@/utils/constants'
-import { useCsrfToken } from '@/utils/hooks/useCsrfToken'
 import { stringifyError } from '@/utils/errors/stringifyError'
 //TODO: I think it makes more sense to create a custom Tiptap extension for this functionality https://tiptap.dev/docs/editor/ai/introduction
 
@@ -28,13 +27,11 @@ interface AISelectorProps {
 
 export function AISelector({ onOpenChange }: AISelectorProps) {
   const { basePath } = useOutstatic()
-  const csrfToken = useCsrfToken()
   const { editor } = useEditor()
   const [inputValue, setInputValue] = useState('')
 
   const { completion, complete, isLoading } = useCompletion({
     api: basePath + OUTSTATIC_API_PATH + '/generate',
-    headers: csrfToken ? { 'X-CSRF-Token': csrfToken } : undefined,
     onError: (e) => {
       console.error('AI completion error', e)
       const errorToast = toast.error(e.message, {
@@ -68,7 +65,7 @@ export function AISelector({ onOpenChange }: AISelectorProps) {
       )}
 
       {isLoading && (
-        <div className="flex h-12 w-full items-center px-4 text-sm font-medium text-purple-500">
+        <div className="flex h-12 w-full items-center px-4 text-sm font-medium text-slate-900">
           <Magic className="mr-2 h-4 w-4 shrink-0  " />
           AI is thinking
           <div className="ml-2 mt-1">
@@ -92,7 +89,7 @@ export function AISelector({ onOpenChange }: AISelectorProps) {
             />
             <Button
               size="icon"
-              className="absolute right-2 top-1/2 h-6 w-6 -translate-y-1/2 rounded-full bg-purple-500 hover:bg-purple-900"
+              className="absolute right-2 top-1/2 h-6 w-6 -translate-y-1/2 rounded-full bg-slate-900 hover:bg-slate-900"
               onClick={() => {
                 if (completion)
                   return complete(completion, {
@@ -125,6 +122,10 @@ export function AISelector({ onOpenChange }: AISelectorProps) {
               onSelect={(value, option) =>
                 complete(value, { body: { option } })
               }
+              onClose={() => {
+                editor.chain().unsetHighlight().focus().run()
+                onOpenChange(false)
+              }}
             />
           )}
         </>

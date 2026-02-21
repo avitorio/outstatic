@@ -13,7 +13,6 @@ import Link from 'next/link'
 import { singular } from 'pluralize'
 import { useOutstatic } from '@/utils/hooks/useOutstatic'
 import LineBackground from '@/components/ui/outstatic/line-background'
-import { redirect } from 'next/navigation'
 
 type ListProps = {
   slug: string
@@ -21,13 +20,11 @@ type ListProps = {
 }
 
 export default function List({ slug, title }: ListProps) {
-  const { data, isError, isPending } = useGetDocuments()
+  const { data, isPending, error } = useGetDocuments()
   const { dashboardRoute } = useOutstatic()
 
-  if (isPending) return <AdminLoading />
-  if (isError || data?.documents === null) {
-    redirect(dashboardRoute)
-  }
+  // Don't show loading screen if we have an error (auth errors will be handled by session refresh)
+  if ((isPending || data?.documents === null) && !error) return <AdminLoading />
 
   return (
     <AdminLayout title={title}>
@@ -39,12 +36,12 @@ export default function List({ slug, title }: ListProps) {
           </Link>
         </Button>
       </div>
-      {data?.documents.length > 0 && (
+      {data?.documents && data.documents.length > 0 && (
         <div className="relative sm:rounded-lg">
           <DocumentsTable />
         </div>
       )}
-      {data?.documents.length === 0 && !isPending && (
+      {data?.documents && data.documents.length === 0 && !isPending && (
         <LineBackground>
           <div className="relative">
             <Card className="mb-20 max-w-2xl animate-fade-in">

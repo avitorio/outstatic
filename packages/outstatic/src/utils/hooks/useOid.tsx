@@ -9,25 +9,21 @@ const useOid = () => {
   const { refetch: oidQuery } = useQuery({
     queryKey: ['oid'],
     queryFn: async () => {
-      try {
-        const { repository } = await gqlClient.request<{
-          repository: Repository
-        }>(OID, {
-          owner: repoOwner || session?.user?.login || '',
-          name: repoSlug,
-          branch: repoBranch
-        })
+      const { repository } = await gqlClient.request<{
+        repository: Repository
+      }>(OID, {
+        owner: repoOwner || session?.user?.login || '',
+        name: repoSlug,
+        branch: repoBranch
+      })
 
-        const target = repository?.ref?.target as Commit
+      const target = repository?.ref?.target as Commit
 
-        if (typeof target.history.nodes?.[0]?.oid !== 'string') {
-          throw new Error('Received a non-string oid')
-        }
-
-        return target.history.nodes[0].oid
-      } catch (error) {
-        throw error
+      if (typeof target.history.nodes?.[0]?.oid !== 'string') {
+        throw new Error('Received a non-string oid')
       }
+
+      return target.history.nodes[0].oid
     },
     enabled: false,
     gcTime: 0

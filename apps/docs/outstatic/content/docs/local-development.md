@@ -1,13 +1,13 @@
 ---
-title: 'Local Development'
-status: 'published'
+title: "Local Development"
+status: "published"
 author:
-  name: 'leplay'
-  picture: 'https://avatars.githubusercontent.com/u/284475?v=4'
-slug: 'local-development'
-description: ''
-coverImage: ''
-publishedAt: '2023-11-25T09:42:29.000Z'
+  name: "leplay"
+  picture: "https://avatars.githubusercontent.com/u/284475?v=4"
+slug: "local-development"
+description: ""
+coverImage: ""
+publishedAt: "2026-02-20T03:00:00.000Z"
 ---
 
 If you have successfully deployed Outstatic to Vercel and want to run Outstatic locally, here are the steps you need to follow:
@@ -24,7 +24,11 @@ yarn install
 npm install
 ```
 
-## Create a different GitHub OAuth app
+### Using your OUTSTATIC_API_KEY
+
+If you have created a project on Outstatic.com, you can just add your local install url (example: `http://localhost:3000/outstatic`) to the **API Keys** page for your project.
+
+### Using GitHub OAuth
 
 Since a Github OAuth app cannot have multiple callback URLs, you need to create another [Github OAuth app](https://github.com/settings/developers) for local development.
 

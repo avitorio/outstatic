@@ -29,21 +29,17 @@ export const useGetCollectionSchema = ({
   return useQuery({
     queryKey: ['collection-schema', { filePath }],
     queryFn: async (): Promise<SchemaType> => {
-      try {
-        const { repository } = await gqlClient.request(GET_FILE, {
-          owner: repoOwner || session?.user?.login || '',
-          name: repoSlug,
-          filePath
-        })
+      const { repository } = await gqlClient.request(GET_FILE, {
+        owner: repoOwner || session?.user?.login || '',
+        name: repoSlug,
+        filePath
+      })
 
-        if (repository?.object === null) return null
+      if (repository?.object === null) return null
 
-        const { text } = repository?.object as { text: string }
+      const { text } = repository?.object as { text: string }
 
-        return JSON.parse(text)
-      } catch (error) {
-        throw new Error()
-      }
+      return JSON.parse(text)
     },
     meta: {
       errorMessage: `Failed to fetch schema for: ${collectionSlug}`

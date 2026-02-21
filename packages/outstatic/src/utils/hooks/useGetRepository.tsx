@@ -8,23 +8,21 @@ export const useGetRepository = (options?: { enabled?: boolean }) => {
   return useQuery({
     queryKey: ['repository', repoOwner, repoSlug],
     queryFn: async () => {
-      try {
-        if (!repoOwner || !repoSlug) return null
+      if (!repoOwner || !repoSlug) return null
 
-        const { repository } = await gqlClient.request(GET_REPOSITORY, {
-          owner: repoOwner,
-          name: repoSlug
-        })
+      const { repository } = await gqlClient.request(GET_REPOSITORY, {
+        owner: repoOwner,
+        name: repoSlug
+      })
 
-        if (!repository || !repository.defaultBranchRef?.target) {
-          throw new Error('Repository or default branch information not found')
-        }
-
-        return repository
-      } catch (error) {
-        console.error('Error fetching repository:', error)
-        throw error
+      if (!repository || !repository.defaultBranchRef?.target) {
+        throw new Error('Repository or default branch information not found')
       }
+
+      return repository
+    },
+    meta: {
+      errorMessage: 'Failed to fetch repository information'
     },
     enabled: options?.enabled !== false && !!repoOwner && !!repoSlug,
     staleTime: 1000 * 60 * 60 // 1 hour

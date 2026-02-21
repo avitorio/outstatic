@@ -23,6 +23,7 @@ const EditorBubbleButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
       children,
       asChild = false,
       onClick,
+      type,
       ...props
     },
     ref
@@ -35,6 +36,7 @@ const EditorBubbleButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
 
     return (
       <Comp
+        {...(!asChild ? { type: type ?? 'button' } : {})}
         className={`inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 cursor-pointer group border-r rounded-none border-muted py-4 px-4 last-of-type:border-r-0 last-of-type:rounded-tr-md last-of-type:rounded-br-md first-of-type:rounded-tl-md first-of-type:rounded-bl-md disabled:cursor-not-allowed disabled:hover:bg-gray-600 h-9 ${
           editor.isActive(name, attributes)
             ? 'is-active bg-muted'

@@ -15,7 +15,6 @@ import {
 } from '@/components/editor/extensions/slash-command'
 import { getPrevText } from '@/components/editor/utils/getPrevText'
 import { OUTSTATIC_API_PATH } from '@/utils/constants'
-import { useCsrfToken } from '@/utils/hooks/useCsrfToken'
 import { stringifyError } from '@/utils/errors/stringifyError'
 
 export const BaseCommandList = ({
@@ -23,30 +22,41 @@ export const BaseCommandList = ({
   command,
   setImageMenu,
   editor,
-  range
+  range,
+  onShowUpgradeDialog
 }: {
   items: CommandItemProps[]
   setImageMenu: (value: boolean) => void
   command: any
   editor: Editor
   range: Range
+  onShowUpgradeDialog: (accountSlug?: string, dashboardRoute?: string) => void
 }) => {
-  const [selectedIndex, setSelectedIndex] = useState(0)
-  const { hasOpenAIKey, basePath } = useOutstatic()
-  const csrfToken = useCsrfToken()
+  const [selectedIndexState, setSelectedIndex] = useState(0)
+  const { hasAIProviderKey, basePath, isPro, dashboardRoute, projectInfo } =
+    useOutstatic()
+  const selectedIndex =
+    items.length === 0 ? 0 : Math.min(selectedIndexState, items.length - 1)
+
+  const completionStartPos = useRef<number | null>(null)
 
   const { complete, isLoading } = useCompletion({
     id: 'outstatic',
     api: basePath + OUTSTATIC_API_PATH + '/generate',
-    headers: csrfToken ? { 'X-CSRF-Token': csrfToken } : undefined,
     onFinish: (_prompt, completion) => {
       // highlight the generated text
-      editor.commands.setTextSelection({
-        from: range.from,
-        to: range.from + completion.length
-      })
+      if (editor) {
+        const start = editor.state.selection.from
+        editor.commands.insertContentAt(start, completion)
+        editor.commands.setTextSelection({
+          from: start,
+          to: editor.state.selection.from
+        })
+        editor.commands.removeClass('completing')
+      }
     },
     onError: (e) => {
+      completionStartPos.current = null
       console.error('AI completion error', e)
       const errorToast = toast.error(e.message, {
         action: {
@@ -67,6 +77,11 @@ export const BaseCommandList = ({
       const item = items[index]
       if (item) {
         if (item.title === 'Continue writing') {
+          if (!(hasAIProviderKey || isPro)) {
+            editor.chain().focus().deleteRange(range).run()
+            onShowUpgradeDialog(projectInfo?.accountSlug, dashboardRoute)
+            return
+          }
           if (isLoading) return
 
           const prevText = getPrevText(editor, { chars: 5000, offset: 1 })
@@ -74,10 +89,12 @@ export const BaseCommandList = ({
           if (prevText === '') {
             toast.error('Write some content so the AI can continue.')
           } else {
+            // Store the position and delete the slash command range before starting completion
+            completionStartPos.current = range.from
+            editor.chain().focus().deleteRange(range).run()
             complete(prevText, {
               body: { option: 'continue', command: '' }
             })
-            editor.chain().focus().deleteRange(range).run()
           }
         } else if (item.title === 'Image') {
           setImageMenu(true)
@@ -86,8 +103,20 @@ export const BaseCommandList = ({
         }
       }
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [complete, isLoading, command, editor, items]
+    [
+      complete,
+      isLoading,
+      command,
+      editor,
+      items,
+      range,
+      hasAIProviderKey,
+      isPro,
+      onShowUpgradeDialog,
+      dashboardRoute,
+      projectInfo,
+      setImageMenu
+    ]
   )
 
   useEffect(() => {
@@ -96,11 +125,17 @@ export const BaseCommandList = ({
       if (navigationKeys.includes(e.key)) {
         e.preventDefault()
         if (e.key === 'ArrowUp') {
-          setSelectedIndex((selectedIndex + items.length - 1) % items.length)
+          setSelectedIndex((prevIndex) => {
+            if (items.length === 0) return 0
+            return (prevIndex + items.length - 1) % items.length
+          })
           return true
         }
         if (e.key === 'ArrowDown') {
-          setSelectedIndex((selectedIndex + 1) % items.length)
+          setSelectedIndex((prevIndex) => {
+            if (items.length === 0) return 0
+            return (prevIndex + 1) % items.length
+          })
           return true
         }
         if (e.key === 'Enter') {
@@ -115,11 +150,7 @@ export const BaseCommandList = ({
     return () => {
       document.removeEventListener('keydown', onKeyDown)
     }
-  }, [items, selectItem, selectedIndex])
-
-  useEffect(() => {
-    setSelectedIndex(0)
-  }, [items])
+  }, [items.length, selectItem, selectedIndex])
 
   const commandListContainer = useRef<HTMLDivElement>(null)
 
@@ -139,7 +170,6 @@ export const BaseCommandList = ({
         className="z-50 h-auto max-h-[330px] w-72 overflow-y-auto rounded-md border border-muted bg-background px-1 py-2 shadow-md transition-all"
       >
         {items.map((item: CommandItemProps, index: number) => {
-          if (item.title === 'Continue writing' && !hasOpenAIKey) return null
           return (
             <button
               className={`flex w-full items-center space-x-2 rounded-md px-2 py-1 text-left text-sm text-foreground hover:bg-muted ${

@@ -146,13 +146,18 @@ describe('<DocumentSettings />', () => {
   beforeEach(() => {
     jest.clearAllMocks()
     ;(useOstSession as jest.Mock).mockReturnValue(mockSession)
-    // Reset the useOutstatic mock to default values
+    // Reset the useOutstatic mock to default values with permissions
     mockUseOutstatic.mockReturnValue({
       dashboardRoute: '/outstatic',
       session: {
         user: {
           name: 'Test User',
-          image: 'https://example.com/avatar.jpg'
+          image: 'https://example.com/avatar.jpg',
+          permissions: [
+            'collections.manage',
+            'content.manage',
+            'settings.manage'
+          ]
         }
       }
     })
