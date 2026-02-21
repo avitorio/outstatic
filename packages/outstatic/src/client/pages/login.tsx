@@ -16,6 +16,7 @@ import { AlertCircleIcon, Mail } from 'lucide-react'
 import { Input } from '@/components/ui/shadcn/input'
 import { UpgradeDialog } from '@/components/ui/outstatic/upgrade-dialog'
 import { ApiKeyLoginDialog } from '@/components/ui/outstatic/api-key-login-dialog'
+import { Badge } from '@/components/ui/shadcn/badge'
 
 type Errors = keyof typeof loginErrors
 
@@ -67,6 +68,7 @@ export default function Login({
   const [emailLoading, setEmailLoading] = useState(false)
   const [showUpgradeDialog, setShowUpgradeDialog] = useState(false)
   const [showApiKeyDialog, setShowApiKeyDialog] = useState(false)
+  const showPlanBadges = !isPro
   const isLoading = githubLoading || googleLoading
   const apiBasePath = basePath
     ? `${basePath.replace(/\/+$/, '')}${OUTSTATIC_API_PATH}`
@@ -253,7 +255,7 @@ export default function Login({
                             onClick={handleGithubLogin}
                             className={clsx(
                               githubLoading && 'animate-pulse',
-                              'w-full'
+                              'w-full relative'
                             )}
                           >
                             <svg
@@ -272,6 +274,14 @@ export default function Login({
                               ></path>
                             </svg>
                             Sign in with GitHub
+                            {showPlanBadges ? (
+                              <Badge
+                                variant="secondary"
+                                className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-[10px] tracking-wide"
+                              >
+                                FREE
+                              </Badge>
+                            ) : null}
                           </Link>
                         </Button>
                         {isPro ? (
@@ -281,11 +291,19 @@ export default function Login({
                               onClick={handleGoogleLogin}
                               className={clsx(
                                 googleLoading && 'animate-pulse',
-                                'w-full'
+                                'w-full relative'
                               )}
                             >
                               <GoogleIcon />
                               Sign in with Google
+                              {showPlanBadges ? (
+                                <Badge
+                                  variant="outline"
+                                  className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-[10px] tracking-wide"
+                                >
+                                  PRO
+                                </Badge>
+                              ) : null}
                             </Link>
                           </Button>
                         ) : (
@@ -294,9 +312,20 @@ export default function Login({
                             open={showUpgradeDialog}
                             onOpenChange={setShowUpgradeDialog}
                           >
-                            <Button variant="outline" className="mt-2 w-full">
+                            <Button
+                              variant="outline"
+                              className="mt-2 w-full relative"
+                            >
                               <GoogleIcon />
                               Sign in with Google
+                              {showPlanBadges ? (
+                                <Badge
+                                  variant="outline"
+                                  className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-[10px] tracking-wide"
+                                >
+                                  PRO
+                                </Badge>
+                              ) : null}
                             </Button>
                           </UpgradeDialog>
                         )}
@@ -309,7 +338,7 @@ export default function Login({
                         onSubmit={handleEmailLogin}
                         className="w-full max-w-sm"
                       >
-                        <div className="mb-4">
+                        <div className="mb-4 relative">
                           <Input
                             type="email"
                             placeholder="Enter your email"
@@ -321,7 +350,7 @@ export default function Login({
                               }
                             }}
                             required
-                            className="w-full"
+                            className={clsx('w-full', showPlanBadges && 'pr-16')}
                             onKeyDown={(e) => {
                               if (e.key === 'Enter' && !isPro) {
                                 setShowUpgradeDialog(true)
@@ -329,6 +358,14 @@ export default function Login({
                               }
                             }}
                           />
+                          {showPlanBadges ? (
+                            <Badge
+                              variant="outline"
+                              className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-[10px] tracking-wide"
+                            >
+                              PRO
+                            </Badge>
+                          ) : null}
                         </div>
                         {isPro ? (
                           <>

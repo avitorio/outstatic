@@ -82,6 +82,20 @@ describe('<Login />', () => {
     ).toBeInTheDocument()
   })
 
+  it('shows FREE and PRO badges for non-pro projects', () => {
+    render(<Login />)
+
+    expect(screen.getByText('FREE')).toBeInTheDocument()
+    expect(screen.getAllByText('PRO')).toHaveLength(2)
+  })
+
+  it('hides FREE and PRO badges for pro projects', () => {
+    render(<Login isPro />)
+
+    expect(screen.queryByText('FREE')).not.toBeInTheDocument()
+    expect(screen.queryByText('PRO')).not.toBeInTheDocument()
+  })
+
   it('opens API key dialog when GitHub backend returns auth-not-configured', async () => {
     ;(global.fetch as jest.Mock).mockResolvedValueOnce({
       ok: false,
