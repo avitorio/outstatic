@@ -1,6 +1,6 @@
 ---
 title: "Getting started with Next.js"
-publishedAt: "2026-02-17T03:00:00.000Z"
+publishedAt: "2026-02-20T03:00:00.000Z"
 status: "published"
 author:
   name: "Andre Vitorio"
@@ -42,7 +42,7 @@ Add these three files under `/app`. We recommend placing Outstatic in its own ro
 
 #### `/app/(cms)/layout.tsx`
 
-```
+```javascript
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html suppressHydrationWarning>
@@ -54,7 +54,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
 #### `/app/(cms)/outstatic/[[...ost]]/page.tsx`
 
-```
+```javascript
 import 'outstatic/outstatic.css'
 import { Outstatic } from 'outstatic'
 import { OstClient } from 'outstatic/client'
@@ -71,7 +71,7 @@ export default async function Page({
 
 #### `/app/api/outstatic/[[...ost]]/route.ts` (outside the route group)
 
-```
+```javascript
 import { OutstaticApi } from 'outstatic'
 
 export const GET = OutstaticApi.GET
