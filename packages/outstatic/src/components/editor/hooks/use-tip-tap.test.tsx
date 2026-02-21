@@ -178,7 +178,10 @@ describe('useTipTap AI gating', () => {
     }))
 
     const addDocumentListenerSpy = jest.spyOn(document, 'addEventListener')
-    const removeDocumentListenerSpy = jest.spyOn(document, 'removeEventListener')
+    const removeDocumentListenerSpy = jest.spyOn(
+      document,
+      'removeEventListener'
+    )
     const addWindowListenerSpy = jest.spyOn(window, 'addEventListener')
     const removeWindowListenerSpy = jest.spyOn(window, 'removeEventListener')
 

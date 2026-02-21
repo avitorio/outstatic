@@ -29,8 +29,13 @@ import { Badge } from './ui/shadcn/badge'
 import { OUTSTATIC_APP_URL } from '@/utils/constants'
 import { UpgradeDialog } from './ui/outstatic/upgrade-dialog'
 import { cn } from '@/utils/ui'
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import { AppPermissions } from '@/utils/auth/auth'
+import {
+  buildApiKeySignupUrl,
+  buildOutstaticCallbackOrigin
+} from '@/utils/buildApiKeySignupUrl'
+import { useClientOrigin } from '@/utils/hooks/useClientOrigin'
 
 type SidebarProps = {
   /** Additional routes to append or replace default settings routes */
@@ -39,10 +44,12 @@ type SidebarProps = {
 }
 
 export const Sidebar = ({ additionalRoutes }: SidebarProps) => {
-  const { dashboardRoute, isPro, projectInfo, session } = useOutstatic()
+  const { dashboardRoute, isPro, projectInfo, session, basePath } =
+    useOutstatic()
   const { data: collections } = useCollections()
   const { data: singletons } = useSingletons()
   const userPermissions = session?.user?.permissions
+  const clientOrigin = useClientOrigin()
 
   const hasPermission = useCallback(
     (permission: AppPermissions) => {
@@ -53,6 +60,25 @@ export const Sidebar = ({ additionalRoutes }: SidebarProps) => {
   const hasCollections = collections && collections.length > 0
   const hasSingletons = singletons && singletons.length > 0
   const hasContentTypes = hasCollections || hasSingletons
+  const callbackOrigin = useMemo(() => {
+    if (!clientOrigin) {
+      return undefined
+    }
+
+    return buildOutstaticCallbackOrigin(clientOrigin, basePath)
+  }, [basePath, clientOrigin])
+
+  const signUpForApiKeysUrl = useMemo(
+    () =>
+      buildApiKeySignupUrl({
+        callbackOrigin
+      }),
+    [callbackOrigin]
+  )
+  const apiKeysRedirectPath =
+    projectInfo?.accountSlug && projectInfo?.projectSlug
+      ? `${OUTSTATIC_APP_URL}/home/${projectInfo.accountSlug}/${projectInfo.projectSlug}/api-keys`
+      : signUpForApiKeysUrl
 
   const routes = [
     {
@@ -191,28 +217,9 @@ export const Sidebar = ({ additionalRoutes }: SidebarProps) => {
                 },
                 {
                   label: 'API Keys',
-                  path: `${dashboardRoute}/redirect?redirectTo=${encodeURIComponent(`${OUTSTATIC_APP_URL}/home/${projectInfo?.accountSlug}/${projectInfo?.projectSlug}/api-keys`)}`,
+                  path: `${dashboardRoute}/redirect?redirectTo=${encodeURIComponent(apiKeysRedirectPath)}`,
                   newTab: true,
-                  Icon: <Key className={'w-4'} />,
-                  badge: isPro ? undefined : (
-                    <Badge variant="outline">PRO</Badge>
-                  ),
-                  dialog: isPro ? undefined : (
-                    <UpgradeDialog
-                      title="Unlock API Keys"
-                      accountSlug={projectInfo?.accountSlug}
-                      dashboardRoute={dashboardRoute}
-                    >
-                      <div
-                        className={cn(
-                          'flex items-center gap-2 cursor-pointer w-full'
-                        )}
-                      >
-                        <Key className={'w-4'} />
-                        API Keys
-                      </div>
-                    </UpgradeDialog>
-                  )
+                  Icon: <Key className={'w-4'} />
                 },
                 {
                   label: 'Settings',

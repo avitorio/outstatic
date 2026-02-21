@@ -1,4 +1,4 @@
-import { OST_PRO_API_KEY, OST_PRO_API_URL } from '@/utils/constants'
+import { OUTSTATIC_API_KEY, OUTSTATIC_API_URL } from '@/utils/constants'
 import { NextRequest, NextResponse } from 'next/server'
 import { MagicLinkRequestSchema } from './schemas'
 import { ZodError } from 'zod'
@@ -11,7 +11,7 @@ export default async function POST(request: NextRequest) {
     const { email, returnUrl } = MagicLinkRequestSchema.parse(body)
 
     // Check if API key is configured
-    if (!OST_PRO_API_KEY) {
+    if (!OUTSTATIC_API_KEY) {
       return NextResponse.json(
         { error: 'Email authentication is not configured' },
         { status: 500 }
@@ -21,21 +21,22 @@ export default async function POST(request: NextRequest) {
     // Build callback URL for this site's magic-link/callback route
     const url = new URL(request.url)
     const baseUrl = `${url.protocol}//${url.host}`
-    const callbackUrl = `${baseUrl}/api/outstatic/magic-link-callback`
+    const basePath = (process.env.OST_BASE_PATH || '').replace(/\/+$/, '')
+    const callbackUrl = `${baseUrl}${basePath}/api/outstatic/magic-link-callback`
 
-    const apiBase = OST_PRO_API_URL?.endsWith('/')
-      ? OST_PRO_API_URL
-      : `${OST_PRO_API_URL ?? ''}/`
+    const apiBase = OUTSTATIC_API_URL?.endsWith('/')
+      ? OUTSTATIC_API_URL
+      : `${OUTSTATIC_API_URL ?? ''}/`
     const requestUrl = new URL('outstatic/auth/request-magic-link', apiBase)
     // Build default return URL if not provided
-    const effectiveReturnUrl = returnUrl ?? `${baseUrl}/outstatic`
+    const effectiveReturnUrl = returnUrl ?? `${baseUrl}${basePath}/outstatic`
 
     // Call apps/api endpoint with API key in Authorization header
     const response = await fetch(requestUrl.href, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${OST_PRO_API_KEY}`
+        Authorization: `Bearer ${OUTSTATIC_API_KEY}`
       },
       body: JSON.stringify({
         email,

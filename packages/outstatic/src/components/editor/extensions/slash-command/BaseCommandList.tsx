@@ -32,9 +32,11 @@ export const BaseCommandList = ({
   range: Range
   onShowUpgradeDialog: (accountSlug?: string, dashboardRoute?: string) => void
 }) => {
-  const [selectedIndex, setSelectedIndex] = useState(0)
+  const [selectedIndexState, setSelectedIndex] = useState(0)
   const { hasAIProviderKey, basePath, isPro, dashboardRoute, projectInfo } =
     useOutstatic()
+  const selectedIndex =
+    items.length === 0 ? 0 : Math.min(selectedIndexState, items.length - 1)
 
   const completionStartPos = useRef<number | null>(null)
 
@@ -112,7 +114,8 @@ export const BaseCommandList = ({
       isPro,
       onShowUpgradeDialog,
       dashboardRoute,
-      projectInfo
+      projectInfo,
+      setImageMenu
     ]
   )
 
@@ -122,11 +125,17 @@ export const BaseCommandList = ({
       if (navigationKeys.includes(e.key)) {
         e.preventDefault()
         if (e.key === 'ArrowUp') {
-          setSelectedIndex((selectedIndex + items.length - 1) % items.length)
+          setSelectedIndex((prevIndex) => {
+            if (items.length === 0) return 0
+            return (prevIndex + items.length - 1) % items.length
+          })
           return true
         }
         if (e.key === 'ArrowDown') {
-          setSelectedIndex((selectedIndex + 1) % items.length)
+          setSelectedIndex((prevIndex) => {
+            if (items.length === 0) return 0
+            return (prevIndex + 1) % items.length
+          })
           return true
         }
         if (e.key === 'Enter') {
@@ -141,11 +150,7 @@ export const BaseCommandList = ({
     return () => {
       document.removeEventListener('keydown', onKeyDown)
     }
-  }, [items, selectItem, selectedIndex])
-
-  useEffect(() => {
-    setSelectedIndex(0)
-  }, [items])
+  }, [items.length, selectItem, selectedIndex])
 
   const commandListContainer = useRef<HTMLDivElement>(null)
 

@@ -1,45 +1,42 @@
 ---
-title: 'Latest Menu'
-status: 'published'
+title: "Latest Menu"
+status: "published"
 author:
-  name: 'Andre Vitorio'
-  picture: 'https://avatars.githubusercontent.com/u/1417109?v=4'
-slug: 'latest-menu'
-description: ''
-coverImage: ''
-publishedAt: '2024-11-06T03:00:00.000Z'
+  name: "Andre Vitorio"
+  picture: "https://avatars.githubusercontent.com/u/1417109?v=4"
+slug: "latest-menu"
+description: ""
+coverImage: ""
+publishedAt: "2024-11-06T03:00:00.000Z"
 ---
 
-- [Upgrading to v2.0](/upgrading-to-v2.0)
+- Start Here
 
-- [Introduction](/introduction)
+  - [Introduction](/introduction)
+    - [How does Outstatic work?](/introduction#how-does-outstatic-work)
+  - [Getting started](/getting-started)
+    - [Use on any GitHub repository](/using-outstatic-for-markdown-content)
+    - [Add to a Next.js project](/getting-started-with-next-js)
+    - [Deploy a starter website](/deploy-a-starter-outstatic-website-on-vercel)
 
-  - [How does Outstatic work?](/introduction#how-does-outstatic-work)
+- Editing & Modeling
 
-- [Getting started](/getting-started)
+  - [The Content Editor](/the-content-editor)
+    - [AI Completion 🤖](/the-content-editor#ai-completion)
+  - [Custom Fields ⚡︎](/custom-fields)
 
-  - [Deploy a starter website](/deploy-a-starter-outstatic-website-on-vercel)
+- Access & Integration
 
-  - [Use on any GitHub repository](/using-outstatic-for-markdown-content)
+  - [Fetching data](/fetching-data)
+  - [API Keys](/api-keys)
+  - [Roles & Permissions](/roles)
+  - [Environment Variables](/environment-variables)
+  - [Type Generation](/docs/type-generation)
 
-  - [Add to a Next.js project](/getting-started-with-next-js)
+- Help
 
-- [The Content Editor](/the-content-editor)
-
-  - [AI Completion 🤖](/the-content-editor#ai-completion)
-
-- [Fetching data](/fetching-data)
-
-- [Custom Fields ⚡︎](/custom-fields)
-
-- [API Keys](/api-keys)
-
-- [Environment Variables](/environment-variables)
-
-- [FAQs](/faqs)
-
-- [Troubleshooting](/troubleshooting)
-
-- [License](/license)
-
-- [Credits](/credits)
+  - [FAQs](/faqs)
+  - [Upgrading](/upgrading-to-v2.0)
+  - [Troubleshooting](/troubleshooting)
+  - [License](/license)
+  - [Credits](/credits)

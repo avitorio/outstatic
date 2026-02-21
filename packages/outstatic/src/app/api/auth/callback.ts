@@ -1,7 +1,8 @@
 import {
   LoginSession,
   setLoginSession,
-  AppPermissions
+  AppPermissions,
+  resolveRefreshTokenExpiry
 } from '@/utils/auth/auth'
 import {
   getAccessToken,
@@ -9,7 +10,7 @@ import {
   checkCollaborator,
   checkCollaboratorWithRepo
 } from '@/utils/auth/github'
-import { OST_PRO_API_KEY, OST_PRO_API_URL } from '@/utils/constants'
+import { OUTSTATIC_API_KEY, OUTSTATIC_API_URL } from '@/utils/constants'
 import { NextRequest, NextResponse } from 'next/server'
 
 type ProjectInfo = {
@@ -18,20 +19,20 @@ type ProjectInfo = {
 }
 
 async function fetchProjectInfo(): Promise<ProjectInfo | null> {
-  if (!OST_PRO_API_KEY) {
+  if (!OUTSTATIC_API_KEY) {
     return null
   }
 
   try {
-    const apiBase = OST_PRO_API_URL?.endsWith('/')
-      ? OST_PRO_API_URL
-      : `${OST_PRO_API_URL ?? ''}/`
+    const apiBase = OUTSTATIC_API_URL?.endsWith('/')
+      ? OUTSTATIC_API_URL
+      : `${OUTSTATIC_API_URL ?? ''}/`
     const handshakeUrl = new URL('outstatic/project', apiBase)
 
     const response = await fetch(handshakeUrl.href, {
       method: 'GET',
       headers: {
-        Authorization: `Bearer ${OST_PRO_API_KEY}`
+        Authorization: `Bearer ${OUTSTATIC_API_KEY}`
       },
       cache: 'no-store'
     })
@@ -53,6 +54,7 @@ type ExchangeTokenResponse = {
   user: {
     id: string
     email: string
+    login?: string
     name: string
     avatar_url: string
     permissions: AppPermissions[]
@@ -61,6 +63,8 @@ type ExchangeTokenResponse = {
     access_token: string
     refresh_token: string
     expires_at: number
+    refresh_token_expires_in?: number | null
+    refresh_token_expires_at?: number | null
   }
 }
 
@@ -69,9 +73,9 @@ async function exchangeToken(
   callbackUrl: string
 ): Promise<ExchangeTokenResponse | null> {
   try {
-    const apiBase = OST_PRO_API_URL?.endsWith('/')
-      ? OST_PRO_API_URL
-      : `${OST_PRO_API_URL ?? ''}/`
+    const apiBase = OUTSTATIC_API_URL?.endsWith('/')
+      ? OUTSTATIC_API_URL
+      : `${OUTSTATIC_API_URL ?? ''}/`
     const exchangeUrl = new URL('outstatic/auth/exchange-token', apiBase)
 
     const response = await fetch(exchangeUrl.href, {
@@ -98,10 +102,45 @@ async function exchangeToken(
 export default async function GET(request: NextRequest) {
   const url = new URL(request.url)
   const error = url.searchParams.get('error')
+  const basePath = (process.env.OST_BASE_PATH || '').replace(/\/+$/, '')
+  const origin = url.origin
+  const dashboardUrl = `${origin}${basePath}/outstatic`
 
-  // Handle GitHub errors
+  // Handle GitHub and relay errors
   if (error) {
-    return NextResponse.json({ error }, { status: 403 })
+    const errorUrl = new URL(dashboardUrl)
+    errorUrl.searchParams.set('error', error)
+    return NextResponse.redirect(errorUrl)
+  }
+
+  const relayExchangeToken = url.searchParams.get('exchange_token')
+  if (relayExchangeToken) {
+    const callbackUrl = `${origin}${basePath}/api/outstatic/callback`
+    const exchangeResult = await exchangeToken(relayExchangeToken, callbackUrl)
+
+    if (!exchangeResult) {
+      const errorUrl = new URL(dashboardUrl)
+      errorUrl.searchParams.set('error', 'session-error')
+      return NextResponse.redirect(errorUrl)
+    }
+
+    const sessionData: LoginSession = {
+      user: {
+        name: exchangeResult.user.name || exchangeResult.user.email,
+        login: exchangeResult.user.login || exchangeResult.user.email,
+        email: exchangeResult.user.email,
+        image: exchangeResult.user.avatar_url || '',
+        permissions: exchangeResult.user.permissions || []
+      },
+      provider: 'magic-link',
+      access_token: exchangeResult.session.access_token,
+      refresh_token: exchangeResult.session.refresh_token,
+      expires: new Date(exchangeResult.session.expires_at * 1000),
+      refresh_token_expires: resolveRefreshTokenExpiry(exchangeResult.session)
+    }
+
+    await setLoginSession(sessionData)
+    return NextResponse.redirect(dashboardUrl)
   }
 
   const code = url.searchParams.get('code') as string | null
@@ -141,8 +180,6 @@ export default async function GET(request: NextRequest) {
 
     if (userData && userData.email && access_token) {
       const { name, login, email, avatar_url } = userData
-      const origin = url.origin
-      const basePath = process.env.OST_BASE_PATH || ''
 
       // Fetch project info from SaaS to get repo owner/slug
       const projectInfo = await fetchProjectInfo()
@@ -200,19 +237,18 @@ export default async function GET(request: NextRequest) {
             : undefined
         }
         await setLoginSession(sessionData)
-        const redirectUrl = `${origin}${basePath}/outstatic`
-        return NextResponse.redirect(redirectUrl)
+        return NextResponse.redirect(dashboardUrl)
       }
 
       // Not a collaborator - validate against SaaS to check project membership
-      if (!OST_PRO_API_KEY) {
+      if (!OUTSTATIC_API_KEY) {
         const redirectUrl = `${origin}${basePath}/outstatic?error=not-collaborator`
         return NextResponse.redirect(redirectUrl)
       }
 
-      const apiBase = OST_PRO_API_URL?.endsWith('/')
-        ? OST_PRO_API_URL
-        : `${OST_PRO_API_URL ?? ''}/`
+      const apiBase = OUTSTATIC_API_URL?.endsWith('/')
+        ? OUTSTATIC_API_URL
+        : `${OUTSTATIC_API_URL ?? ''}/`
 
       try {
         const validateUrl = new URL(
@@ -225,7 +261,7 @@ export default async function GET(request: NextRequest) {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${OST_PRO_API_KEY}`
+            Authorization: `Bearer ${OUTSTATIC_API_KEY}`
           },
           body: JSON.stringify({
             github_token: access_token,
@@ -234,14 +270,14 @@ export default async function GET(request: NextRequest) {
         })
 
         if (!validateResponse.ok) {
-          const redirectUrl = `${origin}${basePath}/outstatic?error=not-collaborator`
+          const redirectUrl = `${dashboardUrl}?error=not-collaborator`
           return NextResponse.redirect(redirectUrl)
         }
 
         const validation = await validateResponse.json()
 
         if (!validation.valid || !validation.exchange_token) {
-          const redirectUrl = `${origin}${basePath}/outstatic?error=not-collaborator`
+          const redirectUrl = `${dashboardUrl}?error=not-collaborator`
           return NextResponse.redirect(redirectUrl)
         }
 
@@ -252,7 +288,7 @@ export default async function GET(request: NextRequest) {
         )
 
         if (!exchangeResult) {
-          const redirectUrl = `${origin}${basePath}/outstatic?error=session-error`
+          const redirectUrl = `${dashboardUrl}?error=session-error`
           return NextResponse.redirect(redirectUrl)
         }
 
@@ -260,7 +296,7 @@ export default async function GET(request: NextRequest) {
         const sessionData: LoginSession = {
           user: {
             name: validation.user.name || exchangeResult.user.name || email,
-            login: validation.user.login || email,
+            login: validation.user.login || exchangeResult.user.login || email,
             email: exchangeResult.user.email,
             image:
               validation.user.avatar_url ||
@@ -272,14 +308,15 @@ export default async function GET(request: NextRequest) {
           access_token: exchangeResult.session.access_token,
           refresh_token: exchangeResult.session.refresh_token,
           expires: new Date(exchangeResult.session.expires_at * 1000),
-          refresh_token_expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) // 30 days
+          refresh_token_expires: resolveRefreshTokenExpiry(
+            exchangeResult.session
+          )
         }
 
         await setLoginSession(sessionData)
-        const redirectUrl = `${origin}${basePath}/outstatic`
-        return NextResponse.redirect(redirectUrl)
+        return NextResponse.redirect(dashboardUrl)
       } catch {
-        const redirectUrl = `${origin}${basePath}/outstatic?error=not-collaborator`
+        const redirectUrl = `${dashboardUrl}?error=not-collaborator`
         return NextResponse.redirect(redirectUrl)
       }
     } else {

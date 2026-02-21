@@ -7,6 +7,7 @@ import {
   refreshTokenIfNeeded,
   isTokenExpired,
   isRefreshTokenValid,
+  resolveRefreshTokenExpiry,
   LoginSession
 } from '../auth'
 import { getAccessToken } from '../github'
@@ -530,6 +531,32 @@ describe('Auth Utils', () => {
         refresh_token_expires: new Date(Date.now() - 1000) // 1 second ago
       }
       expect(isRefreshTokenValid(expiredSession)).toBe(false)
+    })
+  })
+
+  describe('resolveRefreshTokenExpiry', () => {
+    it('uses refresh_token_expires_at when provided in epoch seconds', () => {
+      const resolved = resolveRefreshTokenExpiry({
+        refresh_token_expires_at: 2_100_000_000
+      })
+
+      expect(resolved).toEqual(new Date(2_100_000_000 * 1000))
+    })
+
+    it('uses refresh_token_expires_in when provided', () => {
+      const nowSpy = jest.spyOn(Date, 'now').mockReturnValue(1_700_000_000_000)
+
+      const resolved = resolveRefreshTokenExpiry({
+        refresh_token_expires_in: 2_592_000_000
+      })
+
+      expect(resolved).toEqual(new Date(1_700_000_000_000 + 2_592_000_000))
+      nowSpy.mockRestore()
+    })
+
+    it('returns undefined when relay expiry fields are missing', () => {
+      const resolved = resolveRefreshTokenExpiry({})
+      expect(resolved).toBeUndefined()
     })
   })
 

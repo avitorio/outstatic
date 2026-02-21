@@ -23,6 +23,7 @@ export type ProjectInfo = {
   accountSlug: string
   repoOwner: string
   repoSlug: string
+  isPro: boolean
 }
 
 export type HandshakeFetcher = (apiKey: string) => Promise<ProjectInfo | null>
@@ -34,8 +35,7 @@ interface CacheEntry {
 
 // Configuration
 const CONFIG = {
-  IN_MEMORY_TTL_MS:
-    process.env.NODE_ENV === 'development' ? 60 * 1000 : 30 * 60 * 1000,
+  IN_MEMORY_TTL_MS: process.env.NODE_ENV === 'development' ? 0 : 30 * 60 * 1000,
   NEXT_CACHE_TTL_SECONDS: process.env.NODE_ENV === 'development' ? 10 : 30 * 60,
   CACHE_TAG: 'project-handshake',
   CACHE_KEY_PREFIX: 'project-handshake'
@@ -195,21 +195,5 @@ export function cleanupExpiredEntries(): void {
     if (now > entry.expiresAt) {
       inMemoryCache.delete(key)
     }
-  }
-}
-
-/**
- * Get cache statistics for debugging
- *
- * Returns the current size of the in-memory cache and all cached keys.
- * Note: This only reflects the in-memory layer, not the persistent cache.
- */
-export function getCacheStats(): {
-  inMemorySize: number
-  inMemoryKeys: string[]
-} {
-  return {
-    inMemorySize: inMemoryCache.size,
-    inMemoryKeys: Array.from(inMemoryCache.keys())
   }
 }

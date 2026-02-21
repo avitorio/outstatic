@@ -41,7 +41,7 @@ export default function EditDocument({ collection }: { collection: string }) {
     setHasChanges,
     dashboardRoute,
     repoMediaPath,
-    publicMediaPath,
+    publicMediaPath
   } = useOutstatic()
   const [showDelete, setShowDelete] = useState(false)
   const [documentSchema, setDocumentSchema] = useState(editDocumentSchema)

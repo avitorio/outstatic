@@ -1,6 +1,6 @@
 import { LoginSession, getLoginSession } from '@/utils/auth/auth'
-import { OST_PRO_API_KEY, OST_PRO_API_URL } from '@/utils/constants'
-import { EnvVarsType, envVars } from '@/utils/envVarsCheck'
+import { OUTSTATIC_API_KEY, OUTSTATIC_API_URL } from '@/utils/constants'
+import { EnvVarsType } from '@/utils/envVarsCheck'
 import {
   createCachedHandshake,
   type ProjectInfo
@@ -42,7 +42,7 @@ async function fetchProjectFromHandshake(
   apiKey: string
 ): Promise<ProjectInfo | null> {
   try {
-    const apiUrl = OST_PRO_API_URL
+    const apiUrl = OUTSTATIC_API_URL
     const apiBase = apiUrl?.endsWith('/') ? apiUrl : `${apiUrl ?? ''}/`
     const handshakeUrl = new URL('outstatic/project', apiBase)
 
@@ -61,7 +61,8 @@ async function fetchProjectFromHandshake(
         projectSlug: data.project_slug,
         accountSlug: data.account_slug,
         repoOwner: data.repo_owner,
-        repoSlug: data.repo_slug
+        repoSlug: data.repo_slug,
+        isPro: data.is_pro
       }
     } else {
       // Log error but don't fail - allow Outstatic to work without projectInfo
@@ -107,18 +108,12 @@ export async function Outstatic({
     OST_BASE_PATH: ''
   }
 
-  if (envVars.hasMissingEnvVars && !ostConfig.OST_REPO_OWNER) {
-    return {
-      missingEnvVars: envVars.envVars
-    } as OutstaticData
-  }
-
   const session = await getLoginSession()
 
   // Perform handshake to get project info if API key is present
   // Uses multi-layer caching: React cache (per-request) + in-memory + Next.js unstable_cache
-  const projectInfo = OST_PRO_API_KEY
-    ? await getProjectInfoWithCache(OST_PRO_API_KEY)
+  const projectInfo = OUTSTATIC_API_KEY
+    ? await getProjectInfoWithCache(OUTSTATIC_API_KEY)
     : undefined
 
   return {
@@ -138,11 +133,11 @@ export async function Outstatic({
     dashboardRoute: '/outstatic',
     githubGql:
       session?.provider !== 'github'
-        ? `${OST_PRO_API_URL}/github/parser`
+        ? `${OUTSTATIC_API_URL}/github/parser`
         : 'https://api.github.com/graphql',
     publicMediaPath: process.env.OST_PUBLIC_MEDIA_PATH || '',
     repoMediaPath: process.env.OST_REPO_MEDIA_PATH || '',
-    isPro: !!OST_PRO_API_KEY && !!projectInfo,
+    isPro: projectInfo?.isPro || false,
     projectInfo: projectInfo
       ? {
           projectId: projectInfo.projectId,
