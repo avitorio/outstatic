@@ -1,6 +1,6 @@
 {
-  "commit": "1909ad5da3bb0b8518b868813b2afe70bf1a2dbd",
-  "generated": "2026-02-21T00:12:59.569Z",
+  "commit": "7e7680b2e6dc442f6d7e9f9ac5013a2b0b860ffe",
+  "generated": "2026-02-21T00:13:19.201Z",
   "metadata": [
     {
       "__outstatic": {
@@ -495,22 +495,6 @@
     },
     {
       "__outstatic": {
-        "commit": "fc9137e0bce4d1f90350e109944d03ed8839421c",
-        "hash": "909280383",
-        "path": "/outstatic/content/docs/using-outstatic-for-markdown-content.mdx"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "docs",
-      "publishedAt": "2026-02-20T03:00:00.000Z",
-      "slug": "using-outstatic-for-markdown-content",
-      "status": "published",
-      "title": "Using Outstatic for Markdown content"
-    },
-    {
-      "__outstatic": {
         "commit": "3b2d34b6ab5b6ee718f4be54adf86e429f660829",
         "hash": "960927893",
         "path": "/outstatic/content/docs/getting-started.md"
@@ -576,6 +560,22 @@
       "slug": "local-development",
       "status": "published",
       "title": "Local Development"
+    },
+    {
+      "__outstatic": {
+        "commit": "7e7680b2e6dc442f6d7e9f9ac5013a2b0b860ffe",
+        "hash": "1806955757",
+        "path": "/outstatic/content/docs/using-outstatic-for-markdown-content.mdx"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "publishedAt": "2026-02-20T03:00:00.000Z",
+      "slug": "using-outstatic-for-markdown-content",
+      "status": "published",
+      "title": "Using Outstatic for Markdown content"
     }
   ]
 }
