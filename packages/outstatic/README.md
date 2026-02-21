@@ -29,11 +29,15 @@ Outstatic is a static site CMS that lives inside your Next.js install. No need f
 
 ## Getting started
 
-Visit <a aria-label="outstatic getting started" href="https://outstatic.com/learn">https://outstatic.com/docs/getting-started</a> to get started with Outstatic.
+Create a <a href="https://outstatic.com/auth/sign-up?provider=github&utm=outstatic-github">FREE Outstatic account</a> to start managing Markdown in your GitHub repositories with zero installation needed.
+
+### Self hosting
+
+Visit <a aria-label="outstatic getting started" href="https://outstatic.com/docs/getting-started/?utm=outstatic-github">https://outstatic.com/docs/getting-started</a> to learn more.
 
 ## Documentation
 
-Visit [https://outstatic.com/docs](https://outstatic.com/docs) to view the full documentation.
+Visit [https://outstatic.com/docs](https://outstatic.com/docs/introduction?utm=outstatic-github) to view the full documentation.
 
 ## Financial Contributors
 
@@ -64,9 +68,10 @@ The project is constantly improving with new changes being implemented on a dail
 Outstatic is built on the following stack:
 
 - [Next.js](https://nextjs.org/) – framework
+- [Tanstack Query](https://tanstack.com/query/latest) - state management and data fetching
 - [GitHub](https://github.com/) – content storage and auth
 - [Tiptap](https://tiptap.dev/) – text editor
-- [OpenAI](https://openai.com/) - AI completions
+- [OpenAI](https://openai.com/) & [Vercel AI Gateway](https://vercel.com/ai-gateway) - AI completions
 - [Vercel AI SDK](https://sdk.vercel.ai/docs) – AI library
 - [TailwindCSS](https://tailwindcss.com/) – styles
 - [Novel](https://novel.sh) – AI completions and slash command
@@ -89,5 +94,3 @@ Please see our [CONTRIBUTING.md](/CONTRIBUTING.md).
 <a href="https://github.com/avitorio/outstatic/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=avitorio/outstatic" />
 </a>
-
-<img src="https://cloud.umami.is/p/x8oBdKH6E" />
