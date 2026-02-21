@@ -1,6 +1,6 @@
 {
-  "commit": "d9e63433b878cb5a5dc9db6451cec1a6c046af81",
-  "generated": "2026-02-21T00:15:20.489Z",
+  "commit": "c0be9e2f07bf7e5e06e169a968f9396b7b4a163e",
+  "generated": "2026-02-21T00:20:14.725Z",
   "metadata": [
     {
       "__outstatic": {
@@ -513,22 +513,6 @@
     },
     {
       "__outstatic": {
-        "commit": "8079a13ab4ef41f640cb79a6d387c6819239680b",
-        "hash": "2656621519",
-        "path": "/outstatic/content/docs/deploy-a-starter-outstatic-website-on-vercel.mdx"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "docs",
-      "publishedAt": "2024-10-30T18:31:58.875Z",
-      "slug": "deploy-a-starter-outstatic-website-on-vercel",
-      "status": "published",
-      "title": "Deploy a starter Outstatic website on Vercel"
-    },
-    {
-      "__outstatic": {
         "commit": "9863de053d5728d1a5635404f34a2995b8cedccb",
         "hash": "397452078",
         "path": "/outstatic/content/docs/local-development.md"
@@ -576,6 +560,22 @@
       "slug": "getting-started-with-next-js",
       "status": "published",
       "title": "Getting started with Next.js"
+    },
+    {
+      "__outstatic": {
+        "commit": "c0be9e2f07bf7e5e06e169a968f9396b7b4a163e",
+        "hash": "530664466",
+        "path": "/outstatic/content/docs/deploy-a-starter-outstatic-website-on-vercel.mdx"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "publishedAt": "2026-02-20T03:00:00.000Z",
+      "slug": "deploy-a-starter-outstatic-website-on-vercel",
+      "status": "published",
+      "title": "Deploy a starter Outstatic website on Vercel"
     }
   ]
 }
