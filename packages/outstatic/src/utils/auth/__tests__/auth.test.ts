@@ -543,11 +543,22 @@ describe('Auth Utils', () => {
       expect(resolved).toEqual(new Date(2_100_000_000 * 1000))
     })
 
-    it('uses refresh_token_expires_in when provided', () => {
+    it('uses refresh_token_expires_in when provided in milliseconds', () => {
       const nowSpy = jest.spyOn(Date, 'now').mockReturnValue(1_700_000_000_000)
 
       const resolved = resolveRefreshTokenExpiry({
         refresh_token_expires_in: 2_592_000_000
+      })
+
+      expect(resolved).toEqual(new Date(1_700_000_000_000 + 2_592_000_000))
+      nowSpy.mockRestore()
+    })
+
+    it('uses refresh_token_expires_in when provided in seconds', () => {
+      const nowSpy = jest.spyOn(Date, 'now').mockReturnValue(1_700_000_000_000)
+
+      const resolved = resolveRefreshTokenExpiry({
+        refresh_token_expires_in: 2_592_000
       })
 
       expect(resolved).toEqual(new Date(1_700_000_000_000 + 2_592_000_000))

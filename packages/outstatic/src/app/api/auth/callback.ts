@@ -90,11 +90,16 @@ async function exchangeToken(
     })
 
     if (!response.ok) {
+      console.error('Relay token exchange returned a non-OK response', {
+        status: response.status,
+        statusText: response.statusText
+      })
       return null
     }
 
     return await response.json()
-  } catch {
+  } catch (error) {
+    console.error('Relay token exchange request failed', error)
     return null
   }
 }
@@ -119,6 +124,7 @@ export default async function GET(request: NextRequest) {
     const exchangeResult = await exchangeToken(relayExchangeToken, callbackUrl)
 
     if (!exchangeResult) {
+      console.error('Failed to exchange relay token from callback query params')
       const errorUrl = new URL(dashboardUrl)
       errorUrl.searchParams.set('error', 'session-error')
       return NextResponse.redirect(errorUrl)
@@ -288,6 +294,9 @@ export default async function GET(request: NextRequest) {
         )
 
         if (!exchangeResult) {
+          console.error(
+            'Failed to exchange relay token after GitHub user validation'
+          )
           const redirectUrl = `${dashboardUrl}?error=session-error`
           return NextResponse.redirect(redirectUrl)
         }

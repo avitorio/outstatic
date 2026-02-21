@@ -56,8 +56,16 @@ type RefreshTokenExpiryInput = {
   refresh_token_expires_at?: number | null
 }
 
+const MAX_REASONABLE_EXPIRES_IN_SECONDS = 31_536_000 // 1 year
+
 function dateFromEpochSecondsOrMilliseconds(value: number): Date {
   return value > 1_000_000_000_000 ? new Date(value) : new Date(value * 1000)
+}
+
+function durationFromSecondsOrMilliseconds(value: number): number {
+  // OAuth providers usually return *_expires_in values in seconds.
+  // Some local call sites already normalize to milliseconds before reaching this helper.
+  return value <= MAX_REASONABLE_EXPIRES_IN_SECONDS ? value * 1000 : value
 }
 
 export function resolveRefreshTokenExpiry(
@@ -76,7 +84,10 @@ export function resolveRefreshTokenExpiry(
     Number.isFinite(input.refresh_token_expires_in) &&
     input.refresh_token_expires_in > 0
   ) {
-    return new Date(Date.now() + input.refresh_token_expires_in)
+    return new Date(
+      Date.now() +
+        durationFromSecondsOrMilliseconds(input.refresh_token_expires_in)
+    )
   }
 
   return undefined
