@@ -1,6 +1,6 @@
 {
-  "commit": "ebbfeccab33cc003a272f6fa289f6a50ba1d1596",
-  "generated": "2026-02-20T23:56:49.110Z",
+  "commit": "ef1c385ca22132898e5eebc4d4eeae81e5789437",
+  "generated": "2026-02-21T00:12:30.602Z",
   "metadata": [
     {
       "__outstatic": {
@@ -576,6 +576,22 @@
       "slug": "local-development",
       "status": "published",
       "title": "Local Development"
+    },
+    {
+      "__outstatic": {
+        "commit": "ef1c385ca22132898e5eebc4d4eeae81e5789437",
+        "hash": "2212050611",
+        "path": "/outstatic/content/docs/test-image.mdx"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "publishedAt": "2026-02-20T23:54:05.604Z",
+      "slug": "test-image",
+      "status": "draft",
+      "title": "Test Image"
     }
   ]
 }
