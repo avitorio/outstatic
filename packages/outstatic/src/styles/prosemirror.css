@@ -1,0 +1,245 @@
+/* Basic editor styles */
+.ProseMirror {
+  outline: none;
+  padding-bottom: 40vh;
+}
+
+.ProseMirror h1,
+.ProseMirror h2,
+.ProseMirror h3,
+.ProseMirror h4,
+.ProseMirror h5,
+.ProseMirror h6 {
+  line-height: 1.1;
+}
+
+.ProseMirror h2 {
+  letter-spacing: -0.02em;
+  font-weight: 700;
+  font-style: normal;
+  letter-spacing: 0;
+  font-size: 34px;
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+}
+
+.ProseMirror h3 {
+  letter-spacing: -0.02em;
+  font-weight: 700;
+  font-style: normal;
+  font-size: 26px;
+  line-height: 1.22;
+  letter-spacing: -0.012em;
+}
+
+.ProseMirror p {
+  font-family: 'PT Serif', Arial, Cambria, 'Times New Roman', Times, serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 21px;
+  line-height: 1.58;
+  letter-spacing: -0.003em;
+  position: relative;
+}
+
+.ProseMirror *.completing:after {
+  content: '';
+  width: 18px;
+  height: 18px;
+  border: 2px solid #ccc;
+  border-top-color: #333;
+  border-radius: 50%;
+  animation: completing 0.8s linear infinite;
+  position: relative;
+  display: inline-block;
+  margin-left: 5px;
+  vertical-align: middle;
+}
+
+@keyframes completing {
+  0% {
+    transform: rotate(0deg);
+    opacity: 1;
+  }
+
+  50% {
+    transform: rotate(180deg);
+    opacity: 0.5;
+  }
+
+  100% {
+    transform: rotate(360deg);
+    opacity: 0.5;
+  }
+}
+
+.ProseMirror p:first-child:before {
+  color: #adb5bd;
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+}
+
+.ProseMirror *.completing.is-empty:before {
+  content: '';
+}
+
+.ProseMirror *.completing.is-empty br {
+  display: none;
+}
+
+.ProseMirror img {
+  max-width: 99%;
+  height: auto;
+  margin: 0;
+  display: inline-block;
+}
+
+.ProseMirror blockquote {
+  padding-left: 1rem;
+  border-left: 2px solid hsl(var(--muted));
+}
+
+.ProseMirror hr {
+  border: none;
+  border-top: 2px solid hsl(var(--muted));
+  margin: 2rem 0;
+}
+
+.ProseMirror a {
+  text-decoration: underline;
+  color: hsl(var(--text-foreground));
+  cursor: pointer;
+  display: inline-block !important;
+}
+
+.ProseMirror pre {
+  font-family: 'JetBrainsMono', monospace;
+}
+
+.ProseMirror code {
+  background-color: #6161611a;
+  color: #616161;
+  font-family: monospace;
+  font-weight: 500;
+}
+
+.ProseMirror code:before,
+.ProseMirror code:after {
+  display: none;
+}
+
+.ProseMirror .hljs-comment,
+.ProseMirror .hljs-quote,
+.ProseMirror code > div {
+  color: #ccc;
+}
+
+.ProseMirror .hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 0.5em;
+  background: #282a36;
+}
+
+.ProseMirror .hljs-built_in,
+.ProseMirror .hljs-selector-tag,
+.ProseMirror .hljs-section,
+.ProseMirror .hljs-link {
+  color: #8be9fd;
+}
+
+.ProseMirror .hljs-keyword {
+  color: #ff79c6;
+}
+
+.ProseMirror .hljs,
+.ProseMirror .hljs-subst {
+  color: #f8f8f2;
+}
+
+.ProseMirror .hljs-title,
+.ProseMirror .hljs-attr,
+.ProseMirror .hljs-meta-keyword {
+  font-style: italic;
+  color: #50fa7b;
+}
+
+.ProseMirror .hljs-string,
+.ProseMirror .hljs-meta,
+.ProseMirror .hljs-name,
+.ProseMirror .hljs-type,
+.ProseMirror .hljs-symbol,
+.ProseMirror .hljs-bullet,
+.ProseMirror .hljs-addition,
+.ProseMirror .hljs-variable,
+.ProseMirror .hljs-template-tag,
+.ProseMirror .hljs-template-variable {
+  color: #f1fa8c;
+}
+
+.ProseMirror .hljs-comment,
+.ProseMirror .hljs-quote,
+.ProseMirror .hljs-deletion {
+  color: #6272a4;
+}
+
+.ProseMirror .hljs-keyword,
+.ProseMirror .hljs-selector-tag,
+.ProseMirror .hljs-literal,
+.ProseMirror .hljs-title,
+.ProseMirror .hljs-section,
+.ProseMirror .hljs-doctag,
+.ProseMirror .hljs-type,
+.ProseMirror .hljs-name,
+.ProseMirror .hljs-strong {
+  font-weight: bold;
+}
+
+.ProseMirror .hljs-literal,
+.ProseMirror .hljs-number {
+  color: #bd93f9;
+}
+
+.ProseMirror .hljs-emphasis {
+  font-style: italic;
+}
+
+.ProseMirror code:not(:where([data-code-type='code-block'])) {
+  border: none;
+  padding: 0;
+  border-radius: 0;
+}
+
+.tippy-box,
+.tippy-content {
+  outline: none;
+  /* TODO: Improve accessibility */
+}
+
+.ProseMirror .image-error {
+  @apply block bg-red-50 border border-red-300 relative w-full h-32 text-base font-normal font-sans;
+}
+
+.ProseMirror .is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  color: #9ca3af;
+  pointer-events: none;
+  height: 0;
+}
+
+.ProseMirror .is-empty::before {
+  content: attr(data-placeholder);
+  float: left;
+  color: #9ca3af;
+  pointer-events: none;
+  height: 0;
+}
+
+ul[data-type='taskList'] li[data-checked='true'] > div > p {
+  color: #9ca3af;
+  text-decoration: line-through;
+  text-decoration-thickness: 2px;
+}

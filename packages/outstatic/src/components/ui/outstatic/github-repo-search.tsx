@@ -1,5 +1,6 @@
 'use client'
 import { SearchCombobox } from '@/components/ui/outstatic/search-combobox'
+import { OUTSTATIC_API_PATH } from '@/utils/constants'
 import { useInitialData } from '@/utils/hooks/useInitialData'
 import { useOutstatic, useLocalData } from '@/utils/hooks/useOutstatic'
 import React, { useEffect, useState } from 'react'
@@ -25,7 +26,7 @@ export const GitHubRepoSearch: React.FC = () => {
     }
     try {
       const response = await fetch(
-        `https://api.github.com/search/repositories?q=${searchQuery}&per_page=100&timestamp=${Date.now()}`,
+        `${OUTSTATIC_API_PATH}/github/search/repositories?q=${searchQuery}&per_page=100&timestamp=${Date.now()}`,
         {
           headers: new Headers({
             Authorization: `token ${session?.access_token}`

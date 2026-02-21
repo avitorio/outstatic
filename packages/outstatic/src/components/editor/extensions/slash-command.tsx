@@ -2,10 +2,11 @@ import { Extension, Range } from '@tiptap/core'
 import { Editor, ReactRenderer } from '@tiptap/react'
 import Suggestion from '@tiptap/suggestion'
 import { ReactNode, useState } from 'react'
-import tippy from 'tippy.js'
+import tippy, { type Instance as TippyInstance } from 'tippy.js'
 import { BaseCommandList } from '@/components/editor/extensions/slash-command/BaseCommandList'
 import ImageCommandList from '@/components/editor/extensions/slash-command/ImageCommandList'
 import { getSuggestionItems } from '@/components/editor/extensions/slash-command/getSuggestionItems'
+import type { UpgradeDialogHandler } from '@/components/ui/outstatic/upgrade-dialog-context'
 
 export type CommandItemProps = {
   title: string
@@ -19,6 +20,10 @@ export type CommandItemProps = {
 export type CommandProps = {
   editor: Editor
   range: Range
+}
+
+type CommandListRef = {
+  onKeyDown: (props: { event: KeyboardEvent }) => boolean
 }
 
 const Command = Extension.create({
@@ -69,12 +74,14 @@ const CommandList = ({
   items,
   command,
   editor,
-  range
+  range,
+  onShowUpgradeDialog
 }: {
   items: CommandItemProps[]
   command: any
   editor: Editor
   range: Range
+  onShowUpgradeDialog: UpgradeDialogHandler
 }) => {
   const [imageMenu, setImageMenu] = useState(false)
 
@@ -92,25 +99,37 @@ const CommandList = ({
         setImageMenu={setImageMenu}
         editor={editor}
         range={range}
+        onShowUpgradeDialog={onShowUpgradeDialog}
       />
     )
   ) : null
 }
 
-const renderItems = () => {
-  let component: ReactRenderer | null = null
-  let popup: any | null = null
+const renderItems = (onShowUpgradeDialog: UpgradeDialogHandler) => {
+  let component: ReactRenderer<CommandListRef> | null = null
+  let popup: TippyInstance[] | null = null
 
   return {
-    onStart: (props: { editor: Editor; clientRect: DOMRect }) => {
+    onStart: (props: {
+      editor: Editor
+      clientRect: (() => DOMRect | null) | null
+    }) => {
       component = new ReactRenderer(CommandList, {
-        props,
+        props: {
+          ...props,
+          onShowUpgradeDialog: (
+            accountSlug?: string,
+            dashboardRoute?: string
+          ) => {
+            popup?.[0]?.hide()
+            onShowUpgradeDialog(accountSlug, dashboardRoute)
+          }
+        },
         editor: props.editor
       })
 
-      // @ts-ignore
       popup = tippy('body', {
-        getReferenceClientRect: props.clientRect,
+        getReferenceClientRect: props.clientRect as () => DOMRect,
         appendTo: () => document.body,
         content: component.element,
         showOnCreate: true,
@@ -119,13 +138,24 @@ const renderItems = () => {
         placement: 'bottom-start'
       })
     },
-    onUpdate: (props: { editor: Editor; clientRect: DOMRect }) => {
-      component?.updateProps(props)
+    onUpdate: (props: {
+      editor: Editor
+      clientRect: (() => DOMRect | null) | null
+    }) => {
+      component?.updateProps({
+        ...props,
+        onShowUpgradeDialog: (
+          accountSlug?: string,
+          dashboardRoute?: string
+        ) => {
+          popup?.[0]?.hide()
+          onShowUpgradeDialog(accountSlug, dashboardRoute)
+        }
+      })
 
-      popup &&
-        popup[0].setProps({
-          getReferenceClientRect: props.clientRect
-        })
+      popup?.[0]?.setProps({
+        getReferenceClientRect: props.clientRect as () => DOMRect
+      })
     },
     onKeyDown: (props: { event: KeyboardEvent }) => {
       if (props.event.key === 'Escape') {
@@ -134,7 +164,6 @@ const renderItems = () => {
         return true
       }
 
-      // @ts-ignore
       return component?.ref?.onKeyDown(props)
     },
     onExit: () => {
@@ -144,11 +173,14 @@ const renderItems = () => {
   }
 }
 
-const SlashCommand = Command.configure({
-  suggestion: {
-    items: getSuggestionItems,
-    render: renderItems
-  }
-})
-
-export default SlashCommand
+export const createSlashCommand = ({
+  onShowUpgradeDialog
+}: {
+  onShowUpgradeDialog: UpgradeDialogHandler
+}) =>
+  Command.configure({
+    suggestion: {
+      items: getSuggestionItems,
+      render: () => renderItems(onShowUpgradeDialog)
+    }
+  })

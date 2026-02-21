@@ -16,10 +16,10 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
-    "eslint-config-next": "15.3.3",
+    "eslint-config-next": "^16.1.5",
     "gray-matter": "^4.0.3",
     "katex": "^0.16.22",
-    "lucide-react": "^0.516.0",
+    "lucide-react": "^0.562.0",
     "next": "16.1.1",
     "next-themes": "0.4.6",
     "outstatic": "latest",
@@ -31,7 +31,7 @@
     "remark-gfm": "^4.0.0",
     "remark-html": "^15.0.2",
     "remark-math": "^6.0.0",
-    "tailwind-merge": "^3.3.1",
+    "tailwind-merge": "^3.4.0",
     "vaul": "^1.1.2"
   },
   "devDependencies": {
@@ -49,6 +49,6 @@
     "rehype-prism-plus": "^1.6.3",
     "rehype-slug": "^5.1.0",
     "tailwindcss": "4.1.10",
-    "typescript": "^5.8.3"
+    "typescript": "^5.9.3"
   }
 }

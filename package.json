@@ -11,6 +11,7 @@
     "dev:docs": "turbo run dev --filter=docs --filter=outstatic",
     "dev:outstatic": "turbo run dev --filter=outstatic",
     "lint": "turbo run lint",
+    "lint:fix": "turbo lint --cache-dir=.turbo --affected --continue -- --fix --cache --cache-location \"node_modules/.cache/.eslintcache\" && manypkg fix",
     "clean": "git clean -xdf node_modules dist .next",
     "format": "prettier --write",
     "lint-staged": "lint-staged",
@@ -18,12 +19,13 @@
     "postinstall": "manypkg check && manypkg fix",
     "test": "turbo run test",
     "typecheck": "turbo run typecheck",
-    "prepublish": "pnpm typecheck && pnpm test && pnpm build",
-    "publish:canary": "pnpm clean && pnpm i && pnpm build --filter=outstatic && pnpm test --filter=outstatic && pnpm publish --filter=outstatic --tag canary",
-    "publish:latest": "pnpm clean && pnpm i && pnpm build --filter=outstatic && pnpm test --filter=outstatic && pnpm publish --filter=outstatic --tag latest",
-    "publish:canary:dry": "pnpm clean && pnpm i && pnpm build --filter=outstatic && pnpm test --filter=outstatic &&  pnpm publish --filter=outstatic --tag canary --dry-run",
-    "publish:latest:dry": "pnpm clean && pnpm i && pnpm build --filter=outstatic && pnpm test --filter=outstatic && pnpm publish --filter=outstatic --tag latest --dry-run",
-    "pack:outstatic": "pnpm clean && pnpm i && pnpm build --filter=outstatic && pnpm test --filter=outstatic && cd packages/outstatic && pnpm pack"
+    "prepublish": "pnpm clean && pnpm i && pnpm lint && pnpm prettier --check . && pnpm typecheck && pnpm test && pnpm build",
+    "release:outstatic": "pnpm clean && pnpm i && pnpm build --filter=outstatic && pnpm test --filter=outstatic",
+    "publish:canary": "pnpm release:outstatic && pnpm publish --filter=outstatic --tag canary",
+    "publish:latest": "pnpm release:outstatic && pnpm publish --filter=outstatic --tag latest",
+    "publish:canary:dry": "pnpm release:outstatic && pnpm publish --filter=outstatic --tag canary --dry-run",
+    "publish:latest:dry": "pnpm release:outstatic && pnpm publish --filter=outstatic --tag latest --dry-run",
+    "pack:outstatic": "pnpm release:outstatic && pnpm --dir packages/outstatic pack"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.1",

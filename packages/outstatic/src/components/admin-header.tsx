@@ -1,4 +1,3 @@
-import { useOstSession, useOstSignOut } from '@/utils/auth/hooks'
 import {
   Menu,
   SlashIcon,
@@ -34,6 +33,7 @@ import { useTheme } from 'next-themes'
 import Link from 'next/link'
 import { useSidebar } from '@/components/ui/shadcn/sidebar'
 import { DiscordLogoIcon, GitHubLogoIcon } from '@radix-ui/react-icons'
+import { useAuth } from '@/utils/auth/auth-provider'
 
 const themes = [
   {
@@ -75,7 +75,7 @@ const community = [
       </svg>
     ),
     name: 'X',
-    href: 'https://x.com/outstatic'
+    href: 'https://x.com/AndreVitorio'
   },
   {
     icon: DiscordLogoIcon,
@@ -85,9 +85,8 @@ const community = [
 ]
 
 const AdminHeaderComponent = () => {
-  const { session, status } = useOstSession()
+  const { session, status, signOut } = useAuth()
   const { repoOwner, repoSlug } = useOutstatic()
-  const { signOut } = useOstSignOut()
   const [isMounted, setIsMounted] = useState(false)
   const { theme, setTheme } = useTheme()
   const { toggleSidebar } = useSidebar()
@@ -145,7 +144,7 @@ const AdminHeaderComponent = () => {
                   className="relative flex shrink-0 overflow-hidden group-hover/trigger:border-background/50 rounded-md border border-transparent transition-colors mx-auto h-9 w-9 group-focus:ring-2"
                 >
                   <Avatar className="rounded-md">
-                    <AvatarImage src={session?.user?.image || ''} />
+                    <AvatarImage src={session?.user?.image || undefined} />
                     <AvatarFallback>
                       {session?.user?.name?.charAt(0)}
                     </AvatarFallback>

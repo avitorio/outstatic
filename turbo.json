@@ -12,7 +12,7 @@
     },
     "dev": {
       "cache": false,
-      "env": ["NEXT_PUBLIC_APP_URL"]
+      "env": ["NEXT_PUBLIC_APP_URL", "OUTSTATIC_API_URL"]
     },
     "clean": {
       "cache": false
@@ -42,6 +42,7 @@
         "OST_BASE_PATH",
         "OST_DETACH",
         "OST_OUTSTATIC_PATH",
+        "OUTSTATIC_API_KEY",
         "OST_REPO_MEDIA_PATH",
         "OST_PUBLIC_MEDIA_PATH",
         "NEXT_PUBLIC_OST_API_PATH",
@@ -50,11 +51,13 @@
     },
     "outstatic": {
       "env": [
+        "AI_GATEWAY_API_KEY",
         "NODE_ENV",
         "OST_CONTENT_PATH",
         "OST_GITHUB_ID",
         "OST_GITHUB_SECRET",
         "OST_MONOREPO_PATH",
+        "OUTSTATIC_API_KEY",
         "OST_REPO_BRANCH",
         "OST_REPO_SLUG",
         "OST_REPO_OWNER",

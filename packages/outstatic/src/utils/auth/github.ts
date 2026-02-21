@@ -71,3 +71,23 @@ export async function checkCollaborator(token: string, userName: string) {
   }
   return true
 }
+
+export async function checkCollaboratorWithRepo(
+  token: string,
+  userName: string,
+  repoOwner: string,
+  repoSlug: string
+) {
+  if (!repoOwner || !repoSlug) {
+    return true
+  }
+  const response = await fetch(
+    `https://api.github.com/repos/${repoOwner}/${repoSlug}/collaborators/${userName}`,
+    {
+      headers: {
+        Authorization: `token ${token}`
+      }
+    }
+  )
+  return response.status === 204
+}

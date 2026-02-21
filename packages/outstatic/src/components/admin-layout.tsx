@@ -1,10 +1,9 @@
-import { useOstSession } from '@/utils/auth/hooks'
+import { useAuth } from '@/utils/auth/auth-provider'
 import { useOutstatic } from '@/utils/hooks/useOutstatic'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 
 export type AdminLayoutProps = {
-  error?: string
   children: React.ReactNode
   settings?: React.ReactNode
   title?: string
@@ -13,13 +12,12 @@ export type AdminLayoutProps = {
 
 export function AdminLayout({
   children,
-  error,
   settings,
   title,
   className
 }: AdminLayoutProps) {
   const { dashboardRoute } = useOutstatic()
-  const { status } = useOstSession()
+  const { status } = useAuth()
   const { push } = useRouter()
 
   useEffect(() => {
@@ -27,10 +25,16 @@ export function AdminLayout({
     document.title = pageTitle
   }, [title])
 
-  if (status === 'unauthenticated') {
-    if (typeof window !== 'undefined') {
-      push(dashboardRoute)
+  useEffect(() => {
+    if (status === 'unauthenticated' && typeof window !== 'undefined') {
+      // Defer navigation to avoid updating Router during render
+      setTimeout(() => {
+        push(dashboardRoute)
+      }, 0)
     }
+  }, [status, dashboardRoute, push])
+
+  if (status === 'unauthenticated') {
     return null
   }
 
@@ -43,14 +47,6 @@ export function AdminLayout({
               className || ''
             }`}
           >
-            {error && (
-              <div className="mb-6 border border-red-500 p-2">
-                Something went wrong{' '}
-                <span role="img" aria-label="sad face">
-                  😓
-                </span>
-              </div>
-            )}
             {children}
           </main>
           {settings && settings}

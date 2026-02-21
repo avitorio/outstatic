@@ -1,0 +1,10 @@
+{
+  "mode": "pre",
+  "tag": "canary",
+  "initialVersions": {
+    "outstatic-dev-blog": "0.0.1",
+    "docs": "1.0.5",
+    "outstatic": "2.0.18"
+  },
+  "changesets": ["wise-ads-grow"]
+}

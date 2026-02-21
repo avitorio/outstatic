@@ -1,6 +1,6 @@
 {
   "name": "outstatic",
-  "version": "2.0.18",
+  "version": "2.1.0-canary.0",
   "description": "Static site CMS",
   "author": "Andre Vitorio <andre@vitorio.net>",
   "license": "FSL-1.1-ALv2",
@@ -46,6 +46,21 @@
       "require": "./dist/utils/hooks/index.js",
       "types": "./dist/utils/hooks/index.d.ts"
     },
+    "./utils/auth/auth-provider": {
+      "import": "./dist/utils/auth/auth-provider.mjs",
+      "require": "./dist/utils/auth/auth-provider.js",
+      "types": "./dist/utils/auth/auth-provider.d.ts"
+    },
+    "./components": {
+      "import": "./dist/components/index.mjs",
+      "require": "./dist/components/index.js",
+      "types": "./dist/components/index.d.ts"
+    },
+    "./utils/token-refresh": {
+      "import": "./dist/graphql/utils/tokenRefreshUtility.mjs",
+      "require": "./dist/graphql/utils/tokenRefreshUtility.js",
+      "types": "./dist/graphql/utils/tokenRefreshUtility.d.ts"
+    },
     "./next-plugin": {
       "import": "./dist/next-plugin.mjs",
       "require": "./dist/next-plugin.js",
@@ -77,7 +92,7 @@
     "@dnd-kit/sortable": "^8.0.0",
     "@dnd-kit/utilities": "^3.2.2",
     "@graphql-typed-document-node/core": "^3.2.0",
-    "@hookform/resolvers": "^5.1.1",
+    "@hookform/resolvers": "^5.2.2",
     "@radix-ui/react-accordion": "1.2.11",
     "@radix-ui/react-alert-dialog": "^1.1.14",
     "@radix-ui/react-avatar": "^1.1.10",
@@ -95,9 +110,9 @@
     "@radix-ui/react-slot": "^1.2.3",
     "@radix-ui/react-tooltip": "1.2.7",
     "@radix-ui/react-visually-hidden": "^1.2.3",
-    "@tanstack/query-sync-storage-persister": "^5.80.7",
-    "@tanstack/react-query": "^5.80.7",
-    "@tanstack/react-query-persist-client": "^5.80.7",
+    "@tanstack/query-sync-storage-persister": "^5.90.20",
+    "@tanstack/react-query": "^5.90.20",
+    "@tanstack/react-query-persist-client": "^5.90.20",
     "@tiptap/core": "2.14.0",
     "@tiptap/extension-bubble-menu": "2.14.0",
     "@tiptap/extension-code-block": "2.14.0",
@@ -138,27 +153,30 @@
     "json-stable-stringify": "^1.3.0",
     "katex": "^0.16.22",
     "lowlight": "^3.3.0",
-    "lucide-react": "^0.516.0",
+    "lucide-react": "^0.562.0",
     "lz-string": "^1.5.0",
     "next-navigation-guard": "0.2.0",
     "next-remove-imports": "^1.0.12",
-    "novel": "^0.5.0",
+    "novel": "^1.0.2",
+    "openai": "^4.104.0",
+    "openai-edge": "^1.2.3",
     "pluralize": "^8.0.0",
     "postcss": "^8.4.49",
-    "react-day-picker": "^9.7.0",
-    "react-hook-form": "^7.58.0",
+    "radix-ui": "^1.4.3",
+    "react-day-picker": "^9.13.0",
+    "react-hook-form": "^7.68.0",
     "react-markdown": "^9.1.0",
     "react-select": "^5.10.1",
     "react-textarea-autosize": "^8.5.9",
     "sift": "^16.0.1",
-    "sonner": "^1.7.4",
-    "tailwind-merge": "^3.3.1",
+    "sonner": "^2.0.7",
+    "tailwind-merge": "^3.4.0",
     "tailwindcss-animate": "^1.0.7",
     "thenby": "^1.3.4",
     "tippy.js": "^6.3.7",
     "tiptap-markdown": "0.8.1",
     "transliteration": "2.3.5",
-    "ts-pattern": "^5.7.1",
+    "ts-pattern": "^5.9.0",
     "url-slug": "^3.0.6",
     "use-debounce": "^9.0.4",
     "use-resize-observer": "^9.1.0",
@@ -214,7 +232,7 @@
     "ts-node": "^10.9.2",
     "tsup": "^6.1.3",
     "tw-animate-css": "^1.3.4",
-    "typescript": "^5.8.3"
+    "typescript": "^5.9.3"
   },
   "externals": {
     "next": "next",
@@ -226,7 +244,8 @@
     "next-themes": "^0.4.6",
     "react": "^19",
     "react-dom": "^19",
-    "tailwindcss": "^4.1.10"
+    "tailwindcss": "4.1.10",
+    "tw-animate-css": "^1.3.4"
   },
   "publishConfig": {
     "access": "public"

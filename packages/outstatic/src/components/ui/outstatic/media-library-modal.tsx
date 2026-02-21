@@ -55,7 +55,7 @@ export default function MediaLibraryModal({
     publicMediaPath
   } = useOutstatic()
   const apiPath = `${basePath}${API_MEDIA_PATH}${repoOwner}/${repoSlug}/${repoBranch}/`
-  const { data, isLoading, error, refetch } = useGetMediaFiles()
+  const { data, isLoading, refetch } = useGetMediaFiles()
   const filteredFiles = useMemo(() => {
     if (!data) return []
 
@@ -181,13 +181,9 @@ export default function MediaLibraryModal({
               </Card>
             </div>
           </div>
-        ) : isLoading ? (
+        ) : isLoading && !data ? (
           <div className="flex items-center justify-center h-full">
             <SpinnerIcon size="2xl" />
-          </div>
-        ) : error ? (
-          <div className="flex items-center justify-center text-red-500 h-full">
-            Error loading media files. Please try again.
           </div>
         ) : filteredFiles.length === 0 ? (
           <div className="flex flex-col items-center justify-center text-gray-500 h-full">

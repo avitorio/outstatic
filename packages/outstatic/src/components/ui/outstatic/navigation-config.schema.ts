@@ -27,7 +27,10 @@ const RouteChild = z.object({
   children: z.array(RouteSubChild).default([]).optional(),
   collapsible: z.boolean().default(false).optional(),
   collapsed: z.boolean().default(false).optional(),
-  renderAction: z.custom<React.ReactNode>().optional()
+  renderAction: z.custom<React.ReactNode>().optional(),
+  badge: z.custom<React.ReactNode>().optional(),
+  dialog: z.custom<React.ReactNode>().optional(),
+  newTab: z.boolean().default(false).optional()
 })
 
 const RouteGroup = z.object({
@@ -40,10 +43,17 @@ const RouteGroup = z.object({
   > {
     return z.union([z.array(RouteChild), z.array(RouteGroup)])
   },
-  renderAction: z.custom<React.ReactNode>().optional()
+  renderAction: z.custom<React.ReactNode>().optional(),
+  badge: z.custom<React.ReactNode>().optional(),
+  dialog: z.custom<React.ReactNode>().optional(),
+  newTab: z.boolean().default(false).optional()
 })
 
 export const NavigationConfigSchema = z.object({
   // @ts-ignore
   routes: z.array(z.union([RouteGroup, Divider]))
 })
+
+export type RouteChildType = z.infer<typeof RouteChild>
+export type RouteGroupType = z.infer<typeof RouteGroup>
+export type RouteSubChildType = z.infer<typeof RouteSubChild>

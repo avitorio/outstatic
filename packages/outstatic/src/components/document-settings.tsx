@@ -369,57 +369,65 @@ export const DocumentSettings = ({
                 errors={errors}
               />
             ))}
-
-          {missingCustomFields &&
-            Object.keys(missingCustomFields).length > 0 && (
-              <>
-                <div className="w-full flex items-center justify-center py-4 gap-2">
-                  <ArrowDown className="h-4 w-4" />
-                  <p className="semiblod text-sm">Set up Custom Fields</p>
-                </div>
-                {Object.entries(missingCustomFields).map(([name, field]) => {
-                  return (
-                    <div
-                      key={name}
-                      className="w-full flex items-center justify-between px-4 py-2 gap-2"
-                    >
-                      <p className="semiblod text-sm truncate">{field.title}</p>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="text-xs flex gap-2"
-                        onClick={() => {
-                          setFieldTitle(field.title)
-                          setShowAddModal(true)
-                        }}
-                      >
-                        <PlusCircle className="h-4 w-4" /> Create
-                      </Button>
+          {session?.user?.permissions?.includes('collections.manage') && (
+            <>
+              {missingCustomFields &&
+                Object.keys(missingCustomFields).length > 0 && (
+                  <>
+                    <div className="w-full flex items-center justify-center py-4 gap-2">
+                      <ArrowDown className="h-4 w-4" />
+                      <p className="semiblod text-sm">Set up Custom Fields</p>
                     </div>
-                  )
-                })}
-              </>
-            )}
-          <div className="w-full flex items-center justify-center px-4 py-2 gap-2">
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    data-testid="add-custom-field-button"
-                    variant="ghost"
-                    size="icon"
-                    className="text-xs flex gap-2"
-                    onClick={() => setShowAddModal(true)}
-                  >
-                    <PlusCircle className="h-4 w-4" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Add Custom Field</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          </div>
+                    {Object.entries(missingCustomFields).map(
+                      ([name, field]) => {
+                        return (
+                          <div
+                            key={name}
+                            className="w-full flex items-center justify-between px-4 py-2 gap-2"
+                          >
+                            <p className="semiblod text-sm truncate">
+                              {field.title}
+                            </p>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="text-xs flex gap-2"
+                              onClick={() => {
+                                setFieldTitle(field.title)
+                                setShowAddModal(true)
+                              }}
+                            >
+                              <PlusCircle className="h-4 w-4" /> Create
+                            </Button>
+                          </div>
+                        )
+                      }
+                    )}
+                  </>
+                )}
+
+              <div className="w-full flex items-center justify-center px-4 py-2 gap-2">
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        data-testid="add-custom-field-button"
+                        variant="ghost"
+                        size="icon"
+                        className="text-xs flex gap-2"
+                        onClick={() => setShowAddModal(true)}
+                      >
+                        <PlusCircle className="h-4 w-4" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Add Custom Field</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </div>
+            </>
+          )}
         </div>
         {showAddModal ? (
           <AddCustomFieldDialog

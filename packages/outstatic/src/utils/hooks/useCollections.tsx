@@ -138,6 +138,9 @@ export function useCollections(options?: UseCollectionsOptions) {
         return []
       }
     },
+    meta: {
+      errorMessage: 'Failed to fetch collections'
+    },
     enabled:
       enabled && !!repoOwner && !!repoSlug && !!repoBranch && !!ostContent
   })

@@ -1,14 +1,21 @@
 import { Document } from '@/types'
 
 // Outstatic configuration
-export const OUTSTATIC_VERSION = '2.0.18'
+export const OUTSTATIC_VERSION = '2.1.0-canary.0'
 export const OUTSTATIC_URL = 'https://outstatic.com'
+export const OUTSTATIC_APP_URL =
+  process.env.NEXT_PUBLIC_OST_APP_URL ?? `https://outstatic.com`
+
+// Pro API configuration (server-side only)
+export const OUTSTATIC_API_KEY = process.env.OUTSTATIC_API_KEY
+export const OUTSTATIC_API_URL =
+  process.env.OUTSTATIC_API_URL || `${OUTSTATIC_APP_URL}/api`
 
 // API configuration
 export const OUTSTATIC_API_PATH =
   process.env.NEXT_PUBLIC_OST_API_PATH || '/api/outstatic'
 export const API_MEDIA_PATH = `${OUTSTATIC_API_PATH}/media/`
-export const GITHUB_GQL_API_URL = 'https://api.github.com/graphql'
+export const GITHUB_GQL_API_URL = `${OUTSTATIC_API_PATH}/github-graphql`
 
 // Authentication
 export const TOKEN_NAME = process.env.NEXT_PUBLIC_OST_TOKEN_NAME || 'ost_token'
