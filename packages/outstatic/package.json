@@ -1,6 +1,6 @@
 {
   "name": "outstatic",
-  "version": "2.1.0-canary.0",
+  "version": "2.1.0",
   "description": "Static site CMS",
   "author": "Andre Vitorio <andre@vitorio.net>",
   "license": "FSL-1.1-ALv2",

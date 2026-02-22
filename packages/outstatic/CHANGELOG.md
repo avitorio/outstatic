@@ -1,5 +1,11 @@
 # outstatic
 
+## 2.1.0
+
+### Minor Changes
+
+- 603350f: Adds support for Outstatic PRO
+
 ## 2.1.0-canary.0
 
 ### Minor Changes
