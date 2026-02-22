@@ -49,9 +49,6 @@ export default function RootLayout({
             defer
             src={umamiScript.src}
             data-website-id={umamiScript.websiteId}
-            onError={() => {
-              console.error('Failed to load Umami analytics')
-            }}
           />
         ) : null}
       </head>
