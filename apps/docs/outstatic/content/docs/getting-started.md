@@ -13,7 +13,7 @@ publishedAt: "2026-02-20T03:00:00.000Z"
 \
 Start using Outstatic in minutes, free on our hosted service.
 
-[Create your Outstatic account](/auth/sign-up?provider=github).
+[Create your Outstatic account](https://outstatic.com/auth/sign-up?provider=github).
 
 ## Self-hosting options:
 
