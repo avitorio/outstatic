@@ -1,6 +1,6 @@
 {
-  "commit": "f686d17493a0e076312b0c1e346f57011695a64b",
-  "generated": "2026-02-21T00:23:49.069Z",
+  "commit": "ad3b4fb8b49983eb7cf2adb91ca2feadd6224000",
+  "generated": "2026-02-22T01:42:06.512Z",
   "metadata": [
     {
       "__outstatic": {
@@ -479,24 +479,6 @@
     },
     {
       "__outstatic": {
-        "commit": "3b2d34b6ab5b6ee718f4be54adf86e429f660829",
-        "hash": "960927893",
-        "path": "/outstatic/content/docs/getting-started.md"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "docs",
-      "coverImage": "",
-      "description": "Get started with Outstatic",
-      "publishedAt": "2026-02-20T03:00:00.000Z",
-      "slug": "getting-started",
-      "status": "published",
-      "title": "Getting started"
-    },
-    {
-      "__outstatic": {
         "commit": "d590a6fff567d5817d4323208969241f69f9b6d4",
         "hash": "4269890586",
         "path": "/outstatic/content/docs/deploy-a-starter-outstatic-website-on-vercel-with-github-oauth.mdx"
@@ -576,6 +558,24 @@
       "slug": "getting-started-with-next-js",
       "status": "published",
       "title": "Getting started with Next.js"
+    },
+    {
+      "__outstatic": {
+        "commit": "ad3b4fb8b49983eb7cf2adb91ca2feadd6224000",
+        "hash": "960927893",
+        "path": "/outstatic/content/docs/getting-started.md"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "coverImage": "",
+      "description": "Get started with Outstatic",
+      "publishedAt": "2026-02-20T03:00:00.000Z",
+      "slug": "getting-started",
+      "status": "published",
+      "title": "Getting started"
     }
   ]
 }
