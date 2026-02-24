@@ -130,9 +130,11 @@ export default async function POST(req: Request): Promise<Response> {
     baseURL: process.env.OPENAI_BASE_URL || 'https://api.openai.com/v1'
   })
 
+  const modelId = process.env.OST_AI_MODEL || 'openai/gpt-4.1-nano'
+
   const model = process.env.OPENAI_API_KEY
-    ? openai('gpt-3.5-turbo')
-    : 'openai/gpt-3.5-turbo'
+    ? openai(modelId.replace('openai/', ''))
+    : `${modelId}`
 
   const result = streamText({
     model,

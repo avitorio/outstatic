@@ -43,19 +43,19 @@ const getUpgradeUrl = (
 
 const features = [
   {
-    icon: <Users className="h-5 w-5" />,
-    title: 'Invite Members',
-    description: 'Add team members to your projects'
-  },
-  {
-    icon: <Mail className="h-5 w-5" />,
-    title: 'Email Authentication',
-    description: 'Email authentication for seamless access to your projects'
-  },
-  {
     icon: <Sparkles className="h-5 w-5" />,
     title: 'AI Completions',
     description: 'Smart content suggestions and auto-completion powered by AI'
+  },
+  {
+    icon: <Users className="h-5 w-5" />,
+    title: 'Team Collaboration',
+    description: 'Add team members to your projects and manage their access to your projects'
+  },
+  {
+    icon: <Mail className="h-5 w-5" />,
+    title: 'Email and Google Authentication',
+    description: 'Email and Google authentication for seamless access to your projects'
   }
 ]
 
@@ -128,15 +128,6 @@ export function UpgradeDialog({
         </div>
 
         <div className="space-y-4">
-          <div className="from-primary/10 to-primary/5 rounded-lg bg-gradient-to-r p-4 text-center">
-            <p className="text-foreground text-sm font-medium">
-              Ready to scale your team?
-            </p>
-            <p className="text-muted-foreground mt-1 text-xs">
-              Start your free trial today
-            </p>
-          </div>
-
           <Button variant="default" size="lg" className="w-full" asChild>
             <Link
               target="_blank"
