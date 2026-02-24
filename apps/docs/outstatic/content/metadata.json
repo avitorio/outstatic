@@ -1,6 +1,6 @@
 {
-  "commit": "cac6b8c736530d9843103bd6593da8bfb0f82a3b",
-  "generated": "2026-02-22T01:48:09.113Z",
+  "commit": "7822fbaf201114ddbcb4a084a57cd140e50f3d2f",
+  "generated": "2026-02-24T16:46:19.672Z",
   "metadata": [
     {
       "__outstatic": {
@@ -259,24 +259,6 @@
       "slug": "roles",
       "status": "published",
       "title": "Roles & Permissions"
-    },
-    {
-      "__outstatic": {
-        "commit": "aaa225a10dc0e2cb4456c102d63e5c109f801dcc",
-        "hash": "1502496",
-        "path": "/outstatic/content/docs/the-content-editor.md"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "docs",
-      "coverImage": "",
-      "description": "Learn how the Outstatic Content Editor works.",
-      "publishedAt": "2024-11-16T03:00:00.000Z",
-      "slug": "the-content-editor",
-      "status": "published",
-      "title": "The content editor"
     },
     {
       "__outstatic": {
@@ -594,6 +576,24 @@
       "slug": "getting-started",
       "status": "published",
       "title": "Getting started"
+    },
+    {
+      "__outstatic": {
+        "commit": "7822fbaf201114ddbcb4a084a57cd140e50f3d2f",
+        "hash": "1416887862",
+        "path": "/outstatic/content/docs/the-content-editor.md"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "coverImage": "",
+      "description": "Learn how the Outstatic Content Editor works.",
+      "publishedAt": "2024-11-16T03:00:00.000Z",
+      "slug": "the-content-editor",
+      "status": "published",
+      "title": "The content editor"
     }
   ]
 }

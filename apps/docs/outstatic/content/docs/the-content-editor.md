@@ -43,18 +43,59 @@ The **Repository Media Path** is where images are stored in your repository. The
 
 Outstatic fetches the images directly from GitHub so they can be visualised instantly on the editor.
 
-## AI Completion
+## AI completion
 
-Outstatic provides immediate access to **AI completion** functionality, seamlessly integrated and ready to use. This feature is driven by the leveraging OpenAI's API. To harness its capabilities, follow these simple steps:
+Outstatic includes AI completions out of the box, so you can keep writing without context switching. Pick the setup that matches how you want to run AI in your project:
 
-1. Obtain an OpenAI API key ([get one here](https://platform.openai.com/account/api-keys)).
-2. Integrate this key into your system by setting it as an environment variable using the following template:
+### Option 1 (Recommended): Outstatic-managed AI via `OUTSTATIC_API_KEY`
+
+If you’re using `OUTSTATIC_API_KEY`, you don’t need to configure any AI provider keys or models. Outstatic handles the AI provider for you and uses a high-quality, up-to-date completion model, with very generous usage designed for normal editorial workflows.
+
+1. [Create an Outstatic account](https://outstatic.com/auth/sign-up?provider=github)
+2. Create a project and generate an API Key
+3. Set your Outstatic API key in your environment:
+
+```bash
+OUTSTATIC_API_KEY=ost_XXXXXXXXXXXXXXXXXXXXXXXXX
+```
+
+### Option 2: Vercel AI Gateway via `AI_GATEWAY_API_KEY`
+
+If you want to centralize AI usage and billing through Vercel, you can use Vercel AI Gateway instead:\
+[https://vercel.com/ai-gateway](https://vercel.com/ai-gateway)
+
+Set your environment variable:
+
+```bash
+AI_GATEWAY_API_KEY=XXXXXXXXXXXXXXXXXXXXXXXXX
+```
+
+### Option 3: OpenAI directly via `OPENAI_API_KEY`
+
+If you prefer calling OpenAI directly, set your OpenAI key:
 
 ```bash
 OPENAI_API_KEY=sk-XXXXXXXXXXXXXXXXXXXXXXXXX
 ```
 
-When this is done you will be able to trigger completion in two ways. Through the **slash command menu** by selecting the **Continue writing** option, or by typing `++`.
+### Model Selection (self hosted)
+
+Self hosted installs can choose which model to use by setting `OST_AI_MODEL`.
+
+Pick a model ID from:\
+[https://vercel.com/ai-gateway/models](https://vercel.com/ai-gateway/models)
+
+Then set:
+
+```bash
+OST_AI_MODEL=provider/model-id-here
+```
+
+Outstatic will use that model for completions.
+
+### Using completions
+
+When this is done you will be able to trigger completion in three ways. Through the **slash command menu** by selecting the **Continue writing** option, by typing `++`, or by selecting text and clicking on the **Ask AI** bubble menu.
 
 ![](/docs/images/ai-autocomplete-Q2Mj.gif)
 
@@ -85,7 +126,7 @@ In your `layout.tsx` files add:
 import "katex/dist/katex.min.css";
 ```
 
-And in your  `mdx-bundler`:
+And in your `mdx-bundler`:
 
 ```typescript
 import { bundleMDX } from 'mdx-bundler'
