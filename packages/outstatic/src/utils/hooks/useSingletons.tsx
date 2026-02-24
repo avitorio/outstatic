@@ -56,7 +56,7 @@ export function useSingletons(options?: UseGetSingletonsOptions) {
         if (singletonsJson === null || singletonsObject === null) {
           const { data } = await refetchDocuments()
 
-          if (!data) {
+          if (!data || data.documents === null) {
             return []
           }
 
