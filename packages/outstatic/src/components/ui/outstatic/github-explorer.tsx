@@ -2,7 +2,7 @@ import { Tree, TreeDataItem } from '@/components/ui/outstatic/file-tree'
 import { useGetRepoFiles } from '@/utils/hooks/useGetRepoFiles'
 import { cn } from '@/utils/ui'
 import { Folder, FolderRoot } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useMemo } from 'react'
 
 type GithubExplorerProps = {
   path: string
@@ -23,9 +23,15 @@ function GithubExplorer({
   fileExtensions,
   onFileSelect
 }: GithubExplorerProps) {
-  const [items, setItems] = useState<TreeDataItem[]>([])
-
   const { data, isFetching } = useGetRepoFiles({ path, fileExtensions })
+  const items = useMemo<TreeDataItem[]>(() => {
+    if (data === undefined) return []
+
+    const shouldShowRoot = !hideRoot && fileExtensions === undefined
+    return shouldShowRoot
+      ? [{ id: '', name: '.', icon: FolderRoot }, ...data]
+      : data
+  }, [data, hideRoot, fileExtensions])
 
   const isFile = (item: TreeDataItem) => {
     if (!fileExtensions) return false
@@ -45,15 +51,6 @@ function GithubExplorer({
       }
     }
   }
-
-  useEffect(() => {
-    if (data !== undefined && items !== undefined) {
-      hideRoot
-        ? setItems(data)
-        : setItems([{ id: '', name: '', icon: FolderRoot }, ...data])
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [path, data])
 
   return (
     <Tree

@@ -127,7 +127,7 @@ export const useGetRepoFiles = ({
       `files_${repoOwner}/${repoSlug}/${repoBranch}/${path}`,
       { path, extensions: extensionsKey }
     ],
-    queryFn: async (): Promise<TreeDataItem[] | undefined> => {
+    queryFn: async (): Promise<TreeDataItem[]> => {
       const currentTree = queryClient.getQueryData<TreeDataItem[]>([
         `files_${repoOwner}/${repoSlug}/${repoBranch}/${path}`,
         { path, extensions: extensionsKey }
@@ -157,7 +157,7 @@ export const useGetRepoFiles = ({
       const items = filterEntries(entries, fileExtensions)
 
       if (items.length === 0) {
-        return parentTree
+        return parentTree ?? []
       }
 
       if (parentTree) {
