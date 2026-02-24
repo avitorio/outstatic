@@ -1,5 +1,11 @@
 # outstatic
 
+## 2.1.1
+
+### Patch Changes
+
+- 5857dff: feat: add Vercel's AI Gateway as an auto-complete option
+
 ## 2.1.0
 
 ### Minor Changes
