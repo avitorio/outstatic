@@ -1,5 +1,5 @@
 import { useAuth } from '@/utils/auth/auth-provider'
-import { useOutstatic } from '@/utils/hooks/useOutstatic'
+import { useOutstatic } from '@/utils/hooks/use-outstatic'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 

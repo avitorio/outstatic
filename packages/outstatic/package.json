@@ -57,9 +57,9 @@
       "types": "./dist/components/index.d.ts"
     },
     "./utils/token-refresh": {
-      "import": "./dist/graphql/utils/tokenRefreshUtility.mjs",
-      "require": "./dist/graphql/utils/tokenRefreshUtility.js",
-      "types": "./dist/graphql/utils/tokenRefreshUtility.d.ts"
+      "import": "./dist/graphql/utils/token-refresh-utility.mjs",
+      "require": "./dist/graphql/utils/token-refresh-utility.js",
+      "types": "./dist/graphql/utils/token-refresh-utility.d.ts"
     },
     "./next-plugin": {
       "import": "./dist/next-plugin.mjs",

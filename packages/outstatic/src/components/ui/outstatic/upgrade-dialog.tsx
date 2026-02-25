@@ -50,12 +50,14 @@ const features = [
   {
     icon: <Users className="h-5 w-5" />,
     title: 'Team Collaboration',
-    description: 'Add team members to your projects and manage their access to your projects'
+    description:
+      'Add team members to your projects and manage their access to your projects'
   },
   {
     icon: <Mail className="h-5 w-5" />,
     title: 'Email and Google Authentication',
-    description: 'Email and Google authentication for seamless access to your projects'
+    description:
+      'Email and Google authentication for seamless access to your projects'
   }
 ]
 

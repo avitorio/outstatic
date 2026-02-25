@@ -16,8 +16,8 @@ import { Button } from '@/components/ui/shadcn/button'
 import {
   buildApiKeySignupUrl,
   buildOutstaticCallbackOrigin
-} from '@/utils/buildApiKeySignupUrl'
-import { useClientOrigin } from '@/utils/hooks/useClientOrigin'
+} from '@/utils/build-api-key-signup-url'
+import { useClientOrigin } from '@/utils/hooks/use-client-origin'
 
 type ApiKeyLoginDialogProps = {
   open?: boolean

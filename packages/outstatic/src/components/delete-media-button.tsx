@@ -1,13 +1,13 @@
-import { createCommitApi } from '@/utils/createCommitApi'
-import { hashFromUrl } from '@/utils/hashFromUrl'
-import { useCreateCommit } from '@/utils/hooks/useCreateCommit'
-import useOid from '@/utils/hooks/useOid'
-import { useOutstatic } from '@/utils/hooks/useOutstatic'
+import { createCommitApi } from '@/utils/create-commit-api'
+import { hashFromUrl } from '@/utils/hash-from-url'
+import { useCreateCommit } from '@/utils/hooks/use-create-commit'
+import useOid from '@/utils/hooks/use-oid'
+import { useOutstatic } from '@/utils/hooks/use-outstatic'
 import { stringifyMedia } from '@/utils/metadata/stringify'
 import { Trash2 } from 'lucide-react'
 import { useState } from 'react'
 import { Button } from '@/components/ui/shadcn/button'
-import { useGetMediaFiles } from '@/utils/hooks/useGetMediaFiles'
+import { useGetMediaFiles } from '@/utils/hooks/use-get-media-files'
 import {
   AlertDialog,
   AlertDialogAction,

@@ -11,7 +11,7 @@ import {
 import { memo, useEffect, useState } from 'react'
 import { Button } from '@/components/ui/shadcn/button'
 import { AppLogo } from '@/components/ui/outstatic/app-logo'
-import { useOutstatic } from '@/utils/hooks/useOutstatic'
+import { useOutstatic } from '@/utils/hooks/use-outstatic'
 import { GitHubBranchSearch } from '@/components/ui/outstatic/github-branch-search'
 import {
   Avatar,

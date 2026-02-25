@@ -9,8 +9,8 @@ import {
   customFieldTypes,
   isArrayCustomField
 } from '@/types'
-import { useGetSingletonSchema } from '@/utils/hooks/useGetSingletonSchema'
-import { useOutstatic } from '@/utils/hooks/useOutstatic'
+import { useGetSingletonSchema } from '@/utils/hooks/use-get-singleton-schema'
+import { useOutstatic } from '@/utils/hooks/use-outstatic'
 import { useEffect, useState } from 'react'
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form'
 import {
@@ -29,7 +29,7 @@ import {
   FormMessage
 } from '@/components/ui/shadcn/form'
 import { SpinnerIcon } from '@/components/ui/outstatic/spinner-icon'
-import { useSingletonFieldCommit } from '@/utils/hooks/useSingletonFieldCommit'
+import { useSingletonFieldCommit } from '@/utils/hooks/use-singleton-field-commit'
 import {
   Dialog,
   DialogContent,
@@ -69,7 +69,7 @@ export const EditSingletonFieldDialog: React.FC<
 }) => {
   const [editing, setEditing] = useState(false)
   const { setHasChanges } = useOutstatic()
-  const [error, setError] = useState('')
+  const [, setError] = useState('')
   const methods = useForm<CustomFieldForm>({
     mode: 'onChange',
     resolver: zodResolver(editCustomFieldSchema) as any
@@ -82,11 +82,12 @@ export const EditSingletonFieldDialog: React.FC<
   useEffect(() => {
     if (schema) {
       setCustomFields(schema.properties)
-      if (isArrayCustomField(customFields[selectedField])) {
-        methods.setValue('values', customFields[selectedField].values)
+      const selectedSchemaField = schema.properties[selectedField]
+      if (isArrayCustomField(selectedSchemaField)) {
+        methods.setValue('values', selectedSchemaField.values)
       }
     }
-  }, [schema, setCustomFields])
+  }, [schema, selectedField, methods, setCustomFields])
 
   const onSubmit: SubmitHandler<CustomFieldForm> = async (
     data: CustomFieldForm

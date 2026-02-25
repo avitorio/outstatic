@@ -1,12 +1,12 @@
 'use client'
 import { SearchCombobox } from '@/components/ui/outstatic/search-combobox'
 import { GET_BRANCHES } from '@/graphql/queries/branches'
-import { useOutstatic, useLocalData } from '@/utils/hooks/useOutstatic'
+import { useOutstatic, useLocalData } from '@/utils/hooks/use-outstatic'
 import { useCallback, useEffect, useState } from 'react'
 import { CreateBranchDialog } from '@/components/ui/outstatic/create-branch-dialog'
 import { PlusCircle } from 'lucide-react'
 import { Button } from '../shadcn/button'
-import { useInitialData } from '@/utils/hooks/useInitialData'
+import { useInitialData } from '@/utils/hooks/use-initial-data'
 import { useQueryClient } from '@tanstack/react-query'
 
 interface Branch {
@@ -91,21 +91,21 @@ export const GitHubBranchSearch = ({
       }, 300)
       debouncedFetch(keyword)
     },
-    [repoOwner, repoSlug, gqlClient]
+    [repoOwner, repoSlug, gqlClient, repoBranch]
   )
 
   useEffect(() => {
     if (isOpen) {
       fetchBranches(query === repoBranch ? '' : query)
     }
-  }, [query, isOpen])
+  }, [query, isOpen, fetchBranches, repoBranch])
 
   useEffect(() => {
     if (value && value !== repoBranch) {
       setData({ repoBranch: value })
       queryClient.invalidateQueries()
     }
-  }, [value])
+  }, [value, repoBranch, setData, queryClient])
 
   useEffect(() => {
     if (mounted && repoOwner && repoSlug && repoBranch) {

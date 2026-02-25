@@ -4,9 +4,9 @@ import { V2BreakingCheck } from '@/components/v2-breaking-check'
 import {
   InitialDataContext,
   setSessionUpdateCallback
-} from '@/utils/hooks/useInitialData'
+} from '@/utils/hooks/use-initial-data'
 import { AuthProvider, useAuth } from '@/utils/auth/auth-provider'
-import { queryClient } from '@/utils/react-query/queryClient'
+import { queryClient } from '@/utils/react-query/query-client'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { NavigationGuardProvider } from 'next-navigation-guard'
 import { ThemeProvider } from 'next-themes'

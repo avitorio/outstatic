@@ -52,14 +52,14 @@ const mockSingletons = [
   }
 ]
 
-jest.mock('@/utils/hooks/useSingletons', () => ({
+jest.mock('@/utils/hooks/use-singletons', () => ({
   useSingletons: () => ({
     data: mockSingletons,
     refetch: jest.fn()
   })
 }))
 
-jest.mock('@/utils/hooks/useOutstatic', () => ({
+jest.mock('@/utils/hooks/use-outstatic', () => ({
   useOutstatic: () => ({
     dashboardRoute: '/outstatic'
   }),

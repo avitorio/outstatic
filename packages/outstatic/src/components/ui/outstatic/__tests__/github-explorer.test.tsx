@@ -3,13 +3,13 @@ import { Folder, FolderRoot } from 'lucide-react'
 
 import GithubExplorer from '../github-explorer'
 import { Tree } from '../file-tree'
-import { useGetRepoFiles } from '@/utils/hooks/useGetRepoFiles'
+import { useGetRepoFiles } from '@/utils/hooks/use-get-repo-files'
 
 jest.mock('../file-tree', () => ({
   Tree: jest.fn(() => null)
 }))
 
-jest.mock('@/utils/hooks/useGetRepoFiles', () => ({
+jest.mock('@/utils/hooks/use-get-repo-files', () => ({
   useGetRepoFiles: jest.fn()
 }))
 
@@ -43,7 +43,7 @@ describe('<GithubExplorer />', () => {
     mockUseGetRepoFiles.mockReturnValue({
       data: [],
       isFetching: false
-    } as ReturnType<typeof useGetRepoFiles>)
+    } as unknown as ReturnType<typeof useGetRepoFiles>)
   })
 
   it('calls useGetRepoFiles with path and fileExtensions', () => {
@@ -67,7 +67,7 @@ describe('<GithubExplorer />', () => {
     mockUseGetRepoFiles.mockReturnValue({
       data: [{ id: 'docs', name: 'docs' }],
       isFetching: false
-    } as ReturnType<typeof useGetRepoFiles>)
+    } as unknown as ReturnType<typeof useGetRepoFiles>)
 
     render(<GithubExplorer path="" setPath={jest.fn()} />)
 
@@ -84,7 +84,7 @@ describe('<GithubExplorer />', () => {
     mockUseGetRepoFiles.mockReturnValue({
       data: [{ id: 'docs', name: 'docs' }],
       isFetching: false
-    } as ReturnType<typeof useGetRepoFiles>)
+    } as unknown as ReturnType<typeof useGetRepoFiles>)
 
     render(<GithubExplorer path="" setPath={jest.fn()} hideRoot />)
 
@@ -96,7 +96,7 @@ describe('<GithubExplorer />', () => {
     mockUseGetRepoFiles.mockReturnValue({
       data: [{ id: 'docs/post.mdx', name: 'post.mdx' }],
       isFetching: false
-    } as ReturnType<typeof useGetRepoFiles>)
+    } as unknown as ReturnType<typeof useGetRepoFiles>)
 
     render(
       <GithubExplorer path="" setPath={jest.fn()} fileExtensions={['.mdx']} />

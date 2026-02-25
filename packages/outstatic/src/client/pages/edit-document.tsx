@@ -4,14 +4,13 @@ import { DocumentTitleInput } from '@/components/document-title-input'
 import { MDEditor } from '@/components/editor/editor'
 import { DocumentContext } from '@/context'
 import { CustomFieldsType, Document, MDExtensions } from '@/types'
-import { deepReplace } from '@/utils/deepReplace'
-import { useDocumentUpdateEffect } from '@/utils/hooks/useDocumentUpdateEffect'
-import { useFileStore } from '@/utils/hooks/useFileStore'
-import { useGetCollectionSchema } from '@/utils/hooks/useGetCollectionSchema'
-import { useGetConfig } from '@/utils/hooks/useGetConfig'
-import { useUpdateConfig } from '@/utils/hooks/useUpdateConfig'
-import { useOutstatic } from '@/utils/hooks/useOutstatic'
-import useSubmitDocument from '@/utils/hooks/useSubmitDocument'
+import { deepReplace } from '@/utils/deep-replace'
+import { useDocumentUpdateEffect } from '@/utils/hooks/use-document-update-effect'
+import { useFileStore } from '@/utils/hooks/use-file-store'
+import { useGetCollectionSchema } from '@/utils/hooks/use-get-collection-schema'
+import { useGetConfig } from '@/utils/hooks/use-get-config'
+import { useOutstatic } from '@/utils/hooks/use-outstatic'
+import useSubmitDocument from '@/utils/hooks/use-submit-document'
 import { useTipTap } from '@/components/editor/hooks/use-tip-tap'
 import { editDocumentSchema } from '@/utils/schemas/edit-document-schema'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -71,7 +70,6 @@ export default function EditDocument({ collection }: { collection: string }) {
 
   const { data: schema } = useGetCollectionSchema({ collection })
   const { data: config } = useGetConfig()
-  const updateConfig = useUpdateConfig({ setLoading })
 
   const onSubmit = useSubmitDocument({
     session,
@@ -167,11 +165,11 @@ export default function EditDocument({ collection }: { collection: string }) {
     if (mediaPathUpdated) {
       onSubmit(methods.getValues())
     }
-  }, [mediaPathUpdated])
+  }, [mediaPathUpdated, methods, onSubmit])
 
   // Watch for changes in form values and update hasChanges state
   useEffect(() => {
-    const subscription = methods.watch((value, { name, type }) => {
+    const subscription = methods.watch((_, { name, type }) => {
       if (type === 'change' || name === 'content') {
         setHasChanges(true)
       }

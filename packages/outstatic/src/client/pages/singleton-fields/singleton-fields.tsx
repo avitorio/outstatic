@@ -9,7 +9,7 @@ import {
   CardTitle
 } from '@/components/ui/shadcn/card'
 import { CustomFieldType, CustomFieldsType } from '@/types'
-import { useGetSingletonSchema } from '@/utils/hooks/useGetSingletonSchema'
+import { useGetSingletonSchema } from '@/utils/hooks/use-get-singleton-schema'
 import { addCustomFieldSchema } from '@/utils/schemas/add-custom-field-schema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Trash } from 'lucide-react'
@@ -18,7 +18,7 @@ import { useForm } from 'react-hook-form'
 import { AddSingletonFieldDialog } from './_components/add-singleton-field-dialog'
 import { DeleteSingletonFieldDialog } from './_components/delete-singleton-field-dialog'
 import { EditSingletonFieldDialog } from './_components/edit-singleton-field-dialog'
-import { useSingletons } from '@/utils/hooks/useSingletons'
+import { useSingletons } from '@/utils/hooks/use-singletons'
 
 type SingletonFieldsProps = {
   slug: string

@@ -1,6 +1,6 @@
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useCreateBranch } from '@/utils/hooks/useCreateBranch'
+import { useCreateBranch } from '@/utils/hooks/use-create-branch'
 import { CreateBranchSchema } from '@/utils/schemas/create-branch-schema'
 import { Button } from '@/components/ui/shadcn/button'
 import { Input } from '@/components/ui/shadcn/input'
@@ -16,7 +16,7 @@ import {
 import { useState } from 'react'
 import { toast } from 'sonner'
 import { kebabCase } from 'change-case'
-import { stringifyError } from '@/utils/errors/stringifyError'
+import { stringifyError } from '@/utils/errors/stringify-error'
 
 type CreateBranchFormProps = {
   branchName?: string

@@ -4,7 +4,7 @@
 import React from 'react'
 import * as AccordionPrimitive from '@radix-ui/react-accordion'
 import { cn } from '@/utils/ui'
-import { ChevronRight, Loader2, type LucideIcon } from 'lucide-react'
+import { ChevronRight, type LucideIcon } from 'lucide-react'
 import useResizeObserver from 'use-resize-observer'
 import { ScrollArea } from '@/components/ui/shadcn/scroll-area'
 import { SpinnerIcon } from './spinner-icon'

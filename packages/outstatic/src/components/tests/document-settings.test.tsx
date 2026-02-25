@@ -29,7 +29,7 @@ jest.mock('change-case', () => {
 })
 
 // Mock useOutstatic hook with a factory function
-jest.mock('@/utils/hooks/useOutstatic', () => {
+jest.mock('@/utils/hooks/use-outstatic', () => {
   const mockUseOutstatic = jest.fn()
   return {
     useOutstatic: mockUseOutstatic
@@ -38,7 +38,7 @@ jest.mock('@/utils/hooks/useOutstatic', () => {
 
 // Get the mock function after the module is mocked
 const mockUseOutstatic = jest.mocked(
-  require('@/utils/hooks/useOutstatic').useOutstatic
+  require('@/utils/hooks/use-outstatic').useOutstatic
 )
 
 function createMockPointerEvent(

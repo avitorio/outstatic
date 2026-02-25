@@ -15,9 +15,9 @@ import { ScrollArea } from '@/components/ui/shadcn/scroll-area'
 import AICompletionCommands from './ai-completion-command'
 import AISelectorCommands from './ai-selector-commands'
 import { useEditor } from '@/components/editor/editor-context'
-import { useOutstatic } from '@/utils/hooks/useOutstatic'
+import { useOutstatic } from '@/utils/hooks/use-outstatic'
 import { OUTSTATIC_API_PATH } from '@/utils/constants'
-import { stringifyError } from '@/utils/errors/stringifyError'
+import { stringifyError } from '@/utils/errors/stringify-error'
 //TODO: I think it makes more sense to create a custom Tiptap extension for this functionality https://tiptap.dev/docs/editor/ai/introduction
 
 interface AISelectorProps {

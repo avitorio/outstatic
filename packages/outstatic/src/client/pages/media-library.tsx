@@ -2,11 +2,11 @@
 
 import { AdminLayout } from '@/components/admin-layout'
 import { API_MEDIA_PATH } from '@/utils/constants'
-import { useOutstatic } from '@/utils/hooks/useOutstatic'
-import { useGetMediaFiles } from '@/utils/hooks/useGetMediaFiles'
+import { useOutstatic } from '@/utils/hooks/use-outstatic'
+import { useGetMediaFiles } from '@/utils/hooks/use-get-media-files'
 import { useState, useMemo } from 'react'
 import { toast } from 'sonner'
-import useSubmitMedia from '@/utils/hooks/useSubmitMedia'
+import useSubmitMedia from '@/utils/hooks/use-submit-media'
 import { FileType } from '@/types'
 import { DeleteMediaButton } from '@/components/delete-media-button'
 import { MediaLibraryHeader } from '@/components/ui/outstatic/media-library-header'
@@ -20,7 +20,7 @@ import {
   CardDescription,
   CardContent
 } from '@/components/ui/shadcn/card'
-import { stringifyError } from '@/utils/errors/stringifyError'
+import { stringifyError } from '@/utils/errors/stringify-error'
 
 export default function MediaLibrary() {
   const [searchTerm, setSearchTerm] = useState('')
@@ -198,6 +198,7 @@ export default function MediaLibrary() {
                         <SpinnerIcon />
                       </div>
                     )}
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={`${apiPath}/${file.__outstatic.path}`}
                       alt={file.alt}

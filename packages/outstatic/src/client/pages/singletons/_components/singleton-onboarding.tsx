@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/shadcn/button'
 import { Card, CardContent } from '@/components/ui/shadcn/card'
-import { useOutstatic } from '@/utils/hooks/useOutstatic'
+import { useOutstatic } from '@/utils/hooks/use-outstatic'
 import Link from 'next/link'
 import OpenFileModal from '@/client/pages/_components/open-file-modal'
 import { useState } from 'react'

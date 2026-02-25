@@ -1,11 +1,11 @@
 import { AdminLayout } from '@/components/admin-layout'
 import { GitHubRepoSearch } from '@/components/ui/outstatic/github-repo-search'
 import { Button } from '@/components/ui/shadcn/button'
-import { useCollections } from '@/utils/hooks/useCollections'
+import { useCollections } from '@/utils/hooks/use-collections'
 import { useState } from 'react'
 import { MediaSettings } from './_components/media-settings'
 import { DocumentFormatSettings } from './_components/document-format-settings'
-import { useRebuildMetadata } from '@/utils/hooks/useRebuildMetadata'
+import { useRebuildMetadata } from '@/utils/hooks/use-rebuild-metadata'
 import { Card } from '@/components/ui/shadcn/card'
 
 export default function Settings() {

@@ -1,19 +1,46 @@
-import { render, screen, waitFor } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { DocumentFormatSettings } from '../document-format-settings'
 import { TestProviders } from '@/utils/tests/test-wrapper'
+import { StrictMode } from 'react'
 
 // Mock the hooks
 const mockUseGetConfig = jest.fn()
 const mockUpdateConfig = jest.fn()
 
-jest.mock('@/utils/hooks/useGetConfig', () => ({
+jest.mock('@/utils/hooks/use-get-config', () => ({
   useGetConfig: () => mockUseGetConfig()
 }))
 
-jest.mock('@/utils/hooks/useUpdateConfig', () => ({
+jest.mock('@/utils/hooks/use-update-config', () => ({
   useUpdateConfig: () => mockUpdateConfig
 }))
+
+const hasMaximumUpdateDepthError = (calls: unknown[][]) =>
+  calls.some((call) =>
+    call.some((arg) => {
+      if (typeof arg === 'string') {
+        return arg.includes('Maximum update depth exceeded')
+      }
+
+      if (arg instanceof Error) {
+        return arg.message.includes('Maximum update depth exceeded')
+      }
+
+      if (
+        arg &&
+        typeof arg === 'object' &&
+        'message' in arg &&
+        typeof (arg as { message: unknown }).message === 'string'
+      ) {
+        return (arg as { message: string }).message.includes(
+          'Maximum update depth exceeded'
+        )
+      }
+
+      return false
+    })
+  )
 
 describe('DocumentFormatSettings', () => {
   beforeEach(() => {
@@ -32,6 +59,30 @@ describe('DocumentFormatSettings', () => {
       </TestProviders.ReactQuery>
     )
   }
+
+  it('does not trigger maximum update depth errors on render', () => {
+    const consoleErrorSpy = jest
+      .spyOn(console, 'error')
+      .mockImplementation(() => {})
+
+    mockUseGetConfig.mockReturnValue({
+      data: { mdExtension: 'mdx' },
+      isPending: false
+    })
+
+    render(
+      <StrictMode>
+        <TestProviders.ReactQuery>
+          <DocumentFormatSettings />
+        </TestProviders.ReactQuery>
+      </StrictMode>
+    )
+
+    expect(screen.getByRole('combobox')).toHaveTextContent('MDX (.mdx)')
+    expect(hasMaximumUpdateDepthError(consoleErrorSpy.mock.calls)).toBe(false)
+
+    consoleErrorSpy.mockRestore()
+  })
 
   it('should render the component', () => {
     renderComponent()
@@ -173,14 +224,13 @@ describe('DocumentFormatSettings', () => {
     })
 
     // Make updateConfig set loading state
-    let setLoadingFn: ((loading: boolean) => void) | null = null
-    jest.mock('@/utils/hooks/useUpdateConfig', () => ({
+    jest.mock('@/utils/hooks/use-update-config', () => ({
       useUpdateConfig: ({
         setLoading
       }: {
         setLoading: (loading: boolean) => void
       }) => {
-        setLoadingFn = setLoading
+        void setLoading
         return mockUpdateConfig
       }
     }))

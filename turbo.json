@@ -25,6 +25,7 @@
     },
     "docs": {
       "env": [
+        "OST_AI_MODEL",
         "NEXT_PUBLIC_GA_ID",
         "NEXT_PUBLIC_TINYBIRD_TOKEN",
         "NODE_ENV",
@@ -51,6 +52,7 @@
     },
     "outstatic": {
       "env": [
+        "OST_AI_MODEL",
         "AI_GATEWAY_API_KEY",
         "NODE_ENV",
         "OST_CONTENT_PATH",

@@ -4,7 +4,7 @@ import { Fragment, type ReactNode, useEffect } from 'react'
 import Magic from '../ui/icons/magic'
 import { AISelector } from './ai-selector'
 import { Editor } from '@tiptap/react'
-import { useOutstatic } from '@/utils/hooks/useOutstatic'
+import { useOutstatic } from '@/utils/hooks/use-outstatic'
 import { EditorBubbleButton } from '@/components/editor/ui/editor-bubble-button'
 import { useUpgradeDialog } from '@/components/ui/outstatic/upgrade-dialog-context'
 

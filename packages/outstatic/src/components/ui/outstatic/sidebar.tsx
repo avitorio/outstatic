@@ -39,7 +39,7 @@ import {
   RouteSubChildType
 } from './navigation-config.schema'
 import { z } from 'zod/v4'
-import { useCollapsibleState } from '@/utils/hooks/useCollapsibleState'
+import { useCollapsibleState } from '@/utils/hooks/use-collapsible-state'
 
 export type SidebarConfig = z.infer<typeof NavigationConfigSchema>
 

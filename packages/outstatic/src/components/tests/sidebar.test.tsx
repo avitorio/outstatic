@@ -1,5 +1,5 @@
-import { InitialDataContext } from '@/utils/hooks/useInitialData'
-import mockProviderProps from '@/utils/tests/mockProviderProps'
+import { InitialDataContext } from '@/utils/hooks/use-initial-data'
+import mockProviderProps from '@/utils/tests/mock-provider-props'
 import { TestWrapper } from '@/utils/tests/test-wrapper'
 import { render, screen, fireEvent } from '@testing-library/react'
 import { act } from 'react'
@@ -26,11 +26,11 @@ jest.mock('pluralize', () => ({
 const mockUseCollections = jest.fn()
 const mockUseSingletons = jest.fn()
 
-jest.mock('@/utils/hooks/useCollections', () => ({
+jest.mock('@/utils/hooks/use-collections', () => ({
   useCollections: () => mockUseCollections()
 }))
 
-jest.mock('@/utils/hooks/useSingletons', () => ({
+jest.mock('@/utils/hooks/use-singletons', () => ({
   useSingletons: () => mockUseSingletons()
 }))
 

@@ -1,5 +1,5 @@
 import { Tree, TreeDataItem } from '@/components/ui/outstatic/file-tree'
-import { useGetRepoFiles } from '@/utils/hooks/useGetRepoFiles'
+import { useGetRepoFiles } from '@/utils/hooks/use-get-repo-files'
 import { cn } from '@/utils/ui'
 import { Folder, FolderRoot } from 'lucide-react'
 import { useMemo } from 'react'

@@ -9,7 +9,7 @@ import {
   CardTitle
 } from '@/components/ui/shadcn/card'
 import { CustomFieldType, CustomFieldsType } from '@/types'
-import { useGetCollectionSchema } from '@/utils/hooks/useGetCollectionSchema'
+import { useGetCollectionSchema } from '@/utils/hooks/use-get-collection-schema'
 import { addCustomFieldSchema } from '@/utils/schemas/add-custom-field-schema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Trash } from 'lucide-react'
@@ -18,7 +18,7 @@ import { useForm } from 'react-hook-form'
 import { AddCustomFieldDialog } from './_components/add-custom-field-dialog'
 import { DeleteCustomFieldDialog } from './_components/delete-custom-field-dialog'
 import { EditCustomFieldDialog } from './_components/edit-custom-field-dialog'
-import { useOutstatic } from '@/utils/hooks/useOutstatic'
+import { useOutstatic } from '@/utils/hooks/use-outstatic'
 
 type CustomFieldsProps = {
   collection: string

@@ -1,7 +1,7 @@
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { OUTSTATIC_API_PATH } from '@/utils/constants'
 import { AuthProvider, useAuth } from '@/utils/auth/auth-provider'
-import { queryClient } from '@/utils/react-query/queryClient'
+import { queryClient } from '@/utils/react-query/query-client'
 import { toast } from 'sonner'
 import type { LoginSession } from '../auth'
 
@@ -18,7 +18,7 @@ jest.mock('@/utils/auth/auth-provider', () =>
   jest.requireActual('@/utils/auth/auth-provider')
 )
 
-jest.mock('@/utils/react-query/queryClient', () => ({
+jest.mock('@/utils/react-query/query-client', () => ({
   queryClient: {
     invalidateQueries: jest.fn()
   }

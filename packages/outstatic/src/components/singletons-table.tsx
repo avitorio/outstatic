@@ -1,5 +1,5 @@
 import { DeleteDocumentButton } from '@/components/delete-document-button'
-import { useSingletons } from '@/utils/hooks/useSingletons'
+import { useSingletons } from '@/utils/hooks/use-singletons'
 import cookies from 'js-cookie'
 import { ListFilter, Settings } from 'lucide-react'
 import { useState, useCallback, useMemo } from 'react'
@@ -12,8 +12,8 @@ import {
 import {
   useSortedDocuments,
   SortConfig
-} from '@/utils/hooks/useSortedDocuments'
-import { useOutstatic } from '@/utils/hooks/useOutstatic'
+} from '@/utils/hooks/use-sorted-documents'
+import { useOutstatic } from '@/utils/hooks/use-outstatic'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { OstDocument } from '@/types/public'

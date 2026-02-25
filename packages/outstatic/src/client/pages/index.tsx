@@ -3,12 +3,12 @@ import { OutstaticData } from '@/app'
 import { AdminHeader } from '@/components/admin-header'
 import { Sidebar } from '@/components/sidebar'
 import { AdminLoading } from '@/components/admin-loading'
-import { useOutstatic, useLocalData } from '@/utils/hooks/useOutstatic'
+import { useOutstatic, useLocalData } from '@/utils/hooks/use-outstatic'
 import { useEffect } from 'react'
 import { Router } from '../router'
 import Login from './login'
 import Welcome from './welcome'
-import { useGetRepository } from '@/utils/hooks/useGetRepository'
+import { useGetRepository } from '@/utils/hooks/use-get-repository'
 import Onboarding from './onboarding'
 import { SidebarProvider } from '@/components/ui/shadcn/sidebar'
 import { RootProvider } from './_components/root-provider'
@@ -63,7 +63,7 @@ export const Main = ({ params }: { params: { ost: string[] } }) => {
     if (repoSlug && !repoOwner) {
       setData({ repoBranch, repoOwner: session?.user.login })
     }
-  }, [repository, setData, data, session])
+  }, [repository, repoBranch, repoSlug, repoOwner, setData, data, session])
 
   return (
     <>

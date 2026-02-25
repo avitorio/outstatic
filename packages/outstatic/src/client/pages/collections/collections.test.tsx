@@ -1,14 +1,14 @@
 import { render, screen, fireEvent } from '@testing-library/react'
+import { StrictMode } from 'react'
 import Collections from './collections'
-import { useCollections } from '@/utils/hooks/useCollections'
-import { useOutstatic, useLocalData } from '@/utils/hooks/useOutstatic'
+import { useCollections } from '@/utils/hooks/use-collections'
+import { useOutstatic, useLocalData } from '@/utils/hooks/use-outstatic'
 import { TestWrapper } from '@/utils/tests/test-wrapper'
-import { useInitialData } from '@/utils/hooks/useInitialData'
 
 // Mock the hooks
-jest.mock('@/utils/hooks/useCollections')
-jest.mock('@/utils/hooks/useOutstatic')
-jest.mock('@/utils/hooks/useInitialData')
+jest.mock('@/utils/hooks/use-collections')
+jest.mock('@/utils/hooks/use-outstatic')
+jest.mock('@/utils/hooks/use-initial-data')
 jest.mock('@/utils/auth/hooks', () => ({
   useOstSession: () => ({ status: 'authenticated' })
 }))
@@ -34,6 +34,32 @@ jest.mock('change-case', () => {
     split: (str: string) => str
   }
 })
+
+const hasMaximumUpdateDepthError = (calls: unknown[][]) =>
+  calls.some((call) =>
+    call.some((arg) => {
+      if (typeof arg === 'string') {
+        return arg.includes('Maximum update depth exceeded')
+      }
+
+      if (arg instanceof Error) {
+        return arg.message.includes('Maximum update depth exceeded')
+      }
+
+      if (
+        arg &&
+        typeof arg === 'object' &&
+        'message' in arg &&
+        typeof (arg as { message: unknown }).message === 'string'
+      ) {
+        return (arg as { message: string }).message.includes(
+          'Maximum update depth exceeded'
+        )
+      }
+
+      return false
+    })
+  )
 
 describe('Collections', () => {
   const mockCollections = [
@@ -172,5 +198,29 @@ describe('Collections', () => {
       'href',
       '/outstatic/collections/blog'
     )
+  })
+
+  it('does not trigger maximum update depth errors during render', () => {
+    const consoleErrorSpy = jest
+      .spyOn(console, 'error')
+      .mockImplementation(() => {})
+
+    ;(useCollections as jest.Mock).mockReturnValue({
+      isPending: false,
+      data: mockCollections
+    })
+
+    render(
+      <StrictMode>
+        <TestWrapper>
+          <Collections />
+        </TestWrapper>
+      </StrictMode>
+    )
+
+    expect(screen.getByText('Collections')).toBeInTheDocument()
+    expect(hasMaximumUpdateDepthError(consoleErrorSpy.mock.calls)).toBe(false)
+
+    consoleErrorSpy.mockRestore()
   })
 })

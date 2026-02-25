@@ -1,4 +1,4 @@
-import { useOutstatic } from '@/utils/hooks/useOutstatic'
+import { useOutstatic } from '@/utils/hooks/use-outstatic'
 import { Editor, Range } from '@tiptap/react'
 import { useCompletion } from '@ai-sdk/react'
 import {
@@ -13,9 +13,9 @@ import {
   CommandItemProps,
   updateScrollView
 } from '@/components/editor/extensions/slash-command'
-import { getPrevText } from '@/components/editor/utils/getPrevText'
+import { getPrevText } from '@/components/editor/utils/get-prev-text'
 import { OUTSTATIC_API_PATH } from '@/utils/constants'
-import { stringifyError } from '@/utils/errors/stringifyError'
+import { stringifyError } from '@/utils/errors/stringify-error'
 
 export const BaseCommandList = ({
   items,

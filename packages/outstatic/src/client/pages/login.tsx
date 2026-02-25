@@ -6,7 +6,7 @@ import {
 import { Card, CardContent } from '@/components/ui/shadcn/card'
 import LoadingBackground from '@/components/ui/outstatic/loading-background'
 import { OUTSTATIC_API_PATH } from '@/utils/constants'
-import loginErrors from '@/utils/errors/loginErrors'
+import loginErrors from '@/utils/errors/login-errors'
 import clsx from 'clsx'
 import Link from 'next/link'
 import { useSearchParams, useRouter } from 'next/navigation'
@@ -61,15 +61,13 @@ export default function Login({
 
   const error = searchParams.get('error') as Errors
 
-  const [githubLoading, setGithubLoading] = useState(false)
-  const [googleLoading, setGoogleLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
   const [email, setEmail] = useState('')
   const [emailSent, setEmailSent] = useState(false)
   const [emailLoading, setEmailLoading] = useState(false)
   const [showUpgradeDialog, setShowUpgradeDialog] = useState(false)
   const [showApiKeyDialog, setShowApiKeyDialog] = useState(false)
   const showPlanBadges = !isPro
-  const isLoading = githubLoading || googleLoading
   const apiBasePath = basePath
     ? `${basePath.replace(/\/+$/, '')}${OUTSTATIC_API_PATH}`
     : OUTSTATIC_API_PATH
@@ -93,7 +91,7 @@ export default function Login({
 
   const handleGithubLogin = async (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault()
-    setGithubLoading(true)
+    setIsLoading(true)
 
     try {
       const response = await fetch(`${apiBasePath}/login`)
@@ -121,13 +119,13 @@ export default function Login({
     } catch {
       navigateToError('github-relay-failed')
     } finally {
-      setGithubLoading(false)
+      setIsLoading(false)
     }
   }
 
   const handleGoogleLogin = async (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault()
-    setGoogleLoading(true)
+    setIsLoading(true)
 
     try {
       const response = await fetch(`${apiBasePath}/google-login`, {
@@ -161,7 +159,7 @@ export default function Login({
     } catch {
       navigateToError('google-relay-failed')
     } finally {
-      setGoogleLoading(false)
+      setIsLoading(false)
     }
   }
 
@@ -254,7 +252,7 @@ export default function Login({
                             href={`${OUTSTATIC_API_PATH}/login`}
                             onClick={handleGithubLogin}
                             className={clsx(
-                              githubLoading && 'animate-pulse',
+                              isLoading && 'animate-pulse',
                               'w-full relative'
                             )}
                           >
@@ -290,7 +288,7 @@ export default function Login({
                               href={`${OUTSTATIC_API_PATH}/google-login`}
                               onClick={handleGoogleLogin}
                               className={clsx(
-                                googleLoading && 'animate-pulse',
+                                isLoading && 'animate-pulse',
                                 'w-full relative'
                               )}
                             >

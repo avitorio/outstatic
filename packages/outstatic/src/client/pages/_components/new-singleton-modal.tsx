@@ -8,7 +8,7 @@ import {
 } from '@/components/ui/shadcn/card'
 import { Label } from '@/components/ui/shadcn/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/shadcn/radio-group'
-import { useOutstatic } from '@/utils/hooks/useOutstatic'
+import { useOutstatic } from '@/utils/hooks/use-outstatic'
 import { useState } from 'react'
 import GithubExplorer from '@/components/ui/outstatic/github-explorer'
 import PathBreadcrumbs from '@/components/ui/outstatic/path-breadcrumb'

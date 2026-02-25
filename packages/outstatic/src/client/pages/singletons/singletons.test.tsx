@@ -1,16 +1,17 @@
 import { render, screen } from '@testing-library/react'
+import { StrictMode } from 'react'
 import Singletons from './singletons'
-import { useOutstatic } from '@/utils/hooks/useOutstatic'
-import { useGetMetadata } from '@/utils/hooks/useGetMetadata'
+import { useOutstatic } from '@/utils/hooks/use-outstatic'
+import { useGetMetadata } from '@/utils/hooks/use-get-metadata'
 import { TestWrapper } from '@/utils/tests/test-wrapper'
 
 // Mock the hooks
-jest.mock('@/utils/hooks/useOutstatic')
-jest.mock('@/utils/hooks/useGetMetadata')
+jest.mock('@/utils/hooks/use-outstatic')
+jest.mock('@/utils/hooks/use-get-metadata')
 jest.mock('@/utils/auth/hooks', () => ({
   useOstSession: () => ({ status: 'authenticated' })
 }))
-jest.mock('@/utils/hooks/useSingletons', () => ({
+jest.mock('@/utils/hooks/use-singletons', () => ({
   useSingletons: () => ({
     data: [],
     refetch: jest.fn()
@@ -38,6 +39,32 @@ jest.mock('change-case', () => {
     split: (str: string) => str
   }
 })
+
+const hasMaximumUpdateDepthError = (calls: unknown[][]) =>
+  calls.some((call) =>
+    call.some((arg) => {
+      if (typeof arg === 'string') {
+        return arg.includes('Maximum update depth exceeded')
+      }
+
+      if (arg instanceof Error) {
+        return arg.message.includes('Maximum update depth exceeded')
+      }
+
+      if (
+        arg &&
+        typeof arg === 'object' &&
+        'message' in arg &&
+        typeof (arg as { message: unknown }).message === 'string'
+      ) {
+        return (arg as { message: string }).message.includes(
+          'Maximum update depth exceeded'
+        )
+      }
+
+      return false
+    })
+  )
 
 describe('Singletons', () => {
   const mockSingletons = [
@@ -161,5 +188,33 @@ describe('Singletons', () => {
       name: /open from file/i
     })
     expect(openFileButton).toBeInTheDocument()
+  })
+
+  it('does not trigger maximum update depth errors during render', () => {
+    const consoleErrorSpy = jest
+      .spyOn(console, 'error')
+      .mockImplementation(() => {})
+
+    ;(useGetMetadata as jest.Mock).mockReturnValue({
+      isPending: false,
+      data: {
+        metadata: {
+          metadata: mockSingletons
+        }
+      }
+    })
+
+    render(
+      <StrictMode>
+        <TestWrapper>
+          <Singletons />
+        </TestWrapper>
+      </StrictMode>
+    )
+
+    expect(screen.getByText('Singletons')).toBeInTheDocument()
+    expect(hasMaximumUpdateDepthError(consoleErrorSpy.mock.calls)).toBe(false)
+
+    consoleErrorSpy.mockRestore()
   })
 })

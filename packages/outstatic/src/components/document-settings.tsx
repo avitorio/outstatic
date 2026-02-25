@@ -20,7 +20,7 @@ import { useContext, useEffect, useState } from 'react'
 import { RegisterOptions, useFormContext } from 'react-hook-form'
 import { slugify } from 'transliteration'
 import { Button } from '@/components/ui/shadcn/button'
-import { useOutstatic } from '@/utils/hooks/useOutstatic'
+import { useOutstatic } from '@/utils/hooks/use-outstatic'
 import {
   FormField,
   FormItem,

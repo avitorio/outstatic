@@ -683,7 +683,7 @@ export async function watchSchemas(
       generateTypes(options)
     }, 100)
 
-    fs.watch(contentPath, { recursive: true }, (eventType, filename) => {
+    fs.watch(contentPath, { recursive: true }, (_eventType, filename) => {
       if (
         filename &&
         (filename.endsWith('schema.json') || filename.endsWith('.schema.json'))

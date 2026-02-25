@@ -8,9 +8,9 @@ import {
 } from '@/components/ui/shadcn/card'
 import { GitHubBranchSearch } from '@/components/ui/outstatic/github-branch-search'
 import { useState } from 'react'
-import { useLocalData } from '@/utils/hooks/useOutstatic'
+import { useLocalData } from '@/utils/hooks/use-outstatic'
 import { CreateBranchDialog } from '@/components/ui/outstatic/create-branch-dialog'
-import { useInitialData } from '@/utils/hooks/useInitialData'
+import { useInitialData } from '@/utils/hooks/use-initial-data'
 import CollectionOnboarding from '../collections/_components/collection-onboarding'
 import SingletonOnboarding from '../singletons/_components/singleton-onboarding'
 

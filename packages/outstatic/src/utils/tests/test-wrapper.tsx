@@ -12,8 +12,8 @@ import StarterKit from '@tiptap/starter-kit'
 import { NavigationGuardProvider } from 'next-navigation-guard'
 import { ReactNode } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
-import { InitialDataContext } from '@/utils/hooks/useInitialData'
-import mockProviderProps from './mockProviderProps'
+import { InitialDataContext } from '@/utils/hooks/use-initial-data'
+import mockProviderProps from './mock-provider-props'
 
 export const documentExample: Document = {
   publishedAt: new Date('2022-07-14'),

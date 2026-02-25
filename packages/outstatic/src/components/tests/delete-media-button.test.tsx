@@ -3,7 +3,7 @@ import { TestWrapper } from '@/utils/tests/test-wrapper'
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 
 // Mock the useOutstatic hook
-jest.mock('@/utils/hooks/useOutstatic', () => ({
+jest.mock('@/utils/hooks/use-outstatic', () => ({
   __esModule: true,
   useOutstatic: () => ({
     repoOwner: 'testOwner',
@@ -15,10 +15,10 @@ jest.mock('@/utils/hooks/useOutstatic', () => ({
 }))
 
 // Mock useOid hook
-jest.mock('@/utils/hooks/useOid', () => () => jest.fn().mockReturnValue('123'))
+jest.mock('@/utils/hooks/use-oid', () => () => jest.fn().mockReturnValue('123'))
 
 // Mock useGetMediaFiles hook
-jest.mock('@/utils/hooks/useGetMediaFiles', () => ({
+jest.mock('@/utils/hooks/use-get-media-files', () => ({
   useGetMediaFiles: () => ({
     refetch: async () =>
       Promise.resolve({
@@ -30,7 +30,7 @@ jest.mock('@/utils/hooks/useGetMediaFiles', () => ({
   })
 }))
 
-jest.mock('@/utils/hooks/useCreateCommit', () => ({
+jest.mock('@/utils/hooks/use-create-commit', () => ({
   useCreateCommit: () => ({
     mutate: async () => Promise.resolve(true),
     mutateAsync: async () => Promise.resolve(true)
@@ -38,7 +38,7 @@ jest.mock('@/utils/hooks/useCreateCommit', () => ({
 }))
 
 // Mock createCommitApi
-jest.mock('@/utils/createCommitApi', () => ({
+jest.mock('@/utils/create-commit-api', () => ({
   createCommitApi: () => ({
     removeFile: jest.fn(),
     replaceFile: jest.fn(),

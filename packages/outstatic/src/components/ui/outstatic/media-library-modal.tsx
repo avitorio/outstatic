@@ -1,12 +1,12 @@
 'use client'
 
 import { API_MEDIA_PATH } from '@/utils/constants'
-import { useOutstatic } from '@/utils/hooks/useOutstatic'
-import { useGetMediaFiles } from '@/utils/hooks/useGetMediaFiles'
+import { useOutstatic } from '@/utils/hooks/use-outstatic'
+import { useGetMediaFiles } from '@/utils/hooks/use-get-media-files'
 import { useState, useMemo } from 'react'
 import { Button } from '@/components/ui/shadcn/button'
 import { toast } from 'sonner'
-import useSubmitMedia from '@/utils/hooks/useSubmitMedia'
+import useSubmitMedia from '@/utils/hooks/use-submit-media'
 import { FileType } from '@/types'
 import { DeleteMediaButton } from '@/components/delete-media-button'
 import {
@@ -30,7 +30,7 @@ import {
   CardTitle
 } from '../shadcn/card'
 import { MediaSettings } from '@/client/pages/settings/_components/media-settings'
-import { stringifyError } from '@/utils/errors/stringifyError'
+import { stringifyError } from '@/utils/errors/stringify-error'
 
 export default function MediaLibraryModal({
   open,
@@ -212,6 +212,7 @@ export default function MediaLibraryModal({
                     onClick={() => setSelectedImage(file)}
                   >
                     <div className="aspect-square">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
                         src={`${apiPath}${file.__outstatic.path}`}
                         alt={file.alt}

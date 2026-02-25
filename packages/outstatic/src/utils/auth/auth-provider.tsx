@@ -1,7 +1,7 @@
 'use client'
 
 import { OUTSTATIC_API_PATH } from '@/utils/constants'
-import { queryClient } from '@/utils/react-query/queryClient'
+import { queryClient } from '@/utils/react-query/query-client'
 import { LoginSession } from '@/utils/auth/auth'
 import {
   ReactNode,

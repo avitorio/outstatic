@@ -1,4 +1,4 @@
-import { useOutstatic } from '@/utils/hooks/useOutstatic'
+import { useOutstatic } from '@/utils/hooks/use-outstatic'
 import { z } from 'zod/v4'
 import {
   Sidebar as SidebarUI,
@@ -17,8 +17,8 @@ import {
 } from 'lucide-react'
 import { SidebarNavigation } from '@/components/ui/outstatic/sidebar'
 
-import { useCollections } from '@/utils/hooks/useCollections'
-import { useSingletons } from '@/utils/hooks/useSingletons'
+import { useCollections } from '@/utils/hooks/use-collections'
+import { useSingletons } from '@/utils/hooks/use-singletons'
 import { NavigationConfigSchema } from '@/components/ui/outstatic/navigation-config.schema'
 import Link from 'next/link'
 import { TooltipContent, TooltipTrigger } from '@/components/ui/shadcn/tooltip'
@@ -34,8 +34,8 @@ import { AppPermissions } from '@/utils/auth/auth'
 import {
   buildApiKeySignupUrl,
   buildOutstaticCallbackOrigin
-} from '@/utils/buildApiKeySignupUrl'
-import { useClientOrigin } from '@/utils/hooks/useClientOrigin'
+} from '@/utils/build-api-key-signup-url'
+import { useClientOrigin } from '@/utils/hooks/use-client-origin'
 
 type SidebarProps = {
   /** Additional routes to append or replace default settings routes */

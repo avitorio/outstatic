@@ -8,14 +8,14 @@ const filePath2 = path.join(__dirname, './dist/client/client.mjs')
 export default defineConfig((options) => {
   return {
     entry: [
-      './src/index.tsx',
-      './src/client/client.tsx',
+      './src/index.ts',
+      './src/client/client.ts',
       './src/utils/server.ts',
       './src/utils/auth/auth.ts',
       './src/utils/auth/auth-provider.tsx',
-      './src/utils/hooks/index.tsx',
-      './src/components/index.tsx',
-      './src/graphql/utils/tokenRefreshUtility.ts',
+      './src/utils/hooks/index.ts',
+      './src/components/index.ts',
+      './src/graphql/utils/token-refresh-utility.ts',
       './src/next-plugin.ts',
       './src/typegen/index.ts',
       './src/cli/index.ts'

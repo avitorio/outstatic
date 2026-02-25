@@ -11,9 +11,9 @@ import {
 } from '@/components/ui/shadcn/alert-dialog'
 import { Button } from '@/components/ui/shadcn/button'
 import { SpinnerIcon } from '@/components/ui/outstatic/spinner-icon'
-import { useSingletonFieldCommit } from '@/utils/hooks/useSingletonFieldCommit'
-import { useGetSingletonSchema } from '@/utils/hooks/useGetSingletonSchema'
-import { useOutstatic } from '@/utils/hooks/useOutstatic'
+import { useSingletonFieldCommit } from '@/utils/hooks/use-singleton-field-commit'
+import { useGetSingletonSchema } from '@/utils/hooks/use-get-singleton-schema'
+import { useOutstatic } from '@/utils/hooks/use-outstatic'
 import { CustomFieldsType } from '@/types'
 
 interface DeleteSingletonFieldDialogProps {
@@ -45,7 +45,7 @@ export const DeleteSingletonFieldDialog: React.FC<
 }) => {
   const { setHasChanges } = useOutstatic()
   const [deleting, setDeleting] = useState(false)
-  const { data: schema, isLoading } = useGetSingletonSchema({ slug })
+  const { data: schema } = useGetSingletonSchema({ slug })
 
   const capiHelper = useSingletonFieldCommit(slug)
 
@@ -53,7 +53,7 @@ export const DeleteSingletonFieldDialog: React.FC<
     if (schema) {
       setCustomFields(schema.properties)
     }
-  }, [schema])
+  }, [schema, setCustomFields])
 
   const deleteField = async (name: string) => {
     setDeleting(true)

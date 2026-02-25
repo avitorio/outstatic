@@ -1,12 +1,12 @@
 import { render, screen, fireEvent } from '@testing-library/react'
 import ContentOnboarding from './content-onboarding'
-import { useLocalData, useOutstatic } from '@/utils/hooks/useOutstatic'
-import { useInitialData } from '@/utils/hooks/useInitialData'
+import { useLocalData, useOutstatic } from '@/utils/hooks/use-outstatic'
+import { useInitialData } from '@/utils/hooks/use-initial-data'
 import { TestWrapper } from '@/utils/tests/test-wrapper'
 
 // Mock the hooks
-jest.mock('@/utils/hooks/useOutstatic')
-jest.mock('@/utils/hooks/useInitialData')
+jest.mock('@/utils/hooks/use-outstatic')
+jest.mock('@/utils/hooks/use-initial-data')
 jest.mock('@/utils/auth/hooks', () => ({
   useOstSession: () => ({ status: 'authenticated' })
 }))

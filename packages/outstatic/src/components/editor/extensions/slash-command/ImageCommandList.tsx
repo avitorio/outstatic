@@ -3,12 +3,18 @@ import {
   updateScrollView
 } from '@/components/editor/extensions/slash-command'
 import { Editor, Range } from '@tiptap/react'
-import { Check, Image, Link, Upload } from 'lucide-react'
-import { useEffect, useLayoutEffect, useRef, useState } from 'react'
-import { addImage } from '@/components/editor/utils/addImage'
+import { Check, Image as ImageIcon, Link, Upload } from 'lucide-react'
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState
+} from 'react'
+import { addImage } from '@/components/editor/utils/add-image'
 import MediaLibraryModal from '@/components/ui/outstatic/media-library-modal'
 import { API_MEDIA_PATH } from '@/utils/constants'
-import { useOutstatic } from '@/utils/hooks/useOutstatic'
+import { useOutstatic } from '@/utils/hooks/use-outstatic'
 import MediaSettingsDialog from '@/components/ui/outstatic/media-settings-dialog'
 import { Button } from '@/components/ui/shadcn/button'
 
@@ -43,7 +49,7 @@ const items = [
     title: 'Media Library',
     description: 'Add image from media gallery.',
     searchTerms: ['photo', 'picture', 'media'],
-    icon: <Image size={18} />
+    icon: <ImageIcon size={18} />
   }
 ]
 
@@ -61,34 +67,7 @@ const ImageCommandList = ({
   const { repoMediaPath, publicMediaPath, basePath } = useOutstatic()
   const [callbackFunction, setCallbackFunction] = useState<() => void>(() => {})
 
-  const handleItemAction = (title: string) => {
-    switch (title) {
-      case 'Image Upload':
-        if (!repoMediaPath && !publicMediaPath) {
-          setCallbackFunction(() => addImageFile)
-          setShowMediaPathDialog(true)
-        } else {
-          addImageFile()
-        }
-        break
-      case 'Image from URL':
-        setShowLink(true)
-        break
-      case 'Media Library':
-        if (!repoMediaPath && !publicMediaPath) {
-          setCallbackFunction(() => () => setShowMediaLibrary(true))
-          setShowMediaPathDialog(true)
-        } else {
-          setShowMediaLibrary(true)
-        }
-        break
-      // Add more cases for future actions
-      default:
-        console.warn(`Unhandled action: ${title}`)
-    }
-  }
-
-  const addImageFile = async () => {
+  const addImageFile = useCallback(async () => {
     editor.chain().focus().deleteRange(range).run()
     // upload image
     const input = document.createElement('input')
@@ -104,30 +83,63 @@ const ImageCommandList = ({
       }
     }
     input.click()
-  }
+  }, [editor, range])
 
-  const addImageUrl = (imageUrl: string) => {
-    if (
-      !imageUrl.startsWith(`${basePath}${API_MEDIA_PATH}`) &&
-      !isValidUrl(imageUrl)
-    ) {
-      setErrors((prevErrors) => ({ ...prevErrors, imageUrl: 'Invalid URL' }))
-      return null
-    }
+  const addImageUrl = useCallback(
+    (imageUrl: string) => {
+      if (
+        !imageUrl.startsWith(`${basePath}${API_MEDIA_PATH}`) &&
+        !isValidUrl(imageUrl)
+      ) {
+        setErrors((prevErrors) => ({ ...prevErrors, imageUrl: 'Invalid URL' }))
+        return null
+      }
 
-    if (imageUrl) {
-      // TODO: Jump to new paragraph after adding image
-      editor.chain().focus().deleteRange(range).run()
-      editor
-        .chain()
-        .focus()
-        .setImage({ src: imageUrl, alt: '', title: '' })
-        .insertContent('')
-        .run()
-      editor.chain().blur().run()
-    }
-    setShowLink(false)
-  }
+      if (imageUrl) {
+        // TODO: Jump to new paragraph after adding image
+        editor.chain().focus().deleteRange(range).run()
+        editor
+          .chain()
+          .focus()
+          .setImage({ src: imageUrl, alt: '', title: '' })
+          .insertContent('')
+          .run()
+        editor.chain().blur().run()
+      }
+      setShowLink(false)
+    },
+    [basePath, editor, range]
+  )
+
+  const handleItemAction = useCallback(
+    (title: string) => {
+      switch (title) {
+        case 'Image Upload':
+          if (!repoMediaPath && !publicMediaPath) {
+            setCallbackFunction(() => addImageFile)
+            setShowMediaPathDialog(true)
+          } else {
+            addImageFile()
+          }
+          break
+        case 'Image from URL':
+          setShowLink(true)
+          break
+        case 'Media Library':
+          if (!repoMediaPath && !publicMediaPath) {
+            setCallbackFunction(() => () => setShowMediaLibrary(true))
+            setShowMediaPathDialog(true)
+          } else {
+            setShowMediaLibrary(true)
+          }
+          break
+        // Add more cases for future actions
+        default:
+          console.warn(`Unhandled action: ${title}`)
+      }
+    },
+    [addImageFile, publicMediaPath, repoMediaPath]
+  )
 
   useEffect(() => {
     const navigationKeys = ['ArrowUp', 'ArrowDown', 'Enter', 'Escape']
@@ -167,16 +179,24 @@ const ImageCommandList = ({
     return () => {
       document.removeEventListener('keydown', onKeyDown)
     }
-  }, [selectedIndex, showLink, items])
+  }, [
+    selectedIndex,
+    showLink,
+    addImageUrl,
+    handleItemAction,
+    imageUrl,
+    setImageMenu,
+    editor
+  ])
 
   useEffect(() => {
     editor.chain().blur().run()
-  }, [])
+  }, [editor])
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setSelectedIndex(0)
-  }, [items])
+  }, [])
 
   const commandListContainer = useRef<HTMLDivElement>(null)
 

@@ -1,8 +1,8 @@
 'use client'
 import { SearchCombobox } from '@/components/ui/outstatic/search-combobox'
 import { OUTSTATIC_API_PATH } from '@/utils/constants'
-import { useInitialData } from '@/utils/hooks/useInitialData'
-import { useOutstatic, useLocalData } from '@/utils/hooks/useOutstatic'
+import { useInitialData } from '@/utils/hooks/use-initial-data'
+import { useOutstatic, useLocalData } from '@/utils/hooks/use-outstatic'
 import React, { useEffect, useState } from 'react'
 import { useDebouncedCallback } from 'use-debounce'
 
@@ -77,7 +77,7 @@ export const GitHubRepoSearch: React.FC = () => {
             ?.default_branch || ''
       })
     }
-  }, [value])
+  }, [value, setData, suggestions])
 
   return (
     <div>

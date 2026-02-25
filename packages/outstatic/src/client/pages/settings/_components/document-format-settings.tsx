@@ -1,5 +1,5 @@
-import { useGetConfig } from '@/utils/hooks/useGetConfig'
-import { useUpdateConfig } from '@/utils/hooks/useUpdateConfig'
+import { useGetConfig } from '@/utils/hooks/use-get-config'
+import { useUpdateConfig } from '@/utils/hooks/use-update-config'
 import { Button } from '@/components/ui/shadcn/button'
 import { Label } from '@/components/ui/shadcn/label'
 import {

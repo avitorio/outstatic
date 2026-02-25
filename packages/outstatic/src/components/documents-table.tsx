@@ -1,7 +1,7 @@
 import { DeleteDocumentButton } from '@/components/delete-document-button'
 import { SortableSelect } from '@/components/sortable-select'
 import { OstDocument } from '@/types/public'
-import { useGetDocuments } from '@/utils/hooks/useGetDocuments'
+import { useGetDocuments } from '@/utils/hooks/use-get-documents'
 import { sentenceCase } from 'change-case'
 import cookies from 'js-cookie'
 import { ListFilter } from 'lucide-react'
@@ -15,8 +15,8 @@ import {
 import {
   useSortedDocuments,
   SortConfig
-} from '@/utils/hooks/useSortedDocuments'
-import { useOutstatic } from '@/utils/hooks/useOutstatic'
+} from '@/utils/hooks/use-sorted-documents'
+import { useOutstatic } from '@/utils/hooks/use-outstatic'
 import { MDExtensions } from '@/types'
 import { useParams, useRouter } from 'next/navigation'
 

@@ -164,7 +164,7 @@ describe('generateTypes', () => {
       return []
     })
 
-    mockFs.readFileSync.mockImplementation((p) => {
+    mockFs.readFileSync.mockImplementation(() => {
       return JSON.stringify({
         title: 'Test',
         type: 'object',

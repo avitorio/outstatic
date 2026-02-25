@@ -1,18 +1,18 @@
 import { MDExtensions } from '@/types'
-import { createCommitApi } from '@/utils/createCommitApi'
-import { hashFromUrl } from '@/utils/hashFromUrl'
-import { useCreateCommit } from '@/utils/hooks/useCreateCommit'
-import { useGetMetadata } from '@/utils/hooks/useGetMetadata'
-import useOid from '@/utils/hooks/useOid'
-import { useOutstatic } from '@/utils/hooks/useOutstatic'
+import { createCommitApi } from '@/utils/create-commit-api'
+import { hashFromUrl } from '@/utils/hash-from-url'
+import { useCreateCommit } from '@/utils/hooks/use-create-commit'
+import { useGetMetadata } from '@/utils/hooks/use-get-metadata'
+import useOid from '@/utils/hooks/use-oid'
+import { useOutstatic } from '@/utils/hooks/use-outstatic'
 import { stringifyMetadata } from '@/utils/metadata/stringify'
 import { Trash } from 'lucide-react'
 import { useState } from 'react'
 import { Button } from '@/components/ui/shadcn/button'
 import { SpinnerIcon } from '@/components/ui/outstatic/spinner-icon'
 import { toast } from 'sonner'
-import { useGetDocuments } from '@/utils/hooks/useGetDocuments'
-import { useCollections } from '@/utils/hooks/useCollections'
+import { useGetDocuments } from '@/utils/hooks/use-get-documents'
+import { useCollections } from '@/utils/hooks/use-collections'
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -22,7 +22,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle
 } from '@/components/ui/shadcn/alert-dialog'
-import { useSingletons } from '@/utils/hooks/useSingletons'
+import { useSingletons } from '@/utils/hooks/use-singletons'
 
 type DeleteDocumentButtonProps = {
   slug: string

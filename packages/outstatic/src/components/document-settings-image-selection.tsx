@@ -1,6 +1,6 @@
 import { API_MEDIA_PATH } from '@/utils/constants'
-import { useOutstatic } from '@/utils/hooks/useOutstatic'
-import { useContext, useEffect, useState } from 'react'
+import { useOutstatic } from '@/utils/hooks/use-outstatic'
+import { useCallback, useContext, useEffect, useState } from 'react'
 import { Button } from '@/components/ui/shadcn/button'
 import MediaLibraryModal from '@/components/ui/outstatic/media-library-modal'
 import { useFormContext } from 'react-hook-form'
@@ -45,24 +45,28 @@ export const DocumentSettingsImageSelection = ({
   const [showImageLibrary, setShowImageLibrary] = useState(false)
 
   const { setValue, control, getValues, watch } = useFormContext()
+  const watchedImage = watch(id)
 
   // Handle image selection from library or URL
-  const handleImageSelect = (selectedImage: string, isUserAction = false) => {
-    setPreviewLoading(true)
-    setImageState('preview')
-    setLoadingError(false)
+  const handleImageSelect = useCallback(
+    (selectedImage: string, isUserAction = false) => {
+      setPreviewLoading(true)
+      setImageState('preview')
+      setLoadingError(false)
 
-    // Small delay to allow UI to update before setting the image
-    setTimeout(() => {
-      setImage(selectedImage)
-      setPreviewLoading(false)
+      // Small delay to allow UI to update before setting the image
+      setTimeout(() => {
+        setImage(selectedImage)
+        setPreviewLoading(false)
 
-      // Only mark as changed if this was a user-initiated action
-      if (isUserAction) {
-        setHasChanges(true)
-      }
-    }, 500)
-  }
+        // Only mark as changed if this was a user-initiated action
+        if (isUserAction) {
+          setHasChanges(true)
+        }
+      }, 500)
+    },
+    [setHasChanges]
+  )
 
   // Reset image selection
   const handleRemoveImage = () => {
@@ -75,7 +79,7 @@ export const DocumentSettingsImageSelection = ({
 
   // Process image path when form value changes
   useEffect(() => {
-    const resolvedImage = getValues(id)
+    const resolvedImage = watchedImage || getValues(id)
     if (!resolvedImage) {
       return
     }
@@ -97,14 +101,25 @@ export const DocumentSettingsImageSelection = ({
     )
 
     handleImageSelect(image, false)
-  }, [watch(id)])
+  }, [
+    watchedImage,
+    id,
+    getValues,
+    basePath,
+    publicMediaPath,
+    repoOwner,
+    repoSlug,
+    repoBranch,
+    repoMediaPath,
+    handleImageSelect
+  ])
 
   // Set default value if no image is selected
   useEffect(() => {
     if (!image) {
       setValue(id, defaultValue)
     }
-  }, [id, defaultValue])
+  }, [image, id, defaultValue, setValue])
 
   // Render image preview
   const renderImagePreview = () => (

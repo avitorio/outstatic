@@ -8,10 +8,10 @@ import {
 } from '@/components/ui/shadcn/card'
 import { AdminLoading } from '@/components/admin-loading'
 import { Button } from '@/components/ui/shadcn/button'
-import { useGetDocuments } from '@/utils/hooks/useGetDocuments'
+import { useGetDocuments } from '@/utils/hooks/use-get-documents'
 import Link from 'next/link'
 import { singular } from 'pluralize'
-import { useOutstatic } from '@/utils/hooks/useOutstatic'
+import { useOutstatic } from '@/utils/hooks/use-outstatic'
 import LineBackground from '@/components/ui/outstatic/line-background'
 
 type ListProps = {

@@ -2,9 +2,9 @@ import { act, render } from '@testing-library/react'
 import { useEditor } from '@tiptap/react'
 import { useCompletion } from '@ai-sdk/react'
 import { useDebouncedCallback } from 'use-debounce'
-import { useOutstatic } from '@/utils/hooks/useOutstatic'
+import { useOutstatic } from '@/utils/hooks/use-outstatic'
 import { useUpgradeDialog } from '@/components/ui/outstatic/upgrade-dialog-context'
-import { getPrevText } from '@/components/editor/utils/getPrevText'
+import { getPrevText } from '@/components/editor/utils/get-prev-text'
 import { useTipTap } from './use-tip-tap'
 
 jest.mock('@/components/editor/extensions/index', () => ({
@@ -30,7 +30,7 @@ jest.mock('use-debounce', () => ({
   useDebouncedCallback: jest.fn()
 }))
 
-jest.mock('@/utils/hooks/useOutstatic', () => ({
+jest.mock('@/utils/hooks/use-outstatic', () => ({
   useOutstatic: jest.fn()
 }))
 
@@ -38,7 +38,7 @@ jest.mock('@/components/ui/outstatic/upgrade-dialog-context', () => ({
   useUpgradeDialog: jest.fn()
 }))
 
-jest.mock('@/components/editor/utils/getPrevText', () => ({
+jest.mock('@/components/editor/utils/get-prev-text', () => ({
   getPrevText: jest.fn()
 }))
 

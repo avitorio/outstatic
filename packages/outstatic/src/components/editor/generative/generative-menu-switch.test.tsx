@@ -1,9 +1,9 @@
 import { fireEvent, render, screen } from '@testing-library/react'
-import { useOutstatic } from '@/utils/hooks/useOutstatic'
+import { useOutstatic } from '@/utils/hooks/use-outstatic'
 import { useUpgradeDialog } from '@/components/ui/outstatic/upgrade-dialog-context'
 import GenerativeMenuSwitch from './generative-menu-switch'
 
-jest.mock('@/utils/hooks/useOutstatic', () => ({
+jest.mock('@/utils/hooks/use-outstatic', () => ({
   useOutstatic: jest.fn()
 }))
 

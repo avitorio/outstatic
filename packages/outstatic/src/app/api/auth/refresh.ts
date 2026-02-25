@@ -10,7 +10,7 @@ import {
  * API endpoint to refresh the authentication token
  * This is called from the client side when a 401/403 error is detected
  */
-export default async function refresh(request: Request): Promise<Response> {
+export default async function refresh(_request: Request): Promise<Response> {
   try {
     // Get the current session
     const session = await getLoginSession()

@@ -1,0 +1,34 @@
+import { API_MEDIA_PATH } from './constants'
+
+// Function to replace the API image paths with the production paths.
+// Used when saving the content.
+interface ReplaceImagePathParams {
+  markdownContent: string
+  basePath: string
+  repoInfo: string
+  publicMediaPath: string
+}
+
+function replaceImagePath({
+  markdownContent,
+  basePath,
+  repoInfo,
+  publicMediaPath
+}: ReplaceImagePathParams): string {
+  const apiMediaPath = `${basePath}${API_MEDIA_PATH}${repoInfo}`
+  const regex = new RegExp(
+    `!\\[([^\\]]*?)\\]\\((${apiMediaPath})([^\\)]+?)\\)`,
+    'g'
+  )
+
+  let updatedMarkdown = markdownContent.replace(
+    regex,
+    (_match, altText, _apiPath, filename) => {
+      return `![${altText}](/${publicMediaPath}${filename})`
+    }
+  )
+
+  return updatedMarkdown
+}
+
+export default replaceImagePath

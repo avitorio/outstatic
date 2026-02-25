@@ -7,8 +7,8 @@ import {
   Document,
   customFieldTypes
 } from '@/types'
-import { useGetCollectionSchema } from '@/utils/hooks/useGetCollectionSchema'
-import { useOutstatic } from '@/utils/hooks/useOutstatic'
+import { useGetCollectionSchema } from '@/utils/hooks/use-get-collection-schema'
+import { useOutstatic } from '@/utils/hooks/use-outstatic'
 import { camelCase, capitalCase } from 'change-case'
 import { useEffect, useState } from 'react'
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form'
@@ -78,7 +78,7 @@ export const AddCustomFieldDialog: React.FC<AddCustomFieldDialogProps> = ({
 }) => {
   const [adding, setAdding] = useState(false)
   const { setHasChanges } = useOutstatic()
-  const [error, setError] = useState('')
+  const [, setError] = useState('')
   const [fieldName, setFieldName] = useState(fieldTitle ?? '')
   const methods = useForm<CustomFieldForm>({
     mode: 'onChange',
@@ -93,7 +93,7 @@ export const AddCustomFieldDialog: React.FC<AddCustomFieldDialogProps> = ({
     if (schema) {
       setCustomFields(schema.properties)
     }
-  }, [schema])
+  }, [schema, setCustomFields])
 
   const onSubmit: SubmitHandler<CustomFieldForm> = async (
     data: CustomFieldForm

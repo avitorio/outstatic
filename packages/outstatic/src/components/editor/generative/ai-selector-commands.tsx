@@ -7,7 +7,7 @@ import {
 } from 'lucide-react'
 import { useEffect } from 'react'
 import { useEditor } from '@/components/editor/editor-context'
-import { getPrevText } from '@/components/editor/utils/getPrevText'
+import { getPrevText } from '@/components/editor/utils/get-prev-text'
 import {
   CommandList,
   CommandGroup,

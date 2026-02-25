@@ -7,9 +7,9 @@ import {
   Document,
   customFieldTypes
 } from '@/types'
-import { useGetSingletonSchema } from '@/utils/hooks/useGetSingletonSchema'
-import { useOutstatic } from '@/utils/hooks/useOutstatic'
-import { camelCase, capitalCase } from 'change-case'
+import { useGetSingletonSchema } from '@/utils/hooks/use-get-singleton-schema'
+import { useOutstatic } from '@/utils/hooks/use-outstatic'
+import { camelCase } from 'change-case'
 import { useEffect, useState } from 'react'
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form'
 import {
@@ -28,7 +28,7 @@ import {
   FormMessage
 } from '@/components/ui/shadcn/form'
 import { SpinnerIcon } from '@/components/ui/outstatic/spinner-icon'
-import { useSingletonFieldCommit } from '@/utils/hooks/useSingletonFieldCommit'
+import { useSingletonFieldCommit } from '@/utils/hooks/use-singleton-field-commit'
 import {
   Dialog,
   DialogContent,
@@ -78,7 +78,7 @@ export const AddSingletonFieldDialog: React.FC<
 }) => {
   const [adding, setAdding] = useState(false)
   const { setHasChanges } = useOutstatic()
-  const [error, setError] = useState('')
+  const [, setError] = useState('')
   const [fieldName, setFieldName] = useState(fieldTitle ?? '')
   const methods = useForm<CustomFieldForm>({
     mode: 'onChange',
@@ -93,7 +93,7 @@ export const AddSingletonFieldDialog: React.FC<
     if (schema) {
       setCustomFields(schema.properties)
     }
-  }, [schema])
+  }, [schema, setCustomFields])
 
   const onSubmit: SubmitHandler<CustomFieldForm> = async (
     data: CustomFieldForm

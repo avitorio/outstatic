@@ -5,7 +5,7 @@ import { ReactNode, useState } from 'react'
 import tippy, { type Instance as TippyInstance } from 'tippy.js'
 import { BaseCommandList } from '@/components/editor/extensions/slash-command/BaseCommandList'
 import ImageCommandList from '@/components/editor/extensions/slash-command/ImageCommandList'
-import { getSuggestionItems } from '@/components/editor/extensions/slash-command/getSuggestionItems'
+import { getSuggestionItems } from '@/components/editor/extensions/slash-command/get-suggestion-items'
 import type { UpgradeDialogHandler } from '@/components/ui/outstatic/upgrade-dialog-context'
 
 export type CommandItemProps = {

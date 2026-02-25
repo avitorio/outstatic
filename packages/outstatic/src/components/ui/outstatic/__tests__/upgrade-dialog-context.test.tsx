@@ -1,12 +1,12 @@
 import { fireEvent, render, screen } from '@testing-library/react'
 
-import { useOutstatic } from '@/utils/hooks/useOutstatic'
+import { useOutstatic } from '@/utils/hooks/use-outstatic'
 import {
   UpgradeDialogProvider,
   useUpgradeDialog
 } from '../upgrade-dialog-context'
 
-jest.mock('@/utils/hooks/useOutstatic', () => ({
+jest.mock('@/utils/hooks/use-outstatic', () => ({
   useOutstatic: jest.fn()
 }))
 

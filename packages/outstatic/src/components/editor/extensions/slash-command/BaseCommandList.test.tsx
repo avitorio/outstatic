@@ -1,18 +1,18 @@
 import { fireEvent, render, screen } from '@testing-library/react'
 import { useCompletion } from '@ai-sdk/react'
-import { useOutstatic } from '@/utils/hooks/useOutstatic'
-import { getPrevText } from '@/components/editor/utils/getPrevText'
+import { useOutstatic } from '@/utils/hooks/use-outstatic'
+import { getPrevText } from '@/components/editor/utils/get-prev-text'
 import { BaseCommandList } from './BaseCommandList'
 
 jest.mock('@ai-sdk/react', () => ({
   useCompletion: jest.fn()
 }))
 
-jest.mock('@/utils/hooks/useOutstatic', () => ({
+jest.mock('@/utils/hooks/use-outstatic', () => ({
   useOutstatic: jest.fn()
 }))
 
-jest.mock('@/components/editor/utils/getPrevText', () => ({
+jest.mock('@/components/editor/utils/get-prev-text', () => ({
   getPrevText: jest.fn()
 }))
 

@@ -4,13 +4,13 @@ import { DocumentTitleInput } from '@/components/document-title-input'
 import { MDEditor } from '@/components/editor/editor'
 import { DocumentContext } from '@/context'
 import { CustomFieldsType, Document, MDExtensions } from '@/types'
-import { deepReplace } from '@/utils/deepReplace'
-import { useSingletonUpdateEffect } from '@/utils/hooks/useSingletonUpdateEffect'
-import { useFileStore } from '@/utils/hooks/useFileStore'
-import { useGetSingletonSchema } from '@/utils/hooks/useGetSingletonSchema'
-import { useGetConfig } from '@/utils/hooks/useGetConfig'
-import { useOutstatic } from '@/utils/hooks/useOutstatic'
-import useSubmitSingleton from '@/utils/hooks/useSubmitSingleton'
+import { deepReplace } from '@/utils/deep-replace'
+import { useSingletonUpdateEffect } from '@/utils/hooks/use-singleton-update-effect'
+import { useFileStore } from '@/utils/hooks/use-file-store'
+import { useGetSingletonSchema } from '@/utils/hooks/use-get-singleton-schema'
+import { useGetConfig } from '@/utils/hooks/use-get-config'
+import { useOutstatic } from '@/utils/hooks/use-outstatic'
+import useSubmitSingleton from '@/utils/hooks/use-submit-singleton'
 import { useTipTap } from '@/components/editor/hooks/use-tip-tap'
 import { editDocumentSchema } from '@/utils/schemas/edit-document-schema'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -23,12 +23,12 @@ import { toast } from 'sonner'
 import MediaSettingsDialog from '@/components/ui/outstatic/media-settings-dialog'
 import { MarkdownExtensionDialog } from '@/components/ui/outstatic/markdown-extension-dialog'
 import { useEditor } from '@/components/editor/editor-context'
-import { useSingletons } from '@/utils/hooks/useSingletons'
+import { useSingletons } from '@/utils/hooks/use-singletons'
 import NewSingletonModal from './_components/new-singleton-modal'
 import { useSearchParams } from 'next/navigation'
-import { useGetFileByPath } from '@/utils/hooks/useGetFileByPath'
-import { parseContent } from '@/utils/parseContent'
-import { getLocalDate } from '@/utils/getLocalDate'
+import { useGetFileByPath } from '@/utils/hooks/use-get-file-by-path'
+import { parseContent } from '@/utils/parse-content'
+import { getLocalDate } from '@/utils/get-local-date'
 import matter from 'gray-matter'
 import { slugify } from 'transliteration'
 
@@ -203,7 +203,9 @@ export default function EditSingleton({ slug: initialSlug }: { slug: string }) {
     publicMediaPath,
     repoMediaPath,
     methods,
-    setHasChanges
+    setHasChanges,
+    session?.user?.image,
+    session?.user?.name
   ])
 
   // Update URL when slug changes (after first save of new singleton)
@@ -274,7 +276,7 @@ export default function EditSingleton({ slug: initialSlug }: { slug: string }) {
     if (mediaPathUpdated) {
       onSubmit(methods.getValues())
     }
-  }, [mediaPathUpdated])
+  }, [mediaPathUpdated, methods, onSubmit])
 
   // Submit the document after singleton content path is selected (not for openFile case)
   // For new singletons: show extension dialog if config.mdExtension is missing
@@ -346,7 +348,7 @@ export default function EditSingleton({ slug: initialSlug }: { slug: string }) {
 
   // Watch for changes in form values and update hasChanges state
   useEffect(() => {
-    const subscription = methods.watch((value, { name, type }) => {
+    const subscription = methods.watch((_, { name, type }) => {
       if (type === 'change' || name === 'content') {
         setHasChanges(true)
       }

@@ -12,8 +12,8 @@ import {
 import { Button } from '@/components/ui/shadcn/button'
 import { SpinnerIcon } from '@/components/ui/outstatic/spinner-icon'
 import { useCustomFieldCommit } from './use-custom-field-commit'
-import { useGetCollectionSchema } from '@/utils/hooks/useGetCollectionSchema'
-import { useOutstatic } from '@/utils/hooks/useOutstatic'
+import { useGetCollectionSchema } from '@/utils/hooks/use-get-collection-schema'
+import { useOutstatic } from '@/utils/hooks/use-outstatic'
 import { CustomFieldsType } from '@/types'
 
 interface DeleteCustomFieldDialogProps {
@@ -43,7 +43,7 @@ export const DeleteCustomFieldDialog: React.FC<
 }) => {
   const { setHasChanges } = useOutstatic()
   const [deleting, setDeleting] = useState(false)
-  const { data: schema, isLoading } = useGetCollectionSchema({ collection })
+  const { data: schema } = useGetCollectionSchema({ collection })
 
   const capiHelper = useCustomFieldCommit()
 
@@ -51,7 +51,7 @@ export const DeleteCustomFieldDialog: React.FC<
     if (schema) {
       setCustomFields(schema.properties)
     }
-  }, [schema])
+  }, [schema, setCustomFields])
 
   const deleteField = async (name: string) => {
     setDeleting(true)

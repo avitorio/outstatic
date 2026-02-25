@@ -12,7 +12,7 @@ import {
   UpgradeDialog,
   type UpgradeFeature
 } from '@/components/ui/outstatic/upgrade-dialog'
-import { useOutstatic } from '@/utils/hooks/useOutstatic'
+import { useOutstatic } from '@/utils/hooks/use-outstatic'
 
 export type UpgradeDialogHandler = (
   accountSlug?: string,
