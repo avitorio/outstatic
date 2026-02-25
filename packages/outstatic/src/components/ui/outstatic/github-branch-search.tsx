@@ -2,23 +2,16 @@
 import { SearchCombobox } from '@/components/ui/outstatic/search-combobox'
 import { GET_BRANCHES } from '@/graphql/queries/branches'
 import { useOutstatic, useLocalData } from '@/utils/hooks/use-outstatic'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { CreateBranchDialog } from '@/components/ui/outstatic/create-branch-dialog'
 import { PlusCircle } from 'lucide-react'
 import { Button } from '../shadcn/button'
 import { useInitialData } from '@/utils/hooks/use-initial-data'
 import { useQueryClient } from '@tanstack/react-query'
+import { useDebouncedCallback } from 'use-debounce'
 
 interface Branch {
   name: string
-}
-
-const debounce = (func: Function, delay: number) => {
-  let timeoutId: NodeJS.Timeout | null = null
-  return (...args: any[]) => {
-    if (timeoutId) clearTimeout(timeoutId)
-    timeoutId = setTimeout(() => func(...args), delay)
-  }
 }
 
 interface GitHubBranchSearchProps {
@@ -43,62 +36,84 @@ export const GitHubBranchSearch = ({
   const [showCreateBranchDialog, setShowCreateBranchDialog] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
   const [mounted, setMounted] = useState(false)
+  const latestRequestIdRef = useRef(0)
+  const repoStateRef = useRef({ repoOwner, repoSlug, repoBranch, gqlClient })
+
+  useEffect(() => {
+    repoStateRef.current = { repoOwner, repoSlug, repoBranch, gqlClient }
+  }, [repoOwner, repoSlug, repoBranch, gqlClient])
 
   useEffect(() => {
     setMounted(true)
   }, [])
 
   const fetchBranches = useCallback(
-    (keyword: string) => {
-      const debouncedFetch = debounce(async (kw: string) => {
-        if (repoOwner && repoSlug && gqlClient) {
-          setIsLoading(true)
-          try {
-            const variables = {
-              owner: repoOwner,
-              name: repoSlug,
-              first: 10,
-              query: kw
-            }
+    async (keyword: string, requestId: number) => {
+      const { repoOwner, repoSlug, repoBranch, gqlClient } = repoStateRef.current
 
-            const response = await gqlClient.request(GET_BRANCHES, variables)
-
-            const branches: Branch[] =
-              response.repository?.refs?.nodes
-                ?.filter((node): node is { name: string } => node !== null)
-                .map((node) => ({
-                  name: node.name
-                })) ?? []
-
-            // Check if repoBranch is in the response, if not add it
-            if (
-              repoBranch &&
-              !branches.some((branch) => branch.name === repoBranch)
-            ) {
-              branches.unshift({ name: repoBranch })
-            }
-
-            setSuggestions(branches)
-          } catch (error) {
-            console.error(
-              'There was a problem with the GraphQL operation:',
-              error
-            )
-          } finally {
-            setIsLoading(false)
-          }
+      if (!repoOwner || !repoSlug || !gqlClient) {
+        if (requestId === latestRequestIdRef.current) {
+          setSuggestions(repoBranch ? [{ name: repoBranch }] : [])
+          setIsLoading(false)
         }
-      }, 300)
-      debouncedFetch(keyword)
+        return
+      }
+
+      try {
+        const variables = {
+          owner: repoOwner,
+          name: repoSlug,
+          first: 10,
+          query: keyword
+        }
+
+        const response = await gqlClient.request(GET_BRANCHES, variables)
+
+        if (requestId !== latestRequestIdRef.current) return
+
+        const branches: Branch[] =
+          response.repository?.refs?.nodes
+            ?.filter((node): node is { name: string } => node !== null)
+            .map((node) => ({
+              name: node.name
+            })) ?? []
+
+        // Keep current branch selectable even if GraphQL search does not return it.
+        if (repoBranch && !branches.some((branch) => branch.name === repoBranch)) {
+          branches.unshift({ name: repoBranch })
+        }
+
+        setSuggestions(branches)
+      } catch (error) {
+        if (requestId === latestRequestIdRef.current) {
+          setSuggestions(repoBranch ? [{ name: repoBranch }] : [])
+        }
+        console.error('There was a problem with the GraphQL operation:', error)
+      } finally {
+        if (requestId === latestRequestIdRef.current) {
+          setIsLoading(false)
+        }
+      }
     },
-    [repoOwner, repoSlug, gqlClient, repoBranch]
+    []
   )
+
+  const debouncedFetchBranches = useDebouncedCallback(fetchBranches, 300)
 
   useEffect(() => {
     if (isOpen) {
-      fetchBranches(query === repoBranch ? '' : query)
+      const requestId = latestRequestIdRef.current + 1
+      latestRequestIdRef.current = requestId
+      setIsLoading(true)
+      debouncedFetchBranches(query === repoBranch ? '' : query, requestId)
+    } else {
+      latestRequestIdRef.current += 1
+      debouncedFetchBranches.cancel()
+      setIsLoading(false)
     }
-  }, [query, isOpen, fetchBranches, repoBranch])
+
+    return () => debouncedFetchBranches.cancel()
+  }, [query, isOpen, repoBranch, debouncedFetchBranches])
 
   useEffect(() => {
     if (value && value !== repoBranch) {

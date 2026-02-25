@@ -2,15 +2,21 @@ import { AdminLayout } from '@/components/admin-layout'
 import { GitHubRepoSearch } from '@/components/ui/outstatic/github-repo-search'
 import { Button } from '@/components/ui/shadcn/button'
 import { useCollections } from '@/utils/hooks/use-collections'
+import { useOutstatic } from '@/utils/hooks/use-outstatic'
 import { useState } from 'react'
 import { MediaSettings } from './_components/media-settings'
 import { DocumentFormatSettings } from './_components/document-format-settings'
 import { useRebuildMetadata } from '@/utils/hooks/use-rebuild-metadata'
 import { Card } from '@/components/ui/shadcn/card'
+import { ExternalLink } from 'lucide-react'
+import Link from 'next/link'
 
 export default function Settings() {
   const [rebuild, setRebuilding] = useState(false)
   const { data: collections } = useCollections()
+  const { repoOwner, repoSlug } = useOutstatic()
+  const repositoryUrl =
+    repoOwner && repoSlug ? `https://github.com/${repoOwner}/${repoSlug}` : ''
 
   const rebuildMetadata = useRebuildMetadata()
 
@@ -26,7 +32,18 @@ export default function Settings() {
             <label className="block mb-2 text-sm font-medium text-foreground">
               Repository
             </label>
-            <GitHubRepoSearch />
+            <div className="flex items-center gap-2">
+              <div className="flex-1">
+                <GitHubRepoSearch />
+              </div>
+              {repositoryUrl ? (
+                <Link target="_blank" rel="noreferrer" href={repositoryUrl}>
+                  <Button variant="outline" size="icon" title="Open repository">
+                    <ExternalLink className="h-4 w-4" />
+                  </Button>
+                </Link>
+              ) : null}
+            </div>
           </div>
           <p className="text-sm">
             <span className="font-semibold">Optional:</span> You can set default
