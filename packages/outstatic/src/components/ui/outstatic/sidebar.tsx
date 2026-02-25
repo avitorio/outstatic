@@ -43,6 +43,13 @@ import { useCollapsibleState } from '@/utils/hooks/use-collapsible-state'
 
 export type SidebarConfig = z.infer<typeof NavigationConfigSchema>
 
+function isExactRoute(path: string, currentPath: string) {
+  const normalizedPath = (path.split('?')[0] || '').replace(/\/+$/, '') || '/'
+  const normalizedCurrentPath = currentPath.replace(/\/+$/, '') || '/'
+
+  return normalizedPath === normalizedCurrentPath
+}
+
 // Type guard to check if a child is a RouteGroup (has children but no path)
 function isRouteGroup(child: unknown): child is {
   label: string
@@ -191,13 +198,14 @@ function SubRouteGroup({
                   currentPath,
                   child.end
                 )
+                const isCurrentRoute = isExactRoute(child.path, currentPath)
 
                 return (
                   <SidebarMenuSubItem key={child.path}>
                     <SidebarMenuSubButton isActive={isActive} asChild>
                       <Link
                         className={cn(linkClassName, {
-                          'pointer-events-none': isActive
+                          'pointer-events-none': isCurrentRoute
                         })}
                         href={child.path}
                       >
@@ -416,6 +424,10 @@ export function SidebarNavigation({
                               currentPath,
                               end
                             )
+                            const isCurrentRoute = isExactRoute(
+                              path,
+                              currentPath
+                            )
 
                             return (
                               <SidebarMenuButton
@@ -427,7 +439,7 @@ export function SidebarNavigation({
                                   className={cn('flex items-center', {
                                     'mx-auto w-full gap-0! [&>svg]:flex-1':
                                       !open,
-                                    'pointer-events-none': isActive
+                                    'pointer-events-none': isCurrentRoute
                                   })}
                                   href={path}
                                   target={newTab ? '_blank' : '_self'}
@@ -490,6 +502,11 @@ export function SidebarNavigation({
                                               currentPath,
                                               subChild.end
                                             )
+                                            const isCurrentRoute =
+                                              isExactRoute(
+                                                subChild.path,
+                                                currentPath
+                                              )
 
                                             const linkClassName = cn(
                                               'flex items-center',
@@ -520,7 +537,7 @@ export function SidebarNavigation({
                                                       linkClassName,
                                                       {
                                                         'pointer-events-none':
-                                                          isActive
+                                                          isCurrentRoute
                                                       }
                                                     )}
                                                     href={subChild.path}
