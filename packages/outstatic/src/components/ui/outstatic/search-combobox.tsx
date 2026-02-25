@@ -81,18 +81,18 @@ export function SearchCombobox({
             ? loadingPlaceholder
             : value
               ? (() => {
-                  const selectedRecord = data.find(
-                    (dataRecord) => dataRecord.value === value
-                  )
-                  return (
-                    <>
-                      {selectedRecord?.icon && (
-                        <selectedRecord.icon className="h-4 w-4 inline-block" />
-                      )}
-                      {selectedRecord?.label}
-                    </>
-                  )
-                })()
+                const selectedRecord = data.find(
+                  (dataRecord) => dataRecord.value === value
+                )
+                return (
+                  <>
+                    {selectedRecord?.icon && (
+                      <selectedRecord.icon className="h-4 w-4 inline-block" />
+                    )}
+                    {selectedRecord?.label}
+                  </>
+                )
+              })()
               : selectPlaceholder}
         </span>
       ) : null}
@@ -105,7 +105,7 @@ export function SearchCombobox({
             className={cn(
               buttonClassName,
               size === 'sm' &&
-                'focus-visible:outline-hidden focus-visible:ring-0 focus-visible:ring-offset-0 px-1'
+              'focus-visible:outline-hidden focus-visible:ring-0 focus-visible:ring-offset-0 px-1'
             )}
             disabled={disabled}
             size={size}
@@ -120,18 +120,18 @@ export function SearchCombobox({
                 ? loadingPlaceholder
                 : value
                   ? (() => {
-                      const selectedRecord = data.find(
-                        (dataRecord) => dataRecord.value === value
-                      )
-                      return (
-                        <>
-                          {selectedRecord?.icon && (
-                            <selectedRecord.icon className="h-4 w-4 inline-block" />
-                          )}
-                          {selectedRecord?.label}
-                        </>
-                      )
-                    })()
+                    const selectedRecord = data.find(
+                      (dataRecord) => dataRecord.value === value
+                    )
+                    return (
+                      <>
+                        {selectedRecord?.icon && (
+                          <selectedRecord.icon className="h-4 w-4 inline-block" />
+                        )}
+                        {selectedRecord?.label}
+                      </>
+                    )
+                  })()
                   : selectPlaceholder}
             </span>
             <div>
@@ -155,7 +155,7 @@ export function SearchCombobox({
             <CommandEmpty>
               {isLoading ? loadingPlaceholder : resultsPlaceholder}
             </CommandEmpty>
-            <CommandList className="max-h-[200px]">
+            <CommandList className="max-h-[200px] overflow-y-auto">
               <CommandGroup>
                 {data.map((dataRecord) => (
                   <CommandItem

@@ -15,7 +15,7 @@ import { useTipTap } from '@/components/editor/hooks/use-tip-tap'
 import { editDocumentSchema } from '@/utils/schemas/edit-document-schema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import Head from 'next/head'
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { convertSchemaToZod } from '@/utils/zod'
 import { FormMessage } from '@/components/ui/shadcn/form'
@@ -78,8 +78,8 @@ export default function EditSingleton({ slug: initialSlug }: { slug: string }) {
   const [metadata, setMetadata] = useState<Record<string, any>>({})
   const [showMediaPathDialog, setShowMediaPathDialog] = useState(false)
   const [showExtensionDialog, setShowExtensionDialog] = useState(false)
-  const pendingFormDataRef = useRef<Document | null>(null)
-  const pendingSingletonPathRef = useRef<string | null>(null)
+  const [pendingConfigMdExtension, setPendingConfigMdExtension] =
+    useState<MDExtensions | null>(null)
   const editDocument = (property: string, value: any) => {
     const formValues = methods.getValues()
     const newValue = deepReplace(formValues, property, value)
@@ -279,21 +279,21 @@ export default function EditSingleton({ slug: initialSlug }: { slug: string }) {
   }, [mediaPathUpdated, methods, onSubmit])
 
   // Submit the document after singleton content path is selected (not for openFile case)
-  // For new singletons: show extension dialog if config.mdExtension is missing
   useEffect(() => {
     if (singletonContentPath && isNew && !openFilePath) {
-      // If config.mdExtension is missing, show extension dialog first
-      if (!config?.mdExtension) {
-        pendingFormDataRef.current = methods.getValues()
-        pendingSingletonPathRef.current = singletonContentPath
-        setShowExtensionDialog(true)
-        return
-      }
+      const submitOptions = pendingConfigMdExtension
+        ? {
+            configUpdate: {
+              mdExtension: pendingConfigMdExtension
+            }
+          }
+        : undefined
+
       // @ts-ignore
-      onSubmit(methods.getValues())
+      onSubmit(methods.getValues(), submitOptions)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [singletonContentPath, config?.mdExtension])
+  }, [singletonContentPath, pendingConfigMdExtension])
 
   // Set extension from config when available (for new singletons)
   useEffect(() => {
@@ -301,6 +301,12 @@ export default function EditSingleton({ slug: initialSlug }: { slug: string }) {
       setExtension(config.mdExtension)
     }
   }, [isNew, openFilePath, config?.mdExtension])
+
+  useEffect(() => {
+    if (!isNew) {
+      setPendingConfigMdExtension(null)
+    }
+  }, [isNew])
 
   const handleSave = (data: Document) => {
     // Check media paths first
@@ -311,7 +317,11 @@ export default function EditSingleton({ slug: initialSlug }: { slug: string }) {
     // Show modal for new singletons to select save location
     // Skip modal if we're opening an existing file (openFilePath is present)
     if (isNew && !singletonContentPath && !openFilePath) {
-      setShowSingletonModal(true)
+      if (!config?.mdExtension && !pendingConfigMdExtension) {
+        setShowExtensionDialog(true)
+      } else {
+        setShowSingletonModal(true)
+      }
       return
     }
 
@@ -327,6 +337,13 @@ export default function EditSingleton({ slug: initialSlug }: { slug: string }) {
       return onSubmit(data, { configUpdate: { mdExtension: extension } })
     }
 
+    if (isNew && !openFilePath && pendingConfigMdExtension) {
+      // @ts-ignore
+      return onSubmit(data, {
+        configUpdate: { mdExtension: pendingConfigMdExtension }
+      })
+    }
+
     // Normal save
     // @ts-ignore
     return onSubmit(data)
@@ -334,16 +351,8 @@ export default function EditSingleton({ slug: initialSlug }: { slug: string }) {
 
   const handleExtensionDialogSave = (selectedExtension: MDExtensions) => {
     setExtension(selectedExtension)
-
-    // Save singleton with the selected extension
-    if (pendingFormDataRef.current) {
-      // @ts-ignore
-      onSubmit(pendingFormDataRef.current, {
-        configUpdate: { mdExtension: selectedExtension }
-      })
-      pendingFormDataRef.current = null
-      pendingSingletonPathRef.current = null
-    }
+    setPendingConfigMdExtension(selectedExtension)
+    setShowSingletonModal(true)
   }
 
   // Watch for changes in form values and update hasChanges state
@@ -434,12 +443,12 @@ export default function EditSingleton({ slug: initialSlug }: { slug: string }) {
               open={showSingletonModal}
               onOpenChange={setShowSingletonModal}
               loading={loading}
+              extension={extension}
               singletonTitle={methods.getValues('title') || 'Singleton'}
               onSave={(path) => {
                 setSingletonContentPath(path)
                 setShowSingletonModal(false)
-                // The effect watching singletonContentPath will handle the rest
-                // including showing the extension dialog if needed
+                // The effect watching singletonContentPath will handle submit.
               }}
             />
             <MarkdownExtensionDialog

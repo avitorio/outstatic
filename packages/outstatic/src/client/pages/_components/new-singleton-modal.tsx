@@ -24,6 +24,7 @@ import { SpinnerIcon } from '@/components/ui/outstatic/spinner-icon'
 import { Checkbox } from '@/components/ui/shadcn/checkbox'
 import { Input } from '@/components/ui/shadcn/input'
 import { slugify } from 'transliteration'
+import type { MDExtensions } from '@/types'
 
 type NewSingletonModalProps = {
   open: boolean
@@ -31,6 +32,7 @@ type NewSingletonModalProps = {
   onSave: (path: string) => void
   loading: boolean
   singletonTitle: string
+  extension: MDExtensions
 }
 
 export default function NewSingletonModal({
@@ -38,7 +40,8 @@ export default function NewSingletonModal({
   onOpenChange,
   onSave,
   loading,
-  singletonTitle
+  singletonTitle,
+  extension
 }: NewSingletonModalProps) {
   const { contentPath, monorepoPath } = useOutstatic()
 
@@ -67,8 +70,8 @@ export default function NewSingletonModal({
     allowedChars: 'a-zA-Z0-9.'
   })
   const singletonFilePath = selectedPath
-    ? `${selectedPath}/${singletonSlug}.{md|mdx}`
-    : `${singletonSlug}.{md|mdx}`
+    ? `${selectedPath}/${singletonSlug}.${extension}`
+    : `${singletonSlug}.${extension}`
 
   const handleSave = () => {
     if (!outstaticFolder && createFolder && !newFolderSlug) {
@@ -274,8 +277,6 @@ export default function NewSingletonModal({
 
             <Label>File Preview</Label>
             <PathBreadcrumbs path={'/' + singletonFilePath} />
-
-            <PathBreadcrumbs path={'/' + selectedPath} />
             <div className="flex justify-between pt-4">
               <Button variant="outline" onClick={() => setStep(2)}>
                 Back

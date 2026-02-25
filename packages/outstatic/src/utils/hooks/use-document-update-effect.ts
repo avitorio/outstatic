@@ -49,12 +49,15 @@ export const useDocumentUpdateEffect = ({
     (collectionEntry) => collectionEntry.slug === collection
   )
 
-  const collectionPath = collectionInfo?.path
-    ? `${collectionInfo.path}/`
-    : ''
+  const collectionPath =
+    collectionInfo === undefined
+      ? undefined
+      : collectionInfo.path
+        ? `${collectionInfo.path}/`
+        : ''
 
   const { data: document } = useGetDocument({
-    filePath: `${collectionPath}${slug}`,
+    filePath: `${collectionPath ?? ''}${slug}`,
     enabled: slug !== 'new' && collectionPath !== undefined
   })
 

@@ -22,6 +22,16 @@ type UseCollectionsOptions = {
   enabled?: boolean
 }
 
+const SINGLETONS_COLLECTION_SLUG = '_singletons'
+
+function filterSingletonsCollection(
+  collections: CollectionType[] = []
+): CollectionType[] {
+  return collections.filter(
+    (collection) => collection.slug !== SINGLETONS_COLLECTION_SLUG
+  )
+}
+
 export function useCollections(options?: UseCollectionsOptions) {
   const { enabled = true } = options ?? {}
   const { repoOwner, repoSlug, repoBranch, isPending, gqlClient, ostContent } =
@@ -50,13 +60,18 @@ export function useCollections(options?: UseCollectionsOptions) {
 
         if (collectionsObject?.text) {
           collectionsData = JSON.parse(collectionsObject.text)
-          const collections = collectionsData ?? []
+          const collections = filterSingletonsCollection(collectionsData ?? [])
 
           return collections
         }
 
-        // If the collections.json file doesn't exist, fetch the collections from the outstatic folder
-        // and create the collections.json file
+        // Legacy bootstrap:
+        // Before collections.json existed, Outstatic inferred collections from
+        // folders under outstatic/content. We keep this fallback for older
+        // installs, but `_singletons` is a system directory and must never be
+        // treated as a collection.
+        // We still generate collections.json here so legacy installs are
+        // upgraded to the current source of truth.
         if (collectionJson === null || collectionsObject === null) {
           const data =
             isPending || !repoOwner || !repoSlug || !repoBranch
@@ -77,20 +92,19 @@ export function useCollections(options?: UseCollectionsOptions) {
           }
 
           collectionsData = entries
-            .map((entry) =>
-              entry.type === 'tree'
-                ? {
-                    title: sentenceCase(entry.name, {
-                      split: (str) =>
-                        str.split(/([^A-Za-z0-9\.]+)/g).filter(Boolean)
-                    }),
-                    slug: entry.name,
-                    path: `${ostContent}/${entry.name}`,
-                    children: []
-                  }
-                : undefined
+            .filter(
+              (entry) =>
+                entry.type === 'tree' &&
+                entry.name !== SINGLETONS_COLLECTION_SLUG
             )
-            .filter(Boolean) as CollectionsType
+            .map((entry) => ({
+              title: sentenceCase(entry.name, {
+                split: (str) => str.split(/([^A-Za-z0-9\.]+)/g).filter(Boolean)
+              }),
+              slug: entry.name,
+              path: `${ostContent}/${entry.name}`,
+              children: []
+            })) as CollectionsType
 
           const oid = await fetchOid()
 
