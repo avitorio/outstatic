@@ -26,7 +26,6 @@
     "docs": {
       "env": [
         "OST_AI_MODEL",
-        "NEXT_PUBLIC_GA_ID",
         "NEXT_PUBLIC_TINYBIRD_TOKEN",
         "NODE_ENV",
         "OST_CONTENT_PATH",
@@ -41,7 +40,6 @@
         "OPENAI_API_KEY",
         "OST_GITHUB_CALLBACK_URL",
         "OST_BASE_PATH",
-        "OST_DETACH",
         "OST_OUTSTATIC_PATH",
         "OUTSTATIC_API_KEY",
         "OST_REPO_MEDIA_PATH",
@@ -69,7 +67,6 @@
         "OPENAI_BASE_URL",
         "OST_GITHUB_CALLBACK_URL",
         "OST_BASE_PATH",
-        "OST_DETACH",
         "OST_OUTSTATIC_PATH",
         "OST_REPO_MEDIA_PATH",
         "OST_PUBLIC_MEDIA_PATH",

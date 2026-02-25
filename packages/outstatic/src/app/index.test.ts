@@ -42,8 +42,7 @@ describe(Outstatic, () => {
       },
       missingEnvVars: false,
       hasAIProviderKey: !!process.env.OPENAI_API_KEY,
-      basePath: process.env.OST_BASE_PATH || '',
-      ostDetach: process.env.OST_DETACH || false
+      basePath: process.env.OST_BASE_PATH || ''
     })
   })
 })

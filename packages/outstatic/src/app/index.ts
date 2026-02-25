@@ -30,7 +30,6 @@ export type OutstaticData = {
   missingEnvVars: EnvVarsType | false
   hasAIProviderKey: boolean
   basePath: string
-  ostDetach: boolean
   ostContent?: string
   dashboardRoute: string
   githubGql: string
@@ -136,7 +135,6 @@ export async function Outstatic({
     hasAIProviderKey:
       !!process.env.OPENAI_API_KEY || !!process.env.AI_GATEWAY_API_KEY,
     basePath: process.env.OST_BASE_PATH || '',
-    ostDetach: !!process.env.OST_DETACH,
     pages: DEFAULT_PAGES,
     dashboardRoute: DEFAULT_DASHBOARD_ROUTE,
     githubGql:

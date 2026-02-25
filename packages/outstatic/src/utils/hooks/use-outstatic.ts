@@ -123,8 +123,7 @@ export const useLocalData = () => {
         repoOwner: '',
         basePath: '',
         repoMediaPath: '',
-        publicMediaPath: '',
-        ostDetach: false
+        publicMediaPath: ''
       }
     },
     meta: { persist: true }

@@ -34,7 +34,6 @@ const mockProviderProps = {
   setHasChanges: () => {},
   basePath: '',
   missingEnvVars: { required: {}, optional: {} },
-  ostDetach: false,
   ostContent: 'anything',
   dashboardRoute: '/outstatic',
   githubGql: 'https://api.github.com/graphql',
