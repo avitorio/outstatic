@@ -138,12 +138,24 @@ export const useLocalData = () => {
 
   const setData = useCallback(
     (newData: Partial<OutstaticData> | ConfigType) => {
-      queryClient.setQueryData(queryKey, (oldData: OutstaticData) => ({
-        ...oldData,
+      const currentData =
+        queryClient.getQueryData<Record<string, unknown>>(queryKey) || {}
+
+      const hasChanges = Object.entries(newData).some(
+        ([key, value]) => currentData[key] !== value
+      )
+
+      if (!hasChanges) {
+        return
+      }
+
+      queryClient.setQueryData(queryKey, {
+        ...currentData,
         ...newData
-      }))
+      })
+
       queryClient.invalidateQueries({
-        queryKey: ['collections', 'config'],
+        queryKey: ['collections', 'config', 'singletons'],
         refetchType: 'all'
       })
     },

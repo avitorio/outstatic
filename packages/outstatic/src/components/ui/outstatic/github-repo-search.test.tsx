@@ -222,4 +222,14 @@ describe('GitHubRepoSearch', () => {
       repoBranch: 'main'
     })
   })
+
+  it('does not rewrite local data when the selected repository is unchanged', () => {
+    render(<GitHubRepoSearch />)
+
+    act(() => {
+      getLatestSearchComboboxProps().setValue('owner-one/repo-one')
+    })
+
+    expect(mockSetData).not.toHaveBeenCalled()
+  })
 })

@@ -7,7 +7,6 @@ import { CreateBranchDialog } from '@/components/ui/outstatic/create-branch-dial
 import { PlusCircle } from 'lucide-react'
 import { Button } from '../shadcn/button'
 import { useInitialData } from '@/utils/hooks/use-initial-data'
-import { useQueryClient } from '@tanstack/react-query'
 import { useDebouncedCallback } from 'use-debounce'
 
 interface Branch {
@@ -25,19 +24,18 @@ export const GitHubBranchSearch = ({
   size = 'default',
   onboarding = false
 }: GitHubBranchSearchProps) => {
-  const queryClient = useQueryClient()
   const { setData } = useLocalData()
   const [query, setQuery] = useState('')
   const { repoBranch: initialRepoBranch } = useInitialData()
   const { repoOwner, repoSlug, repoBranch, gqlClient, session } = useOutstatic()
   const [suggestions, setSuggestions] = useState<Branch[]>([])
   const [isLoading, setIsLoading] = useState<boolean>(false)
-  const [value, setValue] = useState('')
   const [showCreateBranchDialog, setShowCreateBranchDialog] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
   const [mounted, setMounted] = useState(false)
   const latestRequestIdRef = useRef(0)
   const repoStateRef = useRef({ repoOwner, repoSlug, repoBranch, gqlClient })
+  const selectedBranch = repoBranch || ''
 
   useEffect(() => {
     repoStateRef.current = { repoOwner, repoSlug, repoBranch, gqlClient }
@@ -100,6 +98,18 @@ export const GitHubBranchSearch = ({
 
   const debouncedFetchBranches = useDebouncedCallback(fetchBranches, 300)
 
+  const handleBranchSelect = useCallback(
+    (nextValue: string) => {
+      if (!nextValue) return
+
+      if (nextValue !== selectedBranch) {
+        setData({ repoBranch: nextValue })
+      }
+      setQuery(nextValue)
+    },
+    [selectedBranch, setData]
+  )
+
   useEffect(() => {
     if (isOpen) {
       const requestId = latestRequestIdRef.current + 1
@@ -116,15 +126,7 @@ export const GitHubBranchSearch = ({
   }, [query, isOpen, repoBranch, debouncedFetchBranches])
 
   useEffect(() => {
-    if (value && value !== repoBranch) {
-      setData({ repoBranch: value })
-      queryClient.invalidateQueries()
-    }
-  }, [value, repoBranch, setData, queryClient])
-
-  useEffect(() => {
     if (mounted && repoOwner && repoSlug && repoBranch) {
-      setValue(repoBranch)
       setQuery(repoBranch)
       setSuggestions([{ name: repoBranch }])
     }
@@ -160,15 +162,15 @@ export const GitHubBranchSearch = ({
           value: branch.name,
           label: branch.name
         }))}
-        value={value}
-        setValue={setValue}
+        value={selectedBranch}
+        setValue={handleBranchSelect}
         onValueChange={setQuery}
         isLoading={isLoading}
         disabled={!repoSlug || !repoOwner || !!initialRepoBranch}
         selectPlaceholder="Select a branch"
         searchPlaceholder="Search for a branch. Ex: main"
         resultsPlaceholder="No branches found"
-        loadingPlaceholder={size !== 'sm' ? 'loading...' : value}
+        loadingPlaceholder={size !== 'sm' ? 'loading...' : selectedBranch}
         variant={initialRepoBranch ? 'hidden' : variant}
         size={size}
         scrollFooter={() =>
@@ -219,7 +221,8 @@ export const GitHubBranchSearch = ({
           }
 
           setSuggestions([{ name: branchName }])
-          setValue(branchName)
+          setQuery(branchName)
+          setData({ repoBranch: branchName })
           setIsLoading(false)
         }}
       />

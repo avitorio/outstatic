@@ -2,7 +2,6 @@ import { act, render, waitFor } from '@testing-library/react'
 import { GitHubBranchSearch } from './github-branch-search'
 import { useInitialData } from '@/utils/hooks/use-initial-data'
 import { useLocalData, useOutstatic } from '@/utils/hooks/use-outstatic'
-import { useQueryClient } from '@tanstack/react-query'
 
 type SearchComboboxRecord = {
   value: string
@@ -40,14 +39,9 @@ jest.mock('@/utils/hooks/use-outstatic', () => ({
   useLocalData: jest.fn()
 }))
 
-jest.mock('@tanstack/react-query', () => ({
-  useQueryClient: jest.fn()
-}))
-
 const mockUseInitialData = useInitialData as jest.Mock
 const mockUseOutstatic = useOutstatic as jest.Mock
 const mockUseLocalData = useLocalData as jest.Mock
-const mockUseQueryClient = useQueryClient as jest.Mock
 
 const getLatestSearchComboboxProps = (): SearchComboboxProps => {
   const lastCall = searchComboboxMock.mock.calls[searchComboboxMock.mock.calls.length - 1]
@@ -72,7 +66,6 @@ describe('GitHubBranchSearch', () => {
 
     mockUseInitialData.mockReturnValue({ repoBranch: null })
     mockUseLocalData.mockReturnValue({ setData: jest.fn() })
-    mockUseQueryClient.mockReturnValue({ invalidateQueries: jest.fn() })
 
     // Return a new gqlClient object every render to simulate unstable identity.
     mockUseOutstatic.mockImplementation(() => ({

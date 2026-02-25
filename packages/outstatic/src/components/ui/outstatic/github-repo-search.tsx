@@ -85,14 +85,24 @@ export const GitHubRepoSearch: React.FC = () => {
       const selectedRepository = suggestions.find(
         (repo) => repo.full_name === nextValue
       )
+      const nextRepoBranch =
+        selectedRepository?.default_branch || repoBranch || ''
+
+      if (
+        repoOwner === nextRepoOwner &&
+        repoSlug === nextRepoSlug &&
+        repoBranch === nextRepoBranch
+      ) {
+        return
+      }
 
       setData({
         repoSlug: nextRepoSlug,
         repoOwner: nextRepoOwner,
-        repoBranch: selectedRepository?.default_branch || repoBranch || ''
+        repoBranch: nextRepoBranch
       })
     },
-    [repoBranch, setData, suggestions]
+    [repoBranch, repoOwner, repoSlug, setData, suggestions]
   )
 
   useEffect(() => {

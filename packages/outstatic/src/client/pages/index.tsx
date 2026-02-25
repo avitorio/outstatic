@@ -52,18 +52,29 @@ export const Main = ({ params }: { params: { ost: string[] } }) => {
   const { repoSlug, repoOwner, repoBranch, isPending, session } = useOutstatic()
   const { data: repository } = useGetRepository()
   const { setData, data, isPending: localPending } = useLocalData()
+  const localRepoBranch = data.repoBranch
+  const sessionLogin = session?.user.login
 
   useEffect(() => {
-    if (repository && !repoBranch && !data.repoBranch) {
+    if (repository && !repoBranch && !localRepoBranch) {
       const defaultBranch = repository.defaultBranchRef?.name
       if (defaultBranch) {
         setData({ repoBranch: defaultBranch })
       }
     }
-    if (repoSlug && !repoOwner) {
-      setData({ repoBranch, repoOwner: session?.user.login })
+
+    if (repoSlug && !repoOwner && sessionLogin) {
+      setData({ repoBranch, repoOwner: sessionLogin })
     }
-  }, [repository, repoBranch, repoSlug, repoOwner, setData, data, session])
+  }, [
+    repository,
+    repoBranch,
+    localRepoBranch,
+    repoSlug,
+    repoOwner,
+    sessionLogin,
+    setData
+  ])
 
   return (
     <>

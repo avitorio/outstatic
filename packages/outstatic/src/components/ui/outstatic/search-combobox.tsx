@@ -15,7 +15,6 @@ import {
   CommandItem
 } from '../shadcn/command'
 import { Popover, PopoverContent, PopoverTrigger } from '../shadcn/popover'
-import { ScrollArea } from '../shadcn/scroll-area'
 import { cn } from '@/utils/ui'
 
 export function SearchCombobox({
@@ -97,7 +96,7 @@ export function SearchCombobox({
               : selectPlaceholder}
         </span>
       ) : null}
-      <Popover open={open} onOpenChange={setOpen} modal>
+      <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
             variant={variant === 'hidden' ? undefined : variant}
@@ -108,7 +107,7 @@ export function SearchCombobox({
               size === 'sm' &&
                 'focus-visible:outline-hidden focus-visible:ring-0 focus-visible:ring-offset-0 px-1'
             )}
-            disabled={disabled || isLoading}
+            disabled={disabled}
             size={size}
           >
             <span
@@ -141,8 +140,11 @@ export function SearchCombobox({
           </Button>
         </PopoverTrigger>
         <PopoverContent
-          className="w-[var(--radix-popover-trigger-width)] p-0"
-          align="center"
+          className={cn(
+            'w-[var(--radix-popover-trigger-width)] p-0',
+            size === 'sm' && 'min-w-[20rem]'
+          )}
+          align={size === 'sm' ? 'start' : 'center'}
           style={{ width: 'var(--radix-popover-trigger-width)' }}
         >
           <Command className="max-h-[275px]">
@@ -153,27 +155,27 @@ export function SearchCombobox({
             <CommandEmpty>
               {isLoading ? loadingPlaceholder : resultsPlaceholder}
             </CommandEmpty>
-            <ScrollArea className="h-[200px]">
-              <CommandList>
-                <CommandGroup>
-                  {data.map((dataRecord) => (
-                    <CommandItem
-                      key={dataRecord.value}
-                      value={dataRecord.value}
-                      onSelect={(currentValue) => {
+            <CommandList className="max-h-[200px]">
+              <CommandGroup>
+                {data.map((dataRecord) => (
+                  <CommandItem
+                    key={dataRecord.value}
+                    value={dataRecord.value}
+                    onSelect={(currentValue) => {
+                      if (currentValue !== value) {
                         setValue(currentValue)
-                        setOpen(false)
-                      }}
-                    >
-                      {dataRecord.icon && (
-                        <dataRecord.icon className="mr-2 h-4 w-4 shrink-0" />
-                      )}
-                      <span>{dataRecord.label}</span>
-                    </CommandItem>
-                  ))}
-                </CommandGroup>
-              </CommandList>
-            </ScrollArea>
+                      }
+                      setOpen(false)
+                    }}
+                  >
+                    {dataRecord.icon && (
+                      <dataRecord.icon className="mr-2 h-4 w-4 shrink-0" />
+                    )}
+                    <span>{dataRecord.label}</span>
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            </CommandList>
             {scrollFooter ? scrollFooter() : null}
           </Command>
         </PopoverContent>
