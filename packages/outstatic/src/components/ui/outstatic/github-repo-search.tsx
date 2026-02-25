@@ -3,81 +3,123 @@ import { SearchCombobox } from '@/components/ui/outstatic/search-combobox'
 import { OUTSTATIC_API_PATH } from '@/utils/constants'
 import { useInitialData } from '@/utils/hooks/use-initial-data'
 import { useOutstatic, useLocalData } from '@/utils/hooks/use-outstatic'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useDebouncedCallback } from 'use-debounce'
+
+interface RepositorySuggestion {
+  full_name: string
+  default_branch?: string
+}
 
 export const GitHubRepoSearch: React.FC = () => {
   const initialData = useInitialData()
   const { setData } = useLocalData()
   const { repoOwner, repoSlug, repoBranch, session } = useOutstatic()
   const repository = repoOwner && repoSlug ? `${repoOwner}/${repoSlug}` : ''
-  const initialSuggestion = repository
+  const initialSuggestion: RepositorySuggestion[] = repository
     ? [{ full_name: repository, default_branch: repoBranch }]
     : []
   const [query, setQuery] = useState<string>('')
-  const [suggestions, setSuggestions] = useState(initialSuggestion)
+  const [suggestions, setSuggestions] =
+    useState<RepositorySuggestion[]>(initialSuggestion)
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [value, setValue] = React.useState(repository)
+  const latestRequestIdRef = React.useRef(0)
 
-  const fetchRepositories = async (searchQuery: string) => {
-    if (!searchQuery) {
-      setSuggestions([])
-      return
-    }
-    try {
-      const response = await fetch(
-        `${OUTSTATIC_API_PATH}/github/search/repositories?q=${searchQuery}&per_page=100&timestamp=${Date.now()}`,
-        {
-          headers: new Headers({
-            Authorization: `token ${session?.access_token}`
-          })
+  const fetchRepositories = useCallback(
+    async (searchQuery: string, requestId: number) => {
+      if (!searchQuery) {
+        if (requestId === latestRequestIdRef.current) {
+          setSuggestions([])
+          setIsLoading(false)
         }
-      )
-      if (!response.ok) {
-        throw new Error('Network response was not ok')
+        return
       }
-      const data = await response.json()
-      setSuggestions((oldData) =>
-        data.items.length > 0 ? data.items : oldData
-      )
-    } catch (error) {
-      console.error('There was a problem with the fetch operation:', error)
-    } finally {
-      setIsLoading(false)
-    }
-  }
+      try {
+        const response = await fetch(
+          `${OUTSTATIC_API_PATH}/github/search/repositories?q=${searchQuery}&per_page=100&timestamp=${Date.now()}`,
+          {
+            headers: new Headers({
+              Authorization: `token ${session?.access_token}`
+            })
+          }
+        )
+        if (!response.ok) {
+          throw new Error('Network response was not ok')
+        }
+        const data = await response.json()
+
+        if (requestId !== latestRequestIdRef.current) return
+
+        const items = Array.isArray(data?.items) ? data.items : []
+        setSuggestions(items)
+      } catch (error) {
+        if (requestId === latestRequestIdRef.current) {
+          setSuggestions([])
+        }
+        console.error('There was a problem with the fetch operation:', error)
+      } finally {
+        if (requestId === latestRequestIdRef.current) {
+          setIsLoading(false)
+        }
+      }
+    },
+    [session?.access_token]
+  )
 
   const debouncedFetchRepositories = useDebouncedCallback(
     fetchRepositories,
     300
   )
 
+  const handleRepositorySelect = useCallback(
+    (nextValue: string) => {
+      setValue(nextValue)
+      setQuery(nextValue)
+
+      if (!nextValue) return
+
+      const [nextRepoOwner, nextRepoSlug] = nextValue.split('/')
+      if (!nextRepoOwner || !nextRepoSlug) return
+
+      const selectedRepository = suggestions.find(
+        (repo) => repo.full_name === nextValue
+      )
+
+      setData({
+        repoSlug: nextRepoSlug,
+        repoOwner: nextRepoOwner,
+        repoBranch: selectedRepository?.default_branch || repoBranch || ''
+      })
+    },
+    [repoBranch, setData, suggestions]
+  )
+
   useEffect(() => {
-    if (query && query !== `${repoOwner}/${repoSlug}`) {
+    if (!value && repository) {
+      setValue(repository)
+      setQuery(repository)
+    }
+  }, [repository, value])
+
+  useEffect(() => {
+    const selectedRepository = `${repoOwner}/${repoSlug}`
+
+    if (query && query !== selectedRepository) {
+      const requestId = latestRequestIdRef.current + 1
+      latestRequestIdRef.current = requestId
       setIsLoading(true)
-      debouncedFetchRepositories(`${query} in:name fork:true`)
+      debouncedFetchRepositories(`${query} in:name fork:true`, requestId)
     } else {
+      latestRequestIdRef.current += 1
+      debouncedFetchRepositories.cancel()
       setIsLoading(false)
       setSuggestions([])
     }
+
     // Cleanup the debounce on component unmount
     return () => debouncedFetchRepositories.cancel()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [query])
-
-  useEffect(() => {
-    if (value) {
-      setQuery(value)
-      const [repoOwner, repoSlug] = value.split('/')
-      setData({
-        repoSlug,
-        repoOwner,
-        repoBranch:
-          suggestions.find((repo) => repo.full_name === value)
-            ?.default_branch || ''
-      })
-    }
-  }, [value, setData, suggestions])
+  }, [debouncedFetchRepositories, query, repoOwner, repoSlug])
 
   return (
     <div>
@@ -98,7 +140,7 @@ export const GitHubRepoSearch: React.FC = () => {
               }))
         }
         value={!!initialData?.repoSlug ? `${repoOwner}/${repoSlug}` : value}
-        setValue={setValue}
+        setValue={handleRepositorySelect}
         onValueChange={setQuery}
         isLoading={isLoading}
         disabled={!!initialData?.repoSlug}
