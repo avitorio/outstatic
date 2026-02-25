@@ -249,6 +249,7 @@ export const AddCustomFieldDialog: React.FC<AddCustomFieldDialogProps> = ({
                       <Input
                         placeholder="Ex: Add a category"
                         {...field}
+                        value={field.value ?? ''}
                         className="w-full max-w-sm md:w-80"
                       />
                     </FormControl>
