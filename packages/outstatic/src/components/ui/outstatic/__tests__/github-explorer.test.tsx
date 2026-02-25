@@ -140,4 +140,15 @@ describe('<GithubExplorer />', () => {
     treeProps.onSelectChange(undefined)
     expect(setPath).toHaveBeenCalledTimes(1)
   })
+
+  it('allows selecting the repository root folder', () => {
+    const setPath = jest.fn()
+
+    render(<GithubExplorer path="docs" setPath={setPath} />)
+
+    const treeProps = getLatestTreeProps()
+    treeProps.onSelectChange({ id: '', name: '.' })
+
+    expect(setPath).toHaveBeenCalledWith('')
+  })
 })

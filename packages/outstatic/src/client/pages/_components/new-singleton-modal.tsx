@@ -21,6 +21,9 @@ import {
   DialogDescription
 } from '@/components/ui/shadcn/dialog'
 import { SpinnerIcon } from '@/components/ui/outstatic/spinner-icon'
+import { Checkbox } from '@/components/ui/shadcn/checkbox'
+import { Input } from '@/components/ui/shadcn/input'
+import { slugify } from 'transliteration'
 
 type NewSingletonModalProps = {
   open: boolean
@@ -45,9 +48,32 @@ export default function NewSingletonModal({
   const [step, setStep] = useState(1)
   const [outstaticFolder, setOutstaticFolder] = useState(true)
   const [path, setPath] = useState('')
+  const [createFolder, setCreateFolder] = useState(false)
+  const [newFolderName, setNewFolderName] = useState('')
+
+  const newFolderSlug = slugify(newFolderName.trim(), {
+    allowedChars: 'a-zA-Z0-9.'
+  })
+
+  const selectedPath = outstaticFolder
+    ? defaultSingletonsPath
+    : createFolder
+      ? path
+        ? `${path}/${newFolderSlug}`
+        : newFolderSlug
+      : path
+
+  const singletonSlug = slugify((singletonTitle || 'singleton').trim(), {
+    allowedChars: 'a-zA-Z0-9.'
+  })
+  const singletonFilePath = selectedPath
+    ? `${selectedPath}/${singletonSlug}.{md|mdx}`
+    : `${singletonSlug}.{md|mdx}`
 
   const handleSave = () => {
-    const selectedPath = outstaticFolder ? defaultSingletonsPath : path
+    if (!outstaticFolder && createFolder && !newFolderSlug) {
+      return
+    }
     onSave(selectedPath)
   }
 
@@ -55,6 +81,8 @@ export default function NewSingletonModal({
     setStep(1)
     setOutstaticFolder(true)
     setPath('')
+    setCreateFolder(false)
+    setNewFolderName('')
   }
 
   return (
@@ -73,6 +101,8 @@ export default function NewSingletonModal({
           <DialogDescription>
             {step === 1 && 'Choose where to store your singleton.'}
             {step === 2 && 'Select a folder for your singleton.'}
+            {step === 3 &&
+              'Save in this folder or create a new folder for your singleton.'}
           </DialogDescription>
         </DialogHeader>
 
@@ -83,9 +113,13 @@ export default function NewSingletonModal({
             </Label>
             <RadioGroup
               className="grid gap-4 md:grid-cols-2 -ml-2"
-              defaultValue="outstatic-folder"
+              defaultValue={
+                outstaticFolder ? 'outstatic-folder' : 'select-folder'
+              }
               onValueChange={(value: string) => {
                 setOutstaticFolder(value === 'outstatic-folder')
+                setCreateFolder(false)
+                setNewFolderName('')
                 if (value === 'select-folder') {
                   setPath('')
                 }
@@ -203,7 +237,53 @@ export default function NewSingletonModal({
               <Button variant="outline" onClick={() => setStep(1)}>
                 Back
               </Button>
-              <Button onClick={handleSave} disabled={loading}>
+              <Button onClick={() => setStep(3)}>Next</Button>
+            </div>
+          </div>
+        )}
+
+        {step === 3 && (
+          <div className="space-y-4">
+            <Label>Content Path</Label>
+            <div className="flex items-center space-x-2 mb-2">
+              <Checkbox
+                id="create-folder"
+                checked={createFolder}
+                onCheckedChange={(checked) => {
+                  if (!checked) {
+                    setNewFolderName('')
+                  }
+                  setCreateFolder(Boolean(checked))
+                }}
+              />
+              <Label htmlFor="create-folder">Create a new folder</Label>
+            </div>
+
+            {createFolder && (
+              <div className="space-y-2">
+                <Label htmlFor="new-folder-name">Folder Name</Label>
+                <Input
+                  id="new-folder-name"
+                  value={newFolderName}
+                  autoFocus
+                  onChange={(e) => setNewFolderName(e.target.value)}
+                  placeholder="Ex: pages"
+                />
+              </div>
+            )}
+
+            <Label>File Preview</Label>
+            <PathBreadcrumbs path={'/' + singletonFilePath} />
+
+            <PathBreadcrumbs path={'/' + selectedPath} />
+            <div className="flex justify-between pt-4">
+              <Button variant="outline" onClick={() => setStep(2)}>
+                Back
+              </Button>
+              <Button
+                onClick={handleSave}
+                disabled={loading || (createFolder && !newFolderSlug)}
+              >
                 {loading ? (
                   <>
                     <SpinnerIcon className="text-background mr-2" />

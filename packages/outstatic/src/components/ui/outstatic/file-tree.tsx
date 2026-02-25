@@ -26,6 +26,12 @@ type TreeProps = React.HTMLAttributes<HTMLDivElement> & {
   isPending?: boolean
 }
 
+const ROOT_ACCORDION_VALUE = '__tree_root__'
+
+function getAccordionValue(id: string): string {
+  return id === '' ? ROOT_ACCORDION_VALUE : id
+}
+
 const Tree = React.forwardRef<HTMLDivElement, TreeProps>(
   (
     {
@@ -56,7 +62,7 @@ const Tree = React.forwardRef<HTMLDivElement, TreeProps>(
     )
 
     const expandedItemIds = React.useMemo(() => {
-      if (!initialSelectedItemId) {
+      if (initialSelectedItemId === undefined) {
         return [] as string[]
       }
 
@@ -68,7 +74,7 @@ const Tree = React.forwardRef<HTMLDivElement, TreeProps>(
       ): string[] | boolean | undefined {
         if (items instanceof Array) {
           for (let i = 0; i < items.length; i++) {
-            ids.push(items[i]!.id)
+            ids.push(getAccordionValue(items[i]!.id))
             if (walkTreeItems(items[i]!, targetId) && !expandAll) {
               return true
             }
@@ -142,78 +148,69 @@ const TreeItem = React.forwardRef<HTMLDivElement, TreeItemProps>(
     },
     ref
   ) => {
+    const items = data instanceof Array ? data : [data]
+
     return (
       <div ref={ref} role="tree" className={className} {...props}>
         <ul>
-          {data instanceof Array ? (
-            data.map((item) => (
-              <li key={item.id}>
-                {item.children ? (
-                  <AccordionPrimitive.Root
-                    type="multiple"
-                    defaultValue={expandedItemIds}
-                  >
-                    <AccordionPrimitive.Item value={item.id}>
-                      <AccordionTrigger
-                        className={cn(
-                          'px-2 hover:before:opacity-100 before:absolute before:left-0 before:w-full before:opacity-0 before:bg-muted/80 before:h-[2.25rem] before:-z-10',
-                          selectedItemId === item.id &&
-                            'before:opacity-100 before:bg-accent text-accent-foreground before:border-l-2 before:border-l-accent-foreground/50 dark:before:border-0 bg-secondary'
-                        )}
-                        onClick={() => handleSelectChange(item)}
-                      >
-                        {item.icon && (
-                          <item.icon
-                            className="h-4 w-4 shrink-0 mr-2 text-accent-foreground/50"
-                            aria-hidden="true"
-                          />
-                        )}
-                        {!item.icon && FolderIcon && (
-                          <FolderIcon
-                            className="h-4 w-4 shrink-0 mr-2 text-accent-foreground/50"
-                            aria-hidden="true"
-                          />
-                        )}
-                        <div className="flex items-center gap-2">
-                          <span className="text-sm truncate">{item.name}</span>
-                          {isPending && selectedItemId === item.id && (
-                            <SpinnerIcon className="h-3 w-3 animate-spin" />
-                          )}
-                        </div>
-                      </AccordionTrigger>
-                      <AccordionContent className="pl-6">
-                        <TreeItem
-                          data={item.children ? item.children : item}
-                          selectedItemId={selectedItemId}
-                          handleSelectChange={handleSelectChange}
-                          expandedItemIds={expandedItemIds}
-                          FolderIcon={FolderIcon}
-                          ItemIcon={ItemIcon}
-                          isPending={isPending}
+          {items.map((item) => (
+            <li key={item.id || `${ROOT_ACCORDION_VALUE}_${item.name}`}>
+              {item.children ? (
+                <AccordionPrimitive.Root
+                  type="multiple"
+                  defaultValue={expandedItemIds}
+                >
+                  <AccordionPrimitive.Item value={getAccordionValue(item.id)}>
+                    <AccordionTrigger
+                      className={cn(
+                        'px-2 hover:before:opacity-100 before:absolute before:left-0 before:w-full before:opacity-0 before:bg-muted/80 before:h-[2.25rem] before:-z-10',
+                        selectedItemId === item.id &&
+                          'before:opacity-100 before:bg-accent text-accent-foreground before:border-l-2 before:border-l-accent-foreground/50 dark:before:border-0 bg-secondary'
+                      )}
+                      onClick={() => handleSelectChange(item)}
+                    >
+                      {item.icon && (
+                        <item.icon
+                          className="h-4 w-4 shrink-0 mr-2 text-accent-foreground/50"
+                          aria-hidden="true"
                         />
-                      </AccordionContent>
-                    </AccordionPrimitive.Item>
-                  </AccordionPrimitive.Root>
-                ) : (
-                  <Leaf
-                    item={item}
-                    isSelected={selectedItemId === item.id}
-                    onClick={() => handleSelectChange(item)}
-                    Icon={ItemIcon}
-                  />
-                )}
-              </li>
-            ))
-          ) : (
-            <li>
-              <Leaf
-                item={data}
-                isSelected={selectedItemId === data.id}
-                onClick={() => handleSelectChange(data)}
-                Icon={ItemIcon}
-              />
+                      )}
+                      {!item.icon && FolderIcon && (
+                        <FolderIcon
+                          className="h-4 w-4 shrink-0 mr-2 text-accent-foreground/50"
+                          aria-hidden="true"
+                        />
+                      )}
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm truncate">{item.name}</span>
+                        {isPending && selectedItemId === item.id && (
+                          <SpinnerIcon className="h-3 w-3 animate-spin" />
+                        )}
+                      </div>
+                    </AccordionTrigger>
+                    <AccordionContent className="pl-6">
+                      <TreeItem
+                        data={item.children ? item.children : item}
+                        selectedItemId={selectedItemId}
+                        handleSelectChange={handleSelectChange}
+                        expandedItemIds={expandedItemIds}
+                        FolderIcon={FolderIcon}
+                        ItemIcon={ItemIcon}
+                        isPending={isPending}
+                      />
+                    </AccordionContent>
+                  </AccordionPrimitive.Item>
+                </AccordionPrimitive.Root>
+              ) : (
+                <Leaf
+                  item={item}
+                  isSelected={selectedItemId === item.id}
+                  onClick={() => handleSelectChange(item)}
+                  Icon={ItemIcon}
+                />
+              )}
             </li>
-          )}
+          ))}
         </ul>
       </div>
     )

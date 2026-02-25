@@ -163,18 +163,22 @@ function useSubmitSingleton({
           branch: repoBranch
         })
 
+        const hasCustomPath = path !== undefined
+
         // Use existing file path if provided (for opening existing files),
         // otherwise use custom content path or default singletons path
         const contentFilePath = existingFilePath
           ? existingFilePath
-          : path
-            ? `${path}/${actualSlug}.${extension}`
+          : hasCustomPath
+            ? `${path ? `${path}/` : ''}${actualSlug}.${extension}`
             : `${singletonsPath}/${actualSlug}.${extension}`
 
         // Extract directory from existing file path
         const contentDirectory = existingFilePath
           ? existingFilePath.substring(0, existingFilePath.lastIndexOf('/'))
-          : (path ?? singletonsPath)
+          : hasCustomPath
+            ? path || ''
+            : singletonsPath
 
         // For new singletons, create the schema.json file and update singletons.json
         if (isNew) {
