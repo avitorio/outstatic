@@ -2,7 +2,6 @@ import { BuiltWithOutstatic } from '@/components/built-with-outstatic'
 import { ThemeProvider } from '@/components/theme-provider'
 import '@/styles/style.css'
 import { Metadata } from 'next'
-import Script from 'next/script'
 import 'katex/dist/katex.min.css'
 
 export const metadata: Metadata = {
@@ -40,16 +39,6 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <head>
-        {process.env.NEXT_PUBLIC_TINYBIRD_TOKEN ? (
-          <Script
-            defer
-            src="https://unpkg.com/@tinybirdco/flock.js"
-            data-host="https://api.tinybird.co"
-            data-token={process.env.NEXT_PUBLIC_TINYBIRD_TOKEN}
-          />
-        ) : null}
-      </head>
       <body id="outstatic" className="bg-background relative">
         <ThemeProvider
           attribute="class"

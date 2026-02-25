@@ -26,7 +26,6 @@
     "docs": {
       "env": [
         "OST_AI_MODEL",
-        "NEXT_PUBLIC_TINYBIRD_TOKEN",
         "NODE_ENV",
         "OST_CONTENT_PATH",
         "OST_GITHUB_ID",
