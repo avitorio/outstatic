@@ -6,7 +6,8 @@ import {
   Monitor,
   Moon,
   Sun,
-  BookTextIcon
+  BookTextIcon,
+  HeartHandshake
 } from 'lucide-react'
 import { memo, useEffect, useState } from 'react'
 import { Button } from '@/components/ui/shadcn/button'
@@ -34,6 +35,7 @@ import Link from 'next/link'
 import { useSidebar } from '@/components/ui/shadcn/sidebar'
 import { DiscordLogoIcon, GitHubLogoIcon } from '@radix-ui/react-icons'
 import { useAuth } from '@/utils/auth/auth-provider'
+import { OUTSTATIC_APP_URL } from '@/utils/constants'
 
 const themes = [
   {
@@ -181,7 +183,7 @@ const AdminHeaderComponent = () => {
                   <DropdownMenuSub>
                     <DropdownMenuSubTrigger>
                       <div className="focus:bg-accent focus:text-accent-foreground data-[variant=destructive]:text-destructive data-[variant=destructive]:focus:bg-destructive/10 dark:data-[variant=destructive]:focus:bg-destructive/20 data-[variant=destructive]:focus:text-destructive data-[variant=destructive]:*:[svg]:!text-destructive [&_svg:not([class*='text-'])]:text-muted-foreground relative flex cursor-default items-center gap-2 rounded-sm text-sm outline-hidden select-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 data-[inset]:pl-8 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 flex cursor-pointer items-center space-x-2 flex cursor-pointer items-center space-x-2">
-                        <MessageCircleQuestion className={'h-5'} />
+                        <HeartHandshake className={'h-5'} />
                         <span>Community</span>
                       </div>
                     </DropdownMenuSubTrigger>
@@ -201,6 +203,22 @@ const AdminHeaderComponent = () => {
                       ))}
                     </DropdownMenuSubContent>
                   </DropdownMenuSub>
+
+                  <DropdownMenuSeparator />
+
+                  <DropdownMenuItem asChild>
+                    <Link
+                      target="_blank"
+                      className={
+                        's-full flex w-full cursor-pointer items-center space-x-2'
+                      }
+                      href={`${OUTSTATIC_APP_URL}/?support=true`}
+                    >
+                      <MessageCircleQuestion className={'h-5'} />
+
+                      <span>Support</span>
+                    </Link>
+                  </DropdownMenuItem>
 
                   <DropdownMenuSeparator />
 
