@@ -13,6 +13,7 @@ import { ThemeProvider } from 'next-themes'
 import { ReactNode, useEffect, useMemo, useCallback } from 'react'
 import { Toaster } from 'sonner'
 import 'katex/dist/katex.min.css'
+import { ContentLockProvider } from '@/utils/hooks/use-content-lock'
 
 type RootProviderProps = {
   ostData: OutstaticData
@@ -51,7 +52,9 @@ function RootProviderInner({ ostData, children }: RootProviderProps) {
       >
         <Toaster />
         <QueryClientProvider client={queryClient}>
-          <NavigationGuardProvider>{children}</NavigationGuardProvider>
+          <NavigationGuardProvider>
+            <ContentLockProvider>{children}</ContentLockProvider>
+          </NavigationGuardProvider>
         </QueryClientProvider>
         <V2BreakingCheck />
       </ThemeProvider>
