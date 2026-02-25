@@ -32,7 +32,6 @@ export const useDocumentUpdateEffect = ({
 }: UseDocumentUpdateEffectProps) => {
   const {
     basePath,
-    ostContent,
     repoOwner,
     repoSlug,
     repoBranch,
@@ -46,14 +45,16 @@ export const useDocumentUpdateEffect = ({
     enabled: slug !== 'new'
   })
 
-  const collectionPath = collections?.find(
-    (col) => col.slug === collection
-  )?.path
+  const collectionInfo = collections?.find(
+    (collectionEntry) => collectionEntry.slug === collection
+  )
+
+  const collectionPath = collectionInfo?.path
+    ? `${collectionInfo.path}/`
+    : ''
 
   const { data: document } = useGetDocument({
-    filePath: `${
-      collectionPath ? `${collectionPath}` : `${ostContent}/${collection}`
-    }/${slug}`,
+    filePath: `${collectionPath}${slug}`,
     enabled: slug !== 'new' && collectionPath !== undefined
   })
 

@@ -118,10 +118,12 @@ function useSubmitDocument({
           throw new Error('Failed to fetch schema or metadata from GitHub')
         }
 
-        const collectionPath =
-          collections?.find(
-            (collectionInfo) => collectionInfo.slug === collection
-          )?.path + '/'
+        const collectionInfo = collections?.find(
+          (collectionEntry) => collectionEntry.slug === collection
+        )
+        const collectionPath = collectionInfo?.path
+          ? `${collectionInfo.path}/`
+          : ''
 
         const document = methods.getValues()
         const mdContent = editor.storage.markdown.getMarkdown()
@@ -259,10 +261,10 @@ function useSubmitDocument({
 
         const newMeta = Array.isArray(m.metadata)
           ? m.metadata.filter(
-              (c) =>
-                c.collection !== collection ||
-                (c.slug !== oldSlug && c.slug !== newSlug)
-            )
+            (c) =>
+              c.collection !== collection ||
+              (c.slug !== oldSlug && c.slug !== newSlug)
+          )
           : []
 
         newMeta.push({
@@ -274,9 +276,9 @@ function useSubmitDocument({
             commit: m.commit,
             path: monorepoPath
               ? `${collectionPath}${newSlug}.${extension}`.replace(
-                  monorepoPath,
-                  ''
-                )
+                monorepoPath,
+                ''
+              )
               : `${collectionPath}${newSlug}.${extension}`
           }
         })
