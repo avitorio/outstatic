@@ -64,13 +64,13 @@ export function SearchCombobox({
 
   const buttonClassName = cn(
     'justify-between',
-    size === 'sm' ? 'w-min px-1 ml-0.5' : 'w-[20rem]',
+    size === 'sm' ? 'w-min px-1 ml-0.5' : 'w-full min-w-[20rem]',
     variant === 'hidden' ? 'hidden' : '',
     className
   )
 
   return (
-    <div className="flex items-center">
+    <div className={cn('flex items-center', size !== 'sm' && 'w-full')}>
       {size === 'sm' ? (
         <span
           className={cn(
@@ -114,7 +114,7 @@ export function SearchCombobox({
             <span
               className={cn(
                 'truncate text-left',
-                size === 'sm' ? 'w-min lg:hidden' : 'w-[20rem]'
+                size === 'sm' ? 'w-min lg:hidden' : 'flex-1 min-w-0'
               )}
             >
               {isLoading
@@ -140,7 +140,11 @@ export function SearchCombobox({
             </div>
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-[20rem] p-0 md:w-[20rem]" align="center">
+        <PopoverContent
+          className="w-[var(--radix-popover-trigger-width)] p-0"
+          align="center"
+          style={{ width: 'var(--radix-popover-trigger-width)' }}
+        >
           <Command className="max-h-[275px]">
             <CommandInput
               placeholder={searchPlaceholder}
