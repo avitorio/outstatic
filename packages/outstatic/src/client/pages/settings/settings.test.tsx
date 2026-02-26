@@ -1,5 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react'
 import { StrictMode } from 'react'
+import { TestProviders } from '@/utils/tests/test-wrapper'
 import Settings from './settings'
 
 const mockUpdateConfig = jest.fn()
@@ -67,6 +68,15 @@ const hasMaximumUpdateDepthError = (calls: unknown[][]) =>
 describe('Settings page', () => {
   const mockRebuildMetadata = jest.fn()
 
+  const renderSettings = () =>
+    render(
+      <TestProviders.ReactQuery>
+        <TestProviders.InitialData>
+          <Settings />
+        </TestProviders.InitialData>
+      </TestProviders.ReactQuery>
+    )
+
   beforeEach(() => {
     jest.clearAllMocks()
     mockUseCollections.mockReturnValue({
@@ -80,7 +90,7 @@ describe('Settings page', () => {
   })
 
   it('renders settings sections', () => {
-    render(<Settings />)
+    renderSettings()
 
     expect(screen.getByTestId('admin-layout')).toHaveAttribute(
       'data-title',
@@ -100,7 +110,7 @@ describe('Settings page', () => {
   })
 
   it('shows metadata actions when collections exist', () => {
-    render(<Settings />)
+    renderSettings()
 
     const rebuildButton = screen.getByRole('button', {
       name: 'Rebuild Metadata'
@@ -118,7 +128,7 @@ describe('Settings page', () => {
       data: []
     })
 
-    render(<Settings />)
+    renderSettings()
 
     expect(
       screen.queryByRole('button', { name: 'Rebuild Metadata' })
@@ -132,7 +142,11 @@ describe('Settings page', () => {
 
     render(
       <StrictMode>
-        <Settings />
+        <TestProviders.ReactQuery>
+          <TestProviders.InitialData>
+            <Settings />
+          </TestProviders.InitialData>
+        </TestProviders.ReactQuery>
       </StrictMode>
     )
 
