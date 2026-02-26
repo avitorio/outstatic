@@ -7,6 +7,9 @@ node_modules
 
 # testing
 coverage
+playwright-report/
+test-results/
+apps/e2e/.auth/
 
 # next.js
 .next/
