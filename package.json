@@ -20,7 +20,7 @@
     "test": "turbo run test --filter=outstatic",
     "test:e2e": "pnpm --dir apps/e2e test",
     "typecheck": "turbo run typecheck",
-    "prepublish": "pnpm clean && pnpm i && pnpm lint && pnpm prettier --check . && pnpm typecheck && pnpm test && pnpm build",
+    "prepublish": "pnpm clean && pnpm i && pnpm lint && pnpm prettier --check . && pnpm typecheck && pnpm test && pnpm build"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.1",
