@@ -115,9 +115,7 @@ jest.mock('change-case', () => ({
       .join('')
   },
   capitalCase: (value: string) =>
-    value
-      .replace(/[_-]+/g, ' ')
-      .replace(/\b\w/g, (char) => char.toUpperCase())
+    value.replace(/[_-]+/g, ' ').replace(/\b\w/g, (char) => char.toUpperCase())
 }))
 
 const mockUseGetCollectionSchema = useGetCollectionSchema as jest.Mock
@@ -209,7 +207,9 @@ describe('<AddCustomFieldDialog />', () => {
     })
 
     expect(screen.getByText('Save your singleton first')).toBeInTheDocument()
-    expect(screen.queryByPlaceholderText('Ex: Category')).not.toBeInTheDocument()
+    expect(
+      screen.queryByPlaceholderText('Ex: Category')
+    ).not.toBeInTheDocument()
   })
 
   it('syncs custom fields from schema when available', async () => {

@@ -39,7 +39,8 @@ const mockUseOutstatic = useOutstatic as jest.Mock
 const mockUseLocalData = useLocalData as jest.Mock
 
 const getLatestSearchComboboxProps = (): SearchComboboxProps => {
-  const lastCall = searchComboboxMock.mock.calls[searchComboboxMock.mock.calls.length - 1]
+  const lastCall =
+    searchComboboxMock.mock.calls[searchComboboxMock.mock.calls.length - 1]
   expect(lastCall).toBeDefined()
   return lastCall[0] as SearchComboboxProps
 }
@@ -119,11 +120,15 @@ describe('GitHubRepoSearch', () => {
   it('ignores stale responses and keeps latest query results', async () => {
     const firstRequest = createDeferred<{
       ok: boolean
-      json: () => Promise<{ items: { full_name: string; default_branch: string }[] }>
+      json: () => Promise<{
+        items: { full_name: string; default_branch: string }[]
+      }>
     }>()
     const secondRequest = createDeferred<{
       ok: boolean
-      json: () => Promise<{ items: { full_name: string; default_branch: string }[] }>
+      json: () => Promise<{
+        items: { full_name: string; default_branch: string }[]
+      }>
     }>()
 
     fetchMock

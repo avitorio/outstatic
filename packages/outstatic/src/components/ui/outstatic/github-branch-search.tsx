@@ -47,7 +47,8 @@ export const GitHubBranchSearch = ({
 
   const fetchBranches = useCallback(
     async (keyword: string, requestId: number) => {
-      const { repoOwner, repoSlug, repoBranch, gqlClient } = repoStateRef.current
+      const { repoOwner, repoSlug, repoBranch, gqlClient } =
+        repoStateRef.current
 
       if (!repoOwner || !repoSlug || !gqlClient) {
         if (requestId === latestRequestIdRef.current) {
@@ -77,7 +78,10 @@ export const GitHubBranchSearch = ({
             })) ?? []
 
         // Keep current branch selectable even if GraphQL search does not return it.
-        if (repoBranch && !branches.some((branch) => branch.name === repoBranch)) {
+        if (
+          repoBranch &&
+          !branches.some((branch) => branch.name === repoBranch)
+        ) {
           branches.unshift({ name: repoBranch })
         }
 

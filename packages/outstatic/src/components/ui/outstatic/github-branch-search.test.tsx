@@ -44,7 +44,8 @@ const mockUseOutstatic = useOutstatic as jest.Mock
 const mockUseLocalData = useLocalData as jest.Mock
 
 const getLatestSearchComboboxProps = (): SearchComboboxProps => {
-  const lastCall = searchComboboxMock.mock.calls[searchComboboxMock.mock.calls.length - 1]
+  const lastCall =
+    searchComboboxMock.mock.calls[searchComboboxMock.mock.calls.length - 1]
   expect(lastCall).toBeDefined()
   return lastCall[0] as SearchComboboxProps
 }

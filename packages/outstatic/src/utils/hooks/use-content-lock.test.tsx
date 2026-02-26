@@ -4,15 +4,14 @@ import {
   ContentLockProvider,
   useContentLock
 } from '@/utils/hooks/use-content-lock'
-import { NavigationGuardProvider, useNavigationGuard } from 'next-navigation-guard'
+import {
+  NavigationGuardProvider,
+  useNavigationGuard
+} from 'next-navigation-guard'
 
 jest.mock('next-navigation-guard', () => ({
   useNavigationGuard: jest.fn(),
-  NavigationGuardProvider: ({
-    children
-  }: {
-    children: ReactNode
-  }) => children
+  NavigationGuardProvider: ({ children }: { children: ReactNode }) => children
 }))
 
 const mockUseNavigationGuard = useNavigationGuard as jest.Mock

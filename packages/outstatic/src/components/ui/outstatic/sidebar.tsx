@@ -502,11 +502,10 @@ export function SidebarNavigation({
                                               currentPath,
                                               subChild.end
                                             )
-                                            const isCurrentRoute =
-                                              isExactRoute(
-                                                subChild.path,
-                                                currentPath
-                                              )
+                                            const isCurrentRoute = isExactRoute(
+                                              subChild.path,
+                                              currentPath
+                                            )
 
                                             const linkClassName = cn(
                                               'flex items-center',

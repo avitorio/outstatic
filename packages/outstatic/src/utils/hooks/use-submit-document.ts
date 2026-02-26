@@ -261,10 +261,10 @@ function useSubmitDocument({
 
         const newMeta = Array.isArray(m.metadata)
           ? m.metadata.filter(
-            (c) =>
-              c.collection !== collection ||
-              (c.slug !== oldSlug && c.slug !== newSlug)
-          )
+              (c) =>
+                c.collection !== collection ||
+                (c.slug !== oldSlug && c.slug !== newSlug)
+            )
           : []
 
         newMeta.push({
@@ -276,9 +276,9 @@ function useSubmitDocument({
             commit: m.commit,
             path: monorepoPath
               ? `${collectionPath}${newSlug}.${extension}`.replace(
-                monorepoPath,
-                ''
-              )
+                  monorepoPath,
+                  ''
+                )
               : `${collectionPath}${newSlug}.${extension}`
           }
         })

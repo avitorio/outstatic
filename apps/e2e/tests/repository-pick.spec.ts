@@ -71,7 +71,10 @@ test.describe('Outstatic repository onboarding', () => {
       await page.waitForTimeout(400)
     }
 
-    if ((await optionByRole.count()) === 0 && (await optionByCmdk.count()) === 0) {
+    if (
+      (await optionByRole.count()) === 0 &&
+      (await optionByCmdk.count()) === 0
+    ) {
       throw new Error(
         `Repository "${targetRepository}" was not found in search results for this account. Update E2E_TARGET_REPOSITORY to a repository visible to the authenticated user.`
       )
