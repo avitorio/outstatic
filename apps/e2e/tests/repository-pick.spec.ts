@@ -1,17 +1,23 @@
 import { expect, test } from '@playwright/test'
 import { assertAuthStateExists } from './support/env'
 
-const TARGET_REPOSITORY = 'avitorio/ost-clean'
+const TARGET_REPOSITORY = process.env.E2E_TARGET_REPOSITORY?.trim()
 
 test.describe('Outstatic repository onboarding', () => {
   test.beforeAll(() => {
     assertAuthStateExists()
   })
 
-  test('searches and selects avitorio/ost-clean, then shows Confirm your Branch', async ({
+  test('searches and selects target repository, then shows Confirm your Branch', async ({
     page
   }) => {
     test.setTimeout(90_000)
+    test.skip(
+      !TARGET_REPOSITORY,
+      'Set E2E_TARGET_REPOSITORY (for example: "owner/repo") to run this test.'
+    )
+
+    const targetRepository = TARGET_REPOSITORY!
 
     const cardTitle = (name: string) =>
       page.locator('[data-slot="card-title"]', { hasText: name }).first()
@@ -45,14 +51,14 @@ test.describe('Outstatic repository onboarding', () => {
     await expect(repoCombobox).toBeVisible({ timeout: 10_000 })
     await repoCombobox.click()
     await expect(searchInput).toBeVisible({ timeout: 10_000 })
-    await searchInput.fill(TARGET_REPOSITORY)
+    await searchInput.fill(targetRepository)
 
     const optionByRole = page
-      .getByRole('option', { name: TARGET_REPOSITORY })
+      .getByRole('option', { name: targetRepository })
       .first()
     const optionByCmdk = page
       .locator('[cmdk-item]')
-      .filter({ hasText: TARGET_REPOSITORY })
+      .filter({ hasText: targetRepository })
       .first()
     const startedAt = Date.now()
     const timeoutMs = 15_000
@@ -66,11 +72,9 @@ test.describe('Outstatic repository onboarding', () => {
     }
 
     if ((await optionByRole.count()) === 0 && (await optionByCmdk.count()) === 0) {
-      test.info().annotations.push({
-        type: 'info',
-        description: `Repository "${TARGET_REPOSITORY}" was not found in search results for this account.`
-      })
-      return
+      throw new Error(
+        `Repository "${targetRepository}" was not found in search results for this account. Update E2E_TARGET_REPOSITORY to a repository visible to the authenticated user.`
+      )
     }
 
     if ((await optionByRole.count()) > 0) {

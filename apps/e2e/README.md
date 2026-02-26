@@ -21,8 +21,7 @@ OST_GITHUB_CALLBACK_URL=http://localhost:3000/api/outstatic/callback
 ## 2) Install browser
 
 ```bash
-pnpm e2e:install
-# or: pnpm --dir apps/e2e install:browsers
+pnpm --dir apps/e2e install:browsers
 ```
 
 ## 3) Bootstrap authenticated state (one-time)
@@ -30,8 +29,7 @@ pnpm e2e:install
 This opens a headed browser. Complete GitHub login manually.
 
 ```bash
-pnpm e2e:auth
-# or: pnpm --dir apps/e2e test:setup
+pnpm --dir apps/e2e test:setup
 ```
 
 This writes auth cookies to `apps/e2e/.auth/user.json`.
@@ -39,24 +37,24 @@ This writes auth cookies to `apps/e2e/.auth/user.json`.
 ## 4) Run e2e suite
 
 ```bash
-pnpm e2e
+pnpm test:e2e
 # or: pnpm --dir apps/e2e test
 ```
 
 ## 5) Optional targeted commands
 
 ```bash
-pnpm e2e:test
-pnpm e2e:test:fast
-pnpm e2e:test:ui
-pnpm e2e:report
-pnpm e2e:login
-pnpm e2e:repository-pick
+pnpm --dir apps/e2e test
+pnpm --dir apps/e2e test:fast
+pnpm --dir apps/e2e test:ui
+pnpm --dir apps/e2e report
+pnpm --dir apps/e2e test:login
+pnpm --dir apps/e2e test:repository-pick
 ```
 
 ## Notes
 
-- If auth state is missing, run `pnpm e2e:auth` first.
+- If auth state is missing, run `pnpm --dir apps/e2e test:setup` first.
 - `OST_REPO_OWNER`, `OST_REPO_SLUG`, `OST_REPO_BRANCH`, and `OUTSTATIC_API_KEY` are ignored during Playwright webServer startup to force onboarding for testing.
 - Playwright starts its own web server (`reuseExistingServer: false`) for deterministic onboarding behavior.
 - The repository onboarding test searches for `avitorio/ost-clean`, selects it when present, and then asserts the "Confirm your Branch" card.
