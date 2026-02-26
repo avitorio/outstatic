@@ -39,7 +39,6 @@ export function getDocumentBySlug(
     } else if (fs.existsSync(mdxPath)) {
       fullPath = mdxPath
     } else {
-      console.error('Neither .md nor .mdx file exists:', { mdPath, mdxPath })
       return null
     }
 
@@ -155,7 +154,6 @@ export function getSingletonBySlug(
     } else if (fs.existsSync(mdxPath)) {
       fullPath = mdxPath
     } else {
-      console.error('Neither .md nor .mdx file exists:', { mdPath, mdxPath })
       return null
     }
 
