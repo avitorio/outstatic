@@ -74,6 +74,18 @@ Object.defineProperty(window, 'matchMedia', {
   }))
 })
 
+// Polyfill ResizeObserver for Radix components in tests
+if (typeof window.ResizeObserver === 'undefined') {
+  class ResizeObserver {
+    observe() {}
+    unobserve() {}
+    disconnect() {}
+  }
+
+  // @ts-ignore
+  window.ResizeObserver = ResizeObserver
+}
+
 // beforeEach(() => {
 //   jest.spyOn(console, 'error')
 //   // @ts-ignore jest.spyOn adds this functionallity
