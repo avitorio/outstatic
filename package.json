@@ -24,8 +24,8 @@
     "release:outstatic": "pnpm clean && pnpm i && pnpm build --filter=outstatic && pnpm test --filter=outstatic",
     "publish:canary": "pnpm release:outstatic && pnpm publish --filter=outstatic --tag canary",
     "publish:latest": "pnpm release:outstatic && pnpm publish --filter=outstatic --tag latest",
-    "publish:canary:dry": "pnpm release:outstatic && pnpm publish --filter=outstatic --tag canary --dry-run",
-    "publish:latest:dry": "pnpm release:outstatic && pnpm publish --filter=outstatic --tag latest --dry-run",
+    "publish:canary:dry": "pnpm release:outstatic && pnpm publish --filter=outstatic --tag canary --dry-run --no-git-checks",
+    "publish:latest:dry": "pnpm release:outstatic && pnpm publish --filter=outstatic --tag latest --dry-run --no-git-checks",
     "pack:outstatic": "pnpm release:outstatic && pnpm --dir packages/outstatic pack"
   },
   "devDependencies": {

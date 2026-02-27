@@ -1,70 +1,114 @@
-import fs from 'fs'
-import path from 'path'
 import { Options, defineConfig } from 'tsup'
 
-const filePath = path.join(__dirname, './dist/client/client.js')
-const filePath2 = path.join(__dirname, './dist/client/client.mjs')
+const CORE_ENTRIES = [
+  './src/index.ts',
+  './src/utils/server.ts',
+  './src/utils/auth/auth.ts',
+  './src/utils/hooks/index.ts',
+  './src/components/index.ts',
+  './src/graphql/utils/token-refresh-utility.ts',
+  './src/typegen/index.ts',
+  './src/cli/index.ts'
+]
+
+const CLIENT_ENTRY = {
+  'client/client': './src/client/client.ts'
+}
+
+const AUTH_PROVIDER_ENTRY = {
+  'utils/auth/auth-provider': './src/utils/auth/auth-provider.tsx'
+}
+
+const TYPE_ENTRIES = [
+  './src/index.ts',
+  './src/client/client.ts',
+  './src/utils/server.ts',
+  './src/utils/auth/auth.ts',
+  './src/utils/auth/auth-provider.tsx',
+  './src/utils/hooks/index.ts',
+  './src/components/index.ts',
+  './src/graphql/utils/token-refresh-utility.ts',
+  './src/next-plugin.ts',
+  './src/typegen/index.ts',
+  './src/cli/index.ts'
+]
+
+const EXTERNALS = [
+  'react',
+  'react-dom',
+  'next',
+  'tsup',
+  'tailwindcss',
+  'tw-animate-css',
+  '@parcel/watcher'
+]
+
+function sharedOptions(options: Options): Omit<Options, 'entry' | 'format'> {
+  return {
+    external: EXTERNALS,
+    minify: !options.watch,
+    treeshake: true,
+    esbuildOptions(esbuildOptions) {
+      esbuildOptions.jsx = 'automatic'
+      esbuildOptions.conditions = ['style']
+    }
+  }
+}
 
 export default defineConfig((options) => {
-  return {
-    entry: [
-      './src/index.ts',
-      './src/client/client.ts',
-      './src/utils/server.ts',
-      './src/utils/auth/auth.ts',
-      './src/utils/auth/auth-provider.tsx',
-      './src/utils/hooks/index.ts',
-      './src/components/index.ts',
-      './src/graphql/utils/token-refresh-utility.ts',
-      './src/next-plugin.ts',
-      './src/typegen/index.ts',
-      './src/cli/index.ts'
-    ],
-    external: [
-      'react',
-      'react-dom',
-      'next',
-      'tsup',
-      'tailwindcss',
-      'tw-animate-css',
-      '@parcel/watcher'
-      // Add any other external dependencies your project uses
-    ],
-    format: ['cjs', 'esm'],
-    dts: true,
-    clean: !options.watch,
-    minify: !options.watch,
-    treeshake: true, // Add tree shaking
-    esbuildOptions(options) {
-      // Ensure proper handling of JSX
-      options.jsx = 'automatic'
+  const dtsEnabled = !options.watch
+
+  return [
+    {
+      ...sharedOptions(options),
+      name: 'core',
+      entry: CORE_ENTRIES,
+      format: ['cjs', 'esm'],
+      clean: !options.watch,
+      dts: dtsEnabled
+        ? {
+            entry: TYPE_ENTRIES
+          }
+        : false
     },
-    // Modify the onSuccess handler to be more robust
-    async onSuccess() {
-      const files = [filePath, filePath2]
-
-      for (const file of files) {
-        try {
-          if (!fs.existsSync(file)) {
-            console.warn(`File not found: ${file}`)
-            continue
-          }
-
-          const data = await fs.promises.readFile(file, 'utf8')
-          const hasUseClient = data.includes('"use client"')
-          let result = data
-
-          if (!hasUseClient) {
-            result = `"use client";\n${data.replace(/"use strict";/g, '')}`
-          }
-
-          await fs.promises.writeFile(file, result, 'utf8')
-          console.log(`Successfully modified: ${file}`)
-        } catch (err) {
-          console.error(`Error processing ${file}:`, err)
-        }
+    {
+      ...sharedOptions(options),
+      name: 'client',
+      entry: CLIENT_ENTRY,
+      format: ['cjs', 'esm'],
+      clean: false,
+      dts: false,
+      treeshake: false,
+      banner: {
+        js: '"use client";'
       }
     },
-    conditions: ['style']
-  } as Options
+    {
+      ...sharedOptions(options),
+      name: 'auth-provider',
+      entry: AUTH_PROVIDER_ENTRY,
+      format: ['cjs', 'esm'],
+      clean: false,
+      dts: false,
+      treeshake: false
+    },
+    {
+      ...sharedOptions(options),
+      name: 'next-plugin-esm',
+      entry: ['./src/next-plugin.ts'],
+      format: ['esm'],
+      clean: false,
+      dts: false
+    },
+    {
+      ...sharedOptions(options),
+      name: 'next-plugin-cjs',
+      entry: {
+        'next-plugin': './src/next-plugin.cjs.ts'
+      },
+      format: ['cjs'],
+      clean: false,
+      dts: false
+    }
+  ]
 })
