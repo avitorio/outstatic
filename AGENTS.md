@@ -141,6 +141,45 @@ When creating or modifying GraphQL queries/mutations:
 2. Run `pnpm graphql-codegen` from `/packages/outstatic`
 3. Generated types appear in `src/graphql/gql/`
 
+## Versioning with Changesets
+
+This monorepo uses [@changesets/cli](https://github.com/changesets/changesets) for versioning and changelog generation. **Every PR that changes code in `packages/outstatic` must include a changeset file.**
+
+### Adding a Changeset
+
+Create a markdown file in `outstatic/.changeset/` with a random kebab-case name (e.g., `happy-dogs-fly.md`). The file format is:
+
+```markdown
+---
+"outstatic": patch
+---
+
+Short description of the change.
+```
+
+- **`patch`** - Bug fixes, minor improvements, refactors (use this by default)
+- **`minor`** - New features, non-breaking additions
+- **`major`** - Breaking changes
+
+### Rules
+
+- Only `outstatic` needs to be listed — `docs` and `outstatic-dev-blog` are ignored in changeset config
+- Use `patch` by default. If you believe the change warrants a `minor` tag ask first. Only use `major` for breaking changes.
+- The description should be a concise, user-facing summary of what changed (not implementation details)
+- One changeset per PR; multiple changes in a single PR can be described with multiple bullet points in the same changeset
+
+### Example
+
+File: `outstatic/.changeset/fix-sidebar-scroll.md`
+
+```markdown
+---
+"outstatic": patch
+---
+
+Fix sidebar scroll position resetting when navigating between collections.
+```
+
 ## Testing
 
 Tests are in `packages/outstatic/src/` alongside source files or in `__tests__`/`tests` folders. Uses Jest with jsdom environment and MSW for API mocking.
