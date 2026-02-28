@@ -14,9 +14,11 @@ export const V2BreakingCheck = () => {
   const [showOverlay, setShowOverlay] = useState(false)
 
   useEffect(() => {
-    const bodyElement = document.querySelector('body')
-    if (!bodyElement?.id?.includes('outstatic')) {
-      bodyElement?.setAttribute('id', 'outstatic')
+    const bodyElement = document.body
+    const hasOutstaticBodyId = bodyElement.id.includes('outstatic')
+    const hasOutstaticRootElement = Boolean(document.getElementById('outstatic'))
+
+    if (!hasOutstaticBodyId && !hasOutstaticRootElement) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setShowOverlay(true)
     }
