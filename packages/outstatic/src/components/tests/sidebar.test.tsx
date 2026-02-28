@@ -218,6 +218,16 @@ describe('<Sidebar />', () => {
 
       expect(screen.getAllByText('Settings')).toHaveLength(2)
     })
+
+    it('renders Bugs & Ideas link', async () => {
+      await renderSidebar()
+
+      const link = screen.getByRole('link', { name: 'Bugs & Ideas' })
+      expect(link).toBeInTheDocument()
+      expect(link).toHaveAttribute('href', 'https://outstatic.featurebase.app/')
+      expect(link).toHaveAttribute('target', '_blank')
+      expect(link).toHaveAttribute('rel', 'noopener noreferrer')
+    })
   })
 
   describe('with null data', () => {
