@@ -16,7 +16,9 @@ export const V2BreakingCheck = () => {
   useEffect(() => {
     const bodyElement = document.body
     const hasOutstaticBodyId = bodyElement.id.includes('outstatic')
-    const hasOutstaticRootElement = Boolean(document.getElementById('outstatic'))
+    const hasOutstaticRootElement = Boolean(
+      document.getElementById('outstatic')
+    )
 
     if (!hasOutstaticBodyId && !hasOutstaticRootElement) {
       // eslint-disable-next-line react-hooks/set-state-in-effect

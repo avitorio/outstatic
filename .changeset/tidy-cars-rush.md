@@ -1,5 +1,5 @@
 ---
-"outstatic": patch
+'outstatic': patch
 ---
 
 Export additional `outstatic/client` helpers (`RootProvider`, `Sidebar`, `SidebarProvider`, and `useLocalData`) for custom dashboard integrations.

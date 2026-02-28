@@ -151,7 +151,7 @@ Create a markdown file in `outstatic/.changeset/` with a random kebab-case name 
 
 ```markdown
 ---
-"outstatic": patch
+'outstatic': patch
 ---
 
 Short description of the change.
@@ -174,7 +174,7 @@ File: `outstatic/.changeset/fix-sidebar-scroll.md`
 
 ```markdown
 ---
-"outstatic": patch
+'outstatic': patch
 ---
 
 Fix sidebar scroll position resetting when navigating between collections.
@@ -185,3 +185,7 @@ Fix sidebar scroll position resetting when navigating between collections.
 Tests are in `packages/outstatic/src/` alongside source files or in `__tests__`/`tests` folders. Uses Jest with jsdom environment and MSW for API mocking.
 
 Path alias `@/` maps to `packages/outstatic/src/` in tests.
+
+## Linting and Formatting
+
+Always run `pnpm lint` and `pnpm format`. If there are errors, then run `pnpm lint:fix` and/or `pnpm format:fix` commands.
