@@ -45,7 +45,7 @@ export default function Collections() {
               </Button>
             ) : null}
           </div>
-          <div className="w-full grid md:grid-cols-3 2xl:grid-cols-4 gap-6 mb-12">
+          <div className="w-full grid md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6 mb-12">
             {collections &&
               collections.map((collection) => (
                 <Card
