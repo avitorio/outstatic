@@ -97,13 +97,15 @@ describe('Settings page', () => {
       'Settings'
     )
     expect(
-      screen.getByRole('heading', { level: 2, name: 'Repository' })
+      screen.getByText('Repository', { selector: '[data-slot="card-title"]' })
     ).toBeInTheDocument()
     expect(
-      screen.getByRole('heading', { level: 2, name: 'Media Library' })
+      screen.getByText('Media Library', {
+        selector: '[data-slot="card-title"]'
+      })
     ).toBeInTheDocument()
     expect(
-      screen.getByRole('heading', { level: 2, name: 'Documents' })
+      screen.getByText('Documents', { selector: '[data-slot="card-title"]' })
     ).toBeInTheDocument()
     expect(screen.getByTestId('github-repo-search')).toBeInTheDocument()
     expect(screen.getByTestId('media-settings')).toBeInTheDocument()

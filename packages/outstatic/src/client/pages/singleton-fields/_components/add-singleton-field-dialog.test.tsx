@@ -11,7 +11,7 @@ jest.mock('@/utils/hooks/use-get-singleton-schema')
 jest.mock('@/utils/hooks/use-outstatic')
 jest.mock('@/utils/hooks/use-singleton-field-commit')
 jest.mock('@/components/ui/shadcn/select', () => {
-  const React = require('react')
+  const React = jest.requireActual<typeof import('react')>('react')
   const SelectContext = React.createContext<{
     onValueChange?: (value: string) => void
   }>({})
