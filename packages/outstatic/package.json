@@ -81,7 +81,8 @@
     "typecheck": "tsc --project tsconfig.json --noEmit",
     "lint": "eslint .",
     "generate": "graphql-codegen",
-    "prestart": "pnpm generate"
+    "prestart": "pnpm generate",
+    "version:sync": "node version.mjs"
   },
   "dependencies": {
     "@ai-sdk/openai": "^3.0.2",
