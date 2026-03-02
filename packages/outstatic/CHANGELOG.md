@@ -1,5 +1,15 @@
 # outstatic
 
+## 2.1.3
+
+### Patch Changes
+
+- 7b6fd94: - Add a Bugs & Ideas sidebar item that opens the Outstatic Featurebase board in a new tab.
+  - Refactor Settings cards to use structured card headers and descriptions instead of prose styling classes.
+- 273e2f1: Export additional `outstatic/client` helpers (`RootProvider`, `Sidebar`, `SidebarProvider`, and `useLocalData`) for custom dashboard integrations.
+
+  Avoid showing the V2 upgrade warning when an Outstatic root container (`#outstatic`) is already present.
+
 ## 2.1.2
 
 ### Patch Changes
