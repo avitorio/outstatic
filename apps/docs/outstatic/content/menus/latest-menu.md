@@ -7,7 +7,7 @@ author:
 slug: "latest-menu"
 description: ""
 coverImage: ""
-publishedAt: "2024-11-06T03:00:00.000Z"
+publishedAt: "2026-03-13T03:00:00.000Z"
 ---
 
 - Start Here
@@ -22,12 +22,15 @@ publishedAt: "2024-11-06T03:00:00.000Z"
 - Editing & Modeling
 
   - [The Content Editor](/the-content-editor)
-    - [AI Completion 🤖](/the-content-editor#ai-completion)
-  - [Custom Fields ⚡︎](/custom-fields)
+    - [Writing Content](/the-content-editor#writing-content)
+    - [Menus](/the-content-editor#menus)
+    - [Uploading Images](/the-content-editor#uploading-images)
+    - [AI Completion](/the-content-editor#ai-completion)
+  - [Custom Fields](/custom-fields)
 
 - Access & Integration
 
-  - [Fetching data](/fetching-data)
+  - [Fetching Data](/fetching-data)
   - [API Keys](/api-keys)
   - [Roles & Permissions](/roles)
   - [Environment Variables](/environment-variables)
