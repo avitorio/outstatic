@@ -7,7 +7,7 @@ author:
 slug: "the-content-editor"
 description: "Learn how the Outstatic Content Editor works."
 coverImage: ""
-publishedAt: "2024-11-16T03:00:00.000Z"
+publishedAt: "2026-03-13T03:00:00.000Z"
 ---
 
 The content editor is the main tool used for editing documents. It's where you'll be writing your content, adding links, images, etc…
@@ -47,9 +47,9 @@ Outstatic fetches the images directly from GitHub so they can be visualised inst
 
 Outstatic includes AI completions out of the box, so you can keep writing without context switching. Pick the setup that matches how you want to run AI in your project:
 
-### Option 1 (Recommended): Outstatic-managed AI via `OUTSTATIC_API_KEY`
+### Option 1 (Recommended): Outstatic-managed AI via `OUTSTATIC_API_KEY` (Pro Users Only)
 
-If you’re using `OUTSTATIC_API_KEY`, you don’t need to configure any AI provider keys or models. Outstatic handles the AI provider for you and uses a high-quality, up-to-date completion model, with very generous usage designed for normal editorial workflows.
+If you’re a pro user and using `OUTSTATIC_API_KEY`, you don’t need to configure any AI provider keys or models. Outstatic handles the AI provider for you and uses a high-quality, up-to-date completion model, with very generous usage designed for normal editorial workflows.
 
 1. [Create an Outstatic account](https://outstatic.com/auth/sign-up?provider=github)
 2. Create a project and generate an API Key
