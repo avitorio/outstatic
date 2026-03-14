@@ -128,7 +128,7 @@ const renderRoute = ({
   // Singleton edit route: /singletons/{slug}
   if (isSingletonRoute(slug, slug2, singletons)) {
     return (
-      <EditorProvider>
+      <EditorProvider key={`singleton-editor-${slug2}`}>
         <UpgradeDialogProvider feature="ai">
           <EditSingleton slug={slug2} />
         </UpgradeDialogProvider>
