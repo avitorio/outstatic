@@ -1,6 +1,6 @@
 {
-  "commit": "7822fbaf201114ddbcb4a084a57cd140e50f3d2f",
-  "generated": "2026-02-24T16:46:19.672Z",
+  "commit": "dbf864b5c1374bcbfac6c5d2de2553baa3dc7b5a",
+  "generated": "2026-03-13T14:32:21.557Z",
   "metadata": [
     {
       "__outstatic": {
@@ -331,24 +331,6 @@
     },
     {
       "__outstatic": {
-        "commit": "040148fa54df61b67b581f1c8c195f2ad68e02d5",
-        "hash": "3325075345",
-        "path": "/outstatic/content/menus/latest-menu.md"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "menus",
-      "coverImage": "",
-      "description": "",
-      "publishedAt": "2024-11-06T03:00:00.000Z",
-      "slug": "latest-menu",
-      "status": "published",
-      "title": "Latest Menu"
-    },
-    {
-      "__outstatic": {
         "commit": "e2fc80edab88258fa434d96f2f41734e5ecb9860",
         "hash": "1806955757",
         "path": "/outstatic/content/docs/using-outstatic-for-markdown-content.mdx"
@@ -579,8 +561,8 @@
     },
     {
       "__outstatic": {
-        "commit": "7822fbaf201114ddbcb4a084a57cd140e50f3d2f",
-        "hash": "1416887862",
+        "commit": "72dc868d3b1febbc1fd249ff9b6e8b5143bd3c82",
+        "hash": "4266979834",
         "path": "/outstatic/content/docs/the-content-editor.md"
       },
       "author": {
@@ -590,10 +572,28 @@
       "collection": "docs",
       "coverImage": "",
       "description": "Learn how the Outstatic Content Editor works.",
-      "publishedAt": "2024-11-16T03:00:00.000Z",
+      "publishedAt": "2026-03-13T03:00:00.000Z",
       "slug": "the-content-editor",
       "status": "published",
       "title": "The content editor"
+    },
+    {
+      "__outstatic": {
+        "commit": "dbf864b5c1374bcbfac6c5d2de2553baa3dc7b5a",
+        "hash": "3706241680",
+        "path": "/outstatic/content/menus/latest-menu.md"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "menus",
+      "coverImage": "",
+      "description": "",
+      "publishedAt": "2026-03-13T03:00:00.000Z",
+      "slug": "latest-menu",
+      "status": "published",
+      "title": "Latest Menu"
     }
   ]
 }
