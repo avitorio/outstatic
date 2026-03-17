@@ -88,6 +88,20 @@ describe('schema-to-ts', () => {
       }
       expect(dataTypeToTS(field)).toBe('unknown')
     })
+
+    it('converts select fields with predefined values to a union type', () => {
+      const field: SchemaField = {
+        title: 'Category',
+        fieldType: 'Select',
+        dataType: 'string',
+        values: [
+          { label: 'News', value: 'news' },
+          { label: 'Guides', value: 'guides' }
+        ]
+      }
+
+      expect(dataTypeToTS(field)).toBe("'news' | 'guides'")
+    })
   })
 
   describe('sanitizeFieldName', () => {

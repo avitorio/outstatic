@@ -8,7 +8,11 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/shadcn/card'
-import { CustomFieldType, CustomFieldsType } from '@/types'
+import {
+  CustomFieldArrayValue,
+  CustomFieldsType,
+  customFieldTypes
+} from '@/types'
 import { useGetCollectionSchema } from '@/utils/hooks/use-get-collection-schema'
 import { addCustomFieldSchema } from '@/utils/schemas/add-custom-field-schema'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -25,9 +29,14 @@ type CustomFieldsProps = {
   title: string
 }
 
-type CustomFieldForm = CustomFieldType<
-  'string' | 'number' | 'array' | 'boolean'
-> & { name: string }
+type CustomFieldForm = {
+  title: string
+  fieldType: (typeof customFieldTypes)[number]
+  description?: string
+  required?: boolean
+  values?: CustomFieldArrayValue[]
+  name: string
+}
 
 export default function CustomFields({ collection, title }: CustomFieldsProps) {
   const [customFields, setCustomFields] = useState<CustomFieldsType>({})
