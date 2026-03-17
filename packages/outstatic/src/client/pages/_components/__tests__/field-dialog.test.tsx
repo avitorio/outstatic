@@ -7,15 +7,12 @@ import {
   waitFor
 } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { AddSingletonFieldDialog } from './add-singleton-field-dialog'
-import { useGetSingletonSchema } from '@/utils/hooks/use-get-singleton-schema'
+import { FieldDialog } from '../field-dialog'
+import { useFieldSchemaCommit } from '@/utils/hooks/use-field-schema-commit'
 import { useOutstatic } from '@/utils/hooks/use-outstatic'
-import { useSingletonFieldCommit } from '@/utils/hooks/use-singleton-field-commit'
-import type { CustomFieldsType } from '@/types'
 
-jest.mock('@/utils/hooks/use-get-singleton-schema')
+jest.mock('@/utils/hooks/use-field-schema-commit')
 jest.mock('@/utils/hooks/use-outstatic')
-jest.mock('@/utils/hooks/use-singleton-field-commit')
 jest.mock('@/components/ui/outstatic/tag-input', () => ({
   TagInput: ({ id }: { id: string }) => {
     const { useFormContext } =
@@ -63,20 +60,17 @@ jest.mock('@/components/ui/shadcn/select', () => {
     children,
     onValueChange
   }: {
-    children: React.ReactNode
+    children: any
     onValueChange?: (value: string) => void
+    value?: string
+    disabled?: boolean
   }) => (
     <SelectContext.Provider value={{ onValueChange }}>
       <div>{children}</div>
     </SelectContext.Provider>
   )
 
-  const SelectTrigger = ({
-    children,
-    ...props
-  }: {
-    children: React.ReactNode
-  }) => (
+  const SelectTrigger = ({ children, ...props }: { children: any }) => (
     <button
       type="button"
       role="combobox"
@@ -92,7 +86,7 @@ jest.mock('@/components/ui/shadcn/select', () => {
     <span>{placeholder ?? ''}</span>
   )
 
-  const SelectContent = ({ children }: { children: React.ReactNode }) => (
+  const SelectContent = ({ children }: { children: any }) => (
     <div id="mock-select-listbox">{children}</div>
   )
 
@@ -100,7 +94,7 @@ jest.mock('@/components/ui/shadcn/select', () => {
     children,
     value
   }: {
-    children: React.ReactNode
+    children: any
     value: string
   }) => {
     const { onValueChange } = React.useContext(SelectContext)
@@ -170,9 +164,8 @@ jest.mock('change-case', () => ({
   }
 }))
 
-const mockUseGetSingletonSchema = useGetSingletonSchema as jest.Mock
 const mockUseOutstatic = useOutstatic as jest.Mock
-const mockUseSingletonFieldCommit = useSingletonFieldCommit as jest.Mock
+const mockUseFieldSchemaCommit = useFieldSchemaCommit as jest.Mock
 
 const hasUncontrolledInputWarning = (calls: unknown[][]) =>
   calls.some((call) =>
@@ -185,25 +178,29 @@ const hasUncontrolledInputWarning = (calls: unknown[][]) =>
     )
   )
 
-describe('<AddSingletonFieldDialog />', () => {
+describe('<FieldDialog />', () => {
   let mockSetHasChanges: jest.Mock
   let mockCommit: jest.Mock
 
   const renderDialog = (
-    overrides: Partial<ComponentProps<typeof AddSingletonFieldDialog>> = {}
+    overrides: Partial<ComponentProps<typeof FieldDialog>> = {}
   ) => {
-    const props: ComponentProps<typeof AddSingletonFieldDialog> = {
-      slug: 'about',
-      title: 'About',
-      showAddModal: true,
-      setShowAddModal: jest.fn(),
+    const props: ComponentProps<typeof FieldDialog> = {
+      mode: 'add',
+      open: true,
+      onOpenChange: jest.fn(),
+      target: {
+        kind: 'collection',
+        slug: 'posts',
+        title: 'Posts'
+      },
       customFields: {},
       setCustomFields: jest.fn(),
       ...overrides
     }
 
     return {
-      ...render(<AddSingletonFieldDialog {...props} />),
+      ...render(<FieldDialog {...props} />),
       props
     }
   }
@@ -216,15 +213,19 @@ describe('<AddSingletonFieldDialog />', () => {
     mockUseOutstatic.mockReturnValue({
       setHasChanges: mockSetHasChanges
     })
-    mockUseGetSingletonSchema.mockReturnValue({
-      data: null
-    })
-    mockUseSingletonFieldCommit.mockReturnValue(mockCommit)
+    mockUseFieldSchemaCommit.mockReturnValue(mockCommit)
   })
 
-  it('renders singleton dialog and keeps description input controlled', async () => {
+  it('renders add mode for a singleton target and keeps description controlled', async () => {
     const user = userEvent.setup()
-    renderDialog()
+
+    renderDialog({
+      target: {
+        kind: 'singleton',
+        slug: 'about',
+        title: 'About'
+      }
+    })
 
     expect(screen.getByText('Add Custom Field to About')).toBeInTheDocument()
 
@@ -254,52 +255,41 @@ describe('<AddSingletonFieldDialog />', () => {
     consoleErrorSpy.mockRestore()
   })
 
-  it('syncs custom fields from singleton schema when available', async () => {
-    const setCustomFields = jest.fn()
-    const schemaProperties: CustomFieldsType = {
-      heroTitle: {
-        title: 'Hero Title',
-        fieldType: 'String',
-        dataType: 'string'
-      }
-    }
-
-    mockUseGetSingletonSchema.mockReturnValue({
-      data: {
-        properties: schemaProperties
+  it('shows save-first modal for unsaved singletons', () => {
+    renderDialog({
+      target: {
+        kind: 'singleton',
+        slug: 'new',
+        title: 'About',
+        isNew: true
       }
     })
 
-    renderDialog({ setCustomFields })
-
-    await waitFor(() =>
-      expect(setCustomFields).toHaveBeenCalledWith(schemaProperties)
-    )
+    expect(screen.getByText('Save your singleton first')).toBeInTheDocument()
+    expect(
+      screen.queryByPlaceholderText('Ex: Category')
+    ).not.toBeInTheDocument()
   })
 
   it('disables field name when a field title is prefilled', () => {
-    renderDialog({ fieldTitle: 'Hero title' })
+    renderDialog({ fieldTitle: 'Category' })
 
     const titleInput = screen.getByPlaceholderText(
       'Ex: Category'
     ) as HTMLInputElement
-    expect(titleInput).toHaveValue('Hero title')
+    expect(titleInput).toHaveValue('Category')
     expect(titleInput).toBeDisabled()
-  })
-
-  it('passes singleton slug into commit hook', () => {
-    renderDialog({ slug: 'home' })
-    expect(mockUseSingletonFieldCommit).toHaveBeenCalledWith('home')
   })
 
   it('closes dialog and clears change state when canceling', async () => {
     const user = userEvent.setup()
-    const setShowAddModal = jest.fn()
-    renderDialog({ setShowAddModal })
+    const onOpenChange = jest.fn()
+
+    renderDialog({ onOpenChange })
 
     await user.click(screen.getByRole('button', { name: 'Cancel' }))
 
-    expect(setShowAddModal).toHaveBeenCalledWith(false)
+    expect(onOpenChange).toHaveBeenCalledWith(false)
     expect(mockSetHasChanges).toHaveBeenCalledWith(false)
   })
 
@@ -307,20 +297,20 @@ describe('<AddSingletonFieldDialog />', () => {
     const user = userEvent.setup()
     renderDialog()
 
-    await user.type(screen.getByPlaceholderText('Ex: Category'), 'Hero Title')
+    await user.type(screen.getByPlaceholderText('Ex: Category'), 'SEO Title')
 
     await waitFor(() =>
       expect(
         screen.getByText(
           (_, element) =>
             element?.tagName.toLowerCase() === 'code' &&
-            element.textContent?.toLowerCase() === 'herotitle'
+            element.textContent?.toLowerCase() === 'seoTitle'.toLowerCase()
         )
       ).toBeInTheDocument()
     )
   })
 
-  it('blocks saving a singleton select field without options', async () => {
+  it('blocks saving a select field without options', async () => {
     const user = userEvent.setup()
     renderDialog()
 
@@ -331,7 +321,7 @@ describe('<AddSingletonFieldDialog />', () => {
     await waitFor(() => expect(mockCommit).not.toHaveBeenCalled())
   })
 
-  it('prevents enter inside the options input from submitting the singleton dialog', async () => {
+  it('prevents enter inside the options input from submitting the dialog', async () => {
     const user = userEvent.setup()
     renderDialog()
 
@@ -345,5 +335,146 @@ describe('<AddSingletonFieldDialog />', () => {
 
     expect(enterEvent.defaultPrevented).toBe(true)
     expect(mockCommit).not.toHaveBeenCalled()
+  })
+
+  it('blocks reserved field names', async () => {
+    const user = userEvent.setup()
+    renderDialog()
+
+    await user.type(screen.getByPlaceholderText('Ex: Category'), 'Title')
+    await user.click(screen.getByRole('option', { name: 'String' }))
+    await user.click(screen.getByRole('button', { name: 'Add' }))
+
+    await waitFor(() => expect(mockCommit).not.toHaveBeenCalled())
+    expect(screen.getByText('Add Custom Field to Posts')).toBeInTheDocument()
+  })
+
+  it('blocks duplicate field names', async () => {
+    const user = userEvent.setup()
+    renderDialog({
+      customFields: {
+        heroTitle: {
+          title: 'Hero Title',
+          fieldType: 'String',
+          dataType: 'string'
+        }
+      }
+    })
+
+    await user.type(screen.getByPlaceholderText('Ex: Category'), 'Hero Title')
+    await user.click(screen.getByRole('option', { name: 'String' }))
+    await user.click(screen.getByRole('button', { name: 'Add' }))
+
+    await waitFor(() => expect(mockCommit).not.toHaveBeenCalled())
+    expect(screen.getByText('Add Custom Field to Posts')).toBeInTheDocument()
+  })
+
+  it('submits add mode and updates fields for a singleton target', async () => {
+    const user = userEvent.setup()
+    const setCustomFields = jest.fn()
+    const target = {
+      kind: 'singleton' as const,
+      slug: 'about',
+      title: 'About'
+    }
+
+    renderDialog({
+      target,
+      setCustomFields
+    })
+
+    expect(mockUseFieldSchemaCommit).toHaveBeenCalledWith(target)
+
+    await user.type(screen.getByPlaceholderText('Ex: Category'), 'Hero Title')
+    await user.click(screen.getByRole('option', { name: 'String' }))
+    fireEvent.submit(document.querySelector('form') as HTMLFormElement)
+
+    await waitFor(() => expect(mockCommit).toHaveBeenCalledTimes(1))
+    expect(mockCommit).toHaveBeenCalledWith({
+      action: 'add',
+      customFields: {
+        heroTitle: {
+          title: 'Hero Title',
+          fieldType: 'String',
+          dataType: 'string',
+          description: '',
+          required: false
+        }
+      },
+      fieldName: 'heroTitle'
+    })
+    expect(setCustomFields).toHaveBeenCalledWith({
+      heroTitle: {
+        title: 'Hero Title',
+        fieldType: 'String',
+        dataType: 'string',
+        description: '',
+        required: false
+      }
+    })
+  })
+
+  it('renders edit mode with locked field name/type and saves changes', async () => {
+    const user = userEvent.setup()
+    const setCustomFields = jest.fn()
+
+    renderDialog({
+      mode: 'edit',
+      target: {
+        kind: 'collection',
+        slug: 'posts',
+        title: 'Posts'
+      },
+      selectedField: 'category',
+      setCustomFields,
+      customFields: {
+        category: {
+          title: 'Category',
+          fieldType: 'Select',
+          dataType: 'string',
+          description: 'Used for filtering',
+          required: true,
+          values: [{ label: 'News', value: 'news' }]
+        }
+      }
+    })
+
+    expect(
+      screen.getByText(
+        'Field name and field type editing are disabled to avoid data conflicts.'
+      )
+    ).toBeInTheDocument()
+    expect(screen.getByDisplayValue('Category')).toBeDisabled()
+    expect(screen.getByText('Edit Category')).toBeInTheDocument()
+    expect(
+      screen.getByRole('button', { name: 'Add option' })
+    ).toBeInTheDocument()
+
+    const descriptionInput = screen.getByDisplayValue('Used for filtering')
+    await user.clear(descriptionInput)
+    await user.type(descriptionInput, 'Primary category')
+    fireEvent.submit(document.querySelector('form') as HTMLFormElement)
+
+    await waitFor(() => expect(mockCommit).toHaveBeenCalledTimes(1))
+    expect(mockCommit).toHaveBeenCalledWith(
+      expect.objectContaining({
+        action: 'edit',
+        fieldName: 'category',
+        customFields: expect.objectContaining({
+          category: expect.objectContaining({
+            title: 'Category',
+            description: 'Primary category'
+          })
+        })
+      })
+    )
+    expect(setCustomFields).toHaveBeenCalledWith(
+      expect.objectContaining({
+        category: expect.objectContaining({
+          title: 'Category',
+          description: 'Primary category'
+        })
+      })
+    )
   })
 })

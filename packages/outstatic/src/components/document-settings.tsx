@@ -43,11 +43,12 @@ import {
   TooltipProvider,
   TooltipTrigger
 } from '@/components/ui/shadcn/tooltip'
-import { AddCustomFieldDialog } from '@/client/pages/custom-fields/_components/add-custom-field-dialog'
+import { FieldDialog } from '@/client/pages/_components/field-dialog'
 import { DateTimePickerForm } from '@/components/ui/outstatic/date-time-picker-form'
 
 import { CustomFieldRenderer } from '@/components/utils/custom-field-renderer'
 import { cn } from '@/utils/ui'
+import type { FieldSchemaTarget } from '@/utils/hooks/field-schema'
 
 type DocumentSettingsProps = {
   saveDocument: () => void
@@ -109,6 +110,20 @@ export const DocumentSettings = ({
   }
 
   const defaultMetadata = ['title', 'status', 'author', 'slug', 'publishedAt']
+  const fieldTarget: FieldSchemaTarget = singleton
+    ? {
+        kind: 'singleton',
+        slug: singleton,
+        title: title || singleton,
+        ...(singleton === 'new' ? { isNew: true } : {})
+      }
+    : {
+        kind: 'collection',
+        slug: collection,
+        title: collection
+          .replace(/[_-]+/g, ' ')
+          .replace(/\b\w/g, (char) => char.toUpperCase())
+      }
 
   const missingCustomFields = Object.keys(metadata)
     .filter(
@@ -430,12 +445,11 @@ export const DocumentSettings = ({
           )}
         </div>
         {showAddModal ? (
-          <AddCustomFieldDialog
-            collection={collection}
-            singleton={singleton}
-            documentTitle={title}
-            showAddModal={showAddModal}
-            setShowAddModal={onModalChange}
+          <FieldDialog
+            mode="add"
+            open={showAddModal}
+            onOpenChange={onModalChange}
+            target={fieldTarget}
             customFields={customFields}
             setCustomFields={setCustomFields}
             fieldTitle={fieldTitle ?? ''}
