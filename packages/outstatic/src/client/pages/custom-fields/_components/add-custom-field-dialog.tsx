@@ -1,17 +1,21 @@
 import { Button } from '@/components/ui/shadcn/button'
 import { Input } from '@/components/ui/shadcn/input'
 import {
+  TagInput,
+  preventTagInputEnterSubmit
+} from '@/components/ui/outstatic/tag-input'
+import {
   CustomFieldArrayValue,
-  CustomFieldType,
   CustomFieldsType,
   Document,
+  createCustomFieldDefinition,
   customFieldTypes
 } from '@/types'
 import { useGetCollectionSchema } from '@/utils/hooks/use-get-collection-schema'
 import { useOutstatic } from '@/utils/hooks/use-outstatic'
 import { camelCase, capitalCase } from 'change-case'
 import { useEffect, useState } from 'react'
-import { FormProvider, SubmitHandler, useForm } from 'react-hook-form'
+import { FormProvider, SubmitHandler, useForm, useWatch } from 'react-hook-form'
 import {
   Select,
   SelectContent,
@@ -41,19 +45,14 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { addCustomFieldSchema } from '@/utils/schemas/add-custom-field-schema'
 import { DEFAULT_FIELDS } from '@/utils/constants'
 import { Checkbox } from '@/components/ui/shadcn/checkbox'
-type CustomFieldForm = CustomFieldType<
-  'string' | 'number' | 'array' | 'boolean' | 'date' | 'image'
-> & { name: string; values?: CustomFieldArrayValue[] }
 
-const fieldDataMap = {
-  Text: 'string',
-  String: 'string',
-  Number: 'number',
-  Tags: 'array',
-  Boolean: 'boolean',
-  Date: 'date',
-  Image: 'image'
-} as const
+type CustomFieldForm = {
+  title: string
+  fieldType: (typeof customFieldTypes)[number]
+  description?: string
+  required?: boolean
+  values?: CustomFieldArrayValue[]
+}
 
 interface AddCustomFieldDialogProps {
   collection: string
@@ -83,6 +82,10 @@ export const AddCustomFieldDialog: React.FC<AddCustomFieldDialogProps> = ({
   const methods = useForm<CustomFieldForm>({
     mode: 'onChange',
     resolver: zodResolver(addCustomFieldSchema) as any
+  })
+  const selectedFieldType = useWatch({
+    control: methods.control,
+    name: 'fieldType'
   })
 
   const { data: schema } = useGetCollectionSchema({ collection })
@@ -121,20 +124,12 @@ export const AddCustomFieldDialog: React.FC<AddCustomFieldDialogProps> = ({
     }
 
     try {
-      // eslint-disable-next-line react-hooks/immutability
-      customFields[fieldName] = {
+      customFields[fieldName] = createCustomFieldDefinition({
         ...rest,
         fieldType,
-        dataType: fieldDataMap[fieldType],
-        title: data.title
-      }
-
-      if (fieldDataMap[fieldType] === 'array') {
-        customFields[fieldName] = {
-          ...customFields[fieldName],
-          values: data?.values || []
-        }
-      }
+        title: data.title,
+        values: data.values
+      })
 
       await capiHelper({
         customFields,
@@ -182,6 +177,7 @@ export const AddCustomFieldDialog: React.FC<AddCustomFieldDialogProps> = ({
         <FormProvider {...methods}>
           <form
             onSubmit={methods.handleSubmit(onSubmit)}
+            onKeyDown={preventTagInputEnterSubmit}
             className="flex flex-col gap-4"
           >
             <div className="flex pt-6 gap-4">
@@ -288,6 +284,17 @@ export const AddCustomFieldDialog: React.FC<AddCustomFieldDialogProps> = ({
                 )}
               />
             </div>
+
+            {selectedFieldType === 'Select' ? (
+              <div className="flex gap-4 mb-4">
+                <TagInput
+                  label="Options"
+                  id="values"
+                  description="Create the available options for this field. The stored YAML value will be each option's value."
+                  suggestions={methods.getValues('values') || []}
+                />
+              </div>
+            ) : null}
 
             <DialogFooter className="flex sm:justify-between items-center pt-6 border-t">
               <div className="text-sm">

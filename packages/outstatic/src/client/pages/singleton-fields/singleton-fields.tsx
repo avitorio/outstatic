@@ -8,7 +8,11 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/shadcn/card'
-import { CustomFieldType, CustomFieldsType } from '@/types'
+import {
+  CustomFieldArrayValue,
+  CustomFieldsType,
+  customFieldTypes
+} from '@/types'
 import { useGetSingletonSchema } from '@/utils/hooks/use-get-singleton-schema'
 import { addCustomFieldSchema } from '@/utils/schemas/add-custom-field-schema'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -24,9 +28,14 @@ type SingletonFieldsProps = {
   slug: string
 }
 
-type CustomFieldForm = CustomFieldType<
-  'string' | 'number' | 'array' | 'boolean'
-> & { name: string }
+type CustomFieldForm = {
+  title: string
+  fieldType: (typeof customFieldTypes)[number]
+  description?: string
+  required?: boolean
+  values?: CustomFieldArrayValue[]
+  name: string
+}
 
 export default function SingletonFields({ slug }: SingletonFieldsProps) {
   const [customFields, setCustomFields] = useState<CustomFieldsType>({})

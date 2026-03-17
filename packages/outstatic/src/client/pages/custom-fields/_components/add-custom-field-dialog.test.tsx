@@ -1,5 +1,11 @@
 import type { ComponentProps } from 'react'
-import { render, screen, waitFor } from '@testing-library/react'
+import {
+  createEvent,
+  fireEvent,
+  render,
+  screen,
+  waitFor
+} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { AddCustomFieldDialog } from './add-custom-field-dialog'
 import { useGetCollectionSchema } from '@/utils/hooks/use-get-collection-schema'
@@ -10,6 +16,43 @@ import type { CustomFieldsType } from '@/types'
 jest.mock('@/utils/hooks/use-get-collection-schema')
 jest.mock('@/utils/hooks/use-outstatic')
 jest.mock('./use-custom-field-commit')
+jest.mock('@/components/ui/outstatic/tag-input', () => ({
+  TagInput: ({ id }: { id: string }) => {
+    const { useFormContext } =
+      jest.requireActual<typeof import('react-hook-form')>('react-hook-form')
+    const { register, setValue } = useFormContext()
+
+    return (
+      <div data-tag-input-root>
+        <input aria-label="Options input" />
+        <input type="hidden" {...register(id)} />
+        <button
+          type="button"
+          onClick={() =>
+            setValue(id, [{ label: 'News', value: 'news' }], {
+              shouldValidate: true
+            })
+          }
+        >
+          Add option
+        </button>
+      </div>
+    )
+  },
+  preventTagInputEnterSubmit: (event: {
+    key: string
+    target: EventTarget | null
+    preventDefault: () => void
+  }) => {
+    if (
+      event.key === 'Enter' &&
+      event.target instanceof HTMLElement &&
+      event.target.closest('[data-tag-input-root]')
+    ) {
+      event.preventDefault()
+    }
+  }
+}))
 jest.mock('@/components/ui/shadcn/select', () => {
   const React = jest.requireActual<typeof import('react')>('react')
   const SelectContext = React.createContext<{
@@ -85,16 +128,27 @@ jest.mock('@hookform/resolvers/zod', () => ({
   zodResolver: () => (values: Record<string, unknown>) => {
     const fallbackFieldType =
       values.title === 'Tags' ? 'Tags' : ('String' as const)
+    const fieldType =
+      typeof values.fieldType === 'string'
+        ? values.fieldType
+        : fallbackFieldType
+    const selectHasOptions =
+      Array.isArray(values.values) && values.values.length > 0
 
     return {
       values: {
         ...values,
-        fieldType:
-          typeof values.fieldType === 'string'
-            ? values.fieldType
-            : fallbackFieldType
+        fieldType
       },
-      errors: {}
+      errors:
+        fieldType === 'Select' && !selectHasOptions
+          ? {
+              values: {
+                type: 'custom',
+                message: 'Add at least one option for a Select field.'
+              }
+            }
+          : {}
     }
   }
 }))
@@ -272,5 +326,32 @@ describe('<AddCustomFieldDialog />', () => {
         )
       ).toBeInTheDocument()
     )
+  })
+
+  it('blocks saving a select field without options', async () => {
+    const user = userEvent.setup()
+    renderDialog()
+
+    await user.type(screen.getByPlaceholderText('Ex: Category'), 'Category')
+    await user.click(screen.getByRole('option', { name: 'Select' }))
+    await user.click(screen.getByRole('button', { name: 'Add' }))
+
+    await waitFor(() => expect(mockCommit).not.toHaveBeenCalled())
+  })
+
+  it('prevents enter inside the options input from submitting the dialog', async () => {
+    const user = userEvent.setup()
+    renderDialog()
+
+    await user.type(screen.getByPlaceholderText('Ex: Category'), 'Category')
+    await user.click(screen.getByRole('option', { name: 'Select' }))
+
+    const optionsInput = screen.getByLabelText('Options input')
+    const enterEvent = createEvent.keyDown(optionsInput, { key: 'Enter' })
+
+    fireEvent(optionsInput, enterEvent)
+
+    expect(enterEvent.defaultPrevented).toBe(true)
+    expect(mockCommit).not.toHaveBeenCalled()
   })
 })
