@@ -1,4 +1,4 @@
-import { CustomFieldsType } from '@/types'
+import { CustomFieldsType, isSelectCustomField } from '@/types'
 import { z } from 'zod/v4'
 import { documentShape } from './schemas/edit-document-schema'
 
@@ -9,6 +9,9 @@ export const convertSchemaToZod = (customFields: {
 
   for (const [name, field] of Object.entries(customFields.properties)) {
     let fieldSchema: z.ZodTypeAny
+    const selectValues = isSelectCustomField(field)
+      ? field.values.map(({ value }) => value)
+      : null
 
     switch (field.dataType) {
       case 'string':
@@ -39,6 +42,17 @@ export const convertSchemaToZod = (customFields: {
       })
     } else {
       fieldSchema = fieldSchema.optional()
+    }
+
+    if (selectValues && selectValues.length > 0) {
+      fieldSchema = fieldSchema.refine(
+        (val) =>
+          val === undefined ||
+          (typeof val === 'string' && selectValues.includes(val)),
+        {
+          message: `${field.title} must be one of the available options.`
+        }
+      )
     }
 
     if (field.dataType === 'number') {

@@ -1,11 +1,13 @@
 import { DocumentSettingsImageSelection } from '@/components/document-settings-image-selection'
 import { TagInput } from '@/components/ui/outstatic/tag-input'
+import { Button } from '@/components/ui/shadcn/button'
 import { Input } from '@/components/ui/shadcn/input'
 import { Textarea } from '@/components/ui/shadcn/textarea'
 import {
   CustomFieldArrayValue,
   CustomFieldsType,
-  isArrayCustomField
+  isArrayCustomField,
+  isSelectCustomField
 } from '@/types'
 import { RegisterOptions } from 'react-hook-form'
 import {
@@ -24,6 +26,13 @@ import {
   AccordionItem,
   AccordionTrigger
 } from '@/components/ui/shadcn/accordion'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from '@/components/ui/shadcn/select'
 import { cn } from '@/utils/ui'
 
 type CustomFieldRendererProps = {
@@ -54,6 +63,7 @@ type FieldDataMapType = {
   String: ComponentType
   Text: ComponentType
   Number: ComponentType
+  Select: ComponentType
   Tags: ComponentType
   Boolean: ComponentType
   Date: ComponentType
@@ -64,6 +74,7 @@ const FieldDataMap: FieldDataMapType = {
   String: { component: Input, props: { type: 'text' } },
   Text: { component: Textarea, props: {} },
   Number: { component: Input, props: { type: 'number' } },
+  Select: { component: Input, props: { type: 'text' } },
   Tags: {
     component: TagInput,
     props: {
@@ -143,6 +154,45 @@ export const CustomFieldRenderer = ({
             )}
           />
         )
+
+      case 'Select': {
+        if (!isSelectCustomField(field)) return null
+
+        const currentValue =
+          typeof formField.value === 'string' && formField.value.length > 0
+            ? formField.value
+            : undefined
+
+        return (
+          <div className="flex flex-col items-start gap-2">
+            <Select
+              value={currentValue}
+              onValueChange={(value) => formField.onChange(value)}
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select an option" />
+              </SelectTrigger>
+              <SelectContent>
+                {field.values.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            {!field.required && currentValue ? (
+              <Button
+                type="button"
+                variant="ghost"
+                className="h-auto p-0 text-sm"
+                onClick={() => formField.onChange(undefined)}
+              >
+                Clear selection
+              </Button>
+            ) : null}
+          </div>
+        )
+      }
 
       default:
         if (isArrayCustomField(field)) {

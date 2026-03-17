@@ -1,13 +1,16 @@
 import { Alert, AlertTitle } from '@/components/ui/shadcn/alert'
-import { TagInput } from '@/components/ui/outstatic/tag-input'
+import {
+  TagInput,
+  preventTagInputEnterSubmit
+} from '@/components/ui/outstatic/tag-input'
 import { Button } from '@/components/ui/shadcn/button'
 import { Input } from '@/components/ui/shadcn/input'
 import {
   CustomFieldArrayValue,
-  CustomFieldType,
   CustomFieldsType,
+  createCustomFieldDefinition,
   customFieldTypes,
-  isArrayCustomField
+  isFieldWithValues
 } from '@/types'
 import { useGetCollectionSchema } from '@/utils/hooks/use-get-collection-schema'
 import { useOutstatic } from '@/utils/hooks/use-outstatic'
@@ -42,9 +45,13 @@ import { editCustomFieldSchema } from '@/utils/schemas/edit-custom-field-schema'
 import { Checkbox } from '@/components/ui/shadcn/checkbox'
 import { InfoCircledIcon } from '@radix-ui/react-icons'
 
-type CustomFieldForm = CustomFieldType<
-  'string' | 'number' | 'array' | 'boolean'
-> & { name: string; values?: CustomFieldArrayValue[] }
+type CustomFieldForm = {
+  title: string
+  fieldType: (typeof customFieldTypes)[number]
+  description?: string
+  required?: boolean
+  values?: CustomFieldArrayValue[]
+}
 
 interface EditCustomFieldDialogProps {
   collection: string
@@ -79,7 +86,7 @@ export const EditCustomFieldDialog: React.FC<EditCustomFieldDialogProps> = ({
     if (schema) {
       setCustomFields(schema.properties)
       const selectedSchemaField = schema.properties[selectedField]
-      if (isArrayCustomField(selectedSchemaField)) {
+      if (isFieldWithValues(selectedSchemaField)) {
         methods.setValue('values', selectedSchemaField.values)
       }
     }
@@ -89,22 +96,16 @@ export const EditCustomFieldDialog: React.FC<EditCustomFieldDialogProps> = ({
     data: CustomFieldForm
   ) => {
     setEditing(true)
-    const { title, ...rest } = data
+    const { fieldType, title, ...rest } = data
 
     try {
       // eslint-disable-next-line react-hooks/immutability
-      customFields[selectedField] = {
-        ...customFields[selectedField],
+      customFields[selectedField] = createCustomFieldDefinition({
         ...rest,
-        title: data.title
-      }
-
-      if (isArrayCustomField(customFields[selectedField])) {
-        customFields[selectedField] = {
-          ...customFields[selectedField],
-          values: data.values || []
-        }
-      }
+        fieldType,
+        title,
+        values: data.values
+      })
 
       await capiHelper({
         customFields,
@@ -138,6 +139,7 @@ export const EditCustomFieldDialog: React.FC<EditCustomFieldDialogProps> = ({
         <FormProvider {...methods}>
           <form
             onSubmit={methods.handleSubmit(onSubmit)}
+            onKeyDown={preventTagInputEnterSubmit}
             className="flex flex-col gap-4"
           >
             <div>
@@ -255,14 +257,20 @@ export const EditCustomFieldDialog: React.FC<EditCustomFieldDialogProps> = ({
                 )}
               />
             </div>
-            {customFields[selectedField].fieldType === 'Tags' &&
-            customFields[selectedField].dataType === 'array' &&
-            isArrayCustomField(customFields[selectedField]) ? (
+            {isFieldWithValues(customFields[selectedField]) ? (
               <div className="flex gap-4 mb-4">
                 <TagInput
-                  label="Your tags"
+                  label={
+                    customFields[selectedField].fieldType === 'Select'
+                      ? 'Options'
+                      : 'Your tags'
+                  }
                   id="values"
-                  description="Deleting tags will remove them from suggestions, not from existing documents."
+                  description={
+                    customFields[selectedField].fieldType === 'Select'
+                      ? 'Editing options updates the strict list of values available in this field.'
+                      : 'Deleting tags will remove them from suggestions, not from existing documents.'
+                  }
                   suggestions={customFields[selectedField].values}
                 />
               </div>

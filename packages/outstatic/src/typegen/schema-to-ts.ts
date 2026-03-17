@@ -29,6 +29,14 @@ export interface Schema {
  * Maps a schema dataType to its TypeScript equivalent
  */
 export function dataTypeToTS(field: SchemaField): string {
+  if (field.fieldType === 'Select') {
+    if (field.values && field.values.length > 0) {
+      return field.values.map((v) => `'${v.value}'`).join(' | ')
+    }
+
+    return 'string'
+  }
+
   switch (field.dataType) {
     case 'string':
       return 'string'
