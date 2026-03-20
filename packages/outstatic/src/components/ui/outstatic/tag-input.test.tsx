@@ -7,19 +7,11 @@ jest.mock('change-case', () => ({
   camelCase: (value: string) => value.trim().toLowerCase()
 }))
 
-jest.mock('./creatable-select', () => ({
-  CreatableSelect: ({
-    onCreateOption
-  }: {
-    onCreateOption?: (inputValue: string) => void
-  }) => (
-    <button type="button" onClick={() => onCreateOption?.('News')}>
-      Create option
-    </button>
-  )
-}))
-
-const TagInputForm = () => {
+const TagInputForm = ({
+  suggestions = []
+}: {
+  suggestions?: { label: string; value: string }[]
+}) => {
   const methods = useForm<{ values: { label: string; value: string }[] }>({
     defaultValues: {
       values: []
@@ -32,7 +24,7 @@ const TagInputForm = () => {
 
   return (
     <FormProvider {...methods}>
-      <TagInput id="values" label="Options" />
+      <TagInput id="values" label="Options" suggestions={suggestions} />
       <output>{JSON.stringify(values)}</output>
     </FormProvider>
   )
@@ -44,8 +36,33 @@ describe('<TagInput />', () => {
 
     render(<TagInputForm />)
 
-    await user.click(screen.getByRole('button', { name: 'Create option' }))
+    await user.type(screen.getByRole('textbox', { name: 'Options' }), 'News')
+    await user.keyboard('{Enter}')
 
     expect(screen.getByText(/"value":"news"/)).toBeInTheDocument()
+  })
+
+  it('selects an existing suggestion from the combobox list', async () => {
+    const user = userEvent.setup()
+
+    render(<TagInputForm suggestions={[{ label: 'News', value: 'news' }]} />)
+
+    await user.click(screen.getByRole('textbox', { name: 'Options' }))
+    await user.click(screen.getByText('News'))
+
+    expect(screen.getByText(/"label":"News"/)).toBeInTheDocument()
+  })
+
+  it('reuses an exact suggestion match instead of creating a duplicate', async () => {
+    const user = userEvent.setup()
+
+    render(<TagInputForm suggestions={[{ label: 'News', value: 'news' }]} />)
+
+    await user.type(screen.getByRole('textbox', { name: 'Options' }), 'News')
+    await user.keyboard('{Enter}')
+
+    expect(
+      screen.getByText(/^\[\{"label":"News","value":"news"\}\]$/)
+    ).toBeInTheDocument()
   })
 })
