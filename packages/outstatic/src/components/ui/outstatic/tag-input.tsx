@@ -3,7 +3,7 @@
 import { CustomFieldArrayValue } from '@/types'
 import { camelCase } from 'change-case'
 import { useContext, useEffect, useState } from 'react'
-import { RegisterOptions, useFormContext } from 'react-hook-form'
+import { useFormContext } from 'react-hook-form'
 import { DocumentContext } from '@/context'
 import {
   FormMessage,
@@ -36,7 +36,6 @@ export type TagProps = {
   placeholder?: string
   description?: string
   readOnly?: boolean
-  registerOptions?: RegisterOptions
   suggestions?: CustomFieldArrayValue[]
   inputSize?: 'small' | 'medium'
   isMulti?: boolean
@@ -48,7 +47,6 @@ export const TagInput = ({
   id,
   inputSize = 'medium',
   suggestions = [],
-  registerOptions: _registerOptions,
   isMulti: _isMulti = true,
   ...rest
 }: TagProps) => {
