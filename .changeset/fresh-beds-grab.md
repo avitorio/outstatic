@@ -2,4 +2,4 @@
 'outstatic': patch
 ---
 
-Replace tag inputs with a multi-select combobox that supports creating new options.
+Replace tag inputs and column pickers with local multi-select comboboxes.

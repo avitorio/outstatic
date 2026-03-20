@@ -195,7 +195,6 @@ export const SingletonsTable = () => {
               selected={columns}
               setSelected={setColumns}
               allOptions={allColumns}
-              defaultValues={allColumns}
               onChangeList={(e: any) => {
                 cookies.set('ost_singletons_fields', JSON.stringify(e))
               }}

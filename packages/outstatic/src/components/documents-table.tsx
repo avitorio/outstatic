@@ -160,7 +160,6 @@ export const DocumentsTable = () => {
               selected={columns}
               setSelected={setColumns}
               allOptions={allColumns}
-              defaultValues={allColumns}
               onChangeList={(e: any) => {
                 cookies.set(`ost_${params.ost[0]}_fields`, JSON.stringify(e))
               }}
