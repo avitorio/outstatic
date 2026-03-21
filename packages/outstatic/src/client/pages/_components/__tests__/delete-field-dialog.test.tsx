@@ -93,6 +93,45 @@ describe('<DeleteFieldDialog />', () => {
     })
   })
 
+  it('keeps the dialog open and re-enables delete when the commit fails', async () => {
+    const user = userEvent.setup()
+    const onOpenChange = jest.fn()
+    const setCustomFields = jest.fn()
+    mockCommit.mockResolvedValue(false)
+
+    render(
+      <DeleteFieldDialog
+        open={true}
+        onOpenChange={onOpenChange}
+        target={{
+          kind: 'collection',
+          slug: 'posts',
+          title: 'Posts'
+        }}
+        selectedField="heroTitle"
+        customFields={{
+          heroTitle: {
+            title: 'Hero Title',
+            fieldType: 'String',
+            dataType: 'string'
+          }
+        }}
+        setCustomFields={setCustomFields}
+      />
+    )
+
+    await user.click(screen.getByRole('button', { name: 'Delete' }))
+
+    await waitFor(() => expect(mockCommit).toHaveBeenCalledTimes(1))
+    await waitFor(() =>
+      expect(screen.getByRole('button', { name: 'Delete' })).toBeEnabled()
+    )
+
+    expect(onOpenChange).not.toHaveBeenCalled()
+    expect(setCustomFields).not.toHaveBeenCalled()
+    expect(screen.getByText('Delete Hero Title Field')).toBeInTheDocument()
+  })
+
   it('closes and clears change state when canceled', async () => {
     const user = userEvent.setup()
     const onOpenChange = jest.fn()

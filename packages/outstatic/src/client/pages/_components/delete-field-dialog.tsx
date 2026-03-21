@@ -3,7 +3,6 @@ import { CustomFieldsType } from '@/types'
 import { SpinnerIcon } from '@/components/ui/outstatic/spinner-icon'
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -58,9 +57,12 @@ export const DeleteFieldDialog = ({
       action: 'delete',
       fieldName: selectedField
     })
-    if (didCommit) {
-      setCustomFields(nextCustomFields)
+    if (!didCommit) {
+      setDeleting(false)
+      return
     }
+
+    setCustomFields(nextCustomFields)
     handleDialogChange(false)
   }
 
@@ -88,22 +90,20 @@ export const DeleteFieldDialog = ({
               Cancel
             </Button>
           </AlertDialogCancel>
-          <AlertDialogAction asChild>
-            <Button
-              variant="destructive"
-              disabled={deleting}
-              onClick={handleDelete}
-            >
-              {deleting ? (
-                <>
-                  <SpinnerIcon className="text-background mr-2" />
-                  Deleting
-                </>
-              ) : (
-                'Delete'
-              )}
-            </Button>
-          </AlertDialogAction>
+          <Button
+            variant="destructive"
+            disabled={deleting}
+            onClick={handleDelete}
+          >
+            {deleting ? (
+              <>
+                <SpinnerIcon className="text-background mr-2" />
+                Deleting
+              </>
+            ) : (
+              'Delete'
+            )}
+          </Button>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

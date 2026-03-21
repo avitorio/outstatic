@@ -220,9 +220,12 @@ export const FieldDialog = ({
         action: 'add',
         fieldName
       })
-      if (didCommit) {
-        setCustomFields(nextCustomFields)
+      if (!didCommit) {
+        setSubmitting(false)
+        return
       }
+
+      setCustomFields(nextCustomFields)
       handleDialogChange(false)
       return
     }
@@ -247,9 +250,12 @@ export const FieldDialog = ({
       action: 'edit',
       fieldName: selectedField
     })
-    if (didCommit) {
-      setCustomFields(nextCustomFields)
+    if (!didCommit) {
+      setSubmitting(false)
+      return
     }
+
+    setCustomFields(nextCustomFields)
     handleDialogChange(false)
   }
 
@@ -261,22 +267,21 @@ export const FieldDialog = ({
     return null
   }
 
+  const activeFieldType =
+    mode === 'edit' ? selectedFieldDefinition?.fieldType : selectedFieldType
+  const isTagsField = activeFieldType === 'Tags'
   const showValuesInput =
-    mode === 'add'
-      ? selectedFieldType === 'Select'
-      : !!selectedFieldDefinition && isFieldWithValues(selectedFieldDefinition)
+    activeFieldType === 'Select' || activeFieldType === 'Tags'
 
-  const valuesLabel =
-    mode === 'edit' && selectedFieldDefinition?.fieldType === 'Tags'
-      ? 'Your tags'
-      : 'Options'
+  const valuesLabel = isTagsField ? 'Your tags' : 'Options'
 
-  const valuesDescription =
-    mode === 'edit' && selectedFieldDefinition?.fieldType === 'Tags'
+  const valuesDescription = isTagsField
+    ? mode === 'edit'
       ? 'Deleting tags will remove them from suggestions, not from existing documents.'
-      : mode === 'edit'
-        ? 'Editing options updates the strict list of values available in this field.'
-        : "Create the available options for this field. The stored YAML value will be each option's value."
+      : 'Add starter tags to seed suggestions for editors. Documents can still use other tags.'
+    : mode === 'edit'
+      ? 'Editing options updates the strict list of values available in this field.'
+      : "Create the available options for this field. The stored YAML value will be each option's value."
 
   const fieldKeyPreview =
     mode === 'edit' ? selectedField : camelCase(watchedTitle ?? '')

@@ -14,14 +14,24 @@ import { useOutstatic } from '@/utils/hooks/use-outstatic'
 jest.mock('@/utils/hooks/use-field-schema-commit')
 jest.mock('@/utils/hooks/use-outstatic')
 jest.mock('@/components/ui/outstatic/tag-input', () => ({
-  TagInput: ({ id }: { id: string }) => {
+  TagInput: ({
+    id,
+    label = 'Options',
+    description
+  }: {
+    id: string
+    label?: string
+    description?: string
+  }) => {
     const { useFormContext } =
       jest.requireActual<typeof import('react-hook-form')>('react-hook-form')
     const { register, setValue } = useFormContext()
 
     return (
       <div data-tag-input-root>
-        <input aria-label="Options input" />
+        <span>{label}</span>
+        {description ? <span>{description}</span> : null}
+        <input aria-label={`${label} input`} />
         <input type="hidden" {...register(id)} />
         <button
           type="button"
@@ -321,6 +331,52 @@ describe('<FieldDialog />', () => {
     await waitFor(() => expect(mockCommit).not.toHaveBeenCalled())
   })
 
+  it('shows tag suggestions input and submits seeded values when adding a tags field', async () => {
+    const user = userEvent.setup()
+    const setCustomFields = jest.fn()
+
+    renderDialog({ setCustomFields })
+
+    await user.type(screen.getByPlaceholderText('Ex: Category'), 'Topics')
+    await user.click(screen.getByRole('option', { name: 'Tags' }))
+
+    expect(screen.getByText('Your tags')).toBeInTheDocument()
+    expect(
+      screen.getByText(
+        'Add starter tags to seed suggestions for editors. Documents can still use other tags.'
+      )
+    ).toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: 'Add option' }))
+    fireEvent.submit(document.querySelector('form') as HTMLFormElement)
+
+    await waitFor(() => expect(mockCommit).toHaveBeenCalledTimes(1))
+    expect(mockCommit).toHaveBeenCalledWith({
+      action: 'add',
+      customFields: {
+        topics: {
+          title: 'Topics',
+          fieldType: 'Tags',
+          dataType: 'array',
+          description: '',
+          required: false,
+          values: [{ label: 'News', value: 'news' }]
+        }
+      },
+      fieldName: 'topics'
+    })
+    expect(setCustomFields).toHaveBeenCalledWith({
+      topics: {
+        title: 'Topics',
+        fieldType: 'Tags',
+        dataType: 'array',
+        description: '',
+        required: false,
+        values: [{ label: 'News', value: 'news' }]
+      }
+    })
+  })
+
   it('prevents enter inside the options input from submitting the dialog', async () => {
     const user = userEvent.setup()
     renderDialog()
@@ -363,7 +419,7 @@ describe('<FieldDialog />', () => {
 
     await user.type(screen.getByPlaceholderText('Ex: Category'), 'Hero Title')
     await user.click(screen.getByRole('option', { name: 'String' }))
-    await user.click(screen.getByRole('button', { name: 'Add' }))
+    fireEvent.submit(document.querySelector('form') as HTMLFormElement)
 
     await waitFor(() => expect(mockCommit).not.toHaveBeenCalled())
     expect(screen.getByText('Add Custom Field to Posts')).toBeInTheDocument()
@@ -412,6 +468,31 @@ describe('<FieldDialog />', () => {
         required: false
       }
     })
+  })
+
+  it('keeps the add dialog open and re-enables submit when the commit fails', async () => {
+    const user = userEvent.setup()
+    const onOpenChange = jest.fn()
+    const setCustomFields = jest.fn()
+    mockCommit.mockResolvedValue(false)
+
+    renderDialog({
+      onOpenChange,
+      setCustomFields
+    })
+
+    await user.type(screen.getByPlaceholderText('Ex: Category'), 'Hero Title')
+    await user.click(screen.getByRole('option', { name: 'String' }))
+    fireEvent.submit(document.querySelector('form') as HTMLFormElement)
+
+    await waitFor(() => expect(mockCommit).toHaveBeenCalledTimes(1))
+    await waitFor(() =>
+      expect(screen.getByRole('button', { name: 'Add' })).toBeEnabled()
+    )
+
+    expect(onOpenChange).not.toHaveBeenCalled()
+    expect(setCustomFields).not.toHaveBeenCalled()
+    expect(screen.getByText('Add Custom Field to Posts')).toBeInTheDocument()
   })
 
   it('renders edit mode with locked field name/type and saves changes', async () => {
