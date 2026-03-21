@@ -1,38 +1,29 @@
-import {
-  CustomFieldArrayValue,
-  CustomFieldsType,
-  Document,
-  FileType,
-  MDExtensions,
-  isArrayCustomField
-} from '@/types'
+import { CustomFieldsType, Document, FileType, MDExtensions } from '@/types'
 import { createCommitApi } from '@/utils/create-commit-api'
-import { hashFromUrl } from '@/utils/hash-from-url'
 import { useOutstatic } from '@/utils/hooks/use-outstatic'
-import { mergeMdMeta } from '@/utils/merge-md-meta'
-import { stringifyMedia, stringifyMetadata } from '@/utils/metadata/stringify'
+import { stringifyMetadata } from '@/utils/metadata/stringify'
 import { LoginSession } from '@/utils/auth/auth'
 import { Editor } from '@tiptap/react'
 import matter from 'gray-matter'
 import MurmurHash3 from 'imurmurhash'
-import stringify from 'json-stable-stringify'
 import { useCallback } from 'react'
-import { UseFormReturn } from 'react-hook-form'
 import { useCreateCommit } from './use-create-commit'
 import { useGetCollectionSchema } from './use-get-collection-schema'
-import { useGetMetadata } from './use-get-metadata'
-import useOid from './use-oid'
-import { useGetMediaFiles } from './use-get-media-files'
 import { useGetConfig } from './use-get-config'
-import {
-  ConfigType,
-  MediaItem,
-  MediaSchema,
-  MetadataSchema,
-  MetadataType
-} from '../metadata/types'
+import { useGetMediaFiles } from './use-get-media-files'
+import { useGetMetadata } from './use-get-metadata'
 import { useCollections } from './use-collections'
+import useOid from './use-oid'
+import { ConfigType } from '../metadata/types'
 import { toast } from 'sonner'
+import {
+  addReferencedMedia,
+  buildMergedContent,
+  createMetadataState,
+  replaceConfigFile,
+  replaceMediaFile,
+  syncCustomFieldTags
+} from './use-submit-entry-shared'
 
 type SubmitDocumentProps = {
   session: LoginSession | null
@@ -41,7 +32,6 @@ type SubmitDocumentProps = {
   setShowDelete: (showDelete: boolean) => void
   setLoading: (loading: boolean) => void
   files: FileType[]
-  methods: UseFormReturn<Document, any, any>
   collection: string
   customFields: CustomFieldsType
   setCustomFields: (customFields: CustomFieldsType) => void
@@ -62,7 +52,6 @@ function useSubmitDocument({
   setShowDelete,
   setLoading,
   files,
-  methods,
   collection,
   customFields,
   setCustomFields,
@@ -78,7 +67,6 @@ function useSubmitDocument({
     repoBranch,
     monorepoPath,
     ostContent,
-    contentPath,
     basePath,
     publicMediaPath,
     repoMediaPath,
@@ -86,7 +74,6 @@ function useSubmitDocument({
     configJsonPath
   } = useOutstatic()
   const fetchOid = useOid()
-  let media: MediaItem[] = []
 
   const { refetch: refetchSchema } = useGetCollectionSchema({ enabled: false })
   const { refetch: refetchMetadata } = useGetMetadata({ enabled: false })
@@ -125,17 +112,20 @@ function useSubmitDocument({
           ? `${collectionInfo.path}/`
           : ''
 
-        const document = methods.getValues()
-        const mdContent = editor.storage.markdown.getMarkdown()
-        let content = mergeMdMeta({
-          data: { ...documentMetadata, ...data, content: mdContent },
+        let content = buildMergedContent({
+          data,
+          documentMetadata,
+          editor,
           basePath,
-          repoInfo: `${repoOwner}/${repoSlug}/${repoBranch}/${repoMediaPath}`,
+          repoOwner,
+          repoSlug,
+          repoBranch,
+          repoMediaPath,
           publicMediaPath
         })
         const oid = await fetchOid()
         const owner = repoOwner || session?.user?.login || ''
-        const newSlug = document.slug
+        const newSlug = data.slug
 
         // If the slug has changed, commit should delete old file
         const oldSlug = slug !== newSlug && slug !== 'new' ? slug : undefined
@@ -154,89 +144,32 @@ function useSubmitDocument({
           capi.removeFile(`${collectionPath}${oldSlug}.${extension}`)
         }
 
-        if (files.length > 0) {
-          files.forEach(({ filename, blob, type, content: fileContents }) => {
-            // check if blob is still in the document before adding file to the commit
-            if (blob && content.search(blob) !== -1) {
-              const randString = window
-                .btoa(Math.random().toString())
-                .substring(10, 6)
-              const newFilename = filename
-                .toLowerCase()
-                .replace(/[^a-zA-Z0-9-_\.]/g, '-')
-                .replace(/(\.[^\.]*)?$/, `-${randString}$1`)
-
-              capi.replaceFile(
-                `${repoMediaPath}${newFilename}`,
-                fileContents,
-                false
-              )
-
-              media.push({
-                __outstatic: {
-                  hash: `${MurmurHash3(fileContents).result()}`,
-                  commit: '',
-                  path: `${repoMediaPath}${newFilename}`
-                },
-                filename: newFilename,
-                type: type,
-                publishedAt: new Date().toISOString(),
-                alt: ''
-              })
-
-              // replace blob in content with path
-              content = content.replace(
-                blob,
-                `/${publicMediaPath}${newFilename}`
-              )
-            }
-          })
-        }
+        const { content: nextContent, media } = addReferencedMedia({
+          files,
+          content,
+          capi,
+          repoMediaPath,
+          publicMediaPath
+        })
+        content = nextContent
 
         const { data: matterData } = matter(content)
 
         capi.replaceFile(`${collectionPath}${newSlug}.${extension}`, content)
 
-        // Check if a new tag value was added
-        let hasNewTag = false
-        Object.entries(customFields).forEach(([key, field]) => {
-          const customField = customFields[key]
-          //@ts-ignore
-          let dataKey = data[key]
-          // Only check for new values in array fields
-          if (isArrayCustomField(field) && isArrayCustomField(customField)) {
-            // If the metadata value is not an array, set it to an empty array
-            if (!Array.isArray(dataKey)) {
-              matterData[key] = []
-              return
-            }
-
-            dataKey.forEach((selectedTag: CustomFieldArrayValue) => {
-              // Check if the selected tag already exists
-              const exists = field.values.some(
-                (savedTag: CustomFieldArrayValue) =>
-                  savedTag.value === selectedTag.value
-              )
-
-              // If the selected tag does not exist, add it
-              if (!exists) {
-                customField.values.push({
-                  value: selectedTag.value,
-                  label: selectedTag.label
-                })
-                customFields[key] = customField
-                setCustomFields({ ...customFields })
-                hasNewTag = true
-              }
-            })
-          }
-        })
+        const { customFields: nextCustomFields, hasNewTag } =
+          syncCustomFieldTags({
+            customFields,
+            data,
+            matterData,
+            setCustomFields
+          })
 
         if (hasNewTag) {
           const customFieldsJSON = JSON.stringify(
             {
               ...schema,
-              properties: { ...customFields }
+              properties: { ...nextCustomFields }
             },
             null,
             2
@@ -248,22 +181,14 @@ function useSubmitDocument({
           )
         }
 
-        // update metadata for this post
-        // requires final content for hashing
-        const m: MetadataSchema = {
-          metadata: (metadata?.metadata?.metadata || []) as MetadataType,
-          commit: '',
-          generated: new Date().toISOString()
-        }
-        m.commit = metadata ? hashFromUrl(metadata.commitUrl) : ''
-
+        const metadataState = createMetadataState(metadata)
         const state = MurmurHash3(content)
 
-        const newMeta = Array.isArray(m.metadata)
-          ? m.metadata.filter(
-              (c) =>
-                c.collection !== collection ||
-                (c.slug !== oldSlug && c.slug !== newSlug)
+        const newMeta = Array.isArray(metadataState.metadata)
+          ? metadataState.metadata.filter(
+              (entry) =>
+                entry.collection !== collection ||
+                (entry.slug !== oldSlug && entry.slug !== newSlug)
             )
           : []
 
@@ -273,7 +198,7 @@ function useSubmitDocument({
           collection,
           __outstatic: {
             hash: `${state.result()}`,
-            commit: m.commit,
+            commit: metadataState.commit,
             path: monorepoPath
               ? `${collectionPath}${newSlug}.${extension}`.replace(
                   monorepoPath,
@@ -285,45 +210,23 @@ function useSubmitDocument({
 
         capi.replaceFile(
           `${ostContent}/metadata.json`,
-          stringifyMetadata({ ...m, metadata: newMeta })
+          stringifyMetadata({ ...metadataState, metadata: newMeta })
         )
 
-        // update media.json with new media
-        if (media.length > 0) {
-          const { data: mediaData } = await refetchMedia()
+        await replaceMediaFile({
+          media,
+          metadataState,
+          refetchMedia,
+          mediaJsonPath,
+          capi
+        })
 
-          // loop through newMedia and add a commit to each
-          media.forEach((media) => {
-            media.__outstatic.commit = m.commit
-          })
-
-          const newMedia = [...(mediaData?.media?.media ?? []), ...media]
-
-          const mediaSchema = {
-            commit: m.commit,
-            generated: m.generated,
-            media: mediaData?.media?.media ?? []
-          } as MediaSchema
-
-          capi.replaceFile(
-            mediaJsonPath,
-            stringifyMedia({ ...mediaSchema, media: newMedia })
-          )
-        }
-
-        // update config.json if configUpdate is provided
-        if (configUpdate && Object.keys(configUpdate).length > 0) {
-          const { data: config } = await refetchConfig()
-          const updatedConfig = {
-            ...(config ?? {}),
-            ...configUpdate
-          }
-          capi.replaceFile(
-            configJsonPath,
-            // @ts-ignore
-            stringify(updatedConfig, { space: 2 })
-          )
-        }
+        await replaceConfigFile({
+          configUpdate,
+          refetchConfig,
+          configJsonPath,
+          capi
+        })
 
         const input = capi.createInput()
 
@@ -338,12 +241,10 @@ function useSubmitDocument({
         setSlug(newSlug)
         setShowDelete(true)
       } catch (error) {
-        // TODO: Better error treatment
         setLoading(false)
         console.log({ error })
       }
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [
       repoOwner,
       session,
@@ -354,9 +255,7 @@ function useSubmitDocument({
       files,
       createCommit,
       fetchOid,
-      methods,
       monorepoPath,
-      contentPath,
       ostContent,
       collection,
       customFields,
@@ -368,7 +267,15 @@ function useSubmitDocument({
       basePath,
       extension,
       mediaJsonPath,
-      configJsonPath
+      configJsonPath,
+      documentMetadata,
+      refetchSchema,
+      refetchMetadata,
+      refetchMedia,
+      refetchCollections,
+      refetchConfig,
+      publicMediaPath,
+      repoMediaPath
     ]
   )
 

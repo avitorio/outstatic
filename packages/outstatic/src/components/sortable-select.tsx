@@ -1,4 +1,7 @@
-import { DndContext, DragEndEvent, useDroppable } from '@dnd-kit/core'
+'use client'
+
+import type { DragEndEvent } from '@dnd-kit/core'
+import { DndContext } from '@dnd-kit/core'
 import { restrictToParentElement } from '@dnd-kit/modifiers'
 import {
   SortableContext,
@@ -7,37 +10,70 @@ import {
   useSortable
 } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import { GripVertical } from 'lucide-react'
-import { MouseEventHandler } from 'react'
-import Select, {
-  CSSObjectWithLabel,
-  ControlProps,
-  MultiValueGenericProps,
-  MultiValueProps,
-  MultiValueRemoveProps,
-  OnChangeValue,
-  components,
-  MenuProps
-} from 'react-select'
-import { Column } from '@/components/documents-table'
+import { Check, GripVertical, Search, X } from 'lucide-react'
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type Dispatch,
+  type FocusEvent,
+  type KeyboardEvent,
+  type SetStateAction
+} from 'react'
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandItem,
+  CommandList
+} from '@/components/ui/shadcn/command'
+import { cn } from '@/utils/ui'
 
-const MultiValue = (props: MultiValueProps<Column>) => {
-  const onMouseDown: MouseEventHandler<HTMLDivElement> = (e) => {
-    e.preventDefault()
-    e.stopPropagation()
-  }
-  const innerProps = { ...props.innerProps, onMouseDown }
-  const { attributes, listeners, setNodeRef, transform, transition } =
-    useSortable({
-      id: props.data.id
-    })
+export type SortableSelectOption = {
+  id: string
+  label: string
+  value: string
+}
 
-  if (transform) {
-    // eslint-disable-next-line react-hooks/immutability
-    transform.scaleX = 1
-    // eslint-disable-next-line react-hooks/immutability
-    transform.scaleY = 1
+const normalize = (value: string) => value.trim().toLowerCase()
+
+export const reorderSortableOptions = (
+  items: SortableSelectOption[],
+  activeId: string,
+  overId?: string
+) => {
+  if (!overId || activeId === overId) {
+    return items
   }
+
+  const oldIndex = items.findIndex((item) => item.id === activeId)
+  const newIndex = items.findIndex((item) => item.id === overId)
+
+  if (oldIndex === -1 || newIndex === -1) {
+    return items
+  }
+
+  return arrayMove(items, oldIndex, newIndex)
+}
+
+const SortableChip = ({
+  option,
+  onRemove
+}: {
+  option: SortableSelectOption
+  onRemove: (option: SortableSelectOption) => void
+}) => {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging
+  } = useSortable({
+    id: option.id
+  })
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -45,180 +81,213 @@ const MultiValue = (props: MultiValueProps<Column>) => {
   }
 
   return (
-    <div style={style} ref={setNodeRef} {...attributes} {...listeners}>
-      {/* @ts-ignore */}
-      <components.MultiValue {...props} innerProps={innerProps} />
-    </div>
-  )
-}
-
-const MultiValueLabel = (props: MultiValueGenericProps<Column>) => {
-  return (
-    <div className="flex cursor-pointer items-center pl-1 bg-background">
-      <GripVertical size={15} />
-      {/* @ts-ignore */}
-      <components.MultiValueLabel
-        {...props}
-        innerProps={{ className: 'text-foreground' }}
-      />
-    </div>
-  )
-}
-
-const Control = (props: ControlProps<Column>) => {
-  const { setNodeRef } = useDroppable({
-    id: 'droppable'
-  })
-
-  return (
     <div
       ref={setNodeRef}
-      className="border border-solid border-muted rounded-md bg-background text-foreground"
+      style={style}
+      className={cn(
+        'inline-flex items-center gap-1 rounded-sm border bg-secondary px-2 py-1 text-xs text-secondary-foreground',
+        isDragging && 'z-10 shadow-md'
+      )}
     >
-      {/* @ts-ignore */}
-      <components.Control
-        {...props}
-        innerProps={{
-          style: {
-            backgroundColor: `hsl(var(--background))`
-          }
-        }}
-      />
-    </div>
-  )
-}
-
-const MultiValueContainer = (props: MultiValueGenericProps<Column>) => {
-  return (
-    <div className="bg-background text-foreground border border-solid rounded-md mr-2">
-      {/* @ts-ignore */}
-      <components.MultiValueContainer {...props} />
-    </div>
-  )
-}
-
-const MultiValueRemove = (props: MultiValueRemoveProps<Column>) => {
-  return (
-    <div className="bg-background text-foreground">
-      {/* @ts-ignore */}
-      <components.MultiValueRemove
-        {...props}
-        innerProps={{
-          onPointerDown: (e: any) => e.stopPropagation(),
-          ...props.innerProps,
-          className: `${props.innerProps.className} text-foreground`
-        }}
-      />
-    </div>
-  )
-}
-
-const Menu = (props: MenuProps) => {
-  return (
-    <>
-      {/* @ts-ignore */}
-      <components.Menu
-        {...props}
-        innerProps={{
-          className:
-            'rounded-md border bg-popover text-popover-foreground shadow-md outline-hidden',
-          style: {
-            backgroundColor: `hsl(var(--background))`,
-            border: '1px solid hsl(var(--muted))',
-            boxShadow:
-              'var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow)'
-          }
+      <button
+        type="button"
+        className="cursor-grab rounded-sm p-0.5 text-muted-foreground hover:text-foreground active:cursor-grabbing"
+        aria-label={`Reorder ${option.label}`}
+        {...attributes}
+        {...listeners}
+      >
+        <GripVertical className="size-3" />
+      </button>
+      <span>{option.label}</span>
+      <button
+        type="button"
+        className="rounded-sm p-0.5 hover:bg-background/80"
+        aria-label={`Remove ${option.label}`}
+        onClick={(event) => {
+          event.preventDefault()
+          event.stopPropagation()
+          onRemove(option)
         }}
       >
-        {props.children}
-      </components.Menu>
-    </>
+        <X className="size-3" />
+      </button>
+    </div>
   )
 }
 
 export const SortableSelect = ({
   selected,
   setSelected,
-  defaultValues,
   allOptions,
   onChangeList,
   onBlur
 }: {
-  selected: Column[]
-  setSelected: React.Dispatch<React.SetStateAction<Column[]>>
-  defaultValues: Column[]
-  allOptions: Column[]
-  onChangeList: (e: any) => void
-  onBlur: (e: any) => void
+  selected: SortableSelectOption[]
+  setSelected: Dispatch<SetStateAction<SortableSelectOption[]>>
+  allOptions: SortableSelectOption[]
+  onChangeList: (items: SortableSelectOption[]) => void
+  onBlur: () => void
 }) => {
-  const onChange = (selectedOptions: OnChangeValue<Column, true>) => {
-    setSelected([...selectedOptions])
-    onChangeList(selectedOptions)
+  const inputRef = useRef<HTMLInputElement | null>(null)
+  const [query, setQuery] = useState('')
+
+  useEffect(() => {
+    inputRef.current?.focus()
+  }, [])
+
+  const selectedIds = useMemo(
+    () => new Set(selected.map((option) => option.id)),
+    [selected]
+  )
+
+  const filteredOptions = useMemo(() => {
+    const normalizedQuery = normalize(query)
+
+    if (!normalizedQuery) {
+      return allOptions
+    }
+
+    return allOptions.filter((option) =>
+      [option.label, option.value].some((value) =>
+        normalize(value).includes(normalizedQuery)
+      )
+    )
+  }, [allOptions, query])
+
+  const updateSelected = (nextSelected: SortableSelectOption[]) => {
+    setSelected(nextSelected)
+    onChangeList(nextSelected)
   }
 
-  const onSortEnd = (event: DragEndEvent) => {
+  const focusInput = () => {
+    inputRef.current?.focus()
+  }
+
+  const removeOption = (option: SortableSelectOption) => {
+    updateSelected(
+      selected.filter((selectedOption) => selectedOption.id !== option.id)
+    )
+    focusInput()
+  }
+
+  const toggleOption = (option: SortableSelectOption) => {
+    const nextSelected = selectedIds.has(option.id)
+      ? selected.filter((selectedOption) => selectedOption.id !== option.id)
+      : [...selected, option]
+
+    updateSelected(nextSelected)
+    setQuery('')
+    focusInput()
+  }
+
+  const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event
+    const nextSelected = reorderSortableOptions(
+      selected,
+      String(active.id),
+      over ? String(over.id) : undefined
+    )
 
-    if (!active || !over) return
+    if (nextSelected !== selected) {
+      updateSelected(nextSelected)
+    }
+  }
 
-    setSelected((items) => {
-      const oldIndex = items.findIndex((item) => item.id === active.id)
-      const newIndex = items.findIndex((item) => item.id === over.id)
-      const newItems = arrayMove(items, oldIndex, newIndex)
+  const handleContainerBlur = (event: FocusEvent<HTMLDivElement>) => {
+    const nextTarget = event.relatedTarget as Node | null
 
-      onChangeList(newItems)
+    if (!event.currentTarget.contains(nextTarget)) {
+      onBlur()
+    }
+  }
 
-      return newItems
-    })
+  const handleInputKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (
+      event.key === 'Backspace' &&
+      query.length === 0 &&
+      selected.length > 0
+    ) {
+      removeOption(selected[selected.length - 1])
+      return
+    }
+
+    if (event.key === 'Escape') {
+      onBlur()
+    }
   }
 
   return (
-    <DndContext modifiers={[restrictToParentElement]} onDragEnd={onSortEnd}>
-      <SortableContext items={selected} strategy={rectSortingStrategy}>
-        <Select
-          isMulti
-          defaultValue={defaultValues}
-          options={allOptions}
-          value={selected}
-          onChange={onChange}
-          components={{
-            // @ts-ignore We're failing to provide a required index prop to SortableElement
-            MultiValue,
-            MultiValueLabel,
-            MultiValueContainer,
-            MultiValueRemove,
-            Control,
-            // @ts-ignore
-            Menu
-          }}
-          isClearable={false}
-          escapeClearsValue={false}
-          closeMenuOnSelect={false}
-          onBlur={onBlur}
-          autoFocus
-          styles={{
-            control: (base: any) =>
-              ({
-                ...base,
-                border: 'none',
-                boxShadow: 'none',
-                '&:hover': {
-                  border: 'none'
-                }
-              }) as CSSObjectWithLabel,
-            option: (base: any) =>
-              ({
-                ...base,
-                color: 'hsl(var(--foreground))',
-                backgroundColor: 'hsl(var(--background))',
-                '&:hover': {
-                  backgroundColor: 'hsl(var(--muted))'
-                },
-                border: 'none'
-              }) as CSSObjectWithLabel
-          }}
-        />
-      </SortableContext>
-    </DndContext>
+    <div
+      className="w-80 rounded-md border bg-popover text-popover-foreground shadow-md"
+      onBlur={handleContainerBlur}
+    >
+      <div className="border-b p-2">
+        <DndContext
+          modifiers={[restrictToParentElement]}
+          onDragEnd={handleDragEnd}
+        >
+          <div
+            className="flex min-h-9 flex-wrap items-center gap-1 rounded-md border border-input bg-background px-2 py-1.5 shadow-sm"
+            onClick={focusInput}
+          >
+            <SortableContext
+              items={selected.map((option) => option.id)}
+              strategy={rectSortingStrategy}
+            >
+              {selected.map((option) => (
+                <SortableChip
+                  key={option.id}
+                  option={option}
+                  onRemove={removeOption}
+                />
+              ))}
+            </SortableContext>
+            <div className="flex min-w-[8rem] flex-1 items-center gap-2 px-1">
+              <Search className="size-4 text-muted-foreground" />
+              <input
+                ref={inputRef}
+                type="text"
+                value={query}
+                className="min-w-0 flex-1 bg-transparent py-1 text-sm outline-none placeholder:text-muted-foreground"
+                placeholder="Filter columns"
+                aria-label="Filter columns"
+                onChange={(event) => setQuery(event.target.value)}
+                onKeyDown={handleInputKeyDown}
+              />
+            </div>
+          </div>
+        </DndContext>
+      </div>
+      <Command shouldFilter={false}>
+        <CommandList className="max-h-56">
+          {filteredOptions.length > 0 ? (
+            <CommandGroup>
+              {filteredOptions.map((option) => {
+                const isSelected = selectedIds.has(option.id)
+
+                return (
+                  <CommandItem
+                    key={option.id}
+                    value={`${option.label} ${option.value}`}
+                    onMouseDown={(event) => event.preventDefault()}
+                    onSelect={() => toggleOption(option)}
+                  >
+                    <Check
+                      className={cn(
+                        'size-4',
+                        isSelected ? 'opacity-100' : 'opacity-0'
+                      )}
+                    />
+                    <span className="truncate">{option.label}</span>
+                  </CommandItem>
+                )
+              })}
+            </CommandGroup>
+          ) : (
+            <CommandEmpty>No columns found.</CommandEmpty>
+          )}
+        </CommandList>
+      </Command>
+    </div>
   )
 }

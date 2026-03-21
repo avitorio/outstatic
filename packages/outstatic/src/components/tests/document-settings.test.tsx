@@ -69,18 +69,15 @@ jest.mock('transliteration', () => ({
   slugify: (str: string) => str.toLowerCase().replace(/\s+/g, '-')
 }))
 
-// Mock AddCustomFieldDialog
-jest.mock(
-  '@/client/pages/custom-fields/_components/add-custom-field-dialog',
-  () => ({
-    AddCustomFieldDialog: ({ showAddModal, setShowAddModal }: any) =>
-      showAddModal ? (
-        <div data-testid="add-custom-field-dialog">
-          <button onClick={() => setShowAddModal(false)}>Close Dialog</button>
-        </div>
-      ) : null
-  })
-)
+// Mock FieldDialog
+jest.mock('@/client/pages/_components/field-dialog', () => ({
+  FieldDialog: ({ open, onOpenChange }: any) =>
+    open ? (
+      <div data-testid="add-custom-field-dialog">
+        <button onClick={() => onOpenChange(false)}>Close Dialog</button>
+      </div>
+    ) : null
+}))
 
 // Mock DeleteDocumentButton
 jest.mock('@/components/delete-document-button', () => ({

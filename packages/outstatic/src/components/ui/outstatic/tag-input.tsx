@@ -1,7 +1,9 @@
+'use client'
+
 import { CustomFieldArrayValue } from '@/types'
 import { camelCase } from 'change-case'
-import { useContext, useState } from 'react'
-import { RegisterOptions, useFormContext } from 'react-hook-form'
+import { useContext, useEffect, useState } from 'react'
+import { useFormContext } from 'react-hook-form'
 import { DocumentContext } from '@/context'
 import {
   FormMessage,
@@ -10,7 +12,7 @@ import {
   FormField
 } from '../shadcn/form'
 import { Label } from '../shadcn/label'
-import { CreatableSelect } from './creatable-select'
+import { CreatableMultiCombobox } from './creatable-multi-combobox'
 
 const TAG_INPUT_ROOT_SELECTOR = '[data-tag-input-root]'
 
@@ -34,7 +36,6 @@ export type TagProps = {
   placeholder?: string
   description?: string
   readOnly?: boolean
-  registerOptions?: RegisterOptions
   suggestions?: CustomFieldArrayValue[]
   inputSize?: 'small' | 'medium'
   isMulti?: boolean
@@ -46,15 +47,10 @@ export const TagInput = ({
   id,
   inputSize = 'medium',
   suggestions = [],
-  isMulti = true,
+  isMulti: _isMulti = true,
   ...rest
 }: TagProps) => {
-  const {
-    control,
-    getValues,
-    setValue,
-    formState: { errors }
-  } = useFormContext()
+  const { control } = useFormContext()
 
   const documentContext = useContext(DocumentContext)
   const setHasChanges =
@@ -64,6 +60,10 @@ export const TagInput = ({
 
   const [options, setOptions] = useState(suggestions)
 
+  useEffect(() => {
+    setOptions(suggestions)
+  }, [suggestions])
+
   const createOption = (label: string) => ({
     label,
     value: camelCase(label)
@@ -71,28 +71,39 @@ export const TagInput = ({
 
   const handleCreate = (inputValue: string) => {
     const newOption = createOption(inputValue)
-    setOptions((prev: any) => [...prev, newOption])
-    const values = getValues(id) || []
-    setValue(id, [...values, newOption])
+    setOptions((prev) => {
+      if (prev.some((option) => option.value === newOption.value)) {
+        return prev
+      }
+
+      return [...prev, newOption]
+    })
     setHasChanges?.(true)
+    return newOption
   }
 
   return (
-    <div className="relative" data-tag-input-root>
+    <div className="relative">
       <FormField
         control={control}
         name={id}
-        render={({ field }) => (
+        render={({ field, fieldState }) => (
           <FormItem>
             <Label htmlFor={id}>{label}</Label>
-            <CreatableSelect
-              isMulti
-              onCreateOption={handleCreate}
-              isClearable={false}
+            <CreatableMultiCombobox
+              id={id}
+              label={label}
+              value={Array.isArray(field.value) ? field.value : []}
               options={options}
-              error={!!errors[id]?.message}
+              error={!!fieldState.error}
+              onBlur={field.onBlur}
+              onCreateOption={handleCreate}
+              onChange={(nextValue) => {
+                field.onChange(nextValue)
+                setHasChanges?.(true)
+              }}
+              inputSize={inputSize}
               {...rest}
-              {...field}
             />
             <FormDescription>{description}</FormDescription>
             <FormMessage />

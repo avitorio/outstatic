@@ -1,34 +1,20 @@
-import { AdminLayout } from '@/components/admin-layout'
-import { DocumentSettings } from '@/components/document-settings'
-import { DocumentTitleInput } from '@/components/document-title-input'
-import { MDEditor } from '@/components/editor/editor'
-import { DocumentContext } from '@/context'
-import { CustomFieldsType, Document, MDExtensions } from '@/types'
-import { deepReplace } from '@/utils/deep-replace'
-import { useSingletonUpdateEffect } from '@/utils/hooks/use-singleton-update-effect'
+import { Document, MDExtensions } from '@/types'
 import { useFileStore } from '@/utils/hooks/use-file-store'
-import { useGetSingletonSchema } from '@/utils/hooks/use-get-singleton-schema'
 import { useGetConfig } from '@/utils/hooks/use-get-config'
-import { useOutstatic } from '@/utils/hooks/use-outstatic'
-import useSubmitSingleton from '@/utils/hooks/use-submit-singleton'
-import { useTipTap } from '@/components/editor/hooks/use-tip-tap'
-import { editDocumentSchema } from '@/utils/schemas/edit-document-schema'
-import { zodResolver } from '@hookform/resolvers/zod'
-import Head from 'next/head'
-import { useEffect, useState } from 'react'
-import { FormProvider, useForm } from 'react-hook-form'
-import { convertSchemaToZod } from '@/utils/zod'
-import { FormMessage } from '@/components/ui/shadcn/form'
-import { toast } from 'sonner'
-import MediaSettingsDialog from '@/components/ui/outstatic/media-settings-dialog'
-import { MarkdownExtensionDialog } from '@/components/ui/outstatic/markdown-extension-dialog'
-import { useEditor } from '@/components/editor/editor-context'
-import { useSingletons } from '@/utils/hooks/use-singletons'
-import NewSingletonModal from './_components/new-singleton-modal'
-import { useSearchParams } from 'next/navigation'
 import { useGetFileByPath } from '@/utils/hooks/use-get-file-by-path'
+import { useGetSingletonSchema } from '@/utils/hooks/use-get-singleton-schema'
+import { useOutstatic } from '@/utils/hooks/use-outstatic'
+import { useSingletonUpdateEffect } from '@/utils/hooks/use-singleton-update-effect'
+import useSubmitSingleton from '@/utils/hooks/use-submit-singleton'
+import { useSingletons } from '@/utils/hooks/use-singletons'
 import { parseContent } from '@/utils/parse-content'
 import { getLocalDate } from '@/utils/get-local-date'
+import { useEffect, useState } from 'react'
+import { toast } from 'sonner'
+import NewSingletonModal from './_components/new-singleton-modal'
+import { EditorPageShell } from './_components/editor-page-shell'
+import { useEditorPageState } from './_components/use-editor-page-state'
+import { useSearchParams } from 'next/navigation'
 import matter from 'gray-matter'
 import { slugify } from 'transliteration'
 
@@ -52,46 +38,40 @@ export default function EditSingleton({ slug: initialSlug }: { slug: string }) {
     repoBranch
   } = useOutstatic()
 
-  // Get openFile query parameter for opening existing files
   const searchParams = useSearchParams()
   const openFilePath = searchParams?.get('openFile') ?? null
   const [openFileLoaded, setOpenFileLoaded] = useState(false)
   const [showDelete, setShowDelete] = useState(false)
-  const [documentSchema, setDocumentSchema] = useState(editDocumentSchema)
   const [showSingletonModal, setShowSingletonModal] = useState(false)
   const [singletonContentPath, setSingletonContentPath] = useState<
     string | undefined
   >(undefined)
-  //@ts-ignore
-  const methods = useForm<Document>({ resolver: zodResolver(documentSchema) })
-
-  const { editor, setEditor } = useEditor()
-  const { editor: tiptapEditor } = useTipTap({ ...methods })
-
-  useEffect(() => {
-    setEditor(tiptapEditor)
-  }, [tiptapEditor, setEditor])
-
-  const [customFields, setCustomFields] = useState<CustomFieldsType>({})
-  const files = useFileStore((state) => state.files)
-  const [extension, setExtension] = useState<MDExtensions>('md')
-  const [metadata, setMetadata] = useState<Record<string, any>>({})
   const [showMediaPathDialog, setShowMediaPathDialog] = useState(false)
   const [showExtensionDialog, setShowExtensionDialog] = useState(false)
   const [pendingConfigMdExtension, setPendingConfigMdExtension] =
     useState<MDExtensions | null>(null)
-  const editDocument = (property: string, value: any) => {
-    const formValues = methods.getValues()
-    const newValue = deepReplace(formValues, property, value)
-    methods.reset(newValue)
-  }
   const [mediaPathUpdated, setMediaPathUpdated] = useState(false)
 
   const { data: schema } = useGetSingletonSchema({ slug, enabled: !isNew })
   const { data: config } = useGetConfig()
   const { data: singletons } = useSingletons()
+  const files = useFileStore((state) => state.files)
+  const {
+    methods,
+    editor,
+    customFields,
+    setCustomFields,
+    extension,
+    setExtension,
+    metadata,
+    setMetadata,
+    editDocument
+  } = useEditorPageState({
+    schema,
+    initialExtension: 'md',
+    setHasChanges
+  })
 
-  // Fetch file content when opening from file
   const { data: openedFileData } = useGetFileByPath({
     filePath: openFilePath,
     enabled: isNew && !!openFilePath && !openFileLoaded
@@ -99,7 +79,7 @@ export default function EditSingleton({ slug: initialSlug }: { slug: string }) {
 
   const singletonTitle = isNew
     ? 'New Singleton'
-    : singletons?.find((s) => s.slug === slug)?.title || slug
+    : singletons?.find((singleton) => singleton.slug === slug)?.title || slug
 
   const onSubmit = useSubmitSingleton({
     session,
@@ -110,7 +90,6 @@ export default function EditSingleton({ slug: initialSlug }: { slug: string }) {
     setShowDelete,
     setLoading,
     files,
-    methods,
     customFields,
     setCustomFields,
     setHasChanges,
@@ -121,7 +100,6 @@ export default function EditSingleton({ slug: initialSlug }: { slug: string }) {
     existingFilePath: openFilePath ?? undefined
   })
 
-  // Only fetch existing singleton data when editing (not creating new)
   useSingletonUpdateEffect({
     slug,
     methods,
@@ -134,7 +112,6 @@ export default function EditSingleton({ slug: initialSlug }: { slug: string }) {
     setSingletonContentPath
   })
 
-  // Load content from opened file
   useEffect(() => {
     if (!openedFileData || !editor || openFileLoaded || !openFilePath) return
 
@@ -152,14 +129,10 @@ export default function EditSingleton({ slug: initialSlug }: { slug: string }) {
       repoMediaPath
     })
 
-    // Extract title from frontmatter or filename
     const filename = openFilePath.substring(openFilePath.lastIndexOf('/') + 1)
     const titleFromFilename = filename.replace(/\.mdx?$/, '')
     const title = data.title || titleFromFilename
-
-    // Generate slug from title if not present in frontmatter
-    const slug = data.slug || slugify(title, { allowedChars: 'a-zA-Z0-9.' })
-
+    const nextSlug = data.slug || slugify(title, { allowedChars: 'a-zA-Z0-9.' })
     const newDate = data.publishedAt
       ? new Date(data.publishedAt)
       : getLocalDate()
@@ -167,7 +140,7 @@ export default function EditSingleton({ slug: initialSlug }: { slug: string }) {
     const newDocument = {
       ...data,
       title,
-      slug,
+      slug: nextSlug,
       status: data.status || 'draft',
       publishedAt: newDate,
       content: parsedContent,
@@ -177,7 +150,6 @@ export default function EditSingleton({ slug: initialSlug }: { slug: string }) {
       }
     }
 
-    // Set the singleton content path to the full file path
     setSingletonContentPath(openFilePath)
     setExtension(fileExtension)
 
@@ -187,8 +159,6 @@ export default function EditSingleton({ slug: initialSlug }: { slug: string }) {
       editor.commands.focus('start')
     })
 
-    // Set hasChanges to true when opening a file so save button is enabled
-    // and content lock is active (prevents navigation without saving)
     setHasChanges(true)
     setOpenFileLoaded(true)
   }, [
@@ -204,11 +174,12 @@ export default function EditSingleton({ slug: initialSlug }: { slug: string }) {
     repoMediaPath,
     methods,
     setHasChanges,
+    setMetadata,
+    setExtension,
     session?.user?.image,
     session?.user?.name
   ])
 
-  // Update URL when slug changes (after first save of new singleton)
   useEffect(() => {
     if (slug !== 'new' && slug !== initialSlug) {
       window.history.replaceState(
@@ -219,66 +190,12 @@ export default function EditSingleton({ slug: initialSlug }: { slug: string }) {
     }
   }, [slug, initialSlug, basePath, dashboardRoute])
 
-  // Add custom fields
-  useEffect(() => {
-    if (schema) {
-      const zodSchema = convertSchemaToZod(schema)
-
-      setDocumentSchema(zodSchema)
-      setCustomFields(schema.properties)
-    }
-  }, [schema])
-
-  // Convert date strings to Date objects
-  useEffect(() => {
-    if (schema && metadata) {
-      const dateFields: string[] = []
-
-      // Find all date fields in schema
-      const findDateFields = (obj: any) => {
-        Object.entries(obj).forEach(([key, value]: [string, any]) => {
-          if (value?.dataType === 'date') {
-            dateFields.push(key)
-          }
-        })
-      }
-
-      findDateFields(schema.properties)
-
-      // Update form values for date fields
-      const currentValues = methods.getValues()
-      const updates: Record<string, Date> = {}
-
-      dateFields.forEach((field) => {
-        if (
-          currentValues[field as keyof Document] &&
-          typeof currentValues[field as keyof Document] === 'string'
-        ) {
-          updates[field] = new Date(
-            currentValues[field as keyof Document] as string
-          )
-        }
-      })
-
-      if (Object.keys(updates).length > 0) {
-        methods.reset({
-          ...currentValues,
-          ...updates
-        })
-        setHasChanges(false)
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [schema, metadata])
-
-  // Submit the document after media paths are updated
   useEffect(() => {
     if (mediaPathUpdated) {
       onSubmit(methods.getValues())
     }
   }, [mediaPathUpdated, methods, onSubmit])
 
-  // Submit the document after singleton content path is selected (not for openFile case)
   useEffect(() => {
     if (singletonContentPath && isNew && !openFilePath) {
       const submitOptions = pendingConfigMdExtension
@@ -295,12 +212,11 @@ export default function EditSingleton({ slug: initialSlug }: { slug: string }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [singletonContentPath, pendingConfigMdExtension])
 
-  // Set extension from config when available (for new singletons)
   useEffect(() => {
     if (isNew && !openFilePath && config?.mdExtension) {
       setExtension(config.mdExtension)
     }
-  }, [isNew, openFilePath, config?.mdExtension])
+  }, [isNew, openFilePath, config?.mdExtension, setExtension])
 
   useEffect(() => {
     if (!isNew) {
@@ -309,13 +225,11 @@ export default function EditSingleton({ slug: initialSlug }: { slug: string }) {
   }, [isNew])
 
   const handleSave = (data: Document) => {
-    // Check media paths first
     if (!repoMediaPath && !publicMediaPath && files.length > 0) {
       setShowMediaPathDialog(true)
       return
     }
-    // Show modal for new singletons to select save location
-    // Skip modal if we're opening an existing file (openFilePath is present)
+
     if (isNew && !singletonContentPath && !openFilePath) {
       if (!config?.mdExtension && !pendingConfigMdExtension) {
         setShowExtensionDialog(true)
@@ -325,13 +239,11 @@ export default function EditSingleton({ slug: initialSlug }: { slug: string }) {
       return
     }
 
-    // For existing singletons (including opened files) without config.mdExtension, silently update it
     if (!isNew && !config?.mdExtension) {
       // @ts-ignore
       return onSubmit(data, { configUpdate: { mdExtension: extension } })
     }
 
-    // For opened files being saved for the first time
     if (isNew && openFilePath && !config?.mdExtension) {
       // @ts-ignore
       return onSubmit(data, { configUpdate: { mdExtension: extension } })
@@ -344,7 +256,6 @@ export default function EditSingleton({ slug: initialSlug }: { slug: string }) {
       })
     }
 
-    // Normal save
     // @ts-ignore
     return onSubmit(data)
   }
@@ -355,111 +266,53 @@ export default function EditSingleton({ slug: initialSlug }: { slug: string }) {
     setShowSingletonModal(true)
   }
 
-  // Watch for changes in form values and update hasChanges state
-  useEffect(() => {
-    const subscription = methods.watch((_, { name, type }) => {
-      if (type === 'change' || name === 'content') {
-        setHasChanges(true)
-      }
-    })
-    return () => subscription.unsubscribe()
-  }, [methods, setHasChanges])
-
   return (
-    <>
-      <Head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin=""
-        />
-        {/* eslint-disable-next-line @next/next/no-page-custom-font*/}
-        <link
-          href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&display=swap"
-          rel="stylesheet"
-        />
-      </Head>
-      {editor && editor?.isEditable && (
-        <DocumentContext.Provider
-          value={{
-            editor,
-            document: methods.getValues(),
-            editDocument,
-            hasChanges,
-            setHasChanges,
-            collection: '_singletons',
-            extension
+    <EditorPageShell
+      methods={methods}
+      editor={editor}
+      editDocument={editDocument}
+      hasChanges={hasChanges}
+      setHasChanges={setHasChanges}
+      collection="_singletons"
+      extension={extension}
+      title={methods.getValues('title') || singletonTitle}
+      settingsTitle={methods.getValues('title') || singletonTitle}
+      saveDocument={methods.handleSubmit(handleSave as any, (data) => {
+        console.error({ data })
+        const firstKey = Object.keys(data)[0] as keyof typeof data
+        const errorMessage =
+          (data[firstKey] as { message?: string })?.message || 'Unknown error'
+        toast.error(`Error in ${firstKey}: ${errorMessage}`)
+      })}
+      loading={loading}
+      showDelete={showDelete}
+      customFields={customFields}
+      setCustomFields={setCustomFields}
+      metadata={metadata}
+      titlePlaceholder={`Your ${singletonTitle} title`}
+      showMediaPathDialog={showMediaPathDialog}
+      setShowMediaPathDialog={setShowMediaPathDialog}
+      onMediaPathConfigured={() => {
+        setMediaPathUpdated(true)
+      }}
+      showExtensionDialog={showExtensionDialog}
+      setShowExtensionDialog={setShowExtensionDialog}
+      extensionFileName={`${methods.getValues('slug') || 'singleton'}.${extension}`}
+      onExtensionSave={handleExtensionDialogSave}
+      singleton={slug}
+      extraDialogs={
+        <NewSingletonModal
+          open={showSingletonModal}
+          onOpenChange={setShowSingletonModal}
+          loading={loading}
+          extension={extension}
+          singletonTitle={methods.getValues('title') || 'Singleton'}
+          onSave={(path) => {
+            setSingletonContentPath(path)
+            setShowSingletonModal(false)
           }}
-        >
-          <FormProvider {...methods}>
-            <FormMessage />
-            <AdminLayout
-              title={methods.getValues('title') || singletonTitle}
-              settings={
-                <DocumentSettings
-                  singleton={slug}
-                  title={methods.getValues('title') || singletonTitle}
-                  loading={loading}
-                  saveDocument={methods.handleSubmit(
-                    handleSave as any,
-                    (data) => {
-                      console.error({ data })
-                      const firstKey = Object.keys(data)[0] as keyof typeof data
-                      const errorMessage =
-                        (data[firstKey] as { message?: string })?.message ||
-                        'Unknown error'
-                      toast.error(`Error in ${firstKey}: ${errorMessage}`)
-                    }
-                  )}
-                  showDelete={showDelete}
-                  customFields={customFields}
-                  setCustomFields={setCustomFields}
-                  metadata={metadata}
-                />
-              }
-            >
-              <form className="m-auto max-w-[700px] space-y-4">
-                <DocumentTitleInput
-                  id="title"
-                  className="w-full resize-none outline-hidden text-5xl scrollbar-hide min-h-[55px] overflow-hidden"
-                  placeholder={`Your ${singletonTitle} title`}
-                />
-                <div className="min-h-full">
-                  <MDEditor editor={editor} id="content" />
-                </div>
-              </form>
-            </AdminLayout>
-            <MediaSettingsDialog
-              title="Your document contains media files."
-              description="Let's set up your media paths so we can upload your files."
-              showMediaPathDialog={showMediaPathDialog}
-              setShowMediaPathDialog={setShowMediaPathDialog}
-              callbackFunction={() => {
-                setMediaPathUpdated(true)
-              }}
-            />
-            <NewSingletonModal
-              open={showSingletonModal}
-              onOpenChange={setShowSingletonModal}
-              loading={loading}
-              extension={extension}
-              singletonTitle={methods.getValues('title') || 'Singleton'}
-              onSave={(path) => {
-                setSingletonContentPath(path)
-                setShowSingletonModal(false)
-                // The effect watching singletonContentPath will handle submit.
-              }}
-            />
-            <MarkdownExtensionDialog
-              open={showExtensionDialog}
-              onOpenChange={setShowExtensionDialog}
-              fileName={`${methods.getValues('slug') || 'singleton'}.${extension}`}
-              onSave={handleExtensionDialogSave}
-            />
-          </FormProvider>
-        </DocumentContext.Provider>
-      )}
-    </>
+        />
+      }
+    />
   )
 }
