@@ -1,5 +1,17 @@
 # outstatic
 
+## 2.1.4
+
+### Patch Changes
+
+- 313e233: - Allow seeding tag suggestions when creating a Tags custom field.
+  - Keep field dialogs open when schema commits fail so editors can retry.
+- 507d73f: Fix the singleton editor view not refreshing when creating a new singleton from the sidebar.
+- 5083c77: Replace tag inputs and column pickers with local multi-select comboboxes.
+- e9b2998: Refactor the document and singleton editors to share common page and form state logic.
+- 466670a: Add a strict single-select custom field type with schema-defined options.
+- 1a2ce4b: Refactor collection and singleton field management to share one implementation and fix field schema commit messages for edits.
+
 ## 2.1.3
 
 ### Patch Changes
