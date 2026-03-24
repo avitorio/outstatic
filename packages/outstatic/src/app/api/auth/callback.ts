@@ -184,7 +184,7 @@ export default async function GET(request: NextRequest) {
       }
     }
 
-    if (userData && userData.email && access_token) {
+    if (userData && access_token) {
       const { name, login, email, avatar_url } = userData
 
       // Fetch project info from SaaS to get repo owner/slug

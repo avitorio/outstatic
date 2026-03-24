@@ -96,16 +96,9 @@ const loginErrors = {
   ),
   'missing-user-data': (
     <>
-      We couldn&apos;t retrieve your email from GitHub. <br />
-      Please add an email address to your{' '}
-      <a
-        className="underline"
-        target="_blank"
-        href="https://github.com/settings/emails"
-      >
-        GitHub email settings
-      </a>{' '}
-      and try again.
+      We couldn&apos;t retrieve your user data from GitHub. <br />
+      Please try again. If the problem persists, check that your GitHub account
+      is in good standing.
     </>
   )
 }

@@ -2,4 +2,4 @@
 'outstatic': patch
 ---
 
-Show a helpful error message when GitHub OAuth fails due to missing email instead of returning raw JSON.
+Allow GitHub OAuth login without an email address on the user's account.
