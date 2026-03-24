@@ -151,7 +151,7 @@ export default async function GET(request: NextRequest) {
 
   const code = url.searchParams.get('code') as string | null
   if (!code) {
-    return NextResponse.json({ error: 'missing_code' }, { status: 400 })
+    return NextResponse.redirect(`${dashboardUrl}?error=missing-code`)
   }
 
   try {
@@ -163,7 +163,7 @@ export default async function GET(request: NextRequest) {
     } = await getAccessToken({ code })
 
     if (!access_token) {
-      return NextResponse.json({ error: 'no_access_token' }, { status: 401 })
+      return NextResponse.redirect(`${dashboardUrl}?error=no-access-token`)
     }
 
     let userData = await fetchGitHubUser(access_token)
@@ -333,6 +333,6 @@ export default async function GET(request: NextRequest) {
       return NextResponse.redirect(redirectUrl)
     }
   } catch {
-    return NextResponse.json({ error: 'auth_callback_failed' }, { status: 500 })
+    return NextResponse.redirect(`${dashboardUrl}?error=auth-callback-failed`)
   }
 }
