@@ -329,7 +329,8 @@ export default async function GET(request: NextRequest) {
         return NextResponse.redirect(redirectUrl)
       }
     } else {
-      return NextResponse.json({ error: 'missing_user_data' }, { status: 403 })
+      const redirectUrl = `${dashboardUrl}?error=missing-user-data`
+      return NextResponse.redirect(redirectUrl)
     }
   } catch {
     return NextResponse.json({ error: 'auth_callback_failed' }, { status: 500 })

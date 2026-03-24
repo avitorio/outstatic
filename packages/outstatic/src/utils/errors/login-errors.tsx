@@ -93,6 +93,20 @@ const loginErrors = {
       Please try again. If the problem persists, check your callback origins and
       API key configuration.
     </>
+  ),
+  'missing-user-data': (
+    <>
+      We couldn&apos;t retrieve your email from GitHub. <br />
+      Please add an email address to your{' '}
+      <a
+        className="underline"
+        target="_blank"
+        href="https://github.com/settings/emails"
+      >
+        GitHub email settings
+      </a>{' '}
+      and try again.
+    </>
   )
 }
 
