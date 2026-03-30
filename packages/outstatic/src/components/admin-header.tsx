@@ -158,7 +158,7 @@ const AdminHeaderComponent = () => {
                       <div className="text-muted-foreground">Signed in as:</div>
                       <div>
                         <span className="block truncate">
-                          {session?.user?.email}
+                          {session?.user?.email || session?.user?.login}
                         </span>
                       </div>
                     </div>

@@ -23,7 +23,7 @@ export type LoginSession = {
   user: {
     name: string
     login: string
-    email: string
+    email?: string
     image: string
     permissions?: AppPermissions[]
   }
@@ -127,7 +127,8 @@ function validateSession(session: any): session is LoginSession {
     session.user &&
     typeof session.user.name === 'string' &&
     typeof session.user.login === 'string' &&
-    typeof session.user.email === 'string' &&
+    (session.user.email === undefined ||
+      typeof session.user.email === 'string') &&
     typeof session.user.image === 'string' &&
     typeof session.access_token === 'string' &&
     isValidDate(session.expires)
