@@ -54,6 +54,31 @@ describe('convertSchemaToZod', () => {
     ).toThrow('Category must be one of the available options.')
   })
 
+  it('coerces an ISO date string into a Date object for date fields', () => {
+    const schema = convertSchemaToZod({
+      properties: {
+        eventDate: {
+          title: 'Event Date',
+          fieldType: 'Date',
+          dataType: 'date',
+          required: true
+        }
+      } satisfies CustomFieldsType
+    })
+
+    const result = schema.parse({
+      status: 'draft',
+      slug: 'post-with-date',
+      author: {},
+      eventDate: '2024-01-15T10:30:00.000Z'
+    })
+
+    expect(result.eventDate).toBeInstanceOf(Date)
+    expect((result.eventDate as Date).toISOString()).toBe(
+      '2024-01-15T10:30:00.000Z'
+    )
+  })
+
   it('allows an optional select field to be unset', () => {
     const schema = convertSchemaToZod({
       properties: {
