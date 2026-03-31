@@ -9,14 +9,19 @@
   },
   "dependencies": {
     "@tailwindcss/postcss": "^4.1.10",
+    "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
     "gray-matter": "^4.0.3",
+    "lucide-react": "^1.7.0",
     "next": "16.1.1",
     "outstatic": "latest",
     "react": "19.1.2",
     "react-dom": "19.1.2",
+    "rehype-katex": "^7.0.1",
     "remark": "^14.0.3",
+    "remark-gfm": "^4.0.0",
     "remark-html": "^15.0.2",
+    "remark-math": "^6.0.0",
     "tailwindcss": "4.1.10"
   },
   "devDependencies": {
@@ -26,7 +31,10 @@
     "@types/react-dom": "19.1.6",
     "eslint": "^9.39.2",
     "eslint-config-next": "^16.1.6",
+    "mdx-bundler": "^10.1.1",
     "postcss": "^8.4.49",
+    "postcss-nesting": "^12.0.2",
+    "rehype-pretty-code": "^0.14.1",
     "typescript": "^5.9.3"
   }
 }
