@@ -11,9 +11,7 @@ export default async function Index() {
     <Layout>
       <div className="max-w-6xl mx-auto px-5">
         <section className="mt-16 mb-16 md:mb-12 prose lg:prose-2xl home-intro">
-          <MDXComponent
-            content={content}
-          />
+          <MDXComponent content={content} />
         </section>
         {allPosts.length > 0 && (
           <ContentGrid

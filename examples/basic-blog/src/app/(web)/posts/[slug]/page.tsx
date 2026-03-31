@@ -88,9 +88,7 @@ export default async function Post(props: { params: Params }) {
           </div>
           <hr className="border-neutral-200 mt-10 mb-10" />
           <div className="max-w-2xl mx-auto prose prose-outstatic">
-            <MDXComponent
-              content={post.content}
-            />
+            <MDXComponent content={post.content} />
           </div>
         </article>
       </div>

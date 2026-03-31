@@ -7,7 +7,7 @@ import Image from 'next/image'
 import ContentGrid from '@/components/ContentGrid'
 import { OstDocument } from 'outstatic'
 import { Metadata } from 'next'
-import { absoluteUrl } from '@/lib/utils' 
+import { absoluteUrl } from '@/lib/utils'
 import { notFound } from 'next/navigation'
 import MDXComponent from '@/components/mdx/mdx-component'
 
@@ -84,9 +84,7 @@ export default async function Project(props: { params: Params }) {
                 {project.description}
               </div>
               <div className="max-w-2xl mx-auto prose prose-outstatic">
-                <MDXComponent
-                  content={content}
-                />
+                <MDXComponent content={content} />
               </div>
             </div>
           </div>
