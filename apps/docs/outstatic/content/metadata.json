@@ -1,6 +1,6 @@
 {
-  "commit": "dbf864b5c1374bcbfac6c5d2de2553baa3dc7b5a",
-  "generated": "2026-03-13T14:32:21.557Z",
+  "commit": "58e228279b82a668ed6102999614fd7baff97844",
+  "generated": "2026-03-31T20:43:35.025Z",
   "metadata": [
     {
       "__outstatic": {
@@ -105,22 +105,6 @@
       "slug": "faqs",
       "status": "published",
       "title": "FAQs"
-    },
-    {
-      "__outstatic": {
-        "commit": "5fd212fff91aa723845099fbfc0af00511254417",
-        "hash": "530664466",
-        "path": "/outstatic/content/docs/deploy-a-starter-outstatic-website-on-vercel.mdx"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "docs",
-      "publishedAt": "2026-02-20T03:00:00.000Z",
-      "slug": "deploy-a-starter-outstatic-website-on-vercel",
-      "status": "published",
-      "title": "Deploy a starter Outstatic website on Vercel"
     },
     {
       "__outstatic": {
@@ -594,6 +578,22 @@
       "slug": "latest-menu",
       "status": "published",
       "title": "Latest Menu"
+    },
+    {
+      "__outstatic": {
+        "commit": "58e228279b82a668ed6102999614fd7baff97844",
+        "hash": "3600214834",
+        "path": "/outstatic/content/docs/deploy-a-starter-outstatic-website-on-vercel.mdx"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "publishedAt": "2026-03-31T03:00:00.000Z",
+      "slug": "deploy-a-starter-outstatic-website-on-vercel",
+      "status": "published",
+      "title": "Deploy a starter Outstatic website on Vercel"
     }
   ]
 }
