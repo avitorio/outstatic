@@ -29,10 +29,7 @@ export function DateTimePickerForm({
   label?: string
   description?: string
 }) {
-  const {
-    control,
-    formState: { errors }
-  } = useFormContext()
+  const { control } = useFormContext()
 
   return (
     <FormField

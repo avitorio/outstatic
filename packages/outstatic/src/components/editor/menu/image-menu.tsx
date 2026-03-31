@@ -1,10 +1,9 @@
 import { useCallback, useState } from 'react'
-import { useFileStore } from '@/utils/hooks/useFileStore'
+import { useFileStore } from '@/utils/hooks/use-file-store'
 import { Editor } from '@tiptap/core'
 import { EditorBubbleButton } from '@/components/editor/ui/editor-bubble-button'
 import { LinkSelector } from '@/components/editor/selectors/link-selector'
 import { BubbleMenu } from '@tiptap/react'
-import { ChevronLeft } from 'lucide-react'
 
 type ImageMenuProps = {
   editor: Editor
@@ -13,24 +12,11 @@ type ImageMenuProps = {
 const ImageMenu = ({ editor }: ImageMenuProps) => {
   const { removeFile } = useFileStore()
   const [showLink, setShowLink] = useState(false)
-  const [url, setUrl] = useState('')
   const [showAltText, setShowAltText] = useState(false)
   const [altText, setAltText] = useState('')
   const shouldShow = useCallback(() => {
     return editor.isActive('image')
   }, [editor])
-
-  const setLink = useCallback(() => {
-    editor.chain().focus().extendMarkRange('link').setLink({ href: url }).run()
-
-    // empty
-    if (url === '' || url === undefined) {
-      editor.chain().focus().extendMarkRange('link').unsetLink().run()
-    }
-    setShowLink(false)
-    editor.chain().blur().run()
-    setUrl('')
-  }, [editor, url])
 
   const addAltText = useCallback(() => {
     editor
@@ -46,7 +32,6 @@ const ImageMenu = ({ editor }: ImageMenuProps) => {
 
     setShowAltText(false)
     editor.chain().blur().run()
-    setUrl('')
     setAltText('')
   }, [editor, altText])
 

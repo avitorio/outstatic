@@ -1,6 +1,6 @@
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useCreateBranch } from '@/utils/hooks/useCreateBranch'
+import { useCreateBranch } from '@/utils/hooks/use-create-branch'
 import { CreateBranchSchema } from '@/utils/schemas/create-branch-schema'
 import { Button } from '@/components/ui/shadcn/button'
 import { Input } from '@/components/ui/shadcn/input'
@@ -16,6 +16,7 @@ import {
 import { useState } from 'react'
 import { toast } from 'sonner'
 import { kebabCase } from 'change-case'
+import { stringifyError } from '@/utils/errors/stringify-error'
 
 type CreateBranchFormProps = {
   branchName?: string
@@ -48,7 +49,17 @@ export function CreateBranchForm({
       return result
     } catch (error) {
       console.error('Failed to create branch:', error)
-      toast.error('Failed to create branch.')
+      const errorToast = toast.error('Failed to create branch.', {
+        action: {
+          label: 'Copy Logs',
+          onClick: () => {
+            navigator.clipboard.writeText(`Error: ${stringifyError(error)}`)
+            toast.message('Logs copied to clipboard', {
+              id: errorToast
+            })
+          }
+        }
+      })
     } finally {
       setIsLoading(false)
     }

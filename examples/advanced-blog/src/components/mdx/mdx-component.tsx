@@ -1,9 +1,9 @@
-"use client";
-import { getMDXComponent } from "mdx-bundler/client";
-import Image from "next/image";
-import { ImgHTMLAttributes, useMemo } from "react";
-import { CustomCode, Pre } from "./custom-code";
-import CustomLink from "./custom-link";
+'use client'
+import { getMDXComponent } from 'mdx-bundler/client'
+import Image from 'next/image'
+import { ImgHTMLAttributes, useMemo } from 'react'
+import { CustomCode, Pre } from './custom-code'
+import CustomLink from './custom-link'
 
 const MDXComponentsMap = {
   a: CustomLink,
@@ -12,30 +12,30 @@ const MDXComponentsMap = {
     <img className="border rounded-lg" {...props} />
   ),
   pre: Pre,
-  code: CustomCode,
-};
+  code: CustomCode
+}
 
 type MDXComponentProps = {
-  content: string;
-  components?: Record<string, any>;
-};
+  content: string
+  components?: Record<string, any>
+}
 
 export const MDXComponent = ({
   content,
-  components = {},
+  components = {}
 }: MDXComponentProps) => {
-  const Component = useMemo(() => getMDXComponent(content), [content]);
+  const Component = useMemo(() => getMDXComponent(content), [content])
 
   return (
     <Component
       components={
         {
           ...MDXComponentsMap,
-          ...components,
+          ...components
         } as any
       }
     />
-  );
-};
+  )
+}
 
-export default MDXComponent;
+export default MDXComponent

@@ -5,14 +5,14 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "eslint ."
   },
   "dependencies": {
     "@tailwindcss/postcss": "^4.1.10",
-    "next": "15.3.3",
+    "next": "16.1.1",
     "outstatic": "latest",
-    "react": "19.1.0",
-    "react-dom": "19.1.0",
+    "react": "19.1.2",
+    "react-dom": "19.1.2",
     "tailwindcss": "4.1.10"
   },
   "devDependencies": {
@@ -20,15 +20,9 @@
     "@types/node": "^24.0.1",
     "@types/react": "19.1.8",
     "@types/react-dom": "19.1.6",
-    "eslint": "^9.29.0",
-    "eslint-config-next": "15.3.3",
-    "postcss": "8.4.49",
-    "typescript": "^5.8.3"
-  },
-  "pnpm": {
-    "overrides": {
-      "@types/react": "19.0.12",
-      "@types/react-dom": "19.0.4"
-    }
+    "eslint": "^9.39.2",
+    "eslint-config-next": "^16.1.6",
+    "postcss": "^8.4.49",
+    "typescript": "^5.9.3"
   }
 }

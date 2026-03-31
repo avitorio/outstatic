@@ -14,8 +14,14 @@ Here's a list of all the environment variables needed to run your Outstatic inst
 
 ```bash
 # REQUIRED Environment variables
+
+# Authentication mode (choose one of the two options below):
+# Option A - Local GitHub OAuth credentials
 OST_GITHUB_ID=YOUR_GITHUB_OAUTH_OR_APPS_ID
 OST_GITHUB_SECRET=YOUR_GITHUB_OAUTH_OR_APPS_SECRET
+
+# Option B - Outstatic relay auth (no local GitHub OAuth app needed)
+OUTSTATIC_API_KEY=your_api_key_here
 
 # OST_REPO_SLUG (Ex: for avitorio/outstatic, OST_REPO_SLUG=outstatic)
 OST_REPO_SLUG=THE_REPOSITORY_SLUG
@@ -49,6 +55,10 @@ OST_TOKEN_SECRET=A_32CHAR_RANDOM_STRING_FOR_YOUR_TOKEN_SECRET
 ```
 
 **Good to know**: To get your repository slug we first try fetching the `OST_REPO_SLUG` environment variable. If that is empty, we try `VERCEL_GIT_REPO_SLUG`, which is one of Vercel's default environment variables. If both are empty, you'll get a warning saying you need to add `OST_REPO_SLUG` to your environment variables.\
+\
+**Authentication mode**: You can authenticate with local GitHub OAuth (`OST_GITHUB_ID` + `OST_GITHUB_SECRET`) or with Outstatic relay auth (`OUTSTATIC_API_KEY`).
+If you use relay auth, configure your Project URL in outstatic.com so login callbacks return to your self-hosted `/api/outstatic/callback` route.
+\
 \
 **Important:** Don't forget to redeploy your website or restart your server after updating environment variables.
 

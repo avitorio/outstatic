@@ -2,11 +2,11 @@
 
 import { AdminLayout } from '@/components/admin-layout'
 import { API_MEDIA_PATH } from '@/utils/constants'
-import { useOutstatic } from '@/utils/hooks/useOutstatic'
-import { useGetMediaFiles } from '@/utils/hooks/useGetMediaFiles'
+import { useOutstatic } from '@/utils/hooks/use-outstatic'
+import { useGetMediaFiles } from '@/utils/hooks/use-get-media-files'
 import { useState, useMemo } from 'react'
 import { toast } from 'sonner'
-import useSubmitMedia from '@/utils/hooks/useSubmitMedia'
+import useSubmitMedia from '@/utils/hooks/use-submit-media'
 import { FileType } from '@/types'
 import { DeleteMediaButton } from '@/components/delete-media-button'
 import { MediaLibraryHeader } from '@/components/ui/outstatic/media-library-header'
@@ -20,6 +20,7 @@ import {
   CardDescription,
   CardContent
 } from '@/components/ui/shadcn/card'
+import { stringifyError } from '@/utils/errors/stringify-error'
 
 export default function MediaLibrary() {
   const [searchTerm, setSearchTerm] = useState('')
@@ -36,7 +37,7 @@ export default function MediaLibrary() {
   const apiPath = `${basePath}${API_MEDIA_PATH}${repoOwner}/${repoSlug}/${repoBranch}`
   const [notFoundFiles, setNotFoundFiles] = useState<Set<string>>(new Set())
   const [loadingImages, setLoadingImages] = useState<Set<string>>(new Set())
-  const { data, isLoading, error, refetch: refetchMedia } = useGetMediaFiles()
+  const { data, isLoading, refetch: refetchMedia } = useGetMediaFiles()
   const filteredFiles = useMemo(() => {
     if (!data) return []
 
@@ -94,7 +95,24 @@ export default function MediaLibrary() {
         try {
           await submitMedia(fileType)
         } catch (error) {
-          toast.error(`Failed to upload ${file.name}`)
+          console.error('Failed to upload media', error)
+          const errorToast = toast.error(`Failed to upload ${file.name}.`, {
+            action: {
+              label: 'Copy Logs',
+              onClick: () => {
+                navigator.clipboard.writeText(
+                  `File: ${JSON.stringify(
+                    { ...fileType, content: '...' },
+                    null,
+                    '  '
+                  )}\n\nError: ${stringifyError(error)}`
+                )
+                toast.message('Logs copied to clipboard', {
+                  id: errorToast
+                })
+              }
+            }
+          })
         }
       }
     }
@@ -149,13 +167,9 @@ export default function MediaLibrary() {
             </CardContent>
           </Card>
         </div>
-      ) : isLoading ? (
+      ) : isLoading && !data ? (
         <div className="flex items-center justify-center h-[80%]">
           <SpinnerIcon size="2xl" />
-        </div>
-      ) : error ? (
-        <div className="flex items-center justify-center h-[80%] text-red-500">
-          Error loading media files. Please try again.
         </div>
       ) : filteredFiles.length === 0 ? (
         <div className="flex flex-col items-center justify-center h-[80%] text-gray-500">
@@ -184,6 +198,7 @@ export default function MediaLibrary() {
                         <SpinnerIcon />
                       </div>
                     )}
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={`${apiPath}/${file.__outstatic.path}`}
                       alt={file.alt}

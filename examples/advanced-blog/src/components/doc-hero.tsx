@@ -1,10 +1,10 @@
-import Image from "next/image";
-import { OstDocument } from "outstatic";
-import DateFormatter from "./date-formatter";
+import Image from 'next/image'
+import { OstDocument } from 'outstatic'
+import DateFormatter from './date-formatter'
 
 type Doc = {
-  tags: { value: string; label: string }[];
-} & OstDocument;
+  tags: { value: string; label: string }[]
+} & OstDocument
 
 export default function DocHero(doc: Doc) {
   return (
@@ -16,6 +16,7 @@ export default function DocHero(doc: Doc) {
           fill
           className="object-cover object-center rounded-md border"
           priority
+          unoptimized={!doc.coverImage}
         />
       </div>
       {Array.isArray(doc?.tags)
@@ -32,10 +33,10 @@ export default function DocHero(doc: Doc) {
         {doc.title}
       </h1>
       <div className="hidden md:block md:mb-12 text-slate-600 dark:text-slate-400">
-        Written on <DateFormatter dateString={doc.publishedAt} /> by{" "}
-        {doc?.author?.name || ""}.
+        Written on <DateFormatter dateString={doc.publishedAt} /> by{' '}
+        {doc?.author?.name || ''}.
       </div>
       <hr className="border-gray-200 mt-10 mb-10" />
     </>
-  );
+  )
 }

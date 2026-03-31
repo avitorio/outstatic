@@ -3,7 +3,7 @@
   "type": "object",
   "properties": {
     "tags": {
-      "required": false,
+      "required": true,
       "description": "Add tags to the post",
       "fieldType": "Tags",
       "dataType": "array",
@@ -22,6 +22,16 @@
           "label": "Outstatic"
         }
       ]
+    },
+    "description": {
+      "fieldType": "String",
+      "dataType": "string",
+      "title": "description"
+    },
+    "coverImage": {
+      "fieldType": "Image",
+      "dataType": "image",
+      "title": "coverImage"
     }
   }
 }

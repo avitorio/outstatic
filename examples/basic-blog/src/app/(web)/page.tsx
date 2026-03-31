@@ -57,7 +57,11 @@ async function getData() {
     .toArray()
 
   const allProjects = await db
-    .find({ collection: 'projects', status: 'published' }, ['title', 'slug', 'coverImage'])
+    .find({ collection: 'projects', status: 'published' }, [
+      'title',
+      'slug',
+      'coverImage'
+    ])
     .sort({ publishedAt: -1 })
     .toArray()
 

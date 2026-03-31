@@ -1,0 +1,146 @@
+import { getLoginSession } from '@/utils/auth/auth'
+import { createOpenAI } from '@ai-sdk/openai'
+import { OUTSTATIC_API_URL } from '@/utils/constants'
+import { ModelMessage, streamText } from 'ai'
+import { match } from 'ts-pattern'
+
+export const maxDuration = 30
+
+// IMPORTANT! Set the runtime to edge: https://vercel.com/docs/functions/edge-functions/edge-runtime
+export const runtime = 'edge'
+
+export default async function POST(req: Request): Promise<Response> {
+  const session = await getLoginSession()
+  if (!session) {
+    return new Response('Unauthorized', { status: 401 })
+  }
+
+  // Check if the OPENAI_API_KEY is set, if not return 400
+  if (
+    !(
+      process.env.OPENAI_API_KEY ||
+      process.env.OUTSTATIC_API_KEY ||
+      process.env.AI_GATEWAY_API_KEY
+    )
+  ) {
+    return new Response(
+      'AI Completion is not configured. Check your .env file.',
+      {
+        status: 400
+      }
+    )
+  }
+
+  if (process.env.OUTSTATIC_API_KEY) {
+    const apiPath = OUTSTATIC_API_URL + '/outstatic/generate'
+    return fetch(apiPath, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${process.env.OUTSTATIC_API_KEY}`
+      },
+      body: req.body,
+      duplex: 'half'
+    } as RequestInit)
+  }
+
+  const { prompt, option, command } = await req.json()
+  const messages = match(option)
+    .with('continue', () => [
+      {
+        role: 'system',
+        content:
+          'You are an AI writing assistant that continues existing text based on context from prior text. ' +
+          'Give more weight/priority to the later characters than the beginning ones. ' +
+          'Limit your response to no more than 200 characters, but make sure to construct complete sentences.' +
+          'Prefer plain text. Use Markdown sparingly and only for structure when clearly helpful. Do not use any word-level formatting like bold, italics, underline, or strikethrough.'
+      },
+      {
+        role: 'user',
+        content: prompt
+      }
+    ])
+    .with('improve', () => [
+      {
+        role: 'system',
+        content:
+          'You are an AI writing assistant that improves existing text. ' +
+          'Limit your response to no more than 200 characters, but make sure to construct complete sentences.' +
+          'Prefer plain text. Use Markdown sparingly and only for structure when clearly helpful. Do not use any word-level formatting like bold, italics, underline, or strikethrough.'
+      },
+      {
+        role: 'user',
+        content: `The existing text is: ${prompt}`
+      }
+    ])
+    .with('shorter', () => [
+      {
+        role: 'system',
+        content:
+          'You are an AI writing assistant that shortens existing text. ' +
+          'Prefer plain text. Use Markdown sparingly and only for structure when clearly helpful. Do not use any word-level formatting like bold, italics, underline, or strikethrough.'
+      },
+      {
+        role: 'user',
+        content: `The existing text is: ${prompt}`
+      }
+    ])
+    .with('longer', () => [
+      {
+        role: 'system',
+        content:
+          'You are an AI writing assistant that lengthens existing text. ' +
+          'Prefer plain text. Use Markdown sparingly and only for structure when clearly helpful. Do not use any word-level formatting like bold, italics, underline, or strikethrough.'
+      },
+      {
+        role: 'user',
+        content: `The existing text is: ${prompt}`
+      }
+    ])
+    .with('fix', () => [
+      {
+        role: 'system',
+        content:
+          'You are an AI writing assistant that fixes grammar and spelling errors in existing text. ' +
+          'Only return the corrected text, nothing else.' +
+          'Limit your response to no more than 200 characters, but make sure to construct complete sentences.' +
+          'Prefer plain text. Use Markdown sparingly and only for structure when clearly helpful. Do not use any word-level formatting like bold, italics, underline, or strikethrough.'
+      },
+      {
+        role: 'user',
+        content: `The existing text is: ${prompt}`
+      }
+    ])
+    .with('zap', () => [
+      {
+        role: 'system',
+        content:
+          'You area an AI writing assistant that generates text based on a prompt. ' +
+          'You take an input from the user and a command for manipulating the text' +
+          'Prefer plain text. Use Markdown sparingly and only for structure when clearly helpful. Do not use any word-level formatting like bold, italics, underline, or strikethrough.'
+      },
+      {
+        role: 'user',
+        content: `For this text: ${prompt}. You have to respect the command: ${command}`
+      }
+    ])
+    .run() as ModelMessage[]
+
+  const openai = createOpenAI({
+    baseURL: process.env.OPENAI_BASE_URL || 'https://api.openai.com/v1'
+  })
+
+  const modelId = process.env.OST_AI_MODEL || 'openai/gpt-4.1-nano'
+
+  const model = process.env.OPENAI_API_KEY
+    ? openai(modelId.replace('openai/', ''))
+    : `${modelId}`
+
+  const result = streamText({
+    model,
+    messages,
+    temperature: 0.7
+  })
+
+  return result.toUIMessageStreamResponse()
+}

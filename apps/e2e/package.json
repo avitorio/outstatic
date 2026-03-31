@@ -1,0 +1,17 @@
+{
+  "name": "outstatic-e2e",
+  "private": true,
+  "scripts": {
+    "report": "playwright show-report",
+    "test": "playwright test --project=chromium --max-failures=1",
+    "test:fast": "playwright test --project=chromium --max-failures=1 --workers=16",
+    "test:setup": "playwright test tests/auth.setup.ts --project=setup --headed",
+    "test:ui": "playwright test --project=chromium --ui",
+    "test:login": "playwright test tests/login.spec.ts --project=chromium",
+    "test:repository-pick": "playwright test tests/repository-pick.spec.ts --project=chromium",
+    "install:browsers": "playwright install chromium"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.54.1"
+  }
+}

@@ -163,7 +163,7 @@ export const Mathematics = Node.create<MathematicsOptions>({
         dom.setAttribute(key, value)
       })
 
-      dom.addEventListener('click', (evt) => {
+      dom.addEventListener('click', () => {
         if (editor.isEditable && typeof getPos === 'function') {
           const pos = getPos()
           const nodeSize = node.nodeSize

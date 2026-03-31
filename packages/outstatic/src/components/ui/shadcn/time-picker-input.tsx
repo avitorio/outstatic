@@ -10,8 +10,7 @@ import {
   setDateByType
 } from '@/utils/ui/time-picker-utils'
 
-export interface TimePickerInputProps
-  extends React.InputHTMLAttributes<HTMLInputElement> {
+export interface TimePickerInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   picker: TimePickerType
   date: Date | undefined
   setDate: (date: Date | undefined) => void

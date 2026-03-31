@@ -1,7 +1,7 @@
-import { z } from 'zod'
+import { z } from 'zod/v4'
 
 const RouteMatchingEnd = z
-  .union([z.boolean(), z.function().args(z.string()).returns(z.boolean())])
+  .union([z.boolean(), z.custom<(input: string) => boolean>()])
   .default(false)
   .optional()
 
@@ -27,17 +27,33 @@ const RouteChild = z.object({
   children: z.array(RouteSubChild).default([]).optional(),
   collapsible: z.boolean().default(false).optional(),
   collapsed: z.boolean().default(false).optional(),
-  renderAction: z.custom<React.ReactNode>().optional()
+  renderAction: z.custom<React.ReactNode>().optional(),
+  badge: z.custom<React.ReactNode>().optional(),
+  dialog: z.custom<React.ReactNode>().optional(),
+  newTab: z.boolean().default(false).optional()
 })
 
 const RouteGroup = z.object({
   label: z.string(),
   collapsible: z.boolean().optional(),
   collapsed: z.boolean().optional(),
-  children: z.array(RouteChild),
-  renderAction: z.custom<React.ReactNode>().optional()
+  Icon: z.custom<React.ReactNode>().optional(),
+  get children(): z.ZodUnion<
+    [z.ZodArray<typeof RouteChild>, z.ZodArray<typeof RouteGroup>]
+  > {
+    return z.union([z.array(RouteChild), z.array(RouteGroup)])
+  },
+  renderAction: z.custom<React.ReactNode>().optional(),
+  badge: z.custom<React.ReactNode>().optional(),
+  dialog: z.custom<React.ReactNode>().optional(),
+  newTab: z.boolean().default(false).optional()
 })
 
 export const NavigationConfigSchema = z.object({
+  // @ts-ignore
   routes: z.array(z.union([RouteGroup, Divider]))
 })
+
+export type RouteChildType = z.infer<typeof RouteChild>
+export type RouteGroupType = z.infer<typeof RouteGroup>
+export type RouteSubChildType = z.infer<typeof RouteSubChild>

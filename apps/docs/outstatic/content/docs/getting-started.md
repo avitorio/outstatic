@@ -7,21 +7,26 @@ author:
 slug: "getting-started"
 description: "Get started with Outstatic"
 coverImage: ""
-publishedAt: "2025-02-17T03:00:00.000Z"
+publishedAt: "2026-02-20T03:00:00.000Z"
 ---
 
-If you are using Next.js 14 please refer to the [Before v1.4](/v1.4/introduction) documentation.
+\
+Start using Outstatic in minutes, free on our hosted service.
 
-## Who are you?
+[Create your Outstatic account](https://outstatic.com/auth/sign-up?provider=github).
 
-I'm just curious, or I'm starting from scratch.
+## Self-hosting options:
 
-- [Deploy a starter Outstatic website on Vercel](/deploy-a-starter-outstatic-website-on-vercel)
+### Which best describes you?
 
-I have a website which uses Markdown (.md, .mdx) files for content.
+I already have a site that uses Markdown (.md or .mdx) for content **(recommended)**
 
-- [Use Outstatic as a CMS to edit Markdown on any GitHub repository.](/using-outstatic-for-markdown-content)
+- [Edit Markdown in any GitHub repository with Outstatic as your CMS.](/using-outstatic-for-markdown-content)
 
-I'm using Next.js and I want to add Outstatic to my website.
+I’m using Next.js and want to add Outstatic to my site
 
-- [Adding Outstatic to your Next.js website](/getting-started-with-next-js)
+- [Install Outstatic inside your Next.js app.](/getting-started-with-next-js)
+
+I don’t have a site yet. I’m starting from scratch or just exploring
+
+- [Deploy a starter Outstatic site to Vercel](/deploy-a-starter-outstatic-website-on-vercel)

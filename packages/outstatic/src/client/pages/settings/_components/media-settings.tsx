@@ -1,7 +1,7 @@
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useGetConfig } from '@/utils/hooks/useGetConfig'
-import { useUpdateConfig } from '@/utils/hooks/useUpdateConfig'
+import { useGetConfig } from '@/utils/hooks/use-get-config'
+import { useUpdateConfig } from '@/utils/hooks/use-update-config'
 import { ConfigSchema } from '@/utils/schemas/config-schema'
 import { Button } from '@/components/ui/shadcn/button'
 import { Input } from '@/components/ui/shadcn/input'
@@ -23,7 +23,7 @@ import {
   DialogFooter
 } from '@/components/ui/shadcn/dialog'
 import { useEffect, useState } from 'react'
-import { useLocalData, useOutstatic } from '@/utils/hooks/useOutstatic'
+import { useLocalData, useOutstatic } from '@/utils/hooks/use-outstatic'
 import { Skeleton } from '@/components/ui/shadcn/skeleton'
 import { FolderIcon } from 'lucide-react'
 import GithubExplorer from '@/components/ui/outstatic/github-explorer'
@@ -54,6 +54,7 @@ export function MediaSettings(props: MediaSettingsProps) {
       publicMediaPath: config?.publicMediaPath || ''
     }
   })
+  const { reset } = form
 
   const onSubmit = useUpdateConfig({ setLoading })
   const handleSubmit = async () => {
@@ -76,12 +77,12 @@ export function MediaSettings(props: MediaSettingsProps) {
   }
 
   useEffect(() => {
-    form.reset({
+    reset({
       repoMediaPath: config?.repoMediaPath || '',
       publicMediaPath: config?.publicMediaPath || ''
     })
     setData(config ?? {})
-  }, [config])
+  }, [config, reset, setData])
 
   return (
     <>

@@ -6,14 +6,13 @@
       "__outstatic": {
         "commit": "375ca4629d57e6f05cb7f61debb7e258bf3947d4",
         "hash": "2477969654",
-        "path": "outstatic/content/pages/home.md"
+        "path": "outstatic/content/_singletons/home.md"
       },
       "author": {
         "name": "Andre Vitorio",
         "picture": ""
       },
-      "collection": "pages",
-      "coverImage": "",
+      "collection": "_singletons",
       "description": "This is my blog.",
       "publishedAt": "2022-03-17T05:35:07.322Z",
       "slug": "home",
@@ -24,14 +23,13 @@
       "__outstatic": {
         "commit": "9637bcf0d7aa912e22e9e0031dd679244f9c9527",
         "hash": "2309931423",
-        "path": "outstatic/content/pages/about.md"
+        "path": "outstatic/content/_singletons/about.md"
       },
       "author": {
         "name": "Andre Vitorio",
         "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
       },
-      "collection": "pages",
-      "coverImage": "",
+      "collection": "_singletons",
       "description": "I'm Andre, a product developer and designer from Maceió, Brazil",
       "publishedAt": "2023-12-28T18:49:02.348Z",
       "slug": "about",
@@ -193,7 +191,7 @@
       "collection": "posts",
       "publishedAt": "2024-11-11T14:22:52.515Z",
       "slug": "test-post",
-      "status": "draft",
+      "status": "published",
       "tags": [
       ],
       "title": "Test Post"

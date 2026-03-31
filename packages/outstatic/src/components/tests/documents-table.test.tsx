@@ -31,7 +31,7 @@ jest.mock('change-case', () => {
 const date1 = 'July 14, 2022'
 const date2 = 'August 15, 2023'
 
-jest.mock('@/utils/hooks/useGetDocuments', () => ({
+jest.mock('@/utils/hooks/use-get-documents', () => ({
   useGetDocuments: () => ({
     data: {
       documents: [

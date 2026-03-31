@@ -2,7 +2,14 @@
   "$schema": "https://json.schemastore.org/tsconfig",
   "display": "Outstatic",
   "include": ["."],
-  "exclude": ["dist", "build", "node_modules"],
+  "exclude": [
+    "dist",
+    "build",
+    "node_modules",
+    "coverage",
+    "postbuild.js",
+    "tailwind.config.js"
+  ],
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
@@ -27,6 +34,6 @@
     "strict": true,
     "allowJs": true,
     "moduleDetection": "force",
-    "resolveJsonModule": true,
+    "resolveJsonModule": true
   }
 }

@@ -1,4 +1,4 @@
-import { envVars } from '@/utils/envVarsCheck'
+import { envVars } from '@/utils/env-vars-check'
 import { GetServerSideProps, GetServerSidePropsContext } from 'next'
 
 type WelcomeProps = {

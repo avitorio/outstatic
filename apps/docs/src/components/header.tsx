@@ -25,6 +25,7 @@ const Header = ({ hideVersionSelect = false }) => {
         return pathname?.startsWith(version.path)
       })
 
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setCurrentVersion(version?.value || VERSIONS[0].value)
     }
   }, [hideVersionSelect, pathname])

@@ -30,7 +30,7 @@ Once you've selected your Collection, click the Add Custom Field button. This wi
 
 **Field name:** Enter the name of your custom field in the "Field name" section. This will be the name of the field that appears on your Document.
 
-**Field type:** Choose the data type that you would like the custom field to be in the "Field Type" section. For example, you might choose "string".
+**Field type:** Choose the data type that you would like the custom field to be in the "Field Type" section. For example, you might choose "string" or "select".
 
 **Description:** You can add a brief description of the field in the "Description" field. This is a good place to provide context for the field and explain how it should be used.
 
@@ -94,9 +94,32 @@ Example `schema.json` file:
       "fieldType": "Text",
       "dataType": "string",
       "title": "website summary"
+    },
+    "category": {
+      "required": true,
+      "description": "Post category",
+      "fieldType": "Select",
+      "dataType": "string",
+      "title": "Category",
+      "values": [
+        {
+          "label": "News",
+          "value": "news"
+        },
+        {
+          "label": "Guides",
+          "value": "guides"
+        }
+      ]
     }
   }
 }
+```
+
+Select fields are saved in Markdown frontmatter as the selected raw value:
+
+```yaml
+category: news
 ```
 
 ## Conclusion

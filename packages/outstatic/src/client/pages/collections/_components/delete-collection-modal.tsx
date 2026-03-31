@@ -10,15 +10,15 @@ import {
 } from '@/components/ui/shadcn/dialog'
 import { Label } from '@/components/ui/shadcn/label'
 import { useState } from 'react'
-import { createCommitApi } from '@/utils/createCommitApi'
-import { hashFromUrl } from '@/utils/hashFromUrl'
-import { useCreateCommit } from '@/utils/hooks/useCreateCommit'
-import { useGetMetadata } from '@/utils/hooks/useGetMetadata'
-import useOid from '@/utils/hooks/useOid'
-import { useOutstatic } from '@/utils/hooks/useOutstatic'
+import { createCommitApi } from '@/utils/create-commit-api'
+import { hashFromUrl } from '@/utils/hash-from-url'
+import { useCreateCommit } from '@/utils/hooks/use-create-commit'
+import { useGetMetadata } from '@/utils/hooks/use-get-metadata'
+import useOid from '@/utils/hooks/use-oid'
+import { useOutstatic } from '@/utils/hooks/use-outstatic'
 import { stringifyMetadata } from '@/utils/metadata/stringify'
 import { toast } from 'sonner'
-import { CollectionType, useCollections } from '@/utils/hooks/useCollections'
+import { CollectionType, useCollections } from '@/utils/hooks/use-collections'
 
 type DeleteCollectionModalProps = {
   setShowDeleteModal: (value: boolean) => void

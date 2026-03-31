@@ -1,6 +1,6 @@
 import ContentGrid from '@/components/content-grid'
 import markdownToHtml from '@/lib/markdownToHtml'
-import { load } from 'outstatic/server'
+import { load, getSingletonBySlug } from 'outstatic/server'
 
 export default async function Index() {
   const { content, allPosts, otherCollections } = await getData()
@@ -44,12 +44,14 @@ async function getData() {
   const db = await load()
 
   // get content for the homepage
-  const page = await db
-    .find({ collection: 'pages', slug: 'home' }, ['content'])
-    .first()
+  const home = getSingletonBySlug('home', ['content'])
+
+  if (!home) {
+    throw new Error('Home singleton not found')
+  }
 
   // convert markdown to html
-  const content = await markdownToHtml(page.content)
+  const content = await markdownToHtml(home.content)
 
   // get all posts. Example of fetching a specific collection
   const allPosts = await db

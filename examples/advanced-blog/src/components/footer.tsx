@@ -1,6 +1,6 @@
-import { GithubIcon, LinkedinIcon } from "lucide-react";
-import Link from "next/link";
-import { BuiltWithOutstatic } from "./built-with-outstatic";
+import { GithubIcon, LinkedinIcon } from 'lucide-react'
+import Link from 'next/link'
+import { BuiltWithOutstatic } from './built-with-outstatic'
 
 const Footer = () => {
   return (
@@ -9,7 +9,7 @@ const Footer = () => {
         <div className="flex justify-between w-full items-center">
           <div className="flex flex-col w-1/2">
             <p className="text-sm mt-4 md:mt-0">
-              The code for this website is{" "}
+              The code for this website is{' '}
               <Link
                 className="underline underline-offset-2 hover:text-gray-600 dark:hover:text-white"
                 href="https://github.com/avitorio/andrevitorio-com"
@@ -69,7 +69,7 @@ const Footer = () => {
         </div>
       </footer>
     </div>
-  );
-};
+  )
+}
 
-export default Footer;
+export default Footer

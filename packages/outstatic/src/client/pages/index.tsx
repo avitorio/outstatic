@@ -3,22 +3,16 @@ import { OutstaticData } from '@/app'
 import { AdminHeader } from '@/components/admin-header'
 import { Sidebar } from '@/components/sidebar'
 import { AdminLoading } from '@/components/admin-loading'
-import { InitialDataContext } from '@/utils/hooks/useInitialData'
-import { useOutstatic, useLocalData } from '@/utils/hooks/useOutstatic'
-import { queryClient } from '@/utils/react-query/queryClient'
-import { QueryClientProvider } from '@tanstack/react-query'
+import { useOutstatic, useLocalData } from '@/utils/hooks/use-outstatic'
 import { useEffect } from 'react'
-import { Toaster } from 'sonner'
 import { Router } from '../router'
 import Login from './login'
 import Welcome from './welcome'
-import { useGetRepository } from '@/utils/hooks/useGetRepository'
+import { useGetRepository } from '@/utils/hooks/use-get-repository'
 import Onboarding from './onboarding'
-import { NavigationGuardProvider } from 'next-navigation-guard'
-import { V2BreakingCheck } from '@/components/v2-breaking-check'
-import { ThemeProvider } from 'next-themes'
-import 'katex/dist/katex.min.css'
 import { SidebarProvider } from '@/components/ui/shadcn/sidebar'
+import { RootProvider } from './_components/root-provider'
+import RedirectingPage from './redirect'
 
 type OstClientProps = {
   ostData: OutstaticData
@@ -44,7 +38,7 @@ export const AdminArea = ({ params }: { params: { ost: string[] } }) => {
 
             <div className="dark:bg-background bg-background mx-auto flex w-full flex-col overflow-y-auto">
               <div className={'flex flex-1 overflow-y-auto'}>
-                <Dashboard params={params} />
+                <Main params={params} />
               </div>
             </div>
           </div>
@@ -54,22 +48,33 @@ export const AdminArea = ({ params }: { params: { ost: string[] } }) => {
   )
 }
 
-export const Dashboard = ({ params }: { params: { ost: string[] } }) => {
+export const Main = ({ params }: { params: { ost: string[] } }) => {
   const { repoSlug, repoOwner, repoBranch, isPending, session } = useOutstatic()
   const { data: repository } = useGetRepository()
   const { setData, data, isPending: localPending } = useLocalData()
+  const localRepoBranch = data.repoBranch
+  const sessionLogin = session?.user.login
 
   useEffect(() => {
-    if (repository && !repoBranch && !data.repoBranch) {
+    if (repository && !repoBranch && !localRepoBranch) {
       const defaultBranch = repository.defaultBranchRef?.name
       if (defaultBranch) {
         setData({ repoBranch: defaultBranch })
       }
     }
-    if (repoSlug && !repoOwner) {
-      setData({ repoBranch, repoOwner: session?.user.login })
+
+    if (repoSlug && !repoOwner && sessionLogin) {
+      setData({ repoBranch, repoOwner: sessionLogin })
     }
-  }, [repository, setData, data, session])
+  }, [
+    repository,
+    repoBranch,
+    localRepoBranch,
+    repoSlug,
+    repoOwner,
+    sessionLogin,
+    setData
+  ])
 
   return (
     <>
@@ -89,26 +94,17 @@ export const OstClient = ({ ostData, params }: OstClientProps) => {
     return <Welcome variables={ostData.missingEnvVars} />
   }
 
+  if (params?.ost?.includes('redirect')) {
+    return <RedirectingPage />
+  }
+
   if (!ostData?.session) {
-    return <Login basePath={ostData?.basePath} />
+    return <Login basePath={ostData?.basePath} isPro={ostData?.isPro} />
   }
 
   return (
-    <InitialDataContext.Provider value={ostData}>
-      <ThemeProvider
-        attribute="class"
-        defaultTheme="system"
-        enableSystem
-        disableTransitionOnChange
-      >
-        <Toaster />
-        <QueryClientProvider client={queryClient}>
-          <NavigationGuardProvider>
-            <AdminArea params={params} />
-          </NavigationGuardProvider>
-        </QueryClientProvider>
-        <V2BreakingCheck />
-      </ThemeProvider>
-    </InitialDataContext.Provider>
+    <RootProvider ostData={ostData}>
+      <AdminArea params={params} />
+    </RootProvider>
   )
 }

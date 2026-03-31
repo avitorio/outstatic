@@ -21,9 +21,9 @@ jest.mock('change-case', () => {
 })
 
 // Mock useOid hook
-jest.mock('@/utils/hooks/useOid', () => () => jest.fn().mockReturnValue('123'))
+jest.mock('@/utils/hooks/use-oid', () => () => jest.fn().mockReturnValue('123'))
 // Mock useGetMetadata hook
-jest.mock('@/utils/hooks/useGetMetadata', () => ({
+jest.mock('@/utils/hooks/use-get-metadata', () => ({
   useGetMetadata: () => ({
     refetch: async () =>
       Promise.resolve({
@@ -32,14 +32,32 @@ jest.mock('@/utils/hooks/useGetMetadata', () => ({
   })
 }))
 
-jest.mock('@/utils/hooks/useCreateCommit', () => ({
+jest.mock('@/utils/hooks/use-create-commit', () => ({
   useCreateCommit: () => ({
     mutateAsync: async () => Promise.resolve(true)
   })
 }))
 
+jest.mock('@/utils/hooks/use-collections', () => ({
+  useCollections: () => ({
+    refetch: async () =>
+      Promise.resolve({
+        data: [{ slug: 'posts', path: 'outstatic/content/posts' }]
+      })
+  })
+}))
+
+jest.mock('@/utils/hooks/use-singletons', () => ({
+  useSingletons: () => ({
+    refetch: async () =>
+      Promise.resolve({
+        data: []
+      })
+  })
+}))
+
 // Mock createCommitApi
-jest.mock('@/utils/createCommitApi', () => ({
+jest.mock('@/utils/create-commit-api', () => ({
   createCommitApi: () => ({
     removeFile: jest.fn(),
     replaceFile: jest.fn(),

@@ -11,7 +11,11 @@ import {
   TextQuote
 } from 'lucide-react'
 
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/shadcn/popover'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger
+} from '@/components/ui/shadcn/popover'
 import { Editor } from '@tiptap/core'
 import { EditorBubbleButton } from '@/components/editor/ui/editor-bubble-button'
 import { useEditor } from '@/components/editor/editor-context'

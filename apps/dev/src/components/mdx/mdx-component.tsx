@@ -27,6 +27,7 @@ export const MDXComponent = ({
   const Component = useMemo(() => getMDXComponent(content), [content])
 
   return (
+    // eslint-disable-next-line react-hooks/static-components
     <Component
       components={
         {

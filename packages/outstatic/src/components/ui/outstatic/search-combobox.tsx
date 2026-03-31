@@ -15,7 +15,6 @@ import {
   CommandItem
 } from '../shadcn/command'
 import { Popover, PopoverContent, PopoverTrigger } from '../shadcn/popover'
-import { ScrollArea } from '../shadcn/scroll-area'
 import { cn } from '@/utils/ui'
 
 export function SearchCombobox({
@@ -64,13 +63,13 @@ export function SearchCombobox({
 
   const buttonClassName = cn(
     'justify-between',
-    size === 'sm' ? 'w-min px-1 ml-0.5' : 'w-[20rem]',
+    size === 'sm' ? 'w-min px-1 ml-0.5' : 'w-full min-w-[20rem]',
     variant === 'hidden' ? 'hidden' : '',
     className
   )
 
   return (
-    <div className="flex items-center">
+    <div className={cn('flex items-center', size !== 'sm' && 'w-full')}>
       {size === 'sm' ? (
         <span
           className={cn(
@@ -81,23 +80,23 @@ export function SearchCombobox({
           {isLoading
             ? loadingPlaceholder
             : value
-            ? (() => {
-                const selectedRecord = data.find(
-                  (dataRecord) => dataRecord.value === value
-                )
-                return (
-                  <>
-                    {selectedRecord?.icon && (
-                      <selectedRecord.icon className="h-4 w-4 inline-block" />
-                    )}
-                    {selectedRecord?.label}
-                  </>
-                )
-              })()
-            : selectPlaceholder}
+              ? (() => {
+                  const selectedRecord = data.find(
+                    (dataRecord) => dataRecord.value === value
+                  )
+                  return (
+                    <>
+                      {selectedRecord?.icon && (
+                        <selectedRecord.icon className="h-4 w-4 inline-block" />
+                      )}
+                      {selectedRecord?.label}
+                    </>
+                  )
+                })()
+              : selectPlaceholder}
         </span>
       ) : null}
-      <Popover open={open} onOpenChange={setOpen} modal>
+      <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
             variant={variant === 'hidden' ? undefined : variant}
@@ -108,39 +107,46 @@ export function SearchCombobox({
               size === 'sm' &&
                 'focus-visible:outline-hidden focus-visible:ring-0 focus-visible:ring-offset-0 px-1'
             )}
-            disabled={disabled || isLoading}
+            disabled={disabled}
             size={size}
           >
             <span
               className={cn(
                 'truncate text-left',
-                size === 'sm' ? 'w-min lg:hidden' : 'w-[20rem]'
+                size === 'sm' ? 'w-min lg:hidden' : 'flex-1 min-w-0'
               )}
             >
               {isLoading
                 ? loadingPlaceholder
                 : value
-                ? (() => {
-                    const selectedRecord = data.find(
-                      (dataRecord) => dataRecord.value === value
-                    )
-                    return (
-                      <>
-                        {selectedRecord?.icon && (
-                          <selectedRecord.icon className="h-4 w-4 inline-block" />
-                        )}
-                        {selectedRecord?.label}
-                      </>
-                    )
-                  })()
-                : selectPlaceholder}
+                  ? (() => {
+                      const selectedRecord = data.find(
+                        (dataRecord) => dataRecord.value === value
+                      )
+                      return (
+                        <>
+                          {selectedRecord?.icon && (
+                            <selectedRecord.icon className="h-4 w-4 inline-block" />
+                          )}
+                          {selectedRecord?.label}
+                        </>
+                      )
+                    })()
+                  : selectPlaceholder}
             </span>
             <div>
               <CaretSortIcon className={cn('h-4 w-4 shrink-0 opacity-50')} />
             </div>
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-[20rem] p-0 md:w-[20rem]" align="center">
+        <PopoverContent
+          className={cn(
+            'w-[var(--radix-popover-trigger-width)] p-0',
+            size === 'sm' && 'min-w-[20rem]'
+          )}
+          align={size === 'sm' ? 'start' : 'center'}
+          style={{ width: 'var(--radix-popover-trigger-width)' }}
+        >
           <Command className="max-h-[275px]">
             <CommandInput
               placeholder={searchPlaceholder}
@@ -149,27 +155,27 @@ export function SearchCombobox({
             <CommandEmpty>
               {isLoading ? loadingPlaceholder : resultsPlaceholder}
             </CommandEmpty>
-            <ScrollArea className="h-[200px]">
-              <CommandList>
-                <CommandGroup>
-                  {data.map((dataRecord) => (
-                    <CommandItem
-                      key={dataRecord.value}
-                      value={dataRecord.value}
-                      onSelect={(currentValue) => {
+            <CommandList className="max-h-[200px] overflow-y-auto">
+              <CommandGroup>
+                {data.map((dataRecord) => (
+                  <CommandItem
+                    key={dataRecord.value}
+                    value={dataRecord.value}
+                    onSelect={(currentValue) => {
+                      if (currentValue !== value) {
                         setValue(currentValue)
-                        setOpen(false)
-                      }}
-                    >
-                      {dataRecord.icon && (
-                        <dataRecord.icon className="mr-2 h-4 w-4 shrink-0" />
-                      )}
-                      <span>{dataRecord.label}</span>
-                    </CommandItem>
-                  ))}
-                </CommandGroup>
-              </CommandList>
-            </ScrollArea>
+                      }
+                      setOpen(false)
+                    }}
+                  >
+                    {dataRecord.icon && (
+                      <dataRecord.icon className="mr-2 h-4 w-4 shrink-0" />
+                    )}
+                    <span>{dataRecord.label}</span>
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            </CommandList>
             {scrollFooter ? scrollFooter() : null}
           </Command>
         </PopoverContent>

@@ -1,20 +1,20 @@
-import Link from "next/link";
-import { getCollections, load } from "outstatic/server";
-import { MobileMenu } from "./mobile-menu";
-import { ThemeToggle } from "./theme-toggle";
-import { buttonVariants } from "./ui/button";
+import Link from 'next/link'
+import { getCollections, load } from 'outstatic/server'
+import { MobileMenu } from './mobile-menu'
+import { ThemeToggle } from './theme-toggle'
+import { buttonVariants } from './ui/button'
 
 export type MenuProps = {
   pages: {
-    title: string;
-    slug: string;
-  }[];
-  collections: string[];
-};
+    title: string
+    slug: string
+  }[]
+  collections: string[]
+}
 
 const Header = async () => {
-  const data = await getData();
-  const { pages, collections } = data;
+  const data = await getData()
+  const { pages, collections } = data
 
   return (
     <header className="py-4 fixed bottom-0 border-t md:bottom-auto md:top-0 w-full z-20 border-b bg-background">
@@ -31,8 +31,8 @@ const Header = async () => {
               <Link
                 href={`/${slug}`}
                 className={
-                  buttonVariants({ variant: "ghost", size: "sm" }) +
-                  " capitalize"
+                  buttonVariants({ variant: 'ghost', size: 'sm' }) +
+                  ' capitalize'
                 }
               >
                 {title}
@@ -44,8 +44,8 @@ const Header = async () => {
               <Link
                 href={`/${collection}`}
                 className={
-                  buttonVariants({ variant: "ghost", size: "sm" }) +
-                  " capitalize"
+                  buttonVariants({ variant: 'ghost', size: 'sm' }) +
+                  ' capitalize'
                 }
               >
                 {collection}
@@ -57,32 +57,32 @@ const Header = async () => {
         <MobileMenu pages={pages} collections={collections} />
       </nav>
     </header>
-  );
-};
+  )
+}
 
 async function getData() {
-  const db = await load();
+  const db = await load()
 
   // get all pages
   const pages = await db
     .find(
       {
-        collection: "pages",
-        slug: { $nin: ["home"] },
-        status: "published",
+        collection: 'pages',
+        slug: { $nin: ['home'] },
+        status: 'published'
       },
-      ["title", "slug"]
+      ['title', 'slug']
     )
-    .toArray();
+    .toArray()
 
   const collections = getCollections().filter(
-    (collection) => collection !== "pages"
-  );
+    (collection) => collection !== 'pages'
+  )
 
   return {
     pages,
-    collections,
-  } as MenuProps;
+    collections
+  } as MenuProps
 }
 
-export default Header;
+export default Header

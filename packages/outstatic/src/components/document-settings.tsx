@@ -20,7 +20,7 @@ import { useContext, useEffect, useState } from 'react'
 import { RegisterOptions, useFormContext } from 'react-hook-form'
 import { slugify } from 'transliteration'
 import { Button } from '@/components/ui/shadcn/button'
-import { useOutstatic } from '@/utils/hooks/useOutstatic'
+import { useOutstatic } from '@/utils/hooks/use-outstatic'
 import {
   FormField,
   FormItem,
@@ -43,29 +43,36 @@ import {
   TooltipProvider,
   TooltipTrigger
 } from '@/components/ui/shadcn/tooltip'
-import { AddCustomFieldDialog } from '@/client/pages/custom-fields/_components/add-custom-field-dialog'
+import { FieldDialog } from '@/client/pages/_components/field-dialog'
 import { DateTimePickerForm } from '@/components/ui/outstatic/date-time-picker-form'
 
 import { CustomFieldRenderer } from '@/components/utils/custom-field-renderer'
 import { cn } from '@/utils/ui'
+import type { FieldSchemaTarget } from '@/utils/hooks/field-schema'
 
 type DocumentSettingsProps = {
   saveDocument: () => void
+  title?: string
   loading: boolean
   registerOptions?: RegisterOptions
   showDelete: boolean
   customFields: CustomFieldsType
   setCustomFields: (fields: CustomFieldsType) => void
   metadata: Record<string, any>
+  hiddenFields?: string[]
+  singleton?: string
 }
 
 export const DocumentSettings = ({
   saveDocument,
+  title,
   loading,
   showDelete,
   customFields,
   setCustomFields,
-  metadata
+  metadata,
+  singleton,
+  hiddenFields = []
 }: DocumentSettingsProps) => {
   const {
     formState: { errors },
@@ -103,6 +110,20 @@ export const DocumentSettings = ({
   }
 
   const defaultMetadata = ['title', 'status', 'author', 'slug', 'publishedAt']
+  const fieldTarget: FieldSchemaTarget = singleton
+    ? {
+        kind: 'singleton',
+        slug: singleton,
+        title: title || singleton,
+        ...(singleton === 'new' ? { isNew: true } : {})
+      }
+    : {
+        kind: 'collection',
+        slug: collection,
+        title: collection
+          .replace(/[_-]+/g, ' ')
+          .replace(/\b\w/g, (char) => char.toUpperCase())
+      }
 
   const missingCustomFields = Object.keys(metadata)
     .filter(
@@ -249,7 +270,7 @@ export const DocumentSettings = ({
               slug={document.slug}
               extension={extension}
               onComplete={() => {
-                router.push(`${dashboardRoute}/${collection}`)
+                router.push(`${dashboardRoute}/${singleton ? '' : collection}`)
               }}
               collection={collection}
               className="hover:bg-foreground/30 max-h-[2.25rem]"
@@ -307,49 +328,51 @@ export const DocumentSettings = ({
               </AccordionContent>
             </AccordionItem>
           </Accordion>
-          <Accordion
-            type="single"
-            collapsible
-            className={cn(
-              'border-b first:border-t',
-              errors['slug']?.message && 'border-destructive'
-            )}
-          >
-            <AccordionItem value={'slug'}>
-              <AccordionTrigger className="hover:no-underline hover:bg-muted px-4 rounded-none data-[state=open]:bg-muted">
-                Slug*
-              </AccordionTrigger>
-              <AccordionContent className="p-4 border-top">
-                <FormField
-                  control={control}
-                  name="slug"
-                  defaultValue={document.slug || ''}
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormControl>
-                        <Input
-                          {...field}
-                          value={field.value ?? ''}
-                          onChange={(e) => {
-                            const lastChar = e.target.value.slice(-1)
-                            field.onChange(
-                              lastChar === ' ' || lastChar === '-'
-                                ? e.target.value
-                                : slugify(e.target.value, {
-                                    allowedChars: 'a-zA-Z0-9.'
-                                  })
-                            )
-                          }}
-                        />
-                      </FormControl>
-                      <FormDescription>The document slug</FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </AccordionContent>
-            </AccordionItem>
-          </Accordion>
+          {!hiddenFields.includes('slug') && (
+            <Accordion
+              type="single"
+              collapsible
+              className={cn(
+                'border-b first:border-t',
+                errors['slug']?.message && 'border-destructive'
+              )}
+            >
+              <AccordionItem value={'slug'}>
+                <AccordionTrigger className="hover:no-underline hover:bg-muted px-4 rounded-none data-[state=open]:bg-muted">
+                  Slug*
+                </AccordionTrigger>
+                <AccordionContent className="p-4 border-top">
+                  <FormField
+                    control={control}
+                    name="slug"
+                    defaultValue={document.slug || ''}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <Input
+                            {...field}
+                            value={field.value ?? ''}
+                            onChange={(e) => {
+                              const lastChar = e.target.value.slice(-1)
+                              field.onChange(
+                                lastChar === ' ' || lastChar === '-'
+                                  ? e.target.value
+                                  : slugify(e.target.value, {
+                                      allowedChars: 'a-zA-Z0-9.'
+                                    })
+                              )
+                            }}
+                          />
+                        </FormControl>
+                        <FormDescription>The document slug</FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+          )}
 
           {customFields &&
             Object.entries(customFields).map(([name, field]) => (
@@ -361,63 +384,72 @@ export const DocumentSettings = ({
                 errors={errors}
               />
             ))}
-
-          {missingCustomFields &&
-            Object.keys(missingCustomFields).length > 0 && (
-              <>
-                <div className="w-full flex items-center justify-center py-4 gap-2">
-                  <ArrowDown className="h-4 w-4" />
-                  <p className="semiblod text-sm">Set up Custom Fields</p>
-                </div>
-                {Object.entries(missingCustomFields).map(([name, field]) => {
-                  return (
-                    <div
-                      key={name}
-                      className="w-full flex items-center justify-between px-4 py-2 gap-2"
-                    >
-                      <p className="semiblod text-sm truncate">{field.title}</p>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="text-xs flex gap-2"
-                        onClick={() => {
-                          setFieldTitle(field.title)
-                          setShowAddModal(true)
-                        }}
-                      >
-                        <PlusCircle className="h-4 w-4" /> Create
-                      </Button>
+          {session?.user?.permissions?.includes('collections.manage') && (
+            <>
+              {missingCustomFields &&
+                Object.keys(missingCustomFields).length > 0 && (
+                  <>
+                    <div className="w-full flex items-center justify-center py-4 gap-2">
+                      <ArrowDown className="h-4 w-4" />
+                      <p className="semiblod text-sm">Set up Custom Fields</p>
                     </div>
-                  )
-                })}
-              </>
-            )}
-          <div className="w-full flex items-center justify-center px-4 py-2 gap-2">
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    data-testid="add-custom-field-button"
-                    variant="ghost"
-                    size="icon"
-                    className="text-xs flex gap-2"
-                    onClick={() => setShowAddModal(true)}
-                  >
-                    <PlusCircle className="h-4 w-4" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Add Custom Field</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          </div>
+                    {Object.entries(missingCustomFields).map(
+                      ([name, field]) => {
+                        return (
+                          <div
+                            key={name}
+                            className="w-full flex items-center justify-between px-4 py-2 gap-2"
+                          >
+                            <p className="semiblod text-sm truncate">
+                              {field.title}
+                            </p>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="text-xs flex gap-2"
+                              onClick={() => {
+                                setFieldTitle(field.title)
+                                setShowAddModal(true)
+                              }}
+                            >
+                              <PlusCircle className="h-4 w-4" /> Create
+                            </Button>
+                          </div>
+                        )
+                      }
+                    )}
+                  </>
+                )}
+
+              <div className="w-full flex items-center justify-center px-4 py-2 gap-2">
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        data-testid="add-custom-field-button"
+                        variant="ghost"
+                        size="icon"
+                        className="text-xs flex gap-2"
+                        onClick={() => setShowAddModal(true)}
+                      >
+                        <PlusCircle className="h-4 w-4" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Add Custom Field</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </div>
+            </>
+          )}
         </div>
         {showAddModal ? (
-          <AddCustomFieldDialog
-            collection={collection}
-            showAddModal={showAddModal}
-            setShowAddModal={onModalChange}
+          <FieldDialog
+            mode="add"
+            open={showAddModal}
+            onOpenChange={onModalChange}
+            target={fieldTarget}
             customFields={customFields}
             setCustomFields={setCustomFields}
             fieldTitle={fieldTitle ?? ''}

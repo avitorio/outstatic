@@ -29,7 +29,7 @@ jest.mock('change-case', () => {
 })
 
 // Mock useOutstatic hook with a factory function
-jest.mock('@/utils/hooks/useOutstatic', () => {
+jest.mock('@/utils/hooks/use-outstatic', () => {
   const mockUseOutstatic = jest.fn()
   return {
     useOutstatic: mockUseOutstatic
@@ -38,7 +38,7 @@ jest.mock('@/utils/hooks/useOutstatic', () => {
 
 // Get the mock function after the module is mocked
 const mockUseOutstatic = jest.mocked(
-  require('@/utils/hooks/useOutstatic').useOutstatic
+  require('@/utils/hooks/use-outstatic').useOutstatic
 )
 
 function createMockPointerEvent(
@@ -69,18 +69,15 @@ jest.mock('transliteration', () => ({
   slugify: (str: string) => str.toLowerCase().replace(/\s+/g, '-')
 }))
 
-// Mock AddCustomFieldDialog
-jest.mock(
-  '@/client/pages/custom-fields/_components/add-custom-field-dialog',
-  () => ({
-    AddCustomFieldDialog: ({ showAddModal, setShowAddModal }: any) =>
-      showAddModal ? (
-        <div data-testid="add-custom-field-dialog">
-          <button onClick={() => setShowAddModal(false)}>Close Dialog</button>
-        </div>
-      ) : null
-  })
-)
+// Mock FieldDialog
+jest.mock('@/client/pages/_components/field-dialog', () => ({
+  FieldDialog: ({ open, onOpenChange }: any) =>
+    open ? (
+      <div data-testid="add-custom-field-dialog">
+        <button onClick={() => onOpenChange(false)}>Close Dialog</button>
+      </div>
+    ) : null
+}))
 
 // Mock DeleteDocumentButton
 jest.mock('@/components/delete-document-button', () => ({
@@ -146,13 +143,18 @@ describe('<DocumentSettings />', () => {
   beforeEach(() => {
     jest.clearAllMocks()
     ;(useOstSession as jest.Mock).mockReturnValue(mockSession)
-    // Reset the useOutstatic mock to default values
+    // Reset the useOutstatic mock to default values with permissions
     mockUseOutstatic.mockReturnValue({
       dashboardRoute: '/outstatic',
       session: {
         user: {
           name: 'Test User',
-          image: 'https://example.com/avatar.jpg'
+          image: 'https://example.com/avatar.jpg',
+          permissions: [
+            'collections.manage',
+            'content.manage',
+            'settings.manage'
+          ]
         }
       }
     })

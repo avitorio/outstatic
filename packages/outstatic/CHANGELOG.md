@@ -1,12 +1,112 @@
 # outstatic
 
+## 2.1.4
+
+### Patch Changes
+
+- 313e233: - Allow seeding tag suggestions when creating a Tags custom field.
+  - Keep field dialogs open when schema commits fail so editors can retry.
+- 507d73f: Fix the singleton editor view not refreshing when creating a new singleton from the sidebar.
+- 5083c77: Replace tag inputs and column pickers with local multi-select comboboxes.
+- e9b2998: Refactor the document and singleton editors to share common page and form state logic.
+- 466670a: Add a strict single-select custom field type with schema-defined options.
+- 1a2ce4b: Refactor collection and singleton field management to share one implementation and fix field schema commit messages for edits.
+
+## 2.1.3
+
+### Patch Changes
+
+- 7b6fd94: - Add a Bugs & Ideas sidebar item that opens the Outstatic Featurebase board in a new tab.
+  - Refactor Settings cards to use structured card headers and descriptions instead of prose styling classes.
+- 273e2f1: Export additional `outstatic/client` helpers (`RootProvider`, `Sidebar`, `SidebarProvider`, and `useLocalData`) for custom dashboard integrations.
+
+  Avoid showing the V2 upgrade warning when an Outstatic root container (`#outstatic`) is already present.
+
+## 2.1.2
+
+### Patch Changes
+
+- Refactor codebase
+
+## 2.1.1
+
+### Patch Changes
+
+- 5857dff: feat: add Vercel's AI Gateway as an auto-complete option
+
+## 2.1.0
+
+### Minor Changes
+
+- 603350f: Adds support for Outstatic PRO
+
+## 2.1.0-canary.0
+
+### Minor Changes
+
+- Adds support for Outstatic PRO
+
+## 2.0.18
+
+### Patch Changes
+
+- 01a866b: Add configurable default markdown extension (md/mdx) for new documents. Users are prompted to choose their preferred format on first save, and can change it later in Settings.
+- 1d8c62c: Refactored the onboarding flow with clear separation
+- c0eb97e: update onboarding
+- 937b475: Nicer type generation output by @mathieudutour
+
+## 2.0.17
+
+### Patch Changes
+
+- 46b4560: Update examples and fix errors
+
+## 2.0.17-canary.0
+
+### Patch Changes
+
+- Update examples and fix errors
+
+## 2.0.16
+
+### Patch Changes
+
+- fix: typescript errors for compatibility
+
+## 2.0.15
+
+### Patch Changes
+
+- 22d76fa: Update the dependencies to work with nextjs 16 by @mathieudutour
+- fef254b: Separate content from settings by @mathieudutour
+- 9e65b10: feat: implement collapsible state management for sidebar navigation
+- 6090714: Add an action to copy the error logs on every toast.error by @mathieudutour
+- 1845b19: Singletons and types by @mathueudutour
+
+## 2.0.14
+
+### Patch Changes
+
+- fix: "Your document contains media files" keeps popping up
+
+## 2.0.13
+
+### Patch Changes
+
+- Fix React Server Components CVE vulnerabilities
+
+## 2.0.12
+
+### Patch Changes
+
+- f6267a4: Apply React RSC fix
+
 ## 2.0.11
 
 ### Patch Changes
 
 - badf81d: refactor: retire old alert component
 - ce51c83: fix: improve API route error handling and type safety for Next.js 15.5.6
-
   - Add proper validation for route parameters in GET and POST handlers
   - Return appropriate 400/404 status codes for invalid requests
   - Remove unused Request interface and NextResponse import

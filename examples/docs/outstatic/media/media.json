@@ -6,7 +6,7 @@
       "__outstatic": {
         "commit": "",
         "hash": "0",
-        "path": "apps/docs/public/images/ai-autocomplete-Q2Mj.gif"
+        "path": "public/images/ai-autocomplete-Q2Mj.gif"
       },
       "alt": "",
       "filename": "ai-autocomplete-Q2Mj.gif",
@@ -17,7 +17,7 @@
       "__outstatic": {
         "commit": "",
         "hash": "0",
-        "path": "apps/docs/public/images/cleanshot-2023-05-26-at-21.31.00-Y2ND.gif"
+        "path": "public/images/cleanshot-2023-05-26-at-21.31.00-Y2ND.gif"
       },
       "alt": "",
       "filename": "cleanshot-2023-05-26-at-21.31.00-Y2ND.gif",
@@ -28,7 +28,7 @@
       "__outstatic": {
         "commit": "",
         "hash": "0",
-        "path": "apps/docs/public/images/cleanshot-2023-05-26-at-21.38.36-I4Nj.gif"
+        "path": "public/images/cleanshot-2023-05-26-at-21.38.36-I4Nj.gif"
       },
       "alt": "",
       "filename": "cleanshot-2023-05-26-at-21.38.36-I4Nj.gif",
@@ -39,7 +39,7 @@
       "__outstatic": {
         "commit": "",
         "hash": "0",
-        "path": "apps/docs/public/images/cleanshot-2023-05-26-at-21.49.55-A1OT.gif"
+        "path": "public/images/cleanshot-2023-05-26-at-21.49.55-A1OT.gif"
       },
       "alt": "",
       "filename": "cleanshot-2023-05-26-at-21.49.55-A1OT.gif",
@@ -50,7 +50,7 @@
       "__outstatic": {
         "commit": "",
         "hash": "0",
-        "path": "apps/docs/public/images/cleanshot-2023-05-26-at-21.52.47-gyND.gif"
+        "path": "public/images/cleanshot-2023-05-26-at-21.52.47-gyND.gif"
       },
       "alt": "",
       "filename": "cleanshot-2023-05-26-at-21.52.47-gyND.gif",
@@ -61,7 +61,7 @@
       "__outstatic": {
         "commit": "",
         "hash": "0",
-        "path": "apps/docs/public/images/cleanshot-2023-10-20-at-23.07.12-2x-MzNz.png"
+        "path": "public/images/cleanshot-2023-10-20-at-23.07.12-2x-MzNz.png"
       },
       "alt": "",
       "filename": "cleanshot-2023-10-20-at-23.07.12-2x-MzNz.png",
@@ -72,7 +72,7 @@
       "__outstatic": {
         "commit": "",
         "hash": "0",
-        "path": "apps/docs/public/images/cleanshot-2023-11-26-at-22.36.06-2x-E2OT.png"
+        "path": "public/images/cleanshot-2023-11-26-at-22.36.06-2x-E2OT.png"
       },
       "alt": "",
       "filename": "cleanshot-2023-11-26-at-22.36.06-2x-E2OT.png",
@@ -83,7 +83,7 @@
       "__outstatic": {
         "commit": "c971f310f5125390dac7c47e185de621fea0e695",
         "hash": "3818802952",
-        "path": "apps/docs/public/images/cleanshot-2024-11-04-at-22.34.52-2x-QyOT.png"
+        "path": "public/images/cleanshot-2024-11-04-at-22.34.52-2x-QyOT.png"
       },
       "alt": "",
       "filename": "cleanshot-2024-11-04-at-22.34.52-2x-QyOT.png",
@@ -94,7 +94,7 @@
       "__outstatic": {
         "commit": "",
         "hash": "0",
-        "path": "apps/docs/public/images/custom-fields-part-1-E5NT.gif"
+        "path": "public/images/custom-fields-part-1-E5NT.gif"
       },
       "alt": "",
       "filename": "custom-fields-part-1-E5NT.gif",
@@ -105,7 +105,7 @@
       "__outstatic": {
         "commit": "",
         "hash": "0",
-        "path": "apps/docs/public/images/docs-preview.webp"
+        "path": "public/images/docs-preview.webp"
       },
       "alt": "",
       "filename": "docs-preview.webp",
@@ -116,7 +116,7 @@
       "__outstatic": {
         "commit": "",
         "hash": "0",
-        "path": "apps/docs/public/images/image-E4ND.png"
+        "path": "public/images/image-E4ND.png"
       },
       "alt": "",
       "filename": "image-E4ND.png",
@@ -127,7 +127,7 @@
       "__outstatic": {
         "commit": "",
         "hash": "0",
-        "path": "apps/docs/public/images/image-MzNT.png"
+        "path": "public/images/image-MzNT.png"
       },
       "alt": "",
       "filename": "image-MzNT.png",
@@ -138,7 +138,7 @@
       "__outstatic": {
         "commit": "",
         "hash": "0",
-        "path": "apps/docs/public/images/image-menu-U2ND.gif"
+        "path": "public/images/image-menu-U2ND.gif"
       },
       "alt": "",
       "filename": "image-menu-U2ND.gif",
@@ -149,7 +149,7 @@
       "__outstatic": {
         "commit": "",
         "hash": "0",
-        "path": "apps/docs/public/images/markdown-example-c4MT.gif"
+        "path": "public/images/markdown-example-c4MT.gif"
       },
       "alt": "",
       "filename": "markdown-example-c4MT.gif",
@@ -160,7 +160,7 @@
       "__outstatic": {
         "commit": "ef8effe9049969543e81739c263adb516a52d155",
         "hash": "351926849",
-        "path": "apps/docs/public/images/missing-env-vars-gzNz.webp"
+        "path": "public/images/missing-env-vars-gzNz.webp"
       },
       "alt": "",
       "filename": "missing-env-vars-gzNz.webp",
@@ -171,7 +171,7 @@
       "__outstatic": {
         "commit": "",
         "hash": "0",
-        "path": "apps/docs/public/images/og-image.png"
+        "path": "public/images/og-image.png"
       },
       "alt": "",
       "filename": "og-image.png",
@@ -182,7 +182,7 @@
       "__outstatic": {
         "commit": "",
         "hash": "0",
-        "path": "apps/docs/public/images/outstatic-login-screen-I4Mz.png"
+        "path": "public/images/outstatic-login-screen-I4Mz.png"
       },
       "alt": "",
       "filename": "outstatic-login-screen-I4Mz.png",
@@ -193,7 +193,7 @@
       "__outstatic": {
         "commit": "",
         "hash": "0",
-        "path": "apps/docs/public/images/outstatic-logo.svg"
+        "path": "public/images/outstatic-logo.svg"
       },
       "alt": "",
       "filename": "outstatic-logo.svg",
@@ -204,7 +204,7 @@
       "__outstatic": {
         "commit": "",
         "hash": "0",
-        "path": "apps/docs/public/images/outstatic-welcome-U1ND.png"
+        "path": "public/images/outstatic-welcome-U1ND.png"
       },
       "alt": "",
       "filename": "outstatic-welcome-U1ND.png",
@@ -215,7 +215,7 @@
       "__outstatic": {
         "commit": "",
         "hash": "0",
-        "path": "apps/docs/public/images/rebuild-metadata-Y4MT.png"
+        "path": "public/images/rebuild-metadata-Y4MT.png"
       },
       "alt": "",
       "filename": "rebuild-metadata-Y4MT.png",
@@ -226,7 +226,7 @@
       "__outstatic": {
         "commit": "",
         "hash": "0",
-        "path": "apps/docs/public/images/selection-menu-2-Y2MD.gif"
+        "path": "public/images/selection-menu-2-Y2MD.gif"
       },
       "alt": "",
       "filename": "selection-menu-2-Y2MD.gif",
@@ -237,7 +237,7 @@
       "__outstatic": {
         "commit": "",
         "hash": "0",
-        "path": "apps/docs/public/images/slash-command-ex-U1MD.gif"
+        "path": "public/images/slash-command-ex-U1MD.gif"
       },
       "alt": "",
       "filename": "slash-command-ex-U1MD.gif",

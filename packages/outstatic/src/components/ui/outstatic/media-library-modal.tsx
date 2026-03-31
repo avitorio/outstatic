@@ -1,12 +1,12 @@
 'use client'
 
 import { API_MEDIA_PATH } from '@/utils/constants'
-import { useOutstatic } from '@/utils/hooks/useOutstatic'
-import { useGetMediaFiles } from '@/utils/hooks/useGetMediaFiles'
+import { useOutstatic } from '@/utils/hooks/use-outstatic'
+import { useGetMediaFiles } from '@/utils/hooks/use-get-media-files'
 import { useState, useMemo } from 'react'
 import { Button } from '@/components/ui/shadcn/button'
 import { toast } from 'sonner'
-import useSubmitMedia from '@/utils/hooks/useSubmitMedia'
+import useSubmitMedia from '@/utils/hooks/use-submit-media'
 import { FileType } from '@/types'
 import { DeleteMediaButton } from '@/components/delete-media-button'
 import {
@@ -30,6 +30,7 @@ import {
   CardTitle
 } from '../shadcn/card'
 import { MediaSettings } from '@/client/pages/settings/_components/media-settings'
+import { stringifyError } from '@/utils/errors/stringify-error'
 
 export default function MediaLibraryModal({
   open,
@@ -54,7 +55,7 @@ export default function MediaLibraryModal({
     publicMediaPath
   } = useOutstatic()
   const apiPath = `${basePath}${API_MEDIA_PATH}${repoOwner}/${repoSlug}/${repoBranch}/`
-  const { data, isLoading, error, refetch } = useGetMediaFiles()
+  const { data, isLoading, refetch } = useGetMediaFiles()
   const filteredFiles = useMemo(() => {
     if (!data) return []
 
@@ -112,7 +113,24 @@ export default function MediaLibraryModal({
         try {
           await submitMedia(fileType)
         } catch (error) {
-          toast.error(`Failed to upload ${file.name}`)
+          console.error('Failed to upload media', error)
+          const errorToast = toast.error(`Failed to upload ${file.name}.`, {
+            action: {
+              label: 'Copy Logs',
+              onClick: () => {
+                navigator.clipboard.writeText(
+                  `File: ${JSON.stringify(
+                    { ...fileType, content: '...' },
+                    null,
+                    '  '
+                  )}\n\nError: ${stringifyError(error)}`
+                )
+                toast.message('Logs copied to clipboard', {
+                  id: errorToast
+                })
+              }
+            }
+          })
         }
       }
     }
@@ -163,13 +181,9 @@ export default function MediaLibraryModal({
               </Card>
             </div>
           </div>
-        ) : isLoading ? (
+        ) : isLoading && !data ? (
           <div className="flex items-center justify-center h-full">
             <SpinnerIcon size="2xl" />
-          </div>
-        ) : error ? (
-          <div className="flex items-center justify-center text-red-500 h-full">
-            Error loading media files. Please try again.
           </div>
         ) : filteredFiles.length === 0 ? (
           <div className="flex flex-col items-center justify-center text-gray-500 h-full">
@@ -198,6 +212,7 @@ export default function MediaLibraryModal({
                     onClick={() => setSelectedImage(file)}
                   >
                     <div className="aspect-square">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
                         src={`${apiPath}${file.__outstatic.path}`}
                         alt={file.alt}

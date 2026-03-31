@@ -1,0 +1,40 @@
+---
+globs: packages/outstatic/src/app/api/**/*.ts,packages/outstatic/src/app/api/**/*.tsx
+alwaysApply: false
+---
+
+The Outstatic API is routed through a central dispatcher at `packages/outstatic/src/app/api/index.tsx`.
+
+Routing model
+
+- `index.tsx` exports `OutstaticApi` with `GET` and `POST` methods.
+- Each method reads `segmentData.params.ost` (a catch‑all array of path segments) and dispatches to a handler map by the first segment.
+- Only the first segment `ost[0]` is used to select a handler; the remaining segments are attached to the request as `req.remainingPath` for nested routing.
+- The handler receives an extended `Request` (extends `NextRequest`) and must return a `Response`/`NextResponse`.
+
+Request shape
+
+- `req.session: any` is available to handlers.
+- `req.remainingPath?: string[]` contains any path segments after the first.
+
+Handler registration
+
+- GET handlers are registered in the local `getPaths` map. POST handlers are registered in the local `postPaths` map.
+- `GetParams` and `PostParams` are `Promise<{ ost: string[] }>`; you do not enumerate route keys in these types anymore.
+- Handlers live under `packages/outstatic/src/app/api/**`.
+- Preferred export style: default‑export a function `(req: Request) => Promise<Response | NextResponse>`. Modules that provide multiple methods may export named functions which are imported and wired explicitly (e.g. `github` exports `GET` and `POST`).
+
+Add a new endpoint
+
+1. Create `packages/outstatic/src/app/api/<endpoint>.ts` (or a subfolder) and export a handler `(req: Request) => Promise<Response | NextResponse>`. Use a default export for simple endpoints; export named functions if you need to provide multiple methods.
+2. Import it in `packages/outstatic/src/app/api/index.tsx`.
+3. Add it to `getPaths` or `postPaths`.
+4. No type update is required for `GetParams`/`PostParams`; the router already accepts `ost: string[]`.
+
+Notes
+
+- The dynamic param is `ost` (catch‑all). Registered keys at time of writing:
+  - GET: `callback`, `login`, `signout`, `user`, `media`, `github`
+  - POST: `generate`, `github`, `github-graphql`
+- Example: the `github` endpoints validate input with Zod, refresh tokens when needed, call GitHub (REST or GraphQL), and return the raw GitHub response.
+- Import alias `@/` resolves to `packages/outstatic/src/`.

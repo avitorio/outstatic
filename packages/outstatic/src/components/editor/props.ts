@@ -1,5 +1,5 @@
 import { EditorProps } from '@tiptap/pm/view'
-import { addImage } from './utils/addImage'
+import { addImage } from './utils/add-image'
 
 export const TiptapEditorProps: EditorProps = {
   attributes: {

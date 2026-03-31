@@ -1,4 +1,3 @@
-import { useOstSession, useOstSignOut } from '@/utils/auth/hooks'
 import {
   Menu,
   SlashIcon,
@@ -7,12 +6,13 @@ import {
   Monitor,
   Moon,
   Sun,
-  BookTextIcon
+  BookTextIcon,
+  HeartHandshake
 } from 'lucide-react'
 import { memo, useEffect, useState } from 'react'
 import { Button } from '@/components/ui/shadcn/button'
 import { AppLogo } from '@/components/ui/outstatic/app-logo'
-import { useOutstatic } from '@/utils/hooks/useOutstatic'
+import { useOutstatic } from '@/utils/hooks/use-outstatic'
 import { GitHubBranchSearch } from '@/components/ui/outstatic/github-branch-search'
 import {
   Avatar,
@@ -34,6 +34,8 @@ import { useTheme } from 'next-themes'
 import Link from 'next/link'
 import { useSidebar } from '@/components/ui/shadcn/sidebar'
 import { DiscordLogoIcon, GitHubLogoIcon } from '@radix-ui/react-icons'
+import { useAuth } from '@/utils/auth/auth-provider'
+import { OUTSTATIC_APP_URL } from '@/utils/constants'
 
 const themes = [
   {
@@ -75,7 +77,7 @@ const community = [
       </svg>
     ),
     name: 'X',
-    href: 'https://x.com/outstatic'
+    href: 'https://x.com/AndreVitorio'
   },
   {
     icon: DiscordLogoIcon,
@@ -85,15 +87,15 @@ const community = [
 ]
 
 const AdminHeaderComponent = () => {
-  const { session, status } = useOstSession()
+  const { session, status, signOut } = useAuth()
   const { repoOwner, repoSlug } = useOutstatic()
-  const { signOut } = useOstSignOut()
   const [isMounted, setIsMounted] = useState(false)
   const { theme, setTheme } = useTheme()
   const { toggleSidebar } = useSidebar()
 
   useEffect(() => {
     // avoid hydration error
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsMounted(true)
   }, [])
 
@@ -144,7 +146,7 @@ const AdminHeaderComponent = () => {
                   className="relative flex shrink-0 overflow-hidden group-hover/trigger:border-background/50 rounded-md border border-transparent transition-colors mx-auto h-9 w-9 group-focus:ring-2"
                 >
                   <Avatar className="rounded-md">
-                    <AvatarImage src={session?.user?.image || ''} />
+                    <AvatarImage src={session?.user?.image || undefined} />
                     <AvatarFallback>
                       {session?.user?.name?.charAt(0)}
                     </AvatarFallback>
@@ -180,8 +182,8 @@ const AdminHeaderComponent = () => {
 
                   <DropdownMenuSub>
                     <DropdownMenuSubTrigger>
-                      <div className="focus:bg-accent focus:text-accent-foreground data-[variant=destructive]:text-destructive data-[variant=destructive]:focus:bg-destructive/10 dark:data-[variant=destructive]:focus:bg-destructive/20 data-[variant=destructive]:focus:text-destructive data-[variant=destructive]:*:[svg]:!text-destructive [&_svg:not([class*='text-'])]:text-muted-foreground relative flex cursor-default items-center gap-2 rounded-sm text-sm outline-hidden select-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 data-[inset]:pl-8 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 flex cursor-pointer items-center space-x-2 flex cursor-pointer items-center space-x-2">
-                        <MessageCircleQuestion className={'h-5'} />
+                      <div className="focus:bg-accent focus:text-accent-foreground data-[variant=destructive]:text-destructive data-[variant=destructive]:focus:bg-destructive/10 dark:data-[variant=destructive]:focus:bg-destructive/20 data-[variant=destructive]:focus:text-destructive data-[variant=destructive]:*:[svg]:!text-destructive [&_svg:not([class*='text-'])]:text-muted-foreground relative flex cursor-default items-center gap-2 rounded-sm text-sm outline-hidden select-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 data-[inset]:pl-8 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 space-x-2">
+                        <HeartHandshake className={'h-5'} />
                         <span>Community</span>
                       </div>
                     </DropdownMenuSubTrigger>
@@ -201,6 +203,22 @@ const AdminHeaderComponent = () => {
                       ))}
                     </DropdownMenuSubContent>
                   </DropdownMenuSub>
+
+                  <DropdownMenuSeparator />
+
+                  <DropdownMenuItem asChild>
+                    <Link
+                      target="_blank"
+                      className={
+                        's-full flex w-full cursor-pointer items-center space-x-2'
+                      }
+                      href={`${OUTSTATIC_APP_URL}/?support=true`}
+                    >
+                      <MessageCircleQuestion className={'h-5'} />
+
+                      <span>Support</span>
+                    </Link>
+                  </DropdownMenuItem>
 
                   <DropdownMenuSeparator />
 
