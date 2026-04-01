@@ -1,5 +1,16 @@
 # outstatic
 
+## 2.1.5
+
+### Patch Changes
+
+- 150bd04: Improve basic blog content parsing
+- fd79e27: Allow GitHub OAuth login without an email address on the user's account.
+- 0900d6f: Improve validation messages for required custom date fields.
+- 7be7c57: fix: custom date field validation failing on document edit by @mathieudutour
+- 606addd: Allow embedded Outstatic dashboards to disable the package toaster to avoid duplicate notifications.
+- 84df573: Fix table missing headers by @TcMits
+
 ## 2.1.4
 
 ### Patch Changes
