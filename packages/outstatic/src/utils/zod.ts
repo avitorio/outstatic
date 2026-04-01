@@ -2,6 +2,44 @@ import { CustomFieldsType, isSelectCustomField } from '@/types'
 import { z } from 'zod/v4'
 import { documentShape } from './schemas/edit-document-schema'
 
+const buildDateSchema = ({
+  title,
+  required
+}: {
+  title: string
+  required?: boolean
+}) => {
+  const dateSchema = z.date({
+    error: ({ input }) => {
+      if (input === undefined) {
+        return `${title} is a required field.`
+      }
+
+      return `${title} must be a valid date.`
+    }
+  })
+
+  return z.preprocess(
+    (value) => {
+      if (value === '' || value === null || value === undefined) {
+        return undefined
+      }
+
+      if (value instanceof Date) {
+        return Number.isNaN(value.getTime()) ? value : new Date(value)
+      }
+
+      if (typeof value === 'string' || typeof value === 'number') {
+        const date = new Date(value)
+        return Number.isNaN(date.getTime()) ? value : date
+      }
+
+      return value
+    },
+    required ? dateSchema : dateSchema.optional()
+  )
+}
+
 export const convertSchemaToZod = (customFields: {
   properties: CustomFieldsType
 }): z.ZodObject<any> => {
@@ -27,7 +65,10 @@ export const convertSchemaToZod = (customFields: {
         fieldSchema = z.array(z.any())
         break
       case 'date':
-        fieldSchema = z.coerce.date()
+        fieldSchema = buildDateSchema({
+          title: field.title,
+          required: field.required
+        })
         break
       case 'image':
         fieldSchema = z.string()
@@ -36,11 +77,11 @@ export const convertSchemaToZod = (customFields: {
         fieldSchema = z.any()
     }
 
-    if (field.required) {
+    if (field.required && field.dataType !== 'date') {
       fieldSchema = fieldSchema.refine((val) => val !== '', {
         message: `${field.title} is a required field.`
       })
-    } else {
+    } else if (!field.required && field.dataType !== 'date') {
       fieldSchema = fieldSchema.optional()
     }
 

@@ -79,6 +79,49 @@ describe('convertSchemaToZod', () => {
     )
   })
 
+  it('shows a required message when a required date field is missing', () => {
+    const schema = convertSchemaToZod({
+      properties: {
+        eventDate: {
+          title: 'Event Date',
+          fieldType: 'Date',
+          dataType: 'date',
+          required: true
+        }
+      } satisfies CustomFieldsType
+    })
+
+    expect(() =>
+      schema.parse({
+        status: 'draft',
+        slug: 'post-with-missing-date',
+        author: {}
+      })
+    ).toThrow('Event Date is a required field.')
+  })
+
+  it('shows a custom validation message for invalid required date values', () => {
+    const schema = convertSchemaToZod({
+      properties: {
+        eventDate: {
+          title: 'Event Date',
+          fieldType: 'Date',
+          dataType: 'date',
+          required: true
+        }
+      } satisfies CustomFieldsType
+    })
+
+    expect(() =>
+      schema.parse({
+        status: 'draft',
+        slug: 'post-with-invalid-date',
+        author: {},
+        eventDate: new Date('invalid')
+      })
+    ).toThrow('Event Date must be a valid date.')
+  })
+
   it('allows an optional select field to be unset', () => {
     const schema = convertSchemaToZod({
       properties: {

@@ -93,6 +93,7 @@ export const CustomFieldRenderer = ({
   errors
 }: CustomFieldRendererProps) => {
   const Field = FieldDataMap[field.fieldType as keyof FieldDataMapType]
+  const isDateField = field.fieldType === 'Date'
 
   const renderFieldContent = (formField: any) => {
     switch (field.fieldType) {
@@ -220,17 +221,21 @@ export const CustomFieldRenderer = ({
           ${field.title}${field.required ? '*' : ''}
         `}</AccordionTrigger>
         <AccordionContent className="p-4 border-top">
-          <FormField
-            control={control}
-            name={name}
-            render={({ field: formField }) => (
-              <FormItem>
-                <FormControl>{renderFieldContent(formField)}</FormControl>
-                <FormDescription>{field.description}</FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          {isDateField ? (
+            <DateTimePickerForm id={name} description={field.description} />
+          ) : (
+            <FormField
+              control={control}
+              name={name}
+              render={({ field: formField }) => (
+                <FormItem>
+                  <FormControl>{renderFieldContent(formField)}</FormControl>
+                  <FormDescription>{field.description}</FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          )}
         </AccordionContent>
       </AccordionItem>
     </Accordion>

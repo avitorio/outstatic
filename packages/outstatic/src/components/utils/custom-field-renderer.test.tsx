@@ -2,15 +2,39 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { FormProvider, useForm, useWatch } from 'react-hook-form'
 import type { ReactNode } from 'react'
+import { useEffect } from 'react'
 import { CustomFieldRenderer } from './custom-field-renderer'
-import type { SelectCustomField } from '@/types'
+import type { CustomFieldsType, SelectCustomField } from '@/types'
 
 jest.mock('@/components/document-settings-image-selection', () => ({
   DocumentSettingsImageSelection: () => <div />
 }))
 
 jest.mock('@/components/ui/outstatic/date-time-picker-form', () => ({
-  DateTimePickerForm: () => <div />
+  DateTimePickerForm: ({ id }: { id: string }) => {
+    const { FormControl, FormField, FormItem, FormMessage } =
+      jest.requireActual<typeof import('@/components/ui/shadcn/form')>(
+        '@/components/ui/shadcn/form'
+      )
+    const { useFormContext } =
+      jest.requireActual<typeof import('react-hook-form')>('react-hook-form')
+    const { control } = useFormContext()
+
+    return (
+      <FormField
+        control={control}
+        name={id}
+        render={({ field }: { field: { value?: string } }) => (
+          <FormItem>
+            <FormControl>
+              <div data-testid={`date-picker-${id}`}>{field.value ?? ''}</div>
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+    )
+  }
 }))
 
 jest.mock('@/components/ui/outstatic/tag-input', () => ({
@@ -108,25 +132,35 @@ const selectField: SelectCustomField = {
 
 function RendererHarness({
   field = selectField,
+  name = 'category',
+  errorMessage,
   defaultValues = {}
 }: {
-  field?: SelectCustomField
+  field?: CustomFieldsType[string]
+  name?: string
+  errorMessage?: string
   defaultValues?: Record<string, unknown>
 }) {
   const methods = useForm({ defaultValues })
+  useEffect(() => {
+    if (errorMessage) {
+      methods.setError(name, { type: 'manual', message: errorMessage })
+    }
+  }, [errorMessage, methods, name])
+
   const currentValue = useWatch({
     control: methods.control,
-    name: 'category'
+    name
   })
 
   return (
     <FormProvider {...methods}>
       <div data-testid="current-value">{String(currentValue ?? '')}</div>
       <CustomFieldRenderer
-        name="category"
+        name={name}
         field={field}
         control={methods.control}
-        errors={{}}
+        errors={errorMessage ? { [name]: { message: errorMessage } } : {}}
       />
     </FormProvider>
   )
@@ -165,5 +199,26 @@ describe('CustomFieldRenderer', () => {
       screen.queryByRole('button', { name: 'Clear selection' })
     ).not.toBeInTheDocument()
     expect(screen.getByTestId('current-value')).toHaveTextContent('news')
+  })
+
+  it('renders a single error message for date fields', async () => {
+    const dateField: CustomFieldsType[string] = {
+      title: 'Birthday',
+      fieldType: 'Date',
+      dataType: 'date',
+      required: true
+    }
+
+    render(
+      <RendererHarness
+        name="birthday"
+        field={dateField}
+        errorMessage="Birthday is a required field."
+      />
+    )
+
+    await screen.findByText('Birthday is a required field.')
+
+    expect(screen.getAllByText('Birthday is a required field.')).toHaveLength(1)
   })
 })
