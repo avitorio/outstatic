@@ -93,7 +93,19 @@ const loginErrors = {
       Please try again. If the problem persists, check your callback origins and
       API key configuration.
     </>
-  )
+  ),
+  'missing-user-data': (
+    <>
+      We couldn&apos;t retrieve your user data from GitHub. <br />
+      Please try again. If the problem persists, check that your GitHub account
+      is in good standing.
+    </>
+  ),
+  'missing-code':
+    'Login failed: no authorization code was received from GitHub. Please try again.',
+  'no-access-token':
+    'Login failed: could not obtain an access token from GitHub. Please check your OAuth app credentials and try again.',
+  'auth-callback-failed': 'Something went wrong during login. Please try again.'
 }
 
 export default loginErrors

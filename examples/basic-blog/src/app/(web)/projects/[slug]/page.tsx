@@ -1,6 +1,6 @@
 import Header from '@/components/Header'
 import Layout from '@/components/Layout'
-import markdownToHtml from '@/lib/markdownToHtml'
+import MDXServer from '@/lib/mdx-server'
 import { getDocumentSlugs, load } from 'outstatic/server'
 import DateFormatter from '@/components/DateFormatter'
 import Image from 'next/image'
@@ -9,6 +9,7 @@ import { OstDocument } from 'outstatic'
 import { Metadata } from 'next'
 import { absoluteUrl } from '@/lib/utils'
 import { notFound } from 'next/navigation'
+import MDXComponent from '@/components/mdx/mdx-component'
 
 type Project = {
   tags: { value: string; label: string }[]
@@ -82,11 +83,8 @@ export default async function Project(props: { params: Params }) {
               <div className="inline-block p-4 border mb-8 font-semibold text-lg rounded-xs shadow-xs">
                 {project.description}
               </div>
-              <div className="max-w-2xl mx-auto">
-                <div
-                  className="prose lg:prose-xl"
-                  dangerouslySetInnerHTML={{ __html: content }}
-                />
+              <div className="max-w-2xl mx-auto prose prose-outstatic">
+                <MDXComponent content={content} />
               </div>
             </div>
           </div>
@@ -123,7 +121,7 @@ async function getData(params: { slug: string }) {
     notFound()
   }
 
-  const content = await markdownToHtml(project.content)
+  const content = await MDXServer(project.content)
 
   const moreProjects = await db
     .find({ collection: 'projects', slug: { $ne: params.slug } }, [

@@ -3,11 +3,12 @@ import { Metadata } from 'next'
 import { OstDocument } from 'outstatic'
 import Header from '@/components/Header'
 import Layout from '@/components/Layout'
-import markdownToHtml from '@/lib/markdownToHtml'
+import MDXServer from '@/lib/mdx-server'
 import { getDocumentSlugs, load } from 'outstatic/server'
 import DateFormatter from '@/components/DateFormatter'
 import { absoluteUrl } from '@/lib/utils'
 import { notFound } from 'next/navigation'
+import MDXComponent from '@/components/mdx/mdx-component'
 
 type Post = {
   tags: { value: string; label: string }[]
@@ -86,11 +87,8 @@ export default async function Post(props: { params: Params }) {
             {post?.author?.name || ''}.
           </div>
           <hr className="border-neutral-200 mt-10 mb-10" />
-          <div className="max-w-2xl mx-auto">
-            <div
-              className="prose lg:prose-xl"
-              dangerouslySetInnerHTML={{ __html: post.content }}
-            />
+          <div className="max-w-2xl mx-auto prose prose-outstatic">
+            <MDXComponent content={post.content} />
           </div>
         </article>
       </div>
@@ -118,7 +116,7 @@ async function getData(params: { slug: string }) {
     notFound()
   }
 
-  const content = await markdownToHtml(post.content)
+  const content = await MDXServer(post.content)
 
   return {
     ...post,

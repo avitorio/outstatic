@@ -151,7 +151,7 @@ export default async function GET(request: NextRequest) {
 
   const code = url.searchParams.get('code') as string | null
   if (!code) {
-    return NextResponse.json({ error: 'missing_code' }, { status: 400 })
+    return NextResponse.redirect(`${dashboardUrl}?error=missing-code`)
   }
 
   try {
@@ -163,7 +163,7 @@ export default async function GET(request: NextRequest) {
     } = await getAccessToken({ code })
 
     if (!access_token) {
-      return NextResponse.json({ error: 'no_access_token' }, { status: 401 })
+      return NextResponse.redirect(`${dashboardUrl}?error=no-access-token`)
     }
 
     let userData = await fetchGitHubUser(access_token)
@@ -184,7 +184,7 @@ export default async function GET(request: NextRequest) {
       }
     }
 
-    if (userData && userData.email && access_token) {
+    if (userData && access_token) {
       const { name, login, email, avatar_url } = userData
 
       // Fetch project info from SaaS to get repo owner/slug
@@ -329,9 +329,10 @@ export default async function GET(request: NextRequest) {
         return NextResponse.redirect(redirectUrl)
       }
     } else {
-      return NextResponse.json({ error: 'missing_user_data' }, { status: 403 })
+      const redirectUrl = `${dashboardUrl}?error=missing-user-data`
+      return NextResponse.redirect(redirectUrl)
     }
   } catch {
-    return NextResponse.json({ error: 'auth_callback_failed' }, { status: 500 })
+    return NextResponse.redirect(`${dashboardUrl}?error=auth-callback-failed`)
   }
 }

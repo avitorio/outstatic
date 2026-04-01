@@ -1,7 +1,8 @@
 import Layout from '@/components/Layout'
 import { load } from 'outstatic/server'
 import ContentGrid from '@/components/ContentGrid'
-import markdownToHtml from '@/lib/markdownToHtml'
+import MDXServer from '@/lib/mdx-server'
+import MDXComponent from '@/components/mdx/mdx-component'
 
 export default async function Index() {
   const { content, allPosts, allProjects } = await getData()
@@ -9,11 +10,8 @@ export default async function Index() {
   return (
     <Layout>
       <div className="max-w-6xl mx-auto px-5">
-        <section className="mt-16 mb-16 md:mb-12">
-          <div
-            className="prose lg:prose-2xl home-intro"
-            dangerouslySetInnerHTML={{ __html: content }}
-          />
+        <section className="mt-16 mb-16 md:mb-12 prose lg:prose-2xl home-intro">
+          <MDXComponent content={content} />
         </section>
         {allPosts.length > 0 && (
           <ContentGrid
@@ -42,7 +40,7 @@ async function getData() {
     .find({ collection: 'pages', slug: 'home' }, ['content'])
     .first()
 
-  const content = await markdownToHtml(page.content)
+  const content = await MDXServer(page.content)
 
   const allPosts = await db
     .find({ collection: 'posts', status: 'published' }, [

@@ -23,6 +23,7 @@ type RootProviderProps = {
 // Inner component that uses the AuthProvider context
 function RootProviderInner({ ostData, children }: RootProviderProps) {
   const { session, updateSession } = useAuth()
+  const showToaster = ostData.ui?.showToaster ?? true
 
   // Derive currentOstData from ostData and session
   const currentOstData = useMemo(
@@ -50,7 +51,7 @@ function RootProviderInner({ ostData, children }: RootProviderProps) {
         enableSystem
         disableTransitionOnChange
       >
-        <Toaster />
+        {showToaster ? <Toaster /> : null}
         <QueryClientProvider client={queryClient}>
           <NavigationGuardProvider>
             <ContentLockProvider>{children}</ContentLockProvider>
