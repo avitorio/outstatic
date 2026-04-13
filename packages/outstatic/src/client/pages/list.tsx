@@ -13,6 +13,8 @@ import Link from 'next/link'
 import { singular } from 'pluralize'
 import { useOutstatic } from '@/utils/hooks/use-outstatic'
 import LineBackground from '@/components/ui/outstatic/line-background'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/shadcn/tooltip'
+import { Settings } from 'lucide-react'
 
 type ListProps = {
   slug: string
@@ -30,11 +32,26 @@ export default function List({ slug, title }: ListProps) {
     <AdminLayout title={title}>
       <div className="mb-8 flex h-12 items-center">
         <h1 className="mr-12 text-2xl">{title}</h1>
-        <Button size="sm" asChild>
-          <Link href={`${dashboardRoute}/${slug}/new`}>
-            New {singular(title)}
-          </Link>
-        </Button>
+        <div className="flex gap-2">
+          <Button size="sm" asChild>
+            <Link href={`${dashboardRoute}/${slug}/new`}>
+              New {singular(title)}
+            </Link>
+          </Button>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button asChild size="icon" variant="ghost">
+                <Link href={`${dashboardRoute}/collections/${slug}`}>
+                  <span className="sr-only">Edit Collection</span>
+                  <Settings className="w-6 h-6" />
+                </Link>
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Edit Collection</p>
+            </TooltipContent>
+          </Tooltip>
+        </div>
       </div>
       {data?.documents && data.documents.length > 0 && (
         <div className="relative sm:rounded-lg">

@@ -22,7 +22,7 @@ import { CollectionType, useCollections } from '@/utils/hooks/use-collections'
 
 type DeleteCollectionModalProps = {
   setShowDeleteModal: (value: boolean) => void
-  setSelectedCollection: (value: CollectionType | null) => void
+  setSelectedCollection?: (value: CollectionType | null) => void
   collection: CollectionType
 }
 
@@ -107,7 +107,7 @@ function DeleteCollectionModal({
         },
         error: 'Failed to delete collection'
       })
-    } catch (error) {}
+    } catch (error) { }
   }
 
   return (
@@ -116,7 +116,7 @@ function DeleteCollectionModal({
       onOpenChange={(open) => {
         if (!open) {
           setShowDeleteModal(false)
-          setSelectedCollection(null)
+          setSelectedCollection?.(null)
         }
       }}
     >
@@ -151,7 +151,7 @@ function DeleteCollectionModal({
             variant="outline"
             onClick={() => {
               setShowDeleteModal(false)
-              setSelectedCollection(null)
+              setSelectedCollection?.(null)
             }}
           >
             Cancel

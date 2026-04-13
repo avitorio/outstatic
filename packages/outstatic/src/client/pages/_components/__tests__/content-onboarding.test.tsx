@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from '@testing-library/react'
-import ContentOnboarding from './content-onboarding'
+import ContentOnboarding from '../content-onboarding'
 import { useLocalData, useOutstatic } from '@/utils/hooks/use-outstatic'
 import { useInitialData } from '@/utils/hooks/use-initial-data'
 import { TestWrapper } from '@/utils/tests/test-wrapper'
@@ -34,22 +34,22 @@ jest.mock('change-case', () => ({
 
 describe('ContentOnboarding', () => {
   beforeEach(() => {
-    ;(useLocalData as jest.Mock).mockReturnValue({
+    ; (useLocalData as jest.Mock).mockReturnValue({
       setData: jest.fn()
     })
-    ;(useOutstatic as jest.Mock).mockReturnValue({
-      repoOwner: 'test-owner',
-      repoSlug: 'test-repo',
-      repoBranch: 'main',
-      dashboardRoute: '/outstatic',
-      basePath: '',
-      gqlClient: {}
-    })
+      ; (useOutstatic as jest.Mock).mockReturnValue({
+        repoOwner: 'test-owner',
+        repoSlug: 'test-repo',
+        repoBranch: 'main',
+        dashboardRoute: '/outstatic',
+        basePath: '',
+        gqlClient: {}
+      })
   })
 
   describe('when branch is not confirmed', () => {
     beforeEach(() => {
-      ;(useInitialData as jest.Mock).mockReturnValue({
+      ; (useInitialData as jest.Mock).mockReturnValue({
         repoBranch: null
       })
     })
@@ -113,7 +113,7 @@ describe('ContentOnboarding', () => {
 
   describe('when branch is confirmed via env var', () => {
     beforeEach(() => {
-      ;(useInitialData as jest.Mock).mockReturnValue({
+      ; (useInitialData as jest.Mock).mockReturnValue({
         repoBranch: 'main'
       })
     })
@@ -167,7 +167,7 @@ describe('ContentOnboarding', () => {
 
   describe('when branch is confirmed via URL param', () => {
     beforeEach(() => {
-      ;(useInitialData as jest.Mock).mockReturnValue({
+      ; (useInitialData as jest.Mock).mockReturnValue({
         repoBranch: null
       })
 

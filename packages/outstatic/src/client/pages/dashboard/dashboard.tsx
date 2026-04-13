@@ -21,6 +21,7 @@ import {
 } from '@/components/ui/shadcn/tooltip'
 import { useState } from 'react'
 import OpenFileModal from '../_components/open-file-modal'
+import NewCollectionModal from '../collections/_components/new-collection-modal'
 
 export default function Dashboard() {
   const { data: collections, isPending: collectionsPending } = useCollections()
@@ -28,7 +29,7 @@ export default function Dashboard() {
   const { dashboardRoute, basePath } = useOutstatic()
   const router = useRouter()
   const [showOpenFileModal, setShowOpenFileModal] = useState(false)
-
+  const [showNewCollectionModal, setShowNewCollectionModal] = useState(false)
   const isPending = collectionsPending || singletonsPending
   const hasCollections = collections && collections.length > 0
   const hasSingletons = singletons && singletons.length > 0
@@ -46,6 +47,23 @@ export default function Dashboard() {
         <>
           <div className="mb-8 flex h-12 items-center">
             <h1 className="mr-12 text-2xl text-foreground">Collections</h1>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  className="cursor-pointer"
+                  size="icon"
+                  variant="ghost"
+                  onClick={() => setShowNewCollectionModal(true)}>
+                  <>
+                    <span className="sr-only">New Singleton</span>
+                    <Plus className="w-6 h-6" />
+                  </>
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>New Collection</p>
+              </TooltipContent>
+            </Tooltip>
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button asChild size="icon" variant="ghost">
@@ -75,14 +93,22 @@ export default function Dashboard() {
                       </h5>
                     </Link>
                     <div className="z-10 flex gap-2">
-                      <Button asChild size="icon" variant="ghost">
-                        <Link href={`${dashboardRoute}/${collection.slug}/new`}>
-                          <span className="sr-only">
-                            New {singular(collection.title)}
-                          </span>
-                          <Plus className="w-6 h-6" />
-                        </Link>
-                      </Button>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button asChild size="icon" variant="ghost">
+                            <Link href={`${dashboardRoute}/${collection.slug}/new`}>
+                              <span className="sr-only">
+                                New {singular(collection.title)}
+                              </span>
+                              <Plus className="w-6 h-6" />
+                            </Link>
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>New {singular(collection.title)}</p>
+                        </TooltipContent>
+                      </Tooltip>
+
                     </div>
                   </CardContent>
                 </Card>
@@ -94,19 +120,6 @@ export default function Dashboard() {
 
           <div className="mb-8 flex h-12 items-center mt-8">
             <h1 className="mr-12 text-2xl text-foreground">Singletons</h1>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button asChild size="icon" variant="ghost">
-                  <Link href={`${dashboardRoute}/singletons`}>
-                    <span className="sr-only">Edit Singletons</span>
-                    <Settings className="w-6 h-6" />
-                  </Link>
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Edit Singletons</p>
-              </TooltipContent>
-            </Tooltip>
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button asChild size="icon" variant="ghost">
@@ -123,6 +136,7 @@ export default function Dashboard() {
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button
+                  className="cursor-pointer"
                   size="icon"
                   variant="ghost"
                   onClick={() => setShowOpenFileModal(true)}
@@ -145,6 +159,13 @@ export default function Dashboard() {
             <SingletonOnboarding />
           )}
         </>
+      )}
+
+      {showNewCollectionModal && (
+        <NewCollectionModal
+          open={showNewCollectionModal}
+          onOpenChange={setShowNewCollectionModal}
+        />
       )}
       <OpenFileModal
         open={showOpenFileModal}
