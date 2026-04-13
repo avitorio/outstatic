@@ -71,6 +71,8 @@ export default function NewCollectionModal({
     repoOwner,
     dashboardRoute
   } = useOutstatic()
+  const canManageCollections =
+    session?.user?.permissions?.includes('collections.manage') ?? false
 
   const router = useRouter()
   const fetchOid = useOid()
@@ -247,6 +249,16 @@ export default function NewCollectionModal({
 
     return () => subscription.unsubscribe()
   }, [form, setHasChanges])
+
+  useEffect(() => {
+    if (!canManageCollections && open) {
+      onOpenChange(false)
+    }
+  }, [canManageCollections, onOpenChange, open])
+
+  if (!canManageCollections) {
+    return null
+  }
 
   return (
     <FormProvider {...form}>

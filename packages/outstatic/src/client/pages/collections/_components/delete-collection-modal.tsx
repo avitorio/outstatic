@@ -9,7 +9,7 @@ import {
   DialogTitle
 } from '@/components/ui/shadcn/dialog'
 import { Label } from '@/components/ui/shadcn/label'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { createCommitApi } from '@/utils/create-commit-api'
 import { hashFromUrl } from '@/utils/hash-from-url'
 import { useCreateCommit } from '@/utils/hooks/use-create-commit'
@@ -33,6 +33,8 @@ function DeleteCollectionModal({
 }: DeleteCollectionModalProps) {
   const { repoOwner, session, repoSlug, repoBranch, ostContent } =
     useOutstatic()
+  const canManageCollections =
+    session?.user?.permissions?.includes('collections.manage') ?? false
   const [deleting, setDeleting] = useState(false)
   const [keepFiles, setKeepFiles] = useState(false)
   const fetchOid = useOid()
@@ -43,6 +45,13 @@ function DeleteCollectionModal({
   })
 
   const mutation = useCreateCommit()
+
+  useEffect(() => {
+    if (!canManageCollections) {
+      setShowDeleteModal(false)
+      setSelectedCollection?.(null)
+    }
+  }, [canManageCollections, setSelectedCollection, setShowDeleteModal])
 
   const deleteCollection = async (collection: CollectionType) => {
     const [
@@ -107,7 +116,11 @@ function DeleteCollectionModal({
         },
         error: 'Failed to delete collection'
       })
-    } catch (error) { }
+    } catch (error) {}
+  }
+
+  if (!canManageCollections) {
+    return null
   }
 
   return (

@@ -26,10 +26,12 @@ import NewCollectionModal from '../collections/_components/new-collection-modal'
 export default function Dashboard() {
   const { data: collections, isPending: collectionsPending } = useCollections()
   const { data: singletons, isPending: singletonsPending } = useSingletons()
-  const { dashboardRoute, basePath } = useOutstatic()
+  const { dashboardRoute, basePath, session } = useOutstatic()
   const router = useRouter()
   const [showOpenFileModal, setShowOpenFileModal] = useState(false)
   const [showNewCollectionModal, setShowNewCollectionModal] = useState(false)
+  const canManageCollections =
+    session?.user?.permissions?.includes('collections.manage') ?? false
   const isPending = collectionsPending || singletonsPending
   const hasCollections = collections && collections.length > 0
   const hasSingletons = singletons && singletons.length > 0
@@ -47,36 +49,41 @@ export default function Dashboard() {
         <>
           <div className="mb-8 flex h-12 items-center">
             <h1 className="mr-12 text-2xl text-foreground">Collections</h1>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  className="cursor-pointer"
-                  size="icon"
-                  variant="ghost"
-                  onClick={() => setShowNewCollectionModal(true)}>
-                  <>
-                    <span className="sr-only">New Singleton</span>
-                    <Plus className="w-6 h-6" />
-                  </>
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>New Collection</p>
-              </TooltipContent>
-            </Tooltip>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button asChild size="icon" variant="ghost">
-                  <Link href={`${dashboardRoute}/collections`}>
-                    <span className="sr-only">Edit Collections</span>
-                    <Settings className="w-6 h-6" />
-                  </Link>
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Edit Collections</p>
-              </TooltipContent>
-            </Tooltip>
+            {canManageCollections ? (
+              <>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      className="cursor-pointer"
+                      size="icon"
+                      variant="ghost"
+                      onClick={() => setShowNewCollectionModal(true)}
+                    >
+                      <>
+                        <span className="sr-only">New Collection</span>
+                        <Plus className="w-6 h-6" />
+                      </>
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>New Collection</p>
+                  </TooltipContent>
+                </Tooltip>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button asChild size="icon" variant="ghost">
+                      <Link href={`${dashboardRoute}/collections`}>
+                        <span className="sr-only">Edit Collections</span>
+                        <Settings className="w-6 h-6" />
+                      </Link>
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Edit Collections</p>
+                  </TooltipContent>
+                </Tooltip>
+              </>
+            ) : null}
           </div>
           {collections && collections.length ? (
             <div className="w-full grid md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6 mb-12">
@@ -96,7 +103,9 @@ export default function Dashboard() {
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <Button asChild size="icon" variant="ghost">
-                            <Link href={`${dashboardRoute}/${collection.slug}/new`}>
+                            <Link
+                              href={`${dashboardRoute}/${collection.slug}/new`}
+                            >
                               <span className="sr-only">
                                 New {singular(collection.title)}
                               </span>
@@ -108,7 +117,6 @@ export default function Dashboard() {
                           <p>New {singular(collection.title)}</p>
                         </TooltipContent>
                       </Tooltip>
-
                     </div>
                   </CardContent>
                 </Card>
@@ -161,7 +169,7 @@ export default function Dashboard() {
         </>
       )}
 
-      {showNewCollectionModal && (
+      {canManageCollections && showNewCollectionModal && (
         <NewCollectionModal
           open={showNewCollectionModal}
           onOpenChange={setShowNewCollectionModal}

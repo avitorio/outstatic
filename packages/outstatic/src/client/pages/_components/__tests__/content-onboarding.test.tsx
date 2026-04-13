@@ -34,22 +34,27 @@ jest.mock('change-case', () => ({
 
 describe('ContentOnboarding', () => {
   beforeEach(() => {
-    ; (useLocalData as jest.Mock).mockReturnValue({
+    ;(useLocalData as jest.Mock).mockReturnValue({
       setData: jest.fn()
     })
-      ; (useOutstatic as jest.Mock).mockReturnValue({
-        repoOwner: 'test-owner',
-        repoSlug: 'test-repo',
-        repoBranch: 'main',
-        dashboardRoute: '/outstatic',
-        basePath: '',
-        gqlClient: {}
-      })
+    ;(useOutstatic as jest.Mock).mockReturnValue({
+      repoOwner: 'test-owner',
+      repoSlug: 'test-repo',
+      repoBranch: 'main',
+      dashboardRoute: '/outstatic',
+      basePath: '',
+      gqlClient: {},
+      session: {
+        user: {
+          permissions: ['collections.manage', 'content.manage']
+        }
+      }
+    })
   })
 
   describe('when branch is not confirmed', () => {
     beforeEach(() => {
-      ; (useInitialData as jest.Mock).mockReturnValue({
+      ;(useInitialData as jest.Mock).mockReturnValue({
         repoBranch: null
       })
     })
@@ -113,7 +118,7 @@ describe('ContentOnboarding', () => {
 
   describe('when branch is confirmed via env var', () => {
     beforeEach(() => {
-      ; (useInitialData as jest.Mock).mockReturnValue({
+      ;(useInitialData as jest.Mock).mockReturnValue({
         repoBranch: 'main'
       })
     })
@@ -163,11 +168,42 @@ describe('ContentOnboarding', () => {
         screen.getByText('or start with a standalone page')
       ).toBeInTheDocument()
     })
+
+    it('hides collection creation when collection management is unavailable', () => {
+      ;(useOutstatic as jest.Mock).mockReturnValue({
+        repoOwner: 'test-owner',
+        repoSlug: 'test-repo',
+        repoBranch: 'main',
+        dashboardRoute: '/outstatic',
+        basePath: '',
+        gqlClient: {},
+        session: {
+          user: {
+            permissions: ['content.manage']
+          }
+        }
+      })
+
+      render(
+        <TestWrapper>
+          <ContentOnboarding />
+        </TestWrapper>
+      )
+
+      expect(
+        screen.queryByRole('button', { name: /New Collection/i })
+      ).not.toBeInTheDocument()
+      expect(
+        screen.getByText(
+          'You need permission to manage collections before you can create one.'
+        )
+      ).toBeInTheDocument()
+    })
   })
 
   describe('when branch is confirmed via URL param', () => {
     beforeEach(() => {
-      ; (useInitialData as jest.Mock).mockReturnValue({
+      ;(useInitialData as jest.Mock).mockReturnValue({
         repoBranch: null
       })
 

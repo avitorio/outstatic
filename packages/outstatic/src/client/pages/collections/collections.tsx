@@ -15,6 +15,8 @@ import NewCollectionModal from './_components/new-collection-modal'
 export default function Collections() {
   const { data: collections, isPending } = useCollections()
   const { dashboardRoute, session } = useOutstatic()
+  const canManageCollections =
+    session?.user?.permissions?.includes('collections.manage') ?? false
 
   const [selectedCollection, setSelectedCollection] =
     useState<CollectionType | null>(null)
@@ -29,9 +31,11 @@ export default function Collections() {
         <LineBackground>
           <div className="mb-8 flex h-12 items-center">
             <h1 className="mr-12 text-2xl text-foreground">Collections</h1>
-            <Button size="sm" onClick={() => setShowNewCollectionModal(true)}>
-              New Collection
-            </Button>
+            {canManageCollections ? (
+              <Button size="sm" onClick={() => setShowNewCollectionModal(true)}>
+                New Collection
+              </Button>
+            ) : null}
           </div>
           <CollectionOnboarding />
         </LineBackground>
@@ -39,7 +43,7 @@ export default function Collections() {
         <>
           <div className="mb-8 flex h-12 items-center">
             <h1 className="mr-12 text-2xl text-foreground">Collections</h1>
-            {session?.user?.permissions?.includes('collections.manage') ? (
+            {canManageCollections ? (
               <Button size="sm" onClick={() => setShowNewCollectionModal(true)}>
                 New Collection
               </Button>
@@ -59,9 +63,7 @@ export default function Collections() {
                         <span className="absolute top-0 bottom-0 left-0 right-16"></span>
                       </h5>
                     </Link>
-                    {session?.user?.permissions?.includes(
-                      'collections.manage'
-                    ) ? (
+                    {canManageCollections ? (
                       <div className="z-10 flex gap-2">
                         <Button asChild size="icon" variant="ghost">
                           <Link
@@ -99,7 +101,7 @@ export default function Collections() {
           collection={selectedCollection}
         />
       ) : null}
-      {showNewCollectionModal && (
+      {canManageCollections && showNewCollectionModal && (
         <NewCollectionModal
           open={showNewCollectionModal}
           onOpenChange={setShowNewCollectionModal}

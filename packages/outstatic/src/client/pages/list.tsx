@@ -13,7 +13,11 @@ import Link from 'next/link'
 import { singular } from 'pluralize'
 import { useOutstatic } from '@/utils/hooks/use-outstatic'
 import LineBackground from '@/components/ui/outstatic/line-background'
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/shadcn/tooltip'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger
+} from '@/components/ui/shadcn/tooltip'
 import { Settings } from 'lucide-react'
 
 type ListProps = {
@@ -23,7 +27,9 @@ type ListProps = {
 
 export default function List({ slug, title }: ListProps) {
   const { data, isPending, error } = useGetDocuments()
-  const { dashboardRoute } = useOutstatic()
+  const { dashboardRoute, session } = useOutstatic()
+  const canManageCollections =
+    session?.user?.permissions?.includes('collections.manage') ?? false
 
   // Don't show loading screen if we have an error (auth errors will be handled by session refresh)
   if ((isPending || data?.documents === null) && !error) return <AdminLoading />
@@ -38,19 +44,21 @@ export default function List({ slug, title }: ListProps) {
               New {singular(title)}
             </Link>
           </Button>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button asChild size="icon" variant="ghost">
-                <Link href={`${dashboardRoute}/collections/${slug}`}>
-                  <span className="sr-only">Edit Collection</span>
-                  <Settings className="w-6 h-6" />
-                </Link>
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>Edit Collection</p>
-            </TooltipContent>
-          </Tooltip>
+          {canManageCollections ? (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button asChild size="icon" variant="ghost">
+                  <Link href={`${dashboardRoute}/collections/${slug}`}>
+                    <span className="sr-only">Edit Collection</span>
+                    <Settings className="w-6 h-6" />
+                  </Link>
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Edit Collection</p>
+              </TooltipContent>
+            </Tooltip>
+          ) : null}
         </div>
       </div>
       {data?.documents && data.documents.length > 0 && (
