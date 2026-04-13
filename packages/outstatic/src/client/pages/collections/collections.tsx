@@ -6,6 +6,7 @@ import { Card, CardContent } from '@/components/ui/shadcn/card'
 import Link from 'next/link'
 import { useState } from 'react'
 import DeleteCollectionModal from './_components/delete-collection-modal'
+import { usePermissions } from '@/utils/hooks/use-permissions'
 import { useOutstatic } from '@/utils/hooks/use-outstatic'
 import { Settings, Trash } from 'lucide-react'
 import CollectionOnboarding from './_components/collection-onboarding'
@@ -14,9 +15,8 @@ import NewCollectionModal from './_components/new-collection-modal'
 
 export default function Collections() {
   const { data: collections, isPending } = useCollections()
-  const { dashboardRoute, session } = useOutstatic()
-  const canManageCollections =
-    session?.user?.permissions?.includes('collections.manage') ?? false
+  const { dashboardRoute } = useOutstatic()
+  const { canManageCollections } = usePermissions()
 
   const [selectedCollection, setSelectedCollection] =
     useState<CollectionType | null>(null)

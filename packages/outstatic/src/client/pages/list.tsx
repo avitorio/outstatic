@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/shadcn/button'
 import { useGetDocuments } from '@/utils/hooks/use-get-documents'
 import Link from 'next/link'
 import { singular } from 'pluralize'
+import { usePermissions } from '@/utils/hooks/use-permissions'
 import { useOutstatic } from '@/utils/hooks/use-outstatic'
 import LineBackground from '@/components/ui/outstatic/line-background'
 import {
@@ -27,9 +28,8 @@ type ListProps = {
 
 export default function List({ slug, title }: ListProps) {
   const { data, isPending, error } = useGetDocuments()
-  const { dashboardRoute, session } = useOutstatic()
-  const canManageCollections =
-    session?.user?.permissions?.includes('collections.manage') ?? false
+  const { dashboardRoute } = useOutstatic()
+  const { canManageCollections } = usePermissions()
 
   // Don't show loading screen if we have an error (auth errors will be handled by session refresh)
   if ((isPending || data?.documents === null) && !error) return <AdminLoading />

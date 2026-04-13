@@ -3,12 +3,32 @@ import CustomFields from '../custom-fields/custom-fields'
 
 const mockUseFieldSchema = jest.fn()
 const mockUseOutstatic = jest.fn()
+const mockUseCollections = jest.fn()
+const mockUseSingletons = jest.fn()
+const mockUsePermissions = jest.fn()
 
 jest.mock('@/utils/hooks/use-field-schema', () => ({
   useFieldSchema: () => mockUseFieldSchema()
 }))
-jest.mock('@/utils/hooks/use-outstatic', () => ({
+jest.mock('@/utils/hooks', () => ({
+  useCollections: () => mockUseCollections(),
   useOutstatic: () => mockUseOutstatic()
+}))
+jest.mock('@/utils/hooks/use-singletons', () => ({
+  useSingletons: () => mockUseSingletons()
+}))
+jest.mock('@/utils/hooks/use-permissions', () => ({
+  usePermissions: () => mockUsePermissions()
+}))
+jest.mock('next/navigation', () => ({
+  useRouter: jest.fn(() => ({
+    push: jest.fn(),
+    replace: jest.fn(),
+    back: jest.fn(),
+    forward: jest.fn(),
+    refresh: jest.fn(),
+    prefetch: jest.fn()
+  }))
 }))
 jest.mock('change-case', () => ({
   capitalCase: (value: string) =>
@@ -33,15 +53,22 @@ describe('<CustomFields />', () => {
       data: null,
       isLoading: false
     })
+    mockUseCollections.mockReturnValue({
+      data: [],
+      isPending: false
+    })
+    mockUseSingletons.mockReturnValue({
+      data: [],
+      refetch: jest.fn()
+    })
+    mockUseOutstatic.mockReturnValue({
+      dashboardRoute: '/outstatic'
+    })
   })
 
   it('renders the unauthorized state when collections.manage is missing', () => {
-    mockUseOutstatic.mockReturnValue({
-      session: {
-        user: {
-          permissions: []
-        }
-      }
+    mockUsePermissions.mockReturnValue({
+      canManageCollections: false
     })
 
     render(<CustomFields collection="posts" title="Posts" />)

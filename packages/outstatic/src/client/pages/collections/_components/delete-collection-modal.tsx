@@ -15,6 +15,7 @@ import { hashFromUrl } from '@/utils/hash-from-url'
 import { useCreateCommit } from '@/utils/hooks/use-create-commit'
 import { useGetMetadata } from '@/utils/hooks/use-get-metadata'
 import useOid from '@/utils/hooks/use-oid'
+import { usePermissions } from '@/utils/hooks/use-permissions'
 import { useOutstatic } from '@/utils/hooks/use-outstatic'
 import { stringifyMetadata } from '@/utils/metadata/stringify'
 import { toast } from 'sonner'
@@ -33,8 +34,7 @@ function DeleteCollectionModal({
 }: DeleteCollectionModalProps) {
   const { repoOwner, session, repoSlug, repoBranch, ostContent } =
     useOutstatic()
-  const canManageCollections =
-    session?.user?.permissions?.includes('collections.manage') ?? false
+  const { canManageCollections } = usePermissions()
   const [deleting, setDeleting] = useState(false)
   const [keepFiles, setKeepFiles] = useState(false)
   const fetchOid = useOid()

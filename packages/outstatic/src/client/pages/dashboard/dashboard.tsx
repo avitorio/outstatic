@@ -6,6 +6,7 @@ import { useSingletons } from '@/utils/hooks/use-singletons'
 import { Card, CardContent } from '@/components/ui/shadcn/card'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { usePermissions } from '@/utils/hooks/use-permissions'
 import { useOutstatic } from '@/utils/hooks/use-outstatic'
 import { Settings, Plus, FolderOpen } from 'lucide-react'
 import CollectionOnboarding from '../collections/_components/collection-onboarding'
@@ -26,12 +27,11 @@ import NewCollectionModal from '../collections/_components/new-collection-modal'
 export default function Dashboard() {
   const { data: collections, isPending: collectionsPending } = useCollections()
   const { data: singletons, isPending: singletonsPending } = useSingletons()
-  const { dashboardRoute, basePath, session } = useOutstatic()
+  const { dashboardRoute, basePath } = useOutstatic()
+  const { canManageCollections } = usePermissions()
   const router = useRouter()
   const [showOpenFileModal, setShowOpenFileModal] = useState(false)
   const [showNewCollectionModal, setShowNewCollectionModal] = useState(false)
-  const canManageCollections =
-    session?.user?.permissions?.includes('collections.manage') ?? false
   const isPending = collectionsPending || singletonsPending
   const hasCollections = collections && collections.length > 0
   const hasSingletons = singletons && singletons.length > 0

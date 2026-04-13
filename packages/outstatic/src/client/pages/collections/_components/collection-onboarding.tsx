@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/shadcn/button'
 import { Card, CardContent } from '@/components/ui/shadcn/card'
-import { useOutstatic } from '@/utils/hooks/use-outstatic'
+import { usePermissions } from '@/utils/hooks/use-permissions'
 import { useState } from 'react'
 import NewCollectionModal from './new-collection-modal'
 import { Folder, Info, ArrowRight } from 'lucide-react'
@@ -13,9 +13,7 @@ import {
 
 export default function CollectionOnboarding() {
   const [showNewCollectionModal, setShowNewCollectionModal] = useState(false)
-  const { session } = useOutstatic()
-  const canManageCollections =
-    session?.user?.permissions?.includes('collections.manage') ?? false
+  const { canManageCollections } = usePermissions()
 
   return (
     <>
