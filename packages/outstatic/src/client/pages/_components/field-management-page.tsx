@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import { Trash } from 'lucide-react'
 import { AdminLayout } from '@/components/admin-layout'
 import { AdminLoading } from '@/components/admin-loading'
-import LineBackground from '@/components/ui/outstatic/line-background'
 import { Button } from '@/components/ui/shadcn/button'
 import {
   Card,
@@ -93,40 +92,37 @@ export const FieldManagementPage = ({
             ) : null}
           </div>
           {Object.keys(customFields).length === 0 ? (
-            <LineBackground>
-              <div className="relative">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>
-                      Add Custom Fields to your {emptyStateSubject}.
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="prose prose-sm dark:prose-invert">
-                    <p>
-                      Create your first Custom Field by clicking the button
-                      below.
-                    </p>
+            <div className="max-w-2xl">
+              <Card>
+                <CardHeader>
+                  <CardTitle>
+                    Add Custom Fields to your {emptyStateSubject}.
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="prose prose-sm dark:prose-invert">
+                  <p>
+                    Create your first Custom Field by clicking the button below.
+                  </p>
 
-                    <div>
-                      <Button onClick={() => setShowAddModal(true)}>
-                        Add Custom Field
-                      </Button>
-                    </div>
-                    <p>
-                      To learn more about how Custom Fields work checkout{' '}
-                      <a
-                        href="https://outstatic.com/docs/custom-fields"
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        the docs
-                      </a>
-                      .
-                    </p>
-                  </CardContent>
-                </Card>
-              </div>
-            </LineBackground>
+                  <div>
+                    <Button onClick={() => setShowAddModal(true)}>
+                      Add Custom Field
+                    </Button>
+                  </div>
+                  <p>
+                    To learn more about how Custom Fields work checkout{' '}
+                    <a
+                      href="https://outstatic.com/docs/custom-fields"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      the docs
+                    </a>
+                    .
+                  </p>
+                </CardContent>
+              </Card>
+            </div>
           ) : (
             <div className="max-w-5xl w-full grid grid-cols-3 gap-6">
               {Object.entries(customFields).map(([name, field]) => {
@@ -177,7 +173,7 @@ export const FieldManagementPage = ({
             </div>
           )}
         </div>
-        <div className="flex flex-1 max-w-2xl flex-col space-y-6 relative z-10">
+        <div className="flex flex-1 max-w-2xl flex-col space-y-6">
           <div className="flex items-center">
             <h2 className="text-xl">Danger Zone</h2>
           </div>
