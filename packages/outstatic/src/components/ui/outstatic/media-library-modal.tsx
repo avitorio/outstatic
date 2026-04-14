@@ -74,9 +74,9 @@ export default function MediaLibraryModal({
         if (sortBy === 'date') {
           return sortDirection === 'asc'
             ? new Date(a.publishedAt).getTime() -
-                new Date(b.publishedAt).getTime()
+            new Date(b.publishedAt).getTime()
             : new Date(b.publishedAt).getTime() -
-                new Date(a.publishedAt).getTime()
+            new Date(a.publishedAt).getTime()
         }
 
         return sortDirection === 'asc'
@@ -145,17 +145,16 @@ export default function MediaLibraryModal({
                 </p>
               </div>
             ) : (
-              <div className="flex h-full max-h-[calc(100%-80px)] flex-col justify-between">
+              <div className="flex h-full flex-col justify-between">
                 <div className="h-full overflow-y-auto p-[2px]">
                   <div className="grid grid-cols-2 gap-4 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-gray-300 sm:grid-cols-4 md:grid-cols-6 2xl:grid-cols-8">
                     {filteredFiles.map((file) => (
                       <div
                         key={file.filename}
-                        className={`group relative cursor-pointer space-y-1 overflow-hidden rounded-lg bg-card p-2 ${
-                          selectedImage?.filename === file.filename
+                        className={`group relative cursor-pointer space-y-1 overflow-hidden rounded-lg bg-card p-2 ${selectedImage?.filename === file.filename
                             ? 'bg-muted ring-1 ring-primary'
                             : ''
-                        }`}
+                          }`}
                         onClick={() => setSelectedImage(file)}
                       >
                         <div className="aspect-square">

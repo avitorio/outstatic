@@ -31,11 +31,16 @@ export function MediaLibraryDropzone({
 
   const handleDragEnter = useCallback(
     (event: DragEvent<HTMLDivElement>) => {
-      if (disabled || !isFileDragEvent(event)) {
+      if (!isFileDragEvent(event)) {
         return
       }
 
       event.preventDefault()
+
+      if (disabled) {
+        return
+      }
+
       dragDepth.current += 1
       setIsDragging(true)
     },
@@ -44,11 +49,17 @@ export function MediaLibraryDropzone({
 
   const handleDragOver = useCallback(
     (event: DragEvent<HTMLDivElement>) => {
-      if (disabled || !isFileDragEvent(event)) {
+      if (!isFileDragEvent(event)) {
         return
       }
 
       event.preventDefault()
+
+      if (disabled) {
+        event.dataTransfer.dropEffect = 'none'
+        return
+      }
+
       event.dataTransfer.dropEffect = 'copy'
     },
     [disabled]
@@ -56,11 +67,18 @@ export function MediaLibraryDropzone({
 
   const handleDragLeave = useCallback(
     (event: DragEvent<HTMLDivElement>) => {
-      if (disabled || !isFileDragEvent(event)) {
+      if (!isFileDragEvent(event)) {
         return
       }
 
       event.preventDefault()
+
+      if (disabled) {
+        dragDepth.current = 0
+        setIsDragging(false)
+        return
+      }
+
       dragDepth.current = Math.max(dragDepth.current - 1, 0)
 
       if (dragDepth.current === 0) {
@@ -72,13 +90,18 @@ export function MediaLibraryDropzone({
 
   const handleDrop = useCallback(
     (event: DragEvent<HTMLDivElement>) => {
-      if (disabled || !isFileDragEvent(event)) {
+      if (!isFileDragEvent(event)) {
         return
       }
 
       event.preventDefault()
       dragDepth.current = 0
       setIsDragging(false)
+
+      if (disabled) {
+        return
+      }
+
       onFileDrop(event.dataTransfer.files)
     },
     [disabled, onFileDrop]

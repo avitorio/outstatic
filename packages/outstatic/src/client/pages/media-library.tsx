@@ -56,9 +56,9 @@ export default function MediaLibrary() {
         if (sortBy === 'date') {
           return sortDirection === 'asc'
             ? new Date(a.publishedAt).getTime() -
-            new Date(b.publishedAt).getTime()
+                new Date(b.publishedAt).getTime()
             : new Date(b.publishedAt).getTime() -
-            new Date(a.publishedAt).getTime()
+                new Date(a.publishedAt).getTime()
         }
 
         return sortDirection === 'asc'

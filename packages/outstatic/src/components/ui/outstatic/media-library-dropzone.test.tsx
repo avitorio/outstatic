@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react'
+import { createEvent, fireEvent, render, screen } from '@testing-library/react'
 import { MediaLibraryDropzone } from './media-library-dropzone'
 
 const createFileList = (files: File[]) =>
@@ -54,10 +54,19 @@ describe('<MediaLibraryDropzone />', () => {
       dropEffect: 'none'
     }
 
-    fireEvent.dragEnter(dropzone, { dataTransfer })
-    fireEvent.drop(dropzone, { dataTransfer })
+    const dragEnterEvent = createEvent.dragEnter(dropzone, { dataTransfer })
+    const dragOverEvent = createEvent.dragOver(dropzone, { dataTransfer })
+    const dropEvent = createEvent.drop(dropzone, { dataTransfer })
+
+    fireEvent(dropzone, dragEnterEvent)
+    fireEvent(dropzone, dragOverEvent)
+    fireEvent(dropzone, dropEvent)
 
     expect(screen.queryByText('Drop image to upload')).not.toBeInTheDocument()
     expect(onFileDrop).not.toHaveBeenCalled()
+    expect(dragEnterEvent.defaultPrevented).toBe(true)
+    expect(dragOverEvent.defaultPrevented).toBe(true)
+    expect(dropEvent.defaultPrevented).toBe(true)
+    expect(dataTransfer.dropEffect).toBe('none')
   })
 })
