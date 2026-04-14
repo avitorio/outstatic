@@ -7,7 +7,7 @@ import {
 import { cn } from '@/utils/ui'
 import { Check, Trash } from 'lucide-react'
 import { useEditor } from '@/components/editor/editor-context'
-import { useEffect, useRef } from 'react'
+import { useRef } from 'react'
 import { EditorBubbleButton } from '@/components/editor/ui/editor-bubble-button'
 
 export function isValidUrl(url: string) {
@@ -41,11 +41,6 @@ export const LinkSelector = ({ open, onOpenChange }: LinkSelectorProps) => {
   const inputRef = useRef<HTMLInputElement>(null)
   const { editor } = useEditor()
 
-  // Autofocus on input by default
-  useEffect(() => {
-    inputRef.current?.focus()
-  })
-
   if (!editor) return null
 
   return (
@@ -62,7 +57,15 @@ export const LinkSelector = ({ open, onOpenChange }: LinkSelectorProps) => {
           </p>
         </EditorBubbleButton>
       </PopoverTrigger>
-      <PopoverContent align="start" className="w-60 p-0" sideOffset={10}>
+      <PopoverContent
+        align="start"
+        className="w-60 p-0"
+        sideOffset={10}
+        onOpenAutoFocus={(event) => {
+          event.preventDefault()
+          inputRef.current?.focus()
+        }}
+      >
         <form
           onSubmit={(e) => {
             const target = e.currentTarget as HTMLFormElement
