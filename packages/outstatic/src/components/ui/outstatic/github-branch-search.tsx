@@ -1,6 +1,7 @@
 'use client'
 import { SearchCombobox } from '@/components/ui/outstatic/search-combobox'
 import { GET_BRANCHES } from '@/graphql/queries/branches'
+import { usePermissions } from '@/utils/hooks/use-permissions'
 import { useOutstatic, useLocalData } from '@/utils/hooks/use-outstatic'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { CreateBranchDialog } from '@/components/ui/outstatic/create-branch-dialog'
@@ -27,7 +28,8 @@ export const GitHubBranchSearch = ({
   const { setData } = useLocalData()
   const [query, setQuery] = useState('')
   const { repoBranch: initialRepoBranch } = useInitialData()
-  const { repoOwner, repoSlug, repoBranch, gqlClient, session } = useOutstatic()
+  const { repoOwner, repoSlug, repoBranch, gqlClient } = useOutstatic()
+  const { canManageProjects } = usePermissions()
   const [suggestions, setSuggestions] = useState<Branch[]>([])
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [showCreateBranchDialog, setShowCreateBranchDialog] = useState(false)
@@ -178,7 +180,7 @@ export const GitHubBranchSearch = ({
         variant={initialRepoBranch ? 'hidden' : variant}
         size={size}
         scrollFooter={() =>
-          session?.user?.permissions?.includes('projects.manage') && (
+          canManageProjects && (
             <div
               className="rounded-t-none border border-t px-3 hover:cursor-pointer relative flex cursor-default select-none items-center rounded-sm py-1.5 text-sm outline-hidden hover:bg-accent hover:text-accent-foreground"
               onClick={() => {

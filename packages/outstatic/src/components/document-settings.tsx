@@ -49,6 +49,7 @@ import { DateTimePickerForm } from '@/components/ui/outstatic/date-time-picker-f
 import { CustomFieldRenderer } from '@/components/utils/custom-field-renderer'
 import { cn } from '@/utils/ui'
 import type { FieldSchemaTarget } from '@/utils/hooks/field-schema'
+import { usePermissions } from '@/utils/hooks/use-permissions'
 
 type DocumentSettingsProps = {
   saveDocument: () => void
@@ -88,6 +89,7 @@ export const DocumentSettings = ({
   const [fieldTitle, setFieldTitle] = useState('')
 
   const { dashboardRoute, session } = useOutstatic()
+  const { canManageCollections } = usePermissions()
 
   const [isOpen, setIsOpen] = useState(false)
 
@@ -384,7 +386,7 @@ export const DocumentSettings = ({
                 errors={errors}
               />
             ))}
-          {session?.user?.permissions?.includes('collections.manage') && (
+          {canManageCollections && (
             <>
               {missingCustomFields &&
                 Object.keys(missingCustomFields).length > 0 && (

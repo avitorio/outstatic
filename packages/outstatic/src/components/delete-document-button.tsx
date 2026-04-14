@@ -28,9 +28,10 @@ type DeleteDocumentButtonProps = {
   slug: string
   extension: MDExtensions
   disabled?: boolean
-  onComplete?: () => void
+  onComplete?: () => void | Promise<void>
   collection: string
   className?: string
+  icon?: boolean
 }
 
 export const DeleteDocumentButton = ({
@@ -39,7 +40,8 @@ export const DeleteDocumentButton = ({
   disabled = false,
   onComplete = () => {},
   collection,
-  className
+  className,
+  icon = true
 }: DeleteDocumentButtonProps) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [deleting, setDeleting] = useState(false)
@@ -124,12 +126,12 @@ export const DeleteDocumentButton = ({
           if (isSingleton) {
             await refetchSingletons()
           }
+          await onComplete?.()
           return 'Document deleted successfully'
         },
         error: 'Failed to delete document'
       })
       setShowDeleteModal(false)
-      if (onComplete) onComplete()
     } catch (error) {
       console.log(error)
     }
@@ -143,11 +145,15 @@ export const DeleteDocumentButton = ({
         disabled={disabled}
         className={className}
         title="Delete document"
-        size="icon"
-        variant="ghost"
+        size={icon ? 'icon' : 'default'}
+        variant={icon ? 'ghost' : 'destructive'}
       >
-        <span className="sr-only">Delete document</span>
-        <Trash className="stroke-foreground" />
+        {icon ? <span className="sr-only">Delete document</span> : null}
+        {icon ? (
+          <Trash className="stroke-foreground" />
+        ) : (
+          <span>Delete Document</span>
+        )}
       </Button>
       <AlertDialog open={showDeleteModal} onOpenChange={setShowDeleteModal}>
         <AlertDialogContent>

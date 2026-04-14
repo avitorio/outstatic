@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from '@testing-library/react'
-import ContentOnboarding from './content-onboarding'
+import ContentOnboarding from '../content-onboarding'
 import { useLocalData, useOutstatic } from '@/utils/hooks/use-outstatic'
 import { useInitialData } from '@/utils/hooks/use-initial-data'
 import { TestWrapper } from '@/utils/tests/test-wrapper'
@@ -43,7 +43,12 @@ describe('ContentOnboarding', () => {
       repoBranch: 'main',
       dashboardRoute: '/outstatic',
       basePath: '',
-      gqlClient: {}
+      gqlClient: {},
+      session: {
+        user: {
+          permissions: ['collections.manage', 'content.manage']
+        }
+      }
     })
   })
 
@@ -161,6 +166,37 @@ describe('ContentOnboarding', () => {
 
       expect(
         screen.getByText('or start with a standalone page')
+      ).toBeInTheDocument()
+    })
+
+    it('hides collection creation when collection management is unavailable', () => {
+      ;(useOutstatic as jest.Mock).mockReturnValue({
+        repoOwner: 'test-owner',
+        repoSlug: 'test-repo',
+        repoBranch: 'main',
+        dashboardRoute: '/outstatic',
+        basePath: '',
+        gqlClient: {},
+        session: {
+          user: {
+            permissions: ['content.manage']
+          }
+        }
+      })
+
+      render(
+        <TestWrapper>
+          <ContentOnboarding />
+        </TestWrapper>
+      )
+
+      expect(
+        screen.queryByRole('button', { name: /New Collection/i })
+      ).not.toBeInTheDocument()
+      expect(
+        screen.getByText(
+          'You need permission to manage collections before you can create one.'
+        )
       ).toBeInTheDocument()
     })
   })
