@@ -72,7 +72,7 @@ export const FieldManagementPage = ({
     )
   }
 
-  if (isLoading || collectionsPending) {
+  if (isLoading || (target.kind === 'collection' && collectionsPending)) {
     return <AdminLoading />
   }
 
