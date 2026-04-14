@@ -1,6 +1,6 @@
 {
-  "commit": "58e228279b82a668ed6102999614fd7baff97844",
-  "generated": "2026-03-31T20:43:35.025Z",
+  "commit": "435cdd21c56c8eace30c2646d04d862d97cf7f0b",
+  "generated": "2026-04-14T21:00:45.564Z",
   "metadata": [
     {
       "__outstatic": {
@@ -594,6 +594,22 @@
       "slug": "deploy-a-starter-outstatic-website-on-vercel",
       "status": "published",
       "title": "Deploy a starter Outstatic website on Vercel"
+    },
+    {
+      "__outstatic": {
+        "commit": "435cdd21c56c8eace30c2646d04d862d97cf7f0b",
+        "hash": "3843126510",
+        "path": "/outstatic/content/docs/setting-up-your-api-key.mdx"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "publishedAt": "2026-04-14T20:40:37.144Z",
+      "slug": "setting-up-your-api-key",
+      "status": "draft",
+      "title": "Setting up your API key"
     }
   ]
 }
