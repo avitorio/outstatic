@@ -28,12 +28,12 @@ describe('<MediaLibraryDropzone />', () => {
 
     fireEvent.dragEnter(dropzone, { dataTransfer })
 
-    expect(screen.getByText('Drop image to upload')).toBeInTheDocument()
+    expect(screen.getByText('Drop images to upload')).toBeInTheDocument()
 
     fireEvent.drop(dropzone, { dataTransfer })
 
     expect(onFileDrop).toHaveBeenCalledWith(files)
-    expect(screen.queryByText('Drop image to upload')).not.toBeInTheDocument()
+    expect(screen.queryByText('Drop images to upload')).not.toBeInTheDocument()
   })
 
   it('ignores dropped files when disabled', () => {
@@ -62,7 +62,7 @@ describe('<MediaLibraryDropzone />', () => {
     fireEvent(dropzone, dragOverEvent)
     fireEvent(dropzone, dropEvent)
 
-    expect(screen.queryByText('Drop image to upload')).not.toBeInTheDocument()
+    expect(screen.queryByText('Drop images to upload')).not.toBeInTheDocument()
     expect(onFileDrop).not.toHaveBeenCalled()
     expect(dragEnterEvent.defaultPrevented).toBe(true)
     expect(dragOverEvent.defaultPrevented).toBe(true)

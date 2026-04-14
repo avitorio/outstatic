@@ -168,7 +168,7 @@ export default function MediaLibrary() {
                     <DeleteMediaButton
                       path={file.__outstatic.path}
                       filename={file.filename}
-                      disabled={false}
+                      disabled={isUploading}
                       onComplete={async () => await refetchMedia()}
                       className="absolute right-2 top-2 bg-background/50 opacity-0 group-hover:opacity-100"
                       notFound={notFoundFiles.has(file.__outstatic.path)}

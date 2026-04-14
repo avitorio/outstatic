@@ -17,7 +17,7 @@ interface MediaLibraryHeaderProps {
   setSortBy: (value: string) => void
   sortDirection: string
   setSortDirection: (value: string) => void
-  handleFileUpload: (files: FileList | null) => void
+  handleFileUpload: (files: FileList | File[] | null) => void
   disableUpload?: boolean
 }
 
@@ -56,8 +56,9 @@ export function MediaLibraryHeader({
           id={fileInputId}
           type="file"
           accept="image/*"
+          multiple
           className="hidden"
-          disabled={disableUpload}
+          disabled={isUploading || disableUpload}
           onChange={(e) => {
             handleFileUpload(e.target.files)
             e.currentTarget.value = ''

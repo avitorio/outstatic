@@ -5,10 +5,19 @@ import { useOutstatic } from '@/utils/hooks/use-outstatic'
 import { stringifyMedia } from '@/utils/metadata/stringify'
 import MurmurHash3 from 'imurmurhash'
 import { useCallback } from 'react'
+import { MediaItem, MediaSchema } from '../metadata/types'
 import { useCreateCommit } from './use-create-commit'
 import useOid from './use-oid'
 import { useGetMediaFiles } from './use-get-media-files'
-import { MediaSchema } from '../metadata/types'
+
+const createMediaFilename = (filename: string) => {
+  const randString = window.btoa(Math.random().toString()).substring(10, 6)
+
+  return filename
+    .toLowerCase()
+    .replace(/[^a-zA-Z0-9-_\.]/g, '-')
+    .replace(/(\.[^\.]*)?$/, `-${randString}$1`)
+}
 
 function useSubmitMedia() {
   const createCommit = useCreateCommit()
@@ -27,58 +36,55 @@ function useSubmitMedia() {
   })
 
   const onSubmit = useCallback(
-    async (file: FileType) => {
-      const { filename, type, content: fileContents } = file
+    async (files: FileType[]) => {
+      if (files.length === 0) {
+        return
+      }
+
       try {
         const oid = await fetchOid()
         const owner = repoOwner || session?.user?.login || ''
-
-        const capi = createCommitApi({
-          message: `chore: Adds ${filename}`,
-          owner,
-          oid: oid ?? '',
-          name: repoSlug,
-          branch: repoBranch
-        })
-
-        // Add a random string to ensure uniqueness and prevent overwriting
-        const randString = window
-          .btoa(Math.random().toString())
-          .substring(10, 6)
-
-        const newFilename = filename
-          .toLowerCase()
-          .replace(/[^a-zA-Z0-9-_\.]/g, '-')
-          .replace(/(\.[^\.]*)?$/, `-${randString}$1`)
-
-        const filePath = `${repoMediaPath}${newFilename}`
-
-        capi.replaceFile(filePath, fileContents, false)
-
         const { data: mediaData, isError } = await refetchMedia()
 
         if (isError) {
           throw new Error('Error fetching media data')
         }
 
+        const capi = createCommitApi({
+          message:
+            files.length === 1
+              ? `chore: Adds ${files[0].filename}`
+              : `chore: Adds ${files.length} media files`,
+          owner,
+          oid: oid ?? '',
+          name: repoSlug,
+          branch: repoBranch
+        })
+
         const { media } = mediaData?.media || { media: [] }
 
         const commit = hashFromUrl(mediaData?.commitUrl ?? '')
 
-        const newMedia = [
-          ...(media ?? []),
-          {
-            __outstatic: {
-              hash: `${MurmurHash3(fileContents).result()}`,
-              commit,
-              path: `${filePath}`
-            },
-            filename: newFilename,
-            type: type,
-            publishedAt: new Date().toISOString(),
-            alt: ''
+        const newMedia: MediaItem[] = files.map(
+          ({ filename, type, content: fileContents }) => {
+            const newFilename = createMediaFilename(filename)
+            const filePath = `${repoMediaPath}${newFilename}`
+
+            capi.replaceFile(filePath, fileContents, false)
+
+            return {
+              __outstatic: {
+                hash: `${MurmurHash3(fileContents).result()}`,
+                commit,
+                path: `${filePath}`
+              },
+              filename: newFilename,
+              type,
+              publishedAt: new Date().toISOString(),
+              alt: ''
+            }
           }
-        ]
+        )
 
         const mediaSchema = {
           commit,
@@ -88,7 +94,10 @@ function useSubmitMedia() {
 
         capi.replaceFile(
           mediaJsonPath,
-          stringifyMedia({ ...mediaSchema, media: newMedia })
+          stringifyMedia({
+            ...mediaSchema,
+            media: [...(media ?? []), ...newMedia]
+          })
         )
 
         const input = capi.createInput()
@@ -99,7 +108,6 @@ function useSubmitMedia() {
         throw error
       }
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [
       repoOwner,
       session,
@@ -107,6 +115,7 @@ function useSubmitMedia() {
       fetchOid,
       repoSlug,
       repoBranch,
+      repoMediaPath,
       mediaJsonPath,
       refetchMedia
     ]

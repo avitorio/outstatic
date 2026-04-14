@@ -127,10 +127,10 @@ export function MediaLibraryDropzone({
             <Upload className="mx-auto size-8 text-primary" />
             <div className="space-y-1">
               <p className="font-medium text-foreground">
-                Drop image to upload
+                Drop images to upload
               </p>
               <p className="text-sm text-muted-foreground">
-                Outstatic will upload the first image you drop here.
+                Outstatic will upload up to 10 images you drop here.
               </p>
             </div>
           </div>
