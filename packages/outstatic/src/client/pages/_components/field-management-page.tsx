@@ -42,11 +42,13 @@ export const FieldManagementPage = ({
   const router = useRouter()
   const { dashboardRoute } = useOutstatic()
   const { data: schema, isLoading } = useFieldSchema({ target })
-  const { data: collections, isPending: collectionsPending } = useCollections(
-    { enabled: target.kind === 'collection' }
-  )
+  const { data: collections, isPending: collectionsPending } = useCollections({
+    enabled: target.kind === 'collection'
+  })
 
-  const { data: singletons, refetch: refetchSingletons } = useSingletons({ enabled: target.kind === 'singleton' })
+  const { data: singletons, refetch: refetchSingletons } = useSingletons({
+    enabled: target.kind === 'singleton'
+  })
   const singleton = singletons?.find((s) => s.slug === target.slug)
   const extension = singleton?.path?.endsWith('.mdx') ? 'mdx' : 'md'
   const collection = collections?.find((c) => c.slug === target.slug)
@@ -101,7 +103,8 @@ export const FieldManagementPage = ({
                   </CardHeader>
                   <CardContent className="prose prose-sm dark:prose-invert">
                     <p>
-                      Create your first Custom Field by clicking the button below.
+                      Create your first Custom Field by clicking the button
+                      below.
                     </p>
 
                     <div>
@@ -177,20 +180,31 @@ export const FieldManagementPage = ({
         <div className="flex flex-1 max-w-2xl flex-col space-y-6 relative z-10">
           <div className="flex items-center">
             <h2 className="text-xl">Danger Zone</h2>
-
           </div>
           <Card>
             <CardHeader>
-              <CardTitle>Delete {target.title} {target.kind === 'collection' ? 'collection' : 'singleton'}</CardTitle>
+              <CardTitle>
+                Delete {target.title}{' '}
+                {target.kind === 'collection' ? 'collection' : 'singleton'}
+              </CardTitle>
             </CardHeader>
             <CardContent className="prose prose-sm dark:prose-invert">
-              <p>Delete the <span className="font-bold">{target.title}</span> {target.kind === 'collection' ? 'collection' : 'singleton'} and all its content.</p>
+              <p>
+                Delete the <span className="font-bold">{target.title}</span>{' '}
+                {target.kind === 'collection' ? 'collection' : 'singleton'} and
+                all its content.
+              </p>
               <p>This action cannot be undone.</p>
             </CardContent>
             <CardFooter>
-              {collection ? <Button variant="destructive" onClick={() => setShowDeleteContentModal(true)}>
-                Delete {target.title}
-              </Button> :
+              {collection ? (
+                <Button
+                  variant="destructive"
+                  onClick={() => setShowDeleteContentModal(true)}
+                >
+                  Delete {target.title}
+                </Button>
+              ) : (
                 <DeleteDocumentButton
                   icon={false}
                   slug={target.slug}
@@ -202,7 +216,7 @@ export const FieldManagementPage = ({
                     setShowDeleteContentModal(false)
                   }}
                 />
-              }
+              )}
             </CardFooter>
           </Card>
         </div>
@@ -251,14 +265,12 @@ export const FieldManagementPage = ({
         />
       ) : null}
 
-      {
-        showDeleteContentModal && collection ? (
-          <DeleteCollectionModal
-            setShowDeleteModal={setShowDeleteContentModal}
-            collection={collection}
-          />
-        ) : null
-      }
+      {showDeleteContentModal && collection ? (
+        <DeleteCollectionModal
+          setShowDeleteModal={setShowDeleteContentModal}
+          collection={collection}
+        />
+      ) : null}
     </AdminLayout>
   )
 }
