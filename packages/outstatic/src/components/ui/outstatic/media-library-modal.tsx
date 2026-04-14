@@ -1,36 +1,34 @@
 'use client'
 
-import { API_MEDIA_PATH } from '@/utils/constants'
-import { useOutstatic } from '@/utils/hooks/use-outstatic'
-import { useGetMediaFiles } from '@/utils/hooks/use-get-media-files'
-import { useState, useMemo } from 'react'
-import { Button } from '@/components/ui/shadcn/button'
-import { toast } from 'sonner'
-import useSubmitMedia from '@/utils/hooks/use-submit-media'
-import { FileType } from '@/types'
+import { MediaSettings } from '@/client/pages/settings/_components/media-settings'
 import { DeleteMediaButton } from '@/components/delete-media-button'
+import { Button } from '@/components/ui/shadcn/button'
 import {
   Dialog,
-  DialogFooter,
   DialogContent,
-  DialogTitle,
+  DialogDescription,
+  DialogFooter,
   DialogHeader,
-  DialogDescription
+  DialogTitle
 } from '@/components/ui/shadcn/dialog'
-import { MediaItem } from '@/utils/metadata/types'
-import * as VisuallyHidden from '@radix-ui/react-visually-hidden'
-import { MediaLibraryHeader } from './media-library-header'
-import { SpinnerIcon } from './spinner-icon'
-import { FileQuestion } from 'lucide-react'
 import {
   Card,
   CardContent,
-  CardDescription,
+  CardDescription as CardBodyDescription,
   CardHeader,
   CardTitle
-} from '../shadcn/card'
-import { MediaSettings } from '@/client/pages/settings/_components/media-settings'
-import { stringifyError } from '@/utils/errors/stringify-error'
+} from '@/components/ui/shadcn/card'
+import { API_MEDIA_PATH } from '@/utils/constants'
+import { MediaItem } from '@/utils/metadata/types'
+import { useGetMediaFiles } from '@/utils/hooks/use-get-media-files'
+import { useMediaLibraryUpload } from '@/utils/hooks/use-media-library-upload'
+import { useOutstatic } from '@/utils/hooks/use-outstatic'
+import * as VisuallyHidden from '@radix-ui/react-visually-hidden'
+import { FileQuestion } from 'lucide-react'
+import { useMemo, useState } from 'react'
+import { MediaLibraryDropzone } from './media-library-dropzone'
+import { MediaLibraryHeader } from './media-library-header'
+import { SpinnerIcon } from './spinner-icon'
 
 export default function MediaLibraryModal({
   open,
@@ -56,6 +54,8 @@ export default function MediaLibraryModal({
   } = useOutstatic()
   const apiPath = `${basePath}${API_MEDIA_PATH}${repoOwner}/${repoSlug}/${repoBranch}/`
   const { data, isLoading, refetch } = useGetMediaFiles()
+  const { handleFileUpload, isUploading } = useMediaLibraryUpload()
+
   const filteredFiles = useMemo(() => {
     if (!data) return []
 
@@ -67,6 +67,7 @@ export default function MediaLibraryModal({
         ) {
           return true
         }
+
         return false
       })
       .sort((a, b) => {
@@ -76,73 +77,17 @@ export default function MediaLibraryModal({
                 new Date(b.publishedAt).getTime()
             : new Date(b.publishedAt).getTime() -
                 new Date(a.publishedAt).getTime()
-        } else {
-          return sortDirection === 'asc'
-            ? a.filename.localeCompare(b.filename)
-            : b.filename.localeCompare(a.filename)
         }
+
+        return sortDirection === 'asc'
+          ? a.filename.localeCompare(b.filename)
+          : b.filename.localeCompare(a.filename)
       })
   }, [data, searchTerm, sortBy, sortDirection])
 
-  const [isUploading, setIsUploading] = useState(false)
-
-  const submitMedia = useSubmitMedia({
-    setLoading: setIsUploading,
-    file: {} as FileType
-  })
-
-  const handleFileUpload = async (files: FileList | null) => {
-    if (!files || files.length === 0) {
-      return
-    }
-
-    setIsUploading(true)
-
-    const file = files[0]
-    const reader = new FileReader()
-
-    reader.onload = async (e) => {
-      if (e.target && e.target.result) {
-        const fileContents = e.target.result as string
-        const fileType: FileType = {
-          filename: file.name,
-          type: 'image',
-          content: fileContents.split(',')[1] // Remove the data URL prefix
-        }
-
-        try {
-          await submitMedia(fileType)
-        } catch (error) {
-          console.error('Failed to upload media', error)
-          const errorToast = toast.error(`Failed to upload ${file.name}.`, {
-            action: {
-              label: 'Copy Logs',
-              onClick: () => {
-                navigator.clipboard.writeText(
-                  `File: ${JSON.stringify(
-                    { ...fileType, content: '...' },
-                    null,
-                    '  '
-                  )}\n\nError: ${stringifyError(error)}`
-                )
-                toast.message('Logs copied to clipboard', {
-                  id: errorToast
-                })
-              }
-            }
-          })
-        }
-      }
-    }
-
-    reader.readAsDataURL(file)
-
-    setIsUploading(false)
-  }
-
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="w-full h-full md:max-w-[96%] max-h-[96%] flex flex-col">
+      <DialogContent className="flex h-full max-h-[96%] w-full flex-col md:max-w-[96%]">
         <DialogHeader>
           <VisuallyHidden.Root>
             <DialogTitle>Media Library</DialogTitle>
@@ -165,15 +110,15 @@ export default function MediaLibraryModal({
           </div>
         </DialogHeader>
         {!repoMediaPath || !publicMediaPath ? (
-          <div className="flex justify-center items-center w-full h-full">
-            <div className="max-w-lg mb-12">
+          <div className="flex h-full w-full items-center justify-center">
+            <div className="mb-12 max-w-lg">
               <Card>
                 <CardHeader>
                   <CardTitle>First time here?</CardTitle>
-                  <CardDescription>
+                  <CardBodyDescription>
                     It seems you haven&apos;t set up your media paths yet.
                     Let&apos;s do that!
-                  </CardDescription>
+                  </CardBodyDescription>
                 </CardHeader>
                 <CardContent>
                   <MediaSettings />
@@ -181,79 +126,83 @@ export default function MediaLibraryModal({
               </Card>
             </div>
           </div>
-        ) : isLoading && !data ? (
-          <div className="flex items-center justify-center h-full">
-            <SpinnerIcon size="2xl" />
-          </div>
-        ) : filteredFiles.length === 0 ? (
-          <div className="flex flex-col items-center justify-center text-gray-500 h-full">
-            <FileQuestion className="w-16 h-16 mb-4" />
-            <p>No media files available. Upload some files to get started!</p>
-          </div>
         ) : (
-          <div className="flex flex-col justify-between h-full max-h-[calc(100%-80px)]">
-            <div
-              className="overflow-y-auto h-full p-[2px]"
-              onDragOver={(e) => e.preventDefault()}
-              onDrop={(e) => {
-                e.preventDefault()
-                handleFileUpload(e.dataTransfer.files)
-              }}
-            >
-              <div className="grid gap-4 grid-cols-2 sm:grid-cols-4 md:grid-cols-6 2xl:grid-cols-8 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent">
-                {filteredFiles.map((file) => (
-                  <div
-                    key={file.filename}
-                    className={`space-y-1 p-2 bg-card rounded-lg overflow-hidden cursor-pointer group relative  ${
-                      selectedImage?.filename === file.filename
-                        ? 'ring-1 ring-primary bg-muted'
-                        : ''
-                    }`}
-                    onClick={() => setSelectedImage(file)}
-                  >
-                    <div className="aspect-square">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={`${apiPath}${file.__outstatic.path}`}
-                        alt={file.alt}
-                        className="w-full h-full object-cover object-center rounded-md"
-                        width={288}
-                        height={288}
-                      />
-                      <DeleteMediaButton
-                        path={file.__outstatic.path}
-                        filename={file.filename}
-                        disabled={false}
-                        onComplete={() => refetch()}
-                        className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 bg-background/50"
-                      />
-                    </div>
-                    <div className="pb-4 relative">
-                      <div className="flex items-center justify-between">
-                        <h3 className="font-semibold text-sm truncate">
-                          {file.filename}
-                        </h3>
-                      </div>
-                    </div>
-                  </div>
-                ))}
+          <MediaLibraryDropzone
+            className="min-h-0 flex-1"
+            disabled={isUploading}
+            onFileDrop={handleFileUpload}
+          >
+            {isLoading && !data ? (
+              <div className="flex h-full items-center justify-center">
+                <SpinnerIcon size="2xl" />
               </div>
-            </div>
-            <DialogFooter className="px-[2px] flex flex-end pt-8">
-              <Button variant="outline" onClick={() => onOpenChange(false)}>
-                Cancel
-              </Button>
-              <Button
-                disabled={!selectedImage}
-                onClick={() => {
-                  onSelect(`${apiPath}${selectedImage?.__outstatic.path}`)
-                  onOpenChange(false)
-                }}
-              >
-                Select
-              </Button>
-            </DialogFooter>
-          </div>
+            ) : filteredFiles.length === 0 ? (
+              <div className="flex h-full flex-col items-center justify-center text-gray-500">
+                <FileQuestion className="mb-4 h-16 w-16" />
+                <p>
+                  No media files available. Upload some files or drop an image
+                  here to get started!
+                </p>
+              </div>
+            ) : (
+              <div className="flex h-full max-h-[calc(100%-80px)] flex-col justify-between">
+                <div className="h-full overflow-y-auto p-[2px]">
+                  <div className="grid grid-cols-2 gap-4 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-gray-300 sm:grid-cols-4 md:grid-cols-6 2xl:grid-cols-8">
+                    {filteredFiles.map((file) => (
+                      <div
+                        key={file.filename}
+                        className={`group relative cursor-pointer space-y-1 overflow-hidden rounded-lg bg-card p-2 ${
+                          selectedImage?.filename === file.filename
+                            ? 'bg-muted ring-1 ring-primary'
+                            : ''
+                        }`}
+                        onClick={() => setSelectedImage(file)}
+                      >
+                        <div className="aspect-square">
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img
+                            src={`${apiPath}${file.__outstatic.path}`}
+                            alt={file.alt}
+                            className="h-full w-full rounded-md object-cover object-center"
+                            width={288}
+                            height={288}
+                          />
+                          <DeleteMediaButton
+                            path={file.__outstatic.path}
+                            filename={file.filename}
+                            disabled={false}
+                            onComplete={() => refetch()}
+                            className="absolute right-2 top-2 bg-background/50 opacity-0 group-hover:opacity-100"
+                          />
+                        </div>
+                        <div className="relative pb-4">
+                          <div className="flex items-center justify-between">
+                            <h3 className="truncate text-sm font-semibold">
+                              {file.filename}
+                            </h3>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <DialogFooter className="flex flex-end px-[2px] pt-8">
+                  <Button variant="outline" onClick={() => onOpenChange(false)}>
+                    Cancel
+                  </Button>
+                  <Button
+                    disabled={!selectedImage}
+                    onClick={() => {
+                      onSelect(`${apiPath}${selectedImage?.__outstatic.path}`)
+                      onOpenChange(false)
+                    }}
+                  >
+                    Select
+                  </Button>
+                </DialogFooter>
+              </div>
+            )}
+          </MediaLibraryDropzone>
         )}
       </DialogContent>
     </Dialog>

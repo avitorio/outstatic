@@ -7,6 +7,7 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/shadcn/select'
+import { useId } from 'react'
 
 interface MediaLibraryHeaderProps {
   isUploading: boolean
@@ -31,6 +32,8 @@ export function MediaLibraryHeader({
   handleFileUpload,
   disableUpload = false
 }: MediaLibraryHeaderProps) {
+  const fileInputId = useId()
+
   return (
     <div className="flex items-center justify-between">
       <div className="flex h-12 items-center capitalize gap-4 xl:gap-12">
@@ -42,7 +45,7 @@ export function MediaLibraryHeader({
           disabled={isUploading || disableUpload}
         >
           {!disableUpload ? (
-            <label htmlFor="fileInput">
+            <label htmlFor={fileInputId}>
               {isUploading ? 'Uploading...' : 'Add Media'}
             </label>
           ) : (
@@ -50,12 +53,14 @@ export function MediaLibraryHeader({
           )}
         </Button>
         <input
-          id="fileInput"
+          id={fileInputId}
           type="file"
           accept="image/*"
           className="hidden"
+          disabled={disableUpload}
           onChange={(e) => {
             handleFileUpload(e.target.files)
+            e.currentTarget.value = ''
           }}
         />
       </div>

@@ -9,22 +9,13 @@ import { useCreateCommit } from './use-create-commit'
 import useOid from './use-oid'
 import { useGetMediaFiles } from './use-get-media-files'
 import { MediaSchema } from '../metadata/types'
-import { toast } from 'sonner'
 
-type SubmitDocumentProps = {
-  setLoading: (loading: boolean) => void
-  file: FileType
-}
-
-function useSubmitMedia({ setLoading, file }: SubmitDocumentProps) {
+function useSubmitMedia() {
   const createCommit = useCreateCommit()
   const {
     repoOwner,
     repoSlug,
     repoBranch,
-    ostContent,
-    contentPath,
-    basePath,
     repoMediaPath,
     session,
     mediaJsonPath
@@ -38,7 +29,6 @@ function useSubmitMedia({ setLoading, file }: SubmitDocumentProps) {
   const onSubmit = useCallback(
     async (file: FileType) => {
       const { filename, type, content: fileContents } = file
-      setLoading(true)
       try {
         const oid = await fetchOid()
         const owner = repoOwner || session?.user?.login || ''
@@ -102,36 +92,23 @@ function useSubmitMedia({ setLoading, file }: SubmitDocumentProps) {
         )
 
         const input = capi.createInput()
-
-        toast.promise(createCommit.mutateAsync(input), {
-          loading: 'Uploading media...',
-          success: async () => {
-            await refetchMedia()
-            return 'Media uploaded successfully'
-          },
-          error: 'Failed to upload media'
-        })
-        setLoading(false)
+        await createCommit.mutateAsync(input)
+        await refetchMedia()
       } catch (error) {
-        // TODO: Better error treatment
-        setLoading(false)
         console.error('Error submitting media:', error)
+        throw error
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [
       repoOwner,
       session,
-      setLoading,
-      file,
       createCommit,
       fetchOid,
-      contentPath,
-      ostContent,
       repoSlug,
       repoBranch,
-      basePath,
-      mediaJsonPath
+      mediaJsonPath,
+      refetchMedia
     ]
   )
 
