@@ -145,8 +145,8 @@ export default function EditSingleton({ slug: initialSlug }: { slug: string }) {
       publishedAt: newDate,
       content: parsedContent,
       author: {
-        name: data.author?.name || session?.user?.name || '',
-        picture: data.author?.picture || session?.user?.image || ''
+        name: data.author?.name ?? session?.user?.name ?? '',
+        picture: data.author?.picture ?? session?.user?.image ?? ''
       }
     }
 

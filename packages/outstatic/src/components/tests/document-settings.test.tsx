@@ -565,6 +565,61 @@ describe('<DocumentSettings />', () => {
     ).toBeInTheDocument()
   })
 
+  it('should preserve an empty author name instead of falling back to the session user', async () => {
+    const user = userEvent.setup()
+
+    render(
+      <TestWrapper>
+        <TestProviders.DocumentContext
+          value={{
+            document: {
+              ...documentExample,
+              author: { name: '', picture: 'https://jdoe.com/picture.jpg' }
+            }
+          }}
+        >
+          <TestProviders.Form>
+            <DocumentSettings {...defaultProps} />
+          </TestProviders.Form>
+        </TestProviders.DocumentContext>
+      </TestWrapper>
+    )
+
+    await user.click(screen.getByText('Author'))
+
+    expect(screen.getByLabelText('Name')).toHaveValue('')
+  })
+
+  it('should preserve an empty author avatar instead of falling back to the session user', async () => {
+    const user = userEvent.setup()
+
+    render(
+      <TestWrapper>
+        <TestProviders.DocumentContext
+          value={{
+            document: {
+              ...documentExample,
+              author: { name: 'Test Author', picture: '' }
+            }
+          }}
+        >
+          <TestProviders.Form>
+            <DocumentSettings {...defaultProps} />
+          </TestProviders.Form>
+        </TestProviders.DocumentContext>
+      </TestWrapper>
+    )
+
+    await user.click(screen.getByText('Author'))
+
+    expect(
+      screen.getByTestId('image-selection-author.picture')
+    ).toHaveTextContent('Image Selection:')
+    expect(
+      screen.getByTestId('image-selection-author.picture')
+    ).not.toHaveTextContent('https://example.com/avatar.jpg')
+  })
+
   it('should handle slug input with transliteration', async () => {
     const user = userEvent.setup()
 
