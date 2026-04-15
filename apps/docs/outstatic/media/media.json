@@ -1,6 +1,6 @@
 {
-  "commit": "d14aac79909eaf678f0456f5ee0d4dae965070c3",
-  "generated": "2026-04-15T15:36:29.700Z",
+  "commit": "5be92d68cce589b3b3a08cd11907cc9c32dd52a2",
+  "generated": "2026-04-15T15:38:43.400Z",
   "media": [
     {
       "__outstatic": {
@@ -103,6 +103,17 @@
     },
     {
       "__outstatic": {
+        "commit": "5be92d68cce589b3b3a08cd11907cc9c32dd52a2",
+        "hash": "489242152",
+        "path": "apps/docs/public/images/cleanshot-2026-04-14-at-18.06.03-2x-Q0Nj.png"
+      },
+      "alt": "",
+      "filename": "cleanshot-2026-04-14-at-18.06.03-2x-Q0Nj.png",
+      "publishedAt": "2026-04-15T15:38:43.398Z",
+      "type": "image"
+    },
+    {
+      "__outstatic": {
         "commit": "d14aac79909eaf678f0456f5ee0d4dae965070c3",
         "hash": "489242152",
         "path": "apps/docs/public/images/cleanshot-2026-04-14-at-18.06.03-2x-U5Nz.png"
@@ -110,6 +121,17 @@
       "alt": "",
       "filename": "cleanshot-2026-04-14-at-18.06.03-2x-U5Nz.png",
       "publishedAt": "2026-04-15T15:36:29.698Z",
+      "type": "image"
+    },
+    {
+      "__outstatic": {
+        "commit": "5be92d68cce589b3b3a08cd11907cc9c32dd52a2",
+        "hash": "2983883210",
+        "path": "apps/docs/public/images/cleanshot-2026-04-15-at-10.37.14-2x-QyMT.png"
+      },
+      "alt": "",
+      "filename": "cleanshot-2026-04-15-at-10.37.14-2x-QyMT.png",
+      "publishedAt": "2026-04-15T15:38:43.399Z",
       "type": "image"
     },
     {
@@ -132,6 +154,17 @@
       "alt": "",
       "filename": "cleanshot-2026-04-15-at-10.44.02-2x-Y0OD.png",
       "publishedAt": "2026-04-15T15:36:29.699Z",
+      "type": "image"
+    },
+    {
+      "__outstatic": {
+        "commit": "5be92d68cce589b3b3a08cd11907cc9c32dd52a2",
+        "hash": "3330638653",
+        "path": "apps/docs/public/images/cleanshot-2026-04-15-at-10.44.02-2x-YyMj.png"
+      },
+      "alt": "",
+      "filename": "cleanshot-2026-04-15-at-10.44.02-2x-YyMj.png",
+      "publishedAt": "2026-04-15T15:38:43.399Z",
       "type": "image"
     },
     {

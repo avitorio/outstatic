@@ -1,6 +1,6 @@
 {
-  "commit": "d14aac79909eaf678f0456f5ee0d4dae965070c3",
-  "generated": "2026-04-15T15:36:29.700Z",
+  "commit": "5be92d68cce589b3b3a08cd11907cc9c32dd52a2",
+  "generated": "2026-04-15T15:38:43.400Z",
   "metadata": [
     {
       "__outstatic": {
@@ -597,9 +597,9 @@
     },
     {
       "__outstatic": {
-        "commit": "d14aac79909eaf678f0456f5ee0d4dae965070c3",
-        "hash": "3999766274",
-        "path": "/outstatic/content/docs/setting-up-your-api-key.mdx"
+        "commit": "5be92d68cce589b3b3a08cd11907cc9c32dd52a2",
+        "hash": "1678663613",
+        "path": "/outstatic/content/docs/deploy-an-outstatic-project-on-vercel.mdx"
       },
       "author": {
         "name": "Andre Vitorio",
@@ -607,9 +607,9 @@
       },
       "collection": "docs",
       "publishedAt": "2026-04-14T20:40:37.144Z",
-      "slug": "setting-up-your-api-key",
+      "slug": "deploy-an-outstatic-project-on-vercel",
       "status": "published",
-      "title": "Cloning and setting up an Outstatic project on Vercel"
+      "title": "Deploy an Outstatic project on Vercel"
     }
   ]
 }
