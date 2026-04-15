@@ -1,6 +1,6 @@
 {
-  "commit": "799763516be1b59edb26a46c68a8e73930d0c3d8",
-  "generated": "2026-04-15T15:46:51.735Z",
+  "commit": "2cb029d9e7efbbce56b6065de9bc6ccdc5e0b077",
+  "generated": "2026-04-15T15:54:32.540Z",
   "media": [
     {
       "__outstatic": {
@@ -114,6 +114,17 @@
     },
     {
       "__outstatic": {
+        "commit": "2cb029d9e7efbbce56b6065de9bc6ccdc5e0b077",
+        "hash": "489242152",
+        "path": "apps/docs/public/images/cleanshot-2026-04-14-at-18.06.03-2x-U2Nj.png"
+      },
+      "alt": "",
+      "filename": "cleanshot-2026-04-14-at-18.06.03-2x-U2Nj.png",
+      "publishedAt": "2026-04-15T15:54:32.538Z",
+      "type": "image"
+    },
+    {
+      "__outstatic": {
         "commit": "4928be275ab7b4c4f9dc6ab749f64472f34c9662",
         "hash": "489242152",
         "path": "apps/docs/public/images/cleanshot-2026-04-14-at-18.06.03-2x-UzMj.png"
@@ -158,6 +169,17 @@
     },
     {
       "__outstatic": {
+        "commit": "2cb029d9e7efbbce56b6065de9bc6ccdc5e0b077",
+        "hash": "2983883210",
+        "path": "apps/docs/public/images/cleanshot-2026-04-15-at-10.37.14-2x-gyMj.png"
+      },
+      "alt": "",
+      "filename": "cleanshot-2026-04-15-at-10.37.14-2x-gyMj.png",
+      "publishedAt": "2026-04-15T15:54:32.538Z",
+      "type": "image"
+    },
+    {
+      "__outstatic": {
         "commit": "435cdd21c56c8eace30c2646d04d862d97cf7f0b",
         "hash": "2983883210",
         "path": "apps/docs/public/images/cleanshot-2026-04-15-at-10.37.14-2x-k3Nj.png"
@@ -198,6 +220,17 @@
       "alt": "",
       "filename": "cleanshot-2026-04-15-at-10.44.02-2x-Y2NT.png",
       "publishedAt": "2026-04-15T15:46:44.883Z",
+      "type": "image"
+    },
+    {
+      "__outstatic": {
+        "commit": "2cb029d9e7efbbce56b6065de9bc6ccdc5e0b077",
+        "hash": "3330638653",
+        "path": "apps/docs/public/images/cleanshot-2026-04-15-at-10.44.02-2x-cxNj.png"
+      },
+      "alt": "",
+      "filename": "cleanshot-2026-04-15-at-10.44.02-2x-cxNj.png",
+      "publishedAt": "2026-04-15T15:54:32.539Z",
       "type": "image"
     },
     {

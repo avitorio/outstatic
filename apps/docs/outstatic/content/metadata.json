@@ -1,6 +1,6 @@
 {
-  "commit": "799763516be1b59edb26a46c68a8e73930d0c3d8",
-  "generated": "2026-04-15T15:46:51.735Z",
+  "commit": "2cb029d9e7efbbce56b6065de9bc6ccdc5e0b077",
+  "generated": "2026-04-15T15:54:32.540Z",
   "metadata": [
     {
       "__outstatic": {
@@ -597,8 +597,8 @@
     },
     {
       "__outstatic": {
-        "commit": "799763516be1b59edb26a46c68a8e73930d0c3d8",
-        "hash": "33517329",
+        "commit": "2cb029d9e7efbbce56b6065de9bc6ccdc5e0b077",
+        "hash": "2231060444",
         "path": "/outstatic/content/docs/generate-api-keys-for-vercel-projects.mdx"
       },
       "author": {
