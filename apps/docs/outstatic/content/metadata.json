@@ -1,6 +1,6 @@
 {
-  "commit": "4928be275ab7b4c4f9dc6ab749f64472f34c9662",
-  "generated": "2026-04-15T15:42:38.747Z",
+  "commit": "37dd38277ee84bf4851f4c6e346432bb1e5c9cf9",
+  "generated": "2026-04-15T15:46:44.884Z",
   "metadata": [
     {
       "__outstatic": {
@@ -597,8 +597,8 @@
     },
     {
       "__outstatic": {
-        "commit": "4928be275ab7b4c4f9dc6ab749f64472f34c9662",
-        "hash": "1461076564",
+        "commit": "37dd38277ee84bf4851f4c6e346432bb1e5c9cf9",
+        "hash": "996800360",
         "path": "/outstatic/content/docs/deploy-an-outstatic-project-on-vercel.mdx"
       },
       "author": {
@@ -609,7 +609,7 @@
       "publishedAt": "2026-04-14T20:40:37.144Z",
       "slug": "deploy-an-outstatic-project-on-vercel",
       "status": "published",
-      "title": "Deploy an Outstatic project on Vercel"
+      "title": "Generate API keys for Vercel projects"
     }
   ]
 }
