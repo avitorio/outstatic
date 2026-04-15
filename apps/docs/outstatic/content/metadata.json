@@ -1,6 +1,6 @@
 {
-  "commit": "37dd38277ee84bf4851f4c6e346432bb1e5c9cf9",
-  "generated": "2026-04-15T15:46:44.884Z",
+  "commit": "799763516be1b59edb26a46c68a8e73930d0c3d8",
+  "generated": "2026-04-15T15:46:51.735Z",
   "metadata": [
     {
       "__outstatic": {
@@ -597,9 +597,9 @@
     },
     {
       "__outstatic": {
-        "commit": "37dd38277ee84bf4851f4c6e346432bb1e5c9cf9",
-        "hash": "996800360",
-        "path": "/outstatic/content/docs/deploy-an-outstatic-project-on-vercel.mdx"
+        "commit": "799763516be1b59edb26a46c68a8e73930d0c3d8",
+        "hash": "33517329",
+        "path": "/outstatic/content/docs/generate-api-keys-for-vercel-projects.mdx"
       },
       "author": {
         "name": "Andre Vitorio",
@@ -607,7 +607,7 @@
       },
       "collection": "docs",
       "publishedAt": "2026-04-14T20:40:37.144Z",
-      "slug": "deploy-an-outstatic-project-on-vercel",
+      "slug": "generate-api-keys-for-vercel-projects",
       "status": "published",
       "title": "Generate API keys for Vercel projects"
     }
