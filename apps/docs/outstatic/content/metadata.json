@@ -1,6 +1,6 @@
 {
-  "commit": "435cdd21c56c8eace30c2646d04d862d97cf7f0b",
-  "generated": "2026-04-15T15:41:19.375Z",
+  "commit": "4928be275ab7b4c4f9dc6ab749f64472f34c9662",
+  "generated": "2026-04-15T15:42:38.747Z",
   "metadata": [
     {
       "__outstatic": {
@@ -597,8 +597,8 @@
     },
     {
       "__outstatic": {
-        "commit": "435cdd21c56c8eace30c2646d04d862d97cf7f0b",
-        "hash": "4000702776",
+        "commit": "4928be275ab7b4c4f9dc6ab749f64472f34c9662",
+        "hash": "1461076564",
         "path": "/outstatic/content/docs/deploy-an-outstatic-project-on-vercel.mdx"
       },
       "author": {
