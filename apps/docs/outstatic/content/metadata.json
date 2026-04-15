@@ -1,6 +1,6 @@
 {
-  "commit": "435cdd21c56c8eace30c2646d04d862d97cf7f0b",
-  "generated": "2026-04-14T21:00:45.564Z",
+  "commit": "d14aac79909eaf678f0456f5ee0d4dae965070c3",
+  "generated": "2026-04-15T15:36:29.700Z",
   "metadata": [
     {
       "__outstatic": {
@@ -597,8 +597,8 @@
     },
     {
       "__outstatic": {
-        "commit": "435cdd21c56c8eace30c2646d04d862d97cf7f0b",
-        "hash": "3843126510",
+        "commit": "d14aac79909eaf678f0456f5ee0d4dae965070c3",
+        "hash": "3999766274",
         "path": "/outstatic/content/docs/setting-up-your-api-key.mdx"
       },
       "author": {
@@ -608,8 +608,8 @@
       "collection": "docs",
       "publishedAt": "2026-04-14T20:40:37.144Z",
       "slug": "setting-up-your-api-key",
-      "status": "draft",
-      "title": "Setting up your API key"
+      "status": "published",
+      "title": "Cloning and setting up an Outstatic project on Vercel"
     }
   ]
 }

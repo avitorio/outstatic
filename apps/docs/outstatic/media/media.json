@@ -1,6 +1,6 @@
 {
-  "commit": "2b28c51a8ac794b1ec3a3af9d5e247f78ade969e",
-  "generated": "2026-02-21T00:19:46.353Z",
+  "commit": "d14aac79909eaf678f0456f5ee0d4dae965070c3",
+  "generated": "2026-04-15T15:36:29.700Z",
   "media": [
     {
       "__outstatic": {
@@ -99,6 +99,39 @@
       "alt": "",
       "filename": "cleanshot-2024-11-04-at-22.34.52-2x-QyOT.png",
       "publishedAt": "2024-11-05T01:36:06.867Z",
+      "type": "image"
+    },
+    {
+      "__outstatic": {
+        "commit": "d14aac79909eaf678f0456f5ee0d4dae965070c3",
+        "hash": "489242152",
+        "path": "apps/docs/public/images/cleanshot-2026-04-14-at-18.06.03-2x-U5Nz.png"
+      },
+      "alt": "",
+      "filename": "cleanshot-2026-04-14-at-18.06.03-2x-U5Nz.png",
+      "publishedAt": "2026-04-15T15:36:29.698Z",
+      "type": "image"
+    },
+    {
+      "__outstatic": {
+        "commit": "d14aac79909eaf678f0456f5ee0d4dae965070c3",
+        "hash": "2983883210",
+        "path": "apps/docs/public/images/cleanshot-2026-04-15-at-10.37.14-2x-cxMz.png"
+      },
+      "alt": "",
+      "filename": "cleanshot-2026-04-15-at-10.37.14-2x-cxMz.png",
+      "publishedAt": "2026-04-15T15:36:29.699Z",
+      "type": "image"
+    },
+    {
+      "__outstatic": {
+        "commit": "d14aac79909eaf678f0456f5ee0d4dae965070c3",
+        "hash": "3330638653",
+        "path": "apps/docs/public/images/cleanshot-2026-04-15-at-10.44.02-2x-Y0OD.png"
+      },
+      "alt": "",
+      "filename": "cleanshot-2026-04-15-at-10.44.02-2x-Y0OD.png",
+      "publishedAt": "2026-04-15T15:36:29.699Z",
       "type": "image"
     },
     {
