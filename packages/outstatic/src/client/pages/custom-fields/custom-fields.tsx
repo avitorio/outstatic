@@ -1,5 +1,5 @@
 import { capitalCase } from 'change-case'
-import { useOutstatic } from '@/utils/hooks/use-outstatic'
+import { usePermissions } from '@/utils/hooks/use-permissions'
 import { FieldManagementPage } from '../_components/field-management-page'
 
 type CustomFieldsProps = {
@@ -8,7 +8,7 @@ type CustomFieldsProps = {
 }
 
 export default function CustomFields({ collection, title }: CustomFieldsProps) {
-  const { session } = useOutstatic()
+  const { canManageCollections } = usePermissions()
 
   return (
     <FieldManagementPage
@@ -18,7 +18,7 @@ export default function CustomFields({ collection, title }: CustomFieldsProps) {
         title: title || capitalCase(collection)
       }}
       emptyStateSubject="collection"
-      canManage={!!session?.user?.permissions?.includes('collections.manage')}
+      canManage={canManageCollections}
     />
   )
 }

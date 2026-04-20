@@ -1,26 +1,24 @@
 'use client'
 
 import { AdminLayout } from '@/components/admin-layout'
-import { API_MEDIA_PATH } from '@/utils/constants'
-import { useOutstatic } from '@/utils/hooks/use-outstatic'
-import { useGetMediaFiles } from '@/utils/hooks/use-get-media-files'
-import { useState, useMemo } from 'react'
-import { toast } from 'sonner'
-import useSubmitMedia from '@/utils/hooks/use-submit-media'
-import { FileType } from '@/types'
 import { DeleteMediaButton } from '@/components/delete-media-button'
-import { MediaLibraryHeader } from '@/components/ui/outstatic/media-library-header'
-import { FileQuestion, ImageOff } from 'lucide-react'
-import { SpinnerIcon } from '@/components/ui/outstatic/spinner-icon'
 import { MediaSettings } from '@/client/pages/settings/_components/media-settings'
+import { MediaLibraryDropzone } from '@/components/ui/outstatic/media-library-dropzone'
+import { MediaLibraryHeader } from '@/components/ui/outstatic/media-library-header'
+import { SpinnerIcon } from '@/components/ui/outstatic/spinner-icon'
 import {
   Card,
-  CardHeader,
-  CardTitle,
+  CardContent,
   CardDescription,
-  CardContent
+  CardHeader,
+  CardTitle
 } from '@/components/ui/shadcn/card'
-import { stringifyError } from '@/utils/errors/stringify-error'
+import { API_MEDIA_PATH } from '@/utils/constants'
+import { useGetMediaFiles } from '@/utils/hooks/use-get-media-files'
+import { useMediaLibraryUpload } from '@/utils/hooks/use-media-library-upload'
+import { useOutstatic } from '@/utils/hooks/use-outstatic'
+import { FileQuestion, ImageOff } from 'lucide-react'
+import { useMemo, useState } from 'react'
 
 export default function MediaLibrary() {
   const [searchTerm, setSearchTerm] = useState('')
@@ -38,6 +36,8 @@ export default function MediaLibrary() {
   const [notFoundFiles, setNotFoundFiles] = useState<Set<string>>(new Set())
   const [loadingImages, setLoadingImages] = useState<Set<string>>(new Set())
   const { data, isLoading, refetch: refetchMedia } = useGetMediaFiles()
+  const { handleFileUpload, isUploading } = useMediaLibraryUpload()
+
   const filteredFiles = useMemo(() => {
     if (!data) return []
 
@@ -49,6 +49,7 @@ export default function MediaLibrary() {
         ) {
           return true
         }
+
         return false
       })
       .sort((a, b) => {
@@ -58,69 +59,13 @@ export default function MediaLibrary() {
                 new Date(b.publishedAt).getTime()
             : new Date(b.publishedAt).getTime() -
                 new Date(a.publishedAt).getTime()
-        } else {
-          return sortDirection === 'asc'
-            ? a.filename.localeCompare(b.filename)
-            : b.filename.localeCompare(a.filename)
         }
+
+        return sortDirection === 'asc'
+          ? a.filename.localeCompare(b.filename)
+          : b.filename.localeCompare(a.filename)
       })
   }, [data, searchTerm, sortBy, sortDirection])
-
-  const [isUploading, setIsUploading] = useState(false)
-
-  const submitMedia = useSubmitMedia({
-    setLoading: setIsUploading,
-    file: {} as FileType
-  })
-
-  const handleFileUpload = async (files: FileList | null) => {
-    if (!files || files.length === 0) {
-      return
-    }
-
-    setIsUploading(true)
-
-    const file = files[0]
-    const reader = new FileReader()
-
-    reader.onload = async (e) => {
-      if (e.target && e.target.result) {
-        const fileContents = e.target.result as string
-        const fileType: FileType = {
-          filename: file.name,
-          type: 'image',
-          content: fileContents.split(',')[1] // Remove the data URL prefix
-        }
-
-        try {
-          await submitMedia(fileType)
-        } catch (error) {
-          console.error('Failed to upload media', error)
-          const errorToast = toast.error(`Failed to upload ${file.name}.`, {
-            action: {
-              label: 'Copy Logs',
-              onClick: () => {
-                navigator.clipboard.writeText(
-                  `File: ${JSON.stringify(
-                    { ...fileType, content: '...' },
-                    null,
-                    '  '
-                  )}\n\nError: ${stringifyError(error)}`
-                )
-                toast.message('Logs copied to clipboard', {
-                  id: errorToast
-                })
-              }
-            }
-          })
-        }
-      }
-    }
-
-    reader.readAsDataURL(file)
-
-    setIsUploading(false)
-  }
 
   const handleImageLoad = (path: string) => {
     setLoadingImages((prev) => {
@@ -134,12 +79,13 @@ export default function MediaLibrary() {
     if (!notFoundFiles.has(path)) {
       setNotFoundFiles((prev) => new Set(prev).add(path))
     }
-    handleImageLoad(path) // Remove from loading state
+
+    handleImageLoad(path)
   }
 
   return (
     <AdminLayout title="Media Library" className="pt-0 md:pt-0">
-      <div className="pb-6 pt-10 sticky top-0 z-10 bg-background">
+      <div className="sticky top-0 z-10 bg-background pb-6 pt-10">
         <MediaLibraryHeader
           isUploading={isUploading}
           searchTerm={searchTerm}
@@ -167,74 +113,79 @@ export default function MediaLibrary() {
             </CardContent>
           </Card>
         </div>
-      ) : isLoading && !data ? (
-        <div className="flex items-center justify-center h-[80%]">
-          <SpinnerIcon size="2xl" />
-        </div>
-      ) : filteredFiles.length === 0 ? (
-        <div className="flex flex-col items-center justify-center h-[80%] text-gray-500">
-          <FileQuestion className="w-16 h-16 mb-4" />
-          <p>No media files available. Upload some files to get started!</p>
-        </div>
       ) : (
-        <div
-          className="grid gap-4 grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-8 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent"
-          onDragOver={(e) => e.preventDefault()}
-          onDrop={(e) => {
-            e.preventDefault()
-            handleFileUpload(e.dataTransfer.files)
-          }}
+        <MediaLibraryDropzone
+          className="min-h-[50vh] h-[calc(100vh-240px)]"
+          disabled={isUploading}
+          onFileDrop={handleFileUpload}
         >
-          {filteredFiles.map((file) => (
-            <div
-              key={file.__outstatic.path}
-              className={`space-y-1 bg-card rounded-lg overflow-hidden cursor-pointer group relative`}
-            >
-              <div className="aspect-square relative flex items-center justify-center">
-                {!notFoundFiles.has(file.__outstatic.path) && (
-                  <>
-                    {loadingImages.has(file.__outstatic.path) && (
-                      <div className="absolute inset-0 flex items-center justify-center bg-gray-50 rounded-md">
-                        <SpinnerIcon />
+          {isLoading && !data ? (
+            <div className="flex min-h-[50vh] items-center justify-center">
+              <SpinnerIcon size="2xl" />
+            </div>
+          ) : filteredFiles.length === 0 ? (
+            <div className="flex min-h-[50vh] flex-col items-center justify-center text-gray-500">
+              <FileQuestion className="mb-4 h-16 w-16" />
+              <p>
+                No media files available. Upload some files or drop an image
+                here to get started!
+              </p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 gap-4 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-gray-300 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-8">
+              {filteredFiles.map((file) => (
+                <div
+                  key={file.__outstatic.path}
+                  className="group relative space-y-1 overflow-hidden rounded-lg bg-card"
+                >
+                  <div className="relative flex aspect-square items-center justify-center">
+                    {!notFoundFiles.has(file.__outstatic.path) ? (
+                      <>
+                        {loadingImages.has(file.__outstatic.path) ? (
+                          <div className="absolute inset-0 flex items-center justify-center rounded-md bg-gray-50">
+                            <SpinnerIcon />
+                          </div>
+                        ) : null}
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={`${apiPath}/${file.__outstatic.path}`}
+                          alt={file.alt}
+                          className="h-full w-full rounded-md bg-slate-50 object-cover object-center"
+                          width={288}
+                          height={288}
+                          onLoad={() => handleImageLoad(file.__outstatic.path)}
+                          onError={() =>
+                            handleImageError(file.__outstatic.path)
+                          }
+                          loading="lazy"
+                        />
+                      </>
+                    ) : (
+                      <div className="absolute inset-0 flex items-center justify-center rounded-md bg-red-100/50">
+                        <ImageOff className="h-12 w-12 text-red-500" />
                       </div>
                     )}
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={`${apiPath}/${file.__outstatic.path}`}
-                      alt={file.alt}
-                      className="w-full h-full object-cover object-center rounded-md bg-slate-50"
-                      width={288}
-                      height={288}
-                      onLoad={() => handleImageLoad(file.__outstatic.path)}
-                      onError={() => handleImageError(file.__outstatic.path)}
-                      loading="lazy"
+                    <DeleteMediaButton
+                      path={file.__outstatic.path}
+                      filename={file.filename}
+                      disabled={isUploading}
+                      onComplete={async () => await refetchMedia()}
+                      className="absolute right-2 top-2 bg-background/50 opacity-0 group-hover:opacity-100"
+                      notFound={notFoundFiles.has(file.__outstatic.path)}
                     />
-                  </>
-                )}
-                {notFoundFiles.has(file.__outstatic.path) && (
-                  <div className="absolute inset-0 flex items-center justify-center bg-red-100/50 rounded-md">
-                    <ImageOff className="w-12 h-12 text-red-500" />
                   </div>
-                )}
-                <DeleteMediaButton
-                  path={file.__outstatic.path}
-                  filename={file.filename}
-                  disabled={false}
-                  onComplete={async () => await refetchMedia()}
-                  className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 bg-background/50"
-                  notFound={notFoundFiles.has(file.__outstatic.path)}
-                />
-              </div>
-              <div className="pb-4 relative">
-                <div className="flex items-center justify-between">
-                  <h3 className="font-semibold text-sm truncate">
-                    {file.filename}
-                  </h3>
+                  <div className="relative pb-4">
+                    <div className="flex items-center justify-between">
+                      <h3 className="truncate text-sm font-semibold">
+                        {file.filename}
+                      </h3>
+                    </div>
+                  </div>
                 </div>
-              </div>
+              ))}
             </div>
-          ))}
-        </div>
+          )}
+        </MediaLibraryDropzone>
       )}
     </AdminLayout>
   )

@@ -20,6 +20,7 @@ import { useCollections } from '@/utils/hooks/use-collections'
 import { useCreateCommit } from '@/utils/hooks/use-create-commit'
 import { useGetDocuments } from '@/utils/hooks/use-get-documents'
 import useOid from '@/utils/hooks/use-oid'
+import { usePermissions } from '@/utils/hooks/use-permissions'
 import { useOutstatic } from '@/utils/hooks/use-outstatic'
 import { useRebuildMetadata } from '@/utils/hooks/use-rebuild-metadata'
 import { stringifyError } from '@/utils/errors/stringify-error'
@@ -71,6 +72,7 @@ export default function NewCollectionModal({
     repoOwner,
     dashboardRoute
   } = useOutstatic()
+  const { canManageCollections } = usePermissions()
 
   const router = useRouter()
   const fetchOid = useOid()
@@ -247,6 +249,16 @@ export default function NewCollectionModal({
 
     return () => subscription.unsubscribe()
   }, [form, setHasChanges])
+
+  useEffect(() => {
+    if (!canManageCollections && open) {
+      onOpenChange(false)
+    }
+  }, [canManageCollections, onOpenChange, open])
+
+  if (!canManageCollections) {
+    return null
+  }
 
   return (
     <FormProvider {...form}>

@@ -9,12 +9,13 @@ import {
   DialogTitle
 } from '@/components/ui/shadcn/dialog'
 import { Label } from '@/components/ui/shadcn/label'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { createCommitApi } from '@/utils/create-commit-api'
 import { hashFromUrl } from '@/utils/hash-from-url'
 import { useCreateCommit } from '@/utils/hooks/use-create-commit'
 import { useGetMetadata } from '@/utils/hooks/use-get-metadata'
 import useOid from '@/utils/hooks/use-oid'
+import { usePermissions } from '@/utils/hooks/use-permissions'
 import { useOutstatic } from '@/utils/hooks/use-outstatic'
 import { stringifyMetadata } from '@/utils/metadata/stringify'
 import { toast } from 'sonner'
@@ -22,7 +23,7 @@ import { CollectionType, useCollections } from '@/utils/hooks/use-collections'
 
 type DeleteCollectionModalProps = {
   setShowDeleteModal: (value: boolean) => void
-  setSelectedCollection: (value: CollectionType | null) => void
+  setSelectedCollection?: (value: CollectionType | null) => void
   collection: CollectionType
 }
 
@@ -33,6 +34,7 @@ function DeleteCollectionModal({
 }: DeleteCollectionModalProps) {
   const { repoOwner, session, repoSlug, repoBranch, ostContent } =
     useOutstatic()
+  const { canManageCollections } = usePermissions()
   const [deleting, setDeleting] = useState(false)
   const [keepFiles, setKeepFiles] = useState(false)
   const fetchOid = useOid()
@@ -43,6 +45,13 @@ function DeleteCollectionModal({
   })
 
   const mutation = useCreateCommit()
+
+  useEffect(() => {
+    if (!canManageCollections) {
+      setShowDeleteModal(false)
+      setSelectedCollection?.(null)
+    }
+  }, [canManageCollections, setSelectedCollection, setShowDeleteModal])
 
   const deleteCollection = async (collection: CollectionType) => {
     const [
@@ -110,13 +119,17 @@ function DeleteCollectionModal({
     } catch (error) {}
   }
 
+  if (!canManageCollections) {
+    return null
+  }
+
   return (
     <Dialog
       open={true}
       onOpenChange={(open) => {
         if (!open) {
           setShowDeleteModal(false)
-          setSelectedCollection(null)
+          setSelectedCollection?.(null)
         }
       }}
     >
@@ -151,7 +164,7 @@ function DeleteCollectionModal({
             variant="outline"
             onClick={() => {
               setShowDeleteModal(false)
-              setSelectedCollection(null)
+              setSelectedCollection?.(null)
             }}
           >
             Cancel

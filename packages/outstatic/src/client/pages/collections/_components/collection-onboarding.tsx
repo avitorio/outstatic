@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/shadcn/button'
 import { Card, CardContent } from '@/components/ui/shadcn/card'
+import { usePermissions } from '@/utils/hooks/use-permissions'
 import { useState } from 'react'
 import NewCollectionModal from './new-collection-modal'
 import { Folder, Info, ArrowRight } from 'lucide-react'
@@ -12,6 +13,7 @@ import {
 
 export default function CollectionOnboarding() {
   const [showNewCollectionModal, setShowNewCollectionModal] = useState(false)
+  const { canManageCollections } = usePermissions()
 
   return (
     <>
@@ -75,20 +77,26 @@ export default function CollectionOnboarding() {
                 </li>
               </ul>
 
-              {/* Primary action */}
-              <Button
-                className="gap-2"
-                onClick={() => setShowNewCollectionModal(true)}
-              >
-                New Collection
-                <ArrowRight className="h-4 w-4" />
-              </Button>
+              {canManageCollections ? (
+                <Button
+                  className="gap-2"
+                  onClick={() => setShowNewCollectionModal(true)}
+                >
+                  New Collection
+                  <ArrowRight className="h-4 w-4" />
+                </Button>
+              ) : (
+                <p className="text-sm text-muted-foreground">
+                  You need permission to manage collections before you can
+                  create one.
+                </p>
+              )}
             </div>
           </div>
         </CardContent>
       </Card>
 
-      {showNewCollectionModal && (
+      {canManageCollections && showNewCollectionModal && (
         <NewCollectionModal
           open={showNewCollectionModal}
           onOpenChange={setShowNewCollectionModal}

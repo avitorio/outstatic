@@ -1,6 +1,8 @@
 import { DeleteDocumentButton } from '@/components/delete-document-button'
 import { TestWrapper } from '@/utils/tests/test-wrapper'
-import { fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
+
+const mutateAsyncMock = jest.fn()
 
 // Mock the useOstSession hook
 jest.mock('@/utils/auth/hooks', () => ({
@@ -34,7 +36,7 @@ jest.mock('@/utils/hooks/use-get-metadata', () => ({
 
 jest.mock('@/utils/hooks/use-create-commit', () => ({
   useCreateCommit: () => ({
-    mutateAsync: async () => Promise.resolve(true)
+    mutateAsync: mutateAsyncMock
   })
 }))
 
@@ -67,6 +69,14 @@ jest.mock('@/utils/create-commit-api', () => ({
 
 test('DeleteDocumentButton renders and operates correctly', async () => {
   const onComplete = jest.fn()
+  let resolveMutation!: (value: boolean) => void
+
+  mutateAsyncMock.mockImplementation(
+    () =>
+      new Promise<boolean>((resolve) => {
+        resolveMutation = resolve
+      })
+  )
 
   render(
     <TestWrapper>
@@ -95,7 +105,13 @@ test('DeleteDocumentButton renders and operates correctly', async () => {
   // Simulate clicking the delete button in the modal
   fireEvent.click(screen.getByText('Delete'))
 
-  // // Check if onComplete is called
+  expect(onComplete).not.toHaveBeenCalled()
+  await waitFor(() => expect(mutateAsyncMock).toHaveBeenCalled())
+
+  await act(async () => {
+    resolveMutation(true)
+  })
+
   await waitFor(() => expect(onComplete).toHaveBeenCalled())
 
   // Simulate clicking the delete button

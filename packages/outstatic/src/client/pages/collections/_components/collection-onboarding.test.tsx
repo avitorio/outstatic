@@ -1,6 +1,15 @@
 import { render, screen, fireEvent } from '@testing-library/react'
 import CollectionOnboarding from './collection-onboarding'
+import { useOutstatic } from '@/utils/hooks/use-outstatic'
 import { TestWrapper } from '@/utils/tests/test-wrapper'
+
+jest.mock('@/utils/hooks/use-outstatic')
+jest.mock('./new-collection-modal', () => ({
+  __esModule: true,
+  default: function MockNewCollectionModal() {
+    return <div role="dialog">New collection modal</div>
+  }
+}))
 
 // Mock useRouter
 jest.mock('next/navigation', () => ({
@@ -23,6 +32,16 @@ jest.mock('change-case', () => ({
 }))
 
 describe('CollectionOnboarding', () => {
+  beforeEach(() => {
+    ;(useOutstatic as jest.Mock).mockReturnValue({
+      session: {
+        user: {
+          permissions: ['collections.manage', 'content.manage']
+        }
+      }
+    })
+  })
+
   it('renders the collection card', () => {
     render(
       <TestWrapper>
@@ -77,6 +96,31 @@ describe('CollectionOnboarding', () => {
 
     expect(
       screen.getByRole('button', { name: /New Collection/i })
+    ).toBeInTheDocument()
+  })
+
+  it('hides the create action when the user cannot manage collections', () => {
+    ;(useOutstatic as jest.Mock).mockReturnValue({
+      session: {
+        user: {
+          permissions: ['content.manage']
+        }
+      }
+    })
+
+    render(
+      <TestWrapper>
+        <CollectionOnboarding />
+      </TestWrapper>
+    )
+
+    expect(
+      screen.queryByRole('button', { name: /New Collection/i })
+    ).not.toBeInTheDocument()
+    expect(
+      screen.getByText(
+        'You need permission to manage collections before you can create one.'
+      )
     ).toBeInTheDocument()
   })
 

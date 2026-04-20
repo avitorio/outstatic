@@ -126,6 +126,42 @@ describe('Collections', () => {
     expect(screen.getByText('Recommended')).toBeInTheDocument()
   })
 
+  it('hides collection creation actions when collections.manage is missing', async () => {
+    ;(useOutstatic as jest.Mock).mockReturnValue({
+      dashboardRoute: '/outstatic',
+      session: {
+        user: {
+          name: 'Test User',
+          login: 'testuser',
+          email: 'test@example.com',
+          image: 'https://example.com/avatar.jpg',
+          permissions: ['content.manage']
+        },
+        access_token: 'mock-access-token',
+        expires: new Date(Date.now() + 3600000)
+      }
+    })
+    ;(useCollections as jest.Mock).mockReturnValue({
+      isPending: false,
+      data: []
+    })
+
+    render(
+      <TestWrapper>
+        <Collections />
+      </TestWrapper>
+    )
+
+    expect(
+      screen.queryByRole('button', { name: 'New Collection' })
+    ).not.toBeInTheDocument()
+    expect(
+      await screen.findByText(
+        'You need permission to manage collections before you can create one.'
+      )
+    ).toBeInTheDocument()
+  })
+
   it('renders collections list correctly', () => {
     ;(useCollections as jest.Mock).mockReturnValue({
       isPending: false,

@@ -49,6 +49,7 @@ import { DateTimePickerForm } from '@/components/ui/outstatic/date-time-picker-f
 import { CustomFieldRenderer } from '@/components/utils/custom-field-renderer'
 import { cn } from '@/utils/ui'
 import type { FieldSchemaTarget } from '@/utils/hooks/field-schema'
+import { usePermissions } from '@/utils/hooks/use-permissions'
 
 type DocumentSettingsProps = {
   saveDocument: () => void
@@ -88,19 +89,30 @@ export const DocumentSettings = ({
   const [fieldTitle, setFieldTitle] = useState('')
 
   const { dashboardRoute, session } = useOutstatic()
+  const { canManageCollections } = usePermissions()
 
   const [isOpen, setIsOpen] = useState(false)
 
   useEffect(() => {
     reset((prev) => ({
       ...prev,
-      status: prev.status || 'draft',
+      status: prev.status || document.status || 'draft',
       author: {
-        name: prev.author?.name || session?.user?.name,
-        picture: prev.author?.picture || session?.user?.image
+        name: prev.author?.name ?? document.author?.name ?? session?.user?.name,
+        picture:
+          prev.author?.picture ??
+          document.author?.picture ??
+          session?.user?.image
       }
     }))
-  }, [session?.user?.name, session?.user?.image, reset])
+  }, [
+    document.author?.name,
+    document.author?.picture,
+    document.status,
+    session?.user?.name,
+    session?.user?.image,
+    reset
+  ])
 
   const onModalChange = (value: boolean) => {
     if (!value) {
@@ -305,7 +317,7 @@ export const DocumentSettings = ({
                 <FormField
                   control={control}
                   name="author.name"
-                  defaultValue={document.author?.name || session?.user?.name}
+                  defaultValue={document.author?.name ?? session?.user?.name}
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Name</FormLabel>
@@ -321,7 +333,7 @@ export const DocumentSettings = ({
                   <DocumentSettingsImageSelection
                     id="author.picture"
                     defaultValue={
-                      document.author?.picture || session?.user?.image
+                      document.author?.picture ?? session?.user?.image
                     }
                   />
                 </div>
@@ -384,7 +396,7 @@ export const DocumentSettings = ({
                 errors={errors}
               />
             ))}
-          {session?.user?.permissions?.includes('collections.manage') && (
+          {canManageCollections && (
             <>
               {missingCustomFields &&
                 Object.keys(missingCustomFields).length > 0 && (
