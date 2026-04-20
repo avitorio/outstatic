@@ -1,5 +1,14 @@
 # outstatic
 
+## 2.1.6
+
+### Patch Changes
+
+- ca91109: Allow dragging and dropping images into the media library and image picker uploads.
+- 49f581a: Update collection headers and restrict collection create, delete, and settings actions to users with collection management permissions.
+- 33bd3ac: Fix Safari editor bubble-menu popovers opening in the wrong position for link and node selectors.
+- d5c4942: Preserve explicit empty author metadata so removing an avatar does not repopulate it from the current session.
+
 ## 2.1.5
 
 ### Patch Changes
