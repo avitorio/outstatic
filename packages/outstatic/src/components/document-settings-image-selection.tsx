@@ -1,6 +1,6 @@
 import { API_MEDIA_PATH } from '@/utils/constants'
 import { useOutstatic } from '@/utils/hooks/use-outstatic'
-import { useCallback, useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useMemo, useState } from 'react'
 import { Button } from '@/components/ui/shadcn/button'
 import MediaLibraryModal from '@/components/ui/outstatic/media-library-modal'
 import { useFormContext } from 'react-hook-form'
@@ -35,10 +35,7 @@ export const DocumentSettingsImageSelection = ({
   const { setHasChanges } = useContext(DocumentContext)
 
   // State management
-  const [imageState, setImageState] = useState<'options' | 'preview' | 'url'>(
-    'options'
-  )
-  const [image, setImage] = useState('')
+  const [imageState, setImageState] = useState<'options' | 'url'>('options')
   const [imageUrl, setImageUrl] = useState('')
   const [previewLoading, setPreviewLoading] = useState(true)
   const [loadingError, setLoadingError] = useState(false)
@@ -46,80 +43,51 @@ export const DocumentSettingsImageSelection = ({
 
   const { setValue, control, getValues, watch } = useFormContext()
   const watchedImage = watch(id)
+  const selectedImage = watchedImage ?? getValues(id)
 
-  // Handle image selection from library or URL
-  const handleImageSelect = useCallback(
-    (selectedImage: string, isUserAction = false) => {
-      setPreviewLoading(true)
-      setImageState('preview')
-      setLoadingError(false)
-
-      // Small delay to allow UI to update before setting the image
-      setTimeout(() => {
-        setImage(selectedImage)
-        setPreviewLoading(false)
-
-        // Only mark as changed if this was a user-initiated action
-        if (isUserAction) {
-          setHasChanges(true)
-        }
-      }, 500)
-    },
-    [setHasChanges]
-  )
-
-  // Reset image selection
-  const handleRemoveImage = () => {
-    setValue(id, '')
-    setImage('')
-    setImageState('options')
-    setLoadingError(false)
-    setHasChanges(true)
-  }
-
-  // Process image path when form value changes
-  useEffect(() => {
-    const resolvedImage = watchedImage || getValues(id)
-    if (!resolvedImage) {
-      return
+  const image = useMemo(() => {
+    if (!selectedImage) {
+      return ''
     }
 
-    // Handle absolute URLs or API media paths
     if (
-      resolvedImage?.startsWith('http') ||
-      resolvedImage?.startsWith(`${basePath}${API_MEDIA_PATH}`)
+      selectedImage.startsWith('http') ||
+      selectedImage.startsWith(`${basePath}${API_MEDIA_PATH}`)
     ) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      handleImageSelect(resolvedImage, false)
-      return
+      return selectedImage
     }
 
-    // Convert relative paths to absolute
-    const image = resolvedImage?.replace(
+    return selectedImage.replace(
       `/${publicMediaPath}`,
       `${basePath}${API_MEDIA_PATH}${repoOwner}/${repoSlug}/${repoBranch}/${repoMediaPath}`
     )
-
-    handleImageSelect(image, false)
   }, [
-    watchedImage,
-    id,
-    getValues,
+    selectedImage,
     basePath,
     publicMediaPath,
     repoOwner,
     repoSlug,
     repoBranch,
-    repoMediaPath,
-    handleImageSelect
+    repoMediaPath
   ])
 
-  // Set default value if no image is selected
+  // Reset image selection
+  const handleRemoveImage = () => {
+    setValue(id, '')
+    setImageState('options')
+    setImageUrl('')
+    setPreviewLoading(true)
+    setLoadingError(false)
+    setHasChanges(true)
+  }
+
+  // Seed the form from the provided default only when the field is unset.
   useEffect(() => {
-    if (!image) {
+    const currentValue = watchedImage ?? getValues(id)
+    if ((currentValue === undefined || currentValue === null) && defaultValue) {
       setValue(id, defaultValue)
     }
-  }, [image, id, defaultValue, setValue])
+  }, [watchedImage, id, defaultValue, getValues, setValue])
 
   // Render image preview
   const renderImagePreview = () => (
@@ -145,19 +113,19 @@ export const DocumentSettingsImageSelection = ({
           src={image}
           className="w-full max-h-48 object-contain"
           onLoad={() => {
+            setPreviewLoading(false)
             setLoadingError(false)
           }}
           onError={() => {
-            if (!previewLoading) {
-              console.log('error loading image')
-              setLoadingError(true)
-            }
+            console.log('error loading image')
+            setPreviewLoading(false)
+            setLoadingError(true)
           }}
           alt=""
         />
       </div>
       <div className="w-full flex justify-between mt-2">
-        <Button variant="destructive" onClick={handleRemoveImage}>
+        <Button variant="destructive" onClick={handleRemoveImage} type="button">
           Remove
         </Button>
       </div>
@@ -187,16 +155,21 @@ export const DocumentSettingsImageSelection = ({
               onClick={() => {
                 setValue(id, '')
                 setImageState('options')
+                setImageUrl('')
               }}
+              type="button"
             >
               Cancel
             </Button>
             <Button
               onClick={() => {
-                setImageState('preview')
+                setPreviewLoading(true)
+                setLoadingError(false)
+                setImageState('options')
                 setValue(id, imageUrl)
                 setHasChanges(true)
               }}
+              type="button"
             >
               Select
             </Button>
@@ -216,6 +189,7 @@ export const DocumentSettingsImageSelection = ({
         onClick={() => {
           setImageState('url')
           setLoadingError(false)
+          setImageUrl('')
         }}
         type="button"
       >
@@ -226,14 +200,19 @@ export const DocumentSettingsImageSelection = ({
 
   return (
     <>
-      {imageState === 'preview' && image && renderImagePreview()}
-      {imageState === 'url' && renderUrlInput()}
-      {imageState === 'options' && renderImageOptions()}
+      {image
+        ? renderImagePreview()
+        : imageState === 'url'
+          ? renderUrlInput()
+          : renderImageOptions()}
 
       <MediaLibraryModal
         open={showImageLibrary}
         onOpenChange={setShowImageLibrary}
         onSelect={(image) => {
+          setPreviewLoading(true)
+          setLoadingError(false)
+          setImageState('options')
           setValue(id, image)
           setHasChanges(true)
         }}

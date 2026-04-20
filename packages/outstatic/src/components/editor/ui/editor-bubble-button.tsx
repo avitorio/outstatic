@@ -22,6 +22,7 @@ const EditorBubbleButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
       attributes,
       children,
       asChild = false,
+      onMouseDown,
       onClick,
       type,
       ...props
@@ -44,6 +45,14 @@ const EditorBubbleButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
         } ${className}`}
         ref={ref}
         {...props}
+        onMouseDown={(e) => {
+          onMouseDown?.(e)
+
+          // Preserve the editor selection while bubble-menu buttons are clicked.
+          if (!e.defaultPrevented) {
+            e.preventDefault()
+          }
+        }}
         onClick={(e) => {
           if (onSelect) {
             e.preventDefault()

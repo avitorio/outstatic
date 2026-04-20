@@ -1,6 +1,6 @@
 {
-  "commit": "58e228279b82a668ed6102999614fd7baff97844",
-  "generated": "2026-03-31T20:43:35.025Z",
+  "commit": "5be92d68cce589b3b3a08cd11907cc9c32dd52a2",
+  "generated": "2026-04-15T15:38:43.400Z",
   "metadata": [
     {
       "__outstatic": {
@@ -594,6 +594,22 @@
       "slug": "deploy-a-starter-outstatic-website-on-vercel",
       "status": "published",
       "title": "Deploy a starter Outstatic website on Vercel"
+    },
+    {
+      "__outstatic": {
+        "commit": "5be92d68cce589b3b3a08cd11907cc9c32dd52a2",
+        "hash": "1678663613",
+        "path": "/outstatic/content/docs/deploy-an-outstatic-project-on-vercel.mdx"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "publishedAt": "2026-04-14T20:40:37.144Z",
+      "slug": "deploy-an-outstatic-project-on-vercel",
+      "status": "published",
+      "title": "Deploy an Outstatic project on Vercel"
     }
   ]
 }
