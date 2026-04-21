@@ -26,6 +26,15 @@ import {
   syncCustomFieldTags
 } from './use-submit-entry-shared'
 
+type SingletonIndexEntry = {
+  title: string
+  slug: string
+  directory: string
+  path: string
+  publishedAt?: string
+  status?: string
+}
+
 type SubmitSingletonProps = {
   session: LoginSession | null
   slug: string
@@ -47,6 +56,97 @@ type SubmitSingletonProps = {
 
 type OnSubmitOptions = {
   configUpdate?: Partial<ConfigType>
+}
+
+type ResolveSingletonPathsArgs = {
+  oldSlug: string
+  nextSlug: string
+  extension: MDExtensions
+  singletonsPath: string
+  path?: string
+  existingFilePath?: string
+}
+
+type SingletonPaths = {
+  oldContentPath: string
+  newContentPath: string
+  contentDirectory: string
+  oldSchemaPath: string
+  newSchemaPath: string
+}
+
+type BuildUpdatedSingletonsIndexArgs = {
+  singletons: SingletonIndexEntry[]
+  isNew: boolean
+  oldSlug: string
+  nextEntry: SingletonIndexEntry
+}
+
+const resolveSingletonPaths = ({
+  oldSlug,
+  nextSlug,
+  extension,
+  singletonsPath,
+  path,
+  existingFilePath
+}: ResolveSingletonPathsArgs): SingletonPaths => {
+  const hasCustomPath = path !== undefined
+  const oldContentPath = existingFilePath
+    ? existingFilePath
+    : hasCustomPath
+      ? `${path ? `${path}/` : ''}${oldSlug}.${extension}`
+      : `${singletonsPath}/${oldSlug}.${extension}`
+
+  const contentDirectory = oldContentPath.includes('/')
+    ? oldContentPath.substring(0, oldContentPath.lastIndexOf('/'))
+    : ''
+
+  const newContentPath =
+    contentDirectory.length > 0
+      ? `${contentDirectory}/${nextSlug}.${extension}`
+      : `${nextSlug}.${extension}`
+
+  return {
+    oldContentPath,
+    newContentPath,
+    contentDirectory,
+    oldSchemaPath: `${singletonsPath}/${oldSlug}.schema.json`,
+    newSchemaPath: `${singletonsPath}/${nextSlug}.schema.json`
+  }
+}
+
+const buildUpdatedSingletonsIndex = ({
+  singletons,
+  isNew,
+  oldSlug,
+  nextEntry
+}: BuildUpdatedSingletonsIndexArgs) => {
+  if (isNew) {
+    return [...singletons, nextEntry]
+  }
+
+  return singletons.map((singleton) =>
+    singleton.slug === oldSlug ? nextEntry : singleton
+  )
+}
+
+const stageSingletonRename = ({
+  capi,
+  oldContentPath,
+  oldSchemaPath,
+  didSlugChange
+}: {
+  capi: ReturnType<typeof createCommitApi>
+  oldContentPath: string
+  oldSchemaPath: string
+  didSlugChange: boolean
+}) => {
+  if (!didSlugChange) {
+    return
+  }
+
+  capi.removeFile(oldContentPath)
+  capi.removeFile(oldSchemaPath)
 }
 
 function useSubmitSingleton({
@@ -103,17 +203,26 @@ function useSubmitSingleton({
       }
 
       try {
-        let actualSlug = slug
-        if (isNew) {
-          const title = data.title || 'untitled'
-          actualSlug = slugify(title, { allowedChars: 'a-zA-Z0-9.' })
+        const title = data.title || 'untitled'
+        const nextSlug =
+          data.slug?.trim() ||
+          slugify(title, { allowedChars: 'a-zA-Z0-9.' }) ||
+          slug
+        const oldSlug = slug
+        const didSlugChange = !isNew && nextSlug !== oldSlug
 
-          const { data: singletons } = await refetchSingletons()
-          if (singletons?.find((singleton) => singleton.slug === actualSlug)) {
-            toast.error(`A singleton with slug "${actualSlug}" already exists.`)
-            setLoading(false)
-            return
-          }
+        const { data: currentSingletons } = await refetchSingletons()
+        const singletons = currentSingletons ?? []
+
+        if (
+          singletons.find(
+            (singleton) =>
+              singleton.slug === nextSlug && singleton.slug !== oldSlug
+          )
+        ) {
+          toast.error(`A singleton with slug "${nextSlug}" already exists.`)
+          setLoading(false)
+          return
         }
 
         const [
@@ -146,51 +255,38 @@ function useSubmitSingleton({
 
         const capi = createCommitApi({
           message: isNew
-            ? `feat(singleton): create ${actualSlug}`
-            : `chore: Updates singleton ${actualSlug}`,
+            ? `feat(singleton): create ${nextSlug}`
+            : `chore: Updates singleton ${nextSlug}`,
           owner,
           oid: oid ?? '',
           name: repoSlug,
           branch: repoBranch
         })
 
-        const hasCustomPath = path !== undefined
-        const contentFilePath = existingFilePath
-          ? existingFilePath
-          : hasCustomPath
-            ? `${path ? `${path}/` : ''}${actualSlug}.${extension}`
-            : `${singletonsPath}/${actualSlug}.${extension}`
-
-        const contentDirectory = existingFilePath
-          ? existingFilePath.substring(0, existingFilePath.lastIndexOf('/'))
-          : hasCustomPath
-            ? path || ''
-            : singletonsPath
+        const {
+          oldContentPath,
+          newContentPath,
+          contentDirectory,
+          oldSchemaPath,
+          newSchemaPath
+        } = resolveSingletonPaths({
+          oldSlug,
+          nextSlug,
+          extension,
+          singletonsPath,
+          path,
+          existingFilePath
+        })
 
         if (isNew) {
           const schemaJson = {
-            title: data.title || actualSlug,
+            title: data.title || nextSlug,
             type: 'object',
             properties: {}
           }
           capi.replaceFile(
-            `${singletonsPath}/${actualSlug}.schema.json`,
+            newSchemaPath,
             JSON.stringify(schemaJson, null, 2) + '\n'
-          )
-
-          const { data: currentSingletons } = await refetchSingletons()
-          const singletonsArray = currentSingletons ?? []
-          singletonsArray.push({
-            title: data.title || actualSlug,
-            slug: actualSlug,
-            directory: contentDirectory,
-            path: contentFilePath,
-            publishedAt: data.publishedAt?.toISOString(),
-            status: data.status
-          })
-          capi.replaceFile(
-            `${ostContent}/singletons.json`,
-            JSON.stringify(singletonsArray, null, 2) + '\n'
           )
         }
 
@@ -205,7 +301,7 @@ function useSubmitSingleton({
 
         const { data: matterData } = matter(content)
 
-        capi.replaceFile(contentFilePath, content)
+        capi.replaceFile(newContentPath, content)
 
         const { customFields: nextCustomFields, hasNewTag } =
           syncCustomFieldTags({
@@ -215,21 +311,48 @@ function useSubmitSingleton({
             setCustomFields
           })
 
-        if (hasNewTag && !isNew) {
-          const customFieldsJSON = JSON.stringify(
-            {
-              ...schema,
-              properties: { ...nextCustomFields }
-            },
-            null,
-            2
-          )
+        const nextSchema =
+          hasNewTag && !isNew
+            ? {
+                ...schema,
+                properties: { ...nextCustomFields }
+              }
+            : schema
 
+        if (!isNew && nextSchema && (hasNewTag || didSlugChange)) {
           capi.replaceFile(
-            `${singletonsPath}/${actualSlug}.schema.json`,
-            customFieldsJSON + '\n'
+            newSchemaPath,
+            JSON.stringify(nextSchema, null, 2) + '\n'
           )
         }
+
+        stageSingletonRename({
+          capi,
+          oldContentPath,
+          oldSchemaPath,
+          didSlugChange
+        })
+
+        const nextSingletonEntry: SingletonIndexEntry = {
+          title: data.title || nextSlug,
+          slug: nextSlug,
+          directory: contentDirectory || singletonsPath,
+          path: newContentPath,
+          publishedAt: data.publishedAt?.toISOString(),
+          status: data.status
+        }
+
+        const updatedSingletons = buildUpdatedSingletonsIndex({
+          singletons,
+          isNew,
+          oldSlug,
+          nextEntry: nextSingletonEntry
+        })
+
+        capi.replaceFile(
+          `${ostContent}/singletons.json`,
+          JSON.stringify(updatedSingletons, null, 2) + '\n'
+        )
 
         const metadataState = createMetadataState(metadata)
         const state = MurmurHash3(content)
@@ -237,20 +360,21 @@ function useSubmitSingleton({
         const newMeta = Array.isArray(metadataState.metadata)
           ? metadataState.metadata.filter(
               (entry) =>
-                entry.collection !== '_singletons' || entry.slug !== actualSlug
+                entry.collection !== '_singletons' ||
+                (entry.slug !== oldSlug && entry.slug !== nextSlug)
             )
           : []
 
         newMeta.push({
           ...matterData,
-          slug: actualSlug,
+          slug: nextSlug,
           collection: '_singletons',
           __outstatic: {
             hash: `${state.result()}`,
             commit: metadataState.commit,
             path: monorepoPath
-              ? contentFilePath.replace(monorepoPath, '')
-              : contentFilePath
+              ? newContentPath.replace(monorepoPath, '')
+              : newContentPath
           }
         })
 
@@ -279,10 +403,10 @@ function useSubmitSingleton({
         toast.promise(createCommit.mutateAsync(input), {
           loading: isNew ? 'Creating singleton...' : 'Saving changes...',
           success: () => {
-            if (isNew) {
-              setSlug(actualSlug)
-              refetchSingletons()
+            if (isNew || didSlugChange) {
+              setSlug(nextSlug)
             }
+            refetchSingletons()
             return isNew
               ? 'Singleton created successfully!'
               : 'Changes saved successfully!'
