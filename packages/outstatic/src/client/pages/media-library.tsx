@@ -5,6 +5,7 @@ import { DeleteMediaButton } from '@/components/delete-media-button'
 import { MediaSettings } from '@/client/pages/settings/_components/media-settings'
 import { MediaLibraryDropzone } from '@/components/ui/outstatic/media-library-dropzone'
 import { MediaLibraryHeader } from '@/components/ui/outstatic/media-library-header'
+import { MediaSettingsDialog } from '@/components/ui/outstatic/media-settings-dialog'
 import { SpinnerIcon } from '@/components/ui/outstatic/spinner-icon'
 import {
   Card,
@@ -24,6 +25,7 @@ export default function MediaLibrary() {
   const [searchTerm, setSearchTerm] = useState('')
   const [sortBy, setSortBy] = useState('date')
   const [sortDirection, setSortDirection] = useState('desc')
+  const [showMediaSettingsDialog, setShowMediaSettingsDialog] = useState(false)
   const {
     basePath,
     repoOwner,
@@ -56,9 +58,9 @@ export default function MediaLibrary() {
         if (sortBy === 'date') {
           return sortDirection === 'asc'
             ? new Date(a.publishedAt).getTime() -
-                new Date(b.publishedAt).getTime()
+            new Date(b.publishedAt).getTime()
             : new Date(b.publishedAt).getTime() -
-                new Date(a.publishedAt).getTime()
+            new Date(a.publishedAt).getTime()
         }
 
         return sortDirection === 'asc'
@@ -95,7 +97,14 @@ export default function MediaLibrary() {
           sortDirection={sortDirection}
           setSortDirection={setSortDirection}
           handleFileUpload={handleFileUpload}
+          onOpenSettings={() => setShowMediaSettingsDialog(true)}
           disableUpload={!repoMediaPath || !publicMediaPath}
+        />
+        <MediaSettingsDialog
+          title="Media Library Settings"
+          description="Configure where uploaded media files are stored and served from."
+          showMediaPathDialog={showMediaSettingsDialog}
+          setShowMediaPathDialog={setShowMediaSettingsDialog}
         />
       </div>
       {!repoMediaPath || !publicMediaPath ? (

@@ -7,6 +7,7 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/shadcn/select'
+import { Settings } from 'lucide-react'
 import { useId } from 'react'
 
 interface MediaLibraryHeaderProps {
@@ -18,6 +19,7 @@ interface MediaLibraryHeaderProps {
   sortDirection: string
   setSortDirection: (value: string) => void
   handleFileUpload: (files: FileList | File[] | null) => void
+  onOpenSettings: () => void
   disableUpload?: boolean
 }
 
@@ -30,6 +32,7 @@ export function MediaLibraryHeader({
   sortDirection,
   setSortDirection,
   handleFileUpload,
+  onOpenSettings,
   disableUpload = false
 }: MediaLibraryHeaderProps) {
   const fileInputId = useId()
@@ -38,20 +41,32 @@ export function MediaLibraryHeader({
     <div className="flex items-center justify-between">
       <div className="flex h-12 items-center capitalize gap-4 xl:gap-12">
         <h1 className="text-xl md:text-2xl">Media Library</h1>
-        <Button
-          size="sm"
-          asChild={!disableUpload}
-          className="hover:cursor-pointer"
-          disabled={isUploading || disableUpload}
-        >
-          {!disableUpload ? (
-            <label htmlFor={fileInputId}>
-              {isUploading ? 'Uploading...' : 'Add Media'}
-            </label>
-          ) : (
-            'Add Media'
-          )}
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            size="sm"
+            asChild={!disableUpload}
+            className="hover:cursor-pointer"
+            disabled={isUploading || disableUpload}
+          >
+            {!disableUpload ? (
+              <label htmlFor={fileInputId}>
+                {isUploading ? 'Uploading...' : 'Add Media'}
+              </label>
+            ) : (
+              'Add Media'
+            )}
+          </Button>
+          <Button
+            size="icon"
+            variant="ghost"
+            type="button"
+            title="Open media settings"
+            aria-label="Open media settings"
+            onClick={onOpenSettings}
+          >
+            <Settings className="h-4 w-4" />
+          </Button>
+        </div>
         <input
           id={fileInputId}
           type="file"

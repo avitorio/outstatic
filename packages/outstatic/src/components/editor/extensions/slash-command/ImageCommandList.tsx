@@ -15,7 +15,7 @@ import { addImage } from '@/components/editor/utils/add-image'
 import MediaLibraryModal from '@/components/ui/outstatic/media-library-modal'
 import { API_MEDIA_PATH } from '@/utils/constants'
 import { useOutstatic } from '@/utils/hooks/use-outstatic'
-import MediaSettingsDialog from '@/components/ui/outstatic/media-settings-dialog'
+import { MediaSettingsDialog } from '@/components/ui/outstatic/media-settings-dialog'
 import { Button } from '@/components/ui/shadcn/button'
 
 type ImageCommandListProps = {
@@ -65,7 +65,7 @@ const ImageCommandList = ({
   const [errors, setErrors] = useState({ imageUrl: '', uploadImage: '' })
   const [selectedIndex, setSelectedIndex] = useState(0)
   const { repoMediaPath, publicMediaPath, basePath } = useOutstatic()
-  const [callbackFunction, setCallbackFunction] = useState<() => void>(() => {})
+  const [callbackFunction, setCallbackFunction] = useState<() => void>(() => { })
 
   const addImageFile = useCallback(async () => {
     editor.chain().focus().deleteRange(range).run()
@@ -216,9 +216,8 @@ const ImageCommandList = ({
         >
           <input
             type="text"
-            className={`flex-1 bg-background p-1 text-sm outline-hidden ${
-              errors.imageUrl ? 'bg-red-50' : 'bg-background'
-            }`}
+            className={`flex-1 bg-background p-1 text-sm outline-hidden ${errors.imageUrl ? 'bg-red-50' : 'bg-background'
+              }`}
             placeholder="Insert link here"
             onChange={(e) => setImageUrl(e.target.value)}
             value={imageUrl}
@@ -259,9 +258,8 @@ const ImageCommandList = ({
           {items.map((item: CommandItemProps, index: number) => {
             return (
               <button
-                className={`flex w-full items-center space-x-2 rounded-md px-2 py-1 text-left text-sm text-foreground hover:bg-muted ${
-                  index === selectedIndex ? 'bg-muted text-foreground' : ''
-                }`}
+                className={`flex w-full items-center space-x-2 rounded-md px-2 py-1 text-left text-sm text-foreground hover:bg-muted ${index === selectedIndex ? 'bg-muted text-foreground' : ''
+                  }`}
                 key={index}
                 onClick={() => handleItemAction(item.title)}
                 onKeyDown={(e) => {

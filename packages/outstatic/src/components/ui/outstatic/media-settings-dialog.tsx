@@ -16,7 +16,7 @@ interface MediaSettingsDialogProps {
   callbackFunction?: () => void | Promise<void>
 }
 
-const MediaSettingsDialog: React.FC<MediaSettingsDialogProps> = ({
+export const MediaSettingsDialog: React.FC<MediaSettingsDialogProps> = ({
   title = 'First time here?',
   description = "It seems you haven't set up your media paths yet. Let's do that!",
   showMediaPathDialog,
@@ -42,4 +42,3 @@ const MediaSettingsDialog: React.FC<MediaSettingsDialogProps> = ({
   )
 }
 
-export default MediaSettingsDialog
