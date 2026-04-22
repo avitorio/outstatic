@@ -115,7 +115,7 @@ const resolveSingletonPaths = ({
   }
 }
 
-const buildUpdatedSingletonsIndex = ({
+export const buildUpdatedSingletonsIndex = ({
   singletons,
   isNew,
   oldSlug,
@@ -130,7 +130,7 @@ const buildUpdatedSingletonsIndex = ({
   )
 }
 
-const stageSingletonRename = ({
+export const stageSingletonRename = ({
   capi,
   oldContentPath,
   oldSchemaPath,
@@ -336,6 +336,9 @@ function useSubmitSingleton({
         const nextSingletonEntry: SingletonIndexEntry = {
           title: data.title || nextSlug,
           slug: nextSlug,
+          // Keep the stored directory anchored to the content location. When a
+          // singleton resolves to a root-level file, fall back to the standard
+          // singletons directory instead of persisting an empty directory string.
           directory: contentDirectory || singletonsPath,
           path: newContentPath,
           publishedAt: data.publishedAt?.toISOString(),
@@ -400,7 +403,7 @@ function useSubmitSingleton({
 
         const input = capi.createInput()
 
-        toast.promise(createCommit.mutateAsync(input), {
+        await toast.promise(createCommit.mutateAsync(input), {
           loading: isNew ? 'Creating singleton...' : 'Saving changes...',
           success: () => {
             if (isNew || didSlugChange) {
