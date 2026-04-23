@@ -20,7 +20,9 @@ describe('mergeMdMeta', () => {
         category: 'news'
       },
       basePath: '',
-      repoInfo: 'owner/repo/main',
+      repoOwner: 'owner',
+      repoSlug: 'repo',
+      repoBranch: 'main',
       publicMediaPath: 'uploads/'
     })
 

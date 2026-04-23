@@ -1,34 +1,57 @@
-import { API_MEDIA_PATH } from './constants'
+import {
+  buildMediaApiPrefix,
+  buildPublicMediaPath,
+  resolveMediaSources
+} from './media-config'
+import { MediaSourceConfig } from './metadata/types'
 
 // Function to replace the API image paths with the production paths.
 // Used when saving the content.
 interface ReplaceImagePathParams {
   markdownContent: string
   basePath: string
-  repoInfo: string
-  publicMediaPath: string
+  repoOwner: string
+  repoSlug: string
+  repoBranch: string
+  media?: MediaSourceConfig[]
+  publicMediaPath?: string
+  repoMediaPath?: string
 }
+
+const escapeRegExp = (value: string) =>
+  value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 
 function replaceImagePath({
   markdownContent,
   basePath,
-  repoInfo,
-  publicMediaPath
+  repoOwner,
+  repoSlug,
+  repoBranch,
+  media,
+  publicMediaPath,
+  repoMediaPath
 }: ReplaceImagePathParams): string {
-  const apiMediaPath = `${basePath}${API_MEDIA_PATH}${repoInfo}`
-  const regex = new RegExp(
-    `!\\[([^\\]]*?)\\]\\((${apiMediaPath})([^\\)]+?)\\)`,
-    'g'
-  )
+  const sources = media?.length
+    ? media
+    : resolveMediaSources({ publicMediaPath, repoMediaPath })
 
-  let updatedMarkdown = markdownContent.replace(
-    regex,
-    (_match, altText, _apiPath, filename) => {
-      return `![${altText}](/${publicMediaPath}${filename})`
-    }
-  )
+  return sources.reduce((content, source) => {
+    const apiMediaPath = buildMediaApiPrefix({
+      basePath,
+      repoOwner,
+      repoSlug,
+      repoBranch,
+      source
+    })
+    const regex = new RegExp(
+      `!\\[([^\\]]*?)\\]\\((${escapeRegExp(apiMediaPath)})([^\\)]+?)\\)`,
+      'g'
+    )
 
-  return updatedMarkdown
+    return content.replace(regex, (_match, altText, _apiPath, filename) => {
+      return `![${altText}](${buildPublicMediaPath(source, filename)})`
+    })
+  }, markdownContent)
 }
 
 export default replaceImagePath

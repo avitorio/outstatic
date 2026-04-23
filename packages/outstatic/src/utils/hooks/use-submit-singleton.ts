@@ -25,6 +25,7 @@ import {
   replaceMediaFile,
   syncCustomFieldTags
 } from './use-submit-entry-shared'
+import { getFirstImageMediaSource } from '../media-config'
 
 type SingletonIndexEntry = {
   title: string
@@ -177,6 +178,7 @@ function useSubmitSingleton({
     basePath,
     publicMediaPath,
     repoMediaPath,
+    media,
     mediaJsonPath,
     configJsonPath
   } = useOutstatic()
@@ -192,6 +194,8 @@ function useSubmitSingleton({
   const { refetch: refetchSingletons } = useSingletons({ enabled: false })
 
   const singletonsPath = `${ostContent}/_singletons`
+
+  const imageMediaSource = getFirstImageMediaSource(media ?? [])
 
   const onSubmit = useCallback(
     async (data: Document, options?: OnSubmitOptions) => {
@@ -247,6 +251,7 @@ function useSubmitSingleton({
           repoOwner,
           repoSlug,
           repoBranch,
+          media,
           repoMediaPath,
           publicMediaPath
         })
@@ -290,12 +295,11 @@ function useSubmitSingleton({
           )
         }
 
-        const { content: nextContent, media } = addReferencedMedia({
+        const { content: nextContent, media: nextMedia } = addReferencedMedia({
           files,
           content,
           capi,
-          repoMediaPath,
-          publicMediaPath
+          source: imageMediaSource
         })
         content = nextContent
 
@@ -387,7 +391,7 @@ function useSubmitSingleton({
         )
 
         await replaceMediaFile({
-          media,
+          media: nextMedia,
           metadataState,
           refetchMedia,
           mediaJsonPath,
@@ -458,6 +462,8 @@ function useSubmitSingleton({
       refetchConfig,
       path,
       existingFilePath,
+      imageMediaSource,
+      media,
       publicMediaPath,
       repoMediaPath,
       documentMetadata

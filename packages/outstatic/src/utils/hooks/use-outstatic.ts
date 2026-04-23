@@ -10,6 +10,7 @@ import { ConfigType } from '../metadata/types'
 import { useCallback, useMemo } from 'react'
 
 import { ConfigSchema } from '../schemas/config-schema'
+import { deriveLegacyMediaPaths, resolveMediaSources } from '../media-config'
 
 type HeadersType = {
   authorization: string
@@ -32,6 +33,19 @@ const cleanOutstaticData = (
   return cleanedData
 }
 
+const clearConfigMediaData = (
+  data: Partial<OutstaticData>
+): Partial<OutstaticData> => {
+  const {
+    media: _media,
+    repoMediaPath: _repoMediaPath,
+    publicMediaPath: _publicMediaPath,
+    ...rest
+  } = data
+
+  return rest
+}
+
 export const useOutstatic = () => {
   const { hasChanges, setHasChanges } = useContentLock()
   const initialData = useInitialData()
@@ -43,7 +57,10 @@ export const useOutstatic = () => {
 
   const graphQLClient = useCreateGraphQLClient(initialData.githubGql, headers)
 
-  const cleanInitialData = cleanOutstaticData(initialData)
+  const cleanInitialData = useMemo(
+    () => cleanOutstaticData(initialData),
+    [initialData]
+  )
 
   const { data: config } = useGetInitialConfig({
     repoOwner: cleanInitialData.repoOwner || localData.repoOwner || '',
@@ -55,21 +72,86 @@ export const useOutstatic = () => {
     gqlClient: graphQLClient
   })
 
-  const cleanConfig = config
-    ? cleanOutstaticData(config)
-    : { repoMediaPath: '', publicMediaPath: '' }
+  const cleanConfig = useMemo(
+    () =>
+      config
+        ? cleanOutstaticData(config)
+        : { media: [], repoMediaPath: '', publicMediaPath: '' },
+    [config]
+  )
+  const localRuntimeData = useMemo(
+    () => clearConfigMediaData(localData),
+    [localData]
+  )
+
+  const resolvedConfigState = useMemo(
+    () => ({
+      ...localRuntimeData,
+      ...cleanConfig
+    }),
+    [cleanConfig, localRuntimeData]
+  )
+
+  const media = useMemo(() => {
+    const configMediaSources = resolveMediaSources(resolvedConfigState)
+    const envMediaSources = resolveMediaSources({
+      repoMediaPath: cleanInitialData.repoMediaPath,
+      publicMediaPath: cleanInitialData.publicMediaPath
+    })
+
+    return configMediaSources.length > 0 ? configMediaSources : envMediaSources
+  }, [
+    cleanInitialData.publicMediaPath,
+    cleanInitialData.repoMediaPath,
+    resolvedConfigState
+  ])
+  const resolvedLegacyMediaPaths = useMemo(
+    () =>
+      media.length > 0
+        ? deriveLegacyMediaPaths(media)
+        : {
+            repoMediaPath:
+              resolvedConfigState.repoMediaPath ||
+              cleanInitialData.repoMediaPath ||
+              '',
+            publicMediaPath:
+              resolvedConfigState.publicMediaPath ||
+              cleanInitialData.publicMediaPath ||
+              ''
+          },
+    [
+      cleanInitialData.publicMediaPath,
+      cleanInitialData.repoMediaPath,
+      media,
+      resolvedConfigState.publicMediaPath,
+      resolvedConfigState.repoMediaPath
+    ]
+  )
 
   // Merge local data with initial data, giving preference to
   // initialData (.ENV variables) over localData (local storage)
-  const outstaticData = {
-    ...localData,
-    ...cleanConfig,
-    ...cleanInitialData,
-    isPending: localPending
-  } as OutstaticData & {
-    isPending: boolean
-    gqlClient: GraphQLClient
-  }
+  const outstaticData = useMemo(
+    () =>
+      ({
+        ...localRuntimeData,
+        ...cleanInitialData,
+        ...cleanConfig,
+        media,
+        ...resolvedLegacyMediaPaths,
+        isPending: localPending
+      }) as OutstaticData & {
+        isPending: boolean
+        gqlClient: GraphQLClient
+      },
+    [
+      cleanConfig,
+      cleanInitialData,
+      localPending,
+      localRuntimeData,
+      media,
+      resolvedLegacyMediaPaths
+    ]
+  )
 
   const { monorepoPath, contentPath, ostPath } = outstaticData
 
@@ -122,6 +204,7 @@ export const useLocalData = () => {
         repoBranch: '',
         repoOwner: '',
         basePath: '',
+        media: [],
         repoMediaPath: '',
         publicMediaPath: ''
       }
@@ -152,10 +235,11 @@ export const useLocalData = () => {
         ...currentData,
         ...newData
       })
-
-      queryClient.invalidateQueries({
-        queryKey: ['collections', 'config', 'singletons'],
-        refetchType: 'all'
+      ;['collections', 'config', 'singletons', 'media'].forEach((key) => {
+        queryClient.invalidateQueries({
+          queryKey: [key],
+          refetchType: 'all'
+        })
       })
     },
     [queryClient, queryKey]

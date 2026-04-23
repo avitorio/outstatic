@@ -4,21 +4,19 @@ import { AdminLayout } from '@/components/admin-layout'
 import { DeleteMediaButton } from '@/components/delete-media-button'
 import { MediaSettings } from '@/client/pages/settings/_components/media-settings'
 import { MediaLibraryDropzone } from '@/components/ui/outstatic/media-library-dropzone'
-import { MediaLibraryHeader } from '@/components/ui/outstatic/media-library-header'
+import {
+  ALL_MEDIA_SOURCE_VALUE,
+  MediaLibraryHeader
+} from '@/components/ui/outstatic/media-library-header'
 import { MediaSettingsDialog } from '@/components/ui/outstatic/media-settings-dialog'
 import { SpinnerIcon } from '@/components/ui/outstatic/spinner-icon'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle
-} from '@/components/ui/shadcn/card'
+import { Card, CardContent } from '@/components/ui/shadcn/card'
 import { API_MEDIA_PATH } from '@/utils/constants'
 import { useGetMediaFiles } from '@/utils/hooks/use-get-media-files'
 import { useMediaLibraryUpload } from '@/utils/hooks/use-media-library-upload'
 import { useOutstatic } from '@/utils/hooks/use-outstatic'
-import { FileQuestion, ImageOff } from 'lucide-react'
+import { getMediaSourceForItem } from '@/utils/media-config'
+import { FileQuestion, FileText, ImageOff } from 'lucide-react'
 import { useMemo, useState } from 'react'
 
 export default function MediaLibrary() {
@@ -26,24 +24,37 @@ export default function MediaLibrary() {
   const [sortBy, setSortBy] = useState('date')
   const [sortDirection, setSortDirection] = useState('desc')
   const [showMediaSettingsDialog, setShowMediaSettingsDialog] = useState(false)
-  const {
-    basePath,
-    repoOwner,
-    repoSlug,
-    repoBranch,
-    repoMediaPath,
-    publicMediaPath
-  } = useOutstatic()
-  const apiPath = `${basePath}${API_MEDIA_PATH}${repoOwner}/${repoSlug}/${repoBranch}`
+  const [selectedSourceName, setSelectedSourceName] = useState(
+    ALL_MEDIA_SOURCE_VALUE
+  )
+  const { basePath, media, repoOwner, repoSlug, repoBranch } = useOutstatic()
+  const apiPath = `${basePath}${API_MEDIA_PATH}${repoOwner}/${repoSlug}/${repoBranch}/`
   const [notFoundFiles, setNotFoundFiles] = useState<Set<string>>(new Set())
   const [loadingImages, setLoadingImages] = useState<Set<string>>(new Set())
   const { data, isLoading, refetch: refetchMedia } = useGetMediaFiles()
-  const { handleFileUpload, isUploading } = useMediaLibraryUpload()
+
+  const selectedSource =
+    selectedSourceName === ALL_MEDIA_SOURCE_VALUE
+      ? undefined
+      : (media ?? []).find((source) => source.name === selectedSourceName)
+  const { handleFileUpload, isUploading } = useMediaLibraryUpload({
+    source: selectedSource,
+    sources: media ?? []
+  })
 
   const filteredFiles = useMemo(() => {
     if (!data) return []
 
     return data.media.media
+      .filter((file) => {
+        if (selectedSourceName === ALL_MEDIA_SOURCE_VALUE) {
+          return true
+        }
+
+        return (
+          getMediaSourceForItem(file, media ?? [])?.name === selectedSourceName
+        )
+      })
       .filter((file) => {
         if (
           file.filename.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -58,16 +69,16 @@ export default function MediaLibrary() {
         if (sortBy === 'date') {
           return sortDirection === 'asc'
             ? new Date(a.publishedAt).getTime() -
-            new Date(b.publishedAt).getTime()
+                new Date(b.publishedAt).getTime()
             : new Date(b.publishedAt).getTime() -
-            new Date(a.publishedAt).getTime()
+                new Date(a.publishedAt).getTime()
         }
 
         return sortDirection === 'asc'
           ? a.filename.localeCompare(b.filename)
           : b.filename.localeCompare(a.filename)
       })
-  }, [data, searchTerm, sortBy, sortDirection])
+  }, [data, media, searchTerm, selectedSourceName, sortBy, sortDirection])
 
   const handleImageLoad = (path: string) => {
     setLoadingImages((prev) => {
@@ -96,27 +107,21 @@ export default function MediaLibrary() {
           setSortBy={setSortBy}
           sortDirection={sortDirection}
           setSortDirection={setSortDirection}
+          mediaSources={media}
+          selectedSourceName={selectedSourceName}
+          setSelectedSourceName={setSelectedSourceName}
           handleFileUpload={handleFileUpload}
           onOpenSettings={() => setShowMediaSettingsDialog(true)}
-          disableUpload={!repoMediaPath || !publicMediaPath}
+          disableUpload={!media?.length}
         />
         <MediaSettingsDialog
-          title="Media Library Settings"
-          description="Configure where uploaded media files are stored and served from."
           showMediaPathDialog={showMediaSettingsDialog}
           setShowMediaPathDialog={setShowMediaSettingsDialog}
         />
       </div>
-      {!repoMediaPath || !publicMediaPath ? (
+      {!media?.length ? (
         <div className="max-w-lg">
           <Card>
-            <CardHeader>
-              <CardTitle>First time here?</CardTitle>
-              <CardDescription>
-                It seems you haven&apos;t set up your media paths yet.
-                Let&apos;s do that!
-              </CardDescription>
-            </CardHeader>
             <CardContent>
               <MediaSettings />
             </CardContent>
@@ -126,6 +131,8 @@ export default function MediaLibrary() {
         <MediaLibraryDropzone
           className="min-h-[50vh] h-[calc(100vh-240px)]"
           disabled={isUploading}
+          dropLabel="Drop media to upload"
+          dropDescription="Outstatic will upload up to 10 files you drop here."
           onFileDrop={handleFileUpload}
         >
           {isLoading && !data ? (
@@ -136,8 +143,8 @@ export default function MediaLibrary() {
             <div className="flex min-h-[50vh] flex-col items-center justify-center text-gray-500">
               <FileQuestion className="mb-4 h-16 w-16" />
               <p>
-                No media files available. Upload some files or drop an image
-                here to get started!
+                No media files available for this source. Upload some files or
+                drop media here to get started.
               </p>
             </div>
           ) : (
@@ -148,7 +155,8 @@ export default function MediaLibrary() {
                   className="group relative space-y-1 overflow-hidden rounded-lg bg-card"
                 >
                   <div className="relative flex aspect-square items-center justify-center">
-                    {!notFoundFiles.has(file.__outstatic.path) ? (
+                    {file.type === 'image' &&
+                    !notFoundFiles.has(file.__outstatic.path) ? (
                       <>
                         {loadingImages.has(file.__outstatic.path) ? (
                           <div className="absolute inset-0 flex items-center justify-center rounded-md bg-gray-50">
@@ -157,7 +165,7 @@ export default function MediaLibrary() {
                         ) : null}
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
-                          src={`${apiPath}/${file.__outstatic.path}`}
+                          src={`${apiPath}${file.__outstatic.path}`}
                           alt={file.alt}
                           className="h-full w-full rounded-md bg-slate-50 object-cover object-center"
                           width={288}
@@ -169,9 +177,16 @@ export default function MediaLibrary() {
                           loading="lazy"
                         />
                       </>
-                    ) : (
+                    ) : file.type === 'image' ? (
                       <div className="absolute inset-0 flex items-center justify-center rounded-md bg-red-100/50">
                         <ImageOff className="h-12 w-12 text-red-500" />
+                      </div>
+                    ) : (
+                      <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 rounded-md bg-slate-50 px-4 text-center">
+                        <FileText className="h-12 w-12 text-slate-500" />
+                        <span className="text-xs font-medium uppercase tracking-wide text-slate-500">
+                          {file.type}
+                        </span>
                       </div>
                     )}
                     <DeleteMediaButton
@@ -180,7 +195,10 @@ export default function MediaLibrary() {
                       disabled={isUploading}
                       onComplete={async () => await refetchMedia()}
                       className="absolute right-2 top-2 bg-background/50 opacity-0 group-hover:opacity-100"
-                      notFound={notFoundFiles.has(file.__outstatic.path)}
+                      notFound={
+                        file.type === 'image' &&
+                        notFoundFiles.has(file.__outstatic.path)
+                      }
                     />
                   </div>
                   <div className="relative pb-4">
@@ -189,6 +207,12 @@ export default function MediaLibrary() {
                         {file.filename}
                       </h3>
                     </div>
+                    {media.length > 1 ? (
+                      <p className="truncate text-xs text-muted-foreground">
+                        {getMediaSourceForItem(file, media)?.label ??
+                          'Unknown source'}
+                      </p>
+                    ) : null}
                   </div>
                 </div>
               ))}

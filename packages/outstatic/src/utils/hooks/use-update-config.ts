@@ -8,6 +8,7 @@ import { ConfigType } from '../metadata/types'
 import stringify from 'json-stable-stringify'
 import { toast } from 'sonner'
 import { useRebuildMediaJson } from './use-rebuild-media-json'
+import { syncLegacyMediaFields } from '../media-config'
 
 type SubmitDocumentProps = {
   setLoading: (loading: boolean) => void
@@ -66,10 +67,13 @@ export function useUpdateConfig({ setLoading }: SubmitDocumentProps) {
           throw new Error('Failed to fetch config')
         }
 
-        const updatedConfig = {
+        const nextConfig = {
           ...(config ?? {}),
           ...configFields
         }
+        const updatedConfig = nextConfig.media
+          ? syncLegacyMediaFields(nextConfig)
+          : nextConfig
 
         commitApi.replaceFile(
           configJsonPath,
@@ -83,6 +87,7 @@ export function useUpdateConfig({ setLoading }: SubmitDocumentProps) {
           loading: 'Updating config...',
           success: () => {
             setData({
+              media: updatedConfig.media ?? [],
               repoMediaPath: updatedConfig.repoMediaPath,
               publicMediaPath: updatedConfig.publicMediaPath
             })
@@ -91,7 +96,9 @@ export function useUpdateConfig({ setLoading }: SubmitDocumentProps) {
               setCallback(() => callbackFunction)
             }
 
-            setShouldRebuildMedia(!!updatedConfig.repoMediaPath)
+            setShouldRebuildMedia(
+              !!updatedConfig.repoMediaPath || !!updatedConfig.media?.length
+            )
 
             return 'Config updated successfully'
           },

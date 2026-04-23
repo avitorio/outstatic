@@ -3,7 +3,7 @@ import { getLocalDate } from '@/utils/get-local-date'
 import { parseContent } from '@/utils/parse-content'
 import { Editor } from '@tiptap/react'
 import matter from 'gray-matter'
-import { Dispatch, SetStateAction, useEffect, useState } from 'react'
+import { Dispatch, SetStateAction, useEffect, useRef } from 'react'
 import { UseFormReturn } from 'react-hook-form'
 import { useGetSingleton } from './use-get-singleton'
 import { useOutstatic } from './use-outstatic'
@@ -37,11 +37,12 @@ export const useSingletonUpdateEffect = ({
     repoOwner,
     repoSlug,
     repoBranch,
+    media,
     publicMediaPath,
     repoMediaPath
   } = useOutstatic()
 
-  const [parsedContent, setParsedContent] = useState(false)
+  const parsedContentRef = useRef(false)
   const { data: singletons } = useSingletons()
 
   const { data: document } = useGetSingleton({
@@ -63,7 +64,7 @@ export const useSingletonUpdateEffect = ({
   }, [enabled, slug, methods])
 
   useEffect(() => {
-    if (!enabled || parsedContent) return
+    if (!enabled || parsedContentRef.current) return
 
     if (document && editor) {
       const { mdDocument } = document
@@ -75,6 +76,7 @@ export const useSingletonUpdateEffect = ({
         repoOwner,
         repoSlug,
         repoBranch,
+        media,
         publicMediaPath,
         repoMediaPath
       })
@@ -104,7 +106,7 @@ export const useSingletonUpdateEffect = ({
       setShowDelete(true)
       setExtension(document.extension)
       setHasChanges(false)
-      setParsedContent(true)
+      parsedContentRef.current = true
     } else {
       // Set publishedAt value on slug update to avoid undefined on first render
       if (slug) {
@@ -124,6 +126,24 @@ export const useSingletonUpdateEffect = ({
     })
 
     return () => subscription.unsubscribe()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [document, editor])
+  }, [
+    basePath,
+    document,
+    editor,
+    enabled,
+    media,
+    methods,
+    publicMediaPath,
+    repoBranch,
+    repoMediaPath,
+    repoOwner,
+    repoSlug,
+    setExtension,
+    setHasChanges,
+    setMetadata,
+    setShowDelete,
+    setSingletonContentPath,
+    singletons,
+    slug
+  ])
 }

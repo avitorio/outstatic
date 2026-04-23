@@ -7,38 +7,62 @@ import { useCreateCommit } from './use-create-commit'
 import { createCommitApi } from '../create-commit-api'
 import { hashFromUrl } from '../hash-from-url'
 import { stringifyMedia } from '../metadata/stringify'
-import { MediaSchema } from '../metadata/types'
+import { MediaItem, MediaSchema, MediaSourceConfig } from '../metadata/types'
 import MurmurHash3 from 'imurmurhash'
-import { useGetFiles } from './use-get-files'
+import { GET_FILES } from '@/graphql/queries/files'
+import { getMediaTypeForFilename } from '../media-config'
 
-interface FileData {
-  __outstatic: {
-    hash: string
-    path: string
-    commit: string
-  }
-  filename: string
+type TreeEntry = {
+  path: string
+  name: string
   type: string
-  publishedAt: string
-  alt: string
+  object?: {
+    commitUrl?: string
+  }
 }
 
-const isImage = (fileName: string) => {
-  return /\.(jpg|jpeg|png|gif|webp|svg)$/i.test(fileName)
+type FilesResponse = {
+  repository?: {
+    object?: {
+      commitUrl?: string
+      entries?: TreeEntry[]
+    } | null
+  }
 }
+
+const createMediaItem = (
+  entry: TreeEntry,
+  source: MediaSourceConfig,
+  parentCommit: string
+): MediaItem => ({
+  __outstatic: {
+    hash: `${MurmurHash3().result()}`,
+    commit: entry.object?.commitUrl
+      ? hashFromUrl(entry.object.commitUrl)
+      : parentCommit,
+    path: `${entry.path}`
+  },
+  filename: `${entry.name}`,
+  type: getMediaTypeForFilename(entry.name, source),
+  source: source.name,
+  publishedAt: new Date().toISOString(),
+  alt: ''
+})
 
 export const useRebuildMediaJson = () => {
   const [total, setTotal] = useState(0)
   const [processed, setProcessed] = useState(0)
   const fetchOid = useOid()
   const mutation = useCreateCommit()
-  const { repoOwner, repoSlug, repoBranch, ostPath, repoMediaPath } =
-    useOutstatic()
-
-  const { refetch, data } = useGetFiles({
-    path: repoMediaPath || '',
-    enabled: false
-  })
+  const {
+    gqlClient,
+    repoOwner,
+    repoSlug,
+    repoBranch,
+    ostPath,
+    media,
+    session
+  } = useOutstatic()
 
   const toastId = 'media-json-rebuild'
 
@@ -57,79 +81,77 @@ export const useRebuildMediaJson = () => {
     }
   }, [processed, total])
 
-  const extractFiles = (data: any): FileData[] => {
-    const object = data?.repository?.object
-    const output: FileData[] = []
-    const queue = object?.entries ? [...object.entries] : []
-    while (queue.length > 0) {
-      const nextEntry = queue.pop()
-      if (nextEntry?.type === 'blob' && isImage(nextEntry.name)) {
-        output.push({
-          __outstatic: {
-            hash: `${MurmurHash3().result()}`,
-            commit: hashFromUrl(`${nextEntry.object.commitUrl}`),
-            path: `${nextEntry.path}`
-          },
-          filename: `${nextEntry.name}`,
-          type: 'image',
-          publishedAt: new Date().toISOString(),
-          alt: ''
-        })
-      }
-    }
-    return output
-  }
+  const fetchSourceFiles = useCallback(
+    async (source: MediaSourceConfig) => {
+      const { repository } = await gqlClient.request(GET_FILES, {
+        owner: repoOwner || session?.user?.login || '',
+        name: repoSlug,
+        contentPath: `${repoBranch}:${source.input}`
+      })
+
+      return { repository } as FilesResponse
+    },
+    [gqlClient, repoBranch, repoOwner, repoSlug, session?.user?.login]
+  )
 
   const processFiles = useCallback(
-    async (files: FileData[], onComplete?: () => void) => {
+    async (
+      files: MediaItem[],
+      parentCommit: string,
+      onComplete?: () => void
+    ) => {
       setTotal(Math.max(files.length, 1))
 
-      const pendingOid = fetchOid()
+      const oid = await fetchOid()
 
-      const oid = await pendingOid
+      if (!oid) {
+        throw new Error('Unable to determine repository oid')
+      }
 
-      if (files.length > 0 && oid) {
-        const parentHash = hashFromUrl(
-          // @ts-ignore
-          data?.repository?.object?.commitUrl ?? ''
-        )
-        const database: MediaSchema = {
-          commit: parentHash,
-          generated: new Date().toUTCString(),
-          media: files.filter(Boolean)
-        }
+      const database: MediaSchema = {
+        commit: parentCommit,
+        generated: new Date().toUTCString(),
+        media: files.filter(Boolean)
+      }
 
-        const commitApi = createCommitApi({
-          message: 'chore: Updates media.json',
-          owner: repoOwner,
-          name: repoSlug,
-          branch: repoBranch,
-          oid
+      const commitApi = createCommitApi({
+        message: 'chore: Updates media.json',
+        owner: repoOwner || session?.user?.login || '',
+        name: repoSlug,
+        branch: repoBranch,
+        oid
+      })
+
+      commitApi.replaceFile(
+        `${ostPath}/media/media.json`,
+        stringifyMedia(database)
+      )
+
+      const payload = commitApi.createInput()
+
+      try {
+        toast.promise(mutation.mutateAsync(payload), {
+          loading: 'Updating media library...',
+          success: () => {
+            onComplete?.()
+            return 'Media library updated successfully'
+          },
+          error: 'Failed to update media library'
         })
-
-        commitApi.replaceFile(
-          `${ostPath}/media/media.json`,
-          stringifyMedia(database)
-        )
-
-        const payload = commitApi.createInput()
-
-        try {
-          toast.promise(mutation.mutateAsync(payload), {
-            loading: 'Updating media library...',
-            success: () => {
-              onComplete?.()
-              return 'Media library updated successfully'
-            },
-            error: 'Failed to update media library'
-          })
-        } catch (error) {
-          console.error(error)
-          throw error
-        }
+      } catch (error) {
+        console.error(error)
+        throw error
       }
     },
-    [data, fetchOid, mutation, ostPath, repoBranch, repoOwner, repoSlug]
+    [
+      fetchOid,
+      mutation,
+      ostPath,
+      repoBranch,
+      repoOwner,
+      repoSlug,
+      session?.user?.login
+    ]
   )
 
   const rebuildMediaJson = useCallback(
@@ -138,48 +160,72 @@ export const useRebuildMediaJson = () => {
     }: {
       onComplete?: () => void
     } = {}) => {
+      const configuredSources = media ?? []
+
+      if (configuredSources.length === 0) {
+        return
+      }
+
       return new Promise((resolve, reject) => {
         toast.promise(
-          refetch().then(({ data }) => {
-            if (!data) {
-              console.log('No data found')
-              reject('No data found')
-              return
-            }
+          Promise.all(
+            configuredSources.map((source) => fetchSourceFiles(source))
+          ).then((responses) => {
+            const mediaItems: MediaItem[] = []
 
-            const files = extractFiles(data)
-            if (files.length === 0) {
-              console.log('No files found')
-              reject('No files found')
-              return
-            }
+            responses.forEach((response, index) => {
+              const source = configuredSources[index]
+              const entries = response.repository?.object?.entries ?? []
+              const parentCommit = response.repository?.object?.commitUrl
+                ? hashFromUrl(response.repository.object.commitUrl)
+                : ''
+
+              entries.forEach((entry) => {
+                if (entry.type !== 'blob') {
+                  return
+                }
+
+                mediaItems.push(createMediaItem(entry, source, parentCommit))
+              })
+            })
+
+            const parentCommit =
+              responses
+                .map((response) => response.repository?.object?.commitUrl)
+                .find(Boolean)
+                ?.toString()
+                ?.trim() ?? ''
 
             return toast.promise(
-              processFiles(files, () => onComplete?.()),
+              processFiles(
+                mediaItems,
+                parentCommit ? hashFromUrl(parentCommit) : '',
+                () => onComplete?.()
+              ),
               {
                 id: toastId,
                 duration: 4000,
-                loading: `Processing files...`,
+                loading: 'Processing files...',
                 success: 'Files processed successfully',
                 error: 'Error processing files'
               }
             )
           }),
           {
-            loading: 'Fetching image files...',
+            loading: 'Fetching media files...',
             success: () => {
               resolve(undefined)
-              return 'Images fetched successfully'
+              return 'Media files fetched successfully'
             },
             error: (err) => {
               reject(err)
-              return 'Failed to fetch images'
+              return 'Failed to fetch media files'
             }
           }
         )
       })
     },
-    [refetch, processFiles]
+    [fetchSourceFiles, media, processFiles]
   )
 
   return rebuildMediaJson

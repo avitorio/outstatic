@@ -81,7 +81,7 @@ export default function Settings() {
           <CardHeader>
             <CardTitle>Media Library</CardTitle>
             <CardDescription>
-              Configure where uploaded media files are stored and served from.
+              Configure media sources, folders, and supported file types.
             </CardDescription>
           </CardHeader>
           <CardContent>

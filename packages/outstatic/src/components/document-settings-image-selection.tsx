@@ -13,6 +13,11 @@ import { Input } from '@/components/ui/shadcn/input'
 import { SpinnerIcon } from '@/components/ui/outstatic/spinner-icon'
 import { ImageOff } from 'lucide-react'
 import { DocumentContext } from '@/context'
+import {
+  buildMediaApiPath,
+  getFilenameFromPublicMediaPath,
+  getSourceForPublicPath
+} from '@/utils/media-config'
 
 type DocumentSettingsImageSelectionProps = {
   id: string
@@ -25,6 +30,7 @@ export const DocumentSettingsImageSelection = ({
 }: DocumentSettingsImageSelectionProps) => {
   const {
     basePath,
+    media,
     publicMediaPath,
     repoOwner,
     repoSlug,
@@ -57,13 +63,29 @@ export const DocumentSettingsImageSelection = ({
       return selectedImage
     }
 
-    return selectedImage.replace(
-      `/${publicMediaPath}`,
-      `${basePath}${API_MEDIA_PATH}${repoOwner}/${repoSlug}/${repoBranch}/${repoMediaPath}`
-    )
+    const source = getSourceForPublicPath(selectedImage, media ?? [])
+
+    if (!source) {
+      return selectedImage.replace(
+        `/${publicMediaPath}`,
+        `${basePath}${API_MEDIA_PATH}${repoOwner}/${repoSlug}/${repoBranch}/${repoMediaPath}`
+      )
+    }
+
+    const filename = getFilenameFromPublicMediaPath(selectedImage, source)
+
+    return buildMediaApiPath({
+      basePath,
+      repoOwner,
+      repoSlug,
+      repoBranch,
+      source,
+      filename
+    })
   }, [
     selectedImage,
     basePath,
+    media,
     publicMediaPath,
     repoOwner,
     repoSlug,

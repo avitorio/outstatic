@@ -19,6 +19,20 @@ const mockUseSubmitMedia = useSubmitMedia as jest.Mock
 const mockToastError = toast.error as jest.Mock
 const mockToastPromise = toast.promise as jest.Mock
 const submitMediaMock = jest.fn()
+const imageSource = {
+  name: 'images',
+  label: 'Images',
+  input: 'media',
+  output: '/media',
+  categories: ['image']
+} as const
+const documentSource = {
+  name: 'docs',
+  label: 'Documents',
+  input: 'media/docs',
+  output: '/media/docs',
+  categories: ['document']
+} as const
 
 const createFileList = (files: File[]) =>
   Object.assign(files, {
@@ -67,20 +81,25 @@ describe('useMediaLibraryUpload', () => {
   it('uploads a single image through the shared submit hook', async () => {
     submitMediaMock.mockResolvedValue(undefined)
     const file = new File(['image'], 'photo.png', { type: 'image/png' })
-    const { result } = renderHook(() => useMediaLibraryUpload())
+    const { result } = renderHook(() =>
+      useMediaLibraryUpload({ source: imageSource })
+    )
 
     await act(async () => {
       await result.current.handleFileUpload(createFileList([file]))
     })
 
     expect(mockToastPromise).toHaveBeenCalled()
-    expect(submitMediaMock).toHaveBeenCalledWith([
-      {
-        filename: 'photo.png',
-        type: 'image',
-        content: 'YWJj'
-      }
-    ])
+    expect(submitMediaMock).toHaveBeenCalledWith({
+      files: [
+        {
+          filename: 'photo.png',
+          type: 'image',
+          content: 'YWJj'
+        }
+      ],
+      source: imageSource
+    })
     expect(mockToastPromise).toHaveBeenCalledWith(
       submitMediaMock.mock.results[0]?.value,
       expect.objectContaining({
@@ -96,7 +115,9 @@ describe('useMediaLibraryUpload', () => {
     submitMediaMock.mockResolvedValue(undefined)
     const firstFile = new File(['image'], 'photo.png', { type: 'image/png' })
     const secondFile = new File(['image'], 'second.png', { type: 'image/png' })
-    const { result } = renderHook(() => useMediaLibraryUpload())
+    const { result } = renderHook(() =>
+      useMediaLibraryUpload({ source: imageSource })
+    )
 
     await act(async () => {
       await result.current.handleFileUpload(
@@ -104,18 +125,21 @@ describe('useMediaLibraryUpload', () => {
       )
     })
 
-    expect(submitMediaMock).toHaveBeenCalledWith([
-      {
-        filename: 'photo.png',
-        type: 'image',
-        content: 'YWJj'
-      },
-      {
-        filename: 'second.png',
-        type: 'image',
-        content: 'YWJj'
-      }
-    ])
+    expect(submitMediaMock).toHaveBeenCalledWith({
+      files: [
+        {
+          filename: 'photo.png',
+          type: 'image',
+          content: 'YWJj'
+        },
+        {
+          filename: 'second.png',
+          type: 'image',
+          content: 'YWJj'
+        }
+      ],
+      source: imageSource
+    })
     expect(mockToastPromise).toHaveBeenCalledWith(
       submitMediaMock.mock.results[0]?.value,
       expect.objectContaining({
@@ -135,7 +159,9 @@ describe('useMediaLibraryUpload', () => {
       'large.png',
       { type: 'image/png' }
     )
-    const { result } = renderHook(() => useMediaLibraryUpload())
+    const { result } = renderHook(() =>
+      useMediaLibraryUpload({ source: imageSource })
+    )
 
     await act(async () => {
       await result.current.handleFileUpload(
@@ -143,13 +169,16 @@ describe('useMediaLibraryUpload', () => {
       )
     })
 
-    expect(submitMediaMock).toHaveBeenCalledWith([
-      {
-        filename: 'photo.png',
-        type: 'image',
-        content: 'YWJj'
-      }
-    ])
+    expect(submitMediaMock).toHaveBeenCalledWith({
+      files: [
+        {
+          filename: 'photo.png',
+          type: 'image',
+          content: 'YWJj'
+        }
+      ],
+      source: imageSource
+    })
     expect(mockToastPromise).toHaveBeenCalledWith(
       submitMediaMock.mock.results[0]?.value,
       expect.objectContaining({
@@ -167,7 +196,9 @@ describe('useMediaLibraryUpload', () => {
       (_, index) =>
         new File(['image'], `photo-${index}.png`, { type: 'image/png' })
     )
-    const { result } = renderHook(() => useMediaLibraryUpload())
+    const { result } = renderHook(() =>
+      useMediaLibraryUpload({ source: imageSource })
+    )
 
     await act(async () => {
       await result.current.handleFileUpload(createFileList(files))
@@ -186,7 +217,9 @@ describe('useMediaLibraryUpload', () => {
     const unreadableFile = new File(['image'], 'broken.png', {
       type: 'image/png'
     })
-    const { result } = renderHook(() => useMediaLibraryUpload())
+    const { result } = renderHook(() =>
+      useMediaLibraryUpload({ source: imageSource })
+    )
 
     await act(async () => {
       await result.current.handleFileUpload(
@@ -194,13 +227,16 @@ describe('useMediaLibraryUpload', () => {
       )
     })
 
-    expect(submitMediaMock).toHaveBeenCalledWith([
-      {
-        filename: 'photo.png',
-        type: 'image',
-        content: 'YWJj'
-      }
-    ])
+    expect(submitMediaMock).toHaveBeenCalledWith({
+      files: [
+        {
+          filename: 'photo.png',
+          type: 'image',
+          content: 'YWJj'
+        }
+      ],
+      source: imageSource
+    })
     expect(mockToastPromise).toHaveBeenCalledWith(
       submitMediaMock.mock.results[0]?.value,
       expect.objectContaining({
@@ -219,7 +255,9 @@ describe('useMediaLibraryUpload', () => {
     const unreadableFile = new File(['image'], 'broken.png', {
       type: 'image/png'
     })
-    const { result } = renderHook(() => useMediaLibraryUpload())
+    const { result } = renderHook(() =>
+      useMediaLibraryUpload({ source: imageSource })
+    )
 
     await act(async () => {
       await result.current.handleFileUpload(
@@ -232,5 +270,52 @@ describe('useMediaLibraryUpload', () => {
     )
     expect(mockToastPromise).not.toHaveBeenCalled()
     expect(submitMediaMock).not.toHaveBeenCalled()
+  })
+
+  it('routes all-media uploads to matching sources by extension', async () => {
+    submitMediaMock.mockResolvedValue(undefined)
+    const imageFile = new File(['image'], 'photo.png', { type: 'image/png' })
+    const documentFile = new File(['document'], 'paper.pdf', {
+      type: 'application/pdf'
+    })
+    const { result } = renderHook(() =>
+      useMediaLibraryUpload({ sources: [imageSource, documentSource] })
+    )
+
+    await act(async () => {
+      await result.current.handleFileUpload(
+        createFileList([imageFile, documentFile])
+      )
+    })
+
+    expect(submitMediaMock).toHaveBeenCalledTimes(2)
+    expect(submitMediaMock).toHaveBeenCalledWith({
+      files: [
+        {
+          filename: 'photo.png',
+          type: 'image',
+          content: 'YWJj'
+        }
+      ],
+      source: imageSource
+    })
+    expect(submitMediaMock).toHaveBeenCalledWith({
+      files: [
+        {
+          filename: 'paper.pdf',
+          type: 'document',
+          content: 'YWJj'
+        }
+      ],
+      source: documentSource
+    })
+    expect(mockToastPromise).toHaveBeenCalledWith(
+      expect.any(Promise),
+      expect.objectContaining({
+        loading: 'Uploading 2 files...',
+        success: 'Uploaded 2 files.',
+        error: 'Failed to upload 2 files.'
+      })
+    )
   })
 })

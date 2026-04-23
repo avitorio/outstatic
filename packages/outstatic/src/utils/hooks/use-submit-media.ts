@@ -5,10 +5,11 @@ import { useOutstatic } from '@/utils/hooks/use-outstatic'
 import { stringifyMedia } from '@/utils/metadata/stringify'
 import MurmurHash3 from 'imurmurhash'
 import { useCallback } from 'react'
-import { MediaItem, MediaSchema } from '../metadata/types'
+import { MediaItem, MediaSchema, MediaSourceConfig } from '../metadata/types'
 import { useCreateCommit } from './use-create-commit'
 import useOid from './use-oid'
 import { useGetMediaFiles } from './use-get-media-files'
+import { buildRepoMediaPath, getMediaTypeForFilename } from '../media-config'
 
 const createMediaFilename = (filename: string) => {
   const randString = window.btoa(Math.random().toString()).substring(10, 6)
@@ -21,14 +22,8 @@ const createMediaFilename = (filename: string) => {
 
 function useSubmitMedia() {
   const createCommit = useCreateCommit()
-  const {
-    repoOwner,
-    repoSlug,
-    repoBranch,
-    repoMediaPath,
-    session,
-    mediaJsonPath
-  } = useOutstatic()
+  const { repoOwner, repoSlug, repoBranch, session, mediaJsonPath } =
+    useOutstatic()
   const fetchOid = useOid()
 
   const { refetch: refetchMedia } = useGetMediaFiles({
@@ -36,8 +31,14 @@ function useSubmitMedia() {
   })
 
   const onSubmit = useCallback(
-    async (files: FileType[]) => {
-      if (files.length === 0) {
+    async ({
+      files,
+      source
+    }: {
+      files: FileType[]
+      source?: MediaSourceConfig
+    }) => {
+      if (files.length === 0 || !source) {
         return
       }
 
@@ -66,9 +67,9 @@ function useSubmitMedia() {
         const commit = hashFromUrl(mediaData?.commitUrl ?? '')
 
         const newMedia: MediaItem[] = files.map(
-          ({ filename, type, content: fileContents }) => {
+          ({ filename, content: fileContents }) => {
             const newFilename = createMediaFilename(filename)
-            const filePath = `${repoMediaPath}${newFilename}`
+            const filePath = buildRepoMediaPath(source, newFilename)
 
             capi.replaceFile(filePath, fileContents, false)
 
@@ -79,7 +80,8 @@ function useSubmitMedia() {
                 path: `${filePath}`
               },
               filename: newFilename,
-              type,
+              type: getMediaTypeForFilename(newFilename, source),
+              source: source.name,
               publishedAt: new Date().toISOString(),
               alt: ''
             }
@@ -115,7 +117,6 @@ function useSubmitMedia() {
       fetchOid,
       repoSlug,
       repoBranch,
-      repoMediaPath,
       mediaJsonPath,
       refetchMedia
     ]

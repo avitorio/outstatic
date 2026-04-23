@@ -1,34 +1,26 @@
 import React from 'react'
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription
-} from '@/components/ui/shadcn/dialog'
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/shadcn/dialog'
 import { MediaSettings } from '@/client/pages/settings/_components/media-settings'
 
 interface MediaSettingsDialogProps {
-  title?: string
-  description?: string
   showMediaPathDialog: boolean
   setShowMediaPathDialog: (show: boolean) => void
   callbackFunction?: () => void | Promise<void>
 }
 
 export const MediaSettingsDialog: React.FC<MediaSettingsDialogProps> = ({
-  title = 'First time here?',
-  description = "It seems you haven't set up your media paths yet. Let's do that!",
   showMediaPathDialog,
   setShowMediaPathDialog,
   callbackFunction
 }) => {
   return (
     <Dialog open={showMediaPathDialog} onOpenChange={setShowMediaPathDialog}>
-      <DialogContent>
+      <DialogContent className="[&>button:last-child]:hidden">
         <DialogHeader>
-          <DialogTitle>{title}</DialogTitle>
-          <DialogDescription>{description}</DialogDescription>
+          <DialogTitle>Media Settings</DialogTitle>
+          <DialogDescription>
+            Configure your media sources, folders, and supported file types.
+          </DialogDescription>
         </DialogHeader>
         <MediaSettings
           onSettingsUpdate={() => {
@@ -41,4 +33,3 @@ export const MediaSettingsDialog: React.FC<MediaSettingsDialogProps> = ({
     </Dialog>
   )
 }
-

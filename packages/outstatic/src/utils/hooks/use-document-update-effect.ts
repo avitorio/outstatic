@@ -3,7 +3,7 @@ import { getLocalDate } from '@/utils/get-local-date'
 import { parseContent } from '@/utils/parse-content'
 import { Editor } from '@tiptap/react'
 import matter from 'gray-matter'
-import { Dispatch, SetStateAction, useEffect, useState } from 'react'
+import { Dispatch, SetStateAction, useEffect, useRef } from 'react'
 import { UseFormReturn } from 'react-hook-form'
 import { useGetDocument } from './use-get-document'
 import { useOutstatic } from './use-outstatic'
@@ -35,11 +35,12 @@ export const useDocumentUpdateEffect = ({
     repoOwner,
     repoSlug,
     repoBranch,
+    media,
     publicMediaPath,
     repoMediaPath
   } = useOutstatic()
 
-  const [parsedContent, setParsedContent] = useState(false)
+  const parsedContentRef = useRef(false)
 
   const { data: collections } = useCollections({
     enabled: slug !== 'new'
@@ -62,7 +63,7 @@ export const useDocumentUpdateEffect = ({
   })
 
   useEffect(() => {
-    if (parsedContent) return
+    if (parsedContentRef.current) return
 
     if (document && editor) {
       const { mdDocument } = document
@@ -74,6 +75,7 @@ export const useDocumentUpdateEffect = ({
         repoOwner,
         repoSlug,
         repoBranch,
+        media,
         publicMediaPath,
         repoMediaPath
       })
@@ -98,7 +100,7 @@ export const useDocumentUpdateEffect = ({
       setShowDelete(slug !== 'new')
       setExtension(document.extension)
       setHasChanges(false)
-      setParsedContent(true)
+      parsedContentRef.current = true
     } else {
       // Set publishedAt value on slug update to avoid undefined on first render
       if (slug) {
@@ -118,6 +120,21 @@ export const useDocumentUpdateEffect = ({
     })
 
     return () => subscription.unsubscribe()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [document, editor])
+  }, [
+    document,
+    editor,
+    basePath,
+    media,
+    publicMediaPath,
+    repoBranch,
+    repoMediaPath,
+    repoOwner,
+    repoSlug,
+    methods,
+    setExtension,
+    setHasChanges,
+    setMetadata,
+    setShowDelete,
+    slug
+  ])
 }

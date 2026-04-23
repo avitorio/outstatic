@@ -24,6 +24,7 @@ import {
   replaceMediaFile,
   syncCustomFieldTags
 } from './use-submit-entry-shared'
+import { getFirstImageMediaSource } from '../media-config'
 
 type SubmitDocumentProps = {
   session: LoginSession | null
@@ -70,6 +71,7 @@ function useSubmitDocument({
     basePath,
     publicMediaPath,
     repoMediaPath,
+    media,
     mediaJsonPath,
     configJsonPath
   } = useOutstatic()
@@ -80,6 +82,8 @@ function useSubmitDocument({
   const { refetch: refetchMedia } = useGetMediaFiles({ enabled: false })
   const { refetch: refetchCollections } = useCollections({ enabled: false })
   const { refetch: refetchConfig } = useGetConfig({ enabled: false })
+
+  const imageMediaSource = getFirstImageMediaSource(media ?? [])
 
   const onSubmit = useCallback(
     async (data: Document, options?: OnSubmitOptions) => {
@@ -120,6 +124,7 @@ function useSubmitDocument({
           repoOwner,
           repoSlug,
           repoBranch,
+          media,
           repoMediaPath,
           publicMediaPath
         })
@@ -144,12 +149,11 @@ function useSubmitDocument({
           capi.removeFile(`${collectionPath}${oldSlug}.${extension}`)
         }
 
-        const { content: nextContent, media } = addReferencedMedia({
+        const { content: nextContent, media: nextMedia } = addReferencedMedia({
           files,
           content,
           capi,
-          repoMediaPath,
-          publicMediaPath
+          source: imageMediaSource
         })
         content = nextContent
 
@@ -214,7 +218,7 @@ function useSubmitDocument({
         )
 
         await replaceMediaFile({
-          media,
+          media: nextMedia,
           metadataState,
           refetchMedia,
           mediaJsonPath,
@@ -274,6 +278,8 @@ function useSubmitDocument({
       refetchMedia,
       refetchCollections,
       refetchConfig,
+      imageMediaSource,
+      media,
       publicMediaPath,
       repoMediaPath
     ]

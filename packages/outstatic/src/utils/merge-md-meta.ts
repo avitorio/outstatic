@@ -1,20 +1,38 @@
 import { Document } from '@/types'
 import { convert } from '@catalystic/json-to-yaml'
-import { API_MEDIA_PATH } from './constants'
 import replaceImagePath from './replace-image-path'
+import {
+  buildMediaApiPrefix,
+  buildPublicMediaPath,
+  resolveMediaSources
+} from './media-config'
+import { MediaSourceConfig } from './metadata/types'
+
+const escapeRegExp = (value: string) =>
+  value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 
 export const mergeMdMeta = ({
   data,
   basePath,
-  repoInfo,
-  publicMediaPath
+  repoOwner,
+  repoSlug,
+  repoBranch,
+  media,
+  publicMediaPath,
+  repoMediaPath
 }: {
   data: Document & Record<string, any>
   basePath: string
-  repoInfo: string
-  publicMediaPath: string
+  repoOwner: string
+  repoSlug: string
+  repoBranch: string
+  media?: MediaSourceConfig[]
+  publicMediaPath?: string
+  repoMediaPath?: string
 }): string => {
-  const apiMediaPath = `${basePath}${API_MEDIA_PATH}${repoInfo}`
+  const sources = media?.length
+    ? media
+    : resolveMediaSources({ publicMediaPath, repoMediaPath })
 
   const processValue = (value: any): any => {
     if (value instanceof Date) {
@@ -31,11 +49,24 @@ export const mergeMdMeta = ({
         ])
       )
     }
-    if (typeof value === 'string' && value.startsWith(apiMediaPath)) {
-      const regex = new RegExp(`(${apiMediaPath})([^\\s"'\\)]+)`, 'g')
-      return value.replace(regex, (_match, _apiPath, filename) => {
-        return `/${publicMediaPath}${filename}`
-      })
+    if (typeof value === 'string') {
+      return sources.reduce((currentValue, source) => {
+        const apiMediaPath = buildMediaApiPrefix({
+          basePath,
+          repoOwner,
+          repoSlug,
+          repoBranch,
+          source
+        })
+        const regex = new RegExp(
+          `(${escapeRegExp(apiMediaPath)})([^\\s"'\\)]+)`,
+          'g'
+        )
+
+        return currentValue.replace(regex, (_match, _apiPath, filename) => {
+          return buildPublicMediaPath(source, filename)
+        })
+      }, value)
     }
     return value
   }
@@ -62,8 +93,12 @@ export const mergeMdMeta = ({
   const newContent = replaceImagePath({
     markdownContent: data.content,
     basePath,
-    repoInfo,
-    publicMediaPath
+    repoOwner,
+    repoSlug,
+    repoBranch,
+    media: sources,
+    publicMediaPath,
+    repoMediaPath
   })
 
   merged += newContent

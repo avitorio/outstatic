@@ -129,5 +129,65 @@ describe('ConfigSchema', () => {
         expect(result.data).toEqual({})
       }
     })
+
+    it('preserves custom media output paths exactly as entered', () => {
+      const result = ConfigSchema.safeParse({
+        media: [
+          {
+            name: 'images',
+            label: 'Images',
+            input: 'media/images',
+            output: './assets',
+            extensions: ['png']
+          }
+        ]
+      })
+
+      expect(result.success).toBe(true)
+      if (result.success) {
+        expect(result.data.media?.[0]?.output).toBe('./assets')
+      }
+    })
+
+    it('rejects overlapping media source extensions', () => {
+      const result = ConfigSchema.safeParse({
+        media: [
+          {
+            name: 'images',
+            label: 'Images',
+            input: 'media/images',
+            output: '/media/images',
+            categories: ['image']
+          },
+          {
+            name: 'photos',
+            label: 'Photos',
+            input: 'media/photos',
+            output: '/media/photos',
+            extensions: ['png', 'webp']
+          }
+        ]
+      })
+
+      expect(result.success).toBe(false)
+      if (!result.success) {
+        expect(
+          result.error.issues.some(
+            (issue) =>
+              issue.path.join('.') === 'media.0.extensions' &&
+              issue.message.includes('png') &&
+              issue.message.includes('webp')
+          )
+        ).toBe(true)
+        expect(
+          result.error.issues.some(
+            (issue) =>
+              issue.path.join('.') === 'media.1.extensions' &&
+              issue.message.includes('png') &&
+              issue.message.includes('webp')
+          )
+        ).toBe(true)
+      }
+    })
   })
 })
