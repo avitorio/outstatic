@@ -168,13 +168,29 @@ export const useRebuildMediaJson = () => {
 
       return new Promise((resolve, reject) => {
         toast.promise(
-          Promise.all(
+          Promise.allSettled(
             configuredSources.map((source) => fetchSourceFiles(source))
-          ).then((responses) => {
+          ).then((results) => {
             const mediaItems: MediaItem[] = []
+            const responses = results.flatMap((result, index) => {
+              if (result.status === 'fulfilled') {
+                return [
+                  {
+                    response: result.value,
+                    source: configuredSources[index]
+                  }
+                ]
+              }
 
-            responses.forEach((response, index) => {
-              const source = configuredSources[index]
+              console.error(
+                `Failed to fetch media files for source "${configuredSources[index]?.name ?? 'unknown'}".`,
+                result.reason
+              )
+
+              return []
+            })
+
+            responses.forEach(({ response, source }) => {
               const entries = response.repository?.object?.entries ?? []
               const parentCommit = response.repository?.object?.commitUrl
                 ? hashFromUrl(response.repository.object.commitUrl)
@@ -191,7 +207,7 @@ export const useRebuildMediaJson = () => {
 
             const parentCommit =
               responses
-                .map((response) => response.repository?.object?.commitUrl)
+                .map(({ response }) => response.repository?.object?.commitUrl)
                 .find(Boolean)
                 ?.toString()
                 ?.trim() ?? ''

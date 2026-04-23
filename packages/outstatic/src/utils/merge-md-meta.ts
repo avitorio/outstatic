@@ -4,7 +4,8 @@ import replaceImagePath from './replace-image-path'
 import {
   buildMediaApiPrefix,
   buildPublicMediaPath,
-  resolveMediaSources
+  resolveMediaSources,
+  sortMediaSourcesByRepoPathSpecificity
 } from './media-config'
 import { MediaSourceConfig } from './metadata/types'
 
@@ -50,23 +51,26 @@ export const mergeMdMeta = ({
       )
     }
     if (typeof value === 'string') {
-      return sources.reduce((currentValue, source) => {
-        const apiMediaPath = buildMediaApiPrefix({
-          basePath,
-          repoOwner,
-          repoSlug,
-          repoBranch,
-          source
-        })
-        const regex = new RegExp(
-          `(${escapeRegExp(apiMediaPath)})([^\\s"'\\)]+)`,
-          'g'
-        )
+      return sortMediaSourcesByRepoPathSpecificity(sources).reduce(
+        (currentValue, source) => {
+          const apiMediaPath = buildMediaApiPrefix({
+            basePath,
+            repoOwner,
+            repoSlug,
+            repoBranch,
+            source
+          })
+          const regex = new RegExp(
+            `(${escapeRegExp(apiMediaPath)})([^\\s"'\\)]+)`,
+            'g'
+          )
 
-        return currentValue.replace(regex, (_match, _apiPath, filename) => {
-          return buildPublicMediaPath(source, filename)
-        })
-      }, value)
+          return currentValue.replace(regex, (_match, _apiPath, filename) => {
+            return buildPublicMediaPath(source, filename)
+          })
+        },
+        value
+      )
     }
     return value
   }

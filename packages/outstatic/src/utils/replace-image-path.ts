@@ -1,7 +1,8 @@
 import {
   buildMediaApiPrefix,
   buildPublicMediaPath,
-  resolveMediaSources
+  resolveMediaSources,
+  sortMediaSourcesByRepoPathSpecificity
 } from './media-config'
 import { MediaSourceConfig } from './metadata/types'
 
@@ -35,23 +36,26 @@ function replaceImagePath({
     ? media
     : resolveMediaSources({ publicMediaPath, repoMediaPath })
 
-  return sources.reduce((content, source) => {
-    const apiMediaPath = buildMediaApiPrefix({
-      basePath,
-      repoOwner,
-      repoSlug,
-      repoBranch,
-      source
-    })
-    const regex = new RegExp(
-      `!\\[([^\\]]*?)\\]\\((${escapeRegExp(apiMediaPath)})([^\\)]+?)\\)`,
-      'g'
-    )
+  return sortMediaSourcesByRepoPathSpecificity(sources).reduce(
+    (content, source) => {
+      const apiMediaPath = buildMediaApiPrefix({
+        basePath,
+        repoOwner,
+        repoSlug,
+        repoBranch,
+        source
+      })
+      const regex = new RegExp(
+        `!\\[([^\\]]*?)\\]\\((${escapeRegExp(apiMediaPath)})([^\\)]+?)\\)`,
+        'g'
+      )
 
-    return content.replace(regex, (_match, altText, _apiPath, filename) => {
-      return `![${altText}](${buildPublicMediaPath(source, filename)})`
-    })
-  }, markdownContent)
+      return content.replace(regex, (_match, altText, _apiPath, filename) => {
+        return `![${altText}](${buildPublicMediaPath(source, filename)})`
+      })
+    },
+    markdownContent
+  )
 }
 
 export default replaceImagePath

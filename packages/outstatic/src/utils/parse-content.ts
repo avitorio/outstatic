@@ -1,7 +1,8 @@
 import {
   buildMediaApiPrefix,
   getPublicMediaPathPrefix,
-  resolveMediaSources
+  resolveMediaSources,
+  sortMediaSourcesByPublicPathSpecificity
 } from './media-config'
 import { MediaSourceConfig } from './metadata/types'
 
@@ -37,21 +38,24 @@ export const parseContent = ({
     return content
   }
 
-  return sources.reduce((result, source) => {
-    const mediaRegex = new RegExp(
-      `(\\!\\[[^\\]]*\\]\\()${escapeRegExp(getPublicMediaPathPrefix(source))}([^)]+)`,
-      'g'
-    )
+  return sortMediaSourcesByPublicPathSpecificity(sources).reduce(
+    (result, source) => {
+      const mediaRegex = new RegExp(
+        `(\\!\\[[^\\]]*\\]\\()${escapeRegExp(getPublicMediaPathPrefix(source))}([^)]+)`,
+        'g'
+      )
 
-    return result.replace(
-      mediaRegex,
-      `$1${buildMediaApiPrefix({
-        basePath,
-        repoOwner,
-        repoSlug,
-        repoBranch,
-        source
-      })}$2`
-    )
-  }, content)
+      return result.replace(
+        mediaRegex,
+        `$1${buildMediaApiPrefix({
+          basePath,
+          repoOwner,
+          repoSlug,
+          repoBranch,
+          source
+        })}$2`
+      )
+    },
+    content
+  )
 }

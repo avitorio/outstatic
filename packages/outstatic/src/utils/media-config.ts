@@ -75,6 +75,19 @@ const normalizeComparablePublicPath = (value: string) => {
     : `/${normalizedValue}`
 }
 
+export const sortMediaSourcesByRepoPathSpecificity = (
+  sources: MediaSourceConfig[]
+) => [...sources].sort((a, b) => b.input.length - a.input.length)
+
+export const sortMediaSourcesByPublicPathSpecificity = (
+  sources: MediaSourceConfig[]
+) =>
+  [...sources].sort(
+    (a, b) =>
+      normalizeComparablePublicPath(getPublicPathPrefix(b.output)).length -
+      normalizeComparablePublicPath(getPublicPathPrefix(a.output)).length
+  )
+
 export const normalizeExtension = (value: string) =>
   value.trim().toLowerCase().replace(/^\./, '')
 
@@ -271,12 +284,10 @@ export const getSourceForRepoPath = (
 ) => {
   const normalizedPath = trimSlashes(repoPath)
 
-  return [...sources]
-    .sort((a, b) => b.input.length - a.input.length)
-    .find((source) => {
-      const prefix = buildSourcePathPrefix(source.input)
-      return normalizedPath.startsWith(prefix)
-    })
+  return sortMediaSourcesByRepoPathSpecificity(sources).find((source) => {
+    const prefix = buildSourcePathPrefix(source.input)
+    return normalizedPath.startsWith(prefix)
+  })
 }
 
 export const getSourceForPublicPath = (
@@ -285,18 +296,12 @@ export const getSourceForPublicPath = (
 ) => {
   const normalizedPath = normalizeComparablePublicPath(publicPath)
 
-  return [...sources]
-    .sort(
-      (a, b) =>
-        normalizeComparablePublicPath(getPublicPathPrefix(b.output)).length -
-        normalizeComparablePublicPath(getPublicPathPrefix(a.output)).length
+  return sortMediaSourcesByPublicPathSpecificity(sources).find((source) => {
+    const prefix = normalizeComparablePublicPath(
+      getPublicPathPrefix(source.output)
     )
-    .find((source) => {
-      const prefix = normalizeComparablePublicPath(
-        getPublicPathPrefix(source.output)
-      )
-      return normalizedPath.startsWith(prefix)
-    })
+    return normalizedPath.startsWith(prefix)
+  })
 }
 
 export const getPublicMediaPathPrefix = (

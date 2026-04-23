@@ -3,6 +3,7 @@ import {
   deriveStoredMediaExtensions,
   getFilenameFromPublicMediaPath,
   getPresetExtensionsForCategories,
+  getSourceForRepoPath,
   getSourceForPublicPath,
   normalizeMediaSource
 } from './media-config'
@@ -84,6 +85,49 @@ describe('media-config helpers', () => {
     )
     expect(getFilenameFromPublicMediaPath('./assets/example.png', source)).toBe(
       'example.png'
+    )
+  })
+
+  it('prefers the most specific source when repo paths overlap', () => {
+    const sources = [
+      normalizeMediaSource({
+        name: 'media',
+        label: 'Media',
+        input: 'media',
+        output: '/media',
+        categories: ['image']
+      }),
+      normalizeMediaSource({
+        name: 'docs',
+        label: 'Docs',
+        input: 'media/docs',
+        output: '/media/docs',
+        categories: ['document']
+      })
+    ]
+
+    expect(getSourceForRepoPath('media/docs/file.pdf', sources)?.name).toBe(
+      'docs'
+    )
+    expect(getSourceForPublicPath('/media/docs/file.pdf', sources)?.name).toBe(
+      'docs'
+    )
+  })
+
+  it('does not match sibling prefixes that only share a startsWith prefix', () => {
+    const source = normalizeMediaSource({
+      name: 'media',
+      label: 'Media',
+      input: 'media',
+      output: '/media',
+      categories: ['image']
+    })
+
+    expect(getSourceForRepoPath('media-backup/file.png', [source])).toBe(
+      undefined
+    )
+    expect(getSourceForPublicPath('/media-backup/file.png', [source])).toBe(
+      undefined
     )
   })
 })

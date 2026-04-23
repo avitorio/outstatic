@@ -14,6 +14,16 @@ const legacyMediaPathSchema = z
     message: "Path must end with '/'"
   })
 
+const hasParentDirectorySegment = (path: string) =>
+  path.split(/[\\/]+/).some((segment) => segment === '..')
+
+const safeLegacyMediaPathSchema = legacyMediaPathSchema.refine(
+  (path) => !hasParentDirectorySegment(path),
+  {
+    message: 'Path must not contain parent-directory segments.'
+  }
+)
+
 const MediaSourceSchema = z
   .object({
     name: z.string().trim().min(1),
@@ -27,6 +37,24 @@ const MediaSourceSchema = z
   .superRefine((source, ctx) => {
     const normalizedSource = normalizeMediaSource(source)
 
+    if (hasParentDirectorySegment(source.input)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['input'],
+        message:
+          'Media source input must not contain parent-directory segments.'
+      })
+    }
+
+    if (hasParentDirectorySegment(source.output)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['output'],
+        message:
+          'Media source output must not contain parent-directory segments.'
+      })
+    }
+
     if (!hasAllowedMediaTypes(normalizedSource)) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
@@ -38,8 +66,8 @@ const MediaSourceSchema = z
 
 export const ConfigSchema = z
   .object({
-    publicMediaPath: legacyMediaPathSchema.optional(),
-    repoMediaPath: legacyMediaPathSchema.optional(),
+    publicMediaPath: safeLegacyMediaPathSchema.optional(),
+    repoMediaPath: safeLegacyMediaPathSchema.optional(),
     media: z.array(MediaSourceSchema).optional(),
     mdExtension: z.union([z.literal('md'), z.literal('mdx')]).optional()
   })
