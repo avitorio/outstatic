@@ -33,11 +33,9 @@ jest.mock('@/components/ui/outstatic/media-settings-dialog', () => ({
   MediaSettingsDialog: () => null
 }))
 jest.mock('@/components/ui/outstatic/media-library-dropzone', () => ({
-  MediaLibraryDropzone: ({
-    children
-  }: {
-    children: React.ReactNode
-  }) => <div data-testid="media-library-dropzone">{children}</div>
+  MediaLibraryDropzone: ({ children }: { children: React.ReactNode }) => (
+    <div data-testid="media-library-dropzone">{children}</div>
+  )
 }))
 jest.mock('@/components/ui/outstatic/media-library-header', () => ({
   ALL_MEDIA_SOURCE_VALUE: '__all_media__',

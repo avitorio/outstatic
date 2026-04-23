@@ -274,7 +274,14 @@ export default function MediaLibrary() {
           ? a.filename.localeCompare(b.filename)
           : b.filename.localeCompare(a.filename)
       })
-  }, [data, mediaSources, searchTerm, selectedSourceName, sortBy, sortDirection])
+  }, [
+    data,
+    mediaSources,
+    searchTerm,
+    selectedSourceName,
+    sortBy,
+    sortDirection
+  ])
 
   const handleImageLoad = (path: string) => {
     setLoadingImages((prev) => {
