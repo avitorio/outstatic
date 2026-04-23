@@ -5,6 +5,13 @@ import { useGetDocument } from './use-get-document'
 import { useOutstatic } from './use-outstatic'
 import { renderHook } from '@testing-library/react'
 import { UseFormReturn } from 'react-hook-form'
+import matter from 'gray-matter'
+import { parseContent } from '@/utils/parse-content'
+
+jest.mock('gray-matter', () => jest.fn())
+jest.mock('@/utils/parse-content', () => ({
+  parseContent: jest.fn()
+}))
 
 jest.mock('./use-collections', () => ({
   useCollections: jest.fn()
@@ -21,6 +28,8 @@ jest.mock('./use-outstatic', () => ({
 const mockUseCollections = useCollections as jest.Mock
 const mockUseGetDocument = useGetDocument as jest.Mock
 const mockUseOutstatic = useOutstatic as jest.Mock
+const mockMatter = matter as jest.Mock
+const mockParseContent = parseContent as jest.Mock
 
 const createMethods = () =>
   ({
@@ -58,6 +67,16 @@ describe('useDocumentUpdateEffect', () => {
     mockUseGetDocument.mockReturnValue({
       data: null
     })
+
+    mockMatter.mockImplementation((mdDocument: string) => ({
+      data: {
+        title: mdDocument,
+        publishedAt: '2024-01-01T00:00:00.000Z'
+      },
+      content: `${mdDocument}-content`
+    }))
+
+    mockParseContent.mockImplementation(({ content }) => `parsed:${content}`)
   })
 
   it('keeps document query disabled until collection metadata resolves', () => {
@@ -120,5 +139,100 @@ describe('useDocumentUpdateEffect', () => {
       filePath: 'shared-slug',
       enabled: true
     })
+  })
+
+  it('re-parses and applies a new document when slug changes without unmounting', async () => {
+    const methods = createMethods()
+    const editor = {
+      commands: {
+        setContent: jest.fn(),
+        focus: jest.fn()
+      }
+    }
+
+    mockUseCollections.mockReturnValue({
+      data: [
+        {
+          title: 'Posts',
+          slug: 'posts',
+          path: 'outstatic/content/posts',
+          children: []
+        }
+      ]
+    })
+
+    mockUseGetDocument.mockImplementation(
+      ({ filePath }: { filePath: string; enabled: boolean }) => ({
+        data:
+          filePath === 'outstatic/content/posts/first-post'
+            ? {
+                mdDocument: 'first-doc',
+                extension: 'md'
+              }
+            : {
+                mdDocument: 'second-doc',
+                extension: 'md'
+              }
+      })
+    )
+
+    const props = {
+      ...createProps(),
+      methods,
+      editor: editor as any,
+      slug: 'first-post'
+    }
+
+    const { rerender } = renderHook(
+      ({ currentProps }) => useDocumentUpdateEffect(currentProps),
+      {
+        initialProps: { currentProps: props }
+      }
+    )
+
+    await Promise.resolve()
+
+    expect(mockMatter).toHaveBeenNthCalledWith(1, 'first-doc')
+    expect(mockParseContent).toHaveBeenNthCalledWith(
+      1,
+      expect.objectContaining({ content: 'first-doc-content' })
+    )
+    expect(methods.reset).toHaveBeenNthCalledWith(
+      1,
+      expect.objectContaining({
+        slug: 'first-post',
+        content: 'parsed:first-doc-content'
+      })
+    )
+    expect(editor.commands.setContent).toHaveBeenNthCalledWith(
+      1,
+      'parsed:first-doc-content'
+    )
+
+    rerender({
+      currentProps: {
+        ...props,
+        slug: 'second-post'
+      }
+    })
+
+    await Promise.resolve()
+
+    expect(mockMatter).toHaveBeenNthCalledWith(2, 'second-doc')
+    expect(mockParseContent).toHaveBeenNthCalledWith(
+      2,
+      expect.objectContaining({ content: 'second-doc-content' })
+    )
+    expect(methods.reset).toHaveBeenNthCalledWith(
+      2,
+      expect.objectContaining({
+        slug: 'second-post',
+        content: 'parsed:second-doc-content'
+      })
+    )
+    expect(editor.commands.setContent).toHaveBeenNthCalledWith(
+      2,
+      'parsed:second-doc-content'
+    )
   })
 })

@@ -223,6 +223,7 @@ export default function MediaLibrary() {
     ALL_MEDIA_SOURCE_VALUE
   )
   const { basePath, media, repoOwner, repoSlug, repoBranch } = useOutstatic()
+  const mediaSources = media ?? []
   const apiPath = `${basePath}${API_MEDIA_PATH}${repoOwner}/${repoSlug}/${repoBranch}/`
   const [notFoundFiles, setNotFoundFiles] = useState<Set<string>>(new Set())
   const [loadingImages, setLoadingImages] = useState<Set<string>>(new Set())
@@ -231,10 +232,10 @@ export default function MediaLibrary() {
   const selectedSource =
     selectedSourceName === ALL_MEDIA_SOURCE_VALUE
       ? undefined
-      : (media ?? []).find((source) => source.name === selectedSourceName)
+      : mediaSources.find((source) => source.name === selectedSourceName)
   const { handleFileUpload, isUploading } = useMediaLibraryUpload({
     source: selectedSource,
-    sources: media ?? []
+    sources: mediaSources
   })
 
   const filteredFiles = useMemo(() => {
@@ -247,7 +248,7 @@ export default function MediaLibrary() {
         }
 
         return (
-          getMediaSourceForItem(file, media ?? [])?.name === selectedSourceName
+          getMediaSourceForItem(file, mediaSources)?.name === selectedSourceName
         )
       })
       .filter((file) => {
@@ -273,7 +274,7 @@ export default function MediaLibrary() {
           ? a.filename.localeCompare(b.filename)
           : b.filename.localeCompare(a.filename)
       })
-  }, [data, media, searchTerm, selectedSourceName, sortBy, sortDirection])
+  }, [data, mediaSources, searchTerm, selectedSourceName, sortBy, sortDirection])
 
   const handleImageLoad = (path: string) => {
     setLoadingImages((prev) => {
@@ -302,19 +303,19 @@ export default function MediaLibrary() {
           setSortBy={setSortBy}
           sortDirection={sortDirection}
           setSortDirection={setSortDirection}
-          mediaSources={media}
+          mediaSources={mediaSources}
           selectedSourceName={selectedSourceName}
           setSelectedSourceName={setSelectedSourceName}
           handleFileUpload={handleFileUpload}
           onOpenSettings={() => setShowMediaSettingsDialog(true)}
-          disableUpload={!media?.length}
+          disableUpload={!mediaSources.length}
         />
         <MediaSettingsDialog
           showMediaPathDialog={showMediaSettingsDialog}
           setShowMediaPathDialog={setShowMediaSettingsDialog}
         />
       </div>
-      {!media?.length ? (
+      {!mediaSources.length ? (
         <div className="max-w-lg">
           <Card>
             <CardContent>
@@ -386,7 +387,7 @@ export default function MediaLibrary() {
                     )}
                     <MediaItemActions
                       file={file}
-                      media={media}
+                      media={mediaSources}
                       disabled={isUploading}
                       onComplete={async () => {
                         await refetchMedia()
@@ -403,9 +404,9 @@ export default function MediaLibrary() {
                         {file.filename}
                       </h3>
                     </div>
-                    {media.length > 1 ? (
+                    {mediaSources.length > 1 ? (
                       <p className="truncate text-xs text-muted-foreground">
-                        {getMediaSourceForItem(file, media)?.label ??
+                        {getMediaSourceForItem(file, mediaSources)?.label ??
                           'Unknown source'}
                       </p>
                     ) : null}

@@ -43,6 +43,7 @@ export const useSingletonUpdateEffect = ({
   } = useOutstatic()
 
   const parsedContentRef = useRef(false)
+  const previousSlugRef = useRef(slug)
   const { data: singletons } = useSingletons()
 
   const { data: document } = useGetSingleton({
@@ -62,6 +63,13 @@ export const useSingletonUpdateEffect = ({
       }
     }
   }, [enabled, slug, methods])
+
+  useEffect(() => {
+    if (previousSlugRef.current !== slug) {
+      parsedContentRef.current = false
+      previousSlugRef.current = slug
+    }
+  }, [slug])
 
   useEffect(() => {
     if (!enabled || parsedContentRef.current) return

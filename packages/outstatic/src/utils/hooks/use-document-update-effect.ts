@@ -41,6 +41,7 @@ export const useDocumentUpdateEffect = ({
   } = useOutstatic()
 
   const parsedContentRef = useRef(false)
+  const previousSlugRef = useRef(slug)
 
   const { data: collections } = useCollections({
     enabled: slug !== 'new'
@@ -61,6 +62,13 @@ export const useDocumentUpdateEffect = ({
     filePath: `${collectionPath ?? ''}${slug}`,
     enabled: slug !== 'new' && collectionPath !== undefined
   })
+
+  useEffect(() => {
+    if (previousSlugRef.current !== slug) {
+      parsedContentRef.current = false
+      previousSlugRef.current = slug
+    }
+  }, [slug])
 
   useEffect(() => {
     if (parsedContentRef.current) return
