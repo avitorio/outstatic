@@ -21,7 +21,7 @@ export const MediaSettingsDialog: React.FC<MediaSettingsDialogProps> = ({
 }) => {
   return (
     <Dialog open={showMediaPathDialog} onOpenChange={setShowMediaPathDialog}>
-      <DialogContent className="[&>button:last-child]:hidden">
+      <DialogContent showCloseButton={false}>
         <DialogHeader>
           <DialogTitle>Media Settings</DialogTitle>
           <DialogDescription>

@@ -110,7 +110,7 @@ export const useRebuildMediaJson = () => {
 
       const database: MediaSchema = {
         commit: parentCommit,
-        generated: new Date().toUTCString(),
+        generated: new Date().toISOString(),
         media: files.filter(Boolean)
       }
 
@@ -130,7 +130,7 @@ export const useRebuildMediaJson = () => {
       const payload = commitApi.createInput()
 
       try {
-        toast.promise(mutation.mutateAsync(payload), {
+        await toast.promise(mutation.mutateAsync(payload), {
           loading: 'Updating media library...',
           success: () => {
             onComplete?.()
