@@ -388,7 +388,9 @@ export default function MediaLibrary() {
                       file={file}
                       media={media}
                       disabled={isUploading}
-                      onComplete={async () => await refetchMedia()}
+                      onComplete={async () => {
+                        await refetchMedia()
+                      }}
                       notFound={
                         file.type === 'image' &&
                         notFoundFiles.has(file.__outstatic.path)

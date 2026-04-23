@@ -1,4 +1,3 @@
-import { Document } from '@/types'
 import { convert } from '@catalystic/json-to-yaml'
 import replaceImagePath from './replace-image-path'
 import {
@@ -22,7 +21,7 @@ export const mergeMdMeta = ({
   publicMediaPath,
   repoMediaPath
 }: {
-  data: Document & Record<string, any>
+  data: Record<string, any> & { content: string }
   basePath: string
   repoOwner: string
   repoSlug: string

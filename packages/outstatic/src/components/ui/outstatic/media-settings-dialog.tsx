@@ -1,5 +1,11 @@
 import React from 'react'
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/shadcn/dialog'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle
+} from '@/components/ui/shadcn/dialog'
 import { MediaSettings } from '@/client/pages/settings/_components/media-settings'
 
 interface MediaSettingsDialogProps {

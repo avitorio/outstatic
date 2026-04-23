@@ -81,8 +81,6 @@ export type MediaSourceConfig = {
   output: string
   extensions?: readonly string[]
   categories?: readonly MediaCategory[]
-  commit?: Record<string, unknown>
-  actions?: unknown
   [key: string]: unknown
 }
 

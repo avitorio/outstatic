@@ -41,7 +41,7 @@ export type OutstaticData = {
   githubGql: string
   publicMediaPath: string
   repoMediaPath: string
-  media?: MediaSourceConfig[]
+  media: MediaSourceConfig[]
   isPro: boolean
   ui?: OutstaticUIOptions
   projectInfo?: {
@@ -152,6 +152,7 @@ export async function Outstatic({
         : `${OUTSTATIC_API_URL}/github/parser`,
     publicMediaPath: process.env.OST_PUBLIC_MEDIA_PATH || '',
     repoMediaPath: process.env.OST_REPO_MEDIA_PATH || '',
+    media: [],
     isPro: projectInfo?.isPro || false,
     ui: {
       showToaster: ui?.showToaster ?? true
