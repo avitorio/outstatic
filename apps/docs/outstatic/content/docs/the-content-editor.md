@@ -32,16 +32,41 @@ The slash command menu appears whenever you type `/`. It allows you to create he
 
 ![](/docs/images/slash-command-ex-U1MD.gif)
 
-## Uploading images
+## Uploading media
 
-You can enhance your documents by incorporating images using various methods: choose the 'Image' command from the **slash command menu**, then select if you want to upload, link to the image or use an already uploaded image from your Media Library. You can also paste your desired picture, or simply drag and drop it into the document.
+You can enhance your documents by adding media through the editor. In the **slash command menu**, choose the **Image** command and then decide whether you want to:
 
-When you add an image for the first time you will see this:\
-![](/docs/images/cleanshot-2024-11-04-at-22.34.52-2x-QyOT.png)
+- upload a file from your computer
+- link to an external image URL
+- pick an existing image from the **Media Library**
 
-The **Repository Media Path** is where images are stored in your repository. The **Public Media Path** is the corresponding path to your media folder on your frontend.
+You can also paste or drag and drop an image directly into the editor.
 
-Outstatic fetches the images directly from GitHub so they can be visualised instantly on the editor.
+Outstatic now uses **media sources** instead of a single repository path and public path. A media source lets you define:
+
+- a label, such as `Images` or `Documents`
+- the repository folder where files are stored
+- the public path written into your content
+- the file categories or exact extensions allowed for that source
+
+If you try to upload or insert an image before configuring an image-capable source, Outstatic opens **Media Settings** so you can create one.
+
+Each source is created in three steps:
+
+1. **Label**
+2. **Paths**: repository path and public path
+3. **Types**: categories and extensions
+
+Categories are preset extension groups. For example, selecting **Image** adds common image extensions to the source. You can also edit the final comma-separated extension list manually.
+
+The **Media Library** uses the configured media sources when uploading files. The source picker includes **All Media**, which lets you browse every uploaded file across all sources. Use the **Add Media** button to upload files. It accepts all extensions allowed by your configured sources.
+
+To keep uploads predictable, media sources should not overlap. Each extension should belong to a single source. For example, you might use:
+
+- `Images` for `png`, `jpg`, `webp`
+- `Documents` for `pdf`, `docx`, `txt`
+
+Outstatic fetches uploaded files directly from GitHub so they can be previewed immediately inside the editor and media library.
 
 ## AI completion
 
