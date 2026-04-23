@@ -151,7 +151,7 @@ describe('useSingletonUpdateEffect', () => {
 
     expect(setMetadata).toHaveBeenCalledWith({
       title: 'Settings',
-      publishedAt: '2024-01-01T00:00:00.000Z',
+      publishedAt: new Date('2024-01-01T00:00:00.000Z'),
       status: 'published',
       hero: 'old'
     })
@@ -176,7 +176,7 @@ describe('useSingletonUpdateEffect', () => {
 
     expect(setMetadata).toHaveBeenLastCalledWith({
       title: 'Home',
-      publishedAt: '2024-02-02T00:00:00.000Z',
+      publishedAt: new Date('2024-02-02T00:00:00.000Z'),
       status: 'draft',
       hero: 'new'
     })

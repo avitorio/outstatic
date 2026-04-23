@@ -116,7 +116,8 @@ describe('MediaLibrary', () => {
         {
           name: 'images',
           label: 'Images',
-          path: 'public/uploads'
+          input: 'public/uploads',
+          output: '/uploads'
         }
       ]
     })
@@ -132,12 +133,14 @@ describe('MediaLibrary', () => {
         {
           name: 'images',
           label: 'Images',
-          path: 'public/uploads'
+          input: 'public/uploads',
+          output: '/uploads'
         },
         {
           name: 'docs',
           label: 'Documents',
-          path: 'public/documents'
+          input: 'public/documents',
+          output: '/documents'
         }
       ]
     })
