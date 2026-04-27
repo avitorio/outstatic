@@ -117,7 +117,102 @@ describe('useRebuildMediaJson', () => {
     createInput.mockReturnValue({ input: 'payload' })
   })
 
-  it('rebuilds media.json from successful sources even when one source fetch fails', async () => {
+  it('rebuilds media.json when all source fetches succeed', async () => {
+    gqlRequest
+      .mockResolvedValueOnce({
+        repository: {
+          object: {
+            commitUrl: 'https://example.com/commit/images',
+            entries: [
+              {
+                path: 'media/images/photo.png',
+                name: 'photo.png',
+                type: 'blob',
+                object: {
+                  commitUrl: 'https://example.com/commit/photo'
+                }
+              },
+              {
+                path: 'media/images/notes.txt',
+                name: 'notes.txt',
+                type: 'blob',
+                object: {
+                  commitUrl: 'https://example.com/commit/notes'
+                }
+              }
+            ]
+          }
+        }
+      })
+      .mockResolvedValueOnce({
+        repository: {
+          object: {
+            commitUrl: 'https://example.com/commit/docs',
+            entries: [
+              {
+                path: 'media/docs/manual.pdf',
+                name: 'manual.pdf',
+                type: 'blob',
+                object: {
+                  commitUrl: 'https://example.com/commit/manual'
+                }
+              },
+              {
+                path: 'media/docs/thumbnail.png',
+                name: 'thumbnail.png',
+                type: 'blob',
+                object: {
+                  commitUrl: 'https://example.com/commit/thumbnail'
+                }
+              }
+            ]
+          }
+        }
+      })
+
+    const { result } = renderHook(() => useRebuildMediaJson())
+
+    await act(async () => {
+      await result.current()
+    })
+
+    expect(mockCreateCommitApi).toHaveBeenCalledWith({
+      message: 'chore: Updates media.json',
+      owner: 'owner',
+      name: 'repo',
+      branch: 'main',
+      oid: 'oid-123'
+    })
+    expect(mockStringifyMedia).toHaveBeenCalledWith({
+      commit: 'hash:https://example.com/commit/images',
+      generated: expect.any(String),
+      media: [
+        expect.objectContaining({
+          filename: 'photo.png',
+          source: 'images',
+          __outstatic: expect.objectContaining({
+            commit: 'hash:https://example.com/commit/photo',
+            path: 'media/images/photo.png'
+          })
+        }),
+        expect.objectContaining({
+          filename: 'manual.pdf',
+          source: 'docs',
+          __outstatic: expect.objectContaining({
+            commit: 'hash:https://example.com/commit/manual',
+            path: 'media/docs/manual.pdf'
+          })
+        })
+      ]
+    })
+    expect(replaceFile).toHaveBeenCalledWith(
+      'outstatic/media/media.json',
+      'serialized-media'
+    )
+    expect(mutateAsync).toHaveBeenCalledWith({ input: 'payload' })
+  })
+
+  it('fails rebuild without rewriting media.json when one source fetch fails', async () => {
     const consoleErrorSpy = jest
       .spyOn(console, 'error')
       .mockImplementation(() => {})
@@ -144,40 +239,85 @@ describe('useRebuildMediaJson', () => {
 
     const { result } = renderHook(() => useRebuildMediaJson())
 
+    let rebuildError: Error | undefined
+
     await act(async () => {
-      await result.current()
+      try {
+        await result.current()
+      } catch (error) {
+        rebuildError = error as Error
+      }
     })
 
+    expect(rebuildError).toBeInstanceOf(Error)
+    expect(rebuildError?.message).toBe(
+      'Failed to rebuild media library because one or more sources could not be loaded: "docs" (Missing folder). media.json was not updated.'
+    )
     expect(consoleErrorSpy).toHaveBeenCalledWith(
       'Failed to fetch media files for source "docs".',
       expect.any(Error)
     )
-    expect(mockCreateCommitApi).toHaveBeenCalledWith({
-      message: 'chore: Updates media.json',
-      owner: 'owner',
-      name: 'repo',
-      branch: 'main',
-      oid: 'oid-123'
-    })
-    expect(mockStringifyMedia).toHaveBeenCalledWith({
-      commit: 'hash:https://example.com/commit/images',
-      generated: expect.any(String),
-      media: [
-        expect.objectContaining({
-          filename: 'photo.png',
-          source: 'images',
-          __outstatic: expect.objectContaining({
-            commit: 'hash:https://example.com/commit/photo',
-            path: 'media/images/photo.png'
-          })
-        })
-      ]
-    })
-    expect(replaceFile).toHaveBeenCalledWith(
-      'outstatic/media/media.json',
-      'serialized-media'
+    expect(mockCreateCommitApi).not.toHaveBeenCalled()
+    expect(mockStringifyMedia).not.toHaveBeenCalled()
+    expect(replaceFile).not.toHaveBeenCalled()
+    expect(mutateAsync).not.toHaveBeenCalled()
+    expect(mockToastPromise).toHaveBeenCalledTimes(1)
+    expect(mockToastPromise.mock.calls[0]?.[1]?.error?.(rebuildError)).toBe(
+      rebuildError?.message
     )
-    expect(mutateAsync).toHaveBeenCalledWith({ input: 'payload' })
+
+    consoleErrorSpy.mockRestore()
+  })
+
+  it('fails rebuild without rewriting media.json when a source folder is missing', async () => {
+    const consoleErrorSpy = jest
+      .spyOn(console, 'error')
+      .mockImplementation(() => {})
+
+    gqlRequest
+      .mockResolvedValueOnce({
+        repository: {
+          object: {
+            commitUrl: 'https://example.com/commit/images',
+            entries: [
+              {
+                path: 'media/images/photo.png',
+                name: 'photo.png',
+                type: 'blob',
+                object: {
+                  commitUrl: 'https://example.com/commit/photo'
+                }
+              }
+            ]
+          }
+        }
+      })
+      .mockResolvedValueOnce({
+        repository: {
+          object: null
+        }
+      })
+
+    const { result } = renderHook(() => useRebuildMediaJson())
+
+    let rebuildError: Error | undefined
+
+    await act(async () => {
+      try {
+        await result.current()
+      } catch (error) {
+        rebuildError = error as Error
+      }
+    })
+
+    expect(rebuildError).toBeInstanceOf(Error)
+    expect(rebuildError?.message).toBe(
+      'Failed to rebuild media library because one or more sources could not be loaded: "docs" (Media source "docs" could not be loaded.). media.json was not updated.'
+    )
+    expect(mockCreateCommitApi).not.toHaveBeenCalled()
+    expect(mockStringifyMedia).not.toHaveBeenCalled()
+    expect(replaceFile).not.toHaveBeenCalled()
+    expect(mutateAsync).not.toHaveBeenCalled()
 
     consoleErrorSpy.mockRestore()
   })

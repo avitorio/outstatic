@@ -1,6 +1,11 @@
 import { DeleteMediaButton } from '@/components/delete-media-button'
 import { TestWrapper } from '@/utils/tests/test-wrapper'
+import { stringifyMedia } from '@/utils/metadata/stringify'
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
+
+const mockRemoveFile = jest.fn()
+const mockReplaceFile = jest.fn()
+const mockCreateInput = jest.fn()
 
 // Mock the useOutstatic hook
 jest.mock('@/utils/hooks/use-outstatic', () => ({
@@ -9,6 +14,7 @@ jest.mock('@/utils/hooks/use-outstatic', () => ({
     repoOwner: 'testOwner',
     repoSlug: 'testRepo',
     repoBranch: 'main',
+    mediaJsonPath: 'outstatic/media/media.json',
     ostContent: {},
     session: { user: { login: 'testUser' } }
   })
@@ -23,7 +29,22 @@ jest.mock('@/utils/hooks/use-get-media-files', () => ({
     refetch: async () =>
       Promise.resolve({
         data: {
-          media: { media: [{ filename: 'test-image.jpg' }] },
+          media: {
+            media: [
+              {
+                filename: 'test-image.jpg',
+                __outstatic: {
+                  path: '/media/test-image.jpg'
+                }
+              },
+              {
+                filename: 'test-image.jpg',
+                __outstatic: {
+                  path: '/other/test-image.jpg'
+                }
+              }
+            ]
+          },
           commitUrl: ''
         }
       })
@@ -40,14 +61,22 @@ jest.mock('@/utils/hooks/use-create-commit', () => ({
 // Mock createCommitApi
 jest.mock('@/utils/create-commit-api', () => ({
   createCommitApi: () => ({
-    removeFile: jest.fn(),
-    replaceFile: jest.fn(),
-    createInput: jest.fn()
+    removeFile: mockRemoveFile,
+    replaceFile: mockReplaceFile,
+    createInput: mockCreateInput
   })
+}))
+
+jest.mock('@/utils/metadata/stringify', () => ({
+  stringifyMedia: jest.fn(() => 'serialized-media')
 }))
 
 test('DeleteMediaButton renders and operates correctly', async () => {
   const onComplete = jest.fn()
+  const mockStringifyMedia = stringifyMedia as jest.Mock
+
+  jest.clearAllMocks()
+  mockCreateInput.mockReturnValue({ input: 'payload' })
 
   render(
     <TestWrapper>
@@ -73,6 +102,23 @@ test('DeleteMediaButton renders and operates correctly', async () => {
 
   // Check if onComplete is called
   await waitFor(() => expect(onComplete).toHaveBeenCalled())
+  expect(mockRemoveFile).toHaveBeenCalledWith('/media/test-image.jpg')
+  expect(mockStringifyMedia).toHaveBeenCalledWith(
+    expect.objectContaining({
+      media: [
+        expect.objectContaining({
+          filename: 'test-image.jpg',
+          __outstatic: expect.objectContaining({
+            path: '/other/test-image.jpg'
+          })
+        })
+      ]
+    })
+  )
+  expect(mockReplaceFile).toHaveBeenCalledWith(
+    'outstatic/media/media.json',
+    'serialized-media'
+  )
 
   // Simulate clicking the delete button again
   fireEvent.click(screen.getByTitle('Delete media file'))

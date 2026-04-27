@@ -318,4 +318,76 @@ describe('useMediaLibraryUpload', () => {
       })
     )
   })
+
+  it('serializes mixed-source uploads so later submissions wait for earlier ones', async () => {
+    let resolveImageUpload!: () => void
+    let resolveDocumentUpload!: () => void
+    const imageUpload = new Promise<void>((resolve) => {
+      resolveImageUpload = resolve
+    })
+    const documentUpload = new Promise<void>((resolve) => {
+      resolveDocumentUpload = resolve
+    })
+
+    submitMediaMock
+      .mockImplementationOnce(() => imageUpload)
+      .mockImplementationOnce(() => documentUpload)
+
+    const imageFile = new File(['image'], 'photo.png', { type: 'image/png' })
+    const documentFile = new File(['document'], 'paper.pdf', {
+      type: 'application/pdf'
+    })
+    const { result } = renderHook(() =>
+      useMediaLibraryUpload({ sources: [imageSource, documentSource] })
+    )
+
+    let pendingUpload: Promise<void>
+
+    await act(async () => {
+      pendingUpload = result.current.handleFileUpload(
+        createFileList([imageFile, documentFile])
+      )
+      await Promise.resolve()
+    })
+
+    expect(submitMediaMock).toHaveBeenCalledTimes(1)
+    expect(submitMediaMock).toHaveBeenNthCalledWith(1, {
+      files: [
+        {
+          filename: 'photo.png',
+          type: 'image',
+          content: 'YWJj'
+        }
+      ],
+      source: imageSource
+    })
+    expect(result.current.isUploading).toBe(true)
+
+    await act(async () => {
+      resolveImageUpload()
+      await imageUpload
+      await Promise.resolve()
+    })
+
+    expect(submitMediaMock).toHaveBeenCalledTimes(2)
+    expect(submitMediaMock).toHaveBeenNthCalledWith(2, {
+      files: [
+        {
+          filename: 'paper.pdf',
+          type: 'document',
+          content: 'YWJj'
+        }
+      ],
+      source: documentSource
+    })
+    expect(result.current.isUploading).toBe(true)
+
+    await act(async () => {
+      resolveDocumentUpload()
+      await documentUpload
+      await pendingUpload!
+    })
+
+    expect(result.current.isUploading).toBe(false)
+  })
 })

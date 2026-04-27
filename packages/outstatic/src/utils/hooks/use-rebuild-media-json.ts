@@ -10,7 +10,10 @@ import { stringifyMedia } from '../metadata/stringify'
 import { MediaItem, MediaSchema, MediaSourceConfig } from '../metadata/types'
 import MurmurHash3 from 'imurmurhash'
 import { GET_FILES } from '@/graphql/queries/files'
-import { getMediaTypeForFilename } from '../media-config'
+import {
+  getMediaTypeForFilename,
+  isFilenameAllowedForSource
+} from '../media-config'
 
 type TreeEntry = {
   path: string
@@ -28,6 +31,11 @@ type FilesResponse = {
       entries?: TreeEntry[]
     } | null
   }
+}
+
+type FailedSourceFetch = {
+  reason: unknown
+  sourceName: string
 }
 
 const createMediaItem = (
@@ -48,6 +56,25 @@ const createMediaItem = (
   publishedAt: new Date().toISOString(),
   alt: ''
 })
+
+const getErrorMessage = (error: unknown, fallback: string) => {
+  if (error instanceof Error && error.message.trim()) {
+    return error.message
+  }
+
+  return fallback
+}
+
+const formatSourceFetchError = (failedSources: FailedSourceFetch[]) => {
+  const details = failedSources
+    .map(({ sourceName, reason }) => {
+      const reasonMessage = getErrorMessage(reason, 'Unknown error')
+      return `"${sourceName}" (${reasonMessage})`
+    })
+    .join(', ')
+
+  return `Failed to rebuild media library because one or more sources could not be loaded: ${details}. media.json was not updated.`
+}
 
 export const useRebuildMediaJson = () => {
   const [total, setTotal] = useState(0)
@@ -88,6 +115,10 @@ export const useRebuildMediaJson = () => {
         name: repoSlug,
         contentPath: `${repoBranch}:${source.input}`
       })
+
+      if (!repository?.object) {
+        throw new Error(`Media source "${source.name}" could not be loaded.`)
+      }
 
       return { repository } as FilesResponse
     },
@@ -136,7 +167,8 @@ export const useRebuildMediaJson = () => {
             onComplete?.()
             return 'Media library updated successfully'
           },
-          error: 'Failed to update media library'
+          error: (error) =>
+            getErrorMessage(error, 'Failed to update media library')
         })
       } catch (error) {
         console.error(error)
@@ -166,80 +198,90 @@ export const useRebuildMediaJson = () => {
         return
       }
 
-      return new Promise((resolve, reject) => {
-        toast.promise(
-          Promise.allSettled(
-            configuredSources.map((source) => fetchSourceFiles(source))
-          ).then((results) => {
-            const mediaItems: MediaItem[] = []
-            const responses = results.flatMap((result, index) => {
-              if (result.status === 'fulfilled') {
-                return [
-                  {
-                    response: result.value,
-                    source: configuredSources[index]
-                  }
-                ]
-              }
-
-              console.error(
-                `Failed to fetch media files for source "${configuredSources[index]?.name ?? 'unknown'}".`,
-                result.reason
-              )
-
+      return toast.promise(
+        Promise.allSettled(
+          configuredSources.map((source) => fetchSourceFiles(source))
+        ).then((results) => {
+          const failedSources = results.flatMap((result, index) => {
+            if (result.status === 'fulfilled') {
               return []
-            })
-
-            responses.forEach(({ response, source }) => {
-              const entries = response.repository?.object?.entries ?? []
-              const parentCommit = response.repository?.object?.commitUrl
-                ? hashFromUrl(response.repository.object.commitUrl)
-                : ''
-
-              entries.forEach((entry) => {
-                if (entry.type !== 'blob') {
-                  return
-                }
-
-                mediaItems.push(createMediaItem(entry, source, parentCommit))
-              })
-            })
-
-            const parentCommit =
-              responses
-                .map(({ response }) => response.repository?.object?.commitUrl)
-                .find(Boolean)
-                ?.toString()
-                ?.trim() ?? ''
-
-            return toast.promise(
-              processFiles(
-                mediaItems,
-                parentCommit ? hashFromUrl(parentCommit) : '',
-                () => onComplete?.()
-              ),
-              {
-                id: toastId,
-                duration: 4000,
-                loading: 'Processing files...',
-                success: 'Files processed successfully',
-                error: 'Error processing files'
-              }
-            )
-          }),
-          {
-            loading: 'Fetching media files...',
-            success: () => {
-              resolve(undefined)
-              return 'Media files fetched successfully'
-            },
-            error: (err) => {
-              reject(err)
-              return 'Failed to fetch media files'
             }
+
+            const sourceName = configuredSources[index]?.name ?? 'unknown'
+
+            console.error(
+              `Failed to fetch media files for source "${sourceName}".`,
+              result.reason
+            )
+
+            return [{ sourceName, reason: result.reason }]
+          })
+
+          if (failedSources.length > 0) {
+            throw new Error(formatSourceFetchError(failedSources))
           }
-        )
-      })
+
+          const mediaItems: MediaItem[] = []
+          const responses = results.map((result, index) => {
+            if (result.status !== 'fulfilled') {
+              throw new Error(
+                'Media source fetch failed after validation. media.json was not updated.'
+              )
+            }
+
+            return {
+              response: result.value,
+              source: configuredSources[index]
+            }
+          })
+
+          responses.forEach(({ response, source }) => {
+            const entries = response.repository?.object?.entries ?? []
+            const parentCommit = response.repository?.object?.commitUrl
+              ? hashFromUrl(response.repository.object.commitUrl)
+              : ''
+
+            entries.forEach((entry) => {
+              if (
+                entry.type !== 'blob' ||
+                !isFilenameAllowedForSource(entry.name, source)
+              ) {
+                return
+              }
+
+              mediaItems.push(createMediaItem(entry, source, parentCommit))
+            })
+          })
+
+          const parentCommit =
+            responses
+              .map(({ response }) => response.repository?.object?.commitUrl)
+              .find(Boolean)
+              ?.toString()
+              ?.trim() ?? ''
+
+          return toast.promise(
+            processFiles(
+              mediaItems,
+              parentCommit ? hashFromUrl(parentCommit) : '',
+              () => onComplete?.()
+            ),
+            {
+              id: toastId,
+              duration: 4000,
+              loading: 'Processing files...',
+              success: 'Files processed successfully',
+              error: (error) => getErrorMessage(error, 'Error processing files')
+            }
+          )
+        }),
+        {
+          loading: 'Fetching media files...',
+          success: 'Media files fetched successfully',
+          error: (error) =>
+            getErrorMessage(error, 'Failed to fetch media files')
+        }
+      )
     },
     [fetchSourceFiles, media, processFiles]
   )

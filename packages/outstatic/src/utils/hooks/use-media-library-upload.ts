@@ -233,20 +233,14 @@ export function useMediaLibraryUpload({
           group.files.push(mediaFile)
           filesBySource.set(matchedSource.name, group)
         })
-        const uploadPromise =
-          filesBySource.size === 1
-            ? submitMedia({
-                files: Array.from(filesBySource.values())[0]?.files ?? [],
-                source: Array.from(filesBySource.values())[0]?.source
-              })
-            : Promise.all(
-                Array.from(filesBySource.values()).map((group) =>
-                  submitMedia({
-                    files: group.files,
-                    source: group.source
-                  })
-                )
-              ).then(() => undefined)
+        const uploadPromise = (async () => {
+          for (const group of filesBySource.values()) {
+            await submitMedia({
+              files: group.files,
+              source: group.source
+            })
+          }
+        })()
 
         await toast.promise(uploadPromise, {
           loading: `Uploading ${uploadCount} ${uploadLabel}...`,

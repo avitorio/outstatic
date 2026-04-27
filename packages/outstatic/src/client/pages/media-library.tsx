@@ -117,7 +117,7 @@ function MediaItemActions({
       mediaData.generated = new Date().toISOString()
       mediaData.commit = hashFromUrl(commitUrl)
       const nextMedia = mediaData.media.filter(
-        (mediaFile) => mediaFile.filename !== file.filename
+        (mediaFile) => mediaFile.__outstatic.path !== file.__outstatic.path
       )
       capi.replaceFile(
         mediaJsonPath,
@@ -223,7 +223,7 @@ export default function MediaLibrary() {
     ALL_MEDIA_SOURCE_VALUE
   )
   const { basePath, media, repoOwner, repoSlug, repoBranch } = useOutstatic()
-  const mediaSources = media ?? []
+  const mediaSources = useMemo(() => media ?? [], [media])
   const apiPath = `${basePath}${API_MEDIA_PATH}${repoOwner}/${repoSlug}/${repoBranch}/`
   const [notFoundFiles, setNotFoundFiles] = useState<Set<string>>(new Set())
   const [loadingImages, setLoadingImages] = useState<Set<string>>(new Set())

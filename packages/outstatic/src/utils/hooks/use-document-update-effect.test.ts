@@ -28,7 +28,7 @@ jest.mock('./use-outstatic', () => ({
 const mockUseCollections = useCollections as jest.Mock
 const mockUseGetDocument = useGetDocument as jest.Mock
 const mockUseOutstatic = useOutstatic as jest.Mock
-const mockMatter = matter as jest.Mock
+const mockMatter = matter as unknown as jest.Mock
 const mockParseContent = parseContent as jest.Mock
 
 const createMethods = () =>
