@@ -21,7 +21,7 @@ export const MediaSettingsDialog: React.FC<MediaSettingsDialogProps> = ({
 }) => {
   return (
     <Dialog open={showMediaPathDialog} onOpenChange={setShowMediaPathDialog}>
-      <DialogContent showCloseButton={false}>
+      <DialogContent showCloseButton={false} onOpenAutoFocus={(e) => e.preventDefault()}>
         <DialogHeader>
           <DialogTitle>Media Settings</DialogTitle>
           <DialogDescription>

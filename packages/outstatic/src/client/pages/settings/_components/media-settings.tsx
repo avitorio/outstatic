@@ -12,7 +12,19 @@ import {
   DialogTitle
 } from '@/components/ui/shadcn/dialog'
 import { Skeleton } from '@/components/ui/shadcn/skeleton'
-import { FolderIcon, Plus, Trash2, Settings, Info } from 'lucide-react'
+import {
+  CircleHelp,
+  FolderIcon,
+  Plus,
+  Trash2,
+  Settings,
+  Info
+} from 'lucide-react'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger
+} from '@/components/ui/shadcn/tooltip'
 import GithubExplorer from '@/components/ui/outstatic/github-explorer'
 import PathBreadcrumbs from '@/components/ui/outstatic/path-breadcrumb'
 import {
@@ -37,8 +49,8 @@ import { slugify } from 'transliteration'
 
 type MediaSettingsProps =
   | {
-      onSettingsUpdate?: () => void
-    }
+    onSettingsUpdate?: () => void
+  }
   | Record<string, never>
 
 type EditableMediaSource = MediaSourceConfig & {
@@ -195,8 +207,27 @@ const sourceEditorSteps = [
   }
 ] as const
 
+function HelpTooltip({ label, children }: { label: string; children: string }) {
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <button
+          type="button"
+          className="inline-flex h-5 w-5 items-center justify-center rounded-full text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none"
+          aria-label={label}
+        >
+          <CircleHelp className="h-3.5 w-3.5" />
+        </button>
+      </TooltipTrigger>
+      <TooltipContent side="top" className="max-w-72">
+        <p>{children}</p>
+      </TooltipContent>
+    </Tooltip>
+  )
+}
+
 export function MediaSettings(props: MediaSettingsProps) {
-  const onSettingsUpdate = props.onSettingsUpdate ?? (() => {})
+  const onSettingsUpdate = props.onSettingsUpdate ?? (() => { })
   const [loading, setLoading] = useState(false)
   const [showConfirmModal, setShowConfirmModal] = useState(false)
   const [pendingMediaSources, setPendingMediaSources] = useState<
@@ -446,7 +477,12 @@ export function MediaSettings(props: MediaSettingsProps) {
         {!isCreatingSourceFlow && !activeEditor ? (
           <div className="flex items-center justify-between gap-4">
             <div>
-              <h3 className="text-base font-semibold">Media Sources</h3>
+              <div className="flex items-center gap-1.5">
+                <h3 className="text-base font-semibold">Media Sources</h3>
+                <HelpTooltip label="About media sources">
+                  Sources define the folders and file types that can be uploaded to your site.
+                </HelpTooltip>
+              </div>
               <p className="text-sm text-muted-foreground">
                 Add media sources to unlock file uploads.
               </p>
@@ -587,13 +623,12 @@ export function MediaSettings(props: MediaSettingsProps) {
                               <button
                                 key={`${source.name}-${step.title}`}
                                 type="button"
-                                className={`h-2.5 w-2.5 rounded-full transition-colors ${
-                                  stepIndex === currentStepIndex
-                                    ? 'bg-foreground'
-                                    : stepIndex < currentStepIndex
-                                      ? 'bg-foreground/50'
-                                      : 'bg-muted-foreground/20'
-                                }`}
+                                className={`h-2.5 w-2.5 rounded-full transition-colors ${stepIndex === currentStepIndex
+                                  ? 'bg-foreground'
+                                  : stepIndex < currentStepIndex
+                                    ? 'bg-foreground/50'
+                                    : 'bg-muted-foreground/20'
+                                  }`}
                                 aria-label={`Go to ${step.title}`}
                                 onClick={() =>
                                   setActiveEditorState({
@@ -620,7 +655,7 @@ export function MediaSettings(props: MediaSettingsProps) {
                                 label: event.target.value
                               }))
                             }
-                            placeholder="Images"
+                            placeholder="Ex: Images"
                           />
                           <p className="text-sm text-muted-foreground">
                             Internal name: {previewConfig.name}
@@ -631,9 +666,15 @@ export function MediaSettings(props: MediaSettingsProps) {
                       {isPathsStep ? (
                         <div className="space-y-4">
                           <div className="space-y-2">
-                            <Label htmlFor={`media-input-${index}`}>
-                              Repository path
-                            </Label>
+                            <div className="flex items-center gap-1.5">
+                              <Label htmlFor={`media-input-${index}`}>
+                                Repository path
+                              </Label>
+                              <HelpTooltip label="About repository paths">
+                                Uploaded files are committed to this folder in
+                                the connected GitHub repository.
+                              </HelpTooltip>
+                            </div>
                             <div className="flex gap-2">
                               <Input
                                 id={`media-input-${index}`}
@@ -654,9 +695,14 @@ export function MediaSettings(props: MediaSettingsProps) {
                             </div>
                           </div>
                           <div className="space-y-2">
-                            <Label htmlFor={`media-output-${index}`}>
-                              Public path
-                            </Label>
+                            <div className="flex items-center gap-1.5">
+                              <Label htmlFor={`media-output-${index}`}>
+                                Public path
+                              </Label>
+                              <HelpTooltip label="About public paths">
+                                How your site will access the files in this source. Ex:&nbsp;https://your-site.com/media/images
+                              </HelpTooltip>
+                            </div>
                             <Input
                               id={`media-output-${index}`}
                               value={source.output}
@@ -676,7 +722,12 @@ export function MediaSettings(props: MediaSettingsProps) {
                         <div className="space-y-4">
                           <div className="space-y-3">
                             <div>
-                              <Label>Categories</Label>
+                              <div className="flex items-center gap-1.5">
+                                <Label>Categories (Optional)</Label>
+                                <HelpTooltip label="About category presets">
+                                  A predefined list of file extensions for a media type.
+                                </HelpTooltip>
+                              </div>
                               <p className="text-sm text-muted-foreground">
                                 Select preset groups to append their extensions
                                 to the list below.
@@ -699,9 +750,15 @@ export function MediaSettings(props: MediaSettingsProps) {
                           </div>
 
                           <div className="space-y-2">
-                            <Label htmlFor={`media-extensions-${index}`}>
-                              Extensions
-                            </Label>
+                            <div className="flex items-center gap-1.5">
+                              <Label htmlFor={`media-extensions-${index}`}>
+                                Extensions
+                              </Label>
+                              <HelpTooltip label="About allowed extensions">
+                                These extensions control which files can be
+                                uploaded to this source. Dots are optional.
+                              </HelpTooltip>
+                            </div>
                             <Input
                               id={`media-extensions-${index}`}
                               value={source.extensionsInput}
