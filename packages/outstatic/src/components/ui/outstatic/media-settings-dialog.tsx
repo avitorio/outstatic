@@ -2,11 +2,10 @@ import React from 'react'
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
-  DialogHeader,
   DialogTitle
 } from '@/components/ui/shadcn/dialog'
 import { MediaSettings } from '@/client/pages/settings/_components/media-settings'
+import * as VisuallyHidden from '@radix-ui/react-visually-hidden'
 
 interface MediaSettingsDialogProps {
   showMediaPathDialog: boolean
@@ -21,13 +20,13 @@ export const MediaSettingsDialog: React.FC<MediaSettingsDialogProps> = ({
 }) => {
   return (
     <Dialog open={showMediaPathDialog} onOpenChange={setShowMediaPathDialog}>
-      <DialogContent showCloseButton={false} onOpenAutoFocus={(e) => e.preventDefault()}>
-        <DialogHeader>
+      <DialogContent
+        showCloseButton={false}
+        onOpenAutoFocus={(e) => e.preventDefault()}
+      >
+        <VisuallyHidden.Root>
           <DialogTitle>Media Settings</DialogTitle>
-          <DialogDescription>
-            Configure your media sources, folders, and supported file types.
-          </DialogDescription>
-        </DialogHeader>
+        </VisuallyHidden.Root>
         <MediaSettings
           onSettingsUpdate={() => {
             if (callbackFunction) callbackFunction()
