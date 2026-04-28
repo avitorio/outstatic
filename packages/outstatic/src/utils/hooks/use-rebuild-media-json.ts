@@ -38,6 +38,11 @@ type FailedSourceFetch = {
   sourceName: string
 }
 
+type RebuildMediaJsonOptions = {
+  onComplete?: () => void
+  sources?: MediaSourceConfig[]
+}
+
 const createMediaItem = (
   entry: TreeEntry,
   source: MediaSourceConfig,
@@ -187,12 +192,8 @@ export const useRebuildMediaJson = () => {
   )
 
   const rebuildMediaJson = useCallback(
-    async ({
-      onComplete
-    }: {
-      onComplete?: () => void
-    } = {}) => {
-      const configuredSources = media ?? []
+    async ({ onComplete, sources }: RebuildMediaJsonOptions = {}) => {
+      const configuredSources = sources ?? media ?? []
 
       if (configuredSources.length === 0) {
         return

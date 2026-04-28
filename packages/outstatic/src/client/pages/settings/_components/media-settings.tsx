@@ -638,13 +638,9 @@ export function MediaSettings(props: MediaSettingsProps) {
                               <Input
                                 id={`media-input-${index}`}
                                 value={source.input}
-                                onChange={(event) =>
-                                  updateSource(index, (current) => ({
-                                    ...current,
-                                    input: event.target.value
-                                  }))
-                                }
-                                placeholder="media/images"
+                                readOnly
+                                className="cursor-default"
+                                placeholder="Select a repository folder"
                               />
                               <Button
                                 type="button"

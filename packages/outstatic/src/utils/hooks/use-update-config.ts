@@ -1,14 +1,14 @@
 import { createCommitApi } from '@/utils/create-commit-api'
 import { useOutstatic, useLocalData } from '@/utils/hooks/use-outstatic'
-import { useCallback, useState, useEffect } from 'react'
+import { useCallback, useState, useEffect, useRef } from 'react'
 import { useCreateCommit } from './use-create-commit'
 import useOid from './use-oid'
 import { useGetConfig } from './use-get-config'
-import { ConfigType } from '../metadata/types'
+import { ConfigType, MediaSourceConfig } from '../metadata/types'
 import stringify from 'json-stable-stringify'
 import { toast } from 'sonner'
 import { useRebuildMediaJson } from './use-rebuild-media-json'
-import { syncLegacyMediaFields } from '../media-config'
+import { resolveMediaSources, syncLegacyMediaFields } from '../media-config'
 
 type SubmitDocumentProps = {
   setLoading: (loading: boolean) => void
@@ -18,6 +18,16 @@ type OnSubmitProps = {
   configFields: Partial<ConfigType>
   callbackFunction?: () => void
 }
+
+type PendingMediaRebuild = {
+  onComplete?: () => void
+  sources: MediaSourceConfig[]
+}
+
+const hasOwnConfigField = (
+  configFields: Partial<ConfigType>,
+  field: keyof ConfigType
+) => Object.prototype.hasOwnProperty.call(configFields, field)
 
 export function useUpdateConfig({ setLoading }: SubmitDocumentProps) {
   const createCommit = useCreateCommit()
@@ -30,21 +40,36 @@ export function useUpdateConfig({ setLoading }: SubmitDocumentProps) {
     enabled: false
   })
 
-  const [callback, setCallback] = useState<() => void | undefined>(
-    () => undefined
-  )
-  const [shouldRebuildMedia, setShouldRebuildMedia] = useState(false)
+  const pendingMediaRebuildRef = useRef<PendingMediaRebuild | null>(null)
+  const [mediaRebuildRequest, setMediaRebuildRequest] = useState(0)
 
   const rebuildMediaJson = useRebuildMediaJson()
 
   useEffect(() => {
-    if (shouldRebuildMedia) {
-      const execute = async () => {
-        await rebuildMediaJson({ onComplete: () => callback() })
-      }
-      execute()
+    if (mediaRebuildRequest === 0) {
+      return
     }
-  }, [shouldRebuildMedia, callback, rebuildMediaJson])
+
+    const pendingMediaRebuild = pendingMediaRebuildRef.current
+
+    if (!pendingMediaRebuild) {
+      return
+    }
+
+    const execute = async () => {
+      try {
+        await rebuildMediaJson({
+          sources: pendingMediaRebuild.sources,
+          onComplete: pendingMediaRebuild.onComplete
+        })
+      } finally {
+        pendingMediaRebuildRef.current = null
+        setLoading(false)
+      }
+    }
+
+    void execute()
+  }, [mediaRebuildRequest, rebuildMediaJson, setLoading])
 
   const onSubmit = useCallback(
     async ({ configFields, callbackFunction }: OnSubmitProps) => {
@@ -74,6 +99,13 @@ export function useUpdateConfig({ setLoading }: SubmitDocumentProps) {
         const updatedConfig = nextConfig.media
           ? syncLegacyMediaFields(nextConfig)
           : nextConfig
+        const shouldRebuildMedia =
+          hasOwnConfigField(configFields, 'media') ||
+          hasOwnConfigField(configFields, 'repoMediaPath') ||
+          hasOwnConfigField(configFields, 'publicMediaPath')
+        const mediaSourcesForRebuild = shouldRebuildMedia
+          ? resolveMediaSources(updatedConfig)
+          : []
 
         commitApi.replaceFile(
           configJsonPath,
@@ -92,17 +124,23 @@ export function useUpdateConfig({ setLoading }: SubmitDocumentProps) {
               publicMediaPath: updatedConfig.publicMediaPath
             })
 
-            if (callbackFunction) {
-              setCallback(() => callbackFunction)
+            if (mediaSourcesForRebuild.length > 0) {
+              pendingMediaRebuildRef.current = {
+                sources: mediaSourcesForRebuild,
+                onComplete: callbackFunction
+              }
+              setMediaRebuildRequest((current) => current + 1)
+            } else {
+              callbackFunction?.()
+              setLoading(false)
             }
-
-            setShouldRebuildMedia(
-              !!updatedConfig.repoMediaPath || !!updatedConfig.media?.length
-            )
 
             return 'Config updated successfully'
           },
-          error: 'Failed to update config'
+          error: () => {
+            setLoading(false)
+            return 'Failed to update config'
+          }
         })
       } catch (error) {
         // TODO: Better error treatment
