@@ -365,9 +365,9 @@ export default function MediaLibrary() {
         if (sortBy === 'date') {
           return sortDirection === 'asc'
             ? new Date(a.publishedAt).getTime() -
-            new Date(b.publishedAt).getTime()
+                new Date(b.publishedAt).getTime()
             : new Date(b.publishedAt).getTime() -
-            new Date(a.publishedAt).getTime()
+                new Date(a.publishedAt).getTime()
         }
 
         return sortDirection === 'asc'
@@ -745,9 +745,11 @@ export default function MediaLibrary() {
                   (file.type === 'image' && !isMissingImage) ||
                   file.type === 'video'
                 const mediaSrc = buildMediaItemSrc(apiPath, file)
-                const previewLayerClassName = `absolute inset-0 h-full w-full transition-all ${isSelected ? 'scale-90' : 'scale-100'
-                  } ${isRangePreview ? 'opacity-70' : 'opacity-100'} ${canPreviewMedia ? 'cursor-zoom-in' : ''
-                  }`
+                const previewLayerClassName = `absolute inset-0 h-full w-full transition-all ${
+                  isSelected ? 'scale-90' : 'scale-100'
+                } ${isRangePreview ? 'opacity-70' : 'opacity-100'} ${
+                  canPreviewMedia ? 'cursor-zoom-in' : ''
+                }`
                 const handlePreviewClick = (
                   event: MouseEvent<HTMLButtonElement | HTMLDivElement>
                 ) => {
@@ -818,8 +820,9 @@ export default function MediaLibrary() {
                     className="group relative space-y-1 overflow-hidden rounded-lg bg-card"
                   >
                     <div
-                      className={`relative flex aspect-square items-center justify-center overflow-hidden rounded-md ${isSelected ? 'bg-muted' : ''
-                        } ${isRangePreview ? 'bg-black' : ''}`}
+                      className={`relative flex aspect-square items-center justify-center overflow-hidden rounded-md ${
+                        isSelected ? 'bg-muted' : ''
+                      } ${isRangePreview ? 'bg-black' : ''}`}
                     >
                       {canPreviewMedia ? (
                         <button
@@ -852,8 +855,9 @@ export default function MediaLibrary() {
                         size="icon"
                         variant={isSelected ? 'default' : 'secondary'}
                         aria-pressed={isSelected}
-                        aria-label={`${isSelected ? 'Deselect' : 'Select'} ${file.filename
-                          }`}
+                        aria-label={`${isSelected ? 'Deselect' : 'Select'} ${
+                          file.filename
+                        }`}
                         disabled={isUploading || bulkDeleting}
                         onClick={(event) => {
                           event.stopPropagation()
@@ -862,10 +866,11 @@ export default function MediaLibrary() {
                             event.shiftKey
                           )
                         }}
-                        className={`absolute left-2 top-2 shadow-sm ${isSelected
-                          ? 'opacity-100'
-                          : 'bg-background/80 opacity-0 backdrop-blur-sm group-hover:opacity-100 focus-visible:opacity-100'
-                          }`}
+                        className={`absolute left-2 top-2 shadow-sm ${
+                          isSelected
+                            ? 'opacity-100'
+                            : 'bg-background/80 opacity-0 backdrop-blur-sm group-hover:opacity-100 focus-visible:opacity-100'
+                        }`}
                       >
                         <SquareCheck className="size-4" />
                       </Button>
