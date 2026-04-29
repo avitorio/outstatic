@@ -89,6 +89,7 @@ const mockMediaData = {
         type: 'image',
         publishedAt: '2024-01-04T00:00:00.000Z',
         __outstatic: {
+          hash: 'logo-hash',
           path: 'public/uploads/logo.png'
         }
       },
@@ -98,6 +99,7 @@ const mockMediaData = {
         type: 'image',
         publishedAt: '2024-01-03T00:00:00.000Z',
         __outstatic: {
+          hash: 'gallery-hash',
           path: 'public/uploads/gallery.png'
         }
       },
@@ -107,6 +109,7 @@ const mockMediaData = {
         type: 'image',
         publishedAt: '2024-01-01T00:00:00.000Z',
         __outstatic: {
+          hash: 'hero-hash',
           path: 'public/uploads/hero.png'
         }
       },
@@ -117,12 +120,34 @@ const mockMediaData = {
         source: 'docs',
         publishedAt: '2024-01-02T00:00:00.000Z',
         __outstatic: {
+          hash: 'report-hash',
           path: 'public/documents/report.pdf'
         }
       }
     ]
   },
   commitUrl: 'https://github.com/andre/outstatic/commit/123'
+}
+
+const mockMediaDataWithVideo = {
+  ...mockMediaData,
+  media: {
+    ...mockMediaData.media,
+    media: [
+      {
+        filename: 'clip.mp4',
+        alt: 'Launch clip',
+        type: 'video',
+        source: 'videos',
+        publishedAt: '2024-01-05T00:00:00.000Z',
+        __outstatic: {
+          hash: 'clip-hash',
+          path: 'public/videos/clip.mp4'
+        }
+      },
+      ...mockMediaData.media.media
+    ]
+  }
 }
 
 describe('MediaLibrary', () => {
@@ -234,8 +259,81 @@ describe('MediaLibrary', () => {
     expect(
       screen.getByRole('button', { name: 'Deselect hero.png' })
     ).toHaveAttribute('aria-pressed', 'true')
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
     expect(mockToastInfo).toHaveBeenCalledWith(
       'Hold Shift and click to select many items at once'
+    )
+  })
+
+  it('opens an image preview dialog from the media item click target', () => {
+    mockUseGetMediaFiles.mockReturnValue({
+      data: mockMediaData,
+      isLoading: false,
+      refetch: refetchMedia
+    })
+    mockUseOutstatic.mockReturnValue({
+      ...baseOutstaticConfig,
+      media: [
+        {
+          name: 'images',
+          label: 'Images',
+          input: 'public/uploads',
+          output: '/uploads'
+        }
+      ]
+    })
+
+    render(<MediaLibrary />)
+
+    fireEvent.click(screen.getByRole('button', { name: 'Preview hero.png' }))
+
+    const dialog = screen.getByRole('dialog', { name: 'Preview hero.png' })
+
+    expect(
+      within(dialog).getByRole('img', { name: 'Hero image' })
+    ).toHaveAttribute(
+      'src',
+      '/outstatic/api/outstatic/media/andre/outstatic/canary/public/uploads/hero.png?v=hero-hash'
+    )
+    expect(screen.queryByText('1 Item Selected')).not.toBeInTheDocument()
+  })
+
+  it('opens a video preview dialog from the media item click target', () => {
+    mockUseGetMediaFiles.mockReturnValue({
+      data: mockMediaDataWithVideo,
+      isLoading: false,
+      refetch: refetchMedia
+    })
+    mockUseOutstatic.mockReturnValue({
+      ...baseOutstaticConfig,
+      media: [
+        {
+          name: 'images',
+          label: 'Images',
+          input: 'public/uploads',
+          output: '/uploads'
+        },
+        {
+          name: 'videos',
+          label: 'Videos',
+          input: 'public/videos',
+          output: '/videos'
+        }
+      ]
+    })
+
+    render(<MediaLibrary />)
+
+    fireEvent.click(screen.getByRole('button', { name: 'Preview clip.mp4' }))
+
+    const dialog = screen.getByRole('dialog', { name: 'Preview clip.mp4' })
+    const video = within(dialog).getByLabelText('Preview clip.mp4')
+
+    expect(video.tagName.toLowerCase()).toBe('video')
+    expect(video).toHaveAttribute('controls')
+    expect(video).toHaveAttribute(
+      'src',
+      '/outstatic/api/outstatic/media/andre/outstatic/canary/public/videos/clip.mp4?v=clip-hash'
     )
   })
 

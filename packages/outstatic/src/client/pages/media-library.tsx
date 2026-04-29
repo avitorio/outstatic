@@ -13,6 +13,13 @@ import {
 } from '@/components/ui/shadcn/alert-dialog'
 import { Button } from '@/components/ui/shadcn/button'
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle
+} from '@/components/ui/shadcn/dialog'
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -45,6 +52,7 @@ import { MediaItem, MediaSourceConfig } from '@/utils/metadata/types'
 import {
   Copy,
   ExternalLink,
+  FileVideo,
   FileQuestion,
   FileText,
   ImageOff,
@@ -53,8 +61,76 @@ import {
   X,
   Trash2
 } from 'lucide-react'
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import {
+  type MouseEvent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState
+} from 'react'
 import { toast } from 'sonner'
+
+type MediaPreview = {
+  file: MediaItem
+  src: string
+}
+
+const buildMediaItemSrc = (apiPath: string, file: MediaItem) => {
+  const version = file.__outstatic.hash || file.__outstatic.commit
+  const versionQuery = version ? `?v=${encodeURIComponent(version)}` : ''
+
+  return `${apiPath}${file.__outstatic.path}${versionQuery}`
+}
+
+function MediaPreviewDialog({
+  preview,
+  onOpenChange
+}: {
+  preview: MediaPreview | null
+  onOpenChange: (open: boolean) => void
+}) {
+  const file = preview?.file
+  const src = preview?.src
+
+  if (!file) {
+    return null
+  }
+
+  return (
+    <Dialog open={Boolean(file)} onOpenChange={onOpenChange}>
+      <DialogContent className="flex max-h-[calc(100vh-2rem)] w-[calc(100vw-2rem)] flex-col gap-0 overflow-hidden p-0 sm:max-w-5xl">
+        <DialogHeader className="border-b px-6 py-4 pr-12">
+          <DialogTitle className="truncate">
+            Preview {file.filename}
+          </DialogTitle>
+          <DialogDescription className="truncate">
+            {file.alt || file.type}
+          </DialogDescription>
+        </DialogHeader>
+        <div className="flex min-h-0 items-center justify-center overflow-auto bg-muted/40 p-4">
+          {file.type === 'video' ? (
+            <video
+              key={src}
+              src={src}
+              controls
+              preload="metadata"
+              aria-label={`Preview ${file.filename}`}
+              className="max-h-[calc(100vh-11rem)] w-full rounded-md bg-black"
+            />
+          ) : (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={src}
+              alt={file.alt}
+              className="max-h-[calc(100vh-11rem)] w-auto max-w-full rounded-md object-contain"
+            />
+          )}
+        </div>
+      </DialogContent>
+    </Dialog>
+  )
+}
 
 function MediaItemActions({
   file,
@@ -231,6 +307,7 @@ export default function MediaLibrary() {
   )
   const [hoveredMediaPath, setHoveredMediaPath] = useState<string | null>(null)
   const [isShiftPressed, setIsShiftPressed] = useState(false)
+  const [previewMedia, setPreviewMedia] = useState<MediaPreview | null>(null)
   const [selectedSourceName, setSelectedSourceName] = useState(
     ALL_MEDIA_SOURCE_VALUE
   )
@@ -288,9 +365,9 @@ export default function MediaLibrary() {
         if (sortBy === 'date') {
           return sortDirection === 'asc'
             ? new Date(a.publishedAt).getTime() -
-                new Date(b.publishedAt).getTime()
+            new Date(b.publishedAt).getTime()
             : new Date(b.publishedAt).getTime() -
-                new Date(a.publishedAt).getTime()
+            new Date(a.publishedAt).getTime()
         }
 
         return sortDirection === 'asc'
@@ -355,7 +432,7 @@ export default function MediaLibrary() {
 
   useEffect(() => {
     if (previousSelectedMediaCount.current === 0 && selectedMediaCount === 1) {
-      toast.info('Hold Shift and click to select many items at once')
+      toast.info('Shift-click to select multiple items.')
     }
 
     previousSelectedMediaCount.current = selectedMediaCount
@@ -661,6 +738,68 @@ export default function MediaLibrary() {
                 const isRangePreview = rangePreviewPaths.has(
                   file.__outstatic.path
                 )
+                const isMissingImage =
+                  file.type === 'image' &&
+                  notFoundFiles.has(file.__outstatic.path)
+                const canPreviewMedia =
+                  (file.type === 'image' && !isMissingImage) ||
+                  file.type === 'video'
+                const mediaSrc = buildMediaItemSrc(apiPath, file)
+                const previewLayerClassName = `absolute inset-0 h-full w-full transition-all ${isSelected ? 'scale-90' : 'scale-100'
+                  } ${isRangePreview ? 'opacity-70' : 'opacity-100'} ${canPreviewMedia ? 'cursor-zoom-in' : ''
+                  }`
+                const handlePreviewClick = (
+                  event: MouseEvent<HTMLButtonElement | HTMLDivElement>
+                ) => {
+                  if (event.shiftKey) {
+                    if (!isUploading && !bulkDeleting) {
+                      toggleSelectedMedia(file.__outstatic.path, true)
+                    }
+
+                    return
+                  }
+
+                  if (canPreviewMedia && !isUploading && !bulkDeleting) {
+                    setPreviewMedia({ file, src: mediaSrc })
+                  }
+                }
+
+                const mediaPreviewContent =
+                  file.type === 'image' && !isMissingImage ? (
+                    <>
+                      {loadingImages.has(file.__outstatic.path) ? (
+                        <div className="absolute inset-0 flex items-center justify-center rounded-md bg-gray-50">
+                          <SpinnerIcon />
+                        </div>
+                      ) : null}
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={mediaSrc}
+                        alt={file.alt}
+                        className="h-full w-full rounded-md bg-slate-50 object-cover object-center"
+                        width={288}
+                        height={288}
+                        onLoad={() => handleImageLoad(file.__outstatic.path)}
+                        onError={() => handleImageError(file.__outstatic.path)}
+                        loading="lazy"
+                      />
+                    </>
+                  ) : file.type === 'image' ? (
+                    <div className="absolute inset-0 flex items-center justify-center rounded-md bg-red-100/50">
+                      <ImageOff className="h-12 w-12 text-red-500" />
+                    </div>
+                  ) : (
+                    <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 rounded-md bg-slate-50 px-4 text-center">
+                      {file.type === 'video' ? (
+                        <FileVideo className="h-12 w-12 text-slate-500" />
+                      ) : (
+                        <FileText className="h-12 w-12 text-slate-500" />
+                      )}
+                      <span className="text-xs font-medium uppercase tracking-wide text-slate-500">
+                        {file.type}
+                      </span>
+                    </div>
+                  )
 
                 return (
                   <div
@@ -679,57 +818,26 @@ export default function MediaLibrary() {
                     className="group relative space-y-1 overflow-hidden rounded-lg bg-card"
                   >
                     <div
-                      className={`relative flex aspect-square items-center justify-center overflow-hidden rounded-md ${
-                        isSelected ? 'bg-muted' : ''
-                      } ${isRangePreview ? 'bg-black' : ''}`}
+                      className={`relative flex aspect-square items-center justify-center overflow-hidden rounded-md ${isSelected ? 'bg-muted' : ''
+                        } ${isRangePreview ? 'bg-black' : ''}`}
                     >
-                      <div
-                        onClick={(event) => {
-                          if (event.shiftKey && !isUploading && !bulkDeleting) {
-                            toggleSelectedMedia(file.__outstatic.path, true)
-                          }
-                        }}
-                        className={`absolute inset-0 transition-all ${
-                          isSelected ? 'scale-90' : 'scale-100'
-                        } ${isRangePreview ? 'opacity-70' : 'opacity-100'}`}
-                      >
-                        {file.type === 'image' &&
-                        !notFoundFiles.has(file.__outstatic.path) ? (
-                          <>
-                            {loadingImages.has(file.__outstatic.path) ? (
-                              <div className="absolute inset-0 flex items-center justify-center rounded-md bg-gray-50">
-                                <SpinnerIcon />
-                              </div>
-                            ) : null}
-                            {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <img
-                              src={`${apiPath}${file.__outstatic.path}`}
-                              alt={file.alt}
-                              className="h-full w-full rounded-md bg-slate-50 object-cover object-center"
-                              width={288}
-                              height={288}
-                              onLoad={() =>
-                                handleImageLoad(file.__outstatic.path)
-                              }
-                              onError={() =>
-                                handleImageError(file.__outstatic.path)
-                              }
-                              loading="lazy"
-                            />
-                          </>
-                        ) : file.type === 'image' ? (
-                          <div className="absolute inset-0 flex items-center justify-center rounded-md bg-red-100/50">
-                            <ImageOff className="h-12 w-12 text-red-500" />
-                          </div>
-                        ) : (
-                          <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 rounded-md bg-slate-50 px-4 text-center">
-                            <FileText className="h-12 w-12 text-slate-500" />
-                            <span className="text-xs font-medium uppercase tracking-wide text-slate-500">
-                              {file.type}
-                            </span>
-                          </div>
-                        )}
-                      </div>
+                      {canPreviewMedia ? (
+                        <button
+                          type="button"
+                          aria-label={`Preview ${file.filename}`}
+                          onClick={handlePreviewClick}
+                          className={`${previewLayerClassName} appearance-none border-0 bg-transparent p-0 text-left`}
+                        >
+                          {mediaPreviewContent}
+                        </button>
+                      ) : (
+                        <div
+                          onClick={handlePreviewClick}
+                          className={previewLayerClassName}
+                        >
+                          {mediaPreviewContent}
+                        </div>
+                      )}
                       <MediaItemActions
                         file={file}
                         media={mediaSources}
@@ -737,19 +845,15 @@ export default function MediaLibrary() {
                         onComplete={async () => {
                           await refetchMedia()
                         }}
-                        notFound={
-                          file.type === 'image' &&
-                          notFoundFiles.has(file.__outstatic.path)
-                        }
+                        notFound={isMissingImage}
                       />
                       <Button
                         type="button"
                         size="icon"
                         variant={isSelected ? 'default' : 'secondary'}
                         aria-pressed={isSelected}
-                        aria-label={`${isSelected ? 'Deselect' : 'Select'} ${
-                          file.filename
-                        }`}
+                        aria-label={`${isSelected ? 'Deselect' : 'Select'} ${file.filename
+                          }`}
                         disabled={isUploading || bulkDeleting}
                         onClick={(event) => {
                           event.stopPropagation()
@@ -758,11 +862,10 @@ export default function MediaLibrary() {
                             event.shiftKey
                           )
                         }}
-                        className={`absolute left-2 top-2 shadow-sm ${
-                          isSelected
-                            ? 'opacity-100'
-                            : 'bg-background/80 opacity-0 backdrop-blur-sm group-hover:opacity-100 focus-visible:opacity-100'
-                        }`}
+                        className={`absolute left-2 top-2 shadow-sm ${isSelected
+                          ? 'opacity-100'
+                          : 'bg-background/80 opacity-0 backdrop-blur-sm group-hover:opacity-100 focus-visible:opacity-100'
+                          }`}
                       >
                         <SquareCheck className="size-4" />
                       </Button>
@@ -787,6 +890,14 @@ export default function MediaLibrary() {
           )}
         </MediaLibraryDropzone>
       )}
+      <MediaPreviewDialog
+        preview={previewMedia}
+        onOpenChange={(open) => {
+          if (!open) {
+            setPreviewMedia(null)
+          }
+        }}
+      />
     </AdminLayout>
   )
 }
