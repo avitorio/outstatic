@@ -58,6 +58,11 @@ describe('ConfigSchema', () => {
       const result = ConfigSchema.safeParse({ publicMediaPath: '' })
       expect(result.success).toBe(false)
     })
+
+    it('should reject parent-directory segments in publicMediaPath', () => {
+      const result = ConfigSchema.safeParse({ publicMediaPath: '../images/' })
+      expect(result.success).toBe(false)
+    })
   })
 
   describe('repoMediaPath', () => {
@@ -80,6 +85,11 @@ describe('ConfigSchema', () => {
       if (result.success) {
         expect(result.data.repoMediaPath).toBeUndefined()
       }
+    })
+
+    it('should reject parent-directory segments in repoMediaPath', () => {
+      const result = ConfigSchema.safeParse({ repoMediaPath: '../public/' })
+      expect(result.success).toBe(false)
     })
   })
 
@@ -127,6 +137,155 @@ describe('ConfigSchema', () => {
       expect(result.success).toBe(true)
       if (result.success) {
         expect(result.data).toEqual({})
+      }
+    })
+
+    it('preserves custom media output paths exactly as entered', () => {
+      const result = ConfigSchema.safeParse({
+        media: [
+          {
+            name: 'images',
+            label: 'Images',
+            input: 'media/images',
+            output: './assets',
+            extensions: ['png']
+          }
+        ]
+      })
+
+      expect(result.success).toBe(true)
+      if (result.success) {
+        expect(result.data.media?.[0]?.output).toBe('./assets')
+      }
+    })
+
+    it('rejects duplicate media source names after normalization', () => {
+      const result = ConfigSchema.safeParse({
+        media: [
+          {
+            name: 'Images',
+            label: 'Images',
+            input: 'media/images',
+            output: '/media/images',
+            extensions: ['png']
+          },
+          {
+            name: 'images',
+            label: 'Images',
+            input: 'media/photos',
+            output: '/media/photos',
+            extensions: ['jpg']
+          }
+        ]
+      })
+
+      expect(result.success).toBe(false)
+      if (!result.success) {
+        expect(
+          result.error.issues.some(
+            (issue) =>
+              issue.path.join('.') === 'media.0.name' &&
+              issue.message.includes('must be unique')
+          )
+        ).toBe(true)
+        expect(
+          result.error.issues.some(
+            (issue) =>
+              issue.path.join('.') === 'media.1.name' &&
+              issue.message.includes('must be unique')
+          )
+        ).toBe(true)
+      }
+    })
+
+    it('rejects parent-directory segments in media source input paths', () => {
+      const result = ConfigSchema.safeParse({
+        media: [
+          {
+            name: 'images',
+            label: 'Images',
+            input: '../../private',
+            output: '/media/images',
+            extensions: ['png']
+          }
+        ]
+      })
+
+      expect(result.success).toBe(false)
+      if (!result.success) {
+        expect(
+          result.error.issues.some(
+            (issue) =>
+              issue.path.join('.') === 'media.0.input' &&
+              issue.message.includes('must not contain parent-directory')
+          )
+        ).toBe(true)
+      }
+    })
+
+    it('rejects parent-directory segments in media source output paths', () => {
+      const result = ConfigSchema.safeParse({
+        media: [
+          {
+            name: 'images',
+            label: 'Images',
+            input: 'media/images',
+            output: '../public/images',
+            extensions: ['png']
+          }
+        ]
+      })
+
+      expect(result.success).toBe(false)
+      if (!result.success) {
+        expect(
+          result.error.issues.some(
+            (issue) =>
+              issue.path.join('.') === 'media.0.output' &&
+              issue.message.includes('must not contain parent-directory')
+          )
+        ).toBe(true)
+      }
+    })
+
+    it('rejects overlapping media source extensions', () => {
+      const result = ConfigSchema.safeParse({
+        media: [
+          {
+            name: 'images',
+            label: 'Images',
+            input: 'media/images',
+            output: '/media/images',
+            categories: ['image']
+          },
+          {
+            name: 'photos',
+            label: 'Photos',
+            input: 'media/photos',
+            output: '/media/photos',
+            extensions: ['png', 'webp']
+          }
+        ]
+      })
+
+      expect(result.success).toBe(false)
+      if (!result.success) {
+        expect(
+          result.error.issues.some(
+            (issue) =>
+              issue.path.join('.') === 'media.0.extensions' &&
+              issue.message.includes('png') &&
+              issue.message.includes('webp')
+          )
+        ).toBe(true)
+        expect(
+          result.error.issues.some(
+            (issue) =>
+              issue.path.join('.') === 'media.1.extensions' &&
+              issue.message.includes('png') &&
+              issue.message.includes('webp')
+          )
+        ).toBe(true)
       }
     })
   })

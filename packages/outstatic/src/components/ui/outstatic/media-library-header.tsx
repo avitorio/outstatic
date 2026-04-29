@@ -7,8 +7,15 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/shadcn/select'
+import { MediaSourceConfig } from '@/utils/metadata/types'
+import {
+  createAcceptAttribute,
+  getAllowedExtensionsForSource
+} from '@/utils/media-config'
 import { Settings } from 'lucide-react'
 import { useId } from 'react'
+
+export const ALL_MEDIA_SOURCE_VALUE = '__all_media__'
 
 interface MediaLibraryHeaderProps {
   isUploading: boolean
@@ -18,9 +25,13 @@ interface MediaLibraryHeaderProps {
   setSortBy: (value: string) => void
   sortDirection: string
   setSortDirection: (value: string) => void
+  mediaSources?: MediaSourceConfig[]
+  selectedSourceName?: string
+  setSelectedSourceName?: (value: string) => void
   handleFileUpload: (files: FileList | File[] | null) => void
-  onOpenSettings: () => void
+  onOpenSettings?: () => void
   disableUpload?: boolean
+  showAllMediaOption?: boolean
 }
 
 export function MediaLibraryHeader({
@@ -31,16 +42,56 @@ export function MediaLibraryHeader({
   setSortBy,
   sortDirection,
   setSortDirection,
+  mediaSources = [],
+  selectedSourceName,
+  setSelectedSourceName,
   handleFileUpload,
   onOpenSettings,
-  disableUpload = false
+  disableUpload = false,
+  showAllMediaOption = true
 }: MediaLibraryHeaderProps) {
   const fileInputId = useId()
+  const selectedSource = mediaSources.find(
+    (source) => source.name === selectedSourceName
+  )
+  const accept = selectedSource
+    ? createAcceptAttribute(selectedSource)
+    : Array.from(
+        new Set(
+          mediaSources.flatMap((source) =>
+            getAllowedExtensionsForSource(source)
+          )
+        )
+      )
+        .map((extension) => `.${extension}`)
+        .join(',')
 
   return (
-    <div className="flex items-center justify-between">
-      <div className="flex h-12 items-center capitalize gap-4 xl:gap-12">
+    <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+      <div className="flex flex-wrap items-center gap-3 xl:gap-4">
         <h1 className="text-xl md:text-2xl">Media Library</h1>
+        {mediaSources.length > 0 ? (
+          <Select
+            value={selectedSourceName}
+            onValueChange={(value) => setSelectedSourceName?.(value)}
+          >
+            <SelectTrigger className="w-[220px]">
+              <SelectValue placeholder="Select a source" />
+            </SelectTrigger>
+            <SelectContent>
+              {showAllMediaOption ? (
+                <SelectItem value={ALL_MEDIA_SOURCE_VALUE}>
+                  All Media
+                </SelectItem>
+              ) : null}
+              {mediaSources.map((source) => (
+                <SelectItem key={source.name} value={source.name}>
+                  {source.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        ) : null}
         <div className="flex items-center gap-2">
           <Button
             size="sm"
@@ -56,21 +107,23 @@ export function MediaLibraryHeader({
               'Add Media'
             )}
           </Button>
-          <Button
-            size="icon"
-            variant="ghost"
-            type="button"
-            title="Open media settings"
-            aria-label="Open media settings"
-            onClick={onOpenSettings}
-          >
-            <Settings className="h-4 w-4" />
-          </Button>
+          {onOpenSettings ? (
+            <Button
+              size="icon"
+              variant="ghost"
+              type="button"
+              title="Open media settings"
+              aria-label="Open media settings"
+              onClick={onOpenSettings}
+            >
+              <Settings className="h-4 w-4" />
+            </Button>
+          ) : null}
         </div>
         <input
           id={fileInputId}
           type="file"
-          accept="image/*"
+          accept={accept}
           multiple
           className="hidden"
           disabled={isUploading || disableUpload}
@@ -80,7 +133,7 @@ export function MediaLibraryHeader({
           }}
         />
       </div>
-      <div className="flex items-center gap-4">
+      <div className="flex flex-wrap items-center gap-4">
         <Input
           placeholder="Search files..."
           value={searchTerm}

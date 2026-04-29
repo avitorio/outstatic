@@ -14,6 +14,8 @@ type MediaLibraryDropzoneProps = {
   children: ReactNode
   className?: string
   disabled?: boolean
+  dropLabel?: string
+  dropDescription?: string
   onFileDrop: (files: FileList | null) => void
 }
 
@@ -24,6 +26,8 @@ export function MediaLibraryDropzone({
   children,
   className,
   disabled = false,
+  dropLabel = 'Drop media to upload',
+  dropDescription = 'Outstatic will upload up to 10 files you drop here.',
   onFileDrop
 }: MediaLibraryDropzoneProps) {
   const dragDepth = useRef(0)
@@ -126,12 +130,8 @@ export function MediaLibraryDropzone({
           <div className="space-y-3">
             <Upload className="mx-auto size-8 text-primary" />
             <div className="space-y-1">
-              <p className="font-medium text-foreground">
-                Drop images to upload
-              </p>
-              <p className="text-sm text-muted-foreground">
-                Outstatic will upload up to 10 images you drop here.
-              </p>
+              <p className="font-medium text-foreground">{dropLabel}</p>
+              <p className="text-sm text-muted-foreground">{dropDescription}</p>
             </div>
           </div>
         </div>

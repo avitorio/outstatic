@@ -124,5 +124,31 @@ Some text here.
 
       expect(result).toContain('public/assets/images/uploads/')
     })
+
+    it('should prefer the most specific media source when outputs overlap', () => {
+      const result = parseContent({
+        ...baseParams,
+        content: '![Alt](/assets/video/clip.mp4)',
+        media: [
+          {
+            name: 'assets',
+            label: 'Assets',
+            input: 'public/assets',
+            output: '/assets',
+            categories: ['image']
+          },
+          {
+            name: 'videos',
+            label: 'Videos',
+            input: 'public/assets/video',
+            output: '/assets/video',
+            categories: ['video']
+          }
+        ]
+      })
+
+      expect(result).toContain('owner/repo/main/public/assets/video/')
+      expect(result).not.toContain('owner/repo/main/public/assets/clip.mp4')
+    })
   })
 })

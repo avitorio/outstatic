@@ -20,11 +20,49 @@ describe('mergeMdMeta', () => {
         category: 'news'
       },
       basePath: '',
-      repoInfo: 'owner/repo/main',
+      repoOwner: 'owner',
+      repoSlug: 'repo',
+      repoBranch: 'main',
       publicMediaPath: 'uploads/'
     })
 
     expect(merged).toContain('category: news')
     expect(merged).not.toContain('label: News')
+  })
+
+  it('prefers the most specific media source when rewriting overlapping API paths', () => {
+    const merged = mergeMdMeta({
+      data: {
+        title: 'Video entry',
+        content:
+          '![Clip](/api/api/outstatic/media/owner/repo/main/public/assets/video/clip.mp4)',
+        cover:
+          '/api/api/outstatic/media/owner/repo/main/public/assets/video/cover.png'
+      },
+      basePath: '/api',
+      repoOwner: 'owner',
+      repoSlug: 'repo',
+      repoBranch: 'main',
+      media: [
+        {
+          name: 'assets',
+          label: 'Assets',
+          input: 'public/assets',
+          output: '/assets',
+          categories: ['image']
+        },
+        {
+          name: 'videos',
+          label: 'Videos',
+          input: 'public/assets/video',
+          output: '/assets/video',
+          categories: ['video']
+        }
+      ]
+    })
+
+    expect(merged).toContain('cover: /assets/video/cover.png')
+    expect(merged).toContain('![Clip](/assets/video/clip.mp4)')
+    expect(merged).not.toContain('/assets/clip.mp4')
   })
 })

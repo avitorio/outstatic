@@ -13,7 +13,7 @@ export type Document = {
 }
 
 export type FileType = {
-  type: 'image'
+  type: string
   blob?: string
   filename: string
   content: string

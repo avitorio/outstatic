@@ -50,6 +50,7 @@ export type MediaItem = {
   alt: string
   publishedAt: string
   type: string
+  source?: string
 }
 
 export type MediaSchema = {
@@ -60,8 +61,33 @@ export type MediaSchema = {
 
 export type MDExtensions = 'md' | 'mdx'
 
+export const mediaCategories = [
+  'image',
+  'document',
+  'video',
+  'audio',
+  'compressed',
+  'code',
+  'font',
+  'spreadsheet'
+] as const
+
+export type MediaCategory = (typeof mediaCategories)[number]
+
+export type MediaSourceConfig = {
+  name: string
+  label: string
+  input: string
+  output: string
+  extensions?: readonly string[]
+  categories?: readonly MediaCategory[]
+  [key: string]: unknown
+}
+
 export type ConfigType = {
   publicMediaPath?: string
   repoMediaPath?: string
+  media?: MediaSourceConfig[]
   mdExtension?: MDExtensions
+  [key: string]: unknown
 }

@@ -123,8 +123,6 @@ export function EditorPageShell({
               </form>
             </AdminLayout>
             <MediaSettingsDialog
-              title="Your document contains media files."
-              description="Let's set up your media paths so we can upload your files."
               showMediaPathDialog={showMediaPathDialog}
               setShowMediaPathDialog={setShowMediaPathDialog}
               callbackFunction={onMediaPathConfigured}

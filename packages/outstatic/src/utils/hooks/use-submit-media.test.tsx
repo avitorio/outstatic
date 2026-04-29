@@ -44,6 +44,13 @@ const mockUseOid = useOid as jest.Mock
 const mockUseOutstatic = useOutstatic as jest.Mock
 
 describe('useSubmitMedia', () => {
+  const source = {
+    name: 'images',
+    label: 'Images',
+    input: 'media',
+    output: '/media',
+    categories: ['image']
+  } as const
   const mutateAsync = jest.fn()
   const refetchMedia = jest.fn()
   const fetchOid = jest.fn()
@@ -133,7 +140,7 @@ describe('useSubmitMedia', () => {
     const { result } = renderHook(() => useSubmitMedia())
 
     await act(async () => {
-      await result.current(files)
+      await result.current({ files, source })
     })
 
     expect(fetchOid).toHaveBeenCalledTimes(1)

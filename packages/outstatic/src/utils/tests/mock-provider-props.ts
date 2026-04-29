@@ -40,6 +40,7 @@ const mockProviderProps = {
   csrfToken: null,
   publicMediaPath: 'anything',
   repoMediaPath: 'anything',
+  media: [],
   isPro: false
 } as OutstaticData
 
