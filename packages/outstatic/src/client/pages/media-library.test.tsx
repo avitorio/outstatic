@@ -1,18 +1,41 @@
-import { render, screen } from '@testing-library/react'
+import {
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  within
+} from '@testing-library/react'
+import { decode as fromBase64 } from 'js-base64'
 import MediaLibrary from './media-library'
 import { useGetMediaFiles } from '@/utils/hooks/use-get-media-files'
 import { useMediaLibraryUpload } from '@/utils/hooks/use-media-library-upload'
 import { useOutstatic } from '@/utils/hooks/use-outstatic'
+
+const mockMutateAsync = jest.fn()
+const mockFetchOid = jest.fn()
+const mockToastInfo = jest.fn()
+const mockToastPromise = jest.fn(
+  (promise: Promise<unknown>, _options?: unknown) => promise
+)
 
 jest.mock('@/utils/hooks/use-outstatic')
 jest.mock('@/utils/hooks/use-get-media-files')
 jest.mock('@/utils/hooks/use-media-library-upload')
 jest.mock('@/utils/hooks/use-create-commit', () => ({
   useCreateCommit: () => ({
-    mutateAsync: jest.fn()
+    mutateAsync: mockMutateAsync
   })
 }))
-jest.mock('@/utils/hooks/use-oid', () => jest.fn(() => jest.fn()))
+jest.mock('@/utils/hooks/use-oid', () => jest.fn(() => mockFetchOid))
+jest.mock('sonner', () => ({
+  toast: {
+    error: jest.fn(),
+    info: (message: string) => mockToastInfo(message),
+    promise: (promise: Promise<unknown>, options: unknown) =>
+      mockToastPromise(promise, options),
+    success: jest.fn()
+  }
+}))
 jest.mock('@/components/admin-layout', () => ({
   AdminLayout: ({
     children,
@@ -51,13 +74,33 @@ const baseOutstaticConfig = {
   media: undefined,
   repoOwner: 'andre',
   repoSlug: 'outstatic',
-  repoBranch: 'canary'
+  repoBranch: 'canary',
+  mediaJsonPath: 'outstatic/media/media.json'
 }
 
 const mockMediaData = {
   media: {
+    commit: 'abc123',
     generated: '2024-01-01T00:00:00.000Z',
     media: [
+      {
+        filename: 'logo.png',
+        alt: 'Logo',
+        type: 'image',
+        publishedAt: '2024-01-04T00:00:00.000Z',
+        __outstatic: {
+          path: 'public/uploads/logo.png'
+        }
+      },
+      {
+        filename: 'gallery.png',
+        alt: 'Gallery image',
+        type: 'image',
+        publishedAt: '2024-01-03T00:00:00.000Z',
+        __outstatic: {
+          path: 'public/uploads/gallery.png'
+        }
+      },
       {
         filename: 'hero.png',
         alt: 'Hero image',
@@ -66,6 +109,16 @@ const mockMediaData = {
         __outstatic: {
           path: 'public/uploads/hero.png'
         }
+      },
+      {
+        filename: 'report.pdf',
+        alt: 'Quarterly report',
+        type: 'document',
+        source: 'docs',
+        publishedAt: '2024-01-02T00:00:00.000Z',
+        __outstatic: {
+          path: 'public/documents/report.pdf'
+        }
       }
     ]
   },
@@ -73,13 +126,19 @@ const mockMediaData = {
 }
 
 describe('MediaLibrary', () => {
+  const refetchMedia = jest.fn()
+
   beforeEach(() => {
     jest.clearAllMocks()
     mockUseOutstatic.mockReturnValue(baseOutstaticConfig)
+    mockMutateAsync.mockResolvedValue({})
+    mockFetchOid.mockResolvedValue('oid-123')
+    mockToastPromise.mockImplementation((promise) => promise)
+    refetchMedia.mockResolvedValue({ data: mockMediaData })
     mockUseGetMediaFiles.mockReturnValue({
       data: null,
       isLoading: false,
-      refetch: jest.fn()
+      refetch: refetchMedia
     })
     mockUseMediaLibraryUpload.mockReturnValue({
       handleFileUpload: jest.fn(),
@@ -105,7 +164,7 @@ describe('MediaLibrary', () => {
     mockUseGetMediaFiles.mockReturnValue({
       data: mockMediaData,
       isLoading: false,
-      refetch: jest.fn()
+      refetch: refetchMedia
     })
 
     mockUseOutstatic.mockReturnValue({
@@ -145,6 +204,280 @@ describe('MediaLibrary', () => {
 
     rerender(<MediaLibrary />)
 
-    expect(screen.getByText('Images')).toBeInTheDocument()
+    expect(screen.getAllByText('Images')).not.toHaveLength(0)
+  })
+
+  it('shows the bulk toolbar after selecting one media item', () => {
+    mockUseGetMediaFiles.mockReturnValue({
+      data: mockMediaData,
+      isLoading: false,
+      refetch: refetchMedia
+    })
+    mockUseOutstatic.mockReturnValue({
+      ...baseOutstaticConfig,
+      media: [
+        {
+          name: 'images',
+          label: 'Images',
+          input: 'public/uploads',
+          output: '/uploads'
+        }
+      ]
+    })
+
+    render(<MediaLibrary />)
+
+    fireEvent.click(screen.getByRole('button', { name: 'Select hero.png' }))
+
+    expect(screen.getByText('1 Item Selected')).toBeInTheDocument()
+    expect(screen.queryByTestId('media-library-header')).not.toBeInTheDocument()
+    expect(
+      screen.getByRole('button', { name: 'Deselect hero.png' })
+    ).toHaveAttribute('aria-pressed', 'true')
+    expect(mockToastInfo).toHaveBeenCalledWith(
+      'Hold Shift and click to select many items at once'
+    )
+  })
+
+  it('updates the bulk toolbar count when selecting multiple media items', () => {
+    mockUseGetMediaFiles.mockReturnValue({
+      data: mockMediaData,
+      isLoading: false,
+      refetch: refetchMedia
+    })
+    mockUseOutstatic.mockReturnValue({
+      ...baseOutstaticConfig,
+      media: [
+        {
+          name: 'images',
+          label: 'Images',
+          input: 'public/uploads',
+          output: '/uploads'
+        }
+      ]
+    })
+
+    render(<MediaLibrary />)
+
+    fireEvent.click(screen.getByRole('button', { name: 'Select hero.png' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Select report.pdf' }))
+
+    expect(screen.getByText('2 Items Selected')).toBeInTheDocument()
+  })
+
+  it('previews and selects a visible range while shift is held', () => {
+    mockUseGetMediaFiles.mockReturnValue({
+      data: mockMediaData,
+      isLoading: false,
+      refetch: refetchMedia
+    })
+    mockUseOutstatic.mockReturnValue({
+      ...baseOutstaticConfig,
+      media: [
+        {
+          name: 'images',
+          label: 'Images',
+          input: 'public/uploads',
+          output: '/uploads'
+        }
+      ]
+    })
+
+    render(<MediaLibrary />)
+
+    fireEvent.click(screen.getByRole('button', { name: 'Select logo.png' }))
+    fireEvent.keyDown(window, { key: 'Shift' })
+    fireEvent.mouseEnter(screen.getByTestId('media-card-hero.png'), {
+      shiftKey: true
+    })
+
+    expect(screen.getByTestId('media-card-gallery.png')).toHaveAttribute(
+      'data-selection-preview',
+      'true'
+    )
+    expect(screen.getByTestId('media-card-report.pdf')).toHaveAttribute(
+      'data-selection-preview',
+      'true'
+    )
+    expect(screen.getByTestId('media-card-hero.png')).toHaveAttribute(
+      'data-selection-preview',
+      'true'
+    )
+
+    fireEvent.mouseLeave(screen.getByTestId('media-card-hero.png'), {
+      shiftKey: true
+    })
+
+    expect(screen.getByTestId('media-card-gallery.png')).toHaveAttribute(
+      'data-selection-preview',
+      'true'
+    )
+    expect(screen.getByTestId('media-card-report.pdf')).toHaveAttribute(
+      'data-selection-preview',
+      'true'
+    )
+    expect(screen.getByTestId('media-card-hero.png')).toHaveAttribute(
+      'data-selection-preview',
+      'true'
+    )
+
+    fireEvent.click(screen.getByAltText('Hero image'), {
+      shiftKey: true
+    })
+
+    expect(screen.getByText('4 Items Selected')).toBeInTheDocument()
+    expect(
+      screen.getByRole('button', { name: 'Deselect gallery.png' })
+    ).toHaveAttribute('aria-pressed', 'true')
+    expect(
+      screen.getByRole('button', { name: 'Deselect report.pdf' })
+    ).toHaveAttribute('aria-pressed', 'true')
+    fireEvent.keyUp(window, { key: 'Shift' })
+  })
+
+  it('clears selected media from the bulk toolbar action', () => {
+    mockUseGetMediaFiles.mockReturnValue({
+      data: mockMediaData,
+      isLoading: false,
+      refetch: refetchMedia
+    })
+    mockUseOutstatic.mockReturnValue({
+      ...baseOutstaticConfig,
+      media: [
+        {
+          name: 'images',
+          label: 'Images',
+          input: 'public/uploads',
+          output: '/uploads'
+        }
+      ]
+    })
+
+    render(<MediaLibrary />)
+
+    fireEvent.click(screen.getByRole('button', { name: 'Select hero.png' }))
+    fireEvent.click(
+      screen.getByRole('button', { name: 'Clear selected media' })
+    )
+
+    expect(screen.queryByText('1 Item Selected')).not.toBeInTheDocument()
+    expect(screen.getByTestId('media-library-header')).toBeInTheDocument()
+  })
+
+  it('clears selected media when pressing escape', () => {
+    mockUseGetMediaFiles.mockReturnValue({
+      data: mockMediaData,
+      isLoading: false,
+      refetch: refetchMedia
+    })
+    mockUseOutstatic.mockReturnValue({
+      ...baseOutstaticConfig,
+      media: [
+        {
+          name: 'images',
+          label: 'Images',
+          input: 'public/uploads',
+          output: '/uploads'
+        }
+      ]
+    })
+
+    render(<MediaLibrary />)
+
+    fireEvent.click(screen.getByRole('button', { name: 'Select hero.png' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Select report.pdf' }))
+    fireEvent.keyDown(window, { key: 'Escape' })
+
+    expect(screen.queryByText('2 Items Selected')).not.toBeInTheDocument()
+    expect(screen.getByTestId('media-library-header')).toBeInTheDocument()
+  })
+
+  it('opens a confirmation dialog from the bulk delete action', () => {
+    mockUseGetMediaFiles.mockReturnValue({
+      data: mockMediaData,
+      isLoading: false,
+      refetch: refetchMedia
+    })
+    mockUseOutstatic.mockReturnValue({
+      ...baseOutstaticConfig,
+      media: [
+        {
+          name: 'images',
+          label: 'Images',
+          input: 'public/uploads',
+          output: '/uploads'
+        }
+      ]
+    })
+
+    render(<MediaLibrary />)
+
+    fireEvent.click(screen.getByRole('button', { name: 'Select hero.png' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Delete Items' }))
+
+    expect(screen.getByText('Delete Media Items')).toBeInTheDocument()
+    expect(
+      screen.getByText(/delete 1 selected media item/i)
+    ).toBeInTheDocument()
+  })
+
+  it('submits one commit for bulk media deletion', async () => {
+    mockUseGetMediaFiles.mockReturnValue({
+      data: mockMediaData,
+      isLoading: false,
+      refetch: refetchMedia
+    })
+    mockUseOutstatic.mockReturnValue({
+      ...baseOutstaticConfig,
+      media: [
+        {
+          name: 'images',
+          label: 'Images',
+          input: 'public/uploads',
+          output: '/uploads'
+        }
+      ]
+    })
+
+    render(<MediaLibrary />)
+
+    fireEvent.click(screen.getByRole('button', { name: 'Select hero.png' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Select report.pdf' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Delete Items' }))
+
+    const dialog = screen.getByRole('alertdialog')
+    fireEvent.click(
+      within(dialog).getByRole('button', { name: 'Delete Items' })
+    )
+
+    await waitFor(() => expect(mockMutateAsync).toHaveBeenCalledTimes(1))
+
+    const input = mockMutateAsync.mock.calls[0][0]
+
+    expect(input.message.headline).toBe('chore: remove 2 media files')
+    expect(input.fileChanges.deletions).toEqual([
+      { path: 'public/uploads/hero.png' },
+      { path: 'public/documents/report.pdf' }
+    ])
+    expect(input.fileChanges.additions).toHaveLength(1)
+    expect(input.fileChanges.additions[0].path).toBe(
+      'outstatic/media/media.json'
+    )
+
+    const nextMedia = JSON.parse(
+      fromBase64(input.fileChanges.additions[0].contents)
+    )
+    expect(
+      nextMedia.media.map(
+        (mediaFile: { filename: string }) => mediaFile.filename
+      )
+    ).toEqual(['gallery.png', 'logo.png'])
+    expect(mockToastPromise).toHaveBeenCalledWith(
+      expect.any(Promise),
+      expect.objectContaining({
+        loading: 'Deleting 2 media items...',
+        success: '2 media items deleted successfully'
+      })
+    )
   })
 })
