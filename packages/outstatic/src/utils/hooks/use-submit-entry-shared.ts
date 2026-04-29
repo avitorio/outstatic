@@ -91,7 +91,7 @@ export function addReferencedMedia({
 
   files.forEach(({ filename, blob, type, content: fileContents }) => {
     if (blob && nextContent.search(blob) !== -1) {
-      const randString = window.btoa(Math.random().toString()).substring(10, 6)
+      const randString = window.btoa(Math.random().toString()).substring(6, 10)
       const newFilename = filename
         .toLowerCase()
         .replace(/[^a-zA-Z0-9-_\.]/g, '-')

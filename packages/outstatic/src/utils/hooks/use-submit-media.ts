@@ -12,7 +12,7 @@ import { useGetMediaFiles } from './use-get-media-files'
 import { buildRepoMediaPath, getMediaTypeForFilename } from '../media-config'
 
 const createMediaFilename = (filename: string) => {
-  const randString = window.btoa(Math.random().toString()).substring(10, 6)
+  const randString = window.btoa(Math.random().toString()).substring(6, 10)
 
   return filename
     .toLowerCase()
