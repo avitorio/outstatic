@@ -40,25 +40,36 @@ export default function MediaLibraryModal({
   onOpenChange: (show: boolean) => void
   onSelect: (imageUrl: string) => void
 }) {
-  const [searchTerm, setSearchTerm] = useState('')
-  const [sortBy, setSortBy] = useState('date')
-  const [sortDirection, setSortDirection] = useState('desc')
-  const [selectedImage, setSelectedImage] = useState<MediaItem | null>(null)
-  const [selectedSourceName, setSelectedSourceName] = useState('')
-
   const { basePath, media, repoOwner, repoSlug, repoBranch } = useOutstatic()
   const imageSources = useMemo(
     () => (media ?? []).filter((source) => isImageMediaSource(source)),
     [media]
   )
-  const selectedSource =
-    imageSources.find((source) => source.name === selectedSourceName) ??
-    imageSources[0]
+  const [searchTerm, setSearchTerm] = useState('')
+  const [sortBy, setSortBy] = useState('date')
+  const [sortDirection, setSortDirection] = useState('desc')
+  const [selectedImage, setSelectedImage] = useState<MediaItem | null>(null)
+  const [selectedSourceName, setSelectedSourceName] = useState<
+    string | undefined
+  >(() => imageSources[0]?.name)
+  const activeSourceName = imageSources.some(
+    (source) => source.name === selectedSourceName
+  )
+    ? selectedSourceName
+    : imageSources[0]?.name
+  const selectedSource = activeSourceName
+    ? imageSources.find((source) => source.name === activeSourceName)
+    : undefined
   const apiPath = `${basePath}${API_MEDIA_PATH}${repoOwner}/${repoSlug}/${repoBranch}/`
   const { data, isLoading, refetch } = useGetMediaFiles()
   const { handleFileUpload, isUploading } = useMediaLibraryUpload({
-    source: selectedSource ?? imageSources[0]
+    source: selectedSource
   })
+
+  const handleSelectedSourceNameChange = (value: string) => {
+    setSelectedSourceName(value)
+    setSelectedImage(null)
+  }
 
   const filteredFiles = useMemo(() => {
     if (!data) return []
@@ -66,12 +77,13 @@ export default function MediaLibraryModal({
     return data.media.media
       .filter((file) => file.type === 'image')
       .filter((file) => {
-        if (!selectedSourceName) {
-          return true
+        if (!selectedSource) {
+          return false
         }
 
         return (
-          getMediaSourceForItem(file, imageSources)?.name === selectedSourceName
+          getMediaSourceForItem(file, imageSources)?.name ===
+          selectedSource.name
         )
       })
       .filter((file) => {
@@ -97,14 +109,7 @@ export default function MediaLibraryModal({
           ? a.filename.localeCompare(b.filename)
           : b.filename.localeCompare(a.filename)
       })
-  }, [
-    data,
-    imageSources,
-    searchTerm,
-    selectedSourceName,
-    sortBy,
-    sortDirection
-  ])
+  }, [data, imageSources, searchTerm, selectedSource, sortBy, sortDirection])
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -126,8 +131,8 @@ export default function MediaLibraryModal({
               sortDirection={sortDirection}
               setSortDirection={setSortDirection}
               mediaSources={imageSources}
-              selectedSourceName={selectedSource?.name}
-              setSelectedSourceName={setSelectedSourceName}
+              selectedSourceName={activeSourceName}
+              setSelectedSourceName={handleSelectedSourceNameChange}
               handleFileUpload={handleFileUpload}
               disableUpload={!imageSources.length}
               showAllMediaOption={false}
