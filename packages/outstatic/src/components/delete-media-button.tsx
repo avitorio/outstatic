@@ -94,7 +94,8 @@ export const DeleteMediaButton = ({
 
       setShowDeleteModal(false)
     } catch (error) {
-      console.log(error)
+      console.error('Failed to delete media:', error)
+      toast.error('Failed to delete media')
     } finally {
       setDeleting(false)
     }

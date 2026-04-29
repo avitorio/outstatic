@@ -13,6 +13,7 @@ import { useOutstatic } from '@/utils/hooks/use-outstatic'
 
 const mockMutateAsync = jest.fn()
 const mockFetchOid = jest.fn()
+const mockToastError = jest.fn()
 const mockToastInfo = jest.fn()
 const mockToastPromise = jest.fn(
   (promise: Promise<unknown>, _options?: unknown) => promise
@@ -29,7 +30,7 @@ jest.mock('@/utils/hooks/use-create-commit', () => ({
 jest.mock('@/utils/hooks/use-oid', () => jest.fn(() => mockFetchOid))
 jest.mock('sonner', () => ({
   toast: {
-    error: jest.fn(),
+    error: (message: string) => mockToastError(message),
     info: (message: string) => mockToastInfo(message),
     promise: (promise: Promise<unknown>, options: unknown) =>
       mockToastPromise(promise, options),
@@ -230,6 +231,30 @@ describe('MediaLibrary', () => {
     rerender(<MediaLibrary />)
 
     expect(screen.getAllByText('Images')).not.toHaveLength(0)
+  })
+
+  it('only instantiates media fetch hooks at the library level', () => {
+    mockUseGetMediaFiles.mockReturnValue({
+      data: mockMediaData,
+      isLoading: false,
+      refetch: refetchMedia
+    })
+    mockUseOutstatic.mockReturnValue({
+      ...baseOutstaticConfig,
+      media: [
+        {
+          name: 'images',
+          label: 'Images',
+          input: 'public/uploads',
+          output: '/uploads'
+        }
+      ]
+    })
+
+    render(<MediaLibrary />)
+
+    expect(mockUseOutstatic).toHaveBeenCalledTimes(1)
+    expect(mockUseGetMediaFiles).toHaveBeenCalledTimes(1)
   })
 
   it('shows the bulk toolbar after selecting one media item', () => {
@@ -577,5 +602,92 @@ describe('MediaLibrary', () => {
         success: '2 media items deleted successfully'
       })
     )
+  })
+
+  it('shows a toast when bulk delete fails before registering the promise toast', async () => {
+    const consoleErrorSpy = jest
+      .spyOn(console, 'error')
+      .mockImplementation(() => {})
+
+    mockUseGetMediaFiles.mockReturnValue({
+      data: mockMediaData,
+      isLoading: false,
+      refetch: refetchMedia
+    })
+    refetchMedia.mockRejectedValueOnce(new Error('Failed to fetch media'))
+    mockUseOutstatic.mockReturnValue({
+      ...baseOutstaticConfig,
+      media: [
+        {
+          name: 'images',
+          label: 'Images',
+          input: 'public/uploads',
+          output: '/uploads'
+        }
+      ]
+    })
+
+    render(<MediaLibrary />)
+
+    fireEvent.click(screen.getByRole('button', { name: 'Select hero.png' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Delete Items' }))
+
+    const dialog = screen.getByRole('alertdialog')
+    fireEvent.click(
+      within(dialog).getByRole('button', { name: 'Delete Items' })
+    )
+
+    await waitFor(() =>
+      expect(mockToastError).toHaveBeenCalledWith(
+        'Failed to delete media items'
+      )
+    )
+    expect(mockToastPromise).not.toHaveBeenCalled()
+    expect(mockMutateAsync).not.toHaveBeenCalled()
+
+    consoleErrorSpy.mockRestore()
+  })
+
+  it('shows a toast when single delete fails before registering the promise toast', async () => {
+    const consoleErrorSpy = jest
+      .spyOn(console, 'error')
+      .mockImplementation(() => {})
+
+    mockUseGetMediaFiles.mockReturnValue({
+      data: mockMediaData,
+      isLoading: false,
+      refetch: refetchMedia
+    })
+    refetchMedia.mockRejectedValueOnce(new Error('Failed to fetch media'))
+    mockUseOutstatic.mockReturnValue({
+      ...baseOutstaticConfig,
+      media: [
+        {
+          name: 'images',
+          label: 'Images',
+          input: 'public/uploads',
+          output: '/uploads'
+        }
+      ]
+    })
+
+    render(<MediaLibrary />)
+
+    fireEvent.pointerDown(
+      screen.getAllByRole('button', { name: 'Open media actions' })[0],
+      { button: 0, ctrlKey: false }
+    )
+    fireEvent.click(await screen.findByText('Delete File'))
+
+    const dialog = screen.getByRole('alertdialog')
+    fireEvent.click(within(dialog).getByRole('button', { name: 'Delete' }))
+
+    await waitFor(() =>
+      expect(mockToastError).toHaveBeenCalledWith('Failed to delete media')
+    )
+    expect(mockToastPromise).not.toHaveBeenCalled()
+    expect(mockMutateAsync).not.toHaveBeenCalled()
+
+    consoleErrorSpy.mockRestore()
   })
 })

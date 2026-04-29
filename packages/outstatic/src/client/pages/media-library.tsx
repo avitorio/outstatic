@@ -137,21 +137,22 @@ function MediaItemActions({
   media,
   disabled,
   notFound,
-  onComplete
+  onDeleteMedia,
+  repoBranch,
+  repoOwner,
+  repoSlug
 }: {
   file: MediaItem
   media: MediaSourceConfig[]
   disabled: boolean
   notFound: boolean
-  onComplete: () => Promise<void>
+  onDeleteMedia: (file: MediaItem, notFound: boolean) => Promise<boolean>
+  repoBranch: string
+  repoOwner: string
+  repoSlug: string
 }) {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
   const [deleting, setDeleting] = useState(false)
-  const { repoOwner, repoSlug, repoBranch, session, mediaJsonPath } =
-    useOutstatic()
-  const fetchOid = useOid()
-  const mutation = useCreateCommit()
-  const { refetch: refetchMedia } = useGetMediaFiles({ enabled: false })
 
   const source = getMediaSourceForItem(file, media)
   const githubUrl = `https://github.com/${repoOwner}/${repoSlug}/blob/${repoBranch}/${file.__outstatic.path}`
@@ -171,49 +172,10 @@ function MediaItemActions({
   const deleteMedia = async () => {
     setDeleting(true)
     try {
-      const [{ data }, oid] = await Promise.all([refetchMedia(), fetchOid()])
-
-      if (!data || !oid) {
-        throw new Error('Failed to fetch media or oid')
+      const didDelete = await onDeleteMedia(file, notFound)
+      if (didDelete) {
+        setShowDeleteDialog(false)
       }
-
-      const { media: mediaData, commitUrl } = data
-      const owner = repoOwner || session?.user?.login || ''
-
-      const capi = createCommitApi({
-        message: `chore: remove ${file.filename}`,
-        owner,
-        oid,
-        name: repoSlug,
-        branch: repoBranch
-      })
-
-      if (!notFound) {
-        capi.removeFile(file.__outstatic.path)
-      }
-
-      mediaData.generated = new Date().toISOString()
-      mediaData.commit = hashFromUrl(commitUrl)
-      const nextMedia = mediaData.media.filter(
-        (mediaFile) => mediaFile.__outstatic.path !== file.__outstatic.path
-      )
-      capi.replaceFile(
-        mediaJsonPath,
-        stringifyMedia({ ...mediaData, media: nextMedia })
-      )
-
-      const input = capi.createInput()
-
-      await toast.promise(mutation.mutateAsync(input), {
-        loading: 'Deleting media...',
-        success: 'Media deleted successfully',
-        error: 'Failed to delete media'
-      })
-
-      setShowDeleteDialog(false)
-      await onComplete()
-    } catch (error) {
-      console.log(error)
     } finally {
       setDeleting(false)
     }
@@ -327,7 +289,7 @@ export default function MediaLibrary() {
   const [loadingImages, setLoadingImages] = useState<Set<string>>(new Set())
   const { data, isLoading, refetch: refetchMedia } = useGetMediaFiles()
   const fetchOid = useOid()
-  const mutation = useCreateCommit()
+  const { mutateAsync: createCommit } = useCreateCommit()
 
   const selectedSource =
     selectedSourceName === ALL_MEDIA_SOURCE_VALUE
@@ -527,6 +489,83 @@ export default function MediaLibrary() {
     }
   }
 
+  const deleteSingleMedia = useCallback(
+    async (file: MediaItem, notFound: boolean) => {
+      let toastStarted = false
+
+      try {
+        const [{ data: latestData }, oid] = await Promise.all([
+          refetchMedia(),
+          fetchOid()
+        ])
+
+        if (!latestData || !oid) {
+          throw new Error('Failed to fetch media or oid')
+        }
+
+        const { media: mediaData, commitUrl } = latestData
+        const owner = repoOwner || session?.user?.login || ''
+
+        const capi = createCommitApi({
+          message: `chore: remove ${file.filename}`,
+          owner,
+          oid,
+          name: repoSlug,
+          branch: repoBranch
+        })
+
+        if (!notFound) {
+          capi.removeFile(file.__outstatic.path)
+        }
+
+        mediaData.generated = new Date().toISOString()
+        mediaData.commit = hashFromUrl(commitUrl)
+        const nextMedia = mediaData.media.filter(
+          (mediaFile) => mediaFile.__outstatic.path !== file.__outstatic.path
+        )
+        capi.replaceFile(
+          mediaJsonPath,
+          stringifyMedia({ ...mediaData, media: nextMedia })
+        )
+
+        const input = capi.createInput()
+        const deletePromise = createCommit(input)
+        toastStarted = true
+
+        await toast.promise(deletePromise, {
+          loading: 'Deleting media...',
+          success: 'Media deleted successfully',
+          error: 'Failed to delete media'
+        })
+
+        try {
+          await refetchMedia()
+        } catch (error) {
+          console.error('Failed to refresh media after deletion:', error)
+        }
+
+        return true
+      } catch (error) {
+        console.error('Failed to delete media:', error)
+        if (!toastStarted) {
+          toast.error('Failed to delete media')
+        }
+
+        return false
+      }
+    },
+    [
+      fetchOid,
+      mediaJsonPath,
+      createCommit,
+      refetchMedia,
+      repoBranch,
+      repoOwner,
+      repoSlug,
+      session?.user?.login
+    ]
+  )
+
   const deleteSelectedMedia = async () => {
     const selectedPaths = Array.from(selectedMediaPaths)
 
@@ -535,6 +574,7 @@ export default function MediaLibrary() {
     }
 
     setBulkDeleting(true)
+    let toastStarted = false
     try {
       const [{ data: latestData }, oid] = await Promise.all([
         refetchMedia(),
@@ -594,8 +634,10 @@ export default function MediaLibrary() {
 
       const input = capi.createInput()
       const itemCopy = selectedCount === 1 ? 'item' : 'items'
+      const deletePromise = createCommit(input)
+      toastStarted = true
 
-      await toast.promise(mutation.mutateAsync(input), {
+      await toast.promise(deletePromise, {
         loading: `Deleting ${selectedCount} media ${itemCopy}...`,
         success: `${selectedCount} media ${itemCopy} deleted successfully`,
         error: `Failed to delete media ${itemCopy}`
@@ -605,7 +647,10 @@ export default function MediaLibrary() {
       clearSelectedMedia()
       await refetchMedia()
     } catch (error) {
-      console.log(error)
+      console.error('Failed to delete selected media:', error)
+      if (!toastStarted) {
+        toast.error('Failed to delete media items')
+      }
     } finally {
       setBulkDeleting(false)
     }
@@ -845,10 +890,11 @@ export default function MediaLibrary() {
                         file={file}
                         media={mediaSources}
                         disabled={isUploading}
-                        onComplete={async () => {
-                          await refetchMedia()
-                        }}
+                        onDeleteMedia={deleteSingleMedia}
                         notFound={isMissingImage}
+                        repoBranch={repoBranch}
+                        repoOwner={repoOwner}
+                        repoSlug={repoSlug}
                       />
                       <Button
                         type="button"
