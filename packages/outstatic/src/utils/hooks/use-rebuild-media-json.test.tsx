@@ -1,4 +1,5 @@
 import { act, renderHook } from '@testing-library/react'
+import MurmurHash3 from 'imurmurhash'
 import { toast } from 'sonner'
 import { createCommitApi } from '../create-commit-api'
 import { hashFromUrl } from '../hash-from-url'
@@ -191,6 +192,7 @@ describe('useRebuildMediaJson', () => {
           filename: 'photo.png',
           source: 'images',
           __outstatic: expect.objectContaining({
+            hash: `${MurmurHash3('images:media/images/photo.png:photo.png').result()}`,
             commit: 'hash:https://example.com/commit/photo',
             path: 'media/images/photo.png'
           })
@@ -199,6 +201,7 @@ describe('useRebuildMediaJson', () => {
           filename: 'manual.pdf',
           source: 'docs',
           __outstatic: expect.objectContaining({
+            hash: `${MurmurHash3('docs:media/docs/manual.pdf:manual.pdf').result()}`,
             commit: 'hash:https://example.com/commit/manual',
             path: 'media/docs/manual.pdf'
           })

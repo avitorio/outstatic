@@ -49,7 +49,7 @@ const createMediaItem = (
   parentCommit: string
 ): MediaItem => ({
   __outstatic: {
-    hash: `${MurmurHash3().result()}`,
+    hash: `${MurmurHash3(`${source.name}:${entry.path}:${entry.name}`).result()}`,
     commit: entry.object?.commitUrl
       ? hashFromUrl(entry.object.commitUrl)
       : parentCommit,
