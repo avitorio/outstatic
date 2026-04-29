@@ -49,8 +49,8 @@ import { slugify } from 'transliteration'
 
 type MediaSettingsProps =
   | {
-    onSettingsUpdate?: () => void
-  }
+      onSettingsUpdate?: () => void
+    }
   | Record<string, never>
 
 type EditableMediaSource = MediaSourceConfig & {
@@ -227,7 +227,7 @@ function HelpTooltip({ label, children }: { label: string; children: string }) {
 }
 
 export function MediaSettings(props: MediaSettingsProps) {
-  const onSettingsUpdate = props.onSettingsUpdate ?? (() => { })
+  const onSettingsUpdate = props.onSettingsUpdate ?? (() => {})
   const [loading, setLoading] = useState(false)
   const [showConfirmModal, setShowConfirmModal] = useState(false)
   const [pendingMediaSources, setPendingMediaSources] = useState<
@@ -480,7 +480,8 @@ export function MediaSettings(props: MediaSettingsProps) {
               <div className="flex items-center gap-1.5">
                 <h3 className="text-base font-semibold">Media Sources</h3>
                 <HelpTooltip label="About media sources">
-                  Sources define the folders and file types that can be uploaded to your site.
+                  Sources define the folders and file types that can be uploaded
+                  to your site.
                 </HelpTooltip>
               </div>
               <p className="text-sm text-muted-foreground">
@@ -553,8 +554,22 @@ export function MediaSettings(props: MediaSettingsProps) {
               const isTypesStep = currentStepIndex === 2
               const hasExtensions =
                 parseExtensionsInput(source.extensionsInput).length > 0
+              const hasLabel = source.label.trim().length > 0
+              const hasDuplicateSourceName =
+                hasLabel &&
+                normalizedSources.some(
+                  (currentSource, currentIndex) =>
+                    currentIndex !== index &&
+                    currentSource.name.trim().toLowerCase() ===
+                      previewConfig.name.trim().toLowerCase()
+                )
+              const canLeaveLabelStep = hasLabel && !hasDuplicateSourceName
+              const labelError = hasDuplicateSourceName
+                ? 'A media source with this label already exists.'
+                : null
+              const labelErrorId = `media-label-error-${index}`
               const canGoNext =
-                (isLabelStep && source.label.trim().length > 0) ||
+                (isLabelStep && canLeaveLabelStep) ||
                 (isPathsStep &&
                   source.input.trim().length > 0 &&
                   source.output.trim().length > 0) ||
@@ -619,26 +634,37 @@ export function MediaSettings(props: MediaSettingsProps) {
                             </p>
                           </div>
                           <div className="flex items-center gap-2">
-                            {sourceEditorSteps.map((step, stepIndex) => (
-                              <button
-                                key={`${source.name}-${step.title}`}
-                                type="button"
-                                className={`h-2.5 w-2.5 rounded-full transition-colors ${stepIndex === currentStepIndex
-                                  ? 'bg-foreground'
-                                  : stepIndex < currentStepIndex
-                                    ? 'bg-foreground/50'
-                                    : 'bg-muted-foreground/20'
+                            {sourceEditorSteps.map((step, stepIndex) => {
+                              const canGoToStep =
+                                stepIndex === 0 || canLeaveLabelStep
+
+                              return (
+                                <button
+                                  key={`${source.name}-${step.title}`}
+                                  type="button"
+                                  className={`h-2.5 w-2.5 rounded-full transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${
+                                    stepIndex === currentStepIndex
+                                      ? 'bg-foreground'
+                                      : stepIndex < currentStepIndex
+                                        ? 'bg-foreground/50'
+                                        : 'bg-muted-foreground/20'
                                   }`}
-                                aria-label={`Go to ${step.title}`}
-                                onClick={() =>
-                                  setActiveEditorState({
-                                    scope: repoScopeKey,
-                                    index,
-                                    step: stepIndex
-                                  })
-                                }
-                              />
-                            ))}
+                                  aria-label={`Go to ${step.title}`}
+                                  disabled={!canGoToStep}
+                                  onClick={() => {
+                                    if (!canGoToStep) {
+                                      return
+                                    }
+
+                                    setActiveEditorState({
+                                      scope: repoScopeKey,
+                                      index,
+                                      step: stepIndex
+                                    })
+                                  }}
+                                />
+                              )
+                            })}
                           </div>
                         </div>
                       </div>
@@ -655,8 +681,20 @@ export function MediaSettings(props: MediaSettingsProps) {
                                 label: event.target.value
                               }))
                             }
+                            aria-invalid={labelError ? true : undefined}
+                            aria-describedby={
+                              labelError ? labelErrorId : undefined
+                            }
                             placeholder="Ex: Images"
                           />
+                          {labelError ? (
+                            <p
+                              id={labelErrorId}
+                              className="text-sm text-destructive"
+                            >
+                              {labelError}
+                            </p>
+                          ) : null}
                           <p className="text-sm text-muted-foreground">
                             Internal name: {previewConfig.name}
                           </p>
@@ -700,7 +738,9 @@ export function MediaSettings(props: MediaSettingsProps) {
                                 Public path
                               </Label>
                               <HelpTooltip label="About public paths">
-                                How your site will access the files in this source. Ex:&nbsp;https://your-site.com/media/images
+                                How your site will access the files in this
+                                source.
+                                Ex:&nbsp;https://your-site.com/media/images
                               </HelpTooltip>
                             </div>
                             <Input
@@ -725,7 +765,8 @@ export function MediaSettings(props: MediaSettingsProps) {
                               <div className="flex items-center gap-1.5">
                                 <Label>Categories (Optional)</Label>
                                 <HelpTooltip label="About category presets">
-                                  A predefined list of file extensions for a media type.
+                                  A predefined list of file extensions for a
+                                  media type.
                                 </HelpTooltip>
                               </div>
                               <p className="text-sm text-muted-foreground">

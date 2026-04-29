@@ -159,6 +159,45 @@ describe('ConfigSchema', () => {
       }
     })
 
+    it('rejects duplicate media source names after normalization', () => {
+      const result = ConfigSchema.safeParse({
+        media: [
+          {
+            name: 'Images',
+            label: 'Images',
+            input: 'media/images',
+            output: '/media/images',
+            extensions: ['png']
+          },
+          {
+            name: 'images',
+            label: 'Images',
+            input: 'media/photos',
+            output: '/media/photos',
+            extensions: ['jpg']
+          }
+        ]
+      })
+
+      expect(result.success).toBe(false)
+      if (!result.success) {
+        expect(
+          result.error.issues.some(
+            (issue) =>
+              issue.path.join('.') === 'media.0.name' &&
+              issue.message.includes('must be unique')
+          )
+        ).toBe(true)
+        expect(
+          result.error.issues.some(
+            (issue) =>
+              issue.path.join('.') === 'media.1.name' &&
+              issue.message.includes('must be unique')
+          )
+        ).toBe(true)
+      }
+    })
+
     it('rejects parent-directory segments in media source input paths', () => {
       const result = ConfigSchema.safeParse({
         media: [
