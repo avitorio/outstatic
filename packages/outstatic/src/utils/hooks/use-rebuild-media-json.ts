@@ -9,6 +9,7 @@ import { hashFromUrl } from '../hash-from-url'
 import { stringifyMedia } from '../metadata/stringify'
 import { MediaItem, MediaSchema, MediaSourceConfig } from '../metadata/types'
 import MurmurHash3 from 'imurmurhash'
+import { GET_FILE } from '@/graphql/queries/file'
 import { GET_FILES } from '@/graphql/queries/files'
 import {
   getMediaTypeForFilename,
@@ -33,6 +34,14 @@ type FilesResponse = {
   }
 }
 
+type MediaFileResponse = {
+  repository?: {
+    object?: {
+      text?: string
+    } | null
+  } | null
+}
+
 type FailedSourceFetch = {
   reason: unknown
   sourceName: string
@@ -43,24 +52,95 @@ type RebuildMediaJsonOptions = {
   sources?: MediaSourceConfig[]
 }
 
+type ExistingMediaLookup = {
+  byHash: Map<string, MediaItem>
+  byPath: Map<string, MediaItem>
+  bySourcePath: Map<string, MediaItem>
+}
+
+const getSourcePathKey = (source: string | undefined, path: string) =>
+  `${source ?? ''}:${path}`
+
+const createExistingMediaLookup = (
+  mediaItems: MediaItem[]
+): ExistingMediaLookup => {
+  const byHash = new Map<string, MediaItem>()
+  const byPath = new Map<string, MediaItem>()
+  const bySourcePath = new Map<string, MediaItem>()
+
+  mediaItems.forEach((item) => {
+    const hash = item.__outstatic?.hash
+    const path = item.__outstatic?.path
+
+    if (hash && !byHash.has(hash)) {
+      byHash.set(hash, item)
+    }
+
+    if (path) {
+      if (!byPath.has(path)) {
+        byPath.set(path, item)
+      }
+
+      const sourcePathKey = getSourcePathKey(item.source, path)
+      if (!bySourcePath.has(sourcePathKey)) {
+        bySourcePath.set(sourcePathKey, item)
+      }
+    }
+  })
+
+  return { byHash, byPath, bySourcePath }
+}
+
+const getPreservedPublishedAt = (
+  item: MediaItem,
+  existingMediaLookup: ExistingMediaLookup
+) => {
+  const existingItems = [
+    existingMediaLookup.byHash.get(item.__outstatic.hash),
+    existingMediaLookup.bySourcePath.get(
+      getSourcePathKey(item.source, item.__outstatic.path)
+    ),
+    existingMediaLookup.byPath.get(item.__outstatic.path)
+  ]
+
+  for (const existingItem of existingItems) {
+    const publishedAt = existingItem?.publishedAt
+
+    if (typeof publishedAt === 'string' && publishedAt.trim()) {
+      return publishedAt
+    }
+  }
+}
+
 const createMediaItem = (
   entry: TreeEntry,
   source: MediaSourceConfig,
-  parentCommit: string
-): MediaItem => ({
-  __outstatic: {
-    hash: `${MurmurHash3(`${source.name}:${entry.path}:${entry.name}`).result()}`,
-    commit: entry.object?.commitUrl
-      ? hashFromUrl(entry.object.commitUrl)
-      : parentCommit,
-    path: `${entry.path}`
-  },
-  filename: `${entry.name}`,
-  type: getMediaTypeForFilename(entry.name, source),
-  source: source.name,
-  publishedAt: new Date().toISOString(),
-  alt: ''
-})
+  parentCommit: string,
+  existingMediaLookup?: ExistingMediaLookup
+): MediaItem => {
+  const item: MediaItem = {
+    __outstatic: {
+      hash: `${MurmurHash3(`${source.name}:${entry.path}:${entry.name}`).result()}`,
+      commit: entry.object?.commitUrl
+        ? hashFromUrl(entry.object.commitUrl)
+        : parentCommit,
+      path: `${entry.path}`
+    },
+    filename: `${entry.name}`,
+    type: getMediaTypeForFilename(entry.name, source),
+    source: source.name,
+    publishedAt: new Date().toISOString(),
+    alt: ''
+  }
+
+  const preservedPublishedAt = existingMediaLookup
+    ? getPreservedPublishedAt(item, existingMediaLookup)
+    : undefined
+
+  return preservedPublishedAt
+    ? { ...item, publishedAt: preservedPublishedAt }
+    : item
+}
 
 const getErrorMessage = (error: unknown, fallback: string) => {
   if (error instanceof Error && error.message.trim()) {
@@ -92,6 +172,7 @@ export const useRebuildMediaJson = () => {
     repoSlug,
     repoBranch,
     ostPath,
+    mediaJsonPath,
     media,
     session
   } = useOutstatic()
@@ -129,6 +210,34 @@ export const useRebuildMediaJson = () => {
     },
     [gqlClient, repoBranch, repoOwner, repoSlug, session?.user?.login]
   )
+
+  const fetchExistingMediaItems = useCallback(async () => {
+    try {
+      const { repository } = (await gqlClient.request(GET_FILE, {
+        owner: repoOwner || session?.user?.login || '',
+        name: repoSlug,
+        filePath: `${repoBranch}:${mediaJsonPath}`
+      })) as MediaFileResponse
+
+      const text = repository?.object?.text
+
+      if (!text) {
+        return []
+      }
+
+      const database = JSON.parse(text) as Partial<MediaSchema>
+
+      return Array.isArray(database.media)
+        ? (database.media as MediaItem[])
+        : []
+    } catch (error) {
+      console.error(
+        'Failed to fetch existing media.json before rebuild.',
+        error
+      )
+      return []
+    }
+  }, [gqlClient, mediaJsonPath, repoBranch, repoOwner, repoSlug, session])
 
   const processFiles = useCallback(
     async (
@@ -199,10 +308,12 @@ export const useRebuildMediaJson = () => {
         return
       }
 
+      const existingMediaItemsPromise = fetchExistingMediaItems()
+
       return toast.promise(
         Promise.allSettled(
           configuredSources.map((source) => fetchSourceFiles(source))
-        ).then((results) => {
+        ).then(async (results) => {
           const failedSources = results.flatMap((result, index) => {
             if (result.status === 'fulfilled') {
               return []
@@ -222,6 +333,9 @@ export const useRebuildMediaJson = () => {
             throw new Error(formatSourceFetchError(failedSources))
           }
 
+          const existingMediaLookup = createExistingMediaLookup(
+            await existingMediaItemsPromise
+          )
           const mediaItems: MediaItem[] = []
           const responses = results.map((result, index) => {
             if (result.status !== 'fulfilled') {
@@ -250,7 +364,14 @@ export const useRebuildMediaJson = () => {
                 return
               }
 
-              mediaItems.push(createMediaItem(entry, source, parentCommit))
+              mediaItems.push(
+                createMediaItem(
+                  entry,
+                  source,
+                  parentCommit,
+                  existingMediaLookup
+                )
+              )
             })
           })
 
@@ -284,7 +405,7 @@ export const useRebuildMediaJson = () => {
         }
       )
     },
-    [fetchSourceFiles, media, processFiles]
+    [fetchExistingMediaItems, fetchSourceFiles, media, processFiles]
   )
 
   return rebuildMediaJson

@@ -89,6 +89,7 @@ describe('useRebuildMediaJson', () => {
       repoSlug: 'repo',
       repoBranch: 'main',
       ostPath: 'outstatic',
+      mediaJsonPath: 'outstatic/media/media.json',
       media: [
         {
           name: 'images',
@@ -120,6 +121,13 @@ describe('useRebuildMediaJson', () => {
 
   it('rebuilds media.json when all source fetches succeed', async () => {
     gqlRequest
+      .mockResolvedValueOnce({
+        repository: {
+          object: {
+            text: JSON.stringify({ media: [] })
+          }
+        }
+      })
       .mockResolvedValueOnce({
         repository: {
           object: {
@@ -215,12 +223,126 @@ describe('useRebuildMediaJson', () => {
     expect(mutateAsync).toHaveBeenCalledWith({ input: 'payload' })
   })
 
+  it('preserves media publishedAt values from existing media.json', async () => {
+    const photoHash = `${MurmurHash3(
+      'images:media/images/photo.png:photo.png'
+    ).result()}`
+    const legacyHash = `${MurmurHash3(
+      'images:media/images/legacy.png:legacy.png'
+    ).result()}`
+
+    gqlRequest
+      .mockResolvedValueOnce({
+        repository: {
+          object: {
+            text: JSON.stringify({
+              media: [
+                {
+                  filename: 'photo.png',
+                  alt: 'Photo',
+                  type: 'image',
+                  source: 'images',
+                  publishedAt: '2023-01-01T00:00:00.000Z',
+                  __outstatic: {
+                    hash: photoHash,
+                    commit: 'old-photo-commit',
+                    path: 'media/images/photo.png'
+                  }
+                },
+                {
+                  filename: 'legacy.png',
+                  alt: 'Legacy',
+                  type: 'image',
+                  source: 'images',
+                  publishedAt: '2022-01-01T00:00:00.000Z',
+                  __outstatic: {
+                    hash: 'content-hash-from-upload',
+                    commit: 'old-legacy-commit',
+                    path: 'media/images/legacy.png'
+                  }
+                }
+              ]
+            })
+          }
+        }
+      })
+      .mockResolvedValueOnce({
+        repository: {
+          object: {
+            commitUrl: 'https://example.com/commit/images',
+            entries: [
+              {
+                path: 'media/images/photo.png',
+                name: 'photo.png',
+                type: 'blob',
+                object: {
+                  commitUrl: 'https://example.com/commit/photo'
+                }
+              },
+              {
+                path: 'media/images/legacy.png',
+                name: 'legacy.png',
+                type: 'blob',
+                object: {
+                  commitUrl: 'https://example.com/commit/legacy'
+                }
+              }
+            ]
+          }
+        }
+      })
+
+    const { result } = renderHook(() => useRebuildMediaJson())
+
+    await act(async () => {
+      await result.current({
+        sources: [
+          {
+            name: 'images',
+            label: 'Images',
+            input: 'media/images',
+            output: '/images',
+            categories: ['image']
+          }
+        ]
+      })
+    })
+
+    expect(mockStringifyMedia).toHaveBeenCalledWith(
+      expect.objectContaining({
+        media: [
+          expect.objectContaining({
+            filename: 'photo.png',
+            publishedAt: '2023-01-01T00:00:00.000Z',
+            __outstatic: expect.objectContaining({
+              hash: photoHash
+            })
+          }),
+          expect.objectContaining({
+            filename: 'legacy.png',
+            publishedAt: '2022-01-01T00:00:00.000Z',
+            __outstatic: expect.objectContaining({
+              hash: legacyHash
+            })
+          })
+        ]
+      })
+    )
+  })
+
   it('fails rebuild without rewriting media.json when one source fetch fails', async () => {
     const consoleErrorSpy = jest
       .spyOn(console, 'error')
       .mockImplementation(() => {})
 
     gqlRequest
+      .mockResolvedValueOnce({
+        repository: {
+          object: {
+            text: JSON.stringify({ media: [] })
+          }
+        }
+      })
       .mockResolvedValueOnce({
         repository: {
           object: {
@@ -278,6 +400,13 @@ describe('useRebuildMediaJson', () => {
       .mockImplementation(() => {})
 
     gqlRequest
+      .mockResolvedValueOnce({
+        repository: {
+          object: {
+            text: JSON.stringify({ media: [] })
+          }
+        }
+      })
       .mockResolvedValueOnce({
         repository: {
           object: {

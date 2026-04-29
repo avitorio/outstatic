@@ -261,7 +261,7 @@ describe('MediaLibrary', () => {
     ).toHaveAttribute('aria-pressed', 'true')
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
     expect(mockToastInfo).toHaveBeenCalledWith(
-      'Hold Shift and click to select many items at once'
+      'Shift-click to select multiple items.'
     )
   })
 

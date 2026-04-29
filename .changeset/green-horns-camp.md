@@ -13,6 +13,7 @@
 - Prevent duplicate media source labels from progressing through setup.
 - Keep the media picker source filter and selected image in sync.
 - Fix rebuilt media library items receiving identical hashes.
+- Preserve existing media item upload timestamps when rebuilding `media.json`.
 - Fix media source path validation and overlapping path resolution.
 - Use ISO timestamps when rebuilding `media.json`.
 - Fix the media settings dialog accessibility warning without adding a visible title.
