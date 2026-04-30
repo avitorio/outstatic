@@ -7,6 +7,7 @@ import { useCreateCommit } from './use-create-commit'
 import { GET_FILE } from '@/graphql/queries/file'
 import { useGetDocuments } from './use-get-documents'
 import { SingletonsType } from '@/types/singleton'
+import { isGithubCredentialsError } from '@/utils/errors/is-github-credentials-error'
 
 type UseGetSingletonsOptions = {
   enabled?: boolean
@@ -105,6 +106,10 @@ export function useSingletons(options?: UseGetSingletonsOptions) {
         }
         return []
       } catch (error) {
+        if (isGithubCredentialsError(error)) {
+          throw error
+        }
+
         console.error('Error fetching singletons:', error)
         toast.error('Error fetching singletons')
         return []
