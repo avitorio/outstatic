@@ -9,6 +9,7 @@ import { compress, decompress } from 'lz-string'
 import { toast } from 'sonner'
 import { ClientError } from 'graphql-request'
 import { stringifyError } from '@/utils/errors/stringify-error'
+import { isGithubCredentialsError } from '@/utils/errors/is-github-credentials-error'
 
 // Create a client
 export const queryClient = new QueryClient({
@@ -21,14 +22,7 @@ export const queryClient = new QueryClient({
         // serves as a fallback for non-GraphQL errors or cases where the
         // interceptor fails to refresh the token.
         if (error instanceof ClientError) {
-          const status = error.response?.status
-          const message = error.response?.message
-          const isAuthError =
-            (status === 401 || status === 403) &&
-            typeof message === 'string' &&
-            message.includes('credentials')
-
-          if (isAuthError) {
+          if (isGithubCredentialsError(error)) {
             // Silently handle auth errors - don't show toast or log
             // GraphQL interceptor handles refresh attempts, and if it fails,
             // the user should be redirected to login (handled elsewhere)
