@@ -12,6 +12,7 @@ import { toast } from 'sonner'
 import { noCase } from 'change-case'
 import { EditorPageShell } from './_components/editor-page-shell'
 import { useEditorPageState } from './_components/use-editor-page-state'
+import { getFirstImageMediaSource } from '@/utils/media-config'
 
 export default function EditDocument({ collection }: { collection: string }) {
   const pathname = usePathname()
@@ -25,9 +26,9 @@ export default function EditDocument({ collection }: { collection: string }) {
     hasChanges,
     setHasChanges,
     dashboardRoute,
-    repoMediaPath,
-    publicMediaPath
+    media
   } = useOutstatic()
+  const imageMediaSource = getFirstImageMediaSource(media ?? [])
   const [showDelete, setShowDelete] = useState(false)
   const [showMediaPathDialog, setShowMediaPathDialog] = useState(false)
   const [showExtensionDialog, setShowExtensionDialog] = useState(false)
@@ -104,7 +105,7 @@ export default function EditDocument({ collection }: { collection: string }) {
   const isNewDocument = slug === 'new'
 
   const handleSave = (data: Document) => {
-    if (!repoMediaPath && !publicMediaPath && files.length > 0) {
+    if (!imageMediaSource && files.length > 0) {
       setShowMediaPathDialog(true)
       return
     }

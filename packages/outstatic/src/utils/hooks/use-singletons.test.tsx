@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { renderHook, waitFor } from '@testing-library/react'
+import { act, renderHook, waitFor } from '@testing-library/react'
 import { useOutstatic } from '@/utils/hooks/use-outstatic'
 import useOid from './use-oid'
 import { useCreateCommit } from './use-create-commit'
@@ -42,6 +42,7 @@ const mockUseCreateCommit = useCreateCommit as jest.Mock
 const mockUseGetDocuments = useGetDocuments as jest.Mock
 const mockCreateCommitApi = createCommitApi as jest.Mock
 const mockToastPromise = toast.promise as jest.Mock
+const mockToastError = toast.error as jest.Mock
 
 const requestMock = jest.fn()
 const fetchOidMock = jest.fn()
@@ -202,5 +203,48 @@ describe('useSingletons', () => {
     expect(createInputMock).toHaveBeenCalledTimes(1)
     expect(mutateAsyncMock).toHaveBeenCalledWith({ payload: 'commit-input' })
     expect(mockToastPromise).toHaveBeenCalledTimes(1)
+  })
+
+  it('keeps existing singletons and skips toast when singletons.json refetch gets bad credentials', async () => {
+    const existingSingletons = [
+      {
+        title: 'About',
+        slug: 'about',
+        path: 'outstatic/content/_singletons/about.mdx',
+        directory: 'outstatic/content/_singletons',
+        publishedAt: '2026-01-01',
+        status: 'published'
+      }
+    ]
+
+    requestMock
+      .mockResolvedValueOnce({
+        repository: {
+          object: {
+            text: JSON.stringify(existingSingletons)
+          }
+        }
+      })
+      .mockRejectedValueOnce({
+        response: {
+          status: 401,
+          message: 'Bad credentials'
+        }
+      })
+
+    const { result } = renderHook(() => useSingletons(), {
+      wrapper: createWrapper()
+    })
+
+    await waitFor(() => {
+      expect(result.current.data).toEqual(existingSingletons)
+    })
+
+    await act(async () => {
+      await result.current.refetch()
+    })
+
+    expect(result.current.data).toEqual(existingSingletons)
+    expect(mockToastError).not.toHaveBeenCalled()
   })
 })

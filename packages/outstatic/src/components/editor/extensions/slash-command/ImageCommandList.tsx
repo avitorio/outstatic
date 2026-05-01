@@ -15,8 +15,9 @@ import { addImage } from '@/components/editor/utils/add-image'
 import MediaLibraryModal from '@/components/ui/outstatic/media-library-modal'
 import { API_MEDIA_PATH } from '@/utils/constants'
 import { useOutstatic } from '@/utils/hooks/use-outstatic'
-import MediaSettingsDialog from '@/components/ui/outstatic/media-settings-dialog'
+import { MediaSettingsDialog } from '@/components/ui/outstatic/media-settings-dialog'
 import { Button } from '@/components/ui/shadcn/button'
+import { getFirstImageMediaSource } from '@/utils/media-config'
 
 type ImageCommandListProps = {
   editor: Editor
@@ -64,7 +65,8 @@ const ImageCommandList = ({
   const [showMediaPathDialog, setShowMediaPathDialog] = useState(false)
   const [errors, setErrors] = useState({ imageUrl: '', uploadImage: '' })
   const [selectedIndex, setSelectedIndex] = useState(0)
-  const { repoMediaPath, publicMediaPath, basePath } = useOutstatic()
+  const { basePath, media } = useOutstatic()
+  const imageMediaSource = getFirstImageMediaSource(media ?? [])
   const [callbackFunction, setCallbackFunction] = useState<() => void>(() => {})
 
   const addImageFile = useCallback(async () => {
@@ -115,7 +117,7 @@ const ImageCommandList = ({
     (title: string) => {
       switch (title) {
         case 'Image Upload':
-          if (!repoMediaPath && !publicMediaPath) {
+          if (!imageMediaSource) {
             setCallbackFunction(() => addImageFile)
             setShowMediaPathDialog(true)
           } else {
@@ -126,7 +128,7 @@ const ImageCommandList = ({
           setShowLink(true)
           break
         case 'Media Library':
-          if (!repoMediaPath && !publicMediaPath) {
+          if (!imageMediaSource) {
             setCallbackFunction(() => () => setShowMediaLibrary(true))
             setShowMediaPathDialog(true)
           } else {
@@ -138,7 +140,7 @@ const ImageCommandList = ({
           console.warn(`Unhandled action: ${title}`)
       }
     },
-    [addImageFile, publicMediaPath, repoMediaPath]
+    [addImageFile, imageMediaSource]
   )
 
   useEffect(() => {

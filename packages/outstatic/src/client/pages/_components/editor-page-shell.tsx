@@ -3,7 +3,7 @@ import { DocumentSettings } from '@/components/document-settings'
 import { DocumentTitleInput } from '@/components/document-title-input'
 import { MDEditor } from '@/components/editor/editor'
 import { FormMessage } from '@/components/ui/shadcn/form'
-import MediaSettingsDialog from '@/components/ui/outstatic/media-settings-dialog'
+import { MediaSettingsDialog } from '@/components/ui/outstatic/media-settings-dialog'
 import { MarkdownExtensionDialog } from '@/components/ui/outstatic/markdown-extension-dialog'
 import { DocumentContext } from '@/context'
 import { CustomFieldsType, Document, MDExtensions } from '@/types'
@@ -123,8 +123,6 @@ export function EditorPageShell({
               </form>
             </AdminLayout>
             <MediaSettingsDialog
-              title="Your document contains media files."
-              description="Let's set up your media paths so we can upload your files."
               showMediaPathDialog={showMediaPathDialog}
               setShowMediaPathDialog={setShowMediaPathDialog}
               callbackFunction={onMediaPathConfigured}

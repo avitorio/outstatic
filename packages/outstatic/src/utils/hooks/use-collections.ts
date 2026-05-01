@@ -8,6 +8,7 @@ import { useCreateCommit } from './use-create-commit'
 import { GET_FILE } from '@/graphql/queries/file'
 import { sentenceCase } from 'change-case'
 import { stringifyError } from '@/utils/errors/stringify-error'
+import { isGithubCredentialsError } from '@/utils/errors/is-github-credentials-error'
 
 export type CollectionType = {
   title: string
@@ -137,6 +138,10 @@ export function useCollections(options?: UseCollectionsOptions) {
         }
         return []
       } catch (error) {
+        if (isGithubCredentialsError(error)) {
+          throw error
+        }
+
         console.error('Error fetching collections:', error)
         const errorToast = toast.error('Error fetching collections', {
           action: {

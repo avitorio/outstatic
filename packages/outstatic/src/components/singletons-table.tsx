@@ -178,7 +178,9 @@ export const SingletonsTable = () => {
                       slug={document.slug}
                       extension="md"
                       disabled={false}
-                      onComplete={() => refetch()}
+                      onComplete={() => {
+                        void refetch()
+                      }}
                       collection="_singletons"
                     />
                   </div>

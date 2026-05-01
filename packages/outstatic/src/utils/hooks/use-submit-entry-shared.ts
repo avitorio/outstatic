@@ -14,11 +14,18 @@ import stringify from 'json-stable-stringify'
 import MurmurHash3 from 'imurmurhash'
 import {
   ConfigType,
+  MediaSourceConfig,
   MediaItem,
   MediaSchema,
   MetadataSchema,
   MetadataType
 } from '../metadata/types'
+import {
+  buildPublicMediaPath,
+  buildRepoMediaPath,
+  getMediaTypeForFilename,
+  syncLegacyMediaFields
+} from '../media-config'
 
 type BuildMergedContentArgs = {
   data: Document
@@ -28,8 +35,9 @@ type BuildMergedContentArgs = {
   repoOwner: string
   repoSlug: string
   repoBranch: string
-  repoMediaPath: string
-  publicMediaPath: string
+  media?: MediaSourceConfig[]
+  repoMediaPath?: string
+  publicMediaPath?: string
 }
 
 export function buildMergedContent({
@@ -40,6 +48,7 @@ export function buildMergedContent({
   repoOwner,
   repoSlug,
   repoBranch,
+  media,
   repoMediaPath,
   publicMediaPath
 }: BuildMergedContentArgs) {
@@ -48,7 +57,11 @@ export function buildMergedContent({
   return mergeMdMeta({
     data: { ...documentMetadata, ...data, content: mdContent },
     basePath,
-    repoInfo: `${repoOwner}/${repoSlug}/${repoBranch}/${repoMediaPath}`,
+    repoOwner,
+    repoSlug,
+    repoBranch,
+    media,
+    repoMediaPath,
     publicMediaPath
   })
 }
@@ -57,45 +70,52 @@ type AddReferencedMediaArgs = {
   files: FileType[]
   content: string
   capi: CommitAPI
-  repoMediaPath: string
-  publicMediaPath: string
+  source?: MediaSourceConfig
 }
 
 export function addReferencedMedia({
   files,
   content,
   capi,
-  repoMediaPath,
-  publicMediaPath
+  source
 }: AddReferencedMediaArgs) {
   const media: MediaItem[] = []
   let nextContent = content
 
+  if (!source) {
+    return {
+      content,
+      media
+    }
+  }
+
   files.forEach(({ filename, blob, type, content: fileContents }) => {
     if (blob && nextContent.search(blob) !== -1) {
-      const randString = window.btoa(Math.random().toString()).substring(10, 6)
+      const randString = window.btoa(Math.random().toString()).substring(6, 10)
       const newFilename = filename
         .toLowerCase()
         .replace(/[^a-zA-Z0-9-_\.]/g, '-')
         .replace(/(\.[^\.]*)?$/, `-${randString}$1`)
+      const repoPath = buildRepoMediaPath(source, newFilename)
 
-      capi.replaceFile(`${repoMediaPath}${newFilename}`, fileContents, false)
+      capi.replaceFile(repoPath, fileContents, false)
 
       media.push({
         __outstatic: {
           hash: `${MurmurHash3(fileContents).result()}`,
           commit: '',
-          path: `${repoMediaPath}${newFilename}`
+          path: repoPath
         },
         filename: newFilename,
-        type,
+        type: getMediaTypeForFilename(newFilename, source),
+        source: source.name,
         publishedAt: new Date().toISOString(),
         alt: ''
       })
 
       nextContent = nextContent.replace(
         blob,
-        `/${publicMediaPath}${newFilename}`
+        buildPublicMediaPath(source, newFilename)
       )
     }
   })
@@ -246,10 +266,13 @@ export async function replaceConfigFile({
   }
 
   const { data: config } = await refetchConfig()
-  const updatedConfig = {
+  const nextConfig = {
     ...(config ?? {}),
     ...configUpdate
   }
+  const updatedConfig = nextConfig.media
+    ? syncLegacyMediaFields(nextConfig)
+    : nextConfig
 
   capi.replaceFile(
     configJsonPath,

@@ -1,6 +1,7 @@
 import { getLoginSession, type LoginSession } from '@/utils/auth/auth'
 import { OUTSTATIC_API_KEY, OUTSTATIC_API_URL } from '@/utils/constants'
 import type { EnvVarsType } from '@/utils/env-vars-check'
+import type { MediaSourceConfig } from '@/utils/metadata/types'
 import {
   createCachedHandshake,
   type ProjectInfo
@@ -40,6 +41,7 @@ export type OutstaticData = {
   githubGql: string
   publicMediaPath: string
   repoMediaPath: string
+  media: MediaSourceConfig[]
   isPro: boolean
   ui?: OutstaticUIOptions
   projectInfo?: {
@@ -150,6 +152,7 @@ export async function Outstatic({
         : `${OUTSTATIC_API_URL}/github/parser`,
     publicMediaPath: process.env.OST_PUBLIC_MEDIA_PATH || '',
     repoMediaPath: process.env.OST_REPO_MEDIA_PATH || '',
+    media: [],
     isPro: projectInfo?.isPro || false,
     ui: {
       showToaster: ui?.showToaster ?? true

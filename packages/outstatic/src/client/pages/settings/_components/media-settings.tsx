@@ -1,33 +1,51 @@
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
+import { useCallback, useMemo, useState } from 'react'
 import { useGetConfig } from '@/utils/hooks/use-get-config'
 import { useUpdateConfig } from '@/utils/hooks/use-update-config'
-import { ConfigSchema } from '@/utils/schemas/config-schema'
+import { CustomFieldArrayValue } from '@/types'
 import { Button } from '@/components/ui/shadcn/button'
 import { Input } from '@/components/ui/shadcn/input'
-import {
-  Form,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormControl,
-  FormDescription,
-  FormMessage
-} from '@/components/ui/shadcn/form'
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
-  DialogTitle,
-  DialogFooter
+  DialogTitle
 } from '@/components/ui/shadcn/dialog'
-import { useEffect, useState } from 'react'
-import { useLocalData, useOutstatic } from '@/utils/hooks/use-outstatic'
 import { Skeleton } from '@/components/ui/shadcn/skeleton'
-import { FolderIcon } from 'lucide-react'
+import {
+  CircleHelp,
+  FolderIcon,
+  Plus,
+  Trash2,
+  Settings,
+  Info
+} from 'lucide-react'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger
+} from '@/components/ui/shadcn/tooltip'
 import GithubExplorer from '@/components/ui/outstatic/github-explorer'
 import PathBreadcrumbs from '@/components/ui/outstatic/path-breadcrumb'
+import {
+  DEFAULT_MEDIA_SOURCE_LABEL,
+  DEFAULT_MEDIA_SOURCE_NAME,
+  deriveStoredMediaExtensions,
+  getFirstImageMediaSource,
+  getAllowedExtensionsForSource,
+  getPresetExtensionsForCategories,
+  normalizeExtension
+} from '@/utils/media-config'
+import {
+  MediaSourceConfig,
+  mediaCategories,
+  MediaCategory
+} from '@/utils/metadata/types'
+import { Label } from '@/components/ui/shadcn/label'
+import { ConfigSchema } from '@/utils/schemas/config-schema'
+import { useOutstatic } from '@/utils/hooks/use-outstatic'
+import { CreatableMultiCombobox } from '@/components/ui/outstatic/creatable-multi-combobox'
+import { slugify } from 'transliteration'
 
 type MediaSettingsProps =
   | {
@@ -35,128 +53,817 @@ type MediaSettingsProps =
     }
   | Record<string, never>
 
+type EditableMediaSource = MediaSourceConfig & {
+  extensionsInput: string
+}
+
+type MediaSourceEditorState = {
+  scope: string
+  index: number
+  step: number
+} | null
+
+type ScopedIndexState = {
+  scope: string
+  index: number
+} | null
+
+type DraftSourcesState = {
+  scope: string
+  sources: EditableMediaSource[]
+} | null
+
+const parseExtensionsInput = (value: string) =>
+  value
+    .split(/[,\n]/)
+    .map((entry) => normalizeExtension(entry))
+    .filter(Boolean)
+
+const formatExtensionsInput = (extensions: readonly string[]) =>
+  extensions.join(', ')
+
+const appendExtensionsToInput = (
+  currentInput: string,
+  addedExtensions: readonly string[]
+) => {
+  const currentExtensions = parseExtensionsInput(currentInput)
+  const nextExtensions = Array.from(
+    new Set([...currentExtensions, ...addedExtensions.map(normalizeExtension)])
+  )
+
+  return formatExtensionsInput(nextExtensions)
+}
+
+const categoryLabel = (category: MediaCategory) =>
+  category.charAt(0).toUpperCase() + category.slice(1)
+
+const categoryOptions: CustomFieldArrayValue[] = mediaCategories.map(
+  (category) => ({
+    label: categoryLabel(category),
+    value: category
+  })
+)
+
+const getFallbackMediaSourceName = (index: number) =>
+  index === 0 ? DEFAULT_MEDIA_SOURCE_NAME : `media-${index + 1}`
+
+const inferMediaSourceName = (label: string, fallbackName: string) => {
+  const normalizedLabel = label.trim()
+
+  if (!normalizedLabel) {
+    return fallbackName
+  }
+
+  return (
+    slugify(normalizedLabel, { allowedChars: 'a-zA-Z0-9.' }) || fallbackName
+  )
+}
+
+const createEditableMediaSource = (
+  index: number,
+  existing?: Partial<MediaSourceConfig>
+): EditableMediaSource => {
+  const fallbackName = getFallbackMediaSourceName(index)
+  const fallbackLabel =
+    index === 0 ? DEFAULT_MEDIA_SOURCE_LABEL : `Media ${index + 1}`
+  const categoryExtensions = getPresetExtensionsForCategories(
+    existing?.categories
+  )
+  const extensions = Array.from(
+    new Set([...categoryExtensions, ...(existing?.extensions ?? [])])
+  )
+
+  return {
+    name: inferMediaSourceName(
+      existing?.label ?? '',
+      existing?.name ?? fallbackName
+    ),
+    label: existing?.label ?? fallbackLabel,
+    input: existing?.input ?? `media/${fallbackName}`,
+    output: existing?.output ?? `/media/${fallbackName}`,
+    categories: existing?.categories,
+    extensions: existing?.extensions,
+    extensionsInput: formatExtensionsInput(extensions),
+    ...existing
+  }
+}
+
+const toEditableMediaSource = (
+  source: MediaSourceConfig,
+  index: number
+): EditableMediaSource => createEditableMediaSource(index, source)
+
+const toMediaSourceConfig = (
+  source: EditableMediaSource,
+  index: number
+): MediaSourceConfig => {
+  const { extensionsInput, ...configFields } = source
+  const { categories, extensions } = deriveStoredMediaExtensions({
+    categories: source.categories,
+    extensions: parseExtensionsInput(extensionsInput)
+  })
+  const fallbackName = getFallbackMediaSourceName(index)
+
+  return {
+    ...configFields,
+    name: inferMediaSourceName(source.label, fallbackName),
+    extensions: extensions?.length ? extensions : undefined,
+    categories
+  }
+}
+
+const formatValidationErrors = (
+  issues: Array<{ path: PropertyKey[]; message: string }>
+) =>
+  issues.map((issue) => {
+    const [, index, field] = issue.path
+
+    if (typeof index === 'number') {
+      const fieldLabel =
+        typeof field === 'string'
+          ? field === 'name'
+            ? ' label'
+            : ` ${field}`
+          : ''
+      return `Source ${index + 1}${fieldLabel}: ${issue.message}`
+    }
+
+    return issue.message
+  })
+
+const sourceEditorSteps = [
+  {
+    title: 'Label',
+    description: 'Choose the source label.'
+  },
+  {
+    title: 'Paths',
+    description: 'Set the repository folder and the public path for files.'
+  },
+  {
+    title: 'Types',
+    description:
+      'Select category presets and fine-tune the final extension list.'
+  }
+] as const
+
+function HelpTooltip({ label, children }: { label: string; children: string }) {
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <button
+          type="button"
+          className="inline-flex h-5 w-5 items-center justify-center rounded-full text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none"
+          aria-label={label}
+        >
+          <CircleHelp className="h-3.5 w-3.5" />
+        </button>
+      </TooltipTrigger>
+      <TooltipContent side="top" className="max-w-72">
+        <p>{children}</p>
+      </TooltipContent>
+    </Tooltip>
+  )
+}
+
 export function MediaSettings(props: MediaSettingsProps) {
   const onSettingsUpdate = props.onSettingsUpdate ?? (() => {})
   const [loading, setLoading] = useState(false)
   const [showConfirmModal, setShowConfirmModal] = useState(false)
-  const { data: config, isPending } = useGetConfig()
-  const { setData } = useLocalData()
-  const { repoOwner, repoSlug } = useOutstatic()
+  const [pendingMediaSources, setPendingMediaSources] = useState<
+    MediaSourceConfig[] | null
+  >(null)
+  const [validationErrors, setValidationErrors] = useState<string[]>([])
   const [showRepoFolderDialog, setShowRepoFolderDialog] = useState(false)
-  const [repoMediaPath, setRepoMediaPath] = useState(
-    config?.repoMediaPath || ''
-  )
+  const [repoDialogIndex, setRepoDialogIndex] = useState<number | null>(null)
   const [selectedRepoFolder, setSelectedRepoFolder] = useState('')
-  const form = useForm({
-    resolver: zodResolver(ConfigSchema),
-    defaultValues: {
-      repoMediaPath: config?.repoMediaPath || '',
-      publicMediaPath: config?.publicMediaPath || ''
-    }
-  })
-  const { reset } = form
+  const { data: config, isPending } = useGetConfig()
+  const { media, repoOwner, repoSlug, repoBranch } = useOutstatic()
+  const repoScopeKey = `${repoOwner}/${repoSlug}/${repoBranch}`
+  const [activeEditorState, setActiveEditorState] =
+    useState<MediaSourceEditorState>(null)
+  const [creatingSourceState, setCreatingSourceState] =
+    useState<ScopedIndexState>(null)
+  const [infoDialogState, setInfoDialogState] = useState<ScopedIndexState>(null)
+  const [draftSourcesState, setDraftSourcesState] =
+    useState<DraftSourcesState>(null)
+  const draftSources =
+    draftSourcesState?.scope === repoScopeKey ? draftSourcesState.sources : null
+  const activeEditor =
+    activeEditorState?.scope === repoScopeKey ? activeEditorState : null
+  const creatingSourceIndex =
+    creatingSourceState?.scope === repoScopeKey
+      ? creatingSourceState.index
+      : null
+  const infoDialogIndex =
+    infoDialogState?.scope === repoScopeKey ? infoDialogState.index : null
 
   const onSubmit = useUpdateConfig({ setLoading })
-  const handleSubmit = async () => {
-    if (!config) {
-      onSubmit({
-        configFields: form.getValues(),
-        callbackFunction: () => onSettingsUpdate()
-      })
-    } else {
-      setShowConfirmModal(true)
+
+  const resolveSources = useCallback(
+    (current: EditableMediaSource[] | null) =>
+      current ??
+      (media ?? []).map((source, index) =>
+        toEditableMediaSource(source, index)
+      ),
+    [media]
+  )
+
+  const sources = resolveSources(draftSources)
+
+  const updateSources = (
+    updater: (current: EditableMediaSource[]) => EditableMediaSource[]
+  ) => {
+    setDraftSourcesState((current) => ({
+      scope: repoScopeKey,
+      sources: updater(
+        resolveSources(current?.scope === repoScopeKey ? current.sources : null)
+      )
+    }))
+  }
+
+  const normalizedSources = useMemo(
+    () => sources.map((source, index) => toMediaSourceConfig(source, index)),
+    [sources]
+  )
+  const legacySource = getFirstImageMediaSource(normalizedSources)
+  const infoSource =
+    infoDialogIndex !== null ? normalizedSources[infoDialogIndex] : undefined
+  const infoSourceCategories = (infoSource?.categories ?? []).map(categoryLabel)
+  const infoSourceExtensions = infoSource
+    ? getAllowedExtensionsForSource(infoSource)
+    : []
+  const isCreatingSourceFlow =
+    activeEditor !== null && creatingSourceIndex === activeEditor.index
+  const visibleSourceIndexes = isCreatingSourceFlow
+    ? activeEditor
+      ? [activeEditor.index]
+      : []
+    : sources.map((_, index) => index)
+
+  const updateSource = (
+    index: number,
+    updater: (current: EditableMediaSource) => EditableMediaSource
+  ) => {
+    updateSources((current) =>
+      current.map((source, currentIndex) =>
+        currentIndex === index ? updater(source) : source
+      )
+    )
+  }
+
+  const updateSelectedCategories = (
+    index: number,
+    selectedOptions: CustomFieldArrayValue[]
+  ) => {
+    const nextCategories = selectedOptions.map(
+      (option) => option.value
+    ) as MediaCategory[]
+
+    updateSource(index, (source) => {
+      const previousCategories = source.categories ?? []
+      const addedCategories = nextCategories.filter(
+        (category) => !previousCategories.includes(category)
+      )
+      const presetExtensions = getPresetExtensionsForCategories(addedCategories)
+
+      return {
+        ...source,
+        categories: nextCategories,
+        extensionsInput: appendExtensionsToInput(
+          source.extensionsInput,
+          presetExtensions
+        )
+      }
+    })
+  }
+
+  const openSourceEditor = (index: number, step = 0) => {
+    setActiveEditorState({ scope: repoScopeKey, index, step })
+  }
+
+  const closeSourceEditor = () => {
+    setCreatingSourceState(null)
+    setActiveEditorState(null)
+  }
+
+  const handleEditorBack = () => {
+    if (!activeEditor) {
+      return
     }
+
+    if (activeEditor.step === 0) {
+      if (creatingSourceIndex === activeEditor.index) {
+        updateSources((current) =>
+          current.filter(
+            (_, currentIndex) => currentIndex !== activeEditor.index
+          )
+        )
+      }
+
+      setCreatingSourceState(null)
+      setActiveEditorState(null)
+      return
+    }
+
+    setActiveEditorState({
+      ...activeEditor,
+      step: activeEditor.step - 1
+    })
+  }
+
+  const handleEditorNext = () => {
+    setActiveEditorState((current) => {
+      if (!current || current.scope !== repoScopeKey) {
+        return current
+      }
+
+      if (current.step >= sourceEditorSteps.length - 1) {
+        setCreatingSourceState(null)
+        return null
+      }
+
+      return {
+        ...current,
+        step: current.step + 1
+      }
+    })
+  }
+
+  const removeSource = (index: number) => {
+    updateSources((current) =>
+      current.filter((_, currentIndex) => currentIndex !== index)
+    )
+
+    setActiveEditorState((current) => {
+      if (!current || current.scope !== repoScopeKey) {
+        return current
+      }
+
+      if (current.index === index) {
+        return null
+      }
+
+      if (current.index > index) {
+        return { ...current, index: current.index - 1 }
+      }
+
+      return current
+    })
+
+    setInfoDialogState((current) => {
+      if (current === null || current.scope !== repoScopeKey) {
+        return current
+      }
+
+      if (current.index === index) {
+        return null
+      }
+
+      if (current.index > index) {
+        return { ...current, index: current.index - 1 }
+      }
+
+      return current
+    })
+  }
+
+  const handleBrowseFolder = (index: number) => {
+    setRepoDialogIndex(index)
+    setSelectedRepoFolder(sources[index]?.input ?? '')
+    setShowRepoFolderDialog(true)
+  }
+
+  const handleSubmit = () => {
+    const parsed = ConfigSchema.safeParse({
+      ...(config ?? {}),
+      media: normalizedSources
+    })
+
+    if (!parsed.success) {
+      setValidationErrors(formatValidationErrors(parsed.error.issues))
+      return
+    }
+
+    setValidationErrors([])
+    setPendingMediaSources(parsed.data.media ?? [])
+    setShowConfirmModal(true)
   }
 
   const confirmSubmit = () => {
+    if (!pendingMediaSources) {
+      return
+    }
+
     setShowConfirmModal(false)
+    setDraftSourcesState({
+      scope: repoScopeKey,
+      sources: pendingMediaSources.map((source, index) =>
+        toEditableMediaSource(source, index)
+      )
+    })
+    setValidationErrors([])
     onSubmit({
-      configFields: form.getValues(),
+      configFields: {
+        media: pendingMediaSources
+      },
       callbackFunction: () => onSettingsUpdate()
     })
   }
 
-  useEffect(() => {
-    reset({
-      repoMediaPath: config?.repoMediaPath || '',
-      publicMediaPath: config?.publicMediaPath || ''
-    })
-    setData(config ?? {})
-  }, [config, reset, setData])
-
   return (
     <>
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
-          <FormField
-            control={form.control}
-            name="repoMediaPath"
-            defaultValue={repoMediaPath}
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Repository Media Path</FormLabel>
-                <div className="flex gap-2">
-                  <FormControl>
-                    {isPending ? (
-                      <Skeleton className="w-100 h-10" />
-                    ) : (
-                      <Input disabled placeholder="public/images/" {...field} />
-                    )}
-                  </FormControl>
-                  <Button
-                    disabled={isPending}
-                    size="icon"
-                    variant="outline"
-                    title="Browse repository folders"
-                    onClick={() => setShowRepoFolderDialog(true)}
-                    type="button"
-                  >
-                    <FolderIcon className="w-4 h-4" />
-                  </Button>
-                </div>
-                <FormDescription>
-                  The path where media files are stored in your repository.
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="publicMediaPath"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Public Media Path</FormLabel>
-                <FormControl>
-                  {isPending ? (
-                    <Skeleton className="w-100 h-10" />
-                  ) : (
-                    <div className="flex">
-                      <Input
-                        disabled
-                        value="https://yourwebsite.com/"
-                        className="bg-secondary rounded-r-none min-w-[186px] w-auto"
-                      />
-                      <Input
-                        placeholder="images/"
-                        className="rounded-l-none w-full"
-                        {...field}
-                      />
+      <div className="space-y-6">
+        {!isCreatingSourceFlow && !activeEditor ? (
+          <div className="flex items-center justify-between gap-4">
+            <div>
+              <div className="flex items-center gap-1.5">
+                <h3 className="text-base font-semibold">Media Sources</h3>
+                <HelpTooltip label="About media sources">
+                  Sources define the folders and file types that can be uploaded
+                  to your site.
+                </HelpTooltip>
+              </div>
+              <p className="text-sm text-muted-foreground">
+                Add media sources to unlock file uploads.
+              </p>
+            </div>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => {
+                const nextIndex = sources.length
+                updateSources((current) => [
+                  ...current,
+                  createEditableMediaSource(current.length, {
+                    label: '',
+                    name: '',
+                    input: '',
+                    output: ''
+                  })
+                ])
+                setCreatingSourceState({
+                  scope: repoScopeKey,
+                  index: nextIndex
+                })
+                openSourceEditor(nextIndex)
+              }}
+            >
+              <Plus className="mr-2 h-4 w-4" />
+              Add source
+            </Button>
+          </div>
+        ) : null}
+
+        {!isCreatingSourceFlow && validationErrors.length > 0 ? (
+          <div className="rounded-md border border-destructive/30 bg-destructive/5 p-4 text-sm text-destructive">
+            <p className="mb-2 font-medium">Please fix the following issues:</p>
+            <ul className="space-y-1">
+              {validationErrors.map((error) => (
+                <li key={error}>{error}</li>
+              ))}
+            </ul>
+          </div>
+        ) : null}
+
+        {isPending ? (
+          <div className="space-y-4">
+            <Skeleton className="h-28 w-full" />
+            <Skeleton className="h-28 w-full" />
+          </div>
+        ) : sources.length === 0 ? (
+          <div className="rounded-lg border border-dashed p-6 text-sm text-muted-foreground">
+            No media sources configured yet. Add one to start uploading media.
+          </div>
+        ) : (
+          <div className="space-y-4">
+            {visibleSourceIndexes.map((index) => {
+              const source = sources[index]
+
+              if (!source) {
+                return null
+              }
+
+              const previewConfig = toMediaSourceConfig(source, index)
+              const isLegacySource = legacySource?.name === previewConfig.name
+              const isEditing = activeEditor?.index === index
+              const currentStepIndex = isEditing ? activeEditor.step : 0
+              const currentStep = sourceEditorSteps[currentStepIndex]
+              const isLabelStep = currentStepIndex === 0
+              const isPathsStep = currentStepIndex === 1
+              const isTypesStep = currentStepIndex === 2
+              const hasExtensions =
+                parseExtensionsInput(source.extensionsInput).length > 0
+              const hasLabel = source.label.trim().length > 0
+              const hasDuplicateSourceName =
+                hasLabel &&
+                normalizedSources.some(
+                  (currentSource, currentIndex) =>
+                    currentIndex !== index &&
+                    currentSource.name.trim().toLowerCase() ===
+                      previewConfig.name.trim().toLowerCase()
+                )
+              const canLeaveLabelStep = hasLabel && !hasDuplicateSourceName
+              const labelError = hasDuplicateSourceName
+                ? 'A media source with this label already exists.'
+                : null
+              const labelErrorId = `media-label-error-${index}`
+              const canGoNext =
+                (isLabelStep && canLeaveLabelStep) ||
+                (isPathsStep &&
+                  source.input.trim().length > 0 &&
+                  source.output.trim().length > 0) ||
+                isTypesStep
+
+              return (
+                <div key={`${source.name}-${index}`} className="space-y-4">
+                  {!isCreatingSourceFlow && !activeEditor ? (
+                    <div className="flex items-start justify-between">
+                      <div className="flex items-center justify-between gap-2 w-full rounded-xl border px-4 py-2">
+                        <div>
+                          <h4 className="font-medium">
+                            {isCreatingSourceFlow
+                              ? 'New source'
+                              : source.label || previewConfig.name}
+                          </h4>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Button
+                            type="button"
+                            variant={isEditing ? 'secondary' : 'ghost'}
+                            size="icon"
+                            onClick={() => openSourceEditor(index)}
+                          >
+                            <Settings className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            onClick={() =>
+                              setInfoDialogState({ scope: repoScopeKey, index })
+                            }
+                          >
+                            <Info className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            disabled={sources.length === 1}
+                            onClick={() => removeSource(index)}
+                          >
+                            <Trash2 className="h-4 w-4 text-destructive" />
+                          </Button>
+                        </div>
+                      </div>
                     </div>
-                  )}
-                </FormControl>
-                <FormDescription>
-                  The public path where media files are accessed.
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <Button disabled={loading} type="submit">
-            Update Media Paths
+                  ) : null}
+
+                  {isEditing ? (
+                    <div className="space-y-4">
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between gap-3">
+                          <div>
+                            <p className="text-sm font-medium">
+                              Step {currentStepIndex + 1} of{' '}
+                              {sourceEditorSteps.length}: {currentStep.title}
+                            </p>
+                            <p className="text-sm text-muted-foreground">
+                              {currentStep.description}
+                            </p>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            {sourceEditorSteps.map((step, stepIndex) => {
+                              const canGoToStep =
+                                stepIndex === 0 || canLeaveLabelStep
+
+                              return (
+                                <button
+                                  key={`${source.name}-${step.title}`}
+                                  type="button"
+                                  className={`h-2.5 w-2.5 rounded-full transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${
+                                    stepIndex === currentStepIndex
+                                      ? 'bg-foreground'
+                                      : stepIndex < currentStepIndex
+                                        ? 'bg-foreground/50'
+                                        : 'bg-muted-foreground/20'
+                                  }`}
+                                  aria-label={`Go to ${step.title}`}
+                                  disabled={!canGoToStep}
+                                  onClick={() => {
+                                    if (!canGoToStep) {
+                                      return
+                                    }
+
+                                    setActiveEditorState({
+                                      scope: repoScopeKey,
+                                      index,
+                                      step: stepIndex
+                                    })
+                                  }}
+                                />
+                              )
+                            })}
+                          </div>
+                        </div>
+                      </div>
+
+                      {isLabelStep ? (
+                        <div className="space-y-2">
+                          <Label htmlFor={`media-label-${index}`}>Label</Label>
+                          <Input
+                            id={`media-label-${index}`}
+                            value={source.label}
+                            onChange={(event) =>
+                              updateSource(index, (current) => ({
+                                ...current,
+                                label: event.target.value
+                              }))
+                            }
+                            aria-invalid={labelError ? true : undefined}
+                            aria-describedby={
+                              labelError ? labelErrorId : undefined
+                            }
+                            placeholder="Ex: Images"
+                          />
+                          {labelError ? (
+                            <p
+                              id={labelErrorId}
+                              className="text-sm text-destructive"
+                            >
+                              {labelError}
+                            </p>
+                          ) : null}
+                          <p className="text-sm text-muted-foreground">
+                            Internal name: {previewConfig.name}
+                          </p>
+                        </div>
+                      ) : null}
+
+                      {isPathsStep ? (
+                        <div className="space-y-4">
+                          <div className="space-y-2">
+                            <div className="flex items-center gap-1.5">
+                              <Label htmlFor={`media-input-${index}`}>
+                                Repository path
+                              </Label>
+                              <HelpTooltip label="About repository paths">
+                                Uploaded files are committed to this folder in
+                                the connected GitHub repository.
+                              </HelpTooltip>
+                            </div>
+                            <div className="flex gap-2">
+                              <Input
+                                id={`media-input-${index}`}
+                                value={source.input}
+                                readOnly
+                                className="cursor-default"
+                                placeholder="Select a repository folder"
+                              />
+                              <Button
+                                type="button"
+                                size="icon"
+                                variant="outline"
+                                title="Browse repository folders"
+                                onClick={() => handleBrowseFolder(index)}
+                              >
+                                <FolderIcon className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          </div>
+                          <div className="space-y-2">
+                            <div className="flex items-center gap-1.5">
+                              <Label htmlFor={`media-output-${index}`}>
+                                Public path
+                              </Label>
+                              <HelpTooltip label="About public paths">
+                                How your site will access the files in this
+                                source.
+                                Ex:&nbsp;https://your-site.com/media/images
+                              </HelpTooltip>
+                            </div>
+                            <Input
+                              id={`media-output-${index}`}
+                              value={source.output}
+                              onChange={(event) =>
+                                updateSource(index, (current) => ({
+                                  ...current,
+                                  output: event.target.value
+                                }))
+                              }
+                              placeholder="/media/images"
+                            />
+                          </div>
+                        </div>
+                      ) : null}
+
+                      {isTypesStep ? (
+                        <div className="space-y-4">
+                          <div className="space-y-3">
+                            <div>
+                              <div className="flex items-center gap-1.5">
+                                <Label>Categories (Optional)</Label>
+                                <HelpTooltip label="About category presets">
+                                  A predefined list of file extensions for a
+                                  media type.
+                                </HelpTooltip>
+                              </div>
+                              <p className="text-sm text-muted-foreground">
+                                Select preset groups to append their extensions
+                                to the list below.
+                              </p>
+                            </div>
+                            <CreatableMultiCombobox
+                              id={`media-categories-${index}`}
+                              value={(source.categories ?? []).map(
+                                (category) => ({
+                                  label: categoryLabel(category),
+                                  value: category
+                                })
+                              )}
+                              options={categoryOptions}
+                              placeholder="Select category presets"
+                              onChange={(value) =>
+                                updateSelectedCategories(index, value)
+                              }
+                            />
+                          </div>
+
+                          <div className="space-y-2">
+                            <div className="flex items-center gap-1.5">
+                              <Label htmlFor={`media-extensions-${index}`}>
+                                Extensions
+                              </Label>
+                              <HelpTooltip label="About allowed extensions">
+                                These extensions control which files can be
+                                uploaded to this source. Dots are optional.
+                              </HelpTooltip>
+                            </div>
+                            <Input
+                              id={`media-extensions-${index}`}
+                              value={source.extensionsInput}
+                              onChange={(event) =>
+                                updateSource(index, (current) => ({
+                                  ...current,
+                                  extensionsInput: event.target.value
+                                }))
+                              }
+                              placeholder="png, jpg, webp"
+                            />
+                            <p className="text-sm text-muted-foreground">
+                              Edit the comma-separated extension list directly.
+                              Removing a preset extension here will save the
+                              exact list instead of the preset group.
+                            </p>
+                          </div>
+                        </div>
+                      ) : null}
+
+                      <div className="flex justify-between gap-2">
+                        <Button
+                          type="button"
+                          variant="outline"
+                          onClick={handleEditorBack}
+                        >
+                          Back
+                        </Button>
+                        {currentStepIndex < sourceEditorSteps.length - 1 ? (
+                          <Button
+                            type="button"
+                            onClick={handleEditorNext}
+                            disabled={!canGoNext}
+                          >
+                            Next
+                          </Button>
+                        ) : (
+                          <Button
+                            type="button"
+                            onClick={closeSourceEditor}
+                            disabled={isCreatingSourceFlow && !hasExtensions}
+                          >
+                            Done
+                          </Button>
+                        )}
+                      </div>
+                    </div>
+                  ) : null}
+                </div>
+              )
+            })}
+          </div>
+        )}
+
+        {!isCreatingSourceFlow && !activeEditor ? (
+          <Button
+            disabled={loading || isPending || sources.length === 0}
+            type="button"
+            onClick={handleSubmit}
+          >
+            Save Media Sources
           </Button>
-        </form>
-      </Form>
+        ) : null}
+      </div>
 
       <Dialog
         open={showRepoFolderDialog}
@@ -166,11 +873,11 @@ export function MediaSettings(props: MediaSettingsProps) {
           <DialogHeader>
             <DialogTitle>Select Media Folder</DialogTitle>
             <DialogDescription>
-              Choose the folder where your media files will be stored
+              Choose the folder where files for this source will be stored.
             </DialogDescription>
           </DialogHeader>
           <PathBreadcrumbs
-            path={selectedRepoFolder ? '/' + selectedRepoFolder + '/' : ''}
+            path={selectedRepoFolder ? `/${selectedRepoFolder}/` : ''}
           />
           <GithubExplorer
             path={selectedRepoFolder}
@@ -180,8 +887,14 @@ export function MediaSettings(props: MediaSettingsProps) {
           <div className="flex justify-end">
             <Button
               onClick={() => {
-                setRepoMediaPath(selectedRepoFolder + '/')
-                form.setValue('repoMediaPath', selectedRepoFolder + '/')
+                if (repoDialogIndex === null) {
+                  return
+                }
+
+                updateSource(repoDialogIndex, (current) => ({
+                  ...current,
+                  input: selectedRepoFolder
+                }))
                 setShowRepoFolderDialog(false)
               }}
               disabled={selectedRepoFolder === ''}
@@ -195,47 +908,89 @@ export function MediaSettings(props: MediaSettingsProps) {
       <Dialog open={showConfirmModal} onOpenChange={setShowConfirmModal}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Are you absolutely sure?</DialogTitle>
+            <DialogTitle>Save media sources?</DialogTitle>
             <DialogDescription>
-              <span className="mb-2 mt-4">
-                Future media uploads will be stored at:
-              </span>{' '}
-              <br />
-              <span className="mb-2 mt-4">
-                <span className="font-medium">
-                  github.com/{repoOwner}/{repoSlug}/
-                  {form.getValues('repoMediaPath')}
-                </span>{' '}
-                <br />
-              </span>{' '}
-              <br />
-              <span className="mb-2 mt-4">
-                Future documents will show your media as:
-              </span>{' '}
-              <br />
-              <span className="mb-2 mt-4 font-medium">
-                /{form.getValues('publicMediaPath')}image-example.png
-              </span>{' '}
-              <br />
-              <br />
-              <span className="mt-4">
-                <span className="text-destructive font-medium">
-                  Existing documents and media will NOT be updated.
-                </span>{' '}
-                <br />
-              </span>{' '}
-              <br />
+              Future uploads will be routed through the configured media
+              sources. Legacy image paths will keep pointing to the first
+              image-capable source in this list.
             </DialogDescription>
           </DialogHeader>
-          <DialogFooter>
+          <div className="space-y-2 text-sm">
+            {pendingMediaSources?.map((source) => (
+              <div key={source.name} className="rounded-md bg-muted/50 p-3">
+                <p className="font-medium">{source.label}</p>
+                <p className="text-muted-foreground">
+                  {source.input}
+                  {' -> '}
+                  {source.output}
+                </p>
+              </div>
+            ))}
+          </div>
+          <div className="flex justify-end gap-2">
             <Button
+              type="button"
               variant="outline"
               onClick={() => setShowConfirmModal(false)}
             >
               Cancel
             </Button>
-            <Button onClick={confirmSubmit}>Confirm</Button>
-          </DialogFooter>
+            <Button type="button" onClick={confirmSubmit}>
+              Save
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog
+        open={infoDialogIndex !== null}
+        onOpenChange={(open) => {
+          if (!open) {
+            setInfoDialogState(null)
+          }
+        }}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Source Info</DialogTitle>
+            <DialogDescription>
+              Derived paths and file types for this media source.
+            </DialogDescription>
+          </DialogHeader>
+          {infoSource ? (
+            <div className="space-y-3 text-sm">
+              <p>
+                <span className="font-medium">Internal name:</span>{' '}
+                {infoSource.name}
+              </p>
+              <p>
+                <span className="font-medium">Repository:</span> github.com/
+                {repoOwner}/{repoSlug}/{infoSource.input}
+              </p>
+              <p>
+                <span className="font-medium">Public:</span> {infoSource.output}
+                /example-file
+              </p>
+              <p>
+                <span className="font-medium">Categories:</span>{' '}
+                {infoSourceCategories.length > 0
+                  ? infoSourceCategories.join(', ')
+                  : 'None'}
+              </p>
+              <p>
+                <span className="font-medium">Extensions:</span>{' '}
+                {infoSourceExtensions.length > 0
+                  ? infoSourceExtensions.join(', ')
+                  : 'None'}
+              </p>
+              {legacySource?.name === infoSource.name ? (
+                <p className="text-muted-foreground">
+                  This is the first image-capable source, so legacy
+                  `repoMediaPath` and `publicMediaPath` will map here.
+                </p>
+              ) : null}
+            </div>
+          ) : null}
         </DialogContent>
       </Dialog>
     </>

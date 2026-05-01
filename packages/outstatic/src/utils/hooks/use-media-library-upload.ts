@@ -4,11 +4,15 @@ import { FileType } from '@/types'
 import { toast } from 'sonner'
 import { useCallback, useState } from 'react'
 import useSubmitMedia from './use-submit-media'
+import { MediaSourceConfig } from '../metadata/types'
+import {
+  getMediaTypeForFilename,
+  isFilenameAllowedForSource,
+  isImageOnlyMediaSource
+} from '../media-config'
 
 const MAX_MEDIA_UPLOAD_BATCH_FILES = 10
 const MAX_MEDIA_FILE_SIZE_BYTES = 20 * 1024 * 1024
-const IMAGE_FILE_EXTENSION =
-  /\.(avif|bmp|gif|heic|heif|jpe?g|png|svg|tiff?|webp)$/i
 
 const readFileAsDataUrl = (file: File) =>
   new Promise<string>((resolve, reject) => {
@@ -29,9 +33,6 @@ const readFileAsDataUrl = (file: File) =>
 
     reader.readAsDataURL(file)
   })
-
-const isImageFile = (file: File) =>
-  file.type.startsWith('image/') || IMAGE_FILE_EXTENSION.test(file.name)
 
 const getFiles = (files: FileList | File[] | null) => {
   if (!files) {
@@ -57,17 +58,19 @@ const joinWithAnd = (parts: string[]) => {
 }
 
 const createSkippedSummary = ({
-  invalidCount,
+  unsupportedCount,
   oversizedCount,
-  unreadableCount
+  unreadableCount,
+  unsupportedLabel
 }: {
-  invalidCount: number
+  unsupportedCount: number
   oversizedCount: number
   unreadableCount: number
+  unsupportedLabel: string
 }) => {
   const parts = [
-    invalidCount > 0
-      ? `${invalidCount} invalid ${pluralize(invalidCount, 'file')}`
+    unsupportedCount > 0
+      ? `${unsupportedCount} ${unsupportedLabel} ${pluralize(unsupportedCount, 'file')}`
       : null,
     oversizedCount > 0
       ? `${oversizedCount} oversized ${pluralize(oversizedCount, 'file')}`
@@ -84,13 +87,36 @@ const createSkippedSummary = ({
   return `Skipped ${joinWithAnd(parts)}.`
 }
 
-export function useMediaLibraryUpload() {
+const getUploadCopy = (source?: MediaSourceConfig) => {
+  const imageOnly = source ? isImageOnlyMediaSource(source) : false
+
+  return {
+    singular: imageOnly ? 'image' : 'file',
+    plural: imageOnly ? 'images' : 'files',
+    unsupportedLabel: imageOnly ? 'invalid' : 'unsupported'
+  }
+}
+
+export function useMediaLibraryUpload({
+  source,
+  sources = []
+}: {
+  source?: MediaSourceConfig
+  sources?: MediaSourceConfig[]
+} = {}) {
   const [isUploading, setIsUploading] = useState(false)
   const submitMedia = useSubmitMedia()
 
   const handleFileUpload = useCallback(
     async (files: FileList | File[] | null) => {
+      const uploadSources = source ? [source] : sources
+
+      if (uploadSources.length === 0) {
+        return
+      }
+
       const nextFiles = getFiles(files)
+      const uploadCopy = getUploadCopy(source)
 
       if (nextFiles.length === 0) {
         return
@@ -98,18 +124,23 @@ export function useMediaLibraryUpload() {
 
       if (nextFiles.length > MAX_MEDIA_UPLOAD_BATCH_FILES) {
         toast.error(
-          `You can upload up to ${MAX_MEDIA_UPLOAD_BATCH_FILES} images at once.`
+          `You can upload up to ${MAX_MEDIA_UPLOAD_BATCH_FILES} ${uploadCopy.plural} at once.`
         )
         return
       }
 
       const uploadCandidates: File[] = []
-      let invalidCount = 0
+      const matchedSourcesByFilename = new Map<string, MediaSourceConfig>()
+      let unsupportedCount = 0
       let oversizedCount = 0
 
       nextFiles.forEach((file) => {
-        if (!isImageFile(file)) {
-          invalidCount += 1
+        const matchedSource = uploadSources.find((uploadSource) =>
+          isFilenameAllowedForSource(file.name, uploadSource)
+        )
+
+        if (!matchedSource) {
+          unsupportedCount += 1
           return
         }
 
@@ -118,6 +149,7 @@ export function useMediaLibraryUpload() {
           return
         }
 
+        matchedSourcesByFilename.set(file.name, matchedSource)
         uploadCandidates.push(file)
       })
 
@@ -135,7 +167,10 @@ export function useMediaLibraryUpload() {
 
             return {
               filename: file.name,
-              type: 'image',
+              type: getMediaTypeForFilename(
+                file.name,
+                matchedSourcesByFilename.get(file.name)
+              ),
               content
             } satisfies FileType
           })
@@ -158,24 +193,56 @@ export function useMediaLibraryUpload() {
         })
 
         const skippedSummary = createSkippedSummary({
-          invalidCount,
+          unsupportedCount,
           oversizedCount,
-          unreadableCount
+          unreadableCount,
+          unsupportedLabel: uploadCopy.unsupportedLabel
         })
 
         if (mediaFiles.length === 0) {
           toast.error(
             skippedSummary
-              ? `No images were uploaded. ${skippedSummary}`
-              : 'No images were uploaded.'
+              ? `No ${uploadCopy.plural} were uploaded. ${skippedSummary}`
+              : `No ${uploadCopy.plural} were uploaded.`
           )
           return
         }
 
         const uploadCount = mediaFiles.length
-        const uploadLabel = pluralize(uploadCount, 'image')
+        const uploadLabel = pluralize(
+          uploadCount,
+          uploadCopy.singular,
+          uploadCopy.plural
+        )
+        const filesBySource = new Map<
+          string,
+          { source: MediaSourceConfig; files: FileType[] }
+        >()
 
-        await toast.promise(submitMedia(mediaFiles), {
+        mediaFiles.forEach((mediaFile) => {
+          const matchedSource = matchedSourcesByFilename.get(mediaFile.filename)
+
+          if (!matchedSource) {
+            return
+          }
+
+          const group = filesBySource.get(matchedSource.name) ?? {
+            source: matchedSource,
+            files: []
+          }
+          group.files.push(mediaFile)
+          filesBySource.set(matchedSource.name, group)
+        })
+        const uploadPromise = (async () => {
+          for (const group of filesBySource.values()) {
+            await submitMedia({
+              files: group.files,
+              source: group.source
+            })
+          }
+        })()
+
+        await toast.promise(uploadPromise, {
           loading: `Uploading ${uploadCount} ${uploadLabel}...`,
           success: skippedSummary
             ? `Uploaded ${uploadCount} ${uploadLabel}. ${skippedSummary}`
@@ -188,7 +255,7 @@ export function useMediaLibraryUpload() {
         setIsUploading(false)
       }
     },
-    [submitMedia]
+    [source, sources, submitMedia]
   )
 
   return {

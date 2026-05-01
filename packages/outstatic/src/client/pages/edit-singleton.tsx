@@ -17,6 +17,7 @@ import { useEditorPageState } from './_components/use-editor-page-state'
 import { useSearchParams } from 'next/navigation'
 import matter from 'gray-matter'
 import { slugify } from 'transliteration'
+import { getFirstImageMediaSource } from '@/utils/media-config'
 
 export default function EditSingleton({ slug: initialSlug }: { slug: string }) {
   const [slug, setSlug] = useState(initialSlug)
@@ -31,12 +32,14 @@ export default function EditSingleton({ slug: initialSlug }: { slug: string }) {
     hasChanges,
     setHasChanges,
     dashboardRoute,
-    repoMediaPath,
+    media,
     publicMediaPath,
+    repoMediaPath,
     repoOwner,
     repoSlug,
     repoBranch
   } = useOutstatic()
+  const imageMediaSource = getFirstImageMediaSource(media ?? [])
 
   const searchParams = useSearchParams()
   const openFilePath = searchParams?.get('openFile') ?? null
@@ -125,6 +128,7 @@ export default function EditSingleton({ slug: initialSlug }: { slug: string }) {
       repoOwner,
       repoSlug,
       repoBranch,
+      media,
       publicMediaPath,
       repoMediaPath
     })
@@ -170,6 +174,7 @@ export default function EditSingleton({ slug: initialSlug }: { slug: string }) {
     repoOwner,
     repoSlug,
     repoBranch,
+    media,
     publicMediaPath,
     repoMediaPath,
     methods,
@@ -225,7 +230,7 @@ export default function EditSingleton({ slug: initialSlug }: { slug: string }) {
   }, [isNew])
 
   const handleSave = (data: Document) => {
-    if (!repoMediaPath && !publicMediaPath && files.length > 0) {
+    if (!imageMediaSource && files.length > 0) {
       setShowMediaPathDialog(true)
       return
     }

@@ -143,7 +143,9 @@ export const DocumentsTable = () => {
                         slug={document.slug}
                         extension={document.extension as MDExtensions}
                         disabled={false}
-                        onComplete={() => refetch()}
+                        onComplete={() => {
+                          void refetch()
+                        }}
                         collection={params.ost[0]}
                       />
                     </td>

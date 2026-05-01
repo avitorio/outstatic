@@ -76,10 +76,19 @@ export function UpgradeDialog({
   dashboardRoute?: string
 }>) {
   const [isOpen, setIsOpen] = useState(open)
+  const [hasMounted, setHasMounted] = useState(false)
 
   useEffect(() => {
     setIsOpen(open)
   }, [open])
+
+  useEffect(() => {
+    setHasMounted(true)
+  }, [])
+
+  if (!hasMounted) {
+    return children
+  }
 
   return (
     <Dialog

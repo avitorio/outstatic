@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { renderHook, waitFor } from '@testing-library/react'
+import { act, renderHook, waitFor } from '@testing-library/react'
 import { useOutstatic } from '@/utils/hooks/use-outstatic'
 import useOid from './use-oid'
 import { useCreateCommit } from './use-create-commit'
@@ -42,6 +42,7 @@ const mockUseOid = useOid as jest.Mock
 const mockUseCreateCommit = useCreateCommit as jest.Mock
 const mockCreateCommitApi = createCommitApi as jest.Mock
 const mockToastPromise = toast.promise as jest.Mock
+const mockToastError = toast.error as jest.Mock
 
 const requestMock = jest.fn()
 const fetchOidMock = jest.fn()
@@ -187,5 +188,46 @@ describe('useCollections', () => {
       JSON.stringify(expectedCollections, null, 2)
     )
     expect(mutateAsyncMock).toHaveBeenCalledWith({ payload: 'commit-input' })
+  })
+
+  it('keeps existing collections and skips toast when collections.json refetch gets bad credentials', async () => {
+    const existingCollections = [
+      {
+        title: 'Posts',
+        slug: 'posts',
+        path: 'outstatic/content/posts',
+        children: []
+      }
+    ]
+
+    requestMock
+      .mockResolvedValueOnce({
+        repository: {
+          object: {
+            text: JSON.stringify(existingCollections)
+          }
+        }
+      })
+      .mockRejectedValueOnce({
+        response: {
+          status: 401,
+          message: 'Bad credentials'
+        }
+      })
+
+    const { result } = renderHook(() => useCollections(), {
+      wrapper: createWrapper()
+    })
+
+    await waitFor(() => {
+      expect(result.current.data).toEqual(existingCollections)
+    })
+
+    await act(async () => {
+      await result.current.refetch()
+    })
+
+    expect(result.current.data).toEqual(existingCollections)
+    expect(mockToastError).not.toHaveBeenCalled()
   })
 })

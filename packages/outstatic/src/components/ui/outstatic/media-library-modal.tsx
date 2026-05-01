@@ -23,6 +23,7 @@ import { MediaItem } from '@/utils/metadata/types'
 import { useGetMediaFiles } from '@/utils/hooks/use-get-media-files'
 import { useMediaLibraryUpload } from '@/utils/hooks/use-media-library-upload'
 import { useOutstatic } from '@/utils/hooks/use-outstatic'
+import { getMediaSourceForItem, isImageMediaSource } from '@/utils/media-config'
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden'
 import { FileQuestion } from 'lucide-react'
 import { useMemo, useState } from 'react'
@@ -39,27 +40,52 @@ export default function MediaLibraryModal({
   onOpenChange: (show: boolean) => void
   onSelect: (imageUrl: string) => void
 }) {
+  const { basePath, media, repoOwner, repoSlug, repoBranch } = useOutstatic()
+  const imageSources = useMemo(
+    () => (media ?? []).filter((source) => isImageMediaSource(source)),
+    [media]
+  )
   const [searchTerm, setSearchTerm] = useState('')
   const [sortBy, setSortBy] = useState('date')
   const [sortDirection, setSortDirection] = useState('desc')
   const [selectedImage, setSelectedImage] = useState<MediaItem | null>(null)
-
-  const {
-    basePath,
-    repoOwner,
-    repoSlug,
-    repoBranch,
-    repoMediaPath,
-    publicMediaPath
-  } = useOutstatic()
+  const [selectedSourceName, setSelectedSourceName] = useState<
+    string | undefined
+  >(() => imageSources[0]?.name)
+  const activeSourceName = imageSources.some(
+    (source) => source.name === selectedSourceName
+  )
+    ? selectedSourceName
+    : imageSources[0]?.name
+  const selectedSource = activeSourceName
+    ? imageSources.find((source) => source.name === activeSourceName)
+    : undefined
   const apiPath = `${basePath}${API_MEDIA_PATH}${repoOwner}/${repoSlug}/${repoBranch}/`
   const { data, isLoading, refetch } = useGetMediaFiles()
-  const { handleFileUpload, isUploading } = useMediaLibraryUpload()
+  const { handleFileUpload, isUploading } = useMediaLibraryUpload({
+    source: selectedSource
+  })
+
+  const handleSelectedSourceNameChange = (value: string) => {
+    setSelectedSourceName(value)
+    setSelectedImage(null)
+  }
 
   const filteredFiles = useMemo(() => {
     if (!data) return []
 
     return data.media.media
+      .filter((file) => file.type === 'image')
+      .filter((file) => {
+        if (!selectedSource) {
+          return false
+        }
+
+        return (
+          getMediaSourceForItem(file, imageSources)?.name ===
+          selectedSource.name
+        )
+      })
       .filter((file) => {
         if (
           file.filename.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -83,7 +109,7 @@ export default function MediaLibraryModal({
           ? a.filename.localeCompare(b.filename)
           : b.filename.localeCompare(a.filename)
       })
-  }, [data, searchTerm, sortBy, sortDirection])
+  }, [data, imageSources, searchTerm, selectedSource, sortBy, sortDirection])
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -104,20 +130,24 @@ export default function MediaLibraryModal({
               setSortBy={setSortBy}
               sortDirection={sortDirection}
               setSortDirection={setSortDirection}
+              mediaSources={imageSources}
+              selectedSourceName={activeSourceName}
+              setSelectedSourceName={handleSelectedSourceNameChange}
               handleFileUpload={handleFileUpload}
-              disableUpload={!repoMediaPath || !publicMediaPath}
+              disableUpload={!imageSources.length}
+              showAllMediaOption={false}
             />
           </div>
         </DialogHeader>
-        {!repoMediaPath || !publicMediaPath ? (
+        {!imageSources.length ? (
           <div className="flex h-full w-full items-center justify-center">
             <div className="mb-12 max-w-lg">
               <Card>
                 <CardHeader>
-                  <CardTitle>First time here?</CardTitle>
+                  <CardTitle>Add an image source</CardTitle>
                   <CardBodyDescription>
-                    It seems you haven&apos;t set up your media paths yet.
-                    Let&apos;s do that!
+                    Configure at least one image-capable media source to upload
+                    and select images here.
                   </CardBodyDescription>
                 </CardHeader>
                 <CardContent>
@@ -130,6 +160,8 @@ export default function MediaLibraryModal({
           <MediaLibraryDropzone
             className="min-h-0 flex-1"
             disabled={isUploading}
+            dropLabel="Drop images to upload"
+            dropDescription="Outstatic will upload up to 10 images you drop here."
             onFileDrop={handleFileUpload}
           >
             {isLoading && !data ? (
@@ -140,8 +172,8 @@ export default function MediaLibraryModal({
               <div className="flex h-full flex-col items-center justify-center text-gray-500">
                 <FileQuestion className="mb-4 h-16 w-16" />
                 <p>
-                  No media files available. Upload some files or drop an image
-                  here to get started!
+                  No images available. Upload an image or drop one here to get
+                  started.
                 </p>
               </div>
             ) : (
@@ -171,7 +203,9 @@ export default function MediaLibraryModal({
                             path={file.__outstatic.path}
                             filename={file.filename}
                             disabled={isUploading}
-                            onComplete={() => refetch()}
+                            onComplete={() => {
+                              void refetch()
+                            }}
                             className="absolute right-2 top-2 bg-background/50 opacity-0 group-hover:opacity-100"
                           />
                         </div>

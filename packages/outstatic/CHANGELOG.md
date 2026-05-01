@@ -1,5 +1,33 @@
 # outstatic
 
+## 2.1.7
+
+### Patch Changes
+
+- 095aab0: Show an error toast when media deletion cannot fetch the latest repository data before deleting.
+- 467f0c2: Fix singleton title and slug updates so the sidebar stays in sync after saving.
+- 6b15f15: Fix hydration mismatches from the PRO upgrade dialog trigger.
+- 095aab0: - Serialize mixed-source media uploads so `media.json` updates do not race.
+  - Prevent media rebuilds from rewriting `media.json` when a configured source fails to load.
+  - Add support for configuring multiple media sources with per-folder file type rules.
+  - Add bulk selection and deletion controls to the media library.
+  - Add media library preview dialogs for image and video files.
+  - Add contextual help tooltips to media source settings.
+  - Make media repository paths selectable only through the GitHub folder selector.
+  - Replace the media library delete icon with an actions menu that can delete files, open them on GitHub, or copy their output URL.
+  - Prevent duplicate media source labels from progressing through setup.
+  - Keep the media picker source filter and selected image in sync.
+  - Fix rebuilt media library items receiving identical hashes.
+  - Preserve existing media item upload timestamps when rebuilding `media.json`.
+  - Fix media source path validation and overlapping path resolution.
+  - Use ISO timestamps when rebuilding `media.json`.
+  - Fix the media settings dialog accessibility warning without adding a visible title.
+  - Fix document editor state when navigating between existing documents without unmounting.
+  - Fix singleton editors reloading stale content when navigating between entries.
+  - Guard the media library when no media sources are configured.
+- 034a171: Add a media library settings button next to the Add Media action.
+- ad29f23: Keep cached collections and singletons visible when GitHub metadata fetches hit a temporary bad credentials error.
+
 ## 2.1.6
 
 ### Patch Changes
