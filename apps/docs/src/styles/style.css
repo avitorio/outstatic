@@ -25,8 +25,11 @@
   &::-webkit-scrollbar {
     display: none;
   }
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
+
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
 }
 
 @layer base {
@@ -109,7 +112,7 @@
     --sidebar-ring: 212.7 26.8% 83.9%;
     --radius: 0.5rem;
     --prose-body: 0 0% 79%;
-    --prose-headings: 222 17% 11%;
+    --prose-headings: 210 40% 98%;
     --prose-lead: 220 9% 35%;
     --prose-links: 220 39% 84%;
     --prose-bold: 0 0% 87%;
