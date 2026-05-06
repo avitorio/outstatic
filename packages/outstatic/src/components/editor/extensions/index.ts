@@ -19,6 +19,7 @@ import { ToggleClass } from '@/components/editor/extensions/toggle-class'
 import { Mathematics } from '@/components/editor/extensions/mathematics'
 import LinkParser from '@/components/editor/extensions/link-parser'
 import { AIHighlight } from '@/components/editor/extensions/ai-higlight'
+import { MdxBlock } from '@/components/editor/extensions/mdx-block'
 import { cn } from '@/utils/ui'
 
 export type TiptapExtensionsOptions = {
@@ -114,6 +115,7 @@ export const getTiptapExtensions = (options: TiptapExtensionsOptions) =>
         throwOnError: false
       }
     }),
+    MdxBlock,
     Image.extend({
       renderHTML({
         HTMLAttributes
