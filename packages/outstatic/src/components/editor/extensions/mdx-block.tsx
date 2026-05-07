@@ -3,6 +3,7 @@ import { NodeViewWrapper, ReactNodeViewRenderer } from '@tiptap/react'
 import type { NodeViewProps } from '@tiptap/react'
 import type MarkdownIt from 'markdown-it'
 import type { Node as ProseMirrorNode } from '@tiptap/pm/model'
+import { parse } from 'acorn'
 
 const MDX_BLOCK_TYPE = 'mdxBlock'
 const MDX_BLOCK_PLACEHOLDER = '<MyComponent />'
@@ -147,114 +148,24 @@ const getTagDepthDelta = (line: string, matchers: TagMatchers) => {
   )
 }
 
-const getSyntaxDepth = (value: string) => {
-  let braces = 0
-  let brackets = 0
-  let parens = 0
-  let quote: '"' | "'" | '`' | null = null
-  let escaped = false
-  let blockComment = false
-  let lineComment = false
-
-  for (let index = 0; index < value.length; index += 1) {
-    const char = value[index]
-    const next = value[index + 1]
-
-    if (lineComment) {
-      if (char === '\n') {
-        lineComment = false
-      }
-      continue
-    }
-
-    if (blockComment) {
-      if (char === '*' && next === '/') {
-        blockComment = false
-        index += 1
-      }
-      continue
-    }
-
-    if (quote) {
-      if (escaped) {
-        escaped = false
-        continue
-      }
-
-      if (char === '\\') {
-        escaped = true
-        continue
-      }
-
-      if (char === quote) {
-        quote = null
-      }
-      continue
-    }
-
-    if (char === '/' && next === '/') {
-      lineComment = true
-      index += 1
-      continue
-    }
-
-    if (char === '/' && next === '*') {
-      blockComment = true
-      index += 1
-      continue
-    }
-
-    if (char === '"' || char === "'" || char === '`') {
-      quote = char
-      continue
-    }
-
-    if (char === '{') braces += 1
-    if (char === '}') braces -= 1
-    if (char === '[') brackets += 1
-    if (char === ']') brackets -= 1
-    if (char === '(') parens += 1
-    if (char === ')') parens -= 1
-  }
-
-  return {
-    braces,
-    brackets,
-    parens,
-    inString: quote !== null,
-    inComment: blockComment
-  }
-}
-
-const isBalancedJavaScriptSnippet = (value: string) => {
-  const depth = getSyntaxDepth(value)
-
-  return (
-    depth.braces <= 0 &&
-    depth.brackets <= 0 &&
-    depth.parens <= 0 &&
-    !depth.inString &&
-    !depth.inComment
-  )
-}
-
 const isCompleteMdxEsm = (value: string, kind: MdxEsmKind) => {
-  if (!isBalancedJavaScriptSnippet(value)) {
+  try {
+    const program = parse(value, {
+      ecmaVersion: 'latest',
+      sourceType: 'module'
+    })
+
+    return (
+      program.body.length > 0 &&
+      program.body.every((node) =>
+        kind === 'import'
+          ? node.type === 'ImportDeclaration'
+          : node.type.startsWith('Export')
+      )
+    )
+  } catch {
     return false
   }
-
-  const normalized = value.trim().replace(/\s+/g, ' ')
-
-  if (kind === 'import') {
-    return (
-      /^import\s+['"][^'"]+['"]\s*;?$/.test(normalized) ||
-      /^import\s+.+\s+from\s+['"][^'"]+['"]\s*;?$/.test(normalized)
-    )
-  }
-
-  return /^export\s+(?:(?:type\s+)?(?:const|let|var|function|class|default|async|interface|enum)\b|\{|\*)/.test(
-    normalized
-  )
 }
 
 const collectMdxEsmStatement = (
