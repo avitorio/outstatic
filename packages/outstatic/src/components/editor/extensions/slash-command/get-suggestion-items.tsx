@@ -7,6 +7,7 @@ import {
   Image as ImageIcon,
   List,
   ListOrdered,
+  Rows3,
   TableIcon,
   Text,
   TextQuote
@@ -117,6 +118,14 @@ const items = [
     icon: <Code size={18} />,
     command: ({ editor, range }: CommandProps) =>
       editor.chain().focus().deleteRange(range).toggleCodeBlock().run()
+  },
+  {
+    title: 'MDX/HTML',
+    description: 'Insert a raw MDX or HTML block.',
+    searchTerms: ['mdx', 'html', 'jsx', 'component', 'import', 'export'],
+    icon: <Rows3 size={18} />,
+    command: ({ editor, range }: CommandProps) =>
+      editor.chain().focus().deleteRange(range).setMdxBlock().run()
   },
   {
     title: 'Image',

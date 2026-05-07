@@ -10,7 +10,7 @@ import TableRow from '@tiptap/extension-table-row'
 import TiptapUnderline from '@tiptap/extension-underline'
 import { ReactNodeViewRenderer } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
-import { common, createLowlight } from 'lowlight'
+import { all, createLowlight } from 'lowlight'
 import { Markdown } from 'tiptap-markdown'
 import CodeBlock from '@/components/editor/extensions/code-block'
 import { createSlashCommand } from '@/components/editor/extensions/slash-command'
@@ -19,6 +19,7 @@ import { ToggleClass } from '@/components/editor/extensions/toggle-class'
 import { Mathematics } from '@/components/editor/extensions/mathematics'
 import LinkParser from '@/components/editor/extensions/link-parser'
 import { AIHighlight } from '@/components/editor/extensions/ai-higlight'
+import { MdxBlock } from '@/components/editor/extensions/mdx-block'
 import { cn } from '@/utils/ui'
 
 export type TiptapExtensionsOptions = {
@@ -114,6 +115,7 @@ export const getTiptapExtensions = (options: TiptapExtensionsOptions) =>
         throwOnError: false
       }
     }),
+    MdxBlock,
     Image.extend({
       renderHTML({
         HTMLAttributes
@@ -137,7 +139,7 @@ export const getTiptapExtensions = (options: TiptapExtensionsOptions) =>
     }).configure({
       // configure lowlight: common /  all / use highlightJS in case there is a need to specify certain language grammars only
       // common: covers 37 language grammars which should be good enough in most cases
-      lowlight: createLowlight(common)
+      lowlight: createLowlight(all)
     }),
     Table.configure({
       resizable: true
