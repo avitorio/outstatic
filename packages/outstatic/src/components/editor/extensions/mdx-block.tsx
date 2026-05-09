@@ -5,9 +5,16 @@ import {
   NodeViewWrapper,
   ReactNodeViewRenderer
 } from '@tiptap/react'
+import type { NodeViewProps } from '@tiptap/react'
 import type MarkdownIt from 'markdown-it'
 import type { Node as ProseMirrorNode } from '@tiptap/pm/model'
 import { parse } from 'acorn'
+import { AlertCircle } from 'lucide-react'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger
+} from '@/components/ui/shadcn/tooltip'
 
 const MDX_BLOCK_TYPE = 'mdxBlock'
 type MdxOpening = {
@@ -41,15 +48,37 @@ type MdxBlockMatch = {
   nextLine: number
 }
 
+type MdxValidationResult =
+  | {
+    valid: true
+    message?: never
+  }
+  | {
+    valid: false
+    message: string
+  }
+
+type MdxTagToken =
+  | {
+    type: 'open'
+    tagName: string
+    isFragment: boolean
+  }
+  | {
+    type: 'close'
+    tagName: string
+    isFragment: boolean
+  }
+
 type TagMatchers =
   | {
-      isFragment: true
-    }
+    isFragment: true
+  }
   | {
-      isFragment: false
-      openingRegexp: RegExp
-      closingRegexp: RegExp
-    }
+    isFragment: false
+    openingRegexp: RegExp
+    closingRegexp: RegExp
+  }
 
 type LowlightResult = {
   children?: unknown[]
@@ -210,6 +239,120 @@ const getTagDepthDelta = (line: string, matchers: TagMatchers) => {
   )
 }
 
+const getClosingTagName = (opening: MdxOpening) =>
+  opening.isFragment ? '</>' : `</${opening.tagName}>`
+
+const getClosingTagNameFromToken = (
+  token: Extract<MdxTagToken, { type: 'open' }>
+) => (token.isFragment ? '</>' : `</${token.tagName}>`)
+
+const findTagEnd = (value: string, start: number) => {
+  let quote: '"' | "'" | null = null
+  let braceDepth = 0
+
+  for (let index = start + 1; index < value.length; index += 1) {
+    const character = value[index]
+
+    if (quote) {
+      if (character === quote) {
+        quote = null
+      }
+
+      continue
+    }
+
+    if (character === '"' || character === "'") {
+      quote = character
+      continue
+    }
+
+    if (character === '{') {
+      braceDepth += 1
+      continue
+    }
+
+    if (character === '}') {
+      braceDepth = Math.max(0, braceDepth - 1)
+      continue
+    }
+
+    if (character === '>' && braceDepth === 0) {
+      return index
+    }
+  }
+
+  return -1
+}
+
+const getMdxTagTokens = (value: string): MdxTagToken[] => {
+  const tokens: MdxTagToken[] = []
+  let index = 0
+
+  while (index < value.length) {
+    const tagStart = value.indexOf('<', index)
+
+    if (tagStart === -1) {
+      break
+    }
+
+    const tagEnd = findTagEnd(value, tagStart)
+
+    if (tagEnd === -1) {
+      break
+    }
+
+    const tag = value.slice(tagStart, tagEnd + 1).trim()
+    index = tagEnd + 1
+
+    if (
+      tag.startsWith('<!--') ||
+      tag.startsWith('<!') ||
+      tag.startsWith('<?')
+    ) {
+      continue
+    }
+
+    if (tag === '<>') {
+      tokens.push({ type: 'open', tagName: '', isFragment: true })
+      continue
+    }
+
+    if (tag === '</>') {
+      tokens.push({ type: 'close', tagName: '', isFragment: true })
+      continue
+    }
+
+    const closingMatch = tag.match(
+      /^<\/([A-Za-z][\w:-]*(?:\.[A-Za-z][\w:-]*)*)\s*>$/
+    )
+
+    if (closingMatch) {
+      tokens.push({
+        type: 'close',
+        tagName: closingMatch[1],
+        isFragment: false
+      })
+      continue
+    }
+
+    if (tag.endsWith('/>')) {
+      continue
+    }
+
+    const opening = getMdxOpening(tag)
+
+    if (opening) {
+      tokens.push({
+        type: 'open',
+        tagName: opening.tagName,
+        isFragment: opening.isFragment
+      })
+    }
+  }
+
+  return tokens
+}
+
 const isCompleteMdxEsm = (value: string, kind: MdxEsmKind) => {
   try {
     const program = parse(value, {
@@ -228,6 +371,84 @@ const isCompleteMdxEsm = (value: string, kind: MdxEsmKind) => {
   } catch {
     return false
   }
+}
+
+export const validateMdxBlock = (raw: string): MdxValidationResult => {
+  const trimmed = raw.trim()
+
+  if (!trimmed) {
+    return { valid: true }
+  }
+
+  const esmKind = getMdxEsmKind(trimmed)
+
+  if (esmKind) {
+    return isCompleteMdxEsm(raw, esmKind)
+      ? { valid: true }
+      : { valid: false, message: 'Invalid import/export statement.' }
+  }
+
+  const opening = getMdxOpening(trimmed)
+
+  if (!opening) {
+    return {
+      valid: false,
+      message: 'MDX blocks must start with import, export, or JSX/HTML.'
+    }
+  }
+
+  const tokens = getMdxTagTokens(raw)
+
+  if (tokens.length === 0) {
+    if (trimmed.endsWith('/>')) {
+      return { valid: true }
+    }
+
+    return {
+      valid: false,
+      message: `Missing closing ${getClosingTagName(opening)} tag.`
+    }
+  }
+
+  const stack: Array<Extract<MdxTagToken, { type: 'open' }>> = []
+
+  for (const token of tokens) {
+    if (token.type === 'open') {
+      stack.push(token)
+      continue
+    }
+
+    const expected = stack.pop()
+
+    if (!expected) {
+      return {
+        valid: false,
+        message: `Unexpected closing ${token.isFragment ? '</>' : `</${token.tagName}>`
+          } tag.`
+      }
+    }
+
+    if (
+      expected.isFragment !== token.isFragment ||
+      expected.tagName !== token.tagName
+    ) {
+      return {
+        valid: false,
+        message: `Missing closing ${getClosingTagNameFromToken(expected)} tag.`
+      }
+    }
+  }
+
+  const unclosedTag = stack.pop()
+
+  if (unclosedTag) {
+    return {
+      valid: false,
+      message: `Missing closing ${getClosingTagNameFromToken(unclosedTag)} tag.`
+    }
+  }
+
+  return { valid: true }
 }
 
 const collectMdxEsmStatement = (
@@ -405,9 +626,33 @@ const markdownItMdxBlock = (markdownit: MarkdownIt) => {
     )}</code></pre>`
 }
 
-const MdxBlockView = () => {
+const MdxBlockView = ({ node }: NodeViewProps) => {
+  const validation = validateMdxBlock(node.textContent)
+  const isInvalid = !validation.valid
+
   return (
     <NodeViewWrapper className="relative">
+      {isInvalid ? (
+        <div
+          contentEditable={false}
+          className="absolute top-2 left-3 z-10"
+        >
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button
+                aria-label={`MDX validation warning: ${validation.message}`}
+                className="inline-flex size-6 items-center justify-center rounded-full bg-destructive/15 text-destructive p-0"
+                type="button"
+              >
+                <AlertCircle aria-hidden="true" size={16} />
+              </button>
+            </TooltipTrigger>
+            <TooltipContent className="max-w-72" side="top">
+              {validation.message}
+            </TooltipContent>
+          </Tooltip>
+        </div>
+      ) : null}
       <div className="absolute top-0 right-6 rounded-b-md border border-t-0 border-gray-600 px-3 py-1">
         <span
           contentEditable={false}
@@ -416,8 +661,15 @@ const MdxBlockView = () => {
           MDX
         </span>
       </div>
-      <pre className="text-white bg-foreground dark:bg-background rounded-md p-4 pt-12 border border-gray-600">
-        <NodeViewContent as="code" aria-label="MDX block content" />
+      <pre
+        className={`text-white bg-foreground dark:bg-background rounded-md p-4 pt-12 border ${isInvalid ? 'border-red-500' : 'border-gray-600'
+          }`}
+      >
+        <NodeViewContent
+          as="code"
+          aria-invalid={isInvalid}
+          aria-label="MDX block content"
+        />
       </pre>
     </NodeViewWrapper>
   )
@@ -466,18 +718,18 @@ export const MdxBlock = CodeBlockLowlight.extend({
     return {
       setMdxBlock:
         (attributes = {}) =>
-        ({ commands }) =>
-          commands.insertContent({
-            type: this.name,
-            content: attributes.raw
-              ? [
+          ({ commands }) =>
+            commands.insertContent({
+              type: this.name,
+              content: attributes.raw
+                ? [
                   {
                     type: 'text',
                     text: attributes.raw
                   }
                 ]
-              : []
-          })
+                : []
+            })
     }
   },
 

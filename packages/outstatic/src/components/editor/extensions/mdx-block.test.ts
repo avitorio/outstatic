@@ -1,11 +1,15 @@
 import { Editor } from '@tiptap/core'
+import { act, render, waitFor } from '@testing-library/react'
+import { EditorContent } from '@tiptap/react'
+import { createElement } from 'react'
 import StarterKit from '@tiptap/starter-kit'
 import { Markdown } from 'tiptap-markdown'
 import {
   MdxBlock,
   createMdxLowlight,
   getMdxOpening,
-  isMdxEsmLine
+  isMdxEsmLine,
+  validateMdxBlock
 } from './mdx-block'
 
 const testLowlight = {
@@ -161,6 +165,86 @@ const createEditor = (content: string) =>
   })
 
 describe('MdxBlock', () => {
+  it('validates an empty MDX block', () => {
+    expect(validateMdxBlock('')).toEqual({ valid: true })
+  })
+
+  it('validates import and export blocks', () => {
+    expect(
+      validateMdxBlock("import Callout from '@/components/Callout'")
+    ).toEqual({ valid: true })
+    expect(
+      validateMdxBlock('export const metadata = { title: "Hello" }')
+    ).toEqual({ valid: true })
+  })
+
+  it('marks incomplete import and export blocks as invalid', () => {
+    expect(validateMdxBlock('import { Callout')).toEqual({
+      valid: false,
+      message: 'Invalid import/export statement.'
+    })
+    expect(validateMdxBlock('export const metadata =')).toEqual({
+      valid: false,
+      message: 'Invalid import/export statement.'
+    })
+  })
+
+  it('validates self-closing MDX components', () => {
+    expect(validateMdxBlock('<Callout className="foo" />')).toEqual({
+      valid: true
+    })
+  })
+
+  it('validates multiline MDX components with children', () => {
+    expect(
+      validateMdxBlock(`<Callout>
+  <span>Text</span>
+</Callout>`)
+    ).toEqual({ valid: true })
+  })
+
+  it('marks MDX components with missing closing tags as invalid', () => {
+    expect(validateMdxBlock('<Callout>\nBody')).toEqual({
+      valid: false,
+      message: 'Missing closing </Callout> tag.'
+    })
+    expect(validateMdxBlock('<Callout>\n<span>Text\n</Callout>')).toEqual({
+      valid: false,
+      message: 'Missing closing </span> tag.'
+    })
+  })
+
+  it('marks unsupported raw text as invalid', () => {
+    expect(validateMdxBlock('plain text')).toEqual({
+      valid: false,
+      message: 'MDX blocks must start with import, export, or JSX/HTML.'
+    })
+  })
+
+  it('renders a non-blocking validation warning for invalid MDX blocks', async () => {
+    const editor = createEditor('')
+    const { container } = render(
+      createElement(EditorContent, { editor: editor as any })
+    )
+
+    act(() => {
+      editor.commands.setMdxBlock({ raw: '<Callout>\nBody' })
+    })
+
+    await waitFor(() => {
+      expect(
+        container.querySelector('button[aria-label^="MDX validation warning:"]')
+      ).toBeInTheDocument()
+      expect(
+        container.querySelector('[aria-label="MDX block content"]')
+      ).toHaveAttribute('aria-invalid', 'true')
+    })
+    expect(container.textContent).not.toContain(
+      'Missing closing </Callout> tag.'
+    )
+    expect(editor.storage.markdown.getMarkdown().trim()).toBe('<Callout>\nBody')
+  })
+
   it('inserts an empty block instead of storing placeholder content', () => {
     const editor = createEditor('')
 
