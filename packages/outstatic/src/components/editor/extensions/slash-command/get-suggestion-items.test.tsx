@@ -4,10 +4,30 @@ import { Markdown } from 'tiptap-markdown'
 import { MdxBlock } from '../mdx-block'
 import { getSuggestionItems } from './get-suggestion-items'
 
+const testLowlight = {
+  listLanguages: () => ['jsx'],
+  highlight: (_language: string, value: string) => ({
+    children: [
+      {
+        type: 'text',
+        value
+      }
+    ]
+  }),
+  highlightAuto: (value: string) => ({
+    children: [
+      {
+        type: 'text',
+        value
+      }
+    ]
+  })
+}
+
 describe('getSuggestionItems', () => {
-  it('includes an MDX/HTML command that inserts an mdx block', () => {
+  it('includes an MDX command that inserts an mdx block', () => {
     const item = getSuggestionItems({ query: 'mdx' }).find(
-      (item) => item.title === 'MDX/HTML'
+      (item) => item.title === 'MDX'
     )
     const range = { from: 1, to: 4 }
     const chain = {
@@ -30,7 +50,7 @@ describe('getSuggestionItems', () => {
 
   it('inserts an mdx block in a real editor instance', () => {
     const item = getSuggestionItems({ query: 'mdx' }).find(
-      (item) => item.title === 'MDX/HTML'
+      (item) => item.title === 'MDX'
     )
     const editor = new Editor({
       content: '/',
@@ -40,7 +60,9 @@ describe('getSuggestionItems', () => {
           linkify: false
         }),
         StarterKit,
-        MdxBlock
+        MdxBlock.configure({
+          lowlight: testLowlight
+        })
       ]
     })
 

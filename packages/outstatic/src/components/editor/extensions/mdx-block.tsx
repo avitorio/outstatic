@@ -1,10 +1,10 @@
-import { Node, mergeAttributes } from '@tiptap/core'
+import { mergeAttributes } from '@tiptap/core'
+import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight'
 import {
   NodeViewContent,
   NodeViewWrapper,
   ReactNodeViewRenderer
 } from '@tiptap/react'
-import type { NodeViewProps } from '@tiptap/react'
 import type MarkdownIt from 'markdown-it'
 import type { Node as ProseMirrorNode } from '@tiptap/pm/model'
 import { parse } from 'acorn'
@@ -43,13 +43,74 @@ type MdxBlockMatch = {
 
 type TagMatchers =
   | {
-    isFragment: true
-  }
+      isFragment: true
+    }
   | {
-    isFragment: false
-    openingRegexp: RegExp
-    closingRegexp: RegExp
+      isFragment: false
+      openingRegexp: RegExp
+      closingRegexp: RegExp
+    }
+
+type LowlightResult = {
+  children?: unknown[]
+  value?: string
+}
+
+type Lowlight = {
+  listLanguages: () => string[]
+  registered?: (language: string) => boolean
+  highlight: (language: string, value: string) => LowlightResult
+  highlightAuto: (value: string) => LowlightResult
+}
+
+const plainLowlight = {
+  listLanguages: () => [],
+  registered: () => false,
+  highlight: (_language: string, value: string) => ({
+    children: [
+      {
+        type: 'text',
+        value
+      }
+    ]
+  }),
+  highlightAuto: (value: string) => ({
+    children: [
+      {
+        type: 'text',
+        value
+      }
+    ]
+  })
+}
+
+const getMdxHighlightLanguage = (value: string) => {
+  const trimmed = value.trimStart()
+
+  if (/^(?:import|export)\s/.test(trimmed)) {
+    return 'jsx'
   }
+
+  if (trimmed.startsWith('<')) {
+    return 'xml'
+  }
+
+  return 'jsx'
+}
+
+export const createMdxLowlight = (baseLowlight: Lowlight): Lowlight => ({
+  listLanguages: () =>
+    Array.from(new Set([...baseLowlight.listLanguages(), 'mdx'])),
+  registered: (language: string) =>
+    language === 'mdx' || Boolean(baseLowlight.registered?.(language)),
+  highlight: (language: string, value: string) =>
+    baseLowlight.highlight(
+      language === 'mdx' ? getMdxHighlightLanguage(value) : language,
+      value
+    ),
+  highlightAuto: (value: string) =>
+    baseLowlight.highlight(getMdxHighlightLanguage(value), value)
+})
 
 const escapeHtml = (value: string) =>
   value
@@ -344,7 +405,7 @@ const markdownItMdxBlock = (markdownit: MarkdownIt) => {
     )}</code></pre>`
 }
 
-const MdxBlockView = ({ node, updateAttributes }: NodeViewProps) => {
+const MdxBlockView = () => {
   return (
     <NodeViewWrapper className="relative">
       <div className="absolute top-0 right-6 rounded-b-md border border-t-0 border-gray-600 px-3 py-1">
@@ -370,16 +431,17 @@ declare module '@tiptap/core' {
   }
 }
 
-export const MdxBlock = Node.create({
+export const MdxBlock = CodeBlockLowlight.extend({
   name: MDX_BLOCK_TYPE,
   priority: 1000,
-  content: 'text*',
-  group: 'block',
-  marks: '',
-  code: true,
-  defining: true,
-  isolating: true,
-  selectable: true,
+
+  addOptions() {
+    return {
+      ...this.parent?.(),
+      lowlight: plainLowlight,
+      defaultLanguage: 'mdx'
+    }
+  },
 
   parseHTML() {
     return [
@@ -404,18 +466,18 @@ export const MdxBlock = Node.create({
     return {
       setMdxBlock:
         (attributes = {}) =>
-          ({ commands }) =>
-            commands.insertContent({
-              type: this.name,
-              content: attributes.raw
-                ? [
+        ({ commands }) =>
+          commands.insertContent({
+            type: this.name,
+            content: attributes.raw
+              ? [
                   {
                     type: 'text',
                     text: attributes.raw
                   }
                 ]
-                : []
-            })
+              : []
+          })
     }
   },
 

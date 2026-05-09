@@ -1,7 +1,149 @@
 import { Editor } from '@tiptap/core'
 import StarterKit from '@tiptap/starter-kit'
 import { Markdown } from 'tiptap-markdown'
-import { MdxBlock, getMdxOpening, isMdxEsmLine } from './mdx-block'
+import {
+  MdxBlock,
+  createMdxLowlight,
+  getMdxOpening,
+  isMdxEsmLine
+} from './mdx-block'
+
+const testLowlight = {
+  listLanguages: () => ['jsx', 'xml'],
+  registered: (language: string) => ['jsx', 'xml'].includes(language),
+  highlight: (language: string, value: string) => {
+    if (language === 'jsx' && value.startsWith('import')) {
+      return {
+        children: [
+          {
+            type: 'element',
+            properties: {
+              className: ['hljs-keyword']
+            },
+            children: [
+              {
+                type: 'text',
+                value: 'import'
+              }
+            ]
+          },
+          {
+            type: 'text',
+            value: value.slice('import'.length)
+          }
+        ]
+      }
+    }
+
+    if (language === 'xml' && value.startsWith('<Callout')) {
+      return {
+        children: [
+          {
+            type: 'text',
+            value: '<'
+          },
+          {
+            type: 'element',
+            properties: {
+              className: ['hljs-name']
+            },
+            children: [
+              {
+                type: 'text',
+                value: 'Callout'
+              }
+            ]
+          },
+          {
+            type: 'text',
+            value: ' '
+          },
+          {
+            type: 'element',
+            properties: {
+              className: ['hljs-attr']
+            },
+            children: [
+              {
+                type: 'text',
+                value: 'className'
+              }
+            ]
+          },
+          {
+            type: 'text',
+            value: '="foo" '
+          },
+          {
+            type: 'element',
+            properties: {
+              className: ['hljs-attr']
+            },
+            children: [
+              {
+                type: 'text',
+                value: 'title'
+              }
+            ]
+          },
+          {
+            type: 'text',
+            value: value.includes('onClick')
+              ? '="Hi" onClick={() => setOpen(true)} />'
+              : '="Hi" />'
+          }
+        ]
+      }
+    }
+
+    return {
+      children: [
+        {
+          type: 'text',
+          value
+        }
+      ]
+    }
+  },
+  highlightAuto: (value: string) => ({
+    children: [
+      {
+        type: 'text',
+        value
+      }
+    ]
+  })
+}
+
+const mdxLowlight = createMdxLowlight(testLowlight)
+
+const getHighlightedText = (editor: Editor, selector: string) =>
+  Array.from(editor.view.dom.querySelectorAll(selector)).map(
+    (node) => node.textContent
+  )
+
+const getTrackingLowlight = () => {
+  const calls: Array<{ language: string; value: string }> = []
+
+  return {
+    calls,
+    lowlight: createMdxLowlight({
+      ...testLowlight,
+      highlight: (language: string, value: string) => {
+        calls.push({ language, value })
+
+        return {
+          children: [
+            {
+              type: 'text',
+              value
+            }
+          ]
+        }
+      }
+    })
+  }
+}
 
 const createEditor = (content: string) =>
   new Editor({
@@ -12,7 +154,9 @@ const createEditor = (content: string) =>
         linkify: false
       }),
       StarterKit,
-      MdxBlock
+      MdxBlock.configure({
+        lowlight: mdxLowlight
+      })
     ]
   })
 
@@ -61,6 +205,44 @@ import Tag from '@/components/examples/Tag.astro'`
     expect(editor.state.doc.childCount).toBe(1)
     expect(editor.state.doc.firstChild?.textContent).toBe(imports)
     expect(editor.storage.markdown.getMarkdown().trim()).toBe(imports)
+  })
+
+  it('uses JSX syntax highlighting for MDX import blocks', () => {
+    const editor = createEditor("import Callout from '@/components/Callout'")
+
+    expect(editor.view.dom.querySelector('.hljs-keyword')?.textContent).toBe(
+      'import'
+    )
+  })
+
+  it('uses XML syntax highlighting for MDX component prop names', () => {
+    const editor = createEditor('<Callout className="foo" title="Hi" />')
+
+    expect(getHighlightedText(editor, '.hljs-attr')).toEqual([
+      'className',
+      'title'
+    ])
+  })
+
+  it('keeps JSX expression internals as XML-mode text in component blocks', () => {
+    const { calls, lowlight } = getTrackingLowlight()
+
+    new Editor({
+      content:
+        '<Callout className="foo" title="Hi" onClick={() => setOpen(true)} />',
+      extensions: [
+        Markdown.configure({
+          html: false,
+          linkify: false
+        }),
+        StarterKit,
+        MdxBlock.configure({
+          lowlight
+        })
+      ]
+    })
+
+    expect(calls[0]?.language).toBe('xml')
   })
 
   it('round-trips multiline import statements', () => {

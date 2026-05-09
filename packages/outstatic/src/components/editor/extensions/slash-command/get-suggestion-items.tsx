@@ -120,8 +120,8 @@ const items = [
       editor.chain().focus().deleteRange(range).toggleCodeBlock().run()
   },
   {
-    title: 'MDX/HTML',
-    description: 'Insert a raw MDX or HTML block.',
+    title: 'MDX',
+    description: 'Insert raw MDX, JSX, imports, or HTML.',
     searchTerms: ['mdx', 'html', 'jsx', 'component', 'import', 'export'],
     icon: <Rows3 size={18} />,
     command: ({ editor, range }: CommandProps) =>
