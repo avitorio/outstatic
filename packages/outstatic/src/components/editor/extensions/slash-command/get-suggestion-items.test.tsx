@@ -53,6 +53,6 @@ describe('getSuggestionItems', () => {
     })
 
     expect(editor.state.doc.firstChild?.type.name).toBe('mdxBlock')
-    expect(editor.state.doc.firstChild?.attrs.raw).toBe('')
+    expect(editor.state.doc.firstChild?.textContent).toBe('')
   })
 })

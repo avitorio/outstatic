@@ -22,7 +22,7 @@ describe('MdxBlock', () => {
 
     editor.commands.setMdxBlock()
 
-    expect(editor.state.doc.firstChild?.attrs.raw).toBe('')
+    expect(editor.state.doc.firstChild?.textContent).toBe('')
     expect(editor.storage.markdown.getMarkdown().trim()).toBe('')
   })
 
@@ -48,7 +48,7 @@ Line two
 </Callout>`
     const editor = createEditor(mdx)
 
-    expect(editor.state.doc.firstChild?.attrs.raw).toBe(mdx)
+    expect(editor.state.doc.firstChild?.textContent).toBe(mdx)
     expect(editor.storage.markdown.getMarkdown().trim()).toBe(mdx)
   })
 
@@ -59,7 +59,7 @@ import Tag from '@/components/examples/Tag.astro'`
     const editor = createEditor(imports)
 
     expect(editor.state.doc.childCount).toBe(1)
-    expect(editor.state.doc.firstChild?.attrs.raw).toBe(imports)
+    expect(editor.state.doc.firstChild?.textContent).toBe(imports)
     expect(editor.storage.markdown.getMarkdown().trim()).toBe(imports)
   })
 
@@ -70,7 +70,7 @@ import Tag from '@/components/examples/Tag.astro'`
 } from '@/components/examples'`
     const editor = createEditor(imports)
 
-    expect(editor.state.doc.firstChild?.attrs.raw).toBe(imports)
+    expect(editor.state.doc.firstChild?.textContent).toBe(imports)
     expect(editor.storage.markdown.getMarkdown().trim()).toBe(imports)
   })
 
@@ -110,7 +110,7 @@ Next paragraph`
 Body`
     const editor = createEditor(mdx)
 
-    expect(editor.state.doc.firstChild?.attrs.raw).toBe(mdx)
+    expect(editor.state.doc.firstChild?.textContent).toBe(mdx)
     expect(editor.storage.markdown.getMarkdown().trim()).toBe(mdx)
   })
 

@@ -1,13 +1,15 @@
 import { Node, mergeAttributes } from '@tiptap/core'
-import { NodeViewWrapper, ReactNodeViewRenderer } from '@tiptap/react'
+import {
+  NodeViewContent,
+  NodeViewWrapper,
+  ReactNodeViewRenderer
+} from '@tiptap/react'
 import type { NodeViewProps } from '@tiptap/react'
 import type MarkdownIt from 'markdown-it'
 import type { Node as ProseMirrorNode } from '@tiptap/pm/model'
 import { parse } from 'acorn'
 
 const MDX_BLOCK_TYPE = 'mdxBlock'
-const MDX_BLOCK_PLACEHOLDER = '<MyComponent />'
-
 type MdxOpening = {
   tagName: string
   isFragment: boolean
@@ -49,10 +51,9 @@ type TagMatchers =
       closingRegexp: RegExp
     }
 
-const escapeAttribute = (value: string) =>
+const escapeHtml = (value: string) =>
   value
     .replace(/&/g, '&amp;')
-    .replace(/"/g, '&quot;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
     .replace(/\r/g, '&#13;')
@@ -338,30 +339,25 @@ const markdownItMdxBlock = (markdownit: MarkdownIt) => {
   )
 
   markdownit.renderer.rules.mdx_block = (tokens, index) =>
-    `<div data-type="${MDX_BLOCK_TYPE}" data-raw="${escapeAttribute(
+    `<pre data-type="${MDX_BLOCK_TYPE}"><code>${escapeHtml(
       tokens[index].content
-    )}"></div>`
+    )}</code></pre>`
 }
 
 const MdxBlockView = ({ node, updateAttributes }: NodeViewProps) => {
-  const raw = node.attrs.raw ?? ''
-
   return (
-    <NodeViewWrapper className="not-prose my-4 rounded-md border border-muted bg-muted/30 p-3">
-      <div
-        contentEditable={false}
-        className="mb-2 text-xs font-medium text-muted-foreground"
-      >
-        MDX
+    <NodeViewWrapper className="relative">
+      <div className="absolute top-0 right-6 rounded-b-md border border-t-0 border-gray-600 px-3 py-1">
+        <span
+          contentEditable={false}
+          className="select-none bg-linear-to-tr from-primary-300 to-primary-400 bg-clip-text font-medium text-white outline-hidden text-sm"
+        >
+          MDX
+        </span>
       </div>
-      <textarea
-        aria-label="MDX block content"
-        spellCheck={false}
-        value={raw}
-        placeholder={MDX_BLOCK_PLACEHOLDER}
-        onChange={(event) => updateAttributes({ raw: event.target.value })}
-        className="min-h-24 w-full resize-y rounded-md border border-muted bg-background p-3 font-mono text-sm text-foreground outline-hidden focus:border-primary"
-      />
+      <pre className="text-white bg-foreground dark:bg-background rounded-md p-4 pt-12 border border-gray-600">
+        <NodeViewContent as="code" aria-label="MDX block content" />
+      </pre>
     </NodeViewWrapper>
   )
 }
@@ -376,33 +372,31 @@ declare module '@tiptap/core' {
 
 export const MdxBlock = Node.create({
   name: MDX_BLOCK_TYPE,
+  priority: 1000,
+  content: 'text*',
   group: 'block',
-  atom: true,
+  marks: '',
+  code: true,
+  defining: true,
   isolating: true,
   selectable: true,
 
-  addAttributes() {
-    return {
-      raw: {
-        default: '',
-        parseHTML: (element) => element.getAttribute('data-raw') ?? '',
-        renderHTML: (attributes) => ({
-          'data-raw': attributes.raw
-        })
-      }
-    }
-  },
-
   parseHTML() {
-    return [{ tag: `div[data-type="${MDX_BLOCK_TYPE}"]` }]
+    return [
+      {
+        tag: `pre[data-type="${MDX_BLOCK_TYPE}"]`,
+        preserveWhitespace: 'full'
+      }
+    ]
   },
 
   renderHTML({ HTMLAttributes }) {
     return [
-      'div',
+      'pre',
       mergeAttributes(HTMLAttributes, {
         'data-type': MDX_BLOCK_TYPE
-      })
+      }),
+      ['code', 0]
     ]
   },
 
@@ -413,9 +407,14 @@ export const MdxBlock = Node.create({
         ({ commands }) =>
           commands.insertContent({
             type: this.name,
-            attrs: {
-              raw: attributes.raw ?? ''
-            }
+            content: attributes.raw
+              ? [
+                  {
+                    type: 'text',
+                    text: attributes.raw
+                  }
+                ]
+              : []
           })
     }
   },
@@ -428,7 +427,7 @@ export const MdxBlock = Node.create({
     return {
       markdown: {
         serialize: (state: MarkdownSerializerState, node: ProseMirrorNode) => {
-          state.write(node.attrs.raw ?? '')
+          state.write(node.textContent)
           state.closeBlock(node)
         },
         parse: {
