@@ -17,12 +17,12 @@ const createEditor = (content: string) =>
   })
 
 describe('MdxBlock', () => {
-  it('inserts an empty block instead of storing the placeholder as content', () => {
+  it('inserts an empty block instead of storing placeholder content', () => {
     const editor = createEditor('')
 
     editor.commands.setMdxBlock()
 
-    expect(editor.state.doc.firstChild?.attrs.raw).toBe('')
+    expect(editor.state.doc.firstChild?.textContent).toBe('')
     expect(editor.storage.markdown.getMarkdown().trim()).toBe('')
   })
 
@@ -41,6 +41,17 @@ describe('MdxBlock', () => {
     expect(editor.storage.markdown.getMarkdown().trim()).toBe(mdx)
   })
 
+  it('round-trips raw MDX attributes with newlines', () => {
+    const mdx = `<Callout>
+Line one
+Line two
+</Callout>`
+    const editor = createEditor(mdx)
+
+    expect(editor.state.doc.firstChild?.textContent).toBe(mdx)
+    expect(editor.storage.markdown.getMarkdown().trim()).toBe(mdx)
+  })
+
   it('round-trips consecutive MDX import statements in one block', () => {
     const imports = `import Callout from '@/components/examples/Callout.astro'
 import CounterButton from '@/components/examples/CounterButton.astro'
@@ -48,12 +59,25 @@ import Tag from '@/components/examples/Tag.astro'`
     const editor = createEditor(imports)
 
     expect(editor.state.doc.childCount).toBe(1)
-    expect(editor.state.doc.firstChild?.attrs.raw).toBe(imports)
+    expect(editor.state.doc.firstChild?.textContent).toBe(imports)
     expect(editor.storage.markdown.getMarkdown().trim()).toBe(imports)
   })
 
-  it('round-trips top-level MDX export statements', () => {
-    const mdx = `export const metadata = { title: 'Hello' }
+  it('round-trips multiline import statements', () => {
+    const imports = `import {
+  Callout,
+  Tag
+} from '@/components/examples'`
+    const editor = createEditor(imports)
+
+    expect(editor.state.doc.firstChild?.textContent).toBe(imports)
+    expect(editor.storage.markdown.getMarkdown().trim()).toBe(imports)
+  })
+
+  it('round-trips top-level multiline export statements', () => {
+    const mdx = `export const metadata = {
+  title: 'Hello'
+}
 
 # Title`
     const editor = createEditor(mdx)
@@ -71,12 +95,23 @@ import Tag from '@/components/examples/Tag.astro'`
     expect(editor.storage.markdown.getMarkdown().trim()).toBe(mdx)
   })
 
-  it('keeps unclosed single-line tags from swallowing following markdown', () => {
-    const editor = createEditor('<MyComponent>\n\nNext paragraph')
+  it('keeps unclosed JSX content until a blank-line boundary', () => {
+    const mdx = `<MyComponent>
+Body
 
-    expect(editor.storage.markdown.getMarkdown().trim()).toBe(
-      '<MyComponent>\n\nNext paragraph'
-    )
+Next paragraph`
+    const editor = createEditor(mdx)
+
+    expect(editor.storage.markdown.getMarkdown().trim()).toBe(mdx)
+  })
+
+  it('keeps unclosed JSX content through EOF when there is no blank-line boundary', () => {
+    const mdx = `<MyComponent>
+Body`
+    const editor = createEditor(mdx)
+
+    expect(editor.state.doc.firstChild?.textContent).toBe(mdx)
+    expect(editor.storage.markdown.getMarkdown().trim()).toBe(mdx)
   })
 
   it('preserves regular markdown serialization', () => {
@@ -102,6 +137,14 @@ import Tag from '@/components/examples/Tag.astro'`
     expect(editor.storage.markdown.getMarkdown().trim()).toBe(mdx)
   })
 
+  it('does not treat prose beginning with import as MDX ESM', () => {
+    const editor = createEditor('import something into your story.')
+
+    expect(editor.storage.markdown.getMarkdown().trim()).toBe(
+      'import something into your story.'
+    )
+  })
+
   it('detects component and html opening tags', () => {
     expect(getMdxOpening('<MyComponent />')).toEqual({
       tagName: 'MyComponent',
@@ -114,7 +157,7 @@ import Tag from '@/components/examples/Tag.astro'`
     expect(getMdxOpening('&lt;MyComponent /&gt;')).toBeNull()
   })
 
-  it('detects only import and export lines as MDX ESM', () => {
+  it('detects only import and export starts as MDX ESM candidates', () => {
     expect(isMdxEsmLine("import Callout from '@/components/Callout'")).toBe(
       true
     )

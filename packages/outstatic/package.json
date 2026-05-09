@@ -133,6 +133,7 @@
     "@tiptap/react": "2.14.0",
     "@tiptap/starter-kit": "2.14.0",
     "@tiptap/suggestion": "2.14.0",
+    "acorn": "8.15.0",
     "ai": "^6.0.5",
     "change-case": "^5.4.4",
     "class-variance-authority": "^0.7.1",

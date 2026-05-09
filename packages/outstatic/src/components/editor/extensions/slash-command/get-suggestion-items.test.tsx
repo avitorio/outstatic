@@ -1,3 +1,7 @@
+import { Editor } from '@tiptap/core'
+import StarterKit from '@tiptap/starter-kit'
+import { Markdown } from 'tiptap-markdown'
+import { MdxBlock } from '../mdx-block'
 import { getSuggestionItems } from './get-suggestion-items'
 
 describe('getSuggestionItems', () => {
@@ -22,5 +26,33 @@ describe('getSuggestionItems', () => {
     expect(chain.deleteRange).toHaveBeenCalledWith(range)
     expect(chain.setMdxBlock).toHaveBeenCalledTimes(1)
     expect(chain.run).toHaveBeenCalledTimes(1)
+  })
+
+  it('inserts an mdx block in a real editor instance', () => {
+    const item = getSuggestionItems({ query: 'mdx' }).find(
+      (item) => item.title === 'MDX/HTML'
+    )
+    const editor = new Editor({
+      content: '/',
+      extensions: [
+        Markdown.configure({
+          html: false,
+          linkify: false
+        }),
+        StarterKit,
+        MdxBlock
+      ]
+    })
+
+    item?.command?.({
+      editor,
+      range: {
+        from: 1,
+        to: 2
+      }
+    })
+
+    expect(editor.state.doc.firstChild?.type.name).toBe('mdxBlock')
+    expect(editor.state.doc.firstChild?.textContent).toBe('')
   })
 })
