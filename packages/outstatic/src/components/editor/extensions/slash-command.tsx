@@ -1,4 +1,5 @@
 import { Extension, Range } from '@tiptap/core'
+import type { EditorState } from '@tiptap/pm/state'
 import { Editor, ReactRenderer } from '@tiptap/react'
 import Suggestion from '@tiptap/suggestion'
 import { ReactNode, useState } from 'react'
@@ -26,12 +27,37 @@ type CommandListRef = {
   onKeyDown: (props: { event: KeyboardEvent }) => boolean
 }
 
+export const isSlashCommandAllowed = ({
+  state,
+  range
+}: {
+  state: EditorState
+  range: Range
+}) => {
+  const mdxBlockType = state.schema.nodes.mdxBlock
+
+  if (!mdxBlockType) {
+    return true
+  }
+
+  const $from = state.doc.resolve(range.from)
+
+  for (let depth = $from.depth; depth >= 0; depth -= 1) {
+    if ($from.node(depth).type === mdxBlockType) {
+      return false
+    }
+  }
+
+  return true
+}
+
 const Command = Extension.create({
   name: 'slash-command',
   addOptions() {
     return {
       suggestion: {
         char: '/',
+        allow: isSlashCommandAllowed,
         command: ({
           editor,
           range,
