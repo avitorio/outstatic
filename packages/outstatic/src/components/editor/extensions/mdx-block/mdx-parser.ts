@@ -26,16 +26,6 @@ type MdxBlockMatch = {
   nextLine: number
 }
 
-type TagMatchers =
-  | {
-      isFragment: true
-    }
-  | {
-      isFragment: false
-      openingRegexp: RegExp
-      closingRegexp: RegExp
-    }
-
 const escapeHtml = (value: string) =>
   value
     .replace(/&/g, '&amp;')
@@ -51,35 +41,151 @@ const getLine = (state: MarkdownItBlockState, line: number) => {
   return state.src.slice(start, end)
 }
 
-const countMatches = (value: string, regexp: RegExp) =>
-  Array.from(value.matchAll(regexp)).length
+const readTagName = (value: string, start: number) => {
+  const match = value
+    .slice(start)
+    .match(/^([A-Za-z][\w:-]*(?:\.[A-Za-z][\w:-]*)*)/)
 
-const createTagMatchers = (opening: MdxOpening): TagMatchers => {
-  if (opening.isFragment) {
-    return { isFragment: true }
-  }
-
-  const escapedTagName = opening.tagName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-
-  return {
-    isFragment: false,
-    openingRegexp: new RegExp(
-      `<${escapedTagName}(?=[\\s>/])(?!(?:[^>"']|"[^"]*"|'[^']*')*\\/>)`,
-      'g'
-    ),
-    closingRegexp: new RegExp(`</${escapedTagName}\\s*>`, 'g')
-  }
+  return match?.[1] ?? null
 }
 
-const getTagDepthDelta = (line: string, matchers: TagMatchers) => {
-  if (matchers.isFragment) {
-    return countMatches(line, /<>/g) - countMatches(line, /<\/>/g)
+const findTagEnd = (value: string, start: number) => {
+  let quote: '"' | "'" | '`' | null = null
+  let braceDepth = 0
+
+  for (let index = start + 1; index < value.length; index += 1) {
+    const character = value[index]
+
+    if (quote) {
+      if (character === '\\') {
+        index += 1
+        continue
+      }
+
+      if (character === quote) {
+        quote = null
+      }
+
+      continue
+    }
+
+    if (character === '"' || character === "'" || character === '`') {
+      quote = character
+      continue
+    }
+
+    if (character === '{') {
+      braceDepth += 1
+      continue
+    }
+
+    if (character === '}') {
+      braceDepth = Math.max(0, braceDepth - 1)
+      continue
+    }
+
+    if (character === '>' && braceDepth === 0) {
+      return index
+    }
   }
 
-  return (
-    countMatches(line, matchers.openingRegexp) -
-    countMatches(line, matchers.closingRegexp)
-  )
+  return -1
+}
+
+const isSelfClosingTag = (value: string, tagEnd: number) => {
+  let index = tagEnd - 1
+
+  while (index >= 0 && /\s/.test(value[index])) {
+    index -= 1
+  }
+
+  return value[index] === '/'
+}
+
+const getTagDepth = (value: string, opening: MdxOpening) => {
+  let depth = 0
+  let index = 0
+
+  while (index < value.length) {
+    const tagStart = value.indexOf('<', index)
+
+    if (tagStart === -1) {
+      break
+    }
+
+    const nextCharacter = value[tagStart + 1]
+
+    if (value.startsWith('<!--', tagStart)) {
+      const commentEnd = value.indexOf('-->', tagStart + 4)
+      index = commentEnd === -1 ? value.length : commentEnd + 3
+      continue
+    }
+
+    if (nextCharacter === '!' || nextCharacter === '?') {
+      const tagEnd = findTagEnd(value, tagStart)
+      index = tagEnd === -1 ? value.length : tagEnd + 1
+      continue
+    }
+
+    if (opening.isFragment) {
+      if (value.startsWith('</>', tagStart)) {
+        depth -= 1
+        index = tagStart + 3
+        continue
+      }
+
+      if (value.startsWith('<>', tagStart)) {
+        depth += 1
+        index = tagStart + 2
+        continue
+      }
+
+      const tagName = readTagName(value, tagStart + 1)
+
+      if (tagName) {
+        const tagEnd = findTagEnd(value, tagStart)
+        index = tagEnd === -1 ? value.length : tagEnd + 1
+        continue
+      }
+
+      index = tagStart + 1
+      continue
+    }
+
+    const isClosingTag = nextCharacter === '/'
+    const tagNameStart = tagStart + (isClosingTag ? 2 : 1)
+    const tagName = readTagName(value, tagNameStart)
+
+    if (!tagName) {
+      index = tagStart + 1
+      continue
+    }
+
+    const tagEnd = findTagEnd(value, tagStart)
+
+    if (tagEnd === -1) {
+      if (!isClosingTag && tagName === opening.tagName) {
+        depth += 1
+      }
+
+      break
+    }
+
+    if (tagName !== opening.tagName) {
+      index = tagEnd + 1
+      continue
+    }
+
+    if (isClosingTag) {
+      depth -= 1
+    } else if (!isSelfClosingTag(value, tagEnd)) {
+      depth += 1
+    }
+
+    index = tagEnd + 1
+  }
+
+  return depth
 }
 
 const collectMdxEsmStatement = (
@@ -182,9 +288,8 @@ const collectMdxBlock = (
     return null
   }
 
-  const matchers = createTagMatchers(opening)
   const lines = [firstLine]
-  let depth = getTagDepthDelta(firstLine, matchers)
+  let depth = getTagDepth(firstLine, opening)
   let nextLine = startLine + 1
 
   if (depth <= 0) {
@@ -205,7 +310,7 @@ const collectMdxBlock = (
     }
 
     lines.push(line)
-    depth += getTagDepthDelta(line, matchers)
+    depth = getTagDepth(lines.join('\n'), opening)
     nextLine += 1
 
     if (depth <= 0) {

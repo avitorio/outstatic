@@ -23,6 +23,7 @@ declare module '@tiptap/core' {
 
 export const MdxBlock = CodeBlockLowlight.extend({
   name: MDX_BLOCK_TYPE,
+  // Keep this ahead of the base code block so MDX nodes rehydrate before generic code blocks.
   priority: 1000,
 
   addOptions() {

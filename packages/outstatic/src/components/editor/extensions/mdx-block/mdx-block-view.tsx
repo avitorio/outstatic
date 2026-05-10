@@ -9,6 +9,7 @@ import {
   TooltipContent,
   TooltipTrigger
 } from '@/components/ui/shadcn/tooltip'
+import { cn } from '@/utils/ui'
 import { validateMdxBlock } from './mdx-validation'
 
 export const MdxBlockView = ({ node }: NodeViewProps) => {
@@ -44,9 +45,10 @@ export const MdxBlockView = ({ node }: NodeViewProps) => {
         </span>
       </div>
       <pre
-        className={`text-white bg-foreground dark:bg-background rounded-md p-4 pt-12 border ${
+        className={cn(
+          'text-white bg-foreground dark:bg-background rounded-md p-4 pt-12 border',
           isInvalid ? 'border-red-500' : 'border-gray-600'
-        }`}
+        )}
       >
         <NodeViewContent
           as="code"

@@ -273,6 +273,24 @@ describe('MdxBlock', () => {
     expect(editor.storage.markdown.getMarkdown().trim()).toBe(mdx)
   })
 
+  it('round-trips multiline MDX blocks with JSX attribute expressions', () => {
+    const mdx = `<Callout condition={foo && <Badge />}>
+Body
+</Callout>`
+    const editor = createEditor(mdx)
+
+    expect(editor.state.doc.firstChild?.textContent).toBe(mdx)
+    expect(editor.storage.markdown.getMarkdown().trim()).toBe(mdx)
+  })
+
+  it('round-trips multiline MDX blocks with self-closing text inside attributes', () => {
+    const mdx = '<Callout pattern={`/>`}>\nBody\n</Callout>'
+    const editor = createEditor(mdx)
+
+    expect(editor.state.doc.firstChild?.textContent).toBe(mdx)
+    expect(editor.storage.markdown.getMarkdown().trim()).toBe(mdx)
+  })
+
   it('round-trips raw MDX attributes with newlines', () => {
     const mdx = `<Callout>
 Line one
