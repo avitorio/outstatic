@@ -4,13 +4,9 @@ import { EditorContent } from '@tiptap/react'
 import { createElement } from 'react'
 import StarterKit from '@tiptap/starter-kit'
 import { Markdown } from 'tiptap-markdown'
-import {
-  MdxBlock,
-  createMdxLowlight,
-  getMdxOpening,
-  isMdxEsmLine,
-  validateMdxBlock
-} from './mdx-block'
+import { createMdxLowlight } from './mdx-lowlight'
+import { MdxBlock, getMdxOpening, isMdxEsmLine } from '.'
+import { validateMdxBlock } from './mdx-validation'
 
 const testLowlight = {
   listLanguages: () => ['jsx', 'xml'],
@@ -195,6 +191,14 @@ describe('MdxBlock', () => {
     })
   })
 
+  it('validates MDX components with template literal props', () => {
+    expect(
+      validateMdxBlock('<Callout className={`foo-${bar > 1}`} />')
+    ).toEqual({
+      valid: true
+    })
+  })
+
   it('validates multiline MDX components with children', () => {
     expect(
       validateMdxBlock(`<Callout>
@@ -277,6 +281,15 @@ Line two
     const editor = createEditor(mdx)
 
     expect(editor.state.doc.firstChild?.textContent).toBe(mdx)
+    expect(editor.storage.markdown.getMarkdown().trim()).toBe(mdx)
+  })
+
+  it('round-trips a JSX fragment block', () => {
+    const mdx = `<>
+  <span>Hi</span>
+</>`
+    const editor = createEditor(mdx)
+
     expect(editor.storage.markdown.getMarkdown().trim()).toBe(mdx)
   })
 
