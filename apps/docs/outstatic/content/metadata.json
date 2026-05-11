@@ -1,6 +1,6 @@
 {
-  "commit": "a5366cb8964934c6d54510135366349d211aa07b",
-  "generated": "2026-05-11T15:05:44.794Z",
+  "commit": "0edad2eb00370e2f7a26e3dbd408fbde4cec1b23",
+  "generated": "2026-05-11T15:12:40.919Z",
   "metadata": [
     {
       "__outstatic": {
@@ -631,7 +631,7 @@
     },
     {
       "__outstatic": {
-        "commit": "a5366cb8964934c6d54510135366349d211aa07b",
+        "commit": "0edad2eb00370e2f7a26e3dbd408fbde4cec1b23",
         "hash": "194940039",
         "path": "/outstatic/content/docs/mdx-block.md"
       },
