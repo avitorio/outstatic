@@ -206,6 +206,7 @@ export const FieldManagementPage = ({
                   slug={target.slug}
                   extension={extension}
                   collection={'_singletons'}
+                  title={target.title}
                   onComplete={() => {
                     refetchSingletons()
                     router.push(`${dashboardRoute}`)

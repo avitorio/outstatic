@@ -177,7 +177,7 @@ describe('useCollections', () => {
 
     expect(result.current.data).toEqual(expectedCollections)
     expect(mockCreateCommitApi).toHaveBeenCalledWith({
-      message: 'chore: Updates collections',
+      message: 'update collections [outstatic:config]',
       owner: 'acme',
       name: 'site',
       branch: 'main',

@@ -1,4 +1,5 @@
 import type { CustomFieldsType } from '@/types'
+import { createOutstaticCommitMessage } from '@/utils/commit-message'
 
 export type FieldSchemaTarget =
   | {
@@ -54,10 +55,18 @@ export const getFieldSchemaCommitMessage = (
   action: FieldSchemaCommitAction,
   fieldName: string
 ) => {
-  const scope =
+  const scopeLabel =
     target.kind === 'collection' ? target.slug : `singleton/${target.slug}`
 
-  return `feat(${scope}): ${action} ${fieldName} field`
+  const commitAction =
+    action === 'add' ? 'create' : action === 'edit' ? 'update' : 'delete'
+
+  return createOutstaticCommitMessage({
+    scope: 'config',
+    action: commitAction,
+    target: 'field',
+    label: `${scopeLabel} ${fieldName}`
+  })
 }
 
 const getFieldSchemaDocumentTitle = (target: FieldSchemaTarget) =>

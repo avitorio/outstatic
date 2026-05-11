@@ -16,6 +16,7 @@ import {
 import { Label } from '@/components/ui/shadcn/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/shadcn/radio-group'
 import { createCommitApi } from '@/utils/create-commit-api'
+import { createOutstaticCommitMessage } from '@/utils/commit-message'
 import { useCollections } from '@/utils/hooks/use-collections'
 import { useCreateCommit } from '@/utils/hooks/use-create-commit'
 import { useGetDocuments } from '@/utils/hooks/use-get-documents'
@@ -170,7 +171,12 @@ export default function NewCollectionModal({
       }
 
       const commitApi = createCommitApi({
-        message: `feat(content): create ${slug}`,
+        message: createOutstaticCommitMessage({
+          scope: 'config',
+          action: 'create',
+          target: 'collection',
+          label: slug
+        }),
         owner,
         oid,
         name: repoSlug,

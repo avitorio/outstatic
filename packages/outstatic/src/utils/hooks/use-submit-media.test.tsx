@@ -146,7 +146,7 @@ describe('useSubmitMedia', () => {
     expect(fetchOid).toHaveBeenCalledTimes(1)
     expect(refetchMedia).toHaveBeenCalledTimes(2)
     expect(mockCreateCommitApi).toHaveBeenCalledWith({
-      message: 'chore: Adds 2 media files',
+      message: 'upload media "2 files" [outstatic:media]',
       owner: 'owner',
       oid: 'oid-123',
       name: 'repo',

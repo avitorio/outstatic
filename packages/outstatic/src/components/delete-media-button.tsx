@@ -1,4 +1,5 @@
 import { createCommitApi } from '@/utils/create-commit-api'
+import { createOutstaticCommitMessage } from '@/utils/commit-message'
 import { hashFromUrl } from '@/utils/hash-from-url'
 import { useCreateCommit } from '@/utils/hooks/use-create-commit'
 import useOid from '@/utils/hooks/use-oid'
@@ -57,7 +58,12 @@ export const DeleteMediaButton = ({
       const owner = repoOwner || session?.user?.login || ''
 
       const capi = createCommitApi({
-        message: `chore: remove ${filename}`,
+        message: createOutstaticCommitMessage({
+          scope: 'media',
+          action: 'delete',
+          target: 'media',
+          label: filename
+        }),
         owner,
         oid: oid ?? '',
         name: repoSlug,

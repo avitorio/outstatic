@@ -1,5 +1,9 @@
 import { CustomFieldsType, Document, FileType, MDExtensions } from '@/types'
 import { createCommitApi } from '@/utils/create-commit-api'
+import {
+  createOutstaticCommitMessage,
+  type OutstaticCommitAction
+} from '@/utils/commit-message'
 import { useOutstatic } from '@/utils/hooks/use-outstatic'
 import { stringifyMetadata } from '@/utils/metadata/stringify'
 import { LoginSession } from '@/utils/auth/auth'
@@ -135,10 +139,32 @@ function useSubmitDocument({
         // If the slug has changed, commit should delete old file
         const oldSlug = slug !== newSlug && slug !== 'new' ? slug : undefined
 
+        const previousStatus = documentMetadata?.status as
+          | 'draft'
+          | 'published'
+          | undefined
+        const nextStatus = data.status
+        const isCreate = slug === 'new'
+        const action: OutstaticCommitAction = isCreate
+          ? 'create'
+          : previousStatus === 'draft' && nextStatus === 'published'
+            ? 'publish'
+            : previousStatus === 'published' && nextStatus === 'draft'
+              ? 'unpublish'
+              : 'update'
+
+        const message = createOutstaticCommitMessage({
+          scope: 'content',
+          action,
+          status:
+            action === 'publish' || action === 'unpublish'
+              ? undefined
+              : nextStatus,
+          label: data.title?.trim() || newSlug
+        })
+
         const capi = createCommitApi({
-          message: oldSlug
-            ? `chore: Updates ${newSlug} formerly ${oldSlug}`
-            : `chore: Updates/Creates ${newSlug}`,
+          message,
           owner,
           oid: oid ?? '',
           name: repoSlug,
