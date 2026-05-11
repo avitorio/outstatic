@@ -1,5 +1,5 @@
 import { TestWrapper } from '@/utils/tests/test-wrapper'
-import { render, screen } from '@testing-library/react'
+import { render, screen, fireEvent } from '@testing-library/react'
 import React from 'react'
 import { DocumentsTable } from '@/components/documents-table'
 
@@ -21,6 +21,11 @@ jest.mock(
     ({ children }: { children: React.ReactNode }) =>
       children
 )
+
+jest.mock('js-cookie', () => ({
+  get: jest.fn(() => null),
+  set: jest.fn()
+}))
 
 jest.mock('change-case', () => {
   return {
@@ -85,5 +90,86 @@ describe('DocumentsTable', () => {
     expect(screen.getByText('Document 2')).toBeInTheDocument()
     expect(screen.getByText('draft')).toBeInTheDocument()
     expect(screen.getByText(date2)).toBeInTheDocument()
+  })
+
+  it('renders table headers for the default visible columns', () => {
+    render(
+      <TestWrapper>
+        <DocumentsTable />
+      </TestWrapper>
+    )
+
+    expect(
+      screen.getByRole('button', { name: /^title$/i })
+    ).toBeInTheDocument()
+    expect(
+      screen.getByRole('button', { name: /^publishedAt$/i })
+    ).toBeInTheDocument()
+    expect(
+      screen.getByRole('button', { name: /^status$/i })
+    ).toBeInTheDocument()
+  })
+
+  it('renders sort icons for sortable columns', () => {
+    render(
+      <TestWrapper>
+        <DocumentsTable />
+      </TestWrapper>
+    )
+
+    expect(screen.getByTestId('sort-icon-publishedAt')).toBeInTheDocument()
+    expect(screen.getByTestId('sort-icon-title')).toBeInTheDocument()
+  })
+
+  it('toggles sort direction when clicking a column header', () => {
+    render(
+      <TestWrapper>
+        <DocumentsTable />
+      </TestWrapper>
+    )
+
+    expect(screen.getByTestId('caret-down-icon')).toBeInTheDocument()
+
+    fireEvent.click(screen.getByRole('button', { name: /^publishedAt$/i }))
+    expect(screen.getByTestId('caret-up-icon')).toBeInTheDocument()
+  })
+
+  it('renders the Columns dropdown trigger', () => {
+    render(
+      <TestWrapper>
+        <DocumentsTable />
+      </TestWrapper>
+    )
+
+    expect(
+      screen.getByRole('button', { name: /columns/i })
+    ).toBeInTheDocument()
+  })
+
+  it('renders a title filter input', () => {
+    render(
+      <TestWrapper>
+        <DocumentsTable />
+      </TestWrapper>
+    )
+
+    expect(
+      screen.getByPlaceholderText(/filter titles/i)
+    ).toBeInTheDocument()
+  })
+
+  it('filters rows by title when typing in the filter input', () => {
+    render(
+      <TestWrapper>
+        <DocumentsTable />
+      </TestWrapper>
+    )
+
+    const filterInput = screen.getByPlaceholderText(/filter titles/i)
+
+    fireEvent.change(filterInput, { target: { value: 'Document 1' } })
+
+    expect(screen.getByText('Document 1')).toBeInTheDocument()
+    expect(screen.queryByText('Document 2')).not.toBeInTheDocument()
   })
 })
