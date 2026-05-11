@@ -1,5 +1,6 @@
 import { parse } from 'acorn'
 import {
+  findTagEnd,
   getMdxEsmKind,
   getMdxOpening,
   type MdxEsmKind,
@@ -34,49 +35,6 @@ const getClosingTagName = (opening: MdxOpening) =>
 const getClosingTagNameFromToken = (
   token: Extract<MdxTagToken, { type: 'open' }>
 ) => (token.isFragment ? '</>' : `</${token.tagName}>`)
-
-const findTagEnd = (value: string, start: number) => {
-  let quote: '"' | "'" | '`' | null = null
-  let braceDepth = 0
-
-  for (let index = start + 1; index < value.length; index += 1) {
-    const character = value[index]
-
-    if (quote) {
-      if (character === '\\') {
-        index += 1
-        continue
-      }
-
-      if (character === quote) {
-        quote = null
-      }
-
-      continue
-    }
-
-    if (character === '"' || character === "'" || character === '`') {
-      quote = character
-      continue
-    }
-
-    if (character === '{') {
-      braceDepth += 1
-      continue
-    }
-
-    if (character === '}') {
-      braceDepth = Math.max(0, braceDepth - 1)
-      continue
-    }
-
-    if (character === '>' && braceDepth === 0) {
-      return index
-    }
-  }
-
-  return -1
-}
 
 const getMdxTagTokens = (value: string): MdxTagToken[] => {
   const tokens: MdxTagToken[] = []

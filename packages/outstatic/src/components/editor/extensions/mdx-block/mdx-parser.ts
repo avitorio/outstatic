@@ -1,6 +1,7 @@
 import type MarkdownIt from 'markdown-it'
 import {
   MDX_BLOCK_TYPE,
+  findTagEnd,
   getMdxEsmKind,
   getMdxOpening,
   type MdxOpening
@@ -26,13 +27,27 @@ type MdxBlockMatch = {
   nextLine: number
 }
 
-const escapeHtml = (value: string) =>
-  value
+type TagDepthState = {
+  depth: number
+  index: number
+}
+
+type TagDepthResult = {
+  depth: number
+  state: TagDepthState
+}
+
+const escapeHtml = (value: string) => {
+  // Markdown is imported through rendered HTML. Encode line breaks explicitly so
+  // the MDX block reaches ProseMirror as raw text, then preserveWhitespace
+  // decodes them back to newlines during the HTML parse handoff.
+  return value
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
     .replace(/\r/g, '&#13;')
     .replace(/\n/g, '&#10;')
+}
 
 const getLine = (state: MarkdownItBlockState, line: number) => {
   const start = state.bMarks[line]
@@ -49,49 +64,6 @@ const readTagName = (value: string, start: number) => {
   return match?.[1] ?? null
 }
 
-const findTagEnd = (value: string, start: number) => {
-  let quote: '"' | "'" | '`' | null = null
-  let braceDepth = 0
-
-  for (let index = start + 1; index < value.length; index += 1) {
-    const character = value[index]
-
-    if (quote) {
-      if (character === '\\') {
-        index += 1
-        continue
-      }
-
-      if (character === quote) {
-        quote = null
-      }
-
-      continue
-    }
-
-    if (character === '"' || character === "'" || character === '`') {
-      quote = character
-      continue
-    }
-
-    if (character === '{') {
-      braceDepth += 1
-      continue
-    }
-
-    if (character === '}') {
-      braceDepth = Math.max(0, braceDepth - 1)
-      continue
-    }
-
-    if (character === '>' && braceDepth === 0) {
-      return index
-    }
-  }
-
-  return -1
-}
-
 const isSelfClosingTag = (value: string, tagEnd: number) => {
   let index = tagEnd - 1
 
@@ -102,9 +74,32 @@ const isSelfClosingTag = (value: string, tagEnd: number) => {
   return value[index] === '/'
 }
 
-const getTagDepth = (value: string, opening: MdxOpening) => {
-  let depth = 0
-  let index = 0
+const getTagDepth = (
+  value: string,
+  opening: MdxOpening,
+  state: TagDepthState = { depth: 0, index: 0 }
+): TagDepthResult => {
+  let depth = state.depth
+  let index = state.index
+
+  const complete = (): TagDepthResult => ({
+    depth,
+    state: {
+      depth,
+      index: value.length
+    }
+  })
+
+  const incomplete = (
+    tagStart: number,
+    effectiveDepth = depth
+  ): TagDepthResult => ({
+    depth: effectiveDepth,
+    state: {
+      depth,
+      index: tagStart
+    }
+  })
 
   while (index < value.length) {
     const tagStart = value.indexOf('<', index)
@@ -117,13 +112,23 @@ const getTagDepth = (value: string, opening: MdxOpening) => {
 
     if (value.startsWith('<!--', tagStart)) {
       const commentEnd = value.indexOf('-->', tagStart + 4)
-      index = commentEnd === -1 ? value.length : commentEnd + 3
+
+      if (commentEnd === -1) {
+        return incomplete(tagStart)
+      }
+
+      index = commentEnd + 3
       continue
     }
 
     if (nextCharacter === '!' || nextCharacter === '?') {
       const tagEnd = findTagEnd(value, tagStart)
-      index = tagEnd === -1 ? value.length : tagEnd + 1
+
+      if (tagEnd === -1) {
+        return incomplete(tagStart)
+      }
+
+      index = tagEnd + 1
       continue
     }
 
@@ -144,7 +149,12 @@ const getTagDepth = (value: string, opening: MdxOpening) => {
 
       if (tagName) {
         const tagEnd = findTagEnd(value, tagStart)
-        index = tagEnd === -1 ? value.length : tagEnd + 1
+
+        if (tagEnd === -1) {
+          return incomplete(tagStart)
+        }
+
+        index = tagEnd + 1
         continue
       }
 
@@ -164,11 +174,10 @@ const getTagDepth = (value: string, opening: MdxOpening) => {
     const tagEnd = findTagEnd(value, tagStart)
 
     if (tagEnd === -1) {
-      if (!isClosingTag && tagName === opening.tagName) {
-        depth += 1
-      }
-
-      break
+      return incomplete(
+        tagStart,
+        !isClosingTag && tagName === opening.tagName ? depth + 1 : depth
+      )
     }
 
     if (tagName !== opening.tagName) {
@@ -185,7 +194,7 @@ const getTagDepth = (value: string, opening: MdxOpening) => {
     index = tagEnd + 1
   }
 
-  return depth
+  return complete()
 }
 
 const collectMdxEsmStatement = (
@@ -288,13 +297,13 @@ const collectMdxBlock = (
     return null
   }
 
-  const lines = [firstLine]
-  let depth = getTagDepth(firstLine, opening)
+  let content = firstLine
+  let depthResult = getTagDepth(content, opening)
   let nextLine = startLine + 1
 
-  if (depth <= 0) {
+  if (depthResult.depth <= 0) {
     return {
-      content: firstLine,
+      content,
       nextLine
     }
   }
@@ -304,25 +313,25 @@ const collectMdxBlock = (
 
     if (line.trim() === '') {
       return {
-        content: lines.join('\n'),
+        content,
         nextLine
       }
     }
 
-    lines.push(line)
-    depth = getTagDepth(lines.join('\n'), opening)
+    content += `\n${line}`
+    depthResult = getTagDepth(content, opening, depthResult.state)
     nextLine += 1
 
-    if (depth <= 0) {
+    if (depthResult.depth <= 0) {
       return {
-        content: lines.join('\n'),
+        content,
         nextLine
       }
     }
   }
 
   return {
-    content: lines.join('\n'),
+    content,
     nextLine
   }
 }

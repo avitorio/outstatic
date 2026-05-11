@@ -7,6 +7,49 @@ export type MdxOpening = {
 
 export type MdxEsmKind = 'import' | 'export'
 
+export const findTagEnd = (value: string, start: number) => {
+  let quote: '"' | "'" | '`' | null = null
+  let braceDepth = 0
+
+  for (let index = start + 1; index < value.length; index += 1) {
+    const character = value[index]
+
+    if (quote) {
+      if (character === '\\') {
+        index += 1
+        continue
+      }
+
+      if (character === quote) {
+        quote = null
+      }
+
+      continue
+    }
+
+    if (character === '"' || character === "'" || character === '`') {
+      quote = character
+      continue
+    }
+
+    if (character === '{') {
+      braceDepth += 1
+      continue
+    }
+
+    if (character === '}') {
+      braceDepth = Math.max(0, braceDepth - 1)
+      continue
+    }
+
+    if (character === '>' && braceDepth === 0) {
+      return index
+    }
+  }
+
+  return -1
+}
+
 export const getMdxOpening = (line: string): MdxOpening | null => {
   const trimmed = line.trim()
 

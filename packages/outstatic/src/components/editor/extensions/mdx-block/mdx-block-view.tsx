@@ -4,6 +4,7 @@ import {
   type NodeViewProps
 } from '@tiptap/react'
 import { AlertCircle } from 'lucide-react'
+import { useMemo } from 'react'
 import {
   Tooltip,
   TooltipContent,
@@ -13,7 +14,8 @@ import { cn } from '@/utils/ui'
 import { validateMdxBlock } from './mdx-validation'
 
 export const MdxBlockView = ({ node }: NodeViewProps) => {
-  const validation = validateMdxBlock(node.textContent)
+  const textContent = node.textContent
+  const validation = useMemo(() => validateMdxBlock(textContent), [textContent])
   const isInvalid = !validation.valid
 
   return (

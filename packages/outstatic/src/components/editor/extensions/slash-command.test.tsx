@@ -20,6 +20,7 @@ jest.mock(
 
 const testLowlight = {
   listLanguages: () => ['jsx'],
+  registered: (language: string) => language === 'jsx',
   highlight: (_language: string, value: string) => ({
     children: [
       {

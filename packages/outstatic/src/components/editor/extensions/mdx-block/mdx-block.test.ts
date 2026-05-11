@@ -350,6 +350,18 @@ Body
     expect(editor.storage.markdown.getMarkdown().trim()).toBe(mdx)
   })
 
+  it('round-trips MDX blocks with multiline opening tag expressions', () => {
+    const mdx = `<Callout title={
+  title
+}>
+Body
+</Callout>`
+    const editor = createEditor(mdx)
+
+    expect(editor.state.doc.firstChild?.textContent).toBe(mdx)
+    expect(editor.storage.markdown.getMarkdown().trim()).toBe(mdx)
+  })
+
   it('round-trips multiline MDX blocks with self-closing text inside attributes', () => {
     const mdx = '<Callout pattern={`/>`}>\nBody\n</Callout>'
     const editor = createEditor(mdx)
