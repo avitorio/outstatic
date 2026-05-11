@@ -32,7 +32,7 @@ export default function ContentOnboarding() {
         {confirmBranch ? (
           <div className="space-y-6">
             <div className="mb-8 flex flex-col gap-2 h-12 items-start">
-              <h1 className="mr-12 text-2xl">Start your site</h1>
+              <h1 className="mr-4 text-2xl">Start your site</h1>
               <p>Most sites start with a Collection like Blog or Projects.</p>
             </div>
 

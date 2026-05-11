@@ -28,8 +28,8 @@ export default function Settings() {
 
   return (
     <AdminLayout title="Settings">
-      <div className="mb-8 flex h-12 items-center">
-        <h1 className="mr-12 text-2xl">Settings</h1>
+      <div className="mb-4 flex h-12 items-center">
+        <h1 className="mr-4 text-2xl">Settings</h1>
       </div>
       <div className="flex max-w-2xl flex-1 flex-col space-y-6">
         <Card className="mb-8 max-w-2xl">

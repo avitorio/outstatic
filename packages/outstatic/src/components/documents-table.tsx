@@ -190,7 +190,7 @@ export const DocumentsTable = () => {
 
   return (
     <div className="w-full">
-      <div className="flex items-center gap-2 py-4">
+      <div className="flex items-center gap-2 pb-4">
         {titleColumn ? (
           <Input
             placeholder="Filter titles..."
@@ -231,9 +231,9 @@ export const DocumentsTable = () => {
                     {header.isPlaceholder
                       ? null
                       : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
+                        header.column.columnDef.header,
+                        header.getContext()
+                      )}
                   </TableHead>
                 ))}
                 <TableHead />

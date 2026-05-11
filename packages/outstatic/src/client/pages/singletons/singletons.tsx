@@ -40,8 +40,8 @@ export default function Singletons() {
         </LineBackground>
       ) : (
         <>
-          <div className="mb-8 flex h-12 items-center">
-            <h1 className="mr-12 text-2xl text-foreground">Singletons</h1>
+          <div className="mb-4 flex h-12 items-center">
+            <h1 className="mr-4 text-2xl text-foreground">Singletons</h1>
             <div className="flex gap-2">
               <Button size="sm" asChild>
                 <Link href={`${dashboardRoute}/singletons/new`}>
@@ -51,7 +51,7 @@ export default function Singletons() {
 
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Button size="sm" onClick={() => setShowOpenFileModal(true)}>
+                  <Button variant="ghost" size="sm" onClick={() => setShowOpenFileModal(true)}>
                     <span className="sr-only">Open from file</span>
                     <FolderOpen className="w-6 h-6" />
                   </Button>
