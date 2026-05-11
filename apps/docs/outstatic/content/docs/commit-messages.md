@@ -196,7 +196,7 @@ When editors make several Outstatic changes in a row, this can create multiple d
 3. Link the media inside the document
 4. Publish the document
 
-You can use Vercel's Ignore Build Step to skip builds for commits that do not need to deploy.
+You can use [Vercel's Ignore Build Step](https://vercel.com/kb/guide/how-do-i-use-the-ignored-build-step-field-on-vercel) to skip builds for commits that do not need to deploy.
 
 Vercel exposes the commit message through:
 
@@ -207,6 +207,8 @@ VERCEL_GIT_COMMIT_MESSAGE
 ### Example: Ignore Draft and Media Changes
 
 This example ignores draft-only content changes and media-only changes.
+
+Create a bash script at the root of your project, it can be something like: `ignore-outstatic-draft.sh`
 
 ```bash
 #!/bin/bash
@@ -234,6 +236,12 @@ case "$COMMIT_MESSAGE" in
     exit 1
     ;;
 esac
+```
+
+Then on Vercel, visit Project Settings &gt; Build and Deployment &gt; Ignored Build Step. Select `Run my bash script` and add the command below:
+
+```bash
+bash ignore-outstatic-draft.sh
 ```
 
 In Vercel Ignore Build Step:
