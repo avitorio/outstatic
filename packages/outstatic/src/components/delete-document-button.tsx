@@ -44,7 +44,7 @@ export const DeleteDocumentButton = ({
   slug,
   extension,
   disabled = false,
-  onComplete = () => { },
+  onComplete = () => {},
   collection,
   className,
   icon = true,

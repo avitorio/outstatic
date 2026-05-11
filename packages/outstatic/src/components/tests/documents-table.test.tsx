@@ -99,9 +99,7 @@ describe('DocumentsTable', () => {
       </TestWrapper>
     )
 
-    expect(
-      screen.getByRole('button', { name: /^title$/i })
-    ).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /^title$/i })).toBeInTheDocument()
     expect(
       screen.getByRole('button', { name: /^publishedAt$/i })
     ).toBeInTheDocument()
@@ -141,9 +139,7 @@ describe('DocumentsTable', () => {
       </TestWrapper>
     )
 
-    expect(
-      screen.getByRole('button', { name: /columns/i })
-    ).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /columns/i })).toBeInTheDocument()
   })
 
   it('renders a title filter input', () => {
@@ -153,9 +149,7 @@ describe('DocumentsTable', () => {
       </TestWrapper>
     )
 
-    expect(
-      screen.getByPlaceholderText(/filter titles/i)
-    ).toBeInTheDocument()
+    expect(screen.getByPlaceholderText(/filter titles/i)).toBeInTheDocument()
   })
 
   it('filters rows by title when typing in the filter input', () => {

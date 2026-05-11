@@ -51,7 +51,11 @@ export default function Singletons() {
 
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Button variant="ghost" size="sm" onClick={() => setShowOpenFileModal(true)}>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setShowOpenFileModal(true)}
+                  >
                     <span className="sr-only">Open from file</span>
                     <FolderOpen className="w-6 h-6" />
                   </Button>
