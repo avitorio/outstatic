@@ -552,6 +552,116 @@ describe('useSubmitSingleton', () => {
 
     consoleSpy.mockRestore()
   })
+
+  describe('commit message', () => {
+    const renderSubmit = (
+      overrides: {
+        slug?: string
+        isNew?: boolean
+        documentMetadata?: Record<string, any>
+      } = {}
+    ) =>
+      renderHook(() =>
+        useSubmitSingleton({
+          session: { user: { login: 'acme' } } as any,
+          slug: overrides.slug ?? 'about',
+          setSlug: setSlugMock,
+          isNew: overrides.isNew ?? false,
+          setIsNew: setIsNewMock,
+          setShowDelete: setShowDeleteMock,
+          setLoading: setLoadingMock,
+          files: [],
+          customFields: {},
+          setCustomFields: setCustomFieldsMock,
+          setHasChanges: setHasChangesMock,
+          editor: {} as any,
+          extension: 'md',
+          documentMetadata: overrides.documentMetadata ?? {},
+          path: 'outstatic/content/_singletons'
+        })
+      )
+
+    const getCommitMessage = () =>
+      mockCreateCommitApi.mock.calls[0][0].message as string
+
+    it('emits a publish message when transitioning from draft to published', async () => {
+      const { result } = renderSubmit({
+        documentMetadata: { status: 'draft' }
+      })
+
+      await act(async () => {
+        await result.current({
+          title: 'About Us',
+          slug: 'about',
+          status: 'published',
+          publishedAt: new Date('2026-02-01T00:00:00.000Z')
+        } as any)
+      })
+
+      expect(getCommitMessage()).toBe(
+        'publish "About Us" [outstatic:content]'
+      )
+    })
+
+    it('emits an unpublish message when transitioning from published to draft', async () => {
+      const { result } = renderSubmit({
+        documentMetadata: { status: 'published' }
+      })
+
+      await act(async () => {
+        await result.current({
+          title: 'About Us',
+          slug: 'about',
+          status: 'draft',
+          publishedAt: new Date('2026-02-01T00:00:00.000Z')
+        } as any)
+      })
+
+      expect(getCommitMessage()).toBe(
+        'unpublish "About Us" [outstatic:content]'
+      )
+    })
+
+    it('emits a create message with the next status when isNew is true', async () => {
+      const { result } = renderSubmit({
+        slug: 'new',
+        isNew: true,
+        documentMetadata: {}
+      })
+
+      await act(async () => {
+        await result.current({
+          title: 'Home Page',
+          slug: 'home-page',
+          status: 'published',
+          publishedAt: new Date('2026-02-01T00:00:00.000Z')
+        } as any)
+      })
+
+      expect(getCommitMessage()).toBe(
+        'create published "Home Page" [outstatic:content]'
+      )
+    })
+
+    it('emits an update message when only the slug changes on a published singleton', async () => {
+      const { result } = renderSubmit({
+        documentMetadata: { status: 'published' }
+      })
+
+      await act(async () => {
+        await result.current({
+          title: 'About Us',
+          slug: 'about-us',
+          status: 'published',
+          publishedAt: new Date('2026-02-01T00:00:00.000Z')
+        } as any)
+      })
+
+      expect(getCommitMessage()).toBe(
+        'update published "About Us" [outstatic:content]'
+      )
+    })
+  })
 })
 
 describe('buildUpdatedSingletonsIndex', () => {

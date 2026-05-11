@@ -1,4 +1,7 @@
-import { createOutstaticCommitMessage } from './commit-message'
+import {
+  createOutstaticCommitMessage,
+  deriveContentCommitAction
+} from './commit-message'
 
 describe('createOutstaticCommitMessage', () => {
   it('formats content create draft', () => {
@@ -166,5 +169,44 @@ describe('createOutstaticCommitMessage', () => {
         label: 'posts'
       })
     ).toBe('create collection "posts" [outstatic:config]')
+  })
+})
+
+describe('deriveContentCommitAction', () => {
+  it('returns create when isCreate is true regardless of statuses', () => {
+    expect(deriveContentCommitAction(true, undefined, 'draft')).toBe('create')
+    expect(deriveContentCommitAction(true, undefined, 'published')).toBe(
+      'create'
+    )
+    expect(deriveContentCommitAction(true, 'draft', 'published')).toBe('create')
+  })
+
+  it('returns publish when transitioning from draft to published', () => {
+    expect(deriveContentCommitAction(false, 'draft', 'published')).toBe(
+      'publish'
+    )
+  })
+
+  it('returns unpublish when transitioning from published to draft', () => {
+    expect(deriveContentCommitAction(false, 'published', 'draft')).toBe(
+      'unpublish'
+    )
+  })
+
+  it('returns update when status is unchanged (draft to draft)', () => {
+    expect(deriveContentCommitAction(false, 'draft', 'draft')).toBe('update')
+  })
+
+  it('returns update when status is unchanged (published to published)', () => {
+    expect(deriveContentCommitAction(false, 'published', 'published')).toBe(
+      'update'
+    )
+  })
+
+  it('returns update when previousStatus is undefined (existing doc with unknown prior status)', () => {
+    expect(deriveContentCommitAction(false, undefined, 'draft')).toBe('update')
+    expect(deriveContentCommitAction(false, undefined, 'published')).toBe(
+      'update'
+    )
   })
 })

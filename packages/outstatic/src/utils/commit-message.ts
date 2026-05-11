@@ -38,3 +38,15 @@ export const createOutstaticCommitMessage = ({
 
   return `${action}${statusPart}${targetPart}${labelPart} [outstatic:${scope}]`
 }
+
+export const deriveContentCommitAction = (
+  isCreate: boolean,
+  previousStatus: OutstaticContentStatus | undefined,
+  nextStatus: OutstaticContentStatus
+): OutstaticCommitAction => {
+  if (isCreate) return 'create'
+  if (previousStatus === 'draft' && nextStatus === 'published') return 'publish'
+  if (previousStatus === 'published' && nextStatus === 'draft')
+    return 'unpublish'
+  return 'update'
+}
