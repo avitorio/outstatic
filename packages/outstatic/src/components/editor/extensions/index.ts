@@ -62,7 +62,7 @@ export const getTiptapExtensions = (options: TiptapExtensionsOptions) =>
       code: {
         HTMLAttributes: {
           class:
-            'rounded-md bg-muted px-1.5 py-1 font-mono font-medium text-foreground',
+            'rounded-md bg-muted px-1.5 py-1 font-mono font-medium text-muted-foreground',
           spellcheck: 'false'
         }
       },
