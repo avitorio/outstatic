@@ -24,7 +24,8 @@ publishedAt: "2026-03-13T03:00:00.000Z"
   - [The Content Editor](/the-content-editor)
     - [Writing Content](/the-content-editor#writing-content)
     - [Menus](/the-content-editor#menus)
-    - [Uploading Images](/the-content-editor#uploading-images)
+    - [MDX Block](/mdx-block)
+    - [Uploading Media](/the-content-editor#uploading-media)
     - [AI Completion](/the-content-editor#ai-completion)
   - [Custom Fields](/custom-fields)
 
