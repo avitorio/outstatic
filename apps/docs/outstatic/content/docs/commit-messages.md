@@ -175,6 +175,14 @@ Outstatic settings changed.
 
 Whether this should trigger a deployment depends on the setting.
 
+### Update media index
+
+```txt
+update media-index [outstatic:config]
+```
+
+The internal `media.json` manifest was rebuilt. This is tagged as `config` rather than `media` because the file is an index, not a user-uploaded asset — sites that read `media.json` at build time should still rebuild on these commits.
+
 ---
 
 ## Vercel Automation

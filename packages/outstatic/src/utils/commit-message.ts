@@ -16,6 +16,7 @@ export type CreateOutstaticCommitMessageParams = {
   status?: OutstaticContentStatus
   target?: string
   label?: string
+  renamedFrom?: string
 }
 
 const sanitizeCommitLabel = (label: string) =>
@@ -29,14 +30,18 @@ export const createOutstaticCommitMessage = ({
   action,
   status,
   target,
-  label
+  label,
+  renamedFrom
 }: CreateOutstaticCommitMessageParams): string => {
   const statusPart = status ? ` ${status}` : ''
   const targetPart = target ? ` ${target}` : ''
   const sanitizedLabel = label ? sanitizeCommitLabel(label) : ''
   const labelPart = sanitizedLabel ? ` "${sanitizedLabel}"` : ''
+  const renamedPart = renamedFrom?.trim()
+    ? ` (renamed from ${renamedFrom.trim()})`
+    : ''
 
-  return `${action}${statusPart}${targetPart}${labelPart} [outstatic:${scope}]`
+  return `${action}${statusPart}${targetPart}${labelPart}${renamedPart} [outstatic:${scope}]`
 }
 
 export const deriveContentCommitAction = (

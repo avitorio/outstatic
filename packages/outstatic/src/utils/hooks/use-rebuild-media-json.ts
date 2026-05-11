@@ -262,10 +262,9 @@ export const useRebuildMediaJson = () => {
 
       const commitApi = createCommitApi({
         message: createOutstaticCommitMessage({
-          scope: 'media',
+          scope: 'config',
           action: 'update',
-          target: 'media',
-          label: 'media.json'
+          target: 'media-index'
         }),
         owner: repoOwner || session?.user?.login || '',
         name: repoSlug,

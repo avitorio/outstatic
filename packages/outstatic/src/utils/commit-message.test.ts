@@ -170,6 +170,63 @@ describe('createOutstaticCommitMessage', () => {
       })
     ).toBe('create collection "posts" [outstatic:config]')
   })
+
+  it('appends a "renamed from" note when renamedFrom is provided', () => {
+    expect(
+      createOutstaticCommitMessage({
+        scope: 'content',
+        action: 'update',
+        status: 'published',
+        label: 'New Title',
+        renamedFrom: 'old-slug'
+      })
+    ).toBe(
+      'update published "New Title" (renamed from old-slug) [outstatic:content]'
+    )
+  })
+
+  it('appends rename note for publish transitions', () => {
+    expect(
+      createOutstaticCommitMessage({
+        scope: 'content',
+        action: 'publish',
+        label: 'New Title',
+        renamedFrom: 'draft-slug'
+      })
+    ).toBe('publish "New Title" (renamed from draft-slug) [outstatic:content]')
+  })
+
+  it('omits rename note when renamedFrom is empty or whitespace', () => {
+    expect(
+      createOutstaticCommitMessage({
+        scope: 'content',
+        action: 'update',
+        status: 'draft',
+        label: 'Title',
+        renamedFrom: ''
+      })
+    ).toBe('update draft "Title" [outstatic:content]')
+
+    expect(
+      createOutstaticCommitMessage({
+        scope: 'content',
+        action: 'update',
+        status: 'draft',
+        label: 'Title',
+        renamedFrom: '   '
+      })
+    ).toBe('update draft "Title" [outstatic:content]')
+  })
+
+  it('formats media-index rebuild as a config update', () => {
+    expect(
+      createOutstaticCommitMessage({
+        scope: 'config',
+        action: 'update',
+        target: 'media-index'
+      })
+    ).toBe('update media-index [outstatic:config]')
+  })
 })
 
 describe('deriveContentCommitAction', () => {

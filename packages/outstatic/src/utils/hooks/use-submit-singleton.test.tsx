@@ -643,7 +643,7 @@ describe('useSubmitSingleton', () => {
       )
     })
 
-    it('emits an update message when only the slug changes on a published singleton', async () => {
+    it('emits an update message with a rename note when the slug changes on a published singleton', async () => {
       const { result } = renderSubmit({
         documentMetadata: { status: 'published' }
       })
@@ -658,7 +658,26 @@ describe('useSubmitSingleton', () => {
       })
 
       expect(getCommitMessage()).toBe(
-        'update published "About Us" [outstatic:content]'
+        'update published "About Us" (renamed from about) [outstatic:content]'
+      )
+    })
+
+    it('emits an update message without a rename note when the slug is unchanged', async () => {
+      const { result } = renderSubmit({
+        documentMetadata: { status: 'published' }
+      })
+
+      await act(async () => {
+        await result.current({
+          title: 'About',
+          slug: 'about',
+          status: 'published',
+          publishedAt: new Date('2026-02-01T00:00:00.000Z')
+        } as any)
+      })
+
+      expect(getCommitMessage()).toBe(
+        'update published "About" [outstatic:content]'
       )
     })
   })

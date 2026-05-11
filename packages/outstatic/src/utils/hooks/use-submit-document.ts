@@ -160,7 +160,8 @@ function useSubmitDocument({
             action === 'publish' || action === 'unpublish'
               ? undefined
               : nextStatus,
-          label: data.title?.trim() || newSlug
+          label: data.title?.trim() || newSlug,
+          renamedFrom: oldSlug
         })
 
         const capi = createCommitApi({

@@ -282,7 +282,8 @@ function useSubmitSingleton({
             action === 'publish' || action === 'unpublish'
               ? undefined
               : nextStatus,
-          label: data.title?.trim() || nextSlug
+          label: data.title?.trim() || nextSlug,
+          renamedFrom: didSlugChange ? oldSlug : undefined
         })
 
         const capi = createCommitApi({
