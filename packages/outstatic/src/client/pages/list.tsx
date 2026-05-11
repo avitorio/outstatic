@@ -63,7 +63,7 @@ export default function List({ slug, title }: ListProps) {
       </div>
       {data?.documents && data.documents.length > 0 && (
         <div className="relative sm:rounded-lg">
-          <DocumentsTable />
+          <DocumentsTable key={slug} />
         </div>
       )}
       {data?.documents && data.documents.length === 0 && !isPending && (

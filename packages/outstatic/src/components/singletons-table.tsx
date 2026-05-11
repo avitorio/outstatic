@@ -19,6 +19,7 @@ import {
 import { OstDocument } from '@/types/public'
 import { useOutstatic } from '@/utils/hooks/use-outstatic'
 import { useSingletons } from '@/utils/hooks/use-singletons'
+import { publishedAtSortingFn, statusSortingFn } from '@/utils/table-sorting'
 import {
   CaretDownIcon,
   CaretSortIcon,
@@ -27,7 +28,6 @@ import {
 import {
   ColumnDef,
   ColumnFiltersState,
-  SortingFn,
   SortingState,
   VisibilityState,
   flexRender,
@@ -65,27 +65,6 @@ const formatDate = (dateString: string): string => {
     month: 'long',
     day: 'numeric'
   })
-}
-
-const statusSortingFn: SortingFn<SingletonRow> = (rowA, rowB) => {
-  const a = rowA.original
-  const b = rowB.original
-  if (a.status === b.status) {
-    return a.title.localeCompare(b.title)
-  }
-  return a.status === 'published' ? 1 : -1
-}
-
-const publishedAtSortingFn: SortingFn<SingletonRow> = (
-  rowA,
-  rowB,
-  columnId
-) => {
-  const a = rowA.getValue<string>(columnId)
-  const b = rowB.getValue<string>(columnId)
-  const dateA = a ? new Date(a).getTime() : 0
-  const dateB = b ? new Date(b).getTime() : 0
-  return dateA - dateB
 }
 
 type SingletonRowActionsProps = {

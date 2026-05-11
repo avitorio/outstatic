@@ -1,18 +1,22 @@
 import { TestWrapper } from '@/utils/tests/test-wrapper'
 import { render, screen, fireEvent } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import Cookies from 'js-cookie'
 import React from 'react'
 import { SingletonsTable } from '@/components/singletons-table'
 
+const mockRouter = {
+  push: jest.fn(),
+  replace: jest.fn(),
+  back: jest.fn(),
+  forward: jest.fn(),
+  refresh: jest.fn(),
+  prefetch: jest.fn()
+}
+
 jest.mock('next/navigation', () => ({
   useParams: jest.fn().mockReturnValue({ ost: ['singletons'] }),
-  useRouter: jest.fn().mockReturnValue({
-    push: jest.fn(),
-    replace: jest.fn(),
-    back: jest.fn(),
-    forward: jest.fn(),
-    refresh: jest.fn(),
-    prefetch: jest.fn()
-  })
+  useRouter: jest.fn(() => mockRouter)
 }))
 
 jest.mock(
@@ -69,6 +73,11 @@ jest.mock('@/utils/hooks/use-outstatic', () => ({
 }))
 
 describe('SingletonsTable', () => {
+  beforeEach(() => {
+    mockRouter.push.mockClear()
+    ;(Cookies.set as jest.Mock).mockClear()
+  })
+
   it('renders a table with provided singletons', () => {
     render(
       <TestWrapper>
@@ -155,5 +164,99 @@ describe('SingletonsTable', () => {
 
     const filterInput = screen.getByPlaceholderText(/filter titles/i)
     expect(filterInput).toBeInTheDocument()
+  })
+
+  it('opens singleton editor in a new tab when Cmd/Ctrl/Shift-clicking a row via window.open', () => {
+    const openSpy = jest.spyOn(window, 'open').mockImplementation(() => null)
+    render(
+      <TestWrapper>
+        <SingletonsTable />
+      </TestWrapper>
+    )
+
+    const row = screen
+      .getByText('About Page')
+      .closest('tr') as HTMLTableRowElement
+    fireEvent.click(row, { metaKey: true })
+    fireEvent.click(row, { ctrlKey: true })
+    fireEvent.click(row, { shiftKey: true })
+
+    expect(openSpy).toHaveBeenCalledTimes(3)
+    expect(openSpy).toHaveBeenCalledWith(
+      '/outstatic/singletons/about',
+      '_blank',
+      'noopener,noreferrer'
+    )
+    expect(mockRouter.push).not.toHaveBeenCalled()
+
+    openSpy.mockRestore()
+  })
+
+  it('opens singleton editor in a new tab when middle-clicking a row', () => {
+    const openSpy = jest.spyOn(window, 'open').mockImplementation(() => null)
+    render(
+      <TestWrapper>
+        <SingletonsTable />
+      </TestWrapper>
+    )
+
+    const row = screen
+      .getByText('Home Page')
+      .closest('tr') as HTMLTableRowElement
+    row.dispatchEvent(new MouseEvent('auxclick', { bubbles: true, button: 1 }))
+
+    expect(openSpy).toHaveBeenCalledWith(
+      '/outstatic/singletons/home',
+      '_blank',
+      'noopener,noreferrer'
+    )
+    expect(mockRouter.push).not.toHaveBeenCalled()
+
+    openSpy.mockRestore()
+  })
+
+  it('opens the delete confirmation dialog when choosing Delete document from row actions', async () => {
+    const user = userEvent.setup()
+    render(
+      <TestWrapper>
+        <SingletonsTable />
+      </TestWrapper>
+    )
+
+    const [firstActions] = screen.getAllByRole('button', {
+      name: /open row actions/i
+    })
+    await user.click(firstActions)
+
+    await user.click(screen.getByRole('menuitem', { name: /delete document/i }))
+
+    expect(screen.getByRole('alertdialog')).toBeInTheDocument()
+    expect(
+      screen.getByRole('heading', { name: /delete document/i })
+    ).toBeInTheDocument()
+  })
+
+  it('persists visible columns via js-cookie when toggling the Columns menu', async () => {
+    const user = userEvent.setup()
+    render(
+      <TestWrapper>
+        <SingletonsTable />
+      </TestWrapper>
+    )
+
+    await user.click(screen.getByRole('button', { name: /columns/i }))
+    await user.click(
+      screen.getByRole('menuitemcheckbox', { name: /published at/i })
+    )
+
+    expect(Cookies.set).toHaveBeenCalledWith(
+      'ost_singletons_fields',
+      expect.any(String)
+    )
+    const json = (Cookies.set as jest.Mock).mock.calls.find(
+      (call) => call[0] === 'ost_singletons_fields'
+    )?.[1] as string
+    const stored = JSON.parse(json) as { id: string; value: string }[]
+    expect(stored.map((c) => c.value)).not.toContain('publishedAt')
   })
 })

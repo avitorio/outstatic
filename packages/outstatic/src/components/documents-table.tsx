@@ -19,6 +19,7 @@ import { MDExtensions } from '@/types'
 import { OstDocument } from '@/types/public'
 import { useGetDocuments } from '@/utils/hooks/use-get-documents'
 import { useOutstatic } from '@/utils/hooks/use-outstatic'
+import { publishedAtSortingFn, statusSortingFn } from '@/utils/table-sorting'
 import {
   CaretDownIcon,
   CaretSortIcon,
@@ -27,7 +28,6 @@ import {
 import {
   ColumnDef,
   ColumnFiltersState,
-  SortingFn,
   SortingState,
   VisibilityState,
   flexRender,
@@ -40,26 +40,19 @@ import { sentenceCase } from 'change-case'
 import cookies from 'js-cookie'
 import { ChevronDown } from 'lucide-react'
 import { useParams, useRouter } from 'next/navigation'
-import { ReactNode, useMemo, useState } from 'react'
+import { ReactNode, useLayoutEffect, useMemo, useState } from 'react'
 
 type DocumentRow = OstDocument & { extension?: MDExtensions }
 
-const publishedAtSortingFn: SortingFn<DocumentRow> = (rowA, rowB, columnId) => {
-  const a = rowA.getValue<string>(columnId)
-  const b = rowB.getValue<string>(columnId)
-  const dateA = a ? new Date(a).getTime() : 0
-  const dateB = b ? new Date(b).getTime() : 0
-  return dateA - dateB
+const DOCUMENT_COLUMN_LABELS: Record<string, string> = {
+  title: 'Title',
+  status: 'Status',
+  slug: 'Slug',
+  publishedAt: 'Published At'
 }
 
-const statusSortingFn: SortingFn<DocumentRow> = (rowA, rowB) => {
-  const a = rowA.original
-  const b = rowB.original
-  if (a.status === b.status) {
-    return a.title.localeCompare(b.title)
-  }
-  return a.status === 'published' ? 1 : -1
-}
+const documentColumnLabel = (id: string): string =>
+  DOCUMENT_COLUMN_LABELS[id] ?? sentenceCase(id)
 
 const renderCellValue = (value: unknown): ReactNode => {
   if (Array.isArray(value)) {
@@ -76,16 +69,28 @@ const renderCellValue = (value: unknown): ReactNode => {
   return null
 }
 
-type VisibilityPreference =
-  | { type: 'default' }
-  | { type: 'custom'; visible: Set<string> }
-
-const readStoredPreference = (cookieKey: string): VisibilityPreference => {
+const readInitialVisibility = (
+  columnIds: string[],
+  cookieKey: string
+): VisibilityState => {
   const stored = JSON.parse(cookies.get(cookieKey) || 'null') as
     | { value: string }[]
     | null
-  if (!stored) return { type: 'default' }
-  return { type: 'custom', visible: new Set(stored.map((c) => c.value)) }
+  const visible = new Set(
+    stored ? stored.map((c) => c.value) : columnIds.slice(0, 5)
+  )
+  return Object.fromEntries(columnIds.map((id) => [id, visible.has(id)]))
+}
+
+const persistVisibility = (
+  visibility: VisibilityState,
+  columnIds: string[],
+  cookieKey: string
+) => {
+  const visibleColumns = columnIds
+    .filter((id) => visibility[id] !== false)
+    .map((id) => ({ id, label: documentColumnLabel(id), value: id }))
+  cookies.set(cookieKey, JSON.stringify(visibleColumns))
 }
 
 export const DocumentsTable = () => {
@@ -99,10 +104,8 @@ export const DocumentsTable = () => {
     [data?.documents]
   )
 
-  const allColumnIds = useMemo(
-    () => Array.from(data?.metadata?.keys() ?? []),
-    [data?.metadata]
-  )
+  const allColumnIds = data?.metadata ? Array.from(data.metadata.keys()) : []
+  const columnIdsKey = allColumnIds.join('\0')
 
   const cookieKey = `ost_${params.ost[0]}_fields`
 
@@ -112,19 +115,20 @@ export const DocumentsTable = () => {
 
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
 
-  const [visibilityPreference, setVisibilityPreference] =
-    useState<VisibilityPreference>(() => readStoredPreference(cookieKey))
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
 
-  const columnVisibility = useMemo<VisibilityState>(() => {
-    if (allColumnIds.length === 0) return {}
-    const visibleIds =
-      visibilityPreference.type === 'custom'
-        ? visibilityPreference.visible
-        : new Set(allColumnIds.slice(0, 5))
-    return Object.fromEntries(
-      allColumnIds.map((id) => [id, visibleIds.has(id)])
-    )
-  }, [allColumnIds, visibilityPreference])
+  useLayoutEffect(
+    () => {
+      if (allColumnIds.length === 0) {
+        setColumnVisibility({})
+        return
+      }
+      setColumnVisibility(readInitialVisibility(allColumnIds, cookieKey))
+      // `columnIdsKey` is content-based so metadata Map identity (e.g. new refs per render) does not retrigger.
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- columnIdsKey tracks column order; allColumnIds is a new array when metadata is a new Map reference each render
+    [columnIdsKey, cookieKey]
+  )
 
   const columns = useMemo<ColumnDef<DocumentRow>[]>(
     () =>
@@ -142,7 +146,7 @@ export const DocumentsTable = () => {
               className="-ml-3 h-8 data-[state=open]:bg-accent"
               onClick={() => column.toggleSorting(sorted === 'asc')}
             >
-              <span>{sentenceCase(id)}</span>
+              <span>{documentColumnLabel(id)}</span>
               <span className="ml-2" data-testid={`sort-icon-${id}`}>
                 {sorted === 'asc' ? (
                   <CaretUpIcon
@@ -172,7 +176,8 @@ export const DocumentsTable = () => {
           return renderCellValue(value)
         }
       })),
-    [allColumnIds]
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- columnIdsKey tracks allColumnIds content
+    [columnIdsKey]
   )
 
   const table = useReactTable({
@@ -182,14 +187,11 @@ export const DocumentsTable = () => {
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     onColumnVisibilityChange: (updater) => {
-      const next =
-        typeof updater === 'function' ? updater(columnVisibility) : updater
-      const visible = new Set(allColumnIds.filter((id) => next[id] !== false))
-      setVisibilityPreference({ type: 'custom', visible })
-      const visibleColumns = allColumnIds
-        .filter((id) => visible.has(id))
-        .map((id) => ({ id, label: sentenceCase(id), value: id }))
-      cookies.set(cookieKey, JSON.stringify(visibleColumns))
+      setColumnVisibility((prev) => {
+        const next = typeof updater === 'function' ? updater(prev) : updater
+        persistVisibility(next, allColumnIds, cookieKey)
+        return next
+      })
     },
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
@@ -215,7 +217,7 @@ export const DocumentsTable = () => {
               Columns <ChevronDown className="ml-2 h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="capitalize">
+          <DropdownMenuContent align="end">
             {table
               .getAllColumns()
               .filter((column) => column.getCanHide())
@@ -225,7 +227,7 @@ export const DocumentsTable = () => {
                   checked={column.getIsVisible()}
                   onCheckedChange={(value) => column.toggleVisibility(!!value)}
                 >
-                  {sentenceCase(column.id)}
+                  {documentColumnLabel(column.id)}
                 </DropdownMenuCheckboxItem>
               ))}
           </DropdownMenuContent>
@@ -273,7 +275,7 @@ export const DocumentsTable = () => {
                     }}
                   >
                     {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id}>
+                      <TableCell key={cell.id} className="whitespace-normal">
                         {flexRender(
                           cell.column.columnDef.cell,
                           cell.getContext()
@@ -281,7 +283,7 @@ export const DocumentsTable = () => {
                       </TableCell>
                     ))}
                     <TableCell
-                      className="text-right"
+                      className="text-right whitespace-normal"
                       onClick={(e) => e.stopPropagation()}
                     >
                       <DeleteDocumentButton

@@ -1,18 +1,22 @@
 import { TestWrapper } from '@/utils/tests/test-wrapper'
 import { render, screen, fireEvent } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import Cookies from 'js-cookie'
 import React from 'react'
 import { DocumentsTable } from '@/components/documents-table'
 
+const mockRouter = {
+  push: jest.fn(),
+  replace: jest.fn(),
+  back: jest.fn(),
+  forward: jest.fn(),
+  refresh: jest.fn(),
+  prefetch: jest.fn()
+}
+
 jest.mock('next/navigation', () => ({
   useParams: jest.fn().mockReturnValue({ ost: ['testCollection'] }),
-  useRouter: jest.fn().mockReturnValue({
-    push: jest.fn(),
-    replace: jest.fn(),
-    back: jest.fn(),
-    forward: jest.fn(),
-    refresh: jest.fn(),
-    prefetch: jest.fn()
-  })
+  useRouter: jest.fn(() => mockRouter)
 }))
 
 jest.mock(
@@ -76,6 +80,11 @@ jest.mock('@/utils/hooks/use-get-documents', () => ({
 }))
 
 describe('DocumentsTable', () => {
+  beforeEach(() => {
+    mockRouter.push.mockClear()
+    ;(Cookies.set as jest.Mock).mockClear()
+  })
+
   it('renders a table with provided documents', () => {
     render(
       <TestWrapper>
@@ -101,7 +110,7 @@ describe('DocumentsTable', () => {
 
     expect(screen.getByRole('button', { name: /^title$/i })).toBeInTheDocument()
     expect(
-      screen.getByRole('button', { name: /^publishedAt$/i })
+      screen.getByRole('button', { name: /^published at$/i })
     ).toBeInTheDocument()
     expect(
       screen.getByRole('button', { name: /^status$/i })
@@ -128,7 +137,7 @@ describe('DocumentsTable', () => {
 
     expect(screen.getByTestId('caret-down-icon')).toBeInTheDocument()
 
-    fireEvent.click(screen.getByRole('button', { name: /^publishedAt$/i }))
+    fireEvent.click(screen.getByRole('button', { name: /^published at$/i }))
     expect(screen.getByTestId('caret-up-icon')).toBeInTheDocument()
   })
 
@@ -165,5 +174,77 @@ describe('DocumentsTable', () => {
 
     expect(screen.getByText('Document 1')).toBeInTheDocument()
     expect(screen.queryByText('Document 2')).not.toBeInTheDocument()
+  })
+
+  it('opens the editor in a new tab when Cmd/Ctrl/Shift-clicking a row via window.open', () => {
+    const openSpy = jest.spyOn(window, 'open').mockImplementation(() => null)
+    render(
+      <TestWrapper>
+        <DocumentsTable />
+      </TestWrapper>
+    )
+
+    const row = screen
+      .getByText('Document 1')
+      .closest('tr') as HTMLTableRowElement
+
+    fireEvent.click(row, { metaKey: true })
+    fireEvent.click(row, { ctrlKey: true })
+    fireEvent.click(row, { shiftKey: true })
+
+    expect(openSpy).toHaveBeenCalledTimes(3)
+    expect(openSpy).toHaveBeenCalledWith(
+      '/outstatic/testCollection/doc1',
+      '_blank',
+      'noopener,noreferrer'
+    )
+    expect(mockRouter.push).not.toHaveBeenCalled()
+
+    openSpy.mockRestore()
+  })
+
+  it('opens the editor in a new tab when middle-clicking a row', () => {
+    const openSpy = jest.spyOn(window, 'open').mockImplementation(() => null)
+    render(
+      <TestWrapper>
+        <DocumentsTable />
+      </TestWrapper>
+    )
+
+    const row = screen
+      .getByText('Document 2')
+      .closest('tr') as HTMLTableRowElement
+    row.dispatchEvent(new MouseEvent('auxclick', { bubbles: true, button: 1 }))
+
+    expect(openSpy).toHaveBeenCalledWith(
+      '/outstatic/testCollection/doc2',
+      '_blank',
+      'noopener,noreferrer'
+    )
+    expect(mockRouter.push).not.toHaveBeenCalled()
+
+    openSpy.mockRestore()
+  })
+
+  it('persists visible columns via js-cookie when toggling the Columns menu', async () => {
+    const user = userEvent.setup()
+    render(
+      <TestWrapper>
+        <DocumentsTable />
+      </TestWrapper>
+    )
+
+    await user.click(screen.getByRole('button', { name: /columns/i }))
+    await user.click(screen.getByRole('menuitemcheckbox', { name: /^slug$/i }))
+
+    expect(Cookies.set).toHaveBeenCalledWith(
+      'ost_testCollection_fields',
+      expect.any(String)
+    )
+    const json = (Cookies.set as jest.Mock).mock.calls.find(
+      (call) => call[0] === 'ost_testCollection_fields'
+    )?.[1] as string
+    const stored = JSON.parse(json) as { id: string; value: string }[]
+    expect(stored.map((c) => c.value)).not.toContain('slug')
   })
 })
