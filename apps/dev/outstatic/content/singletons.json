@@ -1,0 +1,18 @@
+[
+  {
+    "title": "About Me",
+    "slug": "about",
+    "path": "apps/dev/outstatic/content/_singletons/about.md",
+    "directory": "apps/dev/outstatic/content/_singletons",
+    "publishedAt": "December 28, 2023",
+    "status": "published"
+  },
+  {
+    "title": "Home",
+    "slug": "home",
+    "path": "apps/dev/outstatic/content/_singletons/home.md",
+    "directory": "apps/dev/outstatic/content/_singletons",
+    "publishedAt": "March 17, 2022",
+    "status": "published"
+  }
+]
