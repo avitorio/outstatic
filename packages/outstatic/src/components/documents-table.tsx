@@ -76,6 +76,18 @@ const renderCellValue = (value: unknown): ReactNode => {
   return null
 }
 
+type VisibilityPreference =
+  | { type: 'default' }
+  | { type: 'custom'; visible: Set<string> }
+
+const readStoredPreference = (cookieKey: string): VisibilityPreference => {
+  const stored = JSON.parse(cookies.get(cookieKey) || 'null') as
+    | { value: string }[]
+    | null
+  if (!stored) return { type: 'default' }
+  return { type: 'custom', visible: new Set(stored.map((c) => c.value)) }
+}
+
 export const DocumentsTable = () => {
   const { data, refetch } = useGetDocuments()
   const { dashboardRoute } = useOutstatic()
@@ -100,24 +112,19 @@ export const DocumentsTable = () => {
 
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
 
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(
-    () => {
-      const stored = JSON.parse(cookies.get(cookieKey) || 'null') as
-        | { value: string }[]
-        | null
-      const visible = new Set(
-        stored ? stored.map((c) => c.value) : allColumnIds.slice(0, 5)
-      )
-      return Object.fromEntries(allColumnIds.map((id) => [id, visible.has(id)]))
-    }
-  )
+  const [visibilityPreference, setVisibilityPreference] =
+    useState<VisibilityPreference>(() => readStoredPreference(cookieKey))
 
-  const persistVisibility = (next: VisibilityState) => {
-    const visibleColumns = allColumnIds
-      .filter((id) => next[id] !== false)
-      .map((id) => ({ id, label: sentenceCase(id), value: id }))
-    cookies.set(cookieKey, JSON.stringify(visibleColumns))
-  }
+  const columnVisibility = useMemo<VisibilityState>(() => {
+    if (allColumnIds.length === 0) return {}
+    const visibleIds =
+      visibilityPreference.type === 'custom'
+        ? visibilityPreference.visible
+        : new Set(allColumnIds.slice(0, 5))
+    return Object.fromEntries(
+      allColumnIds.map((id) => [id, visibleIds.has(id)])
+    )
+  }, [allColumnIds, visibilityPreference])
 
   const columns = useMemo<ColumnDef<DocumentRow>[]>(
     () =>
@@ -175,11 +182,14 @@ export const DocumentsTable = () => {
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     onColumnVisibilityChange: (updater) => {
-      setColumnVisibility((prev) => {
-        const next = typeof updater === 'function' ? updater(prev) : updater
-        persistVisibility(next)
-        return next
-      })
+      const next =
+        typeof updater === 'function' ? updater(columnVisibility) : updater
+      const visible = new Set(allColumnIds.filter((id) => next[id] !== false))
+      setVisibilityPreference({ type: 'custom', visible })
+      const visibleColumns = allColumnIds
+        .filter((id) => visible.has(id))
+        .map((id) => ({ id, label: sentenceCase(id), value: id }))
+      cookies.set(cookieKey, JSON.stringify(visibleColumns))
     },
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
