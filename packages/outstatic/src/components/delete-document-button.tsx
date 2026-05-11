@@ -32,6 +32,9 @@ type DeleteDocumentButtonProps = {
   collection: string
   className?: string
   icon?: boolean
+  open?: boolean
+  onOpenChange?: (open: boolean) => void
+  showTrigger?: boolean
 }
 
 export const DeleteDocumentButton = ({
@@ -41,9 +44,18 @@ export const DeleteDocumentButton = ({
   onComplete = () => {},
   collection,
   className,
-  icon = true
+  icon = true,
+  open,
+  onOpenChange,
+  showTrigger = true
 }: DeleteDocumentButtonProps) => {
-  const [showDeleteModal, setShowDeleteModal] = useState(false)
+  const [internalOpen, setInternalOpen] = useState(false)
+  const isControlled = open !== undefined
+  const showDeleteModal = isControlled ? open : internalOpen
+  const setShowDeleteModal = (next: boolean) => {
+    if (!isControlled) setInternalOpen(next)
+    onOpenChange?.(next)
+  }
   const [deleting, setDeleting] = useState(false)
   const { repoOwner, repoSlug, repoBranch, ostContent, session } =
     useOutstatic()
@@ -139,22 +151,24 @@ export const DeleteDocumentButton = ({
 
   return (
     <>
-      <Button
-        onClick={() => setShowDeleteModal(true)}
-        type="button"
-        disabled={disabled}
-        className={className}
-        title="Delete document"
-        size={icon ? 'icon' : 'default'}
-        variant={icon ? 'ghost' : 'destructive'}
-      >
-        {icon ? <span className="sr-only">Delete document</span> : null}
-        {icon ? (
-          <Trash className="stroke-foreground" />
-        ) : (
-          <span>Delete Document</span>
-        )}
-      </Button>
+      {showTrigger ? (
+        <Button
+          onClick={() => setShowDeleteModal(true)}
+          type="button"
+          disabled={disabled}
+          className={className}
+          title="Delete document"
+          size={icon ? 'icon' : 'default'}
+          variant={icon ? 'ghost' : 'destructive'}
+        >
+          {icon ? <span className="sr-only">Delete document</span> : null}
+          {icon ? (
+            <Trash className="stroke-foreground" />
+          ) : (
+            <span>Delete Document</span>
+          )}
+        </Button>
+      ) : null}
       <AlertDialog open={showDeleteModal} onOpenChange={setShowDeleteModal}>
         <AlertDialogContent>
           <AlertDialogHeader>

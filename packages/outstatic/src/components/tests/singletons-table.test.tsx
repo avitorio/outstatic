@@ -122,32 +122,38 @@ describe('SingletonsTable', () => {
     expect(screen.getByTestId('caret-down-icon')).toBeInTheDocument()
   })
 
-  it('renders action buttons for each singleton', () => {
+  it('renders an actions trigger for each singleton', () => {
     render(
       <TestWrapper>
         <SingletonsTable />
       </TestWrapper>
     )
 
-    // Settings icons should be present (sr-only text)
-    const settingsLabels = screen.getAllByText(/edit singleton fields/i)
-    expect(settingsLabels.length).toBe(2)
-
-    // Delete buttons should be present
-    const deleteButtons = screen.getAllByRole('button', {
-      name: /delete document/i
+    const actionTriggers = screen.getAllByRole('button', {
+      name: /open row actions/i
     })
-    expect(deleteButtons.length).toBe(2)
+    expect(actionTriggers.length).toBe(2)
   })
 
-  it('renders column filter button', () => {
+  it('renders the columns dropdown trigger', () => {
     render(
       <TestWrapper>
         <SingletonsTable />
       </TestWrapper>
     )
 
-    const filterButton = screen.getByRole('button', { name: /list columns/i })
+    const filterButton = screen.getByRole('button', { name: /columns/i })
     expect(filterButton).toBeInTheDocument()
+  })
+
+  it('renders a title filter input', () => {
+    render(
+      <TestWrapper>
+        <SingletonsTable />
+      </TestWrapper>
+    )
+
+    const filterInput = screen.getByPlaceholderText(/filter titles/i)
+    expect(filterInput).toBeInTheDocument()
   })
 })

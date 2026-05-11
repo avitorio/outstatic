@@ -114,6 +114,7 @@
     "@tanstack/query-sync-storage-persister": "^5.90.20",
     "@tanstack/react-query": "^5.90.20",
     "@tanstack/react-query-persist-client": "^5.90.20",
+    "@tanstack/react-table": "^8.21.3",
     "@tiptap/core": "2.14.0",
     "@tiptap/extension-bubble-menu": "2.14.0",
     "@tiptap/extension-code-block": "2.14.0",
