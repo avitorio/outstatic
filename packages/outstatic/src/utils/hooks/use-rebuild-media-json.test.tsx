@@ -186,7 +186,7 @@ describe('useRebuildMediaJson', () => {
     })
 
     expect(mockCreateCommitApi).toHaveBeenCalledWith({
-      message: 'chore: Updates media.json',
+      message: 'update media-index [outstatic:config]',
       owner: 'owner',
       name: 'repo',
       branch: 'main',

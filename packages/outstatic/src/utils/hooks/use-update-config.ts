@@ -1,4 +1,5 @@
 import { createCommitApi } from '@/utils/create-commit-api'
+import { createOutstaticCommitMessage } from '@/utils/commit-message'
 import { useOutstatic, useLocalData } from '@/utils/hooks/use-outstatic'
 import { useCallback, useState, useEffect, useRef } from 'react'
 import { useCreateCommit } from './use-create-commit'
@@ -79,7 +80,11 @@ export function useUpdateConfig({ setLoading }: SubmitDocumentProps) {
         const owner = repoOwner || session?.user?.login || ''
 
         const commitApi = createCommitApi({
-          message: `chore: Updates config`,
+          message: createOutstaticCommitMessage({
+            scope: 'config',
+            action: 'update',
+            target: 'settings'
+          }),
           owner,
           oid: oid ?? '',
           name: repoSlug,

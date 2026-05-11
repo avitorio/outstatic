@@ -1,6 +1,7 @@
 import { useOutstatic } from '@/utils/hooks/use-outstatic'
 import { useQuery } from '@tanstack/react-query'
 import { createCommitApi } from '../create-commit-api'
+import { createOutstaticCommitMessage } from '../commit-message'
 import useOid from './use-oid'
 import { toast } from 'sonner'
 import { useCreateCommit } from './use-create-commit'
@@ -82,7 +83,11 @@ export function useSingletons(options?: UseGetSingletonsOptions) {
           }
 
           const commitApi = createCommitApi({
-            message: 'chore: Updates singletons',
+            message: createOutstaticCommitMessage({
+              scope: 'config',
+              action: 'update',
+              target: 'singletons'
+            }),
             owner: repoOwner,
             name: repoSlug,
             branch: repoBranch,

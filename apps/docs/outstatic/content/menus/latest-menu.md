@@ -35,6 +35,7 @@ publishedAt: "2026-03-13T03:00:00.000Z"
   - [API Keys](/api-keys)
   - [Roles & Permissions](/roles)
   - [Environment Variables](/environment-variables)
+  - [Commit Messages](/commit-messages)
   - [Type Generation](/docs/type-generation)
 
 - Help

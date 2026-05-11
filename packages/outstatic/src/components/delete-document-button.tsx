@@ -1,5 +1,6 @@
 import { MDExtensions } from '@/types'
 import { createCommitApi } from '@/utils/create-commit-api'
+import { createOutstaticCommitMessage } from '@/utils/commit-message'
 import { hashFromUrl } from '@/utils/hash-from-url'
 import { useCreateCommit } from '@/utils/hooks/use-create-commit'
 import { useGetMetadata } from '@/utils/hooks/use-get-metadata'
@@ -32,6 +33,8 @@ type DeleteDocumentButtonProps = {
   collection: string
   className?: string
   icon?: boolean
+  status?: 'draft' | 'published'
+  title?: string
 }
 
 export const DeleteDocumentButton = ({
@@ -41,7 +44,9 @@ export const DeleteDocumentButton = ({
   onComplete = () => {},
   collection,
   className,
-  icon = true
+  icon = true,
+  status,
+  title
 }: DeleteDocumentButtonProps) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [deleting, setDeleting] = useState(false)
@@ -73,7 +78,12 @@ export const DeleteDocumentButton = ({
       const owner = repoOwner || session?.user?.login || ''
 
       const capi = createCommitApi({
-        message: `feat(${collection}): remove ${slug}`,
+        message: createOutstaticCommitMessage({
+          scope: 'content',
+          action: 'delete',
+          status,
+          label: title?.trim() || slug
+        }),
         owner,
         oid: oid ?? '',
         name: repoSlug,

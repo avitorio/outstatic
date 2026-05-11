@@ -44,7 +44,7 @@ describe('field schema target helpers', () => {
         'edit',
         'heroTitle'
       )
-    ).toBe('feat(posts): edit heroTitle field')
+    ).toBe('update field "posts heroTitle" [outstatic:config]')
   })
 
   it('builds a singleton delete commit message', () => {
@@ -58,6 +58,6 @@ describe('field schema target helpers', () => {
         'delete',
         'heroTitle'
       )
-    ).toBe('feat(singleton/about): delete heroTitle field')
+    ).toBe('delete field "singleton/about heroTitle" [outstatic:config]')
   })
 })

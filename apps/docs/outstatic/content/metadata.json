@@ -628,6 +628,24 @@
       "slug": "deploy-an-outstatic-project-on-vercel",
       "status": "published",
       "title": "Deploy an Outstatic project on Vercel"
+    },
+    {
+      "__outstatic": {
+        "commit": "9aacf20ebd9f71e1d315815985c2aefd81421f23",
+        "hash": "0",
+        "path": "/outstatic/content/docs/commit-messages.md"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "coverImage": "",
+      "description": "Learn the scoped commit message format Outstatic uses so you can detect content, media, and config changes in Vercel, GitHub Actions, and other deployment tools.",
+      "publishedAt": "2026-05-11T03:00:00.000Z",
+      "slug": "commit-messages",
+      "status": "published",
+      "title": "Commit Messages"
     }
   ]
 }

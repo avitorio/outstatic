@@ -182,6 +182,8 @@ export const SingletonsTable = () => {
                         void refetch()
                       }}
                       collection="_singletons"
+                      status={document.status}
+                      title={document.title}
                     />
                   </div>
                 </td>

@@ -285,6 +285,8 @@ export const DocumentSettings = ({
                 router.push(`${dashboardRoute}/${singleton ? '' : collection}`)
               }}
               collection={collection}
+              status={document.status}
+              title={document.title}
               className="hover:bg-foreground/30 max-h-[2.25rem]"
             />
           )}
