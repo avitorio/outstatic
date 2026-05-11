@@ -1,6 +1,6 @@
 {
-  "commit": "da55c4a80a76a17846d35e6ca0f68ef9269b3b59",
-  "generated": "2025-06-14T19:20:16.310Z",
+  "commit": "6d0fbf616326ee9842602a6db916b4c464602969",
+  "generated": "2026-05-11T21:39:01.330Z",
   "metadata": [
     {
       "__outstatic": {
@@ -198,9 +198,9 @@
     },
     {
       "__outstatic": {
-        "commit": "0000000000000000000000000000000000000000",
-        "hash": "0",
-        "path": "outstatic/content/posts/using-mdx.mdx"
+        "commit": "6d0fbf616326ee9842602a6db916b4c464602969",
+        "hash": "3071018093",
+        "path": "/outstatic/content/posts/using-mdx.mdx"
       },
       "author": {
         "name": "Andre Vitorio",
