@@ -179,6 +179,34 @@
         }
       ],
       "title": "Welcome to Outstatic!"
+    },
+    {
+      "__outstatic": {
+        "commit": "0000000000000000000000000000000000000000",
+        "hash": "0",
+        "path": "/outstatic/content/posts/using-mdx.mdx"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "posts",
+      "coverImage": "",
+      "description": "Embed React components in your posts with the MDX block.",
+      "publishedAt": "2026-05-11T12:00:00.000Z",
+      "slug": "using-mdx",
+      "status": "published",
+      "tags": [
+        {
+          "label": "Outstatic",
+          "value": "outstatic"
+        },
+        {
+          "label": "NextJs",
+          "value": "nextJs"
+        }
+      ],
+      "title": "Using MDX"
     }
   ]
 }
