@@ -47,8 +47,8 @@ export default function Dashboard() {
         </LineBackground>
       ) : (
         <>
-          <div className="mb-8 flex h-12 items-center">
-            <h1 className="mr-12 text-2xl text-foreground">Collections</h1>
+          <div className="mb-4 flex h-12 items-center">
+            <h1 className="mr-4 text-2xl text-foreground">Collections</h1>
             {canManageCollections ? (
               <>
                 <Tooltip>
@@ -126,8 +126,8 @@ export default function Dashboard() {
             <CollectionOnboarding />
           )}
 
-          <div className="mb-8 flex h-12 items-center mt-8">
-            <h1 className="mr-12 text-2xl text-foreground">Singletons</h1>
+          <div className="mb-4 flex h-12 items-center mt-8">
+            <h1 className="mr-4 text-2xl text-foreground">Singletons</h1>
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button asChild size="icon" variant="ghost">

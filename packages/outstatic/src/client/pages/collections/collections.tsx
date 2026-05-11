@@ -29,8 +29,8 @@ export default function Collections() {
     <AdminLayout title="Collections">
       {!collections || collections.length === 0 ? (
         <LineBackground>
-          <div className="mb-8 flex h-12 items-center">
-            <h1 className="mr-12 text-2xl text-foreground">Collections</h1>
+          <div className="mb-4 flex h-12 items-center">
+            <h1 className="mr-4 text-2xl text-foreground">Collections</h1>
             {canManageCollections ? (
               <Button size="sm" onClick={() => setShowNewCollectionModal(true)}>
                 New Collection
@@ -41,8 +41,8 @@ export default function Collections() {
         </LineBackground>
       ) : (
         <>
-          <div className="mb-8 flex h-12 items-center">
-            <h1 className="mr-12 text-2xl text-foreground">Collections</h1>
+          <div className="mb-4 flex h-12 items-center">
+            <h1 className="mr-4 text-2xl text-foreground">Collections</h1>
             {canManageCollections ? (
               <Button size="sm" onClick={() => setShowNewCollectionModal(true)}>
                 New Collection

@@ -36,9 +36,9 @@ export default function List({ slug, title }: ListProps) {
 
   return (
     <AdminLayout title={title}>
-      <div className="mb-8 flex h-12 items-center">
-        <h1 className="mr-12 text-2xl">{title}</h1>
-        <div className="flex gap-2">
+      <div className="mb-4 flex h-12 items-center">
+        <h1 className="mr-4 text-2xl">{title}</h1>
+        <div className="flex gap-2 items-center">
           <Button size="sm" asChild>
             <Link href={`${dashboardRoute}/${slug}/new`}>
               New {singular(title)}
@@ -63,7 +63,7 @@ export default function List({ slug, title }: ListProps) {
       </div>
       {data?.documents && data.documents.length > 0 && (
         <div className="relative sm:rounded-lg">
-          <DocumentsTable />
+          <DocumentsTable key={slug} />
         </div>
       )}
       {data?.documents && data.documents.length === 0 && !isPending && (

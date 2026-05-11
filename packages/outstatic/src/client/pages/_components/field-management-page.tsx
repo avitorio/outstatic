@@ -62,8 +62,8 @@ export const FieldManagementPage = ({
   if (!canManage) {
     return (
       <AdminLayout title="Add Custom Fields">
-        <div className="mb-8 flex h-12 items-center">
-          <h1 className="mr-12 text-2xl">
+        <div className="mb-4 flex h-12 items-center">
+          <h1 className="mr-4 text-2xl">
             You are not authorized to access this page
           </h1>
         </div>
@@ -77,14 +77,14 @@ export const FieldManagementPage = ({
 
   return (
     <AdminLayout title="Add Custom Fields">
-      <div className="mb-8 flex h-12 items-center">
+      <div className="mb-4 flex h-12 items-center">
         <h1 className="text-2xl">{target.title} Settings</h1>
       </div>
 
       <div className="space-y-10">
         <div className="flex flex-1 flex-col space-y-6">
           <div className="flex items-center">
-            <h2 className="mr-12 text-xl">Custom Fields</h2>
+            <h2 className="mr-4 text-xl">Custom Fields</h2>
             {Object.keys(customFields).length > 0 ? (
               <Button onClick={() => setShowAddModal(true)}>
                 Add Custom Field
