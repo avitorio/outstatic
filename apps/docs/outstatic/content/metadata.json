@@ -1,6 +1,6 @@
 {
-  "commit": "2cb029d9e7efbbce56b6065de9bc6ccdc5e0b077",
-  "generated": "2026-04-15T15:54:32.540Z",
+  "commit": "a5366cb8964934c6d54510135366349d211aa07b",
+  "generated": "2026-05-11T15:05:44.794Z",
   "metadata": [
     {
       "__outstatic": {
@@ -563,24 +563,6 @@
     },
     {
       "__outstatic": {
-        "commit": "",
-        "hash": "2646798433",
-        "path": "/outstatic/content/docs/mdx-block.md"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "docs",
-      "coverImage": "",
-      "description": "Use the MDX block to preserve raw MDX, JSX, imports, exports, and HTML in the content editor.",
-      "publishedAt": "2026-05-09T03:00:00.000Z",
-      "slug": "mdx-block",
-      "status": "published",
-      "title": "MDX block"
-    },
-    {
-      "__outstatic": {
         "commit": "dbf864b5c1374bcbfac6c5d2de2553baa3dc7b5a",
         "hash": "2904592966",
         "path": "/outstatic/content/menus/latest-menu.md"
@@ -646,6 +628,24 @@
       "slug": "commit-messages",
       "status": "published",
       "title": "Commit Messages"
+    },
+    {
+      "__outstatic": {
+        "commit": "a5366cb8964934c6d54510135366349d211aa07b",
+        "hash": "194940039",
+        "path": "/outstatic/content/docs/mdx-block.md"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "coverImage": "",
+      "description": "Use the MDX block to preserve raw MDX, JSX, imports, exports, and HTML in the content editor.",
+      "publishedAt": "2026-05-09T03:00:00.000Z",
+      "slug": "mdx-block",
+      "status": "published",
+      "title": "MDX block"
     }
   ]
 }
