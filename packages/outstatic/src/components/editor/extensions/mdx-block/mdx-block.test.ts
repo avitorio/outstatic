@@ -1,11 +1,13 @@
 import { Editor } from '@tiptap/core'
+import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight'
+import { Slice } from '@tiptap/pm/model'
 import { act, render, waitFor } from '@testing-library/react'
 import { EditorContent } from '@tiptap/react'
 import { createElement } from 'react'
 import StarterKit from '@tiptap/starter-kit'
 import { Markdown } from 'tiptap-markdown'
 import { createMdxLowlight } from './mdx-lowlight'
-import { MdxBlock, getMdxOpening, isMdxEsmLine } from '.'
+import { MDX_BLOCK_TYPE, MdxBlock, getMdxOpening, isMdxEsmLine } from '.'
 import { validateMdxBlock } from './mdx-validation'
 
 const testLowlight = {
@@ -256,6 +258,71 @@ describe('MdxBlock', () => {
 
     expect(editor.state.doc.firstChild?.textContent).toBe('')
     expect(editor.storage.markdown.getMarkdown().trim()).toBe('')
+  })
+
+  it('keeps VS Code text pasted inside an MDX block as raw MDX', () => {
+    const editor = new Editor({
+      content: '',
+      extensions: [
+        Markdown.configure({
+          html: false,
+          linkify: false
+        }),
+        StarterKit.configure({
+          codeBlock: false
+        }),
+        MdxBlock.configure({
+          lowlight: mdxLowlight
+        }),
+        CodeBlockLowlight.configure({
+          lowlight: testLowlight
+        })
+      ]
+    })
+    const pasted = `<Dialog open={showMediaPathDialog} onOpenChange={setShowMediaPathDialog}>
+      <DialogContent
+        showCloseButton={false}
+        onOpenAutoFocus={(e) => e.preventDefault()}
+      >
+        <VisuallyHidden.Root>
+          <DialogTitle>Media Settings</DialogTitle>
+        </VisuallyHidden.Root>
+        <MediaSettings
+          onSettingsUpdate={() => {
+            if (callbackFunction) callbackFunction()
+
+            setShowMediaPathDialog(false)
+          }}
+        />
+      </DialogContent>
+    </Dialog>`
+    const event = {
+      clipboardData: {
+        getData: (type: string) => {
+          if (type === 'text/plain') {
+            return pasted
+          }
+
+          if (type === 'vscode-editor-data') {
+            return JSON.stringify({ mode: 'typescriptreact' })
+          }
+
+          return ''
+        }
+      }
+    } as ClipboardEvent
+
+    editor.commands.setMdxBlock()
+    editor.commands.setTextSelection(1)
+
+    const handled = editor.view.someProp('handlePaste', (handler) =>
+      handler(editor.view, event, Slice.empty)
+    )
+
+    expect(handled).toBe(true)
+    expect(editor.state.doc.firstChild?.type.name).toBe(MDX_BLOCK_TYPE)
+    expect(editor.state.doc.firstChild?.textContent).toBe(pasted)
+    expect(editor.storage.markdown.getMarkdown().trim()).toBe(pasted)
   })
 
   it('round-trips a self-closing MDX component without escaping brackets', () => {

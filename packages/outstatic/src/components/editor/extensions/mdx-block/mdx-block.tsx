@@ -1,5 +1,6 @@
 import { mergeAttributes } from '@tiptap/core'
 import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight'
+import { NodeSelection, Plugin, PluginKey } from '@tiptap/pm/state'
 import { ReactNodeViewRenderer } from '@tiptap/react'
 import type { Node as ProseMirrorNode } from '@tiptap/pm/model'
 import type MarkdownIt from 'markdown-it'
@@ -74,6 +75,49 @@ export const MdxBlock = CodeBlockLowlight.extend({
 
   addNodeView() {
     return ReactNodeViewRenderer(MdxBlockView)
+  },
+
+  addProseMirrorPlugins() {
+    return [
+      ...(this.parent?.() ?? []),
+      new Plugin({
+        key: new PluginKey('mdxBlockPasteHandler'),
+        props: {
+          handlePaste: (view, event) => {
+            const text = event.clipboardData?.getData('text/plain')
+
+            if (!text) {
+              return false
+            }
+
+            const { selection, schema } = view.state
+            const normalizedText = text.replace(/\r\n?/g, '\n')
+            const textNode = schema.text(normalizedText)
+            const transaction = view.state.tr
+
+            if (
+              selection.$from.parent.type === this.type &&
+              selection.$from.sameParent(selection.$to)
+            ) {
+              transaction.replaceSelectionWith(textNode, true)
+            } else if (
+              selection instanceof NodeSelection &&
+              selection.node.type === this.type
+            ) {
+              transaction.replaceSelectionWith(this.type.create(null, textNode))
+            } else {
+              return false
+            }
+
+            transaction.setMeta('paste', true)
+            transaction.setMeta('uiEvent', 'paste')
+            view.dispatch(transaction.scrollIntoView())
+
+            return true
+          }
+        }
+      })
+    ]
   },
 
   addStorage() {
