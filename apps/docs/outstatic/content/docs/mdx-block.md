@@ -14,8 +14,13 @@ The **MDX** block lets you add raw MDX source to a document without Outstatic es
 
 Use it when your content needs component tags, HTML, imports, or exports that should be saved exactly as written:
 
-```mdx
+```javascript
 import Callout from '@/components/Callout'
+```
+
+Or
+
+```xml
 
 <Callout title="Tip">
   This content is saved as raw MDX.
@@ -28,22 +33,22 @@ In the content editor, type `/` to open the slash command menu and choose **MDX*
 
 The block behaves like a code block: you edit the raw source directly, and Outstatic preserves the source when loading and saving the document.
 
+## Import statements
+
+Import statements should be added to the top of the editor, so they can also be saved on top of your MDX files.
+
 ## What the block supports
 
 The MDX block is designed for block-level MDX snippets, including:
 
-- `import` and `export` statements
+- `import` statements
 - JSX component tags such as `<Callout />`
 - multiline JSX with children
 - raw HTML such as `<section>` or `<div>`
 
 For example:
 
-```mdx
-export const metadata = {
-  layout: 'docs'
-}
-
+```xml
 <section className="feature">
   <h2>Custom layout</h2>
 </section>
@@ -57,7 +62,7 @@ Validation is only a warning. It does not block editing or saving, and the sourc
 
 Current validation checks for:
 
-- complete `import` and `export` statements
+- complete `import` statements
 - JSX/HTML blocks that start with an opening tag or fragment
 - matching closing tags for multiline JSX/HTML
 
