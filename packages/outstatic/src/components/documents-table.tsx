@@ -282,6 +282,8 @@ export const DocumentsTable = () => {
                           void refetch()
                         }}
                         collection={params.ost[0]}
+                        status={document.status}
+                        title={document.title}
                       />
                     </TableCell>
                   </TableRow>

@@ -2,6 +2,7 @@ import { GET_COLLECTIONS } from '@/graphql/queries/collections'
 import { useOutstatic } from '@/utils/hooks/use-outstatic'
 import { useQuery } from '@tanstack/react-query'
 import { createCommitApi } from '../create-commit-api'
+import { createOutstaticCommitMessage } from '../commit-message'
 import useOid from './use-oid'
 import { toast } from 'sonner'
 import { useCreateCommit } from './use-create-commit'
@@ -114,7 +115,11 @@ export function useCollections(options?: UseCollectionsOptions) {
           }
 
           const commitApi = createCommitApi({
-            message: 'chore: Updates collections',
+            message: createOutstaticCommitMessage({
+              scope: 'config',
+              action: 'update',
+              target: 'collections'
+            }),
             owner: repoOwner,
             name: repoSlug,
             branch: repoBranch,

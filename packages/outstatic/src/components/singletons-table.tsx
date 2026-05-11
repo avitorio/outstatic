@@ -90,12 +90,16 @@ const publishedAtSortingFn: SortingFn<SingletonRow> = (
 
 type SingletonRowActionsProps = {
   slug: string
+  title: string
+  status: 'draft' | 'published'
   dashboardRoute: string
   onDeleteComplete: () => void
 }
 
 const SingletonRowActions = ({
   slug,
+  title,
+  status,
   dashboardRoute,
   onDeleteComplete
 }: SingletonRowActionsProps) => {
@@ -134,6 +138,8 @@ const SingletonRowActions = ({
         open={deleteOpen}
         onOpenChange={setDeleteOpen}
         onComplete={onDeleteComplete}
+        status={status}
+        title={title}
       />
     </>
   )
@@ -341,6 +347,8 @@ export const SingletonsTable = () => {
                     >
                       <SingletonRowActions
                         slug={row.original.slug}
+                        title={row.original.title}
+                        status={row.original.status}
                         dashboardRoute={dashboardRoute}
                         onDeleteComplete={() => {
                           void refetch()

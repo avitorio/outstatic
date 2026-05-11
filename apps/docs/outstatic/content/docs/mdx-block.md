@@ -1,0 +1,72 @@
+---
+title: "MDX block"
+status: "published"
+author:
+  name: "Andre Vitorio"
+  picture: "https://avatars.githubusercontent.com/u/1417109?v=4"
+slug: "mdx-block"
+description: "Use the MDX block to preserve raw MDX, JSX, imports, exports, and HTML in the content editor."
+coverImage: ""
+publishedAt: "2026-05-09T03:00:00.000Z"
+---
+
+The **MDX** block lets you add raw MDX source to a document without Outstatic escaping it or trying to render it inside the editor.
+
+Use it when your content needs component tags, HTML, imports, or exports that should be saved exactly as written:
+
+```mdx
+import Callout from '@/components/Callout'
+
+<Callout title="Tip">
+  This content is saved as raw MDX.
+</Callout>
+```
+
+## Adding an MDX block
+
+In the content editor, type `/` to open the slash command menu and choose **MDX**.
+
+The block behaves like a code block: you edit the raw source directly, and Outstatic preserves the source when loading and saving the document.
+
+## What the block supports
+
+The MDX block is designed for block-level MDX snippets, including:
+
+- `import` and `export` statements
+- JSX component tags such as `<Callout />`
+- multiline JSX with children
+- raw HTML such as `<section>` or `<div>`
+
+For example:
+
+```mdx
+export const metadata = {
+  layout: 'docs'
+}
+
+<section className="feature">
+  <h2>Custom layout</h2>
+</section>
+```
+
+## Validation warnings
+
+Outstatic does lightweight validation while you edit an MDX block. If the block looks incomplete, a warning icon appears in the top-left corner of the block. Hover or focus the icon to see the warning.
+
+Validation is only a warning. It does not block editing or saving, and the source still round-trips exactly as typed.
+
+Current validation checks for:
+
+- complete `import` and `export` statements
+- JSX/HTML blocks that start with an opening tag or fragment
+- matching closing tags for multiline JSX/HTML
+
+Outstatic does not compile or render the MDX in the editor, so it does not validate component existence, import paths, or framework-specific runtime behavior.
+
+## Rendering MDX on your site
+
+The MDX block only controls how content is edited and saved in Outstatic. Your website still needs an MDX pipeline to render the saved content.
+
+For a Next.js site, that usually means rendering the document content with your preferred MDX tooling, such as `mdx-bundler`, `next-mdx-remote`, or `@mdx-js/mdx`.
+
+If your frontend treats document content as plain Markdown or HTML, raw MDX components will not render as React components automatically.

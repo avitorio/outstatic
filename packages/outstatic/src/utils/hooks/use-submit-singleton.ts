@@ -1,5 +1,10 @@
 import { CustomFieldsType, Document, FileType, MDExtensions } from '@/types'
 import { createCommitApi } from '@/utils/create-commit-api'
+import {
+  createOutstaticCommitMessage,
+  deriveContentCommitAction,
+  type OutstaticContentStatus
+} from '@/utils/commit-message'
 import { useOutstatic } from '@/utils/hooks/use-outstatic'
 import { stringifyMetadata } from '@/utils/metadata/stringify'
 import { LoginSession } from '@/utils/auth/auth'
@@ -258,10 +263,31 @@ function useSubmitSingleton({
         const oid = await fetchOid()
         const owner = repoOwner || session?.user?.login || ''
 
+        const rawStatus = documentMetadata?.status
+        const previousStatus: OutstaticContentStatus | undefined =
+          rawStatus === 'draft' || rawStatus === 'published'
+            ? rawStatus
+            : undefined
+        const nextStatus = data.status
+        const action = deriveContentCommitAction(
+          isNew,
+          previousStatus,
+          nextStatus
+        )
+
+        const message = createOutstaticCommitMessage({
+          scope: 'content',
+          action,
+          status:
+            action === 'publish' || action === 'unpublish'
+              ? undefined
+              : nextStatus,
+          label: data.title?.trim() || nextSlug,
+          renamedFrom: didSlugChange ? oldSlug : undefined
+        })
+
         const capi = createCommitApi({
-          message: isNew
-            ? `feat(singleton): create ${nextSlug}`
-            : `chore: Updates singleton ${nextSlug}`,
+          message,
           owner,
           oid: oid ?? '',
           name: repoSlug,

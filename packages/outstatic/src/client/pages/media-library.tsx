@@ -37,6 +37,7 @@ import { SpinnerIcon } from '@/components/ui/outstatic/spinner-icon'
 import { Card, CardContent } from '@/components/ui/shadcn/card'
 import { API_MEDIA_PATH } from '@/utils/constants'
 import { createCommitApi } from '@/utils/create-commit-api'
+import { createOutstaticCommitMessage } from '@/utils/commit-message'
 import { hashFromUrl } from '@/utils/hash-from-url'
 import { useCreateCommit } from '@/utils/hooks/use-create-commit'
 import { useGetMediaFiles } from '@/utils/hooks/use-get-media-files'
@@ -507,7 +508,12 @@ export default function MediaLibrary() {
         const owner = repoOwner || session?.user?.login || ''
 
         const capi = createCommitApi({
-          message: `chore: remove ${file.filename}`,
+          message: createOutstaticCommitMessage({
+            scope: 'media',
+            action: 'delete',
+            target: 'media',
+            label: file.filename
+          }),
           owner,
           oid,
           name: repoSlug,
@@ -597,10 +603,15 @@ export default function MediaLibrary() {
       const selectedCount = selectedPaths.length
 
       const capi = createCommitApi({
-        message:
-          selectedCount === 1
-            ? `chore: remove ${mediaByPath.get(selectedPaths[0])?.filename ?? 'media file'}`
-            : `chore: remove ${selectedCount} media files`,
+        message: createOutstaticCommitMessage({
+          scope: 'media',
+          action: 'delete',
+          target: 'media',
+          label:
+            selectedCount === 1
+              ? (mediaByPath.get(selectedPaths[0])?.filename ?? 'media file')
+              : `${selectedCount} files`
+        }),
         owner,
         oid,
         name: repoSlug,

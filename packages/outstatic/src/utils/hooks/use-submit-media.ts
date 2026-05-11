@@ -1,5 +1,6 @@
 import { FileType } from '@/types'
 import { createCommitApi } from '@/utils/create-commit-api'
+import { createOutstaticCommitMessage } from '@/utils/commit-message'
 import { hashFromUrl } from '@/utils/hash-from-url'
 import { useOutstatic } from '@/utils/hooks/use-outstatic'
 import { stringifyMedia } from '@/utils/metadata/stringify'
@@ -52,10 +53,13 @@ function useSubmitMedia() {
         }
 
         const capi = createCommitApi({
-          message:
-            files.length === 1
-              ? `chore: Adds ${files[0].filename}`
-              : `chore: Adds ${files.length} media files`,
+          message: createOutstaticCommitMessage({
+            scope: 'media',
+            action: 'upload',
+            target: 'media',
+            label:
+              files.length === 1 ? files[0].filename : `${files.length} files`
+          }),
           owner,
           oid: oid ?? '',
           name: repoSlug,

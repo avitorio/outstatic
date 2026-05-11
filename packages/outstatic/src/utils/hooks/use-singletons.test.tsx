@@ -190,7 +190,7 @@ describe('useSingletons', () => {
     expect(refetchDocumentsMock).toHaveBeenCalledTimes(1)
     expect(fetchOidMock).toHaveBeenCalledTimes(1)
     expect(mockCreateCommitApi).toHaveBeenCalledWith({
-      message: 'chore: Updates singletons',
+      message: 'update singletons [outstatic:config]',
       owner: 'acme',
       name: 'site',
       branch: 'main',

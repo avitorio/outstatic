@@ -11,6 +11,7 @@ import {
 import { Label } from '@/components/ui/shadcn/label'
 import { useEffect, useState } from 'react'
 import { createCommitApi } from '@/utils/create-commit-api'
+import { createOutstaticCommitMessage } from '@/utils/commit-message'
 import { hashFromUrl } from '@/utils/hash-from-url'
 import { useCreateCommit } from '@/utils/hooks/use-create-commit'
 import { useGetMetadata } from '@/utils/hooks/use-get-metadata'
@@ -68,7 +69,12 @@ function DeleteCollectionModal({
       const owner = repoOwner || session?.user?.login || ''
 
       const capi = createCommitApi({
-        message: `feat(${collection.slug}): remove ${collection.slug}`,
+        message: createOutstaticCommitMessage({
+          scope: 'config',
+          action: 'delete',
+          target: 'collection',
+          label: collection.slug
+        }),
         owner,
         oid: oid ?? '',
         name: repoSlug,

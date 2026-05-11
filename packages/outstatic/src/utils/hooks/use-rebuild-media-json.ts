@@ -5,6 +5,7 @@ import useOid from './use-oid'
 import { useOutstatic } from './use-outstatic'
 import { useCreateCommit } from './use-create-commit'
 import { createCommitApi } from '../create-commit-api'
+import { createOutstaticCommitMessage } from '../commit-message'
 import { hashFromUrl } from '../hash-from-url'
 import { stringifyMedia } from '../metadata/stringify'
 import { MediaItem, MediaSchema, MediaSourceConfig } from '../metadata/types'
@@ -260,7 +261,11 @@ export const useRebuildMediaJson = () => {
       }
 
       const commitApi = createCommitApi({
-        message: 'chore: Updates media.json',
+        message: createOutstaticCommitMessage({
+          scope: 'config',
+          action: 'update',
+          target: 'media-index'
+        }),
         owner: repoOwner || session?.user?.login || '',
         name: repoSlug,
         branch: repoBranch,

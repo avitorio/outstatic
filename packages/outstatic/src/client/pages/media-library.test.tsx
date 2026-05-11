@@ -577,7 +577,9 @@ describe('MediaLibrary', () => {
 
     const input = mockMutateAsync.mock.calls[0][0]
 
-    expect(input.message.headline).toBe('chore: remove 2 media files')
+    expect(input.message.headline).toBe(
+      'delete media "2 files" [outstatic:media]'
+    )
     expect(input.fileChanges.deletions).toEqual([
       { path: 'public/uploads/hero.png' },
       { path: 'public/documents/report.pdf' }

@@ -1,16 +1,14 @@
-type ErrorWithResponse = {
+type ErrorWithOptionalResponse = {
   response?: {
     status?: number
     message?: unknown
   }
 }
 
-export function isGithubCredentialsError(
-  error: unknown
-): error is ErrorWithResponse {
+export function isGithubCredentialsError(error: unknown): boolean {
   const response =
     typeof error === 'object' && error !== null && 'response' in error
-      ? (error as ErrorWithResponse).response
+      ? (error as ErrorWithOptionalResponse).response
       : undefined
 
   const status = response?.status

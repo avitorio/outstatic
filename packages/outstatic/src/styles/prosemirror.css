@@ -130,80 +130,129 @@
   display: none;
 }
 
-.ProseMirror .hljs-comment,
-.ProseMirror .hljs-quote,
-.ProseMirror code > div {
-  color: #ccc;
-}
+/*!
+  Theme: GitHub Dark Dimmed
+  Description: Dark dimmed theme as seen on github.com
+  Author: github.com
+  Maintainer: @Hirse
+  Updated: 2021-05-15
+
+  Colors taken from GitHub's CSS
+*/
 
 .ProseMirror .hljs {
-  display: block;
-  overflow-x: auto;
-  padding: 0.5em;
-  background: #282a36;
+  color: #adbac7;
+  background: #22272e;
+}
+
+.ProseMirror .hljs-doctag,
+.ProseMirror .hljs-keyword,
+.ProseMirror .hljs-meta .hljs-keyword,
+.ProseMirror .hljs-template-tag,
+.ProseMirror .hljs-template-variable,
+.ProseMirror .hljs-type,
+.ProseMirror .hljs-variable.language_ {
+  /* prettylights-syntax-keyword */
+  color: #f47067;
+}
+
+.ProseMirror .hljs-title,
+.ProseMirror .hljs-title.class_,
+.ProseMirror .hljs-title.class_.inherited__,
+.ProseMirror .hljs-title.function_ {
+  /* prettylights-syntax-entity */
+  color: #dcbdfb;
+}
+
+.ProseMirror .hljs-attr,
+.ProseMirror .hljs-attribute,
+.ProseMirror .hljs-literal,
+.ProseMirror .hljs-meta,
+.ProseMirror .hljs-number,
+.ProseMirror .hljs-operator,
+.ProseMirror .hljs-variable,
+.ProseMirror .hljs-selector-attr,
+.ProseMirror .hljs-selector-class,
+.ProseMirror .hljs-selector-id {
+  /* prettylights-syntax-constant */
+  color: #6cb6ff;
+}
+
+.ProseMirror .hljs-regexp,
+.ProseMirror .hljs-string,
+.ProseMirror .hljs-meta .hljs-string {
+  /* prettylights-syntax-string */
+  color: #96d0ff;
 }
 
 .ProseMirror .hljs-built_in,
-.ProseMirror .hljs-selector-tag,
-.ProseMirror .hljs-section,
-.ProseMirror .hljs-link {
-  color: #8be9fd;
-}
-
-.ProseMirror .hljs-keyword {
-  color: #ff79c6;
-}
-
-.ProseMirror .hljs,
-.ProseMirror .hljs-subst {
-  color: #f8f8f2;
-}
-
-.ProseMirror .hljs-title,
-.ProseMirror .hljs-attr,
-.ProseMirror .hljs-meta-keyword {
-  font-style: italic;
-  color: #50fa7b;
-}
-
-.ProseMirror .hljs-string,
-.ProseMirror .hljs-meta,
-.ProseMirror .hljs-name,
-.ProseMirror .hljs-type,
-.ProseMirror .hljs-symbol,
-.ProseMirror .hljs-bullet,
-.ProseMirror .hljs-addition,
-.ProseMirror .hljs-variable,
-.ProseMirror .hljs-template-tag,
-.ProseMirror .hljs-template-variable {
-  color: #f1fa8c;
+.ProseMirror .hljs-symbol {
+  /* prettylights-syntax-variable */
+  color: #f69d50;
 }
 
 .ProseMirror .hljs-comment,
-.ProseMirror .hljs-quote,
-.ProseMirror .hljs-deletion {
-  color: #6272a4;
+.ProseMirror .hljs-code,
+.ProseMirror .hljs-formula {
+  /* prettylights-syntax-comment */
+  color: #768390;
 }
 
-.ProseMirror .hljs-keyword,
-.ProseMirror .hljs-selector-tag,
-.ProseMirror .hljs-literal,
-.ProseMirror .hljs-title,
-.ProseMirror .hljs-section,
-.ProseMirror .hljs-doctag,
-.ProseMirror .hljs-type,
 .ProseMirror .hljs-name,
-.ProseMirror .hljs-strong {
+.ProseMirror .hljs-quote,
+.ProseMirror .hljs-selector-tag,
+.ProseMirror .hljs-selector-pseudo {
+  /* prettylights-syntax-entity-tag */
+  color: #8ddb8c;
+}
+
+.ProseMirror .hljs-subst {
+  /* prettylights-syntax-storage-modifier-import */
+  color: #adbac7;
+}
+
+.ProseMirror .hljs-section {
+  /* prettylights-syntax-markup-heading */
+  color: #316dca;
   font-weight: bold;
 }
 
-.ProseMirror .hljs-literal,
-.ProseMirror .hljs-number {
-  color: #bd93f9;
+.ProseMirror .hljs-bullet {
+  /* prettylights-syntax-markup-list */
+  color: #eac55f;
 }
 
 .ProseMirror .hljs-emphasis {
+  /* prettylights-syntax-markup-italic */
+  color: #adbac7;
   font-style: italic;
+}
+
+.ProseMirror .hljs-strong {
+  /* prettylights-syntax-markup-bold */
+  color: #adbac7;
+  font-weight: bold;
+}
+
+.ProseMirror .hljs-addition {
+  /* prettylights-syntax-markup-inserted */
+  color: #b4f1b4;
+  background-color: #1b4721;
+}
+
+.ProseMirror .hljs-deletion {
+  /* prettylights-syntax-markup-deleted */
+  color: #ffd8d3;
+  background-color: #78191b;
+}
+
+.ProseMirror .hljs-char.escape_,
+.ProseMirror .hljs-link,
+.ProseMirror .hljs-params,
+.ProseMirror .hljs-property,
+.ProseMirror .hljs-punctuation,
+.ProseMirror .hljs-tag {
+  /* purposely ignored */
 }
 
 .ProseMirror code:not(:where([data-code-type='code-block'])) {

@@ -6,6 +6,7 @@ import useOid from './use-oid'
 import { useOutstatic } from './use-outstatic'
 import { useCreateCommit } from './use-create-commit'
 import { createCommitApi } from '../create-commit-api'
+import { createOutstaticCommitMessage } from '../commit-message'
 import { hashFromUrl } from '../hash-from-url'
 import { chunk } from '../chunk'
 import { stringifyMetadata } from '../metadata/stringify'
@@ -189,7 +190,11 @@ export const useRebuildMetadata = ({
           }
         }
         const commitApi = createCommitApi({
-          message: 'chore: Updates metadata DB',
+          message: createOutstaticCommitMessage({
+            scope: 'config',
+            action: 'update',
+            target: 'metadata'
+          }),
           owner: repoOwner,
           name: repoSlug,
           branch: repoBranch,

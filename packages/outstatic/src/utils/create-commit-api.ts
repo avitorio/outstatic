@@ -1,5 +1,6 @@
 import { CreateCommitOnBranchInput, FileChanges } from '@/graphql/gql/graphql'
 import { encode as toBase64 } from 'js-base64'
+import { createOutstaticCommitMessage } from '@/utils/commit-message'
 
 export interface CommitAPI {
   createInput: () => CreateCommitOnBranchInput
@@ -25,7 +26,13 @@ export const createCommitApi = ({
 }: CreateCommitOptions): CommitAPI => {
   const additions: FileChanges['additions'] = []
   const deletions: FileChanges['deletions'] = []
-  let commitMessage = message ?? 'chore: Outstatic commit'
+  let commitMessage =
+    message ??
+    createOutstaticCommitMessage({
+      scope: 'config',
+      action: 'update',
+      target: 'settings'
+    })
   let commitBody = 'Automatically created by Outstatic'
 
   const setMessage = (title: string, body?: string) => {

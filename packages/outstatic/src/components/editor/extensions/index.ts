@@ -19,6 +19,10 @@ import { ToggleClass } from '@/components/editor/extensions/toggle-class'
 import { Mathematics } from '@/components/editor/extensions/mathematics'
 import LinkParser from '@/components/editor/extensions/link-parser'
 import { AIHighlight } from '@/components/editor/extensions/ai-higlight'
+import {
+  MdxBlock,
+  createMdxLowlight
+} from '@/components/editor/extensions/mdx-block'
 import { cn } from '@/utils/ui'
 
 export type TiptapExtensionsOptions = {
@@ -113,6 +117,9 @@ export const getTiptapExtensions = (options: TiptapExtensionsOptions) =>
       katexOptions: {
         throwOnError: false
       }
+    }),
+    MdxBlock.configure({
+      lowlight: createMdxLowlight(createLowlight(common))
     }),
     Image.extend({
       renderHTML({
