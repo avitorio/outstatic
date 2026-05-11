@@ -598,9 +598,7 @@ describe('useSubmitSingleton', () => {
         } as any)
       })
 
-      expect(getCommitMessage()).toBe(
-        'publish "About Us" [outstatic:content]'
-      )
+      expect(getCommitMessage()).toBe('publish "About Us" [outstatic:content]')
     })
 
     it('emits an unpublish message when transitioning from published to draft', async () => {
