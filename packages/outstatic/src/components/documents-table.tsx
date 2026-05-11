@@ -173,6 +173,11 @@ export const DocumentsTable = () => {
           if (id === 'status') {
             return <span data-testid="status-cell">{value as ReactNode}</span>
           }
+          if (id === 'title') {
+            return (
+              <span className="font-semibold">{renderCellValue(value)}</span>
+            )
+          }
           return renderCellValue(value)
         }
       })),

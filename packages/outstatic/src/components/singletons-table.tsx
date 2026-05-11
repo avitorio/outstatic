@@ -208,7 +208,15 @@ export const SingletonsTable = () => {
             </Button>
           )
         },
-        cell: ({ getValue }) => (getValue() as string) ?? null
+        cell: ({ getValue }) => {
+          const value = (getValue() as string) ?? null
+          if (id === 'title') {
+            return value !== null ? (
+              <span className="font-semibold">{value}</span>
+            ) : null
+          }
+          return value
+        }
       })),
     []
   )
