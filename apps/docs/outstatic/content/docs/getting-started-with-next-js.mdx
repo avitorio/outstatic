@@ -1,6 +1,6 @@
 ---
 title: "Getting started with Next.js"
-publishedAt: "2026-02-20T03:00:00.000Z"
+publishedAt: "2026-05-14T03:00:00.000Z"
 status: "published"
 author:
   name: "Andre Vitorio"
@@ -8,7 +8,7 @@ author:
 slug: "getting-started-with-next-js"
 ---
 
-**Recommended:** Starting with Outstatic 2.0, install the standalone Outstatic Dashboard. [Follow the quick tutorial](/using-outstatic-for-markdown-content), then connect it to your app’s GitHub repository to manage content. Your main app can still use [Outstatic’s data fetching utilities](/fetching-data) as usual.
+**Recommended:** Starting with Outstatic 2.0, we recommend keeping your Outstatic Dashboard separate from your Next.js install. [Follow the quick tutorial](/using-outstatic-for-markdown-content), then connect it to your app’s GitHub repository to manage content. Your main Next.js app can still use [Outstatic’s data fetching utilities](/fetching-data) as usual.
 
 If you prefer to run Outstatic inside your Next.js app, follow the steps below.
 
@@ -38,11 +38,11 @@ bun add outstatic
 
 ### Create the dashboard routes
 
-Add these three files under `/app`. We recommend placing Outstatic in its own route group so layouts don’t interfere with your main app. In this example, the route group is `(cms)` and the dashboard lives at `/outstatic`.
+Add these three files under `/app`. We recommend placing Outstatic in its own route group so root layouts are kept separate and won’t interfere with each other. In this example, the route group is `(cms)` and the dashboard lives at `/outstatic`.
 
 #### `/app/(cms)/layout.tsx`
 
-```javascript
+```typescript
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html suppressHydrationWarning>
@@ -54,7 +54,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
 #### `/app/(cms)/outstatic/[[...ost]]/page.tsx`
 
-```javascript
+```typescript
 import 'outstatic/outstatic.css'
 import { Outstatic } from 'outstatic'
 import { OstClient } from 'outstatic/client'
@@ -71,7 +71,7 @@ export default async function Page({
 
 #### `/app/api/outstatic/[[...ost]]/route.ts` (outside the route group)
 
-```javascript
+```typescript
 import { OutstaticApi } from 'outstatic'
 
 export const GET = OutstaticApi.GET
