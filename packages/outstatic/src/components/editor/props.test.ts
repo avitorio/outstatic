@@ -48,25 +48,51 @@ const createEditorView = ({ empty }: { empty: boolean }) => {
 }
 
 describe('TiptapEditorProps', () => {
-  it('turns selected text into a link when a URL is pasted', () => {
-    const event = createClipboardEvent('example.com')
-    const { view, mark, transaction } = createEditorView({ empty: false })
+  it.each([
+    ['example.com', 'https://example.com/'],
+    ['https://example.com', 'https://example.com']
+  ])(
+    'turns selected text into a link when %s is pasted',
+    (clipboardText, href) => {
+      const event = createClipboardEvent(clipboardText)
+      const { view, mark, transaction } = createEditorView({ empty: false })
 
-    const handled = TiptapEditorProps.handlePaste?.(
-      view as any,
-      event,
-      null as any
-    )
+      const handled = TiptapEditorProps.handlePaste?.(
+        view as any,
+        event,
+        null as any
+      )
 
-    expect(handled).toBe(true)
-    expect(event.preventDefault).toHaveBeenCalledTimes(1)
-    expect(mark.create).toHaveBeenCalledWith({ href: 'https://example.com/' })
-    expect(transaction.addMark).toHaveBeenCalledWith(3, 12, {
-      attrs: { href: 'https://example.com/' }
-    })
-    expect(transaction.scrollIntoView).toHaveBeenCalledTimes(1)
-    expect(view.dispatch).toHaveBeenCalledWith(transaction)
-  })
+      expect(handled).toBe(true)
+      expect(event.preventDefault).toHaveBeenCalledTimes(1)
+      expect(mark.create).toHaveBeenCalledWith({ href })
+      expect(transaction.addMark).toHaveBeenCalledWith(3, 12, {
+        attrs: { href }
+      })
+      expect(transaction.scrollIntoView).toHaveBeenCalledTimes(1)
+      expect(view.dispatch).toHaveBeenCalledWith(transaction)
+    }
+  )
+
+  it.each(['hello world', 'javascript:alert(1)'])(
+    'falls back to normal paste behavior when selected text receives %s',
+    (clipboardText) => {
+      const event = createClipboardEvent(clipboardText)
+      const { view, mark, transaction } = createEditorView({ empty: false })
+
+      const handled = TiptapEditorProps.handlePaste?.(
+        view as any,
+        event,
+        null as any
+      )
+
+      expect(handled).toBe(false)
+      expect(event.preventDefault).not.toHaveBeenCalled()
+      expect(mark.create).not.toHaveBeenCalled()
+      expect(transaction.addMark).not.toHaveBeenCalled()
+      expect(view.dispatch).not.toHaveBeenCalled()
+    }
+  )
 
   it('falls back to normal paste behavior when the selection is empty', () => {
     const event = createClipboardEvent('https://example.com')

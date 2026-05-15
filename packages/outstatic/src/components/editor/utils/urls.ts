@@ -1,8 +1,10 @@
+const ALLOWED_PROTOCOLS = ['http:', 'https:', 'mailto:']
+
 export function isValidUrl(url: string) {
   try {
     // Check if the URL is absolute
-    new URL(url)
-    return true
+    const parsedUrl = new URL(url)
+    return ALLOWED_PROTOCOLS.includes(parsedUrl.protocol)
   } catch (_e) {
     // If not, check if it's a valid relative path
     return url.startsWith('/')
@@ -18,4 +20,5 @@ export function getUrlFromString(str: string) {
   } catch (_e) {
     return null
   }
+  return null
 }

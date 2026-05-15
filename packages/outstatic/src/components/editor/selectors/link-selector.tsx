@@ -11,6 +11,8 @@ import { useRef } from 'react'
 import { EditorBubbleButton } from '@/components/editor/ui/editor-bubble-button'
 import { getUrlFromString } from '@/components/editor/utils/urls'
 
+export { getUrlFromString, isValidUrl } from '@/components/editor/utils/urls'
+
 interface LinkSelectorProps {
   open: boolean
   onOpenChange: (open: boolean) => void
