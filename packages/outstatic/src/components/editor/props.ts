@@ -1,5 +1,6 @@
 import { EditorProps } from '@tiptap/pm/view'
 import { addImage } from './utils/add-image'
+import { getUrlFromString } from './utils/urls'
 
 export const TiptapEditorProps: EditorProps = {
   attributes: {
@@ -35,6 +36,19 @@ export const TiptapEditorProps: EditorProps = {
           return true
         }
       }
+    }
+    const url = getUrlFromString(
+      event.clipboardData?.getData('text/plain')?.trim() || ''
+    )
+    const link = view.state.schema.marks.link
+    const { empty, from, to } = view.state.selection
+    if (url && link && !empty) {
+      event.preventDefault()
+      const transaction = view.state.tr
+        .addMark(from, to, link.create({ href: url }))
+        .scrollIntoView()
+      view.dispatch(transaction)
+      return true
     }
     return false
   },
