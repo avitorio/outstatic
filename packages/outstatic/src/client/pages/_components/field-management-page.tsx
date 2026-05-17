@@ -81,14 +81,8 @@ const SortableFieldCard = ({
             {field.title}
             <span className="absolute top-0 bottom-0 left-12 right-16"></span>
           </span>
-          <Badge variant="outline">
-            {field.fieldType}
-          </Badge>
-          {field.required ? (
-            <Badge>
-              required
-            </Badge>
-          ) : null}
+          <Badge variant="outline">{field.fieldType}</Badge>
+          {field.required ? <Badge>required</Badge> : null}
         </button>
         <Button
           variant="ghost"
