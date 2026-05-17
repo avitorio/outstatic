@@ -28,6 +28,7 @@ import { DeleteDocumentButton } from '@/components/delete-document-button'
 import { useSingletons } from '@/utils/hooks/use-singletons'
 import { useRouter } from 'next/navigation'
 import { reorderCustomFields } from './field-reorder'
+import { Badge } from '@/components/ui/shadcn/badge'
 
 type SortableFieldCardProps = {
   name: string
@@ -64,7 +65,7 @@ const SortableFieldCard = ({
       style={style}
       className={`transition-[border-color,box-shadow] duration-150 hover:border-gray-500 ${isDragging ? 'z-10 border-gray-500 shadow-md' : ''}`}
     >
-      <CardContent className="relative flex items-center justify-between max-w-sm gap-2">
+      <CardContent className="relative flex items-center justify-between max-w-sm gap-2 pl-2">
         <Button
           variant="ghost"
           size="icon"
@@ -77,17 +78,17 @@ const SortableFieldCard = ({
           <GripVertical className="w-5 h-5" />
         </Button>
         <button type="button" onClick={onEdit} className="text-left flex-1">
-          <span className="block text-xl cursor-pointer font-bold tracking-tight text-foreground/90 capitalize hover:text-foreground mb-2">
+          <span className="block cursor-pointer font-bold tracking-tight text-foreground/90 capitalize hover:text-foreground mb-2">
             {field.title}
             <span className="absolute top-0 bottom-0 left-12 right-16"></span>
           </span>
-          <span className="bg-blue-100 text-blue-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded">
+          <Badge variant="outline">
             {field.fieldType}
-          </span>
+          </Badge>
           {field.required ? (
-            <span className="bg-red-100 text-red-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded">
+            <Badge>
               required
-            </span>
+            </Badge>
           ) : null}
         </button>
         <Button
@@ -241,8 +242,8 @@ export const FieldManagementPage = ({
         <div className="flex flex-1 flex-col space-y-6">
           <div className="relative max-w-5xl w-full">
             {hasPendingOrderChange ? (
-              <div className="absolute inset-x-0 -top-[10px] z-20 flex flex-col gap-3 rounded-md bg-background py-3 sm:flex-row sm:items-center sm:justify-between">
-                <p className="text-sm">Custom fields order modified.</p>
+              <div className="absolute inset-x-0 -top-[10px] z-20 flex flex-col gap-3 rounded-md bg-background py-3 sm:flex-row sm:items-center sm:justify-between border border-border px-4">
+                <p className="text-base">Custom fields order modified.</p>
                 <div className="flex items-center gap-2">
                   <Button
                     variant="ghost"
