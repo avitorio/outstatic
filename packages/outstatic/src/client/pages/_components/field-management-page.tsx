@@ -1,5 +1,4 @@
-import type { DragEndEvent } from '@dnd-kit/core'
-import { DndContext } from '@dnd-kit/core'
+import { type DragEndEvent, DndContext } from '@dnd-kit/core'
 import { restrictToParentElement } from '@dnd-kit/modifiers'
 import { SortableContext, useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
@@ -75,7 +74,7 @@ const SortableFieldCard = ({
           {...attributes}
           {...listeners}
         >
-          <GripVertical className="w-5 h-5" />
+          <GripVertical className="w-6 h-6" />
         </Button>
         <button type="button" onClick={onEdit} className="text-left flex-1">
           <span className="block cursor-pointer font-bold tracking-tight text-foreground/90 capitalize hover:text-foreground mb-2">
@@ -98,7 +97,7 @@ const SortableFieldCard = ({
           type="button"
           onClick={onDelete}
         >
-          <span className="sr-only">Delete content</span>
+          <span className="sr-only">Delete {field.title}</span>
           <Trash className="w-6 h-6" />
         </Button>
       </CardContent>
