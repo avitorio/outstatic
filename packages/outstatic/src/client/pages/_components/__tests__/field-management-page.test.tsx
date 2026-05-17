@@ -1,11 +1,13 @@
 import type { ReactNode } from 'react'
-import { render, screen } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { FieldManagementPage } from '../field-management-page'
 
 const mockUseFieldSchema = jest.fn()
 const mockUseCollections = jest.fn()
 const mockUseOutstatic = jest.fn()
 const mockUseSingletons = jest.fn()
+const mockCommitFieldSchema = jest.fn()
+let mockDragEndEvent: any = null
 
 jest.mock('@/utils/hooks/use-field-schema', () => ({
   useFieldSchema: () => mockUseFieldSchema()
@@ -18,6 +20,56 @@ jest.mock('@/utils/hooks', () => ({
 
 jest.mock('@/utils/hooks/use-singletons', () => ({
   useSingletons: () => mockUseSingletons()
+}))
+
+jest.mock('@/utils/hooks/use-field-schema-commit', () => ({
+  useFieldSchemaCommit: () => mockCommitFieldSchema
+}))
+
+jest.mock('@dnd-kit/core', () => ({
+  DndContext: ({
+    children,
+    onDragEnd
+  }: {
+    children: ReactNode
+    onDragEnd: (event: any) => void
+  }) => (
+    <div>
+      {children}
+      <button
+        type="button"
+        onClick={() => {
+          if (mockDragEndEvent) {
+            onDragEnd(mockDragEndEvent)
+          }
+        }}
+      >
+        Trigger drag end
+      </button>
+    </div>
+  )
+}))
+
+jest.mock('@dnd-kit/modifiers', () => ({
+  restrictToParentElement: jest.fn()
+}))
+
+jest.mock('@dnd-kit/sortable', () => ({
+  SortableContext: ({ children }: { children: ReactNode }) => <>{children}</>,
+  useSortable: () => ({
+    attributes: {},
+    listeners: {},
+    setNodeRef: jest.fn(),
+    transform: null,
+    transition: undefined,
+    isDragging: false
+  }),
+  arrayMove: (array: unknown[], oldIndex: number, newIndex: number) => {
+    const next = [...array]
+    const [moved] = next.splice(oldIndex, 1)
+    next.splice(newIndex, 0, moved)
+    return next
+  }
 }))
 
 jest.mock('next/navigation', () => ({
@@ -75,6 +127,7 @@ jest.mock('@/components/delete-document-button', () => ({
 describe('<FieldManagementPage />', () => {
   beforeEach(() => {
     jest.clearAllMocks()
+    mockDragEndEvent = null
 
     mockUseFieldSchema.mockReturnValue({
       data: { properties: {} },
@@ -94,6 +147,8 @@ describe('<FieldManagementPage />', () => {
     mockUseOutstatic.mockReturnValue({
       dashboardRoute: '/outstatic'
     })
+
+    mockCommitFieldSchema.mockResolvedValue(true)
   })
 
   it('does not block singleton pages on a disabled collections query', () => {
@@ -127,5 +182,209 @@ describe('<FieldManagementPage />', () => {
     )
 
     expect(screen.getByText('Loading')).toBeInTheDocument()
+  })
+
+  it('renders reorder controls when custom fields exist', () => {
+    mockUseFieldSchema.mockReturnValue({
+      data: {
+        properties: {
+          title: {
+            title: 'Title',
+            fieldType: 'String',
+            dataType: 'string'
+          },
+          featured: {
+            title: 'Featured',
+            fieldType: 'Boolean',
+            dataType: 'boolean'
+          }
+        }
+      },
+      isLoading: false
+    })
+
+    render(
+      <FieldManagementPage
+        target={{ kind: 'collection', slug: 'posts', title: 'Posts' }}
+        emptyStateSubject="collection"
+      />
+    )
+
+    expect(
+      screen.getByRole('button', { name: 'Reorder Title' })
+    ).toBeInTheDocument()
+    expect(
+      screen.getByRole('button', { name: 'Reorder Featured' })
+    ).toBeInTheDocument()
+  })
+
+  it('does not commit reorder on no-op drag end', () => {
+    mockUseFieldSchema.mockReturnValue({
+      data: {
+        properties: {
+          title: {
+            title: 'Title',
+            fieldType: 'String',
+            dataType: 'string'
+          },
+          featured: {
+            title: 'Featured',
+            fieldType: 'Boolean',
+            dataType: 'boolean'
+          }
+        }
+      },
+      isLoading: false
+    })
+
+    mockDragEndEvent = {
+      active: { id: 'title' },
+      over: { id: 'title' }
+    }
+
+    render(
+      <FieldManagementPage
+        target={{ kind: 'collection', slug: 'posts', title: 'Posts' }}
+        emptyStateSubject="collection"
+      />
+    )
+
+    fireEvent.click(screen.getByRole('button', { name: 'Trigger drag end' }))
+
+    expect(mockCommitFieldSchema).not.toHaveBeenCalled()
+  })
+
+  it('marks field order as modified and waits to commit until saving', async () => {
+    mockUseFieldSchema.mockReturnValue({
+      data: {
+        properties: {
+          title: {
+            title: 'Title',
+            fieldType: 'String',
+            dataType: 'string'
+          },
+          featured: {
+            title: 'Featured',
+            fieldType: 'Boolean',
+            dataType: 'boolean'
+          }
+        }
+      },
+      isLoading: false
+    })
+
+    mockDragEndEvent = {
+      active: { id: 'featured' },
+      over: { id: 'title' }
+    }
+
+    render(
+      <FieldManagementPage
+        target={{ kind: 'collection', slug: 'posts', title: 'Posts' }}
+        emptyStateSubject="collection"
+      />
+    )
+
+    const beforeOrder = screen
+      .getAllByRole('button', { name: /Reorder / })
+      .map((button) => button.getAttribute('aria-label'))
+    expect(beforeOrder).toEqual(['Reorder Title', 'Reorder Featured'])
+
+    fireEvent.click(screen.getByRole('button', { name: 'Trigger drag end' }))
+
+    await waitFor(() => {
+      const afterOrder = screen
+        .getAllByRole('button', { name: /Reorder / })
+        .map((button) => button.getAttribute('aria-label'))
+
+      expect(afterOrder).toEqual(['Reorder Featured', 'Reorder Title'])
+    })
+    expect(
+      screen.getByText('Custom fields order modified.')
+    ).toBeInTheDocument()
+    expect(mockCommitFieldSchema).not.toHaveBeenCalled()
+
+    fireEvent.click(screen.getByRole('button', { name: 'Save changes' }))
+
+    await waitFor(() => {
+      expect(mockCommitFieldSchema).toHaveBeenCalledWith({
+        customFields: {
+          featured: {
+            title: 'Featured',
+            fieldType: 'Boolean',
+            dataType: 'boolean'
+          },
+          title: {
+            title: 'Title',
+            fieldType: 'String',
+            dataType: 'string'
+          }
+        },
+        action: 'reorder',
+        fieldName: 'field order'
+      })
+    })
+
+    await waitFor(() => {
+      expect(
+        screen.queryByText('Custom fields order modified.')
+      ).not.toBeInTheDocument()
+    })
+  })
+
+  it('cancels pending order changes without committing', async () => {
+    mockUseFieldSchema.mockReturnValue({
+      data: {
+        properties: {
+          title: {
+            title: 'Title',
+            fieldType: 'String',
+            dataType: 'string'
+          },
+          featured: {
+            title: 'Featured',
+            fieldType: 'Boolean',
+            dataType: 'boolean'
+          }
+        }
+      },
+      isLoading: false
+    })
+
+    mockDragEndEvent = {
+      active: { id: 'featured' },
+      over: { id: 'title' }
+    }
+
+    render(
+      <FieldManagementPage
+        target={{ kind: 'collection', slug: 'posts', title: 'Posts' }}
+        emptyStateSubject="collection"
+      />
+    )
+
+    fireEvent.click(screen.getByRole('button', { name: 'Trigger drag end' }))
+
+    await waitFor(() => {
+      const pendingOrder = screen
+        .getAllByRole('button', { name: /Reorder / })
+        .map((button) => button.getAttribute('aria-label'))
+
+      expect(pendingOrder).toEqual(['Reorder Featured', 'Reorder Title'])
+    })
+
+    fireEvent.click(screen.getByRole('button', { name: 'Cancel' }))
+
+    await waitFor(() => {
+      const restoredOrder = screen
+        .getAllByRole('button', { name: /Reorder / })
+        .map((button) => button.getAttribute('aria-label'))
+
+      expect(restoredOrder).toEqual(['Reorder Title', 'Reorder Featured'])
+    })
+    expect(mockCommitFieldSchema).not.toHaveBeenCalled()
+    expect(
+      screen.queryByText('Custom fields order modified.')
+    ).not.toBeInTheDocument()
   })
 })

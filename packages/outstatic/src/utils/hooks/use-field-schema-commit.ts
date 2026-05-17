@@ -17,13 +17,15 @@ import {
 const actionLabels = {
   add: 'Adding',
   edit: 'Editing',
-  delete: 'Deleting'
+  delete: 'Deleting',
+  reorder: 'Reordering'
 } as const
 
 const actionPastTense = {
   add: 'added',
   edit: 'edited',
-  delete: 'deleted'
+  delete: 'deleted',
+  reorder: 'reordered'
 } as const
 
 export const useFieldSchemaCommit = (target: FieldSchemaTarget) => {
