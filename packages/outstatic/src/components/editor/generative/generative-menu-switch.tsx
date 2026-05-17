@@ -45,7 +45,7 @@ const GenerativeMenuSwitch = ({
           <Fragment>
             <EditorBubbleButton
               name="ask-ai"
-              className="gap-1 rounded-none text-slate-900"
+              className="gap-1 rounded-none text-foreground"
               onClick={() => {
                 if (hasAIProviderKey || isPro) {
                   onOpenChange(true)
@@ -57,7 +57,7 @@ const GenerativeMenuSwitch = ({
                 }
               }}
             >
-              <Magic className="h-5 w-5" />
+              <Magic className="h-5 w-5 text-foreground" />
               Ask AI
             </EditorBubbleButton>
             {children}

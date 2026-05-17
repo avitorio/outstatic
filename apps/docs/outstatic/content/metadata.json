@@ -1,6 +1,6 @@
 {
-  "commit": "0edad2eb00370e2f7a26e3dbd408fbde4cec1b23",
-  "generated": "2026-05-11T15:12:40.919Z",
+  "commit": "55e890832fe7fe6464708598b9b8443c9f8c73bb",
+  "generated": "2026-05-14T18:34:47.637Z",
   "metadata": [
     {
       "__outstatic": {
@@ -105,22 +105,6 @@
       "slug": "faqs",
       "status": "published",
       "title": "FAQs"
-    },
-    {
-      "__outstatic": {
-        "commit": "75249fd22c738a4854bb45219ca037940ae38ee8",
-        "hash": "319291943",
-        "path": "/outstatic/content/docs/getting-started-with-next-js.mdx"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "docs",
-      "publishedAt": "2026-02-20T03:00:00.000Z",
-      "slug": "getting-started-with-next-js",
-      "status": "published",
-      "title": "Getting started with Next.js"
     },
     {
       "__outstatic": {
@@ -312,22 +296,6 @@
       "slug": "v1.4-menu",
       "status": "published",
       "title": "v1.4 Menu"
-    },
-    {
-      "__outstatic": {
-        "commit": "e2fc80edab88258fa434d96f2f41734e5ecb9860",
-        "hash": "1806955757",
-        "path": "/outstatic/content/docs/using-outstatic-for-markdown-content.mdx"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "docs",
-      "publishedAt": "2026-02-20T03:00:00.000Z",
-      "slug": "using-outstatic-for-markdown-content",
-      "status": "published",
-      "title": "Using Outstatic for Markdown content"
     },
     {
       "__outstatic": {
@@ -613,8 +581,42 @@
     },
     {
       "__outstatic": {
-        "commit": "9aacf20ebd9f71e1d315815985c2aefd81421f23",
-        "hash": "0",
+        "commit": "0edad2eb00370e2f7a26e3dbd408fbde4cec1b23",
+        "hash": "194940039",
+        "path": "/outstatic/content/docs/mdx-block.md"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "coverImage": "",
+      "description": "Use the MDX block to preserve raw MDX, JSX, imports, exports, and HTML in the content editor.",
+      "publishedAt": "2026-05-09T03:00:00.000Z",
+      "slug": "mdx-block",
+      "status": "published",
+      "title": "MDX block"
+    },
+    {
+      "__outstatic": {
+        "commit": "6609ff92e38106cf6bc019187091e962110b179e",
+        "hash": "1263676656",
+        "path": "/outstatic/content/docs/using-outstatic-for-markdown-content.mdx"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "publishedAt": "2026-02-20T03:00:00.000Z",
+      "slug": "using-outstatic-for-markdown-content",
+      "status": "published",
+      "title": "Using Outstatic for Markdown content"
+    },
+    {
+      "__outstatic": {
+        "commit": "0654289c5d6b61b8de8d6cf3dc115863cfffeabc",
+        "hash": "672549693",
         "path": "/outstatic/content/docs/commit-messages.md"
       },
       "author": {
@@ -631,21 +633,19 @@
     },
     {
       "__outstatic": {
-        "commit": "0edad2eb00370e2f7a26e3dbd408fbde4cec1b23",
-        "hash": "194940039",
-        "path": "/outstatic/content/docs/mdx-block.md"
+        "commit": "55e890832fe7fe6464708598b9b8443c9f8c73bb",
+        "hash": "2994204830",
+        "path": "/outstatic/content/docs/getting-started-with-next-js.mdx"
       },
       "author": {
         "name": "Andre Vitorio",
         "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
       },
       "collection": "docs",
-      "coverImage": "",
-      "description": "Use the MDX block to preserve raw MDX, JSX, imports, exports, and HTML in the content editor.",
-      "publishedAt": "2026-05-09T03:00:00.000Z",
-      "slug": "mdx-block",
+      "publishedAt": "2026-05-14T03:00:00.000Z",
+      "slug": "getting-started-with-next-js",
       "status": "published",
-      "title": "MDX block"
+      "title": "Getting started with Next.js"
     }
   ]
 }
