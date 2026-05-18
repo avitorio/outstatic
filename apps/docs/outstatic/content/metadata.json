@@ -1,6 +1,6 @@
 {
-  "commit": "f6ad34e98ae3150e90fa4447f0cdd9edec142122",
-  "generated": "2026-05-18T15:31:09.917Z",
+  "commit": "eef3625205813e18fa09c5ea707bb189643aa802",
+  "generated": "2026-05-18T15:42:41.207Z",
   "metadata": [
     {
       "__outstatic": {
@@ -633,8 +633,8 @@
     },
     {
       "__outstatic": {
-        "commit": "f6ad34e98ae3150e90fa4447f0cdd9edec142122",
-        "hash": "493660344",
+        "commit": "eef3625205813e18fa09c5ea707bb189643aa802",
+        "hash": "1510743011",
         "path": "/outstatic/content/docs/deploy-a-starter-outstatic-website-on-vercel.mdx"
       },
       "author": {
@@ -642,7 +642,7 @@
         "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
       },
       "collection": "docs",
-      "publishedAt": "2026-03-31T03:00:00.000Z",
+      "publishedAt": "2026-05-18T03:00:00.000Z",
       "slug": "deploy-a-starter-outstatic-website-on-vercel",
       "status": "published",
       "title": "Deploy a starter Outstatic website on Vercel"
