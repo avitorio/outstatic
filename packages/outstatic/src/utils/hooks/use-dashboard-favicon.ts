@@ -21,7 +21,6 @@ export const OUTSTATIC_FAVICON_DATA_URI = `data:image/svg+xml,${encodeURICompone
 
 export const OUTSTATIC_FAVICON_LINK_ID = 'outstatic-dashboard-favicon'
 
-
 const ICON_SELECTOR =
   'link[rel="icon"], link[rel="shortcut icon"], link[rel="apple-touch-icon"]'
 
