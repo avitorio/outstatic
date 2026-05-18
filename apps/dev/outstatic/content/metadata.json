@@ -32,33 +32,21 @@
     },
     {
       "__outstatic": {
-        "commit": "caf14a522b836a832926851fe57aff85329380bd",
-        "hash": "854149956",
-        "path": "/outstatic/content/posts/test-post.mdx"
+        "commit": "70f53378cbe8e23e9e155748f6102aa28a8a4067",
+        "hash": "3240539151",
+        "path": "/outstatic/content/projects/outsidesimulator.md"
       },
       "author": {
         "name": "Andre Vitorio",
         "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
       },
-      "collection": "posts",
-      "publishedAt": "2024-11-11T14:22:52.515Z",
-      "slug": "test-post",
+      "collection": "projects",
+      "coverImage": "/images/outside-simulator-I5MD.webp",
+      "description": "Escape to the Outdoors, Virtually.",
+      "publishedAt": "2024-01-08T06:11:26.000Z",
+      "slug": "outsidesimulator",
       "status": "published",
-      "tags": [
-        {
-          "label": "Outstatic",
-          "value": "outstatic"
-        },
-        {
-          "label": "NextJs",
-          "value": "nextJs"
-        },
-        {
-          "label": "GitHub",
-          "value": "gitHub"
-        }
-      ],
-      "title": "Test Post"
+      "title": "OutsideSimulator.com"
     },
     {
       "__outstatic": {
@@ -187,7 +175,7 @@
       "collection": "posts",
       "coverImage": "/images/welcome-to-outstatic-g3Mz.png",
       "description": "Thank you for choosing Outstatic to create your website! We look forward to helping you every step of the way.",
-      "publishedAt": "2024-02-10T01:41:03.484Z",
+      "publishedAt": "2030-02-10T01:41:03.484Z",
       "slug": "welcome-to-outstatic",
       "status": "published",
       "tags": [
