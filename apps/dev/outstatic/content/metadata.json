@@ -1,6 +1,6 @@
 {
   "commit": "",
-  "generated": "Mon, 11 May 2026 21:37:56 GMT",
+  "generated": "Tue, 12 May 2026 23:52:21 GMT",
   "metadata": [
     {
       "__outstatic": {
@@ -32,17 +32,37 @@
     },
     {
       "__outstatic": {
-        "commit": "caf14a522b836a832926851fe57aff85329380bd",
-        "hash": "854149956",
-        "path": "/outstatic/content/posts/test-post.mdx"
+        "commit": "70f53378cbe8e23e9e155748f6102aa28a8a4067",
+        "hash": "3240539151",
+        "path": "/outstatic/content/projects/outsidesimulator.md"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "projects",
+      "coverImage": "/images/outside-simulator-I5MD.webp",
+      "description": "Escape to the Outdoors, Virtually.",
+      "publishedAt": "2024-01-08T06:11:26.000Z",
+      "slug": "outsidesimulator",
+      "status": "published",
+      "title": "OutsideSimulator.com"
+    },
+    {
+      "__outstatic": {
+        "commit": "556f38c12082dda8bded724747fe6ccfe6a13051",
+        "hash": "1352934563",
+        "path": "/outstatic/content/posts/the-next-steps-for-outstatic.md"
       },
       "author": {
         "name": "Andre Vitorio",
         "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
       },
       "collection": "posts",
-      "publishedAt": "2024-11-11T14:22:52.515Z",
-      "slug": "test-post",
+      "coverImage": "/images/1500x500-Q3ND.webp",
+      "description": "The plan was simple: start a blog and write about my journey as a developer. But that's exactly the problem, I'm a developer. ",
+      "publishedAt": "2024-01-02T14:41:29.000Z",
+      "slug": "the-next-steps-for-outstatic",
       "status": "published",
       "tags": [
         {
@@ -58,35 +78,7 @@
           "value": "gitHub"
         }
       ],
-      "title": "Test Post"
-    },
-    {
-      "__outstatic": {
-        "commit": "f0521e738471b1b2b3ad2814dfa2f2e7a35c9201",
-        "hash": "4134932838",
-        "path": "/outstatic/content/posts/welcome-to-outstatic.md"
-      },
-      "author": {
-        "name": "Andre Vitorio",
-        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
-      },
-      "collection": "posts",
-      "coverImage": "/images/welcome-to-outstatic-g3Mz.png",
-      "description": "Thank you for choosing Outstatic to create your website! We look forward to helping you every step of the way.",
-      "publishedAt": "2024-02-10T01:41:03.484Z",
-      "slug": "welcome-to-outstatic",
-      "status": "published",
-      "tags": [
-        {
-          "label": "Outstatic",
-          "value": "outstatic"
-        },
-        {
-          "label": "NextJs",
-          "value": "nextJs"
-        }
-      ],
-      "title": "Welcome to Outstatic!"
+      "title": "Far Out - The Next Steps for Outstatic "
     },
     {
       "__outstatic": {
@@ -144,19 +136,19 @@
     },
     {
       "__outstatic": {
-        "commit": "556f38c12082dda8bded724747fe6ccfe6a13051",
-        "hash": "1352934563",
-        "path": "/outstatic/content/posts/the-next-steps-for-outstatic.md"
+        "commit": "0e4f285e73e4cc800464393cac0363b89e885ac8",
+        "hash": "3071018093",
+        "path": "/outstatic/content/posts/using-mdx.mdx"
       },
       "author": {
         "name": "Andre Vitorio",
         "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
       },
       "collection": "posts",
-      "coverImage": "/images/1500x500-Q3ND.webp",
-      "description": "The plan was simple: start a blog and write about my journey as a developer. But that's exactly the problem, I'm a developer. ",
-      "publishedAt": "2024-01-02T14:41:29.000Z",
-      "slug": "the-next-steps-for-outstatic",
+      "coverImage": "",
+      "description": "Embed React components in your posts with the MDX block.",
+      "publishedAt": "2026-05-11T12:00:00.000Z",
+      "slug": "using-mdx",
       "status": "published",
       "tags": [
         {
@@ -166,13 +158,37 @@
         {
           "label": "NextJs",
           "value": "nextJs"
-        },
-        {
-          "label": "GitHub",
-          "value": "gitHub"
         }
       ],
-      "title": "Far Out - The Next Steps for Outstatic "
+      "title": "Using MDX"
+    },
+    {
+      "__outstatic": {
+        "commit": "f0521e738471b1b2b3ad2814dfa2f2e7a35c9201",
+        "hash": "4134932838",
+        "path": "/outstatic/content/posts/welcome-to-outstatic.md"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "posts",
+      "coverImage": "/images/welcome-to-outstatic-g3Mz.png",
+      "description": "Thank you for choosing Outstatic to create your website! We look forward to helping you every step of the way.",
+      "publishedAt": "2030-02-10T01:41:03.484Z",
+      "slug": "welcome-to-outstatic",
+      "status": "published",
+      "tags": [
+        {
+          "label": "Outstatic",
+          "value": "outstatic"
+        },
+        {
+          "label": "NextJs",
+          "value": "nextJs"
+        }
+      ],
+      "title": "Welcome to Outstatic!"
     }
   ]
 }

@@ -20,6 +20,9 @@ jest.mock('@/utils/hooks/use-singletons', () => ({
 jest.mock('@/utils/hooks/use-permissions', () => ({
   usePermissions: () => mockUsePermissions()
 }))
+jest.mock('@/utils/hooks/use-field-schema-commit', () => ({
+  useFieldSchemaCommit: () => jest.fn()
+}))
 jest.mock('next/navigation', () => ({
   useRouter: jest.fn(() => ({
     push: jest.fn(),
