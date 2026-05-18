@@ -78,6 +78,27 @@
     },
     {
       "__outstatic": {
+        "commit": "0000000000000000000000000000000000000000",
+        "hash": "0",
+        "path": "/outstatic/content/posts/using-mdx.mdx"
+      },
+      "author": {
+        "name": "Andre Vitorio"
+      },
+      "collection": "posts",
+      "coverImage": "/images/jupiter-spaceship.png",
+      "description": "Embed React components in your posts with the MDX block.",
+      "publishedAt": "2026-05-11T12:00:00.000Z",
+      "slug": "using-mdx",
+      "status": "published",
+      "title": "Using MDX",
+      "tags": [
+        { "label": "Outstatic", "value": "outstatic" },
+        { "label": "NextJs", "value": "nextJs" }
+      ]
+    },
+    {
+      "__outstatic": {
         "commit": "aa1f387e5c66347e675bed0862b070d8946c95f4",
         "hash": "1055690014",
         "path": "/outstatic/content/projects/couple-pizza.md"
