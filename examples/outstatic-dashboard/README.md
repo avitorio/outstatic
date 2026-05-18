@@ -123,23 +123,23 @@ Your deployed dashboard can now manage content for your GitHub repository.
 
 ### Recommended
 
-| Variable | Required | Description |
-| --- | --- | --- |
-| `OUTSTATIC_API_KEY` | Yes | API key generated from Outstatic. Used to authenticate your dashboard with Outstatic-managed GitHub access. |
+| Variable            | Required | Description                                                                                                 |
+| ------------------- | -------- | ----------------------------------------------------------------------------------------------------------- |
+| `OUTSTATIC_API_KEY` | Yes      | API key generated from Outstatic. Used to authenticate your dashboard with Outstatic-managed GitHub access. |
 
 ### Advanced GitHub OAuth setup
 
 You can also configure direct GitHub OAuth access manually.
 
-| Variable | Required | Description |
-| --- | --- | --- |
-| `OST_GITHUB_ID` | Optional | GitHub OAuth app client ID |
-| `OST_GITHUB_SECRET` | Optional | GitHub OAuth app client secret |
-| `OST_REPO_SLUG` | Optional | Repository name where content is stored |
-| `OST_REPO_BRANCH` | Optional | Branch where content is saved. Defaults to `main` |
-| `OST_REPO_OWNER` | Optional | GitHub owner or organization. Defaults to the logged-in user |
-| `OST_CONTENT_PATH` | Optional | Folder where content is stored. Defaults to `outstatic/content` |
-| `OST_MONOREPO_PATH` | Optional | Path to the app inside a monorepo, for example `apps/web` |
+| Variable            | Required | Description                                                     |
+| ------------------- | -------- | --------------------------------------------------------------- |
+| `OST_GITHUB_ID`     | Optional | GitHub OAuth app client ID                                      |
+| `OST_GITHUB_SECRET` | Optional | GitHub OAuth app client secret                                  |
+| `OST_REPO_SLUG`     | Optional | Repository name where content is stored                         |
+| `OST_REPO_BRANCH`   | Optional | Branch where content is saved. Defaults to `main`               |
+| `OST_REPO_OWNER`    | Optional | GitHub owner or organization. Defaults to the logged-in user    |
+| `OST_CONTENT_PATH`  | Optional | Folder where content is stored. Defaults to `outstatic/content` |
+| `OST_MONOREPO_PATH` | Optional | Path to the app inside a monorepo, for example `apps/web`       |
 
 ## Using Outstatic with any static framework
 
