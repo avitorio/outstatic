@@ -21,12 +21,15 @@ import LinkParser from '@/components/editor/extensions/link-parser'
 import { AIHighlight } from '@/components/editor/extensions/ai-higlight'
 import {
   MdxBlock,
+  OutstaticMdxBlock,
   createMdxLowlight
 } from '@/components/editor/extensions/mdx-block'
 import { cn } from '@/utils/ui'
+import { Block } from '@/utils/metadata/types'
 
 export type TiptapExtensionsOptions = {
   onShowUpgradeDialog: UpgradeDialogHandler
+  getBlocks?: () => Block[]
 }
 
 export const getTiptapExtensions = (options: TiptapExtensionsOptions) =>
@@ -101,7 +104,8 @@ export const getTiptapExtensions = (options: TiptapExtensionsOptions) =>
       }
     }),
     createSlashCommand({
-      onShowUpgradeDialog: options.onShowUpgradeDialog
+      onShowUpgradeDialog: options.onShowUpgradeDialog,
+      getBlocks: options.getBlocks
     }),
     TiptapUnderline,
     Highlight.configure({
@@ -117,6 +121,9 @@ export const getTiptapExtensions = (options: TiptapExtensionsOptions) =>
       katexOptions: {
         throwOnError: false
       }
+    }),
+    OutstaticMdxBlock.configure({
+      lowlight: createMdxLowlight(createLowlight(common))
     }),
     MdxBlock.configure({
       lowlight: createMdxLowlight(createLowlight(common))

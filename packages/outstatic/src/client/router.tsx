@@ -12,6 +12,7 @@ import SingletonFields from './pages/singleton-fields'
 import List from './pages/list'
 import Settings from './pages/settings'
 import MediaLibrary from './pages/media-library'
+import BlockLibrary from './pages/block-library'
 import { EditorProvider } from '@/components/editor/editor-context'
 import { UpgradeDialogProvider } from '@/components/ui/outstatic/upgrade-dialog-context'
 import Dashboard from './pages/dashboard'
@@ -19,6 +20,7 @@ import Dashboard from './pages/dashboard'
 const DEFAULT_PAGES: { [key: string]: ReactElement | undefined } = {
   settings: <Settings />,
   'media-library': <MediaLibrary />,
+  'block-library': <BlockLibrary />,
   collections: <Collections />,
   singletons: <Singletons />
 }

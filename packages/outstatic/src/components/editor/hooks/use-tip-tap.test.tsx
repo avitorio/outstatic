@@ -1,8 +1,10 @@
 import { act, render } from '@testing-library/react'
+import Placeholder from '@tiptap/extension-placeholder'
 import { useEditor } from '@tiptap/react'
 import { useCompletion } from '@ai-sdk/react'
 import { useDebouncedCallback } from 'use-debounce'
 import { useOutstatic } from '@/utils/hooks/use-outstatic'
+import { useGetBlocks } from '@/utils/hooks/use-get-blocks'
 import { useUpgradeDialog } from '@/components/ui/outstatic/upgrade-dialog-context'
 import { getPrevText } from '@/components/editor/utils/get-prev-text'
 import { useTipTap } from './use-tip-tap'
@@ -34,6 +36,10 @@ jest.mock('@/utils/hooks/use-outstatic', () => ({
   useOutstatic: jest.fn()
 }))
 
+jest.mock('@/utils/hooks/use-get-blocks', () => ({
+  useGetBlocks: jest.fn()
+}))
+
 jest.mock('@/components/ui/outstatic/upgrade-dialog-context', () => ({
   useUpgradeDialog: jest.fn()
 }))
@@ -53,8 +59,10 @@ const mockUseEditor = useEditor as unknown as jest.Mock
 const mockUseCompletion = useCompletion as unknown as jest.Mock
 const mockUseDebouncedCallback = useDebouncedCallback as unknown as jest.Mock
 const mockUseOutstatic = useOutstatic as unknown as jest.Mock
+const mockUseGetBlocks = useGetBlocks as unknown as jest.Mock
 const mockUseUpgradeDialog = useUpgradeDialog as unknown as jest.Mock
 const mockGetPrevText = getPrevText as unknown as jest.Mock
+const mockPlaceholderConfigure = Placeholder.configure as unknown as jest.Mock
 
 function HookHarness({ setValue }: { setValue: jest.Mock }) {
   useTipTap({ setValue })
@@ -96,6 +104,10 @@ describe('useTipTap AI gating', () => {
       hasAIProviderKey: false,
       isPro: false,
       basePath: '/outstatic'
+    })
+
+    mockUseGetBlocks.mockReturnValue({
+      data: null
     })
 
     mockUseUpgradeDialog.mockReturnValue({
@@ -229,5 +241,22 @@ describe('useTipTap AI gating', () => {
     removeDocumentListenerSpy.mockRestore()
     addWindowListenerSpy.mockRestore()
     removeWindowListenerSpy.mockRestore()
+  })
+
+  it('does not show the editor placeholder on MDX block nodes', () => {
+    render(<HookHarness setValue={setValue} />)
+
+    const placeholder = mockPlaceholderConfigure.mock.calls[0][0].placeholder
+
+    expect(
+      placeholder({
+        editor,
+        node: {
+          type: {
+            name: 'mdxBlock'
+          }
+        }
+      })
+    ).toBe('')
   })
 })

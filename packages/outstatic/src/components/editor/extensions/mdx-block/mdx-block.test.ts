@@ -7,8 +7,16 @@ import { createElement } from 'react'
 import StarterKit from '@tiptap/starter-kit'
 import { Markdown } from 'tiptap-markdown'
 import { createMdxLowlight } from './mdx-lowlight'
-import { MDX_BLOCK_TYPE, MdxBlock, getMdxOpening, isMdxEsmLine } from '.'
+import {
+  MDX_BLOCK_TYPE,
+  MdxBlock,
+  OUTSTATIC_MDX_BLOCK_TYPE,
+  OutstaticMdxBlock,
+  getMdxOpening,
+  isMdxEsmLine
+} from '.'
 import { validateMdxBlock } from './mdx-validation'
+import { annotateMdxBlocksWithLibraryMetadata } from '../slash-command/block-mdx'
 
 const testLowlight = {
   listLanguages: () => ['jsx', 'xml'],
@@ -156,6 +164,7 @@ const createEditor = (content: string) =>
         linkify: false
       }),
       StarterKit,
+      OutstaticMdxBlock,
       MdxBlock.configure({
         lowlight: mdxLowlight
       })
@@ -258,6 +267,53 @@ describe('MdxBlock', () => {
 
     expect(editor.state.doc.firstChild?.textContent).toBe('')
     expect(editor.storage.markdown.getMarkdown().trim()).toBe('')
+  })
+
+  it('inserts block-library MDX as a selectable block followed by a paragraph', () => {
+    const editor = createEditor('')
+    const block = {
+      name: 'Callout',
+      props: [{ name: 'title', type: 'String' as const }]
+    }
+    const values = { title: 'Heads up' }
+
+    editor.commands.setMdxBlock({
+      raw: '<Callout title="Heads up" />',
+      outstaticBlockName: block.name,
+      outstaticBlockValues: JSON.stringify(values),
+      outstaticBlockDefinition: JSON.stringify(block)
+    })
+
+    expect(editor.state.doc.childCount).toBe(2)
+    expect(editor.state.doc.firstChild?.type.name).toBe(
+      OUTSTATIC_MDX_BLOCK_TYPE
+    )
+    expect(editor.state.doc.firstChild?.isAtom).toBe(true)
+    expect(editor.state.doc.firstChild?.textContent).toBe('')
+    expect(editor.state.doc.lastChild?.type.name).toBe('paragraph')
+    expect(editor.storage.markdown.getMarkdown().trim()).toBe(
+      '<Callout title="Heads up" />'
+    )
+  })
+
+  it('adds an editable paragraph after rehydrating a trailing block-library MDX block', () => {
+    const editor = createEditor('<Callout />')
+
+    annotateMdxBlocksWithLibraryMetadata(editor, [
+      {
+        name: 'Callout',
+        props: []
+      }
+    ])
+
+    expect(editor.state.doc.childCount).toBe(2)
+    expect(editor.state.doc.firstChild?.type.name).toBe(
+      OUTSTATIC_MDX_BLOCK_TYPE
+    )
+    expect(editor.state.doc.firstChild?.isAtom).toBe(true)
+    expect(editor.state.doc.firstChild?.textContent).toBe('')
+    expect(editor.state.doc.lastChild?.type.name).toBe('paragraph')
+    expect(editor.storage.markdown.getMarkdown().trim()).toBe('<Callout />')
   })
 
   it('keeps VS Code text pasted inside an MDX block as raw MDX', () => {

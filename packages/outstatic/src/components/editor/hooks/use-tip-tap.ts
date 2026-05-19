@@ -1,21 +1,27 @@
 import { getTiptapExtensions } from '@/components/editor/extensions/index'
+import { setSlashCommandBlocks } from '@/components/editor/extensions/slash-command'
+import { annotateMdxBlocksWithLibraryMetadata } from '@/components/editor/extensions/slash-command/block-mdx'
+import { MDX_BLOCK_TYPE } from '@/components/editor/extensions/mdx-block'
 import { TiptapEditorProps } from '@/components/editor/props'
 import { getPrevText } from '@/components/editor/utils/get-prev-text'
 import Placeholder from '@tiptap/extension-placeholder'
 import { Editor, EditorEvents, useEditor } from '@tiptap/react'
 import { useCompletion } from '@ai-sdk/react'
-import { useEffect, useRef, useCallback } from 'react'
+import { useEffect, useRef, useCallback, useMemo } from 'react'
 import { toast } from 'sonner'
 import { useDebouncedCallback } from 'use-debounce'
 import { useOutstatic } from '@/utils/hooks/use-outstatic'
 import { OUTSTATIC_API_PATH } from '@/utils/constants'
 import { stringifyError } from '@/utils/errors/stringify-error'
 import { useUpgradeDialog } from '@/components/ui/outstatic/upgrade-dialog-context'
+import { useGetBlocks } from '@/utils/hooks/use-get-blocks'
 
 export const useTipTap = ({ ...rhfMethods }) => {
   const { hasAIProviderKey, isPro, basePath } = useOutstatic()
   const { openUpgradeDialog } = useUpgradeDialog()
   const { setValue } = rhfMethods
+  const { data: blocksData } = useGetBlocks()
+  const blocks = useMemo(() => blocksData?.blocks.blocks ?? [], [blocksData])
 
   const editorRef = useRef<Editor | null>(null)
   const streamingStateRef = useRef<{
@@ -200,6 +206,10 @@ export const useTipTap = ({ ...rhfMethods }) => {
       }),
       Placeholder.configure({
         placeholder: ({ editor, node }) => {
+          if (node.type.name === MDX_BLOCK_TYPE) {
+            return ''
+          }
+
           if (editor.isActive('tableCell') || editor.isActive('tableHeader')) {
             return ''
           }
@@ -229,6 +239,31 @@ export const useTipTap = ({ ...rhfMethods }) => {
     if (!editor || editorRef.current) return
     editorRef.current = editor
   }, [editor])
+
+  useEffect(() => {
+    if (!editor) {
+      return
+    }
+
+    setSlashCommandBlocks(editor, blocks)
+    annotateMdxBlocksWithLibraryMetadata(editor, blocks)
+
+    if (typeof editor.on !== 'function' || typeof editor.off !== 'function') {
+      return
+    }
+
+    const annotateBlocks = () => {
+      annotateMdxBlocksWithLibraryMetadata(editor, blocks)
+    }
+
+    editor.on('transaction', annotateBlocks)
+    editor.on('update', annotateBlocks)
+
+    return () => {
+      editor.off('transaction', annotateBlocks)
+      editor.off('update', annotateBlocks)
+    }
+  }, [blocks, editor])
 
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
