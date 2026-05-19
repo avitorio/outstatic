@@ -105,7 +105,8 @@ describe('annotateMdxBlocksWithLibraryMetadata', () => {
       mapping: {
         map: jest.fn((position: number) => position)
       },
-      replaceWith: jest.fn()
+      replaceWith: jest.fn(),
+      setMeta: jest.fn()
     }
     const createdNode = { type: { name: 'outstaticMdxBlock' } }
     const editor = {
@@ -150,6 +151,8 @@ describe('annotateMdxBlocksWithLibraryMetadata', () => {
     )
     expect(tr.replaceWith).toHaveBeenCalledWith(4, 32, createdNode)
     expect(tr.insert).not.toHaveBeenCalled()
+    expect(tr.setMeta).toHaveBeenCalledWith('preventUpdate', true)
+    expect(tr.setMeta).toHaveBeenCalledWith('addToHistory', false)
     expect(editor.view.dispatch).toHaveBeenCalledWith(tr)
   })
 })

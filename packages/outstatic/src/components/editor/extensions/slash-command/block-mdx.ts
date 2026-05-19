@@ -421,6 +421,8 @@ export const annotateMdxBlocksWithLibraryMetadata = (
   })
 
   if (changed) {
+    tr.setMeta('preventUpdate', true)
+    tr.setMeta('addToHistory', false)
     editor.view.dispatch(tr)
   }
 
