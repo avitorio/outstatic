@@ -1,5 +1,6 @@
 import { useAuth } from '@/utils/auth/auth-provider'
 import { useOutstatic } from '@/utils/hooks/use-outstatic'
+import { cn } from '@/utils/ui/cn'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 
@@ -43,9 +44,10 @@ export function AdminLayout({
       {status === 'loading' ? null : (
         <>
           <main
-            className={`w-auto flex-auto p-5 pb-0 md:p-10 bg-background h-dvh max-h-[calc(100vh-56px)] overflow-y-scroll scrollbar-hide ${
-              className || ''
-            }`}
+            className={cn(
+              'w-auto flex-auto p-5 pb-0 md:p-10 bg-background h-dvh max-h-[calc(100vh-56px)] overflow-y-scroll scrollbar-hide',
+              className
+            )}
           >
             {children}
           </main>

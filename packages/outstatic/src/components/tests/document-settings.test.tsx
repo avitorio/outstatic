@@ -495,6 +495,17 @@ describe('<DocumentSettings />', () => {
     expect(screen.getByTestId('mobile-toggle-button')).toBeInTheDocument()
   })
 
+  it('should render title field in standalone mode', () => {
+    render(
+      <TestWrapper>
+        <DocumentSettings {...defaultProps} standalone />
+      </TestWrapper>
+    )
+
+    expect(screen.getByLabelText('Title')).toHaveValue('Example Document')
+    expect(screen.queryByTestId('mobile-toggle-button')).not.toBeInTheDocument()
+  })
+
   it('should toggle mobile sidebar when toggle button is clicked', async () => {
     const user = userEvent.setup()
 
