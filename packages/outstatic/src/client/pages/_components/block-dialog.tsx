@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Plus, Trash2 } from 'lucide-react'
+import { ChevronDown, ChevronRight, Plus, Trash2 } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import {
   FormProvider,
@@ -157,10 +157,59 @@ export const BlockDialog = ({
     control: methods.control,
     name: 'props'
   })
+  const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set())
+  const [previousOpen, setPreviousOpen] = useState(open)
+  const [previousFieldsLength, setPreviousFieldsLength] = useState(
+    fields.length
+  )
 
   useEffect(() => {
     methods.reset(getDefaultValues({ mode, block }))
   }, [block, methods, mode, open])
+
+  if (previousOpen !== open) {
+    setPreviousOpen(open)
+    const initialLength =
+      open && mode === 'edit' && block ? block.props.length : 0
+    setPreviousFieldsLength(initialLength)
+    setExpandedIds(new Set())
+  } else if (fields.length !== previousFieldsLength) {
+    const lengthIncreased = fields.length > previousFieldsLength
+    setPreviousFieldsLength(fields.length)
+    if (lengthIncreased) {
+      const newField = fields[fields.length - 1]
+      if (newField) {
+        setExpandedIds((prev) => {
+          const next = new Set(prev)
+          next.add(newField.id)
+          return next
+        })
+      }
+    }
+  }
+
+  const toggleExpanded = (id: string) => {
+    setExpandedIds((prev) => {
+      const next = new Set(prev)
+      if (next.has(id)) {
+        next.delete(id)
+      } else {
+        next.add(id)
+      }
+      return next
+    })
+  }
+
+  const handleAddProp = () => {
+    append({
+      name: '',
+      type: 'String',
+      required: false,
+      description: '',
+      defaultValue: '',
+      options: []
+    })
+  }
 
   const handleDialogChange = (value: boolean) => {
     if (!value) {
@@ -292,16 +341,7 @@ export const BlockDialog = ({
                 <Button
                   type="button"
                   variant="outline"
-                  onClick={() =>
-                    append({
-                      name: '',
-                      type: 'String',
-                      required: false,
-                      description: '',
-                      defaultValue: '',
-                      options: []
-                    })
-                  }
+                  onClick={handleAddProp}
                 >
                   <Plus className="mr-2 h-4 w-4" />
                   Add Prop
@@ -313,142 +353,185 @@ export const BlockDialog = ({
                   This block has no props.
                 </div>
               ) : (
-                <div className="space-y-4">
+                <div className="space-y-4 max-h-[500px] overflow-y-auto">
                   {fields.map((field, index) => {
                     const selectedType = watchedProps?.[index]?.type
+                    const propName = watchedProps?.[index]?.name?.trim()
+                    const hasError = !!(
+                      methods.formState.errors.props as any
+                    )?.[index]
+                    const isExpanded =
+                      expandedIds.has(field.id) || hasError
                     return (
                       <div
                         key={field.id}
-                        className="rounded-md border bg-card p-4"
+                        className="rounded-md border bg-card overflow-hidden"
                       >
-                        <div className="grid gap-4 md:grid-cols-[minmax(0,1fr)_180px_auto]">
-                          <FormField
-                            control={methods.control}
-                            name={`props.${index}.name`}
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Prop name</FormLabel>
-                                <FormControl>
-                                  <Input
-                                    placeholder="title"
-                                    {...field}
-                                    value={field.value ?? ''}
-                                  />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
+                        <div
+                          role="button"
+                          tabIndex={0}
+                          className="flex items-center justify-between gap-2 p-3 cursor-pointer hover:bg-accent/50"
+                          onClick={() => toggleExpanded(field.id)}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                              e.preventDefault()
+                              toggleExpanded(field.id)
+                            }
+                          }}
+                        >
+                          <div className="flex min-w-0 items-center gap-2">
+                            {isExpanded ? (
+                              <ChevronDown className="h-4 w-4 shrink-0 text-muted-foreground" />
+                            ) : (
+                              <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground" />
                             )}
-                          />
-
-                          <FormField
-                            control={methods.control}
-                            name={`props.${index}.type`}
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Type</FormLabel>
-                                <Select
-                                  onValueChange={field.onChange}
-                                  value={field.value}
-                                >
-                                  <FormControl>
-                                    <SelectTrigger>
-                                      <SelectValue placeholder="Type" />
-                                    </SelectTrigger>
-                                  </FormControl>
-                                  <SelectContent>
-                                    {blockPropTypes.map((type) => (
-                                      <SelectItem key={type} value={type}>
-                                        {type}
-                                      </SelectItem>
-                                    ))}
-                                  </SelectContent>
-                                </Select>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-
-                          <FormField
-                            control={methods.control}
-                            name={`props.${index}.required`}
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Required</FormLabel>
-                                <div className="flex h-10 items-center gap-2">
-                                  <FormControl>
-                                    <Checkbox
-                                      checked={field.value}
-                                      onCheckedChange={(checked) =>
-                                        field.onChange(checked === true)
-                                      }
-                                    />
-                                  </FormControl>
-                                  <Button
-                                    type="button"
-                                    variant="ghost"
-                                    size="icon"
-                                    onClick={() => remove(index)}
-                                  >
-                                    <span className="sr-only">Remove prop</span>
-                                    <Trash2 className="h-4 w-4" />
-                                  </Button>
-                                </div>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
+                            <span className="font-medium truncate">
+                              {propName || 'Untitled prop'}
+                            </span>
+                            {selectedType ? (
+                              <span className="text-xs text-muted-foreground shrink-0">
+                                ({selectedType})
+                              </span>
+                            ) : null}
+                          </div>
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              remove(index)
+                            }}
+                          >
+                            <span className="sr-only">Remove prop</span>
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
                         </div>
 
-                        <div className="mt-4 grid gap-4 md:grid-cols-2">
-                          <FormField
-                            control={methods.control}
-                            name={`props.${index}.description`}
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Description</FormLabel>
-                                <FormControl>
-                                  <Input
-                                    placeholder="Shown in the insert form"
-                                    {...field}
-                                    value={field.value ?? ''}
-                                  />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
+                        {isExpanded ? (
+                          <div className="border-t p-4">
+                            <div className="grid gap-4 md:grid-cols-[minmax(0,1fr)_180px_auto]">
+                              <FormField
+                                control={methods.control}
+                                name={`props.${index}.name`}
+                                render={({ field }) => (
+                                  <FormItem>
+                                    <FormLabel>Prop name</FormLabel>
+                                    <FormControl>
+                                      <Input
+                                        placeholder="title"
+                                        {...field}
+                                        value={field.value ?? ''}
+                                      />
+                                    </FormControl>
+                                    <FormMessage />
+                                  </FormItem>
+                                )}
+                              />
 
-                          <FormField
-                            control={methods.control}
-                            name={`props.${index}.defaultValue`}
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Default value</FormLabel>
-                                <FormControl>
-                                  <Input
-                                    placeholder="Optional"
-                                    {...field}
-                                    value={field.value ?? ''}
-                                  />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                        </div>
+                              <FormField
+                                control={methods.control}
+                                name={`props.${index}.type`}
+                                render={({ field }) => (
+                                  <FormItem>
+                                    <FormLabel>Type</FormLabel>
+                                    <Select
+                                      onValueChange={field.onChange}
+                                      value={field.value}
+                                    >
+                                      <FormControl>
+                                        <SelectTrigger>
+                                          <SelectValue placeholder="Type" />
+                                        </SelectTrigger>
+                                      </FormControl>
+                                      <SelectContent>
+                                        {blockPropTypes.map((type) => (
+                                          <SelectItem key={type} value={type}>
+                                            {type}
+                                          </SelectItem>
+                                        ))}
+                                      </SelectContent>
+                                    </Select>
+                                    <FormMessage />
+                                  </FormItem>
+                                )}
+                              />
 
-                        {selectedType === 'Select' ? (
-                          <div className="mt-4">
-                            <TagInput
-                              label="Options"
-                              id={`props.${index}.options`}
-                              placeholder="Add option"
-                              description="Values available when inserting this block."
-                              suggestions={
-                                methods.getValues(`props.${index}.options`) ??
-                                []
-                              }
-                            />
+                              <FormField
+                                control={methods.control}
+                                name={`props.${index}.required`}
+                                render={({ field }) => (
+                                  <FormItem>
+                                    <FormLabel>Required</FormLabel>
+                                    <div className="flex h-10 items-center">
+                                      <FormControl>
+                                        <Checkbox
+                                          checked={field.value}
+                                          onCheckedChange={(checked) =>
+                                            field.onChange(checked === true)
+                                          }
+                                        />
+                                      </FormControl>
+                                    </div>
+                                    <FormMessage />
+                                  </FormItem>
+                                )}
+                              />
+                            </div>
+
+                            <div className="mt-4 grid gap-4 md:grid-cols-2">
+                              <FormField
+                                control={methods.control}
+                                name={`props.${index}.description`}
+                                render={({ field }) => (
+                                  <FormItem>
+                                    <FormLabel>Description</FormLabel>
+                                    <FormControl>
+                                      <Input
+                                        placeholder="Shown in the insert form"
+                                        {...field}
+                                        value={field.value ?? ''}
+                                      />
+                                    </FormControl>
+                                    <FormMessage />
+                                  </FormItem>
+                                )}
+                              />
+
+                              <FormField
+                                control={methods.control}
+                                name={`props.${index}.defaultValue`}
+                                render={({ field }) => (
+                                  <FormItem>
+                                    <FormLabel>Default value</FormLabel>
+                                    <FormControl>
+                                      <Input
+                                        placeholder="Optional"
+                                        {...field}
+                                        value={field.value ?? ''}
+                                      />
+                                    </FormControl>
+                                    <FormMessage />
+                                  </FormItem>
+                                )}
+                              />
+                            </div>
+
+                            {selectedType === 'Select' ? (
+                              <div className="mt-4">
+                                <TagInput
+                                  label="Options"
+                                  id={`props.${index}.options`}
+                                  placeholder="Add option"
+                                  description="Values available when inserting this block."
+                                  suggestions={
+                                    methods.getValues(
+                                      `props.${index}.options`
+                                    ) ?? []
+                                  }
+                                />
+                              </div>
+                            ) : null}
                           </div>
                         ) : null}
                       </div>
