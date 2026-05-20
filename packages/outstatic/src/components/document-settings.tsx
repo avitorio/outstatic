@@ -80,7 +80,8 @@ export const DocumentSettings = ({
   const {
     formState: { errors },
     control,
-    reset
+    reset,
+    setValue
   } = useFormContext()
   const router = useRouter()
 
@@ -246,7 +247,25 @@ export const DocumentSettings = ({
                 <FormItem>
                   <FormLabel>Title</FormLabel>
                   <FormControl>
-                    <Input {...field} value={field.value ?? ''} />
+                    <Input
+                      {...field}
+                      value={field.value ?? ''}
+                      onChange={(e) => {
+                        field.onChange(e)
+                        const segments = new URL(
+                          window.location.href
+                        ).pathname.split('/')
+                        const last = segments.pop() || segments.pop()
+                        if (last === 'new') {
+                          setValue(
+                            'slug',
+                            slugify(e.target.value, {
+                              allowedChars: 'a-zA-Z0-9.'
+                            })
+                          )
+                        }
+                      }}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -263,7 +282,12 @@ export const DocumentSettings = ({
           </label>
           <DateTimePickerForm id="publishedAt" />
         </div>
-        <div className="hidden md:flex relative w-full items-center justify-between mb-4 px-4">
+        <div
+          className={cn(
+            'relative w-full items-center justify-between mb-4 px-4',
+            standalone ? 'flex' : 'hidden md:flex'
+          )}
+        >
           <label
             htmlFor="status"
             className="block text-sm font-medium text-foreground"
