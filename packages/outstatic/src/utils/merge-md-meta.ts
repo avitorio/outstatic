@@ -1,4 +1,3 @@
-import { convert } from '@catalystic/json-to-yaml'
 import replaceImagePath from './replace-image-path'
 import {
   buildMediaApiPrefix,
@@ -10,6 +9,88 @@ import { MediaSourceConfig } from './metadata/types'
 
 const escapeRegExp = (value: string) =>
   value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+
+const getIndent = (level: number) => ' '.repeat(level)
+
+const formatYamlString = (value: string, indent: number) => {
+  if (!value.includes('\n')) {
+    return JSON.stringify(value)
+  }
+
+  const chompingIndicator = value.endsWith('\n') ? '|' : '|-'
+  const blockIndent = getIndent(indent + 2)
+  const lines = value.replace(/\n$/, '').split('\n')
+
+  return [
+    chompingIndicator,
+    ...lines.map((line) => (line ? `${blockIndent}${line}` : ''))
+  ].join('\n')
+}
+
+const formatYamlValue = (value: any, indent: number): string => {
+  if (value === undefined || value === null) return 'null'
+  if (typeof value === 'number') return String(value)
+  if (typeof value === 'boolean') return value ? 'true' : 'false'
+  if (typeof value === 'string') return formatYamlString(value, indent)
+
+  if (Array.isArray(value)) {
+    if (value.length === 0) return '[]'
+
+    return value
+      .map((item) => {
+        const itemIndent = getIndent(indent + 2)
+
+        if (
+          item &&
+          typeof item === 'object' &&
+          !Array.isArray(item) &&
+          Object.keys(item).length > 0
+        ) {
+          const [firstKey, ...remainingKeys] = Object.keys(item)
+          const firstValue = formatYamlValue(item[firstKey], indent + 2)
+          const firstLine = `${itemIndent}- ${firstKey}: ${firstValue}`
+          const remainingLines = remainingKeys.map(
+            (key) =>
+              `${getIndent(indent + 4)}${key}: ${formatYamlValue(
+                item[key],
+                indent + 4
+              )}`
+          )
+
+          return [firstLine, ...remainingLines].join('\n')
+        }
+
+        return `${itemIndent}- ${formatYamlValue(item, indent + 2)}`
+      })
+      .join('\n')
+  }
+
+  if (typeof value === 'object') {
+    const entries = Object.entries(value).filter(
+      ([, entryValue]) => entryValue !== undefined
+    )
+
+    if (entries.length === 0) return '{}'
+
+    return entries
+      .map(
+        ([key, entryValue]) =>
+          `\n${getIndent(indent + 2)}${key}: ${formatYamlValue(
+            entryValue,
+            indent + 2
+          )}`
+      )
+      .join('')
+  }
+
+  return JSON.stringify(value)
+}
+
+const stringifyFrontmatter = (data: Record<string, any>) =>
+  Object.entries(data)
+    .filter(([, value]) => value !== undefined)
+    .map(([key, value]) => `${key}: ${formatYamlValue(value, 0)}`)
+    .join('\n')
 
 export const mergeMdMeta = ({
   data,
@@ -84,11 +165,11 @@ export const mergeMdMeta = ({
     metaData[key] = processValue(metaData[key])
   }
 
-  const converted = convert(metaData)
+  const converted = stringifyFrontmatter(metaData)
 
   let merged = '---\n'
 
-  merged += converted
+  merged += converted + '\n'
 
   merged += '---\n\n'
 

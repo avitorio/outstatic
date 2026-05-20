@@ -1,14 +1,8 @@
 import { mergeMdMeta } from './merge-md-meta'
-
-jest.mock('@catalystic/json-to-yaml', () => ({
-  convert: (data: Record<string, unknown>) =>
-    Object.entries(data)
-      .map(([key, value]) => `${key}: ${String(value)}`)
-      .join('\n')
-}))
+import matter from 'gray-matter'
 
 describe('mergeMdMeta', () => {
-  it('writes select field values as raw YAML strings in frontmatter', () => {
+  it('writes select field values as scalar strings in frontmatter', () => {
     const merged = mergeMdMeta({
       data: {
         title: 'Select field example',
@@ -26,7 +20,7 @@ describe('mergeMdMeta', () => {
       publicMediaPath: 'uploads/'
     })
 
-    expect(merged).toContain('category: news')
+    expect(matter(merged).data.category).toBe('news')
     expect(merged).not.toContain('label: News')
   })
 
@@ -61,8 +55,39 @@ describe('mergeMdMeta', () => {
       ]
     })
 
-    expect(merged).toContain('cover: /assets/video/cover.png')
+    expect(matter(merged).data.cover).toBe('/assets/video/cover.png')
     expect(merged).toContain('![Clip](/assets/video/clip.mp4)')
     expect(merged).not.toContain('/assets/clip.mp4')
+  })
+
+  it('writes multiline markdown frontmatter as a YAML block scalar', () => {
+    const summary = '## Intro\n\nRich copy\n\n- one\n- two'
+
+    const merged = mergeMdMeta({
+      data: {
+        title: 'Rich text frontmatter',
+        content: 'Body content',
+        summary
+      },
+      basePath: '',
+      repoOwner: 'owner',
+      repoSlug: 'repo',
+      repoBranch: 'main',
+      publicMediaPath: 'uploads/'
+    })
+
+    expect(merged).toContain(
+      [
+        'summary: |-',
+        '  ## Intro',
+        '',
+        '  Rich copy',
+        '',
+        '  - one',
+        '  - two'
+      ].join('\n')
+    )
+
+    expect(matter(merged).data.summary).toBe(summary)
   })
 })

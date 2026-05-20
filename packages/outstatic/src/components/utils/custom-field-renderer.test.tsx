@@ -10,6 +10,46 @@ jest.mock('@/components/document-settings-image-selection', () => ({
   DocumentSettingsImageSelection: () => <div />
 }))
 
+jest.mock('@/components/editor/extensions', () => ({
+  getTiptapExtensions: () => []
+}))
+
+jest.mock('@/components/editor/menu/editor-menu', () => ({
+  __esModule: true,
+  default: () => <div data-testid="editor-menu" />
+}))
+
+jest.mock('@/components/editor/menu/image-menu', () => ({
+  __esModule: true,
+  default: () => <div data-testid="image-menu" />
+}))
+
+jest.mock('@/components/editor/menu/table-menu', () => ({
+  TableMenu: () => <div data-testid="table-menu" />
+}))
+
+jest.mock('@/components/editor/props', () => ({
+  TiptapEditorProps: {
+    attributes: {
+      class: ''
+    }
+  }
+}))
+
+jest.mock('@tiptap/extension-placeholder', () => ({
+  __esModule: true,
+  default: {
+    configure: () => ({})
+  }
+}))
+
+jest.mock('@tiptap/react', () => ({
+  EditorContent: ({ 'aria-label': ariaLabel }: { 'aria-label': string }) => (
+    <div aria-label={ariaLabel} role="textbox" />
+  ),
+  useEditor: jest.fn(() => null)
+}))
+
 jest.mock('@/components/ui/outstatic/date-time-picker-form', () => ({
   DateTimePickerForm: ({ id }: { id: string }) => {
     const { FormControl, FormField, FormItem, FormMessage } =
@@ -220,5 +260,25 @@ describe('CustomFieldRenderer', () => {
     await screen.findByText('Birthday is a required field.')
 
     expect(screen.getAllByText('Birthday is a required field.')).toHaveLength(1)
+  })
+
+  it('renders a rich text field as a sheet trigger with markdown preview', () => {
+    const richTextField: CustomFieldsType[string] = {
+      title: 'Summary',
+      fieldType: 'Rich Text',
+      dataType: 'string'
+    }
+
+    render(
+      <RendererHarness
+        name="summary"
+        field={richTextField}
+        defaultValues={{ summary: '## Intro\n\nRich copy' }}
+      />
+    )
+
+    expect(screen.getByRole('button', { name: /Intro/ })).toHaveTextContent(
+      '## Intro'
+    )
   })
 })

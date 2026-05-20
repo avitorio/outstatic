@@ -1,7 +1,24 @@
 import { DocumentSettingsImageSelection } from '@/components/document-settings-image-selection'
+import {
+  EditorProvider,
+  useEditor as useEditorContext
+} from '@/components/editor/editor-context'
+import { getTiptapExtensions } from '@/components/editor/extensions'
+import { TiptapEditorProps } from '@/components/editor/props'
+import EditorMenu from '@/components/editor/menu/editor-menu'
+import ImageMenu from '@/components/editor/menu/image-menu'
+import { TableMenu } from '@/components/editor/menu/table-menu'
 import { TagInput } from '@/components/ui/outstatic/tag-input'
 import { Button } from '@/components/ui/shadcn/button'
 import { Input } from '@/components/ui/shadcn/input'
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger
+} from '@/components/ui/shadcn/sheet'
 import { Textarea } from '@/components/ui/shadcn/textarea'
 import {
   CustomFieldArrayValue,
@@ -34,6 +51,9 @@ import {
   SelectValue
 } from '@/components/ui/shadcn/select'
 import { cn } from '@/utils/ui'
+import Placeholder from '@tiptap/extension-placeholder'
+import { EditorContent, useEditor } from '@tiptap/react'
+import { useEffect, useRef } from 'react'
 
 type CustomFieldRendererProps = {
   name: string
@@ -62,6 +82,7 @@ type ComponentType = {
 type FieldDataMapType = {
   String: ComponentType
   Text: ComponentType
+  'Rich Text': ComponentType
   Number: ComponentType
   Select: ComponentType
   Tags: ComponentType
@@ -73,6 +94,7 @@ type FieldDataMapType = {
 const FieldDataMap: FieldDataMapType = {
   String: { component: Input, props: { type: 'text' } },
   Text: { component: Textarea, props: {} },
+  'Rich Text': { component: Textarea, props: {} },
   Number: { component: Input, props: { type: 'number' } },
   Select: { component: Input, props: { type: 'text' } },
   Tags: {
@@ -84,6 +106,142 @@ const FieldDataMap: FieldDataMapType = {
   Boolean: { component: Checkbox, props: { type: 'checkbox' } },
   Date: { component: DateTimePickerForm, props: { type: 'date' } },
   Image: { component: DocumentSettingsImageSelection, props: { type: 'image' } }
+}
+
+type RichTextFieldProps = {
+  id: string
+  title: string
+  description?: string
+  value?: string
+  onChange: (value: string) => void
+}
+
+const RichTextFieldEditor = ({
+  id,
+  title,
+  value,
+  onChange
+}: RichTextFieldProps) => {
+  const { setEditor } = useEditorContext()
+  const lastValueRef = useRef(value ?? '')
+  const editorAttributes =
+    typeof TiptapEditorProps.attributes === 'function'
+      ? {}
+      : TiptapEditorProps.attributes
+
+  const editor = useEditor({
+    extensions: [
+      ...getTiptapExtensions({
+        onShowUpgradeDialog: () => undefined
+      }),
+      Placeholder.configure({
+        placeholder: "Press '/' for commands, or '++' for AI autocomplete..."
+      })
+    ],
+    content: value ?? '',
+    editorProps: {
+      ...TiptapEditorProps,
+      attributes: {
+        ...editorAttributes,
+        class: cn(
+          editorAttributes?.class,
+          'min-h-[calc(100vh-13rem)] max-w-none px-6 py-5 focus:outline-hidden'
+        )
+      }
+    },
+    onUpdate: ({ editor }) => {
+      const markdown = editor.storage.markdown.getMarkdown()
+      lastValueRef.current = markdown
+      onChange(markdown)
+    },
+    immediatelyRender: false
+  })
+
+  useEffect(() => {
+    if (!editor) return
+
+    setEditor(editor)
+  }, [editor, setEditor])
+
+  useEffect(() => {
+    if (!editor) return
+
+    const nextValue = value ?? ''
+
+    if (lastValueRef.current === nextValue) return
+
+    const currentValue = editor.storage.markdown.getMarkdown()
+
+    if (currentValue === nextValue) {
+      lastValueRef.current = nextValue
+      return
+    }
+
+    editor.commands.setContent(nextValue, false)
+    lastValueRef.current = nextValue
+  }, [editor, value])
+
+  if (!editor) return null
+
+  return (
+    <>
+      <EditorMenu editor={editor} />
+      <TableMenu editor={editor} />
+      <ImageMenu editor={editor} />
+      <EditorContent
+        aria-label={title}
+        id={id}
+        editor={editor}
+        className="prose prose-base dark:prose-invert max-w-none overflow-y-auto border-t"
+      />
+    </>
+  )
+}
+
+const RichTextField = ({
+  id,
+  title,
+  description,
+  value,
+  onChange
+}: RichTextFieldProps) => {
+  const hasValue = typeof value === 'string' && value.trim().length > 0
+  const preview = hasValue ? value : 'No rich text content yet.'
+
+  return (
+    <Sheet>
+      <SheetTrigger asChild>
+        <Button
+          type="button"
+          variant="outline"
+          className="h-auto min-h-24 w-full items-start justify-start whitespace-normal px-3 py-2 text-left"
+        >
+          <span className="line-clamp-4 text-sm text-muted-foreground">
+            {preview}
+          </span>
+        </Button>
+      </SheetTrigger>
+      <SheetContent
+        side="right"
+        className="w-full gap-0 p-0 sm:max-w-none md:w-[90%] md:max-w-[700px]"
+      >
+        <SheetHeader className="border-b px-6 py-4">
+          <SheetTitle>{title}</SheetTitle>
+          {description ? (
+            <SheetDescription>{description}</SheetDescription>
+          ) : null}
+        </SheetHeader>
+        <EditorProvider>
+          <RichTextFieldEditor
+            id={id}
+            title={title}
+            value={value}
+            onChange={onChange}
+          />
+        </EditorProvider>
+      </SheetContent>
+    </Sheet>
+  )
 }
 
 export const CustomFieldRenderer = ({
@@ -99,6 +257,17 @@ export const CustomFieldRenderer = ({
     switch (field.fieldType) {
       case 'String':
         return <Input {...formField} value={formField.value ?? ''} />
+
+      case 'Rich Text':
+        return (
+          <RichTextField
+            id={name}
+            title={field.title}
+            description={field.description}
+            value={formField.value ?? ''}
+            onChange={formField.onChange}
+          />
+        )
 
       case 'Number':
         // Fix for NaN error when saving a non-required number
