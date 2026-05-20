@@ -118,6 +118,8 @@ export type Block = {
   name: string
   description?: string
   keywords?: string[]
+  imports?: string
+  additionalAttributes?: string
   props: BlockProp[]
 }
 

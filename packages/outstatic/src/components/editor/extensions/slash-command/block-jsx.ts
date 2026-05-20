@@ -76,7 +76,12 @@ export const buildBlockJsx = (block: Block, values: BlockFormValues) => {
     attributes.push(`${prop.name}="${escapeAttributeValue(value)}"`)
   })
 
-  const attrs = attributes.length > 0 ? ` ${attributes.join(' ')}` : ''
+  const dynamicAttrs =
+    attributes.length > 0 ? ` ${attributes.join(' ')}` : ''
+  const extraAttrs = block.additionalAttributes?.trim()
+    ? ` ${block.additionalAttributes.trim()}`
+    : ''
+  const attrs = `${dynamicAttrs}${extraAttrs}`
 
   if (typeof childrenValue === 'string' && childrenValue.length > 0) {
     return `<${block.name}${attrs}>\n${childrenValue}\n</${block.name}>`
