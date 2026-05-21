@@ -8,7 +8,8 @@ import { AdminLoading } from '@/components/admin-loading'
 import { Button } from '@/components/ui/shadcn/button'
 import {
   Card,
-  CardContent, CardHeader,
+  CardContent,
+  CardHeader,
   CardTitle
 } from '@/components/ui/shadcn/card'
 import { Input } from '@/components/ui/shadcn/input'
@@ -108,8 +109,9 @@ export default function BlockLibrary() {
           {filteredBlocks.map((block) => (
             <Card key={block.name} className="flex flex-col">
               <CardContent className="relative flex justify-between items-center">
-                <div 
-                  className="absolute top-0 bottom-0 left-0 cursor-pointer w-full h-full z-10" aria-label={`Edit ${block.name}`}
+                <div
+                  className="absolute top-0 bottom-0 left-0 cursor-pointer w-full h-full z-10"
+                  aria-label={`Edit ${block.name}`}
                   onClick={() => {
                     setSelectedBlock(block)
                     setShowEditDialog(true)
