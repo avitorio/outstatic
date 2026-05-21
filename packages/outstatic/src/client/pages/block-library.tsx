@@ -109,14 +109,16 @@ export default function BlockLibrary() {
           {filteredBlocks.map((block) => (
             <Card key={block.name} className="flex flex-col">
               <CardContent className="relative flex justify-between items-center">
-                <div
-                  className="absolute top-0 bottom-0 left-0 cursor-pointer w-full h-full z-10"
-                  aria-label={`Edit ${block.name}`}
-                  onClick={() => {
-                    setSelectedBlock(block)
-                    setShowEditDialog(true)
-                  }}
-                />
+                {canManageCollections ? (
+                  <div
+                    className="absolute top-0 bottom-0 left-0 cursor-pointer w-full h-full z-10"
+                    aria-label={`Edit ${block.name}`}
+                    onClick={() => {
+                      setSelectedBlock(block)
+                      setShowEditDialog(true)
+                    }}
+                  />
+                ) : null}
                 <div className="flex items-center justify-between gap-3 w-full">
                   <div className="flex items-center justify-start gap-3">
                     <div className="p-2 rounded-md border border-border h-12 w-12 flex items-center justify-center">
