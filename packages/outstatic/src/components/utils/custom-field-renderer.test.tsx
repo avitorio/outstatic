@@ -5,6 +5,9 @@ import type { ReactNode } from 'react'
 import { useEffect } from 'react'
 import { CustomFieldRenderer } from './custom-field-renderer'
 import type { CustomFieldsType, SelectCustomField } from '@/types'
+import { useEditor } from '@tiptap/react'
+import { parseContent } from '@/utils/parse-content'
+import { useOutstatic } from '@/utils/hooks/use-outstatic'
 
 jest.mock('@/components/document-settings-image-selection', () => ({
   DocumentSettingsImageSelection: () => <div />
@@ -48,6 +51,14 @@ jest.mock('@tiptap/react', () => ({
     <div aria-label={ariaLabel} role="textbox" />
   ),
   useEditor: jest.fn(() => null)
+}))
+
+jest.mock('@/utils/hooks/use-outstatic', () => ({
+  useOutstatic: jest.fn()
+}))
+
+jest.mock('@/utils/parse-content', () => ({
+  parseContent: jest.fn(({ content }) => `parsed:${content}`)
 }))
 
 jest.mock('@/components/ui/outstatic/date-time-picker-form', () => ({
@@ -170,6 +181,10 @@ const selectField: SelectCustomField = {
   ]
 }
 
+const mockUseEditor = useEditor as jest.Mock
+const mockParseContent = parseContent as jest.Mock
+const mockUseOutstatic = useOutstatic as jest.Mock
+
 function RendererHarness({
   field = selectField,
   name = 'category',
@@ -207,6 +222,22 @@ function RendererHarness({
 }
 
 describe('CustomFieldRenderer', () => {
+  beforeEach(() => {
+    jest.clearAllMocks()
+
+    mockUseEditor.mockReturnValue(null)
+    mockParseContent.mockImplementation(({ content }) => `parsed:${content}`)
+    mockUseOutstatic.mockReturnValue({
+      basePath: '',
+      repoOwner: 'owner',
+      repoSlug: 'repo',
+      repoBranch: 'main',
+      media: undefined,
+      publicMediaPath: 'images/',
+      repoMediaPath: 'public/images/'
+    })
+  })
+
   it('stores the raw option value for a select field', async () => {
     const user = userEvent.setup()
 
@@ -279,6 +310,44 @@ describe('CustomFieldRenderer', () => {
 
     expect(screen.getByRole('button', { name: /Intro/ })).toHaveTextContent(
       '## Intro'
+    )
+  })
+
+  it('parses rich text field content before initializing the editor', async () => {
+    const user = userEvent.setup()
+    const richTextField: CustomFieldsType[string] = {
+      title: 'Summary',
+      fieldType: 'Rich Text',
+      dataType: 'string'
+    }
+
+    render(
+      <RendererHarness
+        name="summary"
+        field={richTextField}
+        defaultValues={{
+          summary: '![Hero](/images/hero.png)'
+        }}
+      />
+    )
+
+    await user.click(screen.getByRole('button', { name: /Hero/ }))
+
+    expect(mockParseContent).toHaveBeenCalledWith(
+      expect.objectContaining({
+        content: '![Hero](/images/hero.png)',
+        basePath: '',
+        repoOwner: 'owner',
+        repoSlug: 'repo',
+        repoBranch: 'main',
+        publicMediaPath: 'images/',
+        repoMediaPath: 'public/images/'
+      })
+    )
+    expect(mockUseEditor).toHaveBeenCalledWith(
+      expect.objectContaining({
+        content: 'parsed:![Hero](/images/hero.png)'
+      })
     )
   })
 })

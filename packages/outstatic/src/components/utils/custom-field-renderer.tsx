@@ -51,9 +51,11 @@ import {
   SelectValue
 } from '@/components/ui/shadcn/select'
 import { cn } from '@/utils/ui'
+import { parseContent } from '@/utils/parse-content'
+import { useOutstatic } from '@/utils/hooks/use-outstatic'
 import Placeholder from '@tiptap/extension-placeholder'
 import { EditorContent, useEditor } from '@tiptap/react'
-import { useEffect, useRef } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 
 type CustomFieldRendererProps = {
   name: string
@@ -123,7 +125,39 @@ const RichTextFieldEditor = ({
   onChange
 }: RichTextFieldProps) => {
   const { setEditor } = useEditorContext()
-  const lastValueRef = useRef(value ?? '')
+  const {
+    basePath,
+    repoOwner,
+    repoSlug,
+    repoBranch,
+    media,
+    publicMediaPath,
+    repoMediaPath
+  } = useOutstatic()
+  const parsedValue = useMemo(
+    () =>
+      parseContent({
+        content: value ?? '',
+        basePath,
+        repoOwner,
+        repoSlug,
+        repoBranch,
+        media,
+        publicMediaPath,
+        repoMediaPath
+      }),
+    [
+      value,
+      basePath,
+      media,
+      publicMediaPath,
+      repoBranch,
+      repoMediaPath,
+      repoOwner,
+      repoSlug
+    ]
+  )
+  const lastValueRef = useRef(parsedValue)
   const editorAttributes =
     typeof TiptapEditorProps.attributes === 'function'
       ? {}
@@ -138,7 +172,7 @@ const RichTextFieldEditor = ({
         placeholder: "Press '/' for commands, or '++' for AI autocomplete..."
       })
     ],
-    content: value ?? '',
+    content: parsedValue,
     editorProps: {
       ...TiptapEditorProps,
       attributes: {
@@ -166,7 +200,7 @@ const RichTextFieldEditor = ({
   useEffect(() => {
     if (!editor) return
 
-    const nextValue = value ?? ''
+    const nextValue = parsedValue
 
     if (lastValueRef.current === nextValue) return
 
@@ -179,7 +213,7 @@ const RichTextFieldEditor = ({
 
     editor.commands.setContent(nextValue, false)
     lastValueRef.current = nextValue
-  }, [editor, value])
+  }, [editor, parsedValue])
 
   if (!editor) return null
 

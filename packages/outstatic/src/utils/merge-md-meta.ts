@@ -36,7 +36,7 @@ const formatYamlValue = (value: any, indent: number): string => {
   if (Array.isArray(value)) {
     if (value.length === 0) return '[]'
 
-    return value
+    const lines = value
       .map((item) => {
         const itemIndent = getIndent(indent + 2)
 
@@ -63,6 +63,8 @@ const formatYamlValue = (value: any, indent: number): string => {
         return `${itemIndent}- ${formatYamlValue(item, indent + 2)}`
       })
       .join('\n')
+
+    return `\n${lines}`
   }
 
   if (typeof value === 'object') {

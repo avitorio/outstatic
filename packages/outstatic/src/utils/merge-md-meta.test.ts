@@ -60,6 +60,49 @@ describe('mergeMdMeta', () => {
     expect(merged).not.toContain('/assets/clip.mp4')
   })
 
+  it('writes array fields as a block sequence on a new line', () => {
+    const tags = [
+      { label: 'News', value: 'news' },
+      { label: 'Tech', value: 'tech' }
+    ]
+
+    const merged = mergeMdMeta({
+      data: {
+        title: 'Tagged post',
+        content: 'Body',
+        tags
+      },
+      basePath: '',
+      repoOwner: 'owner',
+      repoSlug: 'repo',
+      repoBranch: 'main',
+      publicMediaPath: 'uploads/'
+    })
+
+    expect(merged).toContain(
+      ['tags: ', '  - label: "News"', '    value: "news"'].join('\n')
+    )
+
+    expect(matter(merged).data.tags).toEqual(tags)
+  })
+
+  it('writes scalar array fields as a block sequence on a new line', () => {
+    const merged = mergeMdMeta({
+      data: {
+        title: 'Tagged post',
+        content: 'Body',
+        keywords: ['one', 'two']
+      },
+      basePath: '',
+      repoOwner: 'owner',
+      repoSlug: 'repo',
+      repoBranch: 'main',
+      publicMediaPath: 'uploads/'
+    })
+
+    expect(matter(merged).data.keywords).toEqual(['one', 'two'])
+  })
+
   it('writes multiline markdown frontmatter as a YAML block scalar', () => {
     const summary = '## Intro\n\nRich copy\n\n- one\n- two'
 
