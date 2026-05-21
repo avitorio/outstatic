@@ -45,6 +45,7 @@ import { blockFormSchema } from '@/utils/schemas/blocks-schema'
 import { blockPropTypes, Block } from '@/utils/metadata/types'
 import { useUpdateBlocks } from '@/utils/hooks/use-update-blocks'
 import { CustomFieldArrayValue } from '@/types'
+import { IconPicker } from './icon-picker'
 
 type BlockDialogProps = {
   mode: 'add' | 'edit'
@@ -70,6 +71,7 @@ type BlockFormValue = {
   keywords?: CustomFieldArrayValue[]
   imports?: string
   additionalAttributes?: string
+  icon?: string
   props: BlockPropFormValue[]
 }
 
@@ -91,7 +93,7 @@ const BUILT_IN_SLASH_TITLES = [
 const TOTAL_STEPS = 3
 
 const STEP_FIELDS: Record<number, FieldPath<BlockFormValue>[]> = {
-  1: ['name', 'description', 'keywords', 'imports'],
+  1: ['name', 'description', 'keywords', 'imports', 'icon'],
   2: ['props'],
   3: ['additionalAttributes']
 }
@@ -122,6 +124,7 @@ const getDefaultValues = ({
       keywords: toTagValues(block.keywords),
       imports: block.imports ?? '',
       additionalAttributes: block.additionalAttributes ?? '',
+      icon: block.icon ?? undefined,
       props: block.props.map((prop) => ({
         ...prop,
         required: prop.required ?? false,
@@ -138,14 +141,12 @@ const getDefaultValues = ({
     keywords: [],
     imports: '',
     additionalAttributes: '',
+    icon: undefined,
     props: []
   }
 }
 
-const toBlock = (
-  values: BlockFormValue,
-  includeImports: boolean
-): Block => ({
+const toBlock = (values: BlockFormValue, includeImports: boolean): Block => ({
   name: values.name.trim(),
   description: values.description?.trim() || undefined,
   keywords: toStoredValues(values.keywords),
@@ -154,6 +155,7 @@ const toBlock = (
       ? values.imports.trim()
       : undefined,
   additionalAttributes: values.additionalAttributes?.trim() || undefined,
+  icon: values.icon?.trim() || undefined,
   props: values.props.map((prop) => ({
     name: prop.name.trim(),
     type: prop.type,
@@ -325,27 +327,45 @@ export const BlockDialog = ({
             {step === 1 ? (
               <div className="flex flex-col gap-6">
                 <div className="grid gap-4 md:grid-cols-2">
-                  <FormField
-                    control={methods.control}
-                    name="name"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Component Name</FormLabel>
-                        <FormControl>
-                          <Input
-                            placeholder="Callout"
-                            {...field}
-                            value={field.value ?? ''}
-                            autoFocus
-                          />
-                        </FormControl>
-                        <FormDescription>
-                          Use the exported MDX component name.
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                  <div className="flex items-start gap-3">
+                    <FormField
+                      control={methods.control}
+                      name="icon"
+                      render={({ field }) => (
+                        <FormItem className="shrink-0">
+                          <FormLabel>Icon</FormLabel>
+                          <FormControl>
+                            <IconPicker
+                              value={field.value}
+                              onChange={field.onChange}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={methods.control}
+                      name="name"
+                      render={({ field }) => (
+                        <FormItem className="min-w-0 flex-1">
+                          <FormLabel>Component Name</FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder="Callout"
+                              {...field}
+                              value={field.value ?? ''}
+                              autoFocus
+                            />
+                          </FormControl>
+                          <FormDescription>
+                            Use the exported MDX component name.
+                          </FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
 
                   <FormField
                     control={methods.control}
@@ -447,8 +467,7 @@ export const BlockDialog = ({
                       const hasError = !!(
                         methods.formState.errors.props as any
                       )?.[index]
-                      const isExpanded =
-                        expandedIds.has(field.id) || hasError
+                      const isExpanded = expandedIds.has(field.id) || hasError
                       return (
                         <div
                           key={field.id}
@@ -533,10 +552,7 @@ export const BlockDialog = ({
                                         </FormControl>
                                         <SelectContent>
                                           {blockPropTypes.map((type) => (
-                                            <SelectItem
-                                              key={type}
-                                              value={type}
-                                            >
+                                            <SelectItem key={type} value={type}>
                                               {type}
                                             </SelectItem>
                                           ))}

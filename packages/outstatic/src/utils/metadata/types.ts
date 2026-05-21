@@ -120,6 +120,7 @@ export type Block = {
   keywords?: string[]
   imports?: string
   additionalAttributes?: string
+  icon?: string
   props: BlockProp[]
 }
 

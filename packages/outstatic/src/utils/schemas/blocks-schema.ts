@@ -35,6 +35,7 @@ export const blockSchema = z
     keywords: z.array(z.string()).optional(),
     imports: z.string().optional(),
     additionalAttributes: z.string().optional(),
+    icon: z.string().optional(),
     props: z.array(blockPropSchema)
   })
   .superRefine((data, ctx) => {
@@ -88,6 +89,7 @@ export const blockFormSchema = z
     keywords: z.array(blockTagValueSchema).optional(),
     imports: z.string().optional(),
     additionalAttributes: z.string().optional(),
+    icon: z.string().optional(),
     props: z.array(blockFormPropSchema)
   })
   .superRefine((data, ctx) => {

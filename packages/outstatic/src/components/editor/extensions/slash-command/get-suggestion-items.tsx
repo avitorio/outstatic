@@ -13,6 +13,7 @@ import {
   Text,
   TextQuote
 } from 'lucide-react'
+import { DynamicIcon, type IconName } from 'lucide-react/dynamic'
 import {
   CommandItemProps,
   CommandProps
@@ -181,7 +182,15 @@ export const buildBlockItems = (blocks: Block[]): CommandItemProps[] =>
     title: block.name,
     description: block.description || 'Insert MDX block.',
     searchTerms: block.keywords ?? [],
-    icon: <Blocks size={18} />,
+    icon: block.icon ? (
+      <DynamicIcon
+        name={block.icon as IconName}
+        size={18}
+        fallback={() => <Blocks size={18} />}
+      />
+    ) : (
+      <Blocks size={18} />
+    ),
     block
   }))
 

@@ -11,6 +11,7 @@ import {
   Copy,
   Image as ImageIcon
 } from 'lucide-react'
+import { DynamicIcon, type IconName } from 'lucide-react/dynamic'
 import {
   createElement,
   Fragment,
@@ -204,7 +205,17 @@ const OutstaticBlockView = ({
         <div className="flex items-start justify-between gap-3 border-b px-4 py-3">
           <div className="min-w-0">
             <div className="flex items-center gap-2">
-              <Box className="h-4 w-4 text-muted-foreground" />
+              {block.icon ? (
+                <DynamicIcon
+                  name={block.icon as IconName}
+                  className="h-4 w-4 text-muted-foreground"
+                  fallback={() => (
+                    <Box className="h-4 w-4 text-muted-foreground" />
+                  )}
+                />
+              ) : (
+                <Box className="h-4 w-4 text-muted-foreground" />
+              )}
               <div className="truncate text-base font-medium">{block.name}</div>
             </div>
             {block.description ? (
@@ -214,9 +225,6 @@ const OutstaticBlockView = ({
             ) : null}
           </div>
           <div className="flex shrink-0 items-center gap-2">
-            <span className="rounded-md border px-2 py-1 text-xs text-muted-foreground">
-              MDX Block
-            </span>
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button
