@@ -27,7 +27,22 @@ describe('buildBlockJsx', () => {
         publishedAt: '2026-05-18'
       })
     ).toBe(
-      '<Callout title="A &quot;quoted&quot; &amp; escaped title" body={"Line one\\n\\"Line two\\""} count={3} featured image="/images/a.png" theme="info" publishedAt="2026-05-18" />'
+      '<Callout title={"A \\"quoted\\" & escaped title"} body={"Line one\\n\\"Line two\\""} count={3} featured image="/images/a.png" theme="info" publishedAt="2026-05-18" />'
+    )
+  })
+
+  it('preserves ampersands in URL-like string props', () => {
+    const block: Block = {
+      name: 'Youtube',
+      props: [{ name: 'url', type: 'String' }]
+    }
+
+    expect(
+      buildBlockJsx(block, {
+        url: 'https://www.youtube.com/watch?v=wxaXWSVhRXU&list=RDwxaXWSVhRXU&start_radio=1'
+      })
+    ).toBe(
+      '<Youtube url="https://www.youtube.com/watch?v=wxaXWSVhRXU&list=RDwxaXWSVhRXU&start_radio=1" />'
     )
   })
 

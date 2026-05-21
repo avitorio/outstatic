@@ -2,8 +2,7 @@ import { Block, BlockProp } from '@/utils/metadata/types'
 
 export type BlockFormValues = Record<string, string | boolean>
 
-const escapeAttributeValue = (value: string) =>
-  value.replace(/&/g, '&amp;').replace(/"/g, '&quot;')
+const needsExpressionForm = (value: string) => /["\n\r]/.test(value)
 
 export const isEmptyBlockValue = (value: string | boolean | undefined) =>
   value === undefined || value === ''
@@ -73,7 +72,12 @@ export const buildBlockJsx = (block: Block, values: BlockFormValues) => {
       return
     }
 
-    attributes.push(`${prop.name}="${escapeAttributeValue(value)}"`)
+    if (needsExpressionForm(value)) {
+      attributes.push(`${prop.name}={${JSON.stringify(value)}}`)
+      return
+    }
+
+    attributes.push(`${prop.name}="${value}"`)
   })
 
   const dynamicAttrs = attributes.length > 0 ? ` ${attributes.join(' ')}` : ''

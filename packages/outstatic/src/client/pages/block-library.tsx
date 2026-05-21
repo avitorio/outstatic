@@ -88,7 +88,7 @@ export default function BlockLibrary() {
             <CardHeader>
               <CardTitle>Add your first MDX block.</CardTitle>
             </CardHeader>
-            <CardContent className="prose prose-sm dark:prose-invert">
+            <CardContent className="prose prose-sm dark:prose-invert max-w-full">
               <p>
                 Define a reusable component and the props editors should fill in
                 when inserting it.
