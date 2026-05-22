@@ -1,4 +1,5 @@
 import {
+  createFieldSchemaDocument,
   getFieldSchemaCommitMessage,
   getFieldSchemaFilePath,
   getFieldSchemaRequestPath
@@ -59,5 +60,72 @@ describe('field schema target helpers', () => {
         'heroTitle'
       )
     ).toBe('delete field "singleton/about heroTitle" [outstatic:config]')
+  })
+
+  it('builds a settings commit message', () => {
+    expect(
+      getFieldSchemaCommitMessage(
+        {
+          kind: 'collection',
+          slug: 'posts',
+          title: 'Posts'
+        },
+        'settings',
+        'editor settings'
+      )
+    ).toBe('update settings "posts editor settings" [outstatic:config]')
+  })
+
+  it('writes schema settings with custom fields', () => {
+    expect(
+      JSON.parse(
+        createFieldSchemaDocument(
+          {
+            kind: 'collection',
+            slug: 'posts',
+            title: 'Posts'
+          },
+          {
+            featured: {
+              title: 'Featured',
+              fieldType: 'Boolean',
+              dataType: 'boolean'
+            }
+          },
+          { fieldsOnlyMode: true }
+        )
+      )
+    ).toEqual({
+      title: 'posts',
+      type: 'object',
+      settings: {
+        fieldsOnlyMode: true
+      },
+      properties: {
+        featured: {
+          title: 'Featured',
+          fieldType: 'Boolean',
+          dataType: 'boolean'
+        }
+      }
+    })
+  })
+
+  it('normalizes legacy block editor settings', () => {
+    expect(
+      JSON.parse(
+        createFieldSchemaDocument(
+          {
+            kind: 'collection',
+            slug: 'posts',
+            title: 'Posts'
+          },
+          {},
+          { disableBlockEditor: true }
+        )
+      ).settings
+    ).toEqual({
+      fieldsOnlyMode: true
+    })
   })
 })

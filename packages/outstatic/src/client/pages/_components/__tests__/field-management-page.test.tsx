@@ -218,6 +218,57 @@ describe('<FieldManagementPage />', () => {
     ).toBeInTheDocument()
   })
 
+  it('commits editor setting changes', async () => {
+    mockUseFieldSchema.mockReturnValue({
+      data: {
+        settings: {
+          fieldsOnlyMode: false
+        },
+        properties: {
+          featured: {
+            title: 'Featured',
+            fieldType: 'Boolean',
+            dataType: 'boolean'
+          }
+        }
+      },
+      isLoading: false
+    })
+
+    render(
+      <FieldManagementPage
+        target={{ kind: 'collection', slug: 'posts', title: 'Posts' }}
+        emptyStateSubject="collection"
+      />
+    )
+
+    expect(screen.getByRole('button', { name: 'Update' })).toBeDisabled()
+
+    fireEvent.click(screen.getByRole('checkbox', { name: 'Fields only mode' }))
+
+    expect(screen.getByRole('button', { name: 'Update' })).toBeEnabled()
+    expect(mockCommitFieldSchema).not.toHaveBeenCalled()
+
+    fireEvent.click(screen.getByRole('button', { name: 'Update' }))
+
+    await waitFor(() => {
+      expect(mockCommitFieldSchema).toHaveBeenCalledWith({
+        customFields: {
+          featured: {
+            title: 'Featured',
+            fieldType: 'Boolean',
+            dataType: 'boolean'
+          }
+        },
+        settings: {
+          fieldsOnlyMode: true
+        },
+        action: 'settings',
+        fieldName: 'editor settings'
+      })
+    })
+  })
+
   it('does not commit reorder on no-op drag end', () => {
     mockUseFieldSchema.mockReturnValue({
       data: {

@@ -18,6 +18,8 @@ import { useSearchParams } from 'next/navigation'
 import matter from 'gray-matter'
 import { slugify } from 'transliteration'
 import { getFirstImageMediaSource } from '@/utils/media-config'
+import { AdminLoading } from '@/components/admin-loading'
+import { isFieldsOnlyModeEnabled } from '@/utils/hooks/field-schema'
 
 export default function EditSingleton({ slug: initialSlug }: { slug: string }) {
   const [slug, setSlug] = useState(initialSlug)
@@ -55,7 +57,10 @@ export default function EditSingleton({ slug: initialSlug }: { slug: string }) {
     useState<MDExtensions | null>(null)
   const [mediaPathUpdated, setMediaPathUpdated] = useState(false)
 
-  const { data: schema } = useGetSingletonSchema({ slug, enabled: !isNew })
+  const { data: schema, isLoading: isSchemaLoading } = useGetSingletonSchema({
+    slug,
+    enabled: !isNew
+  })
   const { data: config } = useGetConfig()
   const { data: singletons } = useSingletons()
   const files = useFileStore((state) => state.files)
@@ -271,6 +276,10 @@ export default function EditSingleton({ slug: initialSlug }: { slug: string }) {
     setShowSingletonModal(true)
   }
 
+  if (!isNew && isSchemaLoading) {
+    return <AdminLoading />
+  }
+
   return (
     <EditorPageShell
       methods={methods}
@@ -305,6 +314,7 @@ export default function EditSingleton({ slug: initialSlug }: { slug: string }) {
       extensionFileName={`${methods.getValues('slug') || 'singleton'}.${extension}`}
       onExtensionSave={handleExtensionDialogSave}
       singleton={slug}
+      fieldsOnlyMode={isFieldsOnlyModeEnabled(schema?.settings)}
       extraDialogs={
         <NewSingletonModal
           open={showSingletonModal}
