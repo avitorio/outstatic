@@ -28,6 +28,7 @@ publishedAt: "2026-03-13T03:00:00.000Z"
     - [Uploading Media](/the-content-editor#uploading-media)
     - [AI Completion](/the-content-editor#ai-completion)
   - [Custom Fields](/custom-fields)
+    - [Fields only mode](/custom-fields#fields-only-mode)
 
 - Access & Integration
 
