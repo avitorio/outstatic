@@ -80,7 +80,7 @@ describe('mergeMdMeta', () => {
     })
 
     expect(merged).toContain(
-      ['tags: ', '  - label: "News"', '    value: "news"'].join('\n')
+      ['tags:', '  - label: News', '    value: news'].join('\n')
     )
 
     expect(matter(merged).data.tags).toEqual(tags)
@@ -132,5 +132,43 @@ describe('mergeMdMeta', () => {
     )
 
     expect(matter(merged).data.summary).toBe(summary)
+  })
+
+  it('round-trips frontmatter values through gray-matter without type drift', () => {
+    const publishedAt = new Date('2024-06-15T12:34:56.000Z')
+
+    const merged = mergeMdMeta({
+      data: {
+        title: 'Round trip',
+        content: 'Body',
+        publishedAt,
+        draft: false,
+        views: 42,
+        missing: null,
+        zip: '01234',
+        flag: 'no',
+        author: { name: 'Ada', handle: '@ada' },
+        keywords: ['one', 'two'],
+        summary: 'line one\nline two'
+      },
+      basePath: '',
+      repoOwner: 'owner',
+      repoSlug: 'repo',
+      repoBranch: 'main',
+      publicMediaPath: 'uploads/'
+    })
+
+    const parsed = matter(merged).data
+
+    expect(parsed.title).toBe('Round trip')
+    expect(parsed.publishedAt).toEqual(publishedAt)
+    expect(parsed.draft).toBe(false)
+    expect(parsed.views).toBe(42)
+    expect(parsed.missing).toBeNull()
+    expect(parsed.zip).toBe('01234')
+    expect(parsed.flag).toBe('no')
+    expect(parsed.author).toEqual({ name: 'Ada', handle: '@ada' })
+    expect(parsed.keywords).toEqual(['one', 'two'])
+    expect(parsed.summary).toBe('line one\nline two')
   })
 })
