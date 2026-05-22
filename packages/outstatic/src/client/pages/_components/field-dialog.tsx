@@ -4,12 +4,16 @@ import { camelCase } from 'change-case'
 import { useEffect, useState } from 'react'
 import { FormProvider, SubmitHandler, useForm, useWatch } from 'react-hook-form'
 import {
+  ArrayItemType,
+  ArraySubFieldDefinition,
   CustomFieldArrayValue,
   CustomFieldsType,
   Document,
+  arrayItemTypes,
   createCustomFieldDefinition,
   customFieldTypes,
-  isFieldWithValues
+  isFieldWithValues,
+  isRepeatableArrayCustomField
 } from '@/types'
 import { SpinnerIcon } from '@/components/ui/outstatic/spinner-icon'
 import {
@@ -49,6 +53,9 @@ import { useFieldSchemaCommit } from '@/utils/hooks/use-field-schema-commit'
 import { editCustomFieldSchema } from '@/utils/schemas/edit-custom-field-schema'
 import { addCustomFieldSchema } from '@/utils/schemas/add-custom-field-schema'
 import { useOutstatic } from '@/utils/hooks/use-outstatic'
+import { SubFieldManager } from './sub-field-manager'
+
+type SubFieldFormEntry = ArraySubFieldDefinition & { name: string }
 
 type CustomFieldForm = {
   title: string
@@ -56,6 +63,8 @@ type CustomFieldForm = {
   description?: string
   required?: boolean
   values?: CustomFieldArrayValue[]
+  itemType?: ArrayItemType
+  fields?: SubFieldFormEntry[]
 }
 
 type FieldDialogProps = {
@@ -100,7 +109,7 @@ const getDefaultValues = ({
   selectedFieldDefinition?: CustomFieldsType[string]
 }): Partial<CustomFieldForm> => {
   if (mode === 'edit' && selectedFieldDefinition) {
-    return {
+    const base: Partial<CustomFieldForm> = {
       title: selectedFieldDefinition.title,
       fieldType: selectedFieldDefinition.fieldType,
       description: selectedFieldDefinition.description ?? '',
@@ -109,6 +118,21 @@ const getDefaultValues = ({
         ? selectedFieldDefinition.values
         : undefined
     }
+
+    if (isRepeatableArrayCustomField(selectedFieldDefinition)) {
+      base.itemType = selectedFieldDefinition.itemType
+      base.fields = selectedFieldDefinition.fields
+        ? Object.entries(selectedFieldDefinition.fields).map(([name, sub]) => ({
+            name,
+            title: sub.title,
+            fieldType: sub.fieldType,
+            description: sub.description,
+            required: sub.required ?? false
+          }))
+        : []
+    }
+
+    return base
   }
 
   return {
@@ -149,6 +173,10 @@ export const FieldDialog = ({
     control: methods.control,
     name: 'fieldType'
   })
+  const selectedItemType = useWatch({
+    control: methods.control,
+    name: 'itemType'
+  })
   const watchedTitle = useWatch({
     control: methods.control,
     name: 'title'
@@ -182,7 +210,33 @@ export const FieldDialog = ({
 
   const onSubmit: SubmitHandler<CustomFieldForm> = async (data) => {
     setSubmitting(true)
-    const { fieldType, title, ...rest } = data
+    const { fieldType, title } = data
+
+    const fieldsRecord =
+      fieldType === 'Array' && data.itemType === 'Object' && data.fields
+        ? (() => {
+            const record: { [key: string]: ArraySubFieldDefinition } = {}
+            for (const sub of data.fields) {
+              record[sub.name] = {
+                title: sub.title,
+                fieldType: sub.fieldType,
+                description: sub.description,
+                required: sub.required
+              }
+            }
+            return record
+          })()
+        : undefined
+
+    const definitionInput = {
+      title,
+      fieldType,
+      description: data.description,
+      required: data.required,
+      values: data.values,
+      itemType: fieldType === 'Array' ? data.itemType : undefined,
+      fields: fieldsRecord
+    }
 
     if (mode === 'add') {
       const fieldName = camelCase(title)
@@ -207,12 +261,7 @@ export const FieldDialog = ({
 
       const nextCustomFields = {
         ...customFields,
-        [fieldName]: createCustomFieldDefinition({
-          ...rest,
-          fieldType,
-          title,
-          values: data.values
-        })
+        [fieldName]: createCustomFieldDefinition(definitionInput)
       }
 
       const didCommit = await commitFieldSchema({
@@ -237,12 +286,7 @@ export const FieldDialog = ({
 
     const nextCustomFields = {
       ...customFields,
-      [selectedField]: createCustomFieldDefinition({
-        ...rest,
-        fieldType,
-        title,
-        values: data.values
-      })
+      [selectedField]: createCustomFieldDefinition(definitionInput)
     }
 
     const didCommit = await commitFieldSchema({
@@ -269,7 +313,13 @@ export const FieldDialog = ({
 
   const activeFieldType =
     mode === 'edit' ? selectedFieldDefinition?.fieldType : selectedFieldType
+  const activeItemType =
+    mode === 'edit' && isRepeatableArrayCustomField(selectedFieldDefinition)
+      ? selectedFieldDefinition.itemType
+      : selectedItemType
   const isTagsField = activeFieldType === 'Tags'
+  const isArrayField = activeFieldType === 'Array'
+  const isObjectArray = isArrayField && activeItemType === 'Object'
   const showValuesInput =
     activeFieldType === 'Select' || activeFieldType === 'Tags'
 
@@ -440,6 +490,45 @@ export const FieldDialog = ({
                       : methods.getValues('values') || []
                   }
                 />
+              </div>
+            ) : null}
+
+            {isArrayField ? (
+              <div className="flex flex-col gap-4 mb-4">
+                <FormField
+                  control={methods.control}
+                  name="itemType"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Item type</FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value ?? ''}
+                        disabled={mode === 'edit'}
+                      >
+                        <FormControl>
+                          <SelectTrigger className="w-[220px]">
+                            <SelectValue placeholder="Pick an item type" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {arrayItemTypes.map((type) => (
+                            <SelectItem key={type} value={type}>
+                              {type}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormDescription>
+                        Each entry in this array will be a value of the chosen
+                        type. Pick &quot;Object&quot; to define sub-fields.
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                {isObjectArray ? <SubFieldManager /> : null}
               </div>
             ) : null}
 

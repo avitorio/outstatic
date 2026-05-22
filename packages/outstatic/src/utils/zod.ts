@@ -1,4 +1,9 @@
-import { CustomFieldsType, isSelectCustomField } from '@/types'
+import {
+  ArraySubField,
+  CustomFieldsType,
+  isRepeatableArrayCustomField,
+  isSelectCustomField
+} from '@/types'
 import { z } from 'zod/v4'
 import { documentShape } from './schemas/edit-document-schema'
 
@@ -40,6 +45,45 @@ const buildDateSchema = ({
   )
 }
 
+const buildPrimitiveItemSchema = (sub: ArraySubField): z.ZodTypeAny => {
+  switch (sub.dataType) {
+    case 'string':
+      return z.string()
+    case 'number':
+      return z.coerce.number().refine((val) => !isNaN(val), {
+        message: `${sub.title} must be a valid number.`
+      })
+    case 'boolean':
+      return z.boolean()
+    case 'date':
+      return buildDateSchema({ title: sub.title, required: sub.required })
+    case 'image':
+      return z.string()
+    default:
+      return z.any()
+  }
+}
+
+const applyRequiredForSubField = (
+  schema: z.ZodTypeAny,
+  sub: ArraySubField
+): z.ZodTypeAny => {
+  if (sub.dataType === 'date') {
+    return schema
+  }
+
+  if (sub.required) {
+    return schema.refine(
+      (val) => val !== '' && val !== undefined && val !== null,
+      {
+        message: `${sub.title} is a required field.`
+      }
+    )
+  }
+
+  return schema.optional()
+}
+
 export const convertSchemaToZod = (customFields: {
   properties: CustomFieldsType
 }): z.ZodObject<any> => {
@@ -50,6 +94,65 @@ export const convertSchemaToZod = (customFields: {
     const selectValues = isSelectCustomField(field)
       ? field.values.map(({ value }) => value)
       : null
+
+    if (isRepeatableArrayCustomField(field)) {
+      let itemSchema: z.ZodTypeAny
+
+      if (field.itemType === 'Object' && field.fields) {
+        const objectShape: Record<string, z.ZodTypeAny> = {}
+        for (const [subName, sub] of Object.entries(field.fields)) {
+          objectShape[subName] = applyRequiredForSubField(
+            buildPrimitiveItemSchema(sub),
+            sub
+          )
+        }
+        itemSchema = z.object(objectShape)
+      } else {
+        const primitiveSub: ArraySubField = {
+          title: field.title,
+          fieldType: (field.itemType ?? 'String') as ArraySubField['fieldType'],
+          dataType:
+            field.itemType === 'Number'
+              ? 'number'
+              : field.itemType === 'Boolean'
+                ? 'boolean'
+                : field.itemType === 'Date'
+                  ? 'date'
+                  : field.itemType === 'Image'
+                    ? 'image'
+                    : 'string',
+          required: true
+        }
+        itemSchema = buildPrimitiveItemSchema(primitiveSub)
+      }
+
+      fieldSchema = z.array(itemSchema)
+
+      if (typeof field.minItems === 'number') {
+        fieldSchema = (fieldSchema as z.ZodArray<any>).min(field.minItems, {
+          message: `${field.title} requires at least ${field.minItems} item${field.minItems === 1 ? '' : 's'}.`
+        })
+      }
+      if (typeof field.maxItems === 'number') {
+        fieldSchema = (fieldSchema as z.ZodArray<any>).max(field.maxItems, {
+          message: `${field.title} accepts at most ${field.maxItems} item${field.maxItems === 1 ? '' : 's'}.`
+        })
+      }
+
+      if (field.required) {
+        fieldSchema = fieldSchema.refine(
+          (val) => Array.isArray(val) && val.length > 0,
+          {
+            message: `${field.title} is a required field.`
+          }
+        )
+      } else {
+        fieldSchema = fieldSchema.optional()
+      }
+
+      shape[name] = fieldSchema
+      continue
+    }
 
     switch (field.dataType) {
       case 'string':

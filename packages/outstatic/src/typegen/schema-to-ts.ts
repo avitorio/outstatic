@@ -10,6 +10,23 @@ export type DataType =
   | 'date'
   | 'image'
 
+export type ArrayItemType =
+  | 'String'
+  | 'Text'
+  | 'Number'
+  | 'Boolean'
+  | 'Date'
+  | 'Image'
+  | 'Object'
+
+export interface SchemaSubField {
+  title: string
+  fieldType: Exclude<ArrayItemType, 'Object'>
+  dataType: DataType
+  description?: string
+  required?: boolean
+}
+
 export interface SchemaField {
   title: string
   fieldType: string
@@ -17,12 +34,23 @@ export interface SchemaField {
   description?: string
   required?: boolean
   values?: Array<{ label: string; value: string }>
+  itemType?: ArrayItemType
+  fields?: Record<string, SchemaSubField>
 }
 
 export interface Schema {
   title: string
   type: 'object'
   properties: Record<string, SchemaField>
+}
+
+const PRIMITIVE_ITEM_TS: Record<Exclude<ArrayItemType, 'Object'>, string> = {
+  String: 'string',
+  Text: 'string',
+  Number: 'number',
+  Boolean: 'boolean',
+  Date: 'string',
+  Image: 'string'
 }
 
 /**
@@ -35,6 +63,28 @@ export function dataTypeToTS(field: SchemaField): string {
     }
 
     return 'string'
+  }
+
+  if (field.fieldType === 'Array') {
+    const itemType: ArrayItemType = field.itemType ?? 'String'
+
+    if (itemType === 'Object') {
+      if (!field.fields || Object.keys(field.fields).length === 0) {
+        return 'Array<Record<string, unknown>>'
+      }
+      const props = Object.entries(field.fields)
+        .map(([key, sub]) => {
+          const tsType = PRIMITIVE_ITEM_TS[sub.fieldType] ?? 'unknown'
+          const optional = sub.required ? '' : '?'
+          const safeName = sanitizeFieldName(key)
+          return `${safeName}${optional}: ${tsType}`
+        })
+        .join('; ')
+      return `Array<{ ${props} }>`
+    }
+
+    const itemTS = PRIMITIVE_ITEM_TS[itemType] ?? 'unknown'
+    return `${itemTS}[]`
   }
 
   switch (field.dataType) {

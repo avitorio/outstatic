@@ -46,7 +46,8 @@ export const customFieldTypes = [
   'Tags',
   'Boolean',
   'Date',
-  'Image'
+  'Image',
+  'Array'
 ] as const
 
 export const customFieldData = [
@@ -58,9 +59,28 @@ export const customFieldData = [
   'image'
 ] as const
 
+export const arrayItemTypes = [
+  'String',
+  'Text',
+  'Number',
+  'Boolean',
+  'Date',
+  'Image',
+  'Object'
+] as const
+
+export type ArrayItemType = (typeof arrayItemTypes)[number]
+
 export type CustomFieldArrayValue = {
   label: string
   value: string
+}
+
+export type ArraySubFieldDefinition = {
+  title: string
+  fieldType: Exclude<ArrayItemType, 'Object'>
+  description?: string
+  required?: boolean
 }
 
 export type CustomFieldDefinitionInput = {
@@ -69,6 +89,8 @@ export type CustomFieldDefinitionInput = {
   description?: string
   required?: boolean
   values?: CustomFieldArrayValue[]
+  itemType?: ArrayItemType
+  fields?: { [key: string]: ArraySubFieldDefinition }
 }
 
 type BaseCustomField<
@@ -102,6 +124,21 @@ export type DateCustomField = BaseCustomField<'Date', 'date'>
 
 export type ImageCustomField = BaseCustomField<'Image', 'image'>
 
+export type ArraySubField = {
+  title: string
+  fieldType: Exclude<ArrayItemType, 'Object'>
+  dataType: (typeof customFieldData)[number]
+  description?: string
+  required?: boolean
+}
+
+export type ArrayCustomField = BaseCustomField<'Array', 'array'> & {
+  itemType: ArrayItemType
+  fields?: { [key: string]: ArraySubField }
+  minItems?: number
+  maxItems?: number
+}
+
 export type CustomFieldType =
   | StringCustomField
   | TextCustomField
@@ -111,6 +148,7 @@ export type CustomFieldType =
   | BooleanCustomField
   | DateCustomField
   | ImageCustomField
+  | ArrayCustomField
 
 export type CustomFieldsType = {
   [key: string]: CustomFieldType
@@ -124,6 +162,12 @@ export type DocumentSchemaShape =
 
 export function isArrayCustomField(obj: any): obj is TagsCustomField {
   return obj && obj.fieldType === 'Tags' && Array.isArray(obj.values)
+}
+
+export function isRepeatableArrayCustomField(
+  obj: any
+): obj is ArrayCustomField {
+  return obj && obj.fieldType === 'Array' && typeof obj.itemType === 'string'
 }
 
 export function isFieldWithValues(
@@ -140,12 +184,26 @@ export function isSelectCustomField(obj: any): obj is SelectCustomField {
   return obj && obj.fieldType === 'Select' && Array.isArray(obj.values)
 }
 
+const ARRAY_ITEM_DATA_TYPE: Record<
+  Exclude<ArrayItemType, 'Object'>,
+  (typeof customFieldData)[number]
+> = {
+  String: 'string',
+  Text: 'string',
+  Number: 'number',
+  Boolean: 'boolean',
+  Date: 'date',
+  Image: 'image'
+}
+
 export function createCustomFieldDefinition({
   title,
   fieldType,
   description,
   required,
-  values = []
+  values = [],
+  itemType,
+  fields
 }: CustomFieldDefinitionInput): CustomFieldType {
   const baseField = {
     title,
@@ -170,6 +228,30 @@ export function createCustomFieldDefinition({
       return { ...baseField, fieldType, dataType: 'date' }
     case 'Image':
       return { ...baseField, fieldType, dataType: 'image' }
+    case 'Array': {
+      const resolvedItemType: ArrayItemType = itemType ?? 'String'
+      const arrayField: ArrayCustomField = {
+        ...baseField,
+        fieldType,
+        dataType: 'array',
+        itemType: resolvedItemType
+      }
+      if (resolvedItemType === 'Object') {
+        const sourceFields = fields ?? {}
+        const resolvedFields: { [key: string]: ArraySubField } = {}
+        for (const [key, sub] of Object.entries(sourceFields)) {
+          resolvedFields[key] = {
+            title: sub.title,
+            fieldType: sub.fieldType,
+            dataType: ARRAY_ITEM_DATA_TYPE[sub.fieldType],
+            description: sub.description,
+            required: sub.required
+          }
+        }
+        arrayField.fields = resolvedFields
+      }
+      return arrayField
+    }
   }
 }
 
