@@ -177,7 +177,8 @@ describe('BaseCommandList AI gating', () => {
       raw: '<Callout title="Heads up" />',
       outstaticBlockName: 'Callout',
       outstaticBlockValues: JSON.stringify({ title: 'Heads up' }),
-      outstaticBlockDefinition: JSON.stringify(block)
+      outstaticBlockDefinition: JSON.stringify(block),
+      outstaticBlockFocusKey: expect.any(String)
     })
     expect(setImageMenu).not.toHaveBeenCalled()
   })

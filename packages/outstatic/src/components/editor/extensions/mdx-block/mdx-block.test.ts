@@ -269,7 +269,7 @@ describe('MdxBlock', () => {
     expect(editor.storage.markdown.getMarkdown().trim()).toBe('')
   })
 
-  it('inserts block-library MDX as a selectable block followed by a paragraph', () => {
+  it('inserts block-library MDX as a selectable block', () => {
     const editor = createEditor('')
     const block = {
       name: 'Callout',
@@ -284,16 +284,46 @@ describe('MdxBlock', () => {
       outstaticBlockDefinition: JSON.stringify(block)
     })
 
-    expect(editor.state.doc.childCount).toBe(2)
+    expect(editor.state.doc.childCount).toBe(1)
     expect(editor.state.doc.firstChild?.type.name).toBe(
       OUTSTATIC_MDX_BLOCK_TYPE
     )
     expect(editor.state.doc.firstChild?.isAtom).toBe(true)
     expect(editor.state.doc.firstChild?.textContent).toBe('')
-    expect(editor.state.doc.lastChild?.type.name).toBe('paragraph')
     expect(editor.storage.markdown.getMarkdown().trim()).toBe(
       '<Callout title="Heads up" />'
     )
+  })
+
+  it('focuses the first prop input when a block-library MDX block is inserted with a focus key', async () => {
+    const editor = createEditor('')
+    const block = {
+      name: 'Callout',
+      props: [
+        { name: 'title', type: 'String' as const },
+        { name: 'body', type: 'Text' as const }
+      ]
+    }
+    const values = { title: '', body: '' }
+
+    render(createElement(EditorContent, { editor: editor as any }))
+
+    act(() => {
+      editor.commands.setMdxBlock({
+        raw: '<Callout />',
+        outstaticBlockName: block.name,
+        outstaticBlockValues: JSON.stringify(values),
+        outstaticBlockDefinition: JSON.stringify(block),
+        outstaticBlockFocusKey: 'focus-new-callout'
+      })
+    })
+
+    await waitFor(() => {
+      expect(document.activeElement).toHaveAttribute(
+        'id',
+        'mdx-block-Callout-title'
+      )
+    })
   })
 
   it('adds an editable paragraph after rehydrating a trailing block-library MDX block', () => {

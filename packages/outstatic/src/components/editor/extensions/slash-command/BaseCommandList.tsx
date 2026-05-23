@@ -18,6 +18,9 @@ import { OUTSTATIC_API_PATH } from '@/utils/constants'
 import { stringifyError } from '@/utils/errors/stringify-error'
 import { buildBlockJsx, getInitialBlockValues } from './block-jsx'
 
+const getBlockFocusKey = () =>
+  globalThis.crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random()}`
+
 export const BaseCommandList = ({
   items,
   command,
@@ -115,7 +118,8 @@ export const BaseCommandList = ({
                   raw,
                   outstaticBlockName: block.name,
                   outstaticBlockValues: JSON.stringify(values),
-                  outstaticBlockDefinition: JSON.stringify(block)
+                  outstaticBlockDefinition: JSON.stringify(block),
+                  outstaticBlockFocusKey: getBlockFocusKey()
                 })
                 .run()
           })

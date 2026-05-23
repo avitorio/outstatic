@@ -25,6 +25,7 @@ declare module '@tiptap/core' {
         outstaticBlockName?: string
         outstaticBlockValues?: string
         outstaticBlockDefinition?: string
+        outstaticBlockFocusKey?: string
       }) => ReturnType
     }
   }
@@ -64,6 +65,11 @@ const outstaticBlockAttributes = {
               attributes.outstaticBlockDefinition
           }
         : {}
+  },
+  outstaticBlockFocusKey: {
+    default: null,
+    parseHTML: () => null,
+    renderHTML: () => ({})
   }
 }
 
@@ -163,7 +169,8 @@ export const MdxBlock = CodeBlockLowlight.extend({
               outstaticBlockName: attributes.outstaticBlockName ?? null,
               outstaticBlockValues: attributes.outstaticBlockValues ?? null,
               outstaticBlockDefinition:
-                attributes.outstaticBlockDefinition ?? null
+                attributes.outstaticBlockDefinition ?? null,
+              outstaticBlockFocusKey: attributes.outstaticBlockFocusKey ?? null
             },
             content:
               attributes.raw && !isOutstaticBlock
@@ -176,9 +183,7 @@ export const MdxBlock = CodeBlockLowlight.extend({
                 : []
           }
 
-          return commands.insertContent(
-            isOutstaticBlock ? [mdxBlock, { type: 'paragraph' }] : mdxBlock
-          )
+          return commands.insertContent(mdxBlock)
         }
     }
   },

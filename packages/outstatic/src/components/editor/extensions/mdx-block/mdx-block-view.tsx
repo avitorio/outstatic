@@ -18,6 +18,7 @@ import {
   type ReactNode,
   useEffect,
   useMemo,
+  useRef,
   useState
 } from 'react'
 import {
@@ -179,6 +180,24 @@ const OutstaticBlockView = ({
   const code = useMemo(() => getSerializedMdxBlock(node) ?? '', [node])
   const [isCodeVisible, setIsCodeVisible] = useState(false)
   const [mediaPropName, setMediaPropName] = useState<string | null>(null)
+  const wrapperRef = useRef<HTMLDivElement>(null)
+  const focusKey = node.attrs.outstaticBlockFocusKey
+
+  useEffect(() => {
+    if (!focusKey) {
+      return
+    }
+
+    const timeoutId = window.setTimeout(() => {
+      const firstInput = wrapperRef.current?.querySelector<HTMLElement>(
+        '[data-outstatic-mdx-block-prop-input="true"]'
+      )
+
+      firstInput?.focus()
+    }, 0)
+
+    return () => window.clearTimeout(timeoutId)
+  }, [focusKey])
 
   if (!block) {
     return null
@@ -201,7 +220,7 @@ const OutstaticBlockView = ({
         selected && 'border-blue-500 ring-2 ring-blue-500/20'
       )}
     >
-      <div>
+      <div ref={wrapperRef}>
         <div className="flex items-start justify-between gap-3 border-b px-4 py-3">
           <div className="min-w-0">
             <div className="flex items-center gap-2">
@@ -278,6 +297,7 @@ const OutstaticBlockView = ({
                   {prop.type === 'Text' || prop.type === 'Children' ? (
                     <Textarea
                       id={`mdx-block-${block.name}-${prop.name}`}
+                      data-outstatic-mdx-block-prop-input="true"
                       value={typeof value === 'string' ? value : ''}
                       onChange={(event) =>
                         updateValue(prop.name, event.target.value)
@@ -288,6 +308,7 @@ const OutstaticBlockView = ({
                     <div className="flex h-9 items-center gap-2">
                       <Checkbox
                         id={`mdx-block-${block.name}-${prop.name}`}
+                        data-outstatic-mdx-block-prop-input="true"
                         checked={value === true}
                         onCheckedChange={(checked) =>
                           updateValue(prop.name, checked === true)
@@ -303,6 +324,7 @@ const OutstaticBlockView = ({
                   ) : prop.type === 'Select' ? (
                     <select
                       id={`mdx-block-${block.name}-${prop.name}`}
+                      data-outstatic-mdx-block-prop-input="true"
                       value={typeof value === 'string' ? value : ''}
                       onChange={(event) =>
                         updateValue(prop.name, event.target.value)
@@ -320,6 +342,7 @@ const OutstaticBlockView = ({
                     <div className="flex gap-2">
                       <Input
                         id={`mdx-block-${block.name}-${prop.name}`}
+                        data-outstatic-mdx-block-prop-input="true"
                         value={typeof value === 'string' ? value : ''}
                         onChange={(event) =>
                           updateValue(prop.name, event.target.value)
@@ -339,6 +362,7 @@ const OutstaticBlockView = ({
                   ) : (
                     <Input
                       id={`mdx-block-${block.name}-${prop.name}`}
+                      data-outstatic-mdx-block-prop-input="true"
                       type={
                         prop.type === 'Number'
                           ? 'number'
