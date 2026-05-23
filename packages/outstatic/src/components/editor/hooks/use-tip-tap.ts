@@ -252,14 +252,20 @@ export const useTipTap = ({ ...rhfMethods }) => {
       return
     }
 
-    const annotateBlocks = () => {
+    const annotateBlocks = ({
+      transaction
+    }: Pick<EditorEvents['transaction'], 'transaction'>) => {
+      if (!transaction.docChanged) {
+        return
+      }
+
       annotateMdxBlocksWithLibraryMetadata(editor, blocks)
     }
 
-    editor.on('update', annotateBlocks)
+    editor.on('transaction', annotateBlocks)
 
     return () => {
-      editor.off('update', annotateBlocks)
+      editor.off('transaction', annotateBlocks)
     }
   }, [blocks, editor])
 

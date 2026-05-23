@@ -7,6 +7,7 @@ import { useOutstatic } from '@/utils/hooks/use-outstatic'
 import { useGetBlocks } from '@/utils/hooks/use-get-blocks'
 import { useUpgradeDialog } from '@/components/ui/outstatic/upgrade-dialog-context'
 import { getPrevText } from '@/components/editor/utils/get-prev-text'
+import { annotateMdxBlocksWithLibraryMetadata } from '@/components/editor/extensions/slash-command/block-mdx'
 import { useTipTap } from './use-tip-tap'
 
 jest.mock('@/components/editor/extensions/index', () => ({
@@ -48,6 +49,10 @@ jest.mock('@/components/editor/utils/get-prev-text', () => ({
   getPrevText: jest.fn()
 }))
 
+jest.mock('@/components/editor/extensions/slash-command/block-mdx', () => ({
+  annotateMdxBlocksWithLibraryMetadata: jest.fn()
+}))
+
 jest.mock('sonner', () => ({
   toast: {
     error: jest.fn(),
@@ -63,6 +68,8 @@ const mockUseGetBlocks = useGetBlocks as unknown as jest.Mock
 const mockUseUpgradeDialog = useUpgradeDialog as unknown as jest.Mock
 const mockGetPrevText = getPrevText as unknown as jest.Mock
 const mockPlaceholderConfigure = Placeholder.configure as unknown as jest.Mock
+const mockAnnotateMdxBlocksWithLibraryMetadata =
+  annotateMdxBlocksWithLibraryMetadata as unknown as jest.Mock
 
 function HookHarness({ setValue }: { setValue: jest.Mock }) {
   useTipTap({ setValue })
@@ -260,18 +267,17 @@ describe('useTipTap AI gating', () => {
     ).toBe('')
   })
 
-  it('annotates block metadata on content updates without listening to every transaction', () => {
+  it('annotates block metadata on document-changing transactions', () => {
     const on = jest.fn()
     const off = jest.fn()
+    const block = {
+      name: 'Callout'
+    }
 
     mockUseGetBlocks.mockReturnValue({
       data: {
         blocks: {
-          blocks: [
-            {
-              name: 'Callout'
-            }
-          ]
+          blocks: [block]
         }
       }
     })
@@ -282,15 +288,30 @@ describe('useTipTap AI gating', () => {
     })
 
     const { unmount } = render(<HookHarness setValue={setValue} />)
+    const transactionHandler = on.mock.calls.find(
+      ([event]) => event === 'transaction'
+    )?.[1]
 
     expect(on).toHaveBeenCalledTimes(1)
-    expect(on).toHaveBeenCalledWith('update', expect.any(Function))
-    expect(on).not.toHaveBeenCalledWith('transaction', expect.any(Function))
+    expect(on).toHaveBeenCalledWith('transaction', expect.any(Function))
+    expect(mockAnnotateMdxBlocksWithLibraryMetadata).toHaveBeenCalledWith(
+      expect.objectContaining({ on, off }),
+      [block]
+    )
+
+    mockAnnotateMdxBlocksWithLibraryMetadata.mockClear()
+    transactionHandler({ transaction: { docChanged: false } })
+    expect(mockAnnotateMdxBlocksWithLibraryMetadata).not.toHaveBeenCalled()
+
+    transactionHandler({ transaction: { docChanged: true } })
+    expect(mockAnnotateMdxBlocksWithLibraryMetadata).toHaveBeenCalledWith(
+      expect.objectContaining({ on, off }),
+      [block]
+    )
 
     unmount()
 
     expect(off).toHaveBeenCalledTimes(1)
-    expect(off).toHaveBeenCalledWith('update', expect.any(Function))
-    expect(off).not.toHaveBeenCalledWith('transaction', expect.any(Function))
+    expect(off).toHaveBeenCalledWith('transaction', expect.any(Function))
   })
 })
