@@ -14,21 +14,17 @@ The **Block Library** lets you define reusable MDX components and make them avai
 
 Blocks are stored as a JSON file in your repository alongside your content, so the library travels with your project.
 
-![](/docs/images/block-library-overview-PLACEHOLDER.png)
-
 ## Opening the Block Library
 
 In the dashboard sidebar, under **Libraries**, click **Block Library**. The page lists all blocks defined for the current project, with a search field to filter by name, description, or keyword.
 
-![](/docs/images/block-library-sidebar-PLACEHOLDER.png)
+![](/docs/images/block-library-Q4MT.webp)
 
 Only users with the **collection management** permission can add, edit, or delete blocks. Other users can still see the library and use the blocks from the editor.
 
 ## Adding a block
 
 Click **Add Block** to open the block wizard. Adding a block is a 3-step process.
-
-![](/docs/images/block-library-add-PLACEHOLDER.png)
 
 ### Step 1 — Basics
 
@@ -83,25 +79,23 @@ This is helpful for framework-specific attributes or for forcing every inserted 
 
 Click the block name on a card to open the wizard again and edit the block. Use the trash icon to delete it.
 
-![](/docs/images/block-library-card-actions-PLACEHOLDER.png)
-
 Renaming a block updates the library entry. Documents that already use the previous name are not rewritten — they continue to render the original JSX until you edit them.
 
 ## Inserting a block from the editor
 
 In the content editor, type `/` to open the slash command menu. Your custom blocks appear below the built-in commands. Filter by typing the block name, a keyword, or part of the description.
 
-![](/docs/images/block-library-slash-menu-PLACEHOLDER.png)
+![](/docs/images/custom-mdx-slash-command-Y0ND.webp)
 
 When you pick a block, Outstatic inserts an editable card with one input per prop. Required props show a red asterisk and are validated as you type.
 
-![](/docs/images/block-library-insert-form-PLACEHOLDER.png)
+![](/docs/images/youtube-block-example-YzOD.webp)
 
 The card serializes to JSX in your saved document. You can click the `<>` icon on the card to preview the JSX that will be written to disk, and copy it to your clipboard with the copy button.
 
-![](/docs/images/block-library-code-preview-PLACEHOLDER.png)
+![](/docs/images/mdx-block-code-open-Y5MD.webp)
 
-If a block was inserted before its definition was edited, the existing instance keeps the original JSX and continues to work as a regular MDX block.
+If a block was inserted before its definition w![](/docs/images/block-library-czNj.webp)![](/docs/images/block-library-M0NT.webp)as edited, the existing instance keeps the original JSX and continues to work as a regular MDX block.
 
 ## How blocks are stored
 

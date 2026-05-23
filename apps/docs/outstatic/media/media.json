@@ -1,6 +1,6 @@
 {
-  "commit": "c36880475cdc37ef8b64f8d30513eba20058d3ce",
-  "generated": "2026-05-23T13:47:00.522Z",
+  "commit": "5303316bc71d8f7cec991d6d72dc16d7282fa5dd",
+  "generated": "2026-05-23T14:50:33.108Z",
   "media": [
     {
       "__outstatic": {
@@ -22,6 +22,42 @@
       "alt": "",
       "filename": "ai-autocomplete-Q2Mj.gif",
       "publishedAt": "2024-10-31T19:16:45.944Z",
+      "type": "image"
+    },
+    {
+      "__outstatic": {
+        "commit": "5303316bc71d8f7cec991d6d72dc16d7282fa5dd",
+        "hash": "3525014817",
+        "path": "apps/docs/public/images/block-library-M0NT.webp"
+      },
+      "alt": "",
+      "filename": "block-library-M0NT.webp",
+      "publishedAt": "2026-05-23T14:50:33.105Z",
+      "source": "images",
+      "type": "image"
+    },
+    {
+      "__outstatic": {
+        "commit": "5303316bc71d8f7cec991d6d72dc16d7282fa5dd",
+        "hash": "3525014817",
+        "path": "apps/docs/public/images/block-library-Q4MT.webp"
+      },
+      "alt": "",
+      "filename": "block-library-Q4MT.webp",
+      "publishedAt": "2026-05-23T14:50:33.105Z",
+      "source": "images",
+      "type": "image"
+    },
+    {
+      "__outstatic": {
+        "commit": "5303316bc71d8f7cec991d6d72dc16d7282fa5dd",
+        "hash": "3525014817",
+        "path": "apps/docs/public/images/block-library-czNj.webp"
+      },
+      "alt": "",
+      "filename": "block-library-czNj.webp",
+      "publishedAt": "2026-05-23T14:50:33.105Z",
+      "source": "images",
       "type": "image"
     },
     {
@@ -293,6 +329,18 @@
     },
     {
       "__outstatic": {
+        "commit": "5303316bc71d8f7cec991d6d72dc16d7282fa5dd",
+        "hash": "2013661809",
+        "path": "apps/docs/public/images/custom-mdx-slash-command-Y0ND.webp"
+      },
+      "alt": "",
+      "filename": "custom-mdx-slash-command-Y0ND.webp",
+      "publishedAt": "2026-05-23T14:50:33.104Z",
+      "source": "images",
+      "type": "image"
+    },
+    {
+      "__outstatic": {
         "commit": "",
         "hash": "0",
         "path": "apps/docs/public/images/docs-preview.webp"
@@ -355,6 +403,18 @@
       "alt": "",
       "filename": "markdown-example-c4MT.gif",
       "publishedAt": "2024-10-31T19:16:45.944Z",
+      "type": "image"
+    },
+    {
+      "__outstatic": {
+        "commit": "5303316bc71d8f7cec991d6d72dc16d7282fa5dd",
+        "hash": "2153755957",
+        "path": "apps/docs/public/images/mdx-block-code-open-Y5MD.webp"
+      },
+      "alt": "",
+      "filename": "mdx-block-code-open-Y5MD.webp",
+      "publishedAt": "2026-05-23T14:50:33.104Z",
+      "source": "images",
       "type": "image"
     },
     {
@@ -443,6 +503,18 @@
       "alt": "",
       "filename": "slash-command-ex-U1MD.gif",
       "publishedAt": "2024-10-31T19:16:45.944Z",
+      "type": "image"
+    },
+    {
+      "__outstatic": {
+        "commit": "5303316bc71d8f7cec991d6d72dc16d7282fa5dd",
+        "hash": "1162395811",
+        "path": "apps/docs/public/images/youtube-block-example-YzOD.webp"
+      },
+      "alt": "",
+      "filename": "youtube-block-example-YzOD.webp",
+      "publishedAt": "2026-05-23T14:50:33.104Z",
+      "source": "images",
       "type": "image"
     }
   ]
