@@ -111,17 +111,6 @@ export default function BlockLibrary() {
           {filteredBlocks.map((block) => (
             <Card key={block.name} className="flex flex-col">
               <CardContent className="relative flex justify-between items-center">
-                {canManageCollections ? (
-                  <button
-                    type="button"
-                    className="absolute inset-0 z-10 h-full w-full cursor-pointer rounded-md border-0 bg-transparent p-0 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                    aria-label={`Edit ${block.name}`}
-                    onClick={() => {
-                      setSelectedBlock(block)
-                      setShowEditDialog(true)
-                    }}
-                  />
-                ) : null}
                 <div className="flex items-center justify-between gap-3 w-full">
                   <div className="flex items-center justify-start gap-3">
                     <div className="p-2 rounded-md border border-border h-12 w-12 flex items-center justify-center">
@@ -138,7 +127,23 @@ export default function BlockLibrary() {
                       )}
                     </div>
                     <div className="min-w-0">
-                      <CardTitle className="truncate">{block.name}</CardTitle>
+                      {canManageCollections ? (
+                        <button
+                          type="button"
+                          className="max-w-full cursor-pointer rounded-sm text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                          aria-label={`Edit ${block.name}`}
+                          onClick={() => {
+                            setSelectedBlock(block)
+                            setShowEditDialog(true)
+                          }}
+                        >
+                          <CardTitle className="truncate">
+                            {block.name}
+                          </CardTitle>
+                        </button>
+                      ) : (
+                        <CardTitle className="truncate">{block.name}</CardTitle>
+                      )}
                       {block.description ? (
                         <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">
                           {block.description}
