@@ -59,7 +59,7 @@ export default function BlockLibrary() {
       <div className="mb-4 flex h-12 items-center">
         <h1 className="mr-4 text-2xl">Block Library</h1>
         <div className="flex gap-2 items-center">
-          {blocks.length > 0 ? (
+          {canManageCollections && blocks.length > 0 ? (
             <Button onClick={() => setShowAddDialog(true)}>
               <Plus className="mr-2 h-4 w-4" />
               Add Block
@@ -93,10 +93,12 @@ export default function BlockLibrary() {
                 Define a reusable component and the props editors should fill in
                 when inserting it.
               </p>
-              <Button onClick={() => setShowAddDialog(true)}>
-                <Plus className="mr-2 h-4 w-4" />
-                Add Block
-              </Button>
+              {canManageCollections ? (
+                <Button onClick={() => setShowAddDialog(true)}>
+                  <Plus className="mr-2 h-4 w-4" />
+                  Add Block
+                </Button>
+              ) : null}
             </CardContent>
           </Card>
         </div>
@@ -168,39 +170,43 @@ export default function BlockLibrary() {
         </div>
       )}
 
-      <BlockDialog
-        mode="add"
-        open={showAddDialog}
-        onOpenChange={setShowAddDialog}
-        blocks={blocks}
-        onSaved={() => setSelectedBlock(null)}
-      />
+      {canManageCollections ? (
+        <>
+          <BlockDialog
+            mode="add"
+            open={showAddDialog}
+            onOpenChange={setShowAddDialog}
+            blocks={blocks}
+            onSaved={() => setSelectedBlock(null)}
+          />
 
-      <BlockDialog
-        mode="edit"
-        open={showEditDialog}
-        onOpenChange={(open) => {
-          if (!open) {
-            setSelectedBlock(null)
-          }
-          setShowEditDialog(open)
-        }}
-        blocks={blocks}
-        block={selectedBlock}
-        onSaved={() => setSelectedBlock(null)}
-      />
+          <BlockDialog
+            mode="edit"
+            open={showEditDialog}
+            onOpenChange={(open) => {
+              if (!open) {
+                setSelectedBlock(null)
+              }
+              setShowEditDialog(open)
+            }}
+            blocks={blocks}
+            block={selectedBlock}
+            onSaved={() => setSelectedBlock(null)}
+          />
 
-      <DeleteBlockDialog
-        open={showDeleteDialog}
-        onOpenChange={(open) => {
-          if (!open) {
-            setSelectedBlock(null)
-          }
-          setShowDeleteDialog(open)
-        }}
-        block={selectedBlock}
-        onDeleted={() => setSelectedBlock(null)}
-      />
+          <DeleteBlockDialog
+            open={showDeleteDialog}
+            onOpenChange={(open) => {
+              if (!open) {
+                setSelectedBlock(null)
+              }
+              setShowDeleteDialog(open)
+            }}
+            block={selectedBlock}
+            onDeleted={() => setSelectedBlock(null)}
+          />
+        </>
+      ) : null}
     </AdminLayout>
   )
 }

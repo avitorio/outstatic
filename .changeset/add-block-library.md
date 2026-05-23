@@ -10,3 +10,4 @@
 - Add block library icon picking support and update block metadata handling for JSX block insertion.
 - Fix block library String attributes being HTML-escaped on save (e.g. `&` written as `&amp;` in URLs like YouTube embed links).
 - Avoid rescanning the full editor document for block metadata on selection-only transactions.
+- Restrict block library configuration actions to users with collection management permission.

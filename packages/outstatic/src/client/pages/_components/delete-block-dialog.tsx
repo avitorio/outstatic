@@ -1,6 +1,7 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Block } from '@/utils/metadata/types'
 import { useUpdateBlocks } from '@/utils/hooks/use-update-blocks'
+import { usePermissions } from '@/utils/hooks/use-permissions'
 import { SpinnerIcon } from '@/components/ui/outstatic/spinner-icon'
 import {
   AlertDialog,
@@ -28,6 +29,13 @@ export const DeleteBlockDialog = ({
 }: DeleteBlockDialogProps) => {
   const [deleting, setDeleting] = useState(false)
   const { deleteBlock } = useUpdateBlocks()
+  const { canManageCollections } = usePermissions()
+
+  useEffect(() => {
+    if (!canManageCollections && open) {
+      onOpenChange(false)
+    }
+  }, [canManageCollections, onOpenChange, open])
 
   const handleDialogChange = (value: boolean) => {
     if (!value) {
@@ -38,7 +46,7 @@ export const DeleteBlockDialog = ({
   }
 
   const handleDelete = async () => {
-    if (!block) {
+    if (!canManageCollections || !block) {
       return
     }
 
@@ -53,7 +61,7 @@ export const DeleteBlockDialog = ({
     }
   }
 
-  if (!block) {
+  if (!canManageCollections || !block) {
     return null
   }
 

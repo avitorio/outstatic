@@ -44,6 +44,7 @@ import { Textarea } from '@/components/ui/shadcn/textarea'
 import { blockFormSchema } from '@/utils/schemas/blocks-schema'
 import { blockPropTypes, Block } from '@/utils/metadata/types'
 import { useUpdateBlocks } from '@/utils/hooks/use-update-blocks'
+import { usePermissions } from '@/utils/hooks/use-permissions'
 import { CustomFieldArrayValue } from '@/types'
 import { IconPicker } from './icon-picker'
 
@@ -177,6 +178,7 @@ export const BlockDialog = ({
   const [submitting, setSubmitting] = useState(false)
   const [step, setStep] = useState(1)
   const { addBlock, updateBlock } = useUpdateBlocks()
+  const { canManageCollections } = usePermissions()
   const methods = useForm<BlockFormValue>({
     mode: 'onChange',
     resolver: zodResolver(blockFormSchema) as any,
@@ -199,6 +201,12 @@ export const BlockDialog = ({
   useEffect(() => {
     methods.reset(getDefaultValues({ mode, block }))
   }, [block, methods, mode, open])
+
+  useEffect(() => {
+    if (!canManageCollections && open) {
+      onOpenChange(false)
+    }
+  }, [canManageCollections, onOpenChange, open])
 
   if (previousOpen !== open) {
     setPreviousOpen(open)
@@ -262,6 +270,10 @@ export const BlockDialog = ({
   }
 
   const onSubmit: SubmitHandler<BlockFormValue> = async (data) => {
+    if (!canManageCollections) {
+      return
+    }
+
     if (step !== TOTAL_STEPS) {
       return
     }
@@ -305,7 +317,7 @@ export const BlockDialog = ({
     }
   }
 
-  if (mode === 'edit' && !block) {
+  if (!canManageCollections || (mode === 'edit' && !block)) {
     return null
   }
 
