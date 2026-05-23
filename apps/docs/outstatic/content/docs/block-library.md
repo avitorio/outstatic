@@ -34,7 +34,7 @@ Click **Add Block** to open the block wizard. Adding a block is a 3-step process
 
 Define how the block appears in the slash command menu and which imports it needs.
 
-![](/docs/images/block-library-step-1-PLACEHOLDER.png)
+![](/docs/images/cleanshot-2026-05-23-at-10.41.52-2x-Q3Mj.png)
 
 - **Icon** — Pick an icon from the Lucide catalog. The icon shows next to the block in the slash menu and on the block card in the editor.
 - **Component Name** — The exact name of the exported MDX component. Must be PascalCase (e.g. `Callout`, `YouTubeEmbed`).
@@ -46,7 +46,7 @@ Define how the block appears in the slash command menu and which imports it need
 
 Describe the props editors fill in when inserting the block. For each prop you can configure:
 
-![](/docs/images/block-library-step-2-PLACEHOLDER.png)
+![](/docs/images/cleanshot-2026-05-23-at-10.44.06-2x-AyOD.png)
 
 - **Prop name** — camelCase identifier used as the JSX attribute name.
 - **Type** — One of:
@@ -69,7 +69,7 @@ Each prop is collapsible so you can keep the editor compact while you work throu
 
 Optional. Add a string of JSX attributes that should be appended verbatim to every insertion of this block, after any prop attributes.
 
-![](/docs/images/block-library-step-3-PLACEHOLDER.png)
+![](/docs/images/cleanshot-2026-05-23-at-10.45.35-2x-kxMj.png)
 
 Use this for static attributes that never change between insertions, such as:
 
@@ -97,7 +97,7 @@ When you pick a block, Outstatic inserts an editable card with one input per pro
 
 ![](/docs/images/block-library-insert-form-PLACEHOLDER.png)
 
-The card serializes to JSX in your saved document. You can click the **`<>`** icon on the card to preview the JSX that will be written to disk, and copy it to your clipboard with the copy button.
+The card serializes to JSX in your saved document. You can click the `<>` icon on the card to preview the JSX that will be written to disk, and copy it to your clipboard with the copy button.
 
 ![](/docs/images/block-library-code-preview-PLACEHOLDER.png)
 

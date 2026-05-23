@@ -1,6 +1,6 @@
 {
-  "commit": "eef3625205813e18fa09c5ea707bb189643aa802",
-  "generated": "2026-05-18T15:42:41.207Z",
+  "commit": "c36880475cdc37ef8b64f8d30513eba20058d3ce",
+  "generated": "2026-05-23T13:47:00.522Z",
   "metadata": [
     {
       "__outstatic": {
@@ -646,6 +646,24 @@
       "slug": "deploy-a-starter-outstatic-website-on-vercel",
       "status": "published",
       "title": "Deploy a starter Outstatic website on Vercel"
+    },
+    {
+      "__outstatic": {
+        "commit": "c36880475cdc37ef8b64f8d30513eba20058d3ce",
+        "hash": "1403066856",
+        "path": "/outstatic/content/docs/block-library.md"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "docs",
+      "coverImage": "",
+      "description": "Define reusable MDX blocks and insert them from the editor's slash command menu.",
+      "publishedAt": "2026-05-23T03:00:00.000Z",
+      "slug": "block-library",
+      "status": "published",
+      "title": "Block Library"
     }
   ]
 }
