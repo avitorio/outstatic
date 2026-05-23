@@ -109,8 +109,18 @@ export default function BlockLibrary() {
       ) : (
         <div className="grid max-w-6xl gap-4 md:grid-cols-2 xl:grid-cols-3">
           {filteredBlocks.map((block) => (
-            <Card key={block.name} className="flex flex-col">
+            <Card key={block.name} className="flex flex-col hover:border-gray-500 transition-all duration-300 cursor-pointer">
               <CardContent className="relative flex justify-between items-center">
+                {canManageCollections ? (
+                  <div
+                    className="absolute inset-0 z-10 h-full w-full cursor-pointer rounded-md"
+                    aria-hidden="true"
+                    onClick={() => {
+                      setSelectedBlock(block)
+                      setShowEditDialog(true)
+                    }}
+                  />
+                ) : null}
                 <div className="flex items-center justify-between gap-3 w-full">
                   <div className="flex items-center justify-start gap-3">
                     <div className="p-2 rounded-md border border-border h-12 w-12 flex items-center justify-center">
@@ -130,7 +140,7 @@ export default function BlockLibrary() {
                       {canManageCollections ? (
                         <button
                           type="button"
-                          className="max-w-full cursor-pointer rounded-sm text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                          className="relative z-20 max-w-full cursor-pointer rounded-sm text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                           aria-label={`Edit ${block.name}`}
                           onClick={() => {
                             setSelectedBlock(block)
