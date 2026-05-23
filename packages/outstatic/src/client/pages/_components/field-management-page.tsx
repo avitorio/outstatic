@@ -14,9 +14,15 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/shadcn/card'
+import { Checkbox } from '@/components/ui/shadcn/checkbox'
 import { SpinnerIcon } from '@/components/ui/outstatic/spinner-icon'
 import { CustomFieldsType, customFieldTypeLabels } from '@/types'
-import { FieldSchemaTarget } from '@/utils/hooks/field-schema'
+import {
+  FieldSchemaSettings,
+  FieldSchemaTarget,
+  isFieldsOnlyModeEnabled,
+  normalizeFieldSchemaSettings
+} from '@/utils/hooks/field-schema'
 import { useFieldSchema } from '@/utils/hooks/use-field-schema'
 import { useFieldSchemaCommit } from '@/utils/hooks/use-field-schema-commit'
 import { DeleteFieldDialog } from './delete-field-dialog'
@@ -123,6 +129,10 @@ export const FieldManagementPage = ({
   )
   const [hasPendingOrderChange, setHasPendingOrderChange] = useState(false)
   const [savingOrder, setSavingOrder] = useState(false)
+  const [schemaSettings, setSchemaSettings] = useState<FieldSchemaSettings>({})
+  const [pendingSchemaSettings, setPendingSchemaSettings] =
+    useState<FieldSchemaSettings>({})
+  const [savingSettings, setSavingSettings] = useState(false)
   const router = useRouter()
   const { dashboardRoute } = useOutstatic()
   const commitFieldSchema = useFieldSchemaCommit(target)
@@ -143,6 +153,8 @@ export const FieldManagementPage = ({
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setCustomFields(schema.properties)
       setSavedCustomFields(schema.properties)
+      setSchemaSettings(schema.settings ?? {})
+      setPendingSchemaSettings(schema.settings ?? {})
       setHasPendingOrderChange(false)
     }
   }, [schema])
@@ -198,6 +210,31 @@ export const FieldManagementPage = ({
 
     setSavedCustomFields(customFields)
     setHasPendingOrderChange(false)
+  }
+
+  const hasPendingSettingsChange =
+    isFieldsOnlyModeEnabled(pendingSchemaSettings) !==
+    isFieldsOnlyModeEnabled(schemaSettings)
+
+  const handleSaveSettings = async () => {
+    if (savingSettings) {
+      return
+    }
+
+    setSavingSettings(true)
+    const didCommit = await commitFieldSchema({
+      customFields: savedCustomFields,
+      settings: pendingSchemaSettings,
+      action: 'settings',
+      fieldName: 'editor settings'
+    })
+    setSavingSettings(false)
+
+    if (!didCommit) {
+      return
+    }
+
+    setSchemaSettings(pendingSchemaSettings)
   }
 
   const handleDragEnd = (event: DragEndEvent) => {
@@ -334,6 +371,60 @@ export const FieldManagementPage = ({
               </SortableContext>
             </DndContext>
           )}
+        </div>
+        <div className="flex flex-1 max-w-2xl flex-col space-y-6">
+          <div className="flex items-center">
+            <h2 className="text-xl">Editor</h2>
+          </div>
+          <Card>
+            <CardHeader>
+              <CardTitle>Fields only mode</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <label className="flex items-start gap-3">
+                <Checkbox
+                  checked={isFieldsOnlyModeEnabled(pendingSchemaSettings)}
+                  disabled={savingSettings}
+                  onCheckedChange={(checked) => {
+                    setPendingSchemaSettings(
+                      (current) =>
+                        normalizeFieldSchemaSettings({
+                          ...current,
+                          fieldsOnlyMode: checked === true
+                        }) ?? {}
+                    )
+                  }}
+                  aria-label="Fields only mode"
+                />
+                <span className="flex flex-col gap-1">
+                  <span className="font-medium">Fields only mode</span>
+                  <span className="text-sm text-muted-foreground">
+                    Disable the block editor for this {emptyStateSubject}.
+                  </span>
+                </span>
+              </label>
+            </CardContent>
+            <CardFooter className="justify-start">
+              <Button
+                type="button"
+                disabled={
+                  !hasPendingSettingsChange ||
+                  savingSettings ||
+                  hasPendingOrderChange
+                }
+                onClick={handleSaveSettings}
+              >
+                {savingSettings ? (
+                  <>
+                    <SpinnerIcon className="mr-2 text-background" />
+                    Updating
+                  </>
+                ) : (
+                  'Update'
+                )}
+              </Button>
+            </CardFooter>
+          </Card>
         </div>
         <div className="flex flex-1 max-w-2xl flex-col space-y-6">
           <div className="flex items-center">

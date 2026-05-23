@@ -38,6 +38,7 @@ type EditorPageShellProps = {
   onExtensionSave: (selectedExtension: MDExtensions) => void
   singleton?: string
   extraDialogs?: ReactNode
+  fieldsOnlyMode?: boolean
 }
 
 export function EditorPageShell({
@@ -65,8 +66,23 @@ export function EditorPageShell({
   extensionFileName,
   onExtensionSave,
   singleton,
-  extraDialogs
+  extraDialogs,
+  fieldsOnlyMode = false
 }: EditorPageShellProps) {
+  const documentSettings = (
+    <DocumentSettings
+      singleton={singleton}
+      title={settingsTitle}
+      loading={loading}
+      saveDocument={saveDocument}
+      showDelete={showDelete}
+      customFields={customFields}
+      setCustomFields={setCustomFields}
+      metadata={metadata}
+      standalone={fieldsOnlyMode}
+    />
+  )
+
   return (
     <>
       <Head>
@@ -98,29 +114,23 @@ export function EditorPageShell({
             <FormMessage />
             <AdminLayout
               title={title}
-              settings={
-                <DocumentSettings
-                  singleton={singleton}
-                  title={settingsTitle}
-                  loading={loading}
-                  saveDocument={saveDocument}
-                  showDelete={showDelete}
-                  customFields={customFields}
-                  setCustomFields={setCustomFields}
-                  metadata={metadata}
-                />
-              }
+              className={fieldsOnlyMode ? 'p-0 md:p-0 bg-muted' : ''}
+              settings={fieldsOnlyMode ? undefined : documentSettings}
             >
-              <form className="m-auto max-w-[700px] space-y-4">
-                <DocumentTitleInput
-                  id="title"
-                  className="w-full resize-none outline-hidden text-5xl scrollbar-hide min-h-[55px] overflow-hidden"
-                  placeholder={titlePlaceholder}
-                />
-                <div className="min-h-full">
-                  <MDEditor editor={editor} id="content" />
-                </div>
-              </form>
+              {fieldsOnlyMode ? (
+                documentSettings
+              ) : (
+                <form className="m-auto max-w-[700px] space-y-4">
+                  <DocumentTitleInput
+                    id="title"
+                    className="w-full resize-none outline-hidden text-5xl scrollbar-hide min-h-[55px] overflow-hidden"
+                    placeholder={titlePlaceholder}
+                  />
+                  <div className="min-h-full">
+                    <MDEditor editor={editor} id="content" />
+                  </div>
+                </form>
+              )}
             </AdminLayout>
             <MediaSettingsDialog
               showMediaPathDialog={showMediaPathDialog}

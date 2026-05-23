@@ -64,6 +64,80 @@ To delete a field, simply click the trash icon next to the field you want to rem
 
 **Important:** deleting a field does not remove the metadata from your Markdown files.
 
+## Fields only mode
+
+Collections and singletons can also be configured to use **Fields only mode**.
+
+This is useful when a content type should only be edited through structured fields, such as:
+
+- landing page settings
+- site-wide configuration
+- author profiles
+- content that is rendered from metadata instead of a long Markdown or MDX body
+
+When Fields only mode is enabled, the edit page shows only the document settings panel. The title is shown as a regular text field in that panel, alongside status, date, slug, author, and any custom fields configured for the collection or singleton.
+
+### Enable Fields only mode for a collection
+
+1. Open the Outstatic dashboard.
+2. Go to **Collections**.
+3. Click the settings icon for the collection you want to configure.
+4. Below the **Custom Fields** section, find **Editor**.
+5. Check **Fields only mode**.
+6. Click **Update**.
+
+After saving, documents in that collection will open in the settings-only editor.
+
+### Enable Fields only mode for a singleton
+
+1. Open the Outstatic dashboard.
+2. Go to **Singletons**.
+3. Open the settings page for the singleton.
+4. Below the **Custom Fields** section, find **Editor**.
+5. Check **Fields only mode**.
+6. Click **Update**.
+
+After saving, that singleton will open in the settings-only editor.
+
+The **Update** button is always visible, but it is disabled until you change the Fields only mode checkbox.
+
+### What gets saved
+
+The setting is stored in the schema file for the collection or singleton.
+
+For a collection, the schema file is stored at:
+
+```txt
+/outstatic/content/{collection}/schema.json
+```
+
+For a singleton, the schema file is stored at:
+
+```txt
+/outstatic/content/_singletons/{singleton}.schema.json
+```
+
+Example:
+
+```json
+{
+  "title": "homepage",
+  "type": "object",
+  "settings": {
+    "fieldsOnlyMode": true
+  },
+  "properties": {
+    "heroTitle": {
+      "required": true,
+      "description": "Main heading on the home page",
+      "fieldType": "String",
+      "dataType": "string",
+      "title": "Hero Title"
+    }
+  }
+}
+```
+
 ## Good to know
 
 ### Fetching Custom Fields
@@ -80,6 +154,9 @@ Example `schema.json` file:
 {
   "title": "projects",
   "type": "object",
+  "settings": {
+    "fieldsOnlyMode": false
+  },
   "properties": {
     "websiteUrl": {
       "required": false,

@@ -62,6 +62,7 @@ type DocumentSettingsProps = {
   metadata: Record<string, any>
   hiddenFields?: string[]
   singleton?: string
+  standalone?: boolean
 }
 
 export const DocumentSettings = ({
@@ -73,12 +74,14 @@ export const DocumentSettings = ({
   setCustomFields,
   metadata,
   singleton,
-  hiddenFields = []
+  hiddenFields = [],
+  standalone = false
 }: DocumentSettingsProps) => {
   const {
     formState: { errors },
     control,
-    reset
+    reset,
+    setValue
   } = useFormContext()
   const router = useRouter()
 
@@ -165,69 +168,111 @@ export const DocumentSettings = ({
 
   return (
     <>
-      <div className="absolute w-full items-center justify-between flex p-4 border-t z-10 bottom-0 bg-background md:hidden">
-        <Button
-          data-testid="mobile-toggle-button"
-          variant="ghost"
-          size="icon"
-          onClick={() => setIsOpen(!isOpen)}
-          className={`stroke-foreground ${isOpen ? 'bg-accent' : ''}`}
-        >
-          {isOpen ? (
-            <PanelRightClose data-testid="mobile-toggle-close-button" />
-          ) : (
-            <PanelRight />
-          )}
-        </Button>
-        <div className="flex flex-end w-full items-center justify-end gap-4">
-          <label htmlFor="status" className="sr-only">
-            Status
-          </label>
-          <FormField
-            control={control}
-            name="status"
-            defaultValue={document.status}
-            render={({ field }) => (
-              <FormItem>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value ?? 'draft'}
-                  value={field.value ?? 'draft'}
-                >
-                  <FormControl>
-                    <SelectTrigger data-testid="status-select-mobile">
-                      <SelectValue placeholder="Select status" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectItem value="draft">Draft</SelectItem>
-                    <SelectItem value="published">Published</SelectItem>
-                  </SelectContent>
-                </Select>
-              </FormItem>
-            )}
-          />
+      {!standalone && (
+        <div className="absolute w-full items-center justify-between flex p-4 border-t z-10 bottom-0 bg-background md:hidden">
           <Button
-            onClick={saveDocument}
-            disabled={loading || !hasChanges}
-            data-testid="save-button-mobile"
+            data-testid="mobile-toggle-button"
+            variant="ghost"
+            size="icon"
+            onClick={() => setIsOpen(!isOpen)}
+            className={`stroke-foreground ${isOpen ? 'bg-accent' : ''}`}
           >
-            {loading ? (
-              <div className="flex gap-3 items-center">
-                <SpinnerIcon className="text-background" />
-                Saving
-              </div>
+            {isOpen ? (
+              <PanelRightClose data-testid="mobile-toggle-close-button" />
             ) : (
-              'Save'
+              <PanelRight />
             )}
           </Button>
+          <div className="flex flex-end w-full items-center justify-end gap-4">
+            <label htmlFor="status" className="sr-only">
+              Status
+            </label>
+            <FormField
+              control={control}
+              name="status"
+              defaultValue={document.status}
+              render={({ field }) => (
+                <FormItem>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value ?? 'draft'}
+                    value={field.value ?? 'draft'}
+                  >
+                    <FormControl>
+                      <SelectTrigger data-testid="status-select-mobile">
+                        <SelectValue placeholder="Select status" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="draft">Draft</SelectItem>
+                      <SelectItem value="published">Published</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </FormItem>
+              )}
+            />
+            <Button
+              onClick={saveDocument}
+              disabled={loading || !hasChanges}
+              data-testid="save-button-mobile"
+            >
+              {loading ? (
+                <div className="flex gap-3 items-center">
+                  <SpinnerIcon className="text-background" />
+                  Saving
+                </div>
+              ) : (
+                'Save'
+              )}
+            </Button>
+          </div>
         </div>
-      </div>
+      )}
       <aside
-        className={`${
-          isOpen ? 'block absolute' : 'hidden relative'
-        } md:block w-full border-l bg-background md:w-64 md:flex-none md:flex-col md:flex-wrap md:items-start md:justify-start md:border-b-0 md:border-l py-6 h-full max-h-[calc(100vh-128px)] md:max-h-[calc(100vh-56px)] no-scrollbar overflow-y-scroll`}
+        className={
+          standalone
+            ? 'block min-h-full w-full max-w-2xl border-r bg-background py-6 no-scrollbar'
+            : `${
+                isOpen ? 'block absolute' : 'hidden relative'
+              } md:block w-full border-l bg-background md:w-64 md:flex-none md:flex-col md:flex-wrap md:items-start md:justify-start md:border-b-0 md:border-l py-6 h-full max-h-[calc(100vh-128px)] md:max-h-[calc(100vh-56px)] no-scrollbar overflow-y-scroll`
+        }
       >
+        {standalone ? (
+          <div className="relative w-full mb-4 px-4">
+            <FormField
+              control={control}
+              name="title"
+              defaultValue={document.title || ''}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Title</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      value={field.value ?? ''}
+                      onChange={(e) => {
+                        field.onChange(e)
+                        const segments = new URL(
+                          window.location.href
+                        ).pathname.split('/')
+                        const last = segments.pop() || segments.pop()
+                        if (last === 'new') {
+                          setValue(
+                            'slug',
+                            slugify(e.target.value, {
+                              allowedChars: 'a-zA-Z0-9.'
+                            })
+                          )
+                        }
+                      }}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+        ) : null}
         <div className="relative w-full items-center justify-between mb-4 flex px-4">
           <label
             htmlFor="publishedAt"
@@ -237,7 +282,12 @@ export const DocumentSettings = ({
           </label>
           <DateTimePickerForm id="publishedAt" />
         </div>
-        <div className="hidden md:flex relative w-full items-center justify-between mb-4 px-4">
+        <div
+          className={cn(
+            'relative w-full items-center justify-between mb-4 px-4',
+            standalone ? 'flex' : 'hidden md:flex'
+          )}
+        >
           <label
             htmlFor="status"
             className="block text-sm font-medium text-foreground"
