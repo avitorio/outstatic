@@ -7,6 +7,7 @@ import Callout from './callout'
 import Counter from './counter'
 import { CustomCode, Pre } from './custom-code'
 import CustomLink from './custom-link'
+import Youtube from './youtube'
 
 const MDXComponentsMap = {
   a: CustomLink,
@@ -18,7 +19,8 @@ const MDXComponentsMap = {
   code: CustomCode,
   Callout,
   Counter,
-  ApiFetcher
+  ApiFetcher,
+  Youtube
 }
 
 type MDXComponentProps = {
