@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { ChevronDown, ChevronRight, Plus, Trash2 } from 'lucide-react'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
   FieldPath,
   FormProvider,
@@ -193,8 +193,11 @@ export const BlockDialog = ({
     name: 'props'
   })
   const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set())
-  const expandNewlyAddedRef = useRef(false)
+  const [shouldExpandNewField, setShouldExpandNewField] = useState(false)
   const [previousOpen, setPreviousOpen] = useState(open)
+  const [previousFieldsLength, setPreviousFieldsLength] = useState(
+    fields.length
+  )
   const [hasImports, setHasImports] = useState(
     mode === 'edit' && !!block?.imports
   )
@@ -209,24 +212,26 @@ export const BlockDialog = ({
     }
   }, [canManageCollections, onOpenChange, open])
 
-  useEffect(() => {
-    if (!expandNewlyAddedRef.current) return
-    if (fields.length === 0) return
-    const lastField = fields[fields.length - 1]
-    if (!lastField) return
-    setExpandedIds((prev) => {
-      const next = new Set(prev)
-      next.add(lastField.id)
-      return next
-    })
-    expandNewlyAddedRef.current = false
-  }, [fields])
-
   if (previousOpen !== open) {
     setPreviousOpen(open)
     setExpandedIds(new Set())
     setHasImports(mode === 'edit' && !!block?.imports)
     setStep(1)
+  }
+
+  if (fields.length !== previousFieldsLength) {
+    setPreviousFieldsLength(fields.length)
+    if (shouldExpandNewField && fields.length > 0) {
+      setShouldExpandNewField(false)
+      const lastField = fields[fields.length - 1]
+      if (lastField) {
+        setExpandedIds((prev) => {
+          const next = new Set(prev)
+          next.add(lastField.id)
+          return next
+        })
+      }
+    }
   }
 
   const toggleExpanded = (id: string) => {
@@ -242,7 +247,7 @@ export const BlockDialog = ({
   }
 
   const handleAddProp = () => {
-    expandNewlyAddedRef.current = true
+    setShouldExpandNewField(true)
     append({
       name: '',
       type: 'String',
