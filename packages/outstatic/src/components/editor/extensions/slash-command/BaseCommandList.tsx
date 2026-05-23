@@ -16,6 +16,10 @@ import {
 import { getPrevText } from '@/components/editor/utils/get-prev-text'
 import { OUTSTATIC_API_PATH } from '@/utils/constants'
 import { stringifyError } from '@/utils/errors/stringify-error'
+import { buildBlockJsx, getInitialBlockValues } from './block-jsx'
+
+const getBlockFocusKey = () =>
+  globalThis.crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random()}`
 
 export const BaseCommandList = ({
   items,
@@ -98,6 +102,27 @@ export const BaseCommandList = ({
           }
         } else if (item.title === 'Image') {
           setImageMenu(true)
+        } else if (item.block) {
+          const block = item.block
+          const values = getInitialBlockValues(block)
+          const raw = buildBlockJsx(block, values)
+
+          command({
+            ...item,
+            command: ({ editor, range }: { editor: Editor; range: Range }) =>
+              editor
+                .chain()
+                .focus()
+                .deleteRange(range)
+                .setMdxBlock({
+                  raw,
+                  outstaticBlockName: block.name,
+                  outstaticBlockValues: JSON.stringify(values),
+                  outstaticBlockDefinition: JSON.stringify(block),
+                  outstaticBlockFocusKey: getBlockFocusKey()
+                })
+                .run()
+          })
         } else {
           command(item)
         }

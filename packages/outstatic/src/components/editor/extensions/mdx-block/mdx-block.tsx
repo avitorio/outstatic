@@ -1,4 +1,4 @@
-import { mergeAttributes } from '@tiptap/core'
+import { mergeAttributes, Node } from '@tiptap/core'
 import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight'
 import { NodeSelection, Plugin, PluginKey } from '@tiptap/pm/state'
 import { ReactNodeViewRenderer } from '@tiptap/react'
@@ -8,6 +8,9 @@ import { MdxBlockView } from './mdx-block-view'
 import { plainLowlight } from './mdx-lowlight'
 import { markdownItMdxBlock } from './mdx-parser'
 import { MDX_BLOCK_TYPE } from './mdx-block-utils'
+import { getSerializedMdxBlock } from './mdx-block-serialization'
+
+export const OUTSTATIC_MDX_BLOCK_TYPE = 'outstaticMdxBlock'
 
 type MarkdownSerializerState = {
   write: (content: string) => void
@@ -17,10 +20,102 @@ type MarkdownSerializerState = {
 declare module '@tiptap/core' {
   interface Commands<ReturnType> {
     mdxBlock: {
-      setMdxBlock: (attributes?: { raw?: string }) => ReturnType
+      setMdxBlock: (attributes?: {
+        raw?: string
+        outstaticBlockName?: string
+        outstaticBlockValues?: string
+        outstaticBlockDefinition?: string
+        outstaticBlockFocusKey?: string
+      }) => ReturnType
     }
   }
 }
+
+const outstaticBlockAttributes = {
+  outstaticBlockName: {
+    default: null,
+    parseHTML: (element: HTMLElement) =>
+      element.getAttribute('data-outstatic-block-name'),
+    renderHTML: (attributes: Record<string, string | null>) =>
+      attributes.outstaticBlockName
+        ? {
+            'data-outstatic-block-name': attributes.outstaticBlockName
+          }
+        : {}
+  },
+  outstaticBlockValues: {
+    default: null,
+    parseHTML: (element: HTMLElement) =>
+      element.getAttribute('data-outstatic-block-values'),
+    renderHTML: (attributes: Record<string, string | null>) =>
+      attributes.outstaticBlockValues
+        ? {
+            'data-outstatic-block-values': attributes.outstaticBlockValues
+          }
+        : {}
+  },
+  outstaticBlockDefinition: {
+    default: null,
+    parseHTML: (element: HTMLElement) =>
+      element.getAttribute('data-outstatic-block-definition'),
+    renderHTML: (attributes: Record<string, string | null>) =>
+      attributes.outstaticBlockDefinition
+        ? {
+            'data-outstatic-block-definition':
+              attributes.outstaticBlockDefinition
+          }
+        : {}
+  },
+  outstaticBlockFocusKey: {
+    default: null,
+    parseHTML: () => null,
+    renderHTML: () => ({})
+  }
+}
+
+export const OutstaticMdxBlock = Node.create({
+  name: OUTSTATIC_MDX_BLOCK_TYPE,
+  group: 'block',
+  atom: true,
+  draggable: true,
+  selectable: true,
+
+  parseHTML() {
+    return [
+      {
+        tag: `div[data-type="${OUTSTATIC_MDX_BLOCK_TYPE}"]`
+      }
+    ]
+  },
+
+  addAttributes() {
+    return outstaticBlockAttributes
+  },
+
+  renderHTML({ HTMLAttributes }) {
+    return [
+      'div',
+      mergeAttributes(HTMLAttributes, {
+        'data-type': OUTSTATIC_MDX_BLOCK_TYPE
+      })
+    ]
+  },
+
+  addNodeView() {
+    return ReactNodeViewRenderer(MdxBlockView)
+  },
+
+  addStorage() {
+    return {
+      markdown: {
+        serialize: (state: MarkdownSerializerState, node: ProseMirrorNode) => {
+          state.write(getSerializedMdxBlock(node) ?? '')
+          state.closeBlock(node)
+        }
+      }
+    }
+  }
+})
 
 export const MdxBlock = CodeBlockLowlight.extend({
   name: MDX_BLOCK_TYPE,
@@ -45,6 +140,13 @@ export const MdxBlock = CodeBlockLowlight.extend({
     ]
   },
 
+  addAttributes() {
+    return {
+      ...this.parent?.(),
+      ...outstaticBlockAttributes
+    }
+  },
+
   renderHTML({ HTMLAttributes }) {
     return [
       'pre',
@@ -59,18 +161,30 @@ export const MdxBlock = CodeBlockLowlight.extend({
     return {
       setMdxBlock:
         (attributes = {}) =>
-        ({ commands }) =>
-          commands.insertContent({
-            type: this.name,
-            content: attributes.raw
-              ? [
-                  {
-                    type: 'text',
-                    text: attributes.raw
-                  }
-                ]
-              : []
-          })
+        ({ commands }) => {
+          const isOutstaticBlock = Boolean(attributes.outstaticBlockName)
+          const mdxBlock = {
+            type: isOutstaticBlock ? OUTSTATIC_MDX_BLOCK_TYPE : this.name,
+            attrs: {
+              outstaticBlockName: attributes.outstaticBlockName ?? null,
+              outstaticBlockValues: attributes.outstaticBlockValues ?? null,
+              outstaticBlockDefinition:
+                attributes.outstaticBlockDefinition ?? null,
+              outstaticBlockFocusKey: attributes.outstaticBlockFocusKey ?? null
+            },
+            content:
+              attributes.raw && !isOutstaticBlock
+                ? [
+                    {
+                      type: 'text',
+                      text: attributes.raw
+                    }
+                  ]
+                : []
+          }
+
+          return commands.insertContent(mdxBlock)
+        }
     }
   },
 
@@ -125,7 +239,7 @@ export const MdxBlock = CodeBlockLowlight.extend({
     return {
       markdown: {
         serialize: (state: MarkdownSerializerState, node: ProseMirrorNode) => {
-          state.write(node.textContent)
+          state.write(getSerializedMdxBlock(node) ?? node.textContent)
           state.closeBlock(node)
         },
         parse: {

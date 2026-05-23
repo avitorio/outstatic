@@ -41,6 +41,7 @@ describe('BaseCommandList AI gating', () => {
   const chain = {
     focus: jest.fn().mockReturnThis(),
     deleteRange: jest.fn().mockReturnThis(),
+    setMdxBlock: jest.fn().mockReturnThis(),
     run: jest.fn().mockReturnThis()
   }
 
@@ -132,5 +133,53 @@ describe('BaseCommandList AI gating', () => {
     expect(complete).toHaveBeenCalledWith('Existing content', {
       body: { option: 'continue', command: '' }
     })
+  })
+
+  it('inserts custom blocks directly into the editor', () => {
+    const block = {
+      name: 'Callout',
+      description: 'Highlight content',
+      props: [
+        {
+          name: 'title',
+          type: 'String' as const,
+          defaultValue: 'Heads up'
+        }
+      ]
+    }
+
+    render(
+      <BaseCommandList
+        items={[
+          {
+            title: 'Callout',
+            description: 'Highlight content',
+            icon: <span>Block</span>,
+            searchTerms: [],
+            block
+          }
+        ]}
+        command={command}
+        setImageMenu={setImageMenu}
+        editor={editor}
+        range={range}
+        onShowUpgradeDialog={onShowUpgradeDialog}
+      />
+    )
+
+    fireEvent.click(screen.getByRole('button', { name: /callout/i }))
+
+    const insertedItem = command.mock.calls[0][0]
+    insertedItem.command({ editor, range })
+
+    expect(chain.deleteRange).toHaveBeenCalledWith(range)
+    expect(chain.setMdxBlock).toHaveBeenCalledWith({
+      raw: '<Callout title="Heads up" />',
+      outstaticBlockName: 'Callout',
+      outstaticBlockValues: JSON.stringify({ title: 'Heads up' }),
+      outstaticBlockDefinition: JSON.stringify(block),
+      outstaticBlockFocusKey: expect.any(String)
+    })
+    expect(setImageMenu).not.toHaveBeenCalled()
   })
 })

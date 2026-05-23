@@ -11,7 +11,13 @@ const DEFAULT_OST_PATH = 'outstatic'
 const DEFAULT_CONTENT_PATH = 'outstatic/content'
 const DEFAULT_DASHBOARD_ROUTE = '/outstatic'
 const GITHUB_GRAPHQL_URL = 'https://api.github.com/graphql'
-const DEFAULT_PAGES = ['collections', 'settings', 'media-library', 'singletons']
+const DEFAULT_PAGES = [
+  'collections',
+  'settings',
+  'media-library',
+  'block-library',
+  'singletons'
+]
 
 export type OutstaticUIOptions = {
   showToaster?: boolean

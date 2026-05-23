@@ -91,3 +91,41 @@ export type ConfigType = {
   mdExtension?: MDExtensions
   [key: string]: unknown
 }
+
+export const blockPropTypes = [
+  'String',
+  'Text',
+  'Number',
+  'Boolean',
+  'Image',
+  'Select',
+  'Date',
+  'Children'
+] as const
+
+export type BlockPropType = (typeof blockPropTypes)[number]
+
+export type BlockProp = {
+  name: string
+  type: BlockPropType
+  required?: boolean
+  description?: string
+  defaultValue?: string
+  options?: string[]
+}
+
+export type Block = {
+  name: string
+  description?: string
+  keywords?: string[]
+  imports?: string
+  additionalAttributes?: string
+  icon?: string
+  props: BlockProp[]
+}
+
+export type BlocksSchema = {
+  commit: string
+  generated: string
+  blocks: Block[]
+}
