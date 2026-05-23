@@ -109,7 +109,10 @@ export default function BlockLibrary() {
       ) : (
         <div className="grid max-w-6xl gap-4 md:grid-cols-2 xl:grid-cols-3">
           {filteredBlocks.map((block) => (
-            <Card key={block.name} className="flex flex-col hover:border-gray-500 transition-all duration-300 cursor-pointer">
+            <Card
+              key={block.name}
+              className="flex flex-col hover:border-gray-500 transition-all duration-300 cursor-pointer"
+            >
               <CardContent className="relative flex justify-between items-center">
                 {canManageCollections ? (
                   <div
