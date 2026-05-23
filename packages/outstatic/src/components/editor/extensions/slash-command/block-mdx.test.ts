@@ -2,6 +2,7 @@ import {
   annotateMdxBlocksWithLibraryMetadata,
   getBlockMdxAttributes
 } from './block-mdx'
+import { buildBlockJsx } from './block-jsx'
 import { Block } from '@/utils/metadata/types'
 
 const calloutBlock: Block = {
@@ -81,15 +82,45 @@ describe('getBlockMdxAttributes', () => {
     ).toBeNull()
   })
 
-  it('keeps same-name MDX raw when props cannot be represented by the UI', () => {
+  it('keeps same-name MDX raw when prop values cannot be represented by the UI', () => {
     expect(
       getBlockMdxAttributes('<Callout title={title} />', [calloutBlock])
     ).toBeNull()
-    expect(
-      getBlockMdxAttributes('<Callout title="Hello" className="wide" />', [
-        calloutBlock
-      ])
-    ).toBeNull()
+  })
+
+  it('ignores attributes that are not declared in block.props', () => {
+    const attrs = getBlockMdxAttributes(
+      '<Callout title="Hello" className="wide" data-variant="info" />',
+      [calloutBlock]
+    )
+
+    expect(attrs?.outstaticBlockName).toBe('Callout')
+    expect(JSON.parse(attrs?.outstaticBlockValues ?? '').title).toBe('Hello')
+  })
+
+  it('round-trips blocks that carry additionalAttributes', () => {
+    const blockWithExtras: Block = {
+      ...calloutBlock,
+      additionalAttributes: 'className="my-callout" data-variant="info"'
+    }
+
+    const jsx = buildBlockJsx(blockWithExtras, {
+      title: 'Hello',
+      body: '',
+      count: '',
+      featured: false,
+      image: '',
+      theme: '',
+      publishedAt: ''
+    })
+
+    expect(jsx).toContain('className="my-callout"')
+    expect(jsx).toContain('data-variant="info"')
+
+    const attrs = getBlockMdxAttributes(jsx, [blockWithExtras])
+
+    expect(attrs?.outstaticBlockName).toBe('Callout')
+    expect(JSON.parse(attrs?.outstaticBlockValues ?? '').title).toBe('Hello')
   })
 })
 

@@ -300,17 +300,6 @@ const getBlockValuesFromMdx = (
   parsed: ParsedMdxBlock
 ): BlockFormValues | null => {
   const values = getInitialBlockValues(block)
-  const attributeProps = new Set(
-    block.props
-      .filter((prop) => prop.type !== 'Children')
-      .map((prop) => prop.name)
-  )
-
-  for (const attrName of parsed.attrs.keys()) {
-    if (!attributeProps.has(attrName)) {
-      return null
-    }
-  }
 
   for (const prop of block.props) {
     if (prop.type === 'Children') {
