@@ -1,0 +1,21 @@
+{
+  "blocks": [
+    {
+      "description": "Embed Youtube videos",
+      "icon": "video",
+      "keywords": [
+        "youtube"
+      ],
+      "name": "Youtube",
+      "props": [
+        {
+          "description": "Youtube video url",
+          "name": "url",
+          "type": "String"
+        }
+      ]
+    }
+  ],
+  "commit": "",
+  "generated": "2026-05-23T15:09:12.104Z"
+}

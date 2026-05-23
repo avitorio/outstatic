@@ -19,7 +19,8 @@ export const mergeMdMeta = ({
   repoBranch,
   media,
   publicMediaPath,
-  repoMediaPath
+  repoMediaPath,
+  imports
 }: {
   data: Record<string, any> & { content: string }
   basePath: string
@@ -29,6 +30,7 @@ export const mergeMdMeta = ({
   media?: MediaSourceConfig[]
   publicMediaPath?: string
   repoMediaPath?: string
+  imports?: string
 }): string => {
   const sources = media?.length
     ? media
@@ -96,6 +98,10 @@ export const mergeMdMeta = ({
   merged += converted
 
   merged += '---\n\n'
+
+  if (imports && imports.trim().length > 0) {
+    merged += `${imports.trim()}\n\n`
+  }
 
   // replace /api/outstatic/images/ references
   const newContent = replaceImagePath({

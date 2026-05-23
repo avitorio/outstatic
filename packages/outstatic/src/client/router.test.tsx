@@ -113,6 +113,11 @@ jest.mock('./pages/media-library', () => ({
   default: () => <div>Media Library</div>
 }))
 
+jest.mock('./pages/block-library', () => ({
+  __esModule: true,
+  default: () => <div>Block Library</div>
+}))
+
 jest.mock('./pages/dashboard', () => ({
   __esModule: true,
   default: () => <div>Dashboard</div>

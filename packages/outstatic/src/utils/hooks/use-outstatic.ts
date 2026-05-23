@@ -166,6 +166,9 @@ export const useOutstatic = () => {
     configJsonPath: [monorepoPath, ostPath, 'config.json']
       .filter(Boolean)
       .join('/'),
+    blocksJsonPath: [monorepoPath, ostPath, 'blocks.json']
+      .filter(Boolean)
+      .join('/'),
     hasChanges,
     setHasChanges
   }

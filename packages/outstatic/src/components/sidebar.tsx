@@ -12,6 +12,7 @@ import {
   LayoutDashboard,
   Plus,
   Images,
+  Blocks,
   File,
   Key,
   Users
@@ -180,6 +181,11 @@ export const Sidebar = ({ additionalRoutes }: SidebarProps) => {
           label: 'Media Library',
           path: `${dashboardRoute}/media-library`,
           Icon: <Images className={'w-4'} />
+        },
+        {
+          label: 'Block Library',
+          path: `${dashboardRoute}/block-library`,
+          Icon: <Blocks className={'w-4'} />
         }
       ]
     },
