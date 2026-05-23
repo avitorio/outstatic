@@ -16,7 +16,7 @@ import {
 } from '@/components/ui/shadcn/card'
 import { Checkbox } from '@/components/ui/shadcn/checkbox'
 import { SpinnerIcon } from '@/components/ui/outstatic/spinner-icon'
-import { CustomFieldsType } from '@/types'
+import { CustomFieldsType, customFieldTypeLabels } from '@/types'
 import {
   FieldSchemaSettings,
   FieldSchemaTarget,
@@ -87,7 +87,9 @@ const SortableFieldCard = ({
             {field.title}
             <span className="absolute top-0 bottom-0 left-12 right-16"></span>
           </span>
-          <Badge variant="outline">{field.fieldType}</Badge>
+          <Badge variant="outline">
+            {customFieldTypeLabels[field.fieldType]}
+          </Badge>
           {field.required ? <Badge>required</Badge> : null}
         </button>
         <Button

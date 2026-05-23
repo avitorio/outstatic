@@ -1,14 +1,8 @@
 import { mergeMdMeta } from './merge-md-meta'
-
-jest.mock('@catalystic/json-to-yaml', () => ({
-  convert: (data: Record<string, unknown>) =>
-    Object.entries(data)
-      .map(([key, value]) => `${key}: ${String(value)}`)
-      .join('\n')
-}))
+import matter from 'gray-matter'
 
 describe('mergeMdMeta', () => {
-  it('writes select field values as raw YAML strings in frontmatter', () => {
+  it('writes select field values as scalar strings in frontmatter', () => {
     const merged = mergeMdMeta({
       data: {
         title: 'Select field example',
@@ -26,7 +20,7 @@ describe('mergeMdMeta', () => {
       publicMediaPath: 'uploads/'
     })
 
-    expect(merged).toContain('category: news')
+    expect(matter(merged).data.category).toBe('news')
     expect(merged).not.toContain('label: News')
   })
 
@@ -61,8 +55,120 @@ describe('mergeMdMeta', () => {
       ]
     })
 
-    expect(merged).toContain('cover: /assets/video/cover.png')
+    expect(matter(merged).data.cover).toBe('/assets/video/cover.png')
     expect(merged).toContain('![Clip](/assets/video/clip.mp4)')
     expect(merged).not.toContain('/assets/clip.mp4')
+  })
+
+  it('writes array fields as a block sequence on a new line', () => {
+    const tags = [
+      { label: 'News', value: 'news' },
+      { label: 'Tech', value: 'tech' }
+    ]
+
+    const merged = mergeMdMeta({
+      data: {
+        title: 'Tagged post',
+        content: 'Body',
+        tags
+      },
+      basePath: '',
+      repoOwner: 'owner',
+      repoSlug: 'repo',
+      repoBranch: 'main',
+      publicMediaPath: 'uploads/'
+    })
+
+    expect(merged).toContain(
+      ['tags:', '  - label: News', '    value: news'].join('\n')
+    )
+
+    expect(matter(merged).data.tags).toEqual(tags)
+  })
+
+  it('writes scalar array fields as a block sequence on a new line', () => {
+    const merged = mergeMdMeta({
+      data: {
+        title: 'Tagged post',
+        content: 'Body',
+        keywords: ['one', 'two']
+      },
+      basePath: '',
+      repoOwner: 'owner',
+      repoSlug: 'repo',
+      repoBranch: 'main',
+      publicMediaPath: 'uploads/'
+    })
+
+    expect(matter(merged).data.keywords).toEqual(['one', 'two'])
+  })
+
+  it('writes multiline markdown frontmatter as a YAML block scalar', () => {
+    const summary = '## Intro\n\nRich copy\n\n- one\n- two'
+
+    const merged = mergeMdMeta({
+      data: {
+        title: 'Rich text frontmatter',
+        content: 'Body content',
+        summary
+      },
+      basePath: '',
+      repoOwner: 'owner',
+      repoSlug: 'repo',
+      repoBranch: 'main',
+      publicMediaPath: 'uploads/'
+    })
+
+    expect(merged).toContain(
+      [
+        'summary: |-',
+        '  ## Intro',
+        '',
+        '  Rich copy',
+        '',
+        '  - one',
+        '  - two'
+      ].join('\n')
+    )
+
+    expect(matter(merged).data.summary).toBe(summary)
+  })
+
+  it('round-trips frontmatter values through gray-matter without type drift', () => {
+    const publishedAt = new Date('2024-06-15T12:34:56.000Z')
+
+    const merged = mergeMdMeta({
+      data: {
+        title: 'Round trip',
+        content: 'Body',
+        publishedAt,
+        draft: false,
+        views: 42,
+        missing: null,
+        zip: '01234',
+        flag: 'no',
+        author: { name: 'Ada', handle: '@ada' },
+        keywords: ['one', 'two'],
+        summary: 'line one\nline two'
+      },
+      basePath: '',
+      repoOwner: 'owner',
+      repoSlug: 'repo',
+      repoBranch: 'main',
+      publicMediaPath: 'uploads/'
+    })
+
+    const parsed = matter(merged).data
+
+    expect(parsed.title).toBe('Round trip')
+    expect(parsed.publishedAt).toEqual(publishedAt)
+    expect(parsed.draft).toBe(false)
+    expect(parsed.views).toBe(42)
+    expect(parsed.missing).toBeNull()
+    expect(parsed.zip).toBe('01234')
+    expect(parsed.flag).toBe('no')
+    expect(parsed.author).toEqual({ name: 'Ada', handle: '@ada' })
+    expect(parsed.keywords).toEqual(['one', 'two'])
+    expect(parsed.summary).toBe('line one\nline two')
   })
 })
