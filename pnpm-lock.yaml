@@ -291,9 +291,6 @@ importers:
       '@ai-sdk/react':
         specifier: ^3.0.5
         version: 3.0.54(react@19.1.2)(zod@3.25.67)
-      '@catalystic/json-to-yaml':
-        specifier: ^1.0.0
-        version: 1.0.0
       '@dnd-kit/core':
         specifier: ^6.3.1
         version: 6.3.1(react-dom@19.1.2(react@19.1.2))(react@19.1.2)
@@ -1138,9 +1135,6 @@ packages:
 
   '@bcoe/v8-coverage@0.2.3':
     resolution: {integrity: sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==}
-
-  '@catalystic/json-to-yaml@1.0.0':
-    resolution: {integrity: sha512-SsaxDB/JojD+bXv/UA1z5sUCfL0t2oP9qasyzIPhYHCh1JuFkd82Ip8D/81bjeaCFDsy2GiWqaVPcJD4+rXrqw==}
 
   '@cfcs/core@0.0.6':
     resolution: {integrity: sha512-FxfJMwoLB8MEMConeXUCqtMGqxdtePQxRBOiGip9ULcYYam3WfCgoY6xdnMaSkYvRvmosp5iuG+TiPofm65+Pw==}
@@ -9687,8 +9681,6 @@ snapshots:
       '@babel/helper-validator-identifier': 7.27.1
 
   '@bcoe/v8-coverage@0.2.3': {}
-
-  '@catalystic/json-to-yaml@1.0.0': {}
 
   '@cfcs/core@0.0.6':
     dependencies:
