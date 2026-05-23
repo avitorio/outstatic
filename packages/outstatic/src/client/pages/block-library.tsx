@@ -110,8 +110,9 @@ export default function BlockLibrary() {
             <Card key={block.name} className="flex flex-col">
               <CardContent className="relative flex justify-between items-center">
                 {canManageCollections ? (
-                  <div
-                    className="absolute top-0 bottom-0 left-0 cursor-pointer w-full h-full z-10"
+                  <button
+                    type="button"
+                    className="absolute inset-0 z-10 h-full w-full cursor-pointer rounded-md border-0 bg-transparent p-0 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                     aria-label={`Edit ${block.name}`}
                     onClick={() => {
                       setSelectedBlock(block)
