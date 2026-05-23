@@ -259,4 +259,38 @@ describe('useTipTap AI gating', () => {
       })
     ).toBe('')
   })
+
+  it('annotates block metadata on content updates without listening to every transaction', () => {
+    const on = jest.fn()
+    const off = jest.fn()
+
+    mockUseGetBlocks.mockReturnValue({
+      data: {
+        blocks: {
+          blocks: [
+            {
+              name: 'Callout'
+            }
+          ]
+        }
+      }
+    })
+    mockUseEditor.mockReturnValue({
+      ...editor,
+      on,
+      off
+    })
+
+    const { unmount } = render(<HookHarness setValue={setValue} />)
+
+    expect(on).toHaveBeenCalledTimes(1)
+    expect(on).toHaveBeenCalledWith('update', expect.any(Function))
+    expect(on).not.toHaveBeenCalledWith('transaction', expect.any(Function))
+
+    unmount()
+
+    expect(off).toHaveBeenCalledTimes(1)
+    expect(off).toHaveBeenCalledWith('update', expect.any(Function))
+    expect(off).not.toHaveBeenCalledWith('transaction', expect.any(Function))
+  })
 })

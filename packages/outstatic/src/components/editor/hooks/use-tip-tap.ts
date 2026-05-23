@@ -256,11 +256,9 @@ export const useTipTap = ({ ...rhfMethods }) => {
       annotateMdxBlocksWithLibraryMetadata(editor, blocks)
     }
 
-    editor.on('transaction', annotateBlocks)
     editor.on('update', annotateBlocks)
 
     return () => {
-      editor.off('transaction', annotateBlocks)
       editor.off('update', annotateBlocks)
     }
   }, [blocks, editor])
