@@ -34,7 +34,7 @@ export const mergeMdMeta = ({
     ? media
     : resolveMediaSources({ publicMediaPath, repoMediaPath })
 
-  const processValue = (value: any): any => {
+  const processValue = (value: unknown): unknown => {
     if (value instanceof Date) {
       return value
     }

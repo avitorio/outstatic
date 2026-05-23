@@ -293,10 +293,10 @@ describe('CustomFieldRenderer', () => {
     expect(screen.getAllByText('Birthday is a required field.')).toHaveLength(1)
   })
 
-  it('renders a rich text field as a sheet trigger with markdown preview', () => {
+  it('renders a rich text field as a sheet trigger with a plain-text preview', () => {
     const richTextField: CustomFieldsType[string] = {
       title: 'Summary',
-      fieldType: 'Rich Text',
+      fieldType: 'RichText',
       dataType: 'string'
     }
 
@@ -308,16 +308,43 @@ describe('CustomFieldRenderer', () => {
       />
     )
 
-    expect(screen.getByRole('button', { name: /Intro/ })).toHaveTextContent(
-      '## Intro'
+    const trigger = screen.getByRole('button', { name: /Intro/ })
+
+    expect(trigger).toHaveTextContent('Intro Rich copy')
+    expect(trigger).not.toHaveTextContent('## Intro')
+  })
+
+  it('renders a rich text field description only inside the editor sheet', async () => {
+    const user = userEvent.setup()
+    const richTextField: CustomFieldsType[string] = {
+      title: 'Summary',
+      fieldType: 'RichText',
+      dataType: 'string',
+      description: 'Write a polished summary.'
+    }
+
+    render(
+      <RendererHarness
+        name="summary"
+        field={richTextField}
+        defaultValues={{ summary: 'Body copy' }}
+      />
     )
+
+    expect(
+      screen.queryByText('Write a polished summary.')
+    ).not.toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: /Body copy/ }))
+
+    expect(screen.getAllByText('Write a polished summary.')).toHaveLength(1)
   })
 
   it('parses rich text field content before initializing the editor', async () => {
     const user = userEvent.setup()
     const richTextField: CustomFieldsType[string] = {
       title: 'Summary',
-      fieldType: 'Rich Text',
+      fieldType: 'RichText',
       dataType: 'string'
     }
 

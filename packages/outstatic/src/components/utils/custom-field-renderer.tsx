@@ -84,7 +84,7 @@ type ComponentType = {
 type FieldDataMapType = {
   String: ComponentType
   Text: ComponentType
-  'Rich Text': ComponentType
+  RichText: ComponentType
   Number: ComponentType
   Select: ComponentType
   Tags: ComponentType
@@ -96,7 +96,7 @@ type FieldDataMapType = {
 const FieldDataMap: FieldDataMapType = {
   String: { component: Input, props: { type: 'text' } },
   Text: { component: Textarea, props: {} },
-  'Rich Text': { component: Textarea, props: {} },
+  RichText: { component: Textarea, props: {} },
   Number: { component: Input, props: { type: 'number' } },
   Select: { component: Input, props: { type: 'text' } },
   Tags: {
@@ -118,12 +118,39 @@ type RichTextFieldProps = {
   onChange: (value: string) => void
 }
 
+type RichTextFieldEditorProps = {
+  id: string
+  title: string
+  value?: string
+  onChange: (value: string) => void
+}
+
+const getRichTextPreview = (value?: string) => {
+  if (typeof value !== 'string' || value.trim().length === 0) {
+    return 'No rich text content yet.'
+  }
+
+  const preview = value
+    .replace(/```[\s\S]*?```/g, ' ')
+    .replace(/!\[([^\]]*)\]\([^)]+\)/g, '$1')
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+    .replace(/^#{1,6}\s*/gm, '')
+    .replace(/^>\s?/gm, '')
+    .replace(/^\s{0,3}([-*+]|\d+\.)\s+/gm, '')
+    .replace(/[*_~`]/g, '')
+    .replace(/<[^>]+>/g, '')
+    .replace(/\s+/g, ' ')
+    .trim()
+
+  return preview || 'No rich text content yet.'
+}
+
 const RichTextFieldEditor = ({
   id,
   title,
   value,
   onChange
-}: RichTextFieldProps) => {
+}: RichTextFieldEditorProps) => {
   const { setEditor } = useEditorContext()
   const {
     basePath,
@@ -239,8 +266,7 @@ const RichTextField = ({
   value,
   onChange
 }: RichTextFieldProps) => {
-  const hasValue = typeof value === 'string' && value.trim().length > 0
-  const preview = hasValue ? value : 'No rich text content yet.'
+  const preview = getRichTextPreview(value)
 
   return (
     <Sheet>
@@ -258,6 +284,7 @@ const RichTextField = ({
       <SheetContent
         side="right"
         className="w-full gap-0 p-0 sm:max-w-none md:w-[90%] md:max-w-[700px]"
+        {...(!description ? { 'aria-describedby': undefined } : {})}
       >
         <SheetHeader className="border-b px-6 py-4">
           <SheetTitle>{title}</SheetTitle>
@@ -292,7 +319,7 @@ export const CustomFieldRenderer = ({
       case 'String':
         return <Input {...formField} value={formField.value ?? ''} />
 
-      case 'Rich Text':
+      case 'RichText':
         return (
           <RichTextField
             id={name}
@@ -433,7 +460,9 @@ export const CustomFieldRenderer = ({
               render={({ field: formField }) => (
                 <FormItem>
                   <FormControl>{renderFieldContent(formField)}</FormControl>
-                  <FormDescription>{field.description}</FormDescription>
+                  {field.fieldType !== 'RichText' ? (
+                    <FormDescription>{field.description}</FormDescription>
+                  ) : null}
                   <FormMessage />
                 </FormItem>
               )}

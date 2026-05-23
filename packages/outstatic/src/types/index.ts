@@ -41,7 +41,7 @@ export type DeepNonNullable<T> = {
 export const customFieldTypes = [
   'String',
   'Text',
-  'Rich Text',
+  'RichText',
   'Number',
   'Select',
   'Tags',
@@ -49,6 +49,18 @@ export const customFieldTypes = [
   'Date',
   'Image'
 ] as const
+
+export const customFieldTypeLabels = {
+  String: 'String',
+  Text: 'Text',
+  RichText: 'Rich Text',
+  Number: 'Number',
+  Select: 'Select',
+  Tags: 'Tags',
+  Boolean: 'Boolean',
+  Date: 'Date',
+  Image: 'Image'
+} satisfies Record<(typeof customFieldTypes)[number], string>
 
 export const customFieldData = [
   'string',
@@ -87,7 +99,7 @@ export type StringCustomField = BaseCustomField<'String', 'string'>
 
 export type TextCustomField = BaseCustomField<'Text', 'string'>
 
-export type RichTextCustomField = BaseCustomField<'Rich Text', 'string'>
+export type RichTextCustomField = BaseCustomField<'RichText', 'string'>
 
 export type NumberCustomField = BaseCustomField<'Number', 'number'>
 
@@ -162,7 +174,7 @@ export function createCustomFieldDefinition({
       return { ...baseField, fieldType, dataType: 'string' }
     case 'Text':
       return { ...baseField, fieldType, dataType: 'string' }
-    case 'Rich Text':
+    case 'RichText':
       return { ...baseField, fieldType, dataType: 'string' }
     case 'Number':
       return { ...baseField, fieldType, dataType: 'number' }
