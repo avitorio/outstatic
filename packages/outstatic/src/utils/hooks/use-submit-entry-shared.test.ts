@@ -1,13 +1,6 @@
 import { Block } from '@/utils/metadata/types'
 import { buildMergedContent } from './use-submit-entry-shared'
 
-jest.mock('@catalystic/json-to-yaml', () => ({
-  convert: (data: Record<string, unknown>) =>
-    Object.entries(data)
-      .map(([key, value]) => `${key}: ${String(value)}`)
-      .join('\n')
-}))
-
 const createEditor = ({
   blocks,
   markdown
