@@ -13,7 +13,7 @@ import {
   Text,
   TextQuote
 } from 'lucide-react'
-import { DynamicIcon, type IconName } from 'lucide-react/dynamic'
+import { DynamicIcon, type IconName } from '@/components/ui/dynamic-icon'
 import {
   CommandItemProps,
   CommandProps

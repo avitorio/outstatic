@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react'
 import { Blocks, Pencil, Plus, Search, Trash } from 'lucide-react'
-import { DynamicIcon, type IconName } from 'lucide-react/dynamic'
+import { DynamicIcon, type IconName } from '@/components/ui/dynamic-icon'
 import { AdminLayout } from '@/components/admin-layout'
 import { AdminLoading } from '@/components/admin-loading'
 import { Button } from '@/components/ui/shadcn/button'

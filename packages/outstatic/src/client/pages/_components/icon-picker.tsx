@@ -1,6 +1,10 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Blocks, X } from 'lucide-react'
-import { DynamicIcon, type IconName } from 'lucide-react/dynamic'
+import {
+  DynamicIcon,
+  iconNames,
+  type IconName
+} from '@/components/ui/dynamic-icon'
 import { Button } from '@/components/ui/shadcn/button'
 import { Input } from '@/components/ui/shadcn/input'
 import {
@@ -99,54 +103,46 @@ const renderSelectedIcon = (value: string | undefined) => {
 export const IconPicker = ({ value, onChange }: IconPickerProps) => {
   const [open, setOpen] = useState(false)
   const [search, setSearch] = useState('')
-  const [allNames, setAllNames] = useState<string[] | null>(null)
-
-  useEffect(() => {
-    if (!open || allNames) return
-    let cancelled = false
-    import('lucide-react/dynamic').then((module) => {
-      if (cancelled) return
-      setAllNames(module.iconNames as unknown as string[])
-    })
-    return () => {
-      cancelled = true
-    }
-  }, [open, allNames])
-
-  useEffect(() => {
-    if (!open) {
-      setSearch('')
-    }
-  }, [open])
 
   const visibleIcons = useMemo(() => {
     const query = search.trim().toLowerCase()
     if (!query) {
       return POPULAR_ICONS
     }
-    const source = allNames ?? POPULAR_ICONS
     const matches: string[] = []
-    for (const name of source) {
+    for (const name of iconNames) {
       if (name.includes(query)) {
         matches.push(name)
         if (matches.length >= MAX_RESULTS) break
       }
     }
     return matches
-  }, [search, allNames])
+  }, [search])
+
+  const closePicker = () => {
+    setOpen(false)
+    setSearch('')
+  }
 
   const handleSelect = (iconName: string) => {
     onChange(iconName)
-    setOpen(false)
+    closePicker()
   }
 
   const handleClear = () => {
     onChange(undefined)
-    setOpen(false)
+    closePicker()
+  }
+
+  const handleOpenChange = (nextOpen: boolean) => {
+    setOpen(nextOpen)
+    if (!nextOpen) {
+      setSearch('')
+    }
   }
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover open={open} onOpenChange={handleOpenChange}>
       <PopoverTrigger asChild>
         <Button
           type="button"
