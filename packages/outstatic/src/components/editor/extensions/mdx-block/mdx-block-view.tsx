@@ -11,7 +11,7 @@ import {
   Copy,
   Image as ImageIcon
 } from 'lucide-react'
-import { DynamicIcon, type IconName } from 'lucide-react/dynamic'
+import { DynamicIcon, type IconName } from '@/components/ui/dynamic-icon'
 import {
   createElement,
   Fragment,
