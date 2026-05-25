@@ -1,5 +1,11 @@
 # outstatic
 
+## 2.1.11
+
+### Patch Changes
+
+- 36726c3: Fix dynamic Lucide icons so published admin bundles do not require resolving the lucide-react/dynamic subpath.
+
 ## 2.1.10
 
 ### Patch Changes
