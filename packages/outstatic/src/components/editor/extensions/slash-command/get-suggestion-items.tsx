@@ -7,15 +7,18 @@ import {
   Image as ImageIcon,
   List,
   ListOrdered,
+  Blocks,
   Code2,
   TableIcon,
   Text,
   TextQuote
 } from 'lucide-react'
+import { DynamicIcon, type IconName } from '@/components/ui/dynamic-icon'
 import {
   CommandItemProps,
   CommandProps
 } from '@/components/editor/extensions/slash-command'
+import { Block } from '@/utils/metadata/types'
 
 const items = [
   {
@@ -149,16 +152,22 @@ const items = [
   }
 ] as CommandItemProps[]
 
-const filterItems = (
+export const filterItems = (
   items: CommandItemProps[],
   search: string
 ): CommandItemProps[] => {
+  const normalizedSearch = search.toLowerCase()
+
   return items.filter((item: CommandItemProps) => {
-    const titleMatch = item.title.toLowerCase().includes(search)
-    const descriptionMatch = item.description.toLowerCase().includes(search)
+    const titleMatch = item.title.toLowerCase().includes(normalizedSearch)
+    const descriptionMatch = item.description
+      .toLowerCase()
+      .includes(normalizedSearch)
     const searchTermMatch =
       item.searchTerms &&
-      item.searchTerms.some((term: string | any[]) => term.includes(search))
+      item.searchTerms.some((term: string) =>
+        term.toLowerCase().includes(normalizedSearch)
+      )
 
     if (titleMatch || descriptionMatch || searchTermMatch) {
       return true
@@ -168,13 +177,33 @@ const filterItems = (
   })
 }
 
-export const getSuggestionItems = (props: { query: string }) => {
-  const { query } = props
-  if (typeof query !== 'string' || query.length === 0) {
-    return items
+export const buildBlockItems = (blocks: Block[]): CommandItemProps[] =>
+  blocks.map((block) => ({
+    title: block.name,
+    description: block.description || 'Insert MDX block.',
+    searchTerms: block.keywords ?? [],
+    icon: block.icon ? (
+      <DynamicIcon
+        name={block.icon as IconName}
+        size={18}
+        fallback={() => <Blocks size={18} />}
+      />
+    ) : (
+      <Blocks size={18} />
+    ),
+    block
+  }))
+
+export const createGetSuggestionItems =
+  (getBlocks?: () => Block[]) => (props: { query: string }) => {
+    const { query } = props
+    const allItems = [...items, ...buildBlockItems(getBlocks?.() ?? [])]
+
+    if (typeof query !== 'string' || query.length === 0) {
+      return allItems
+    }
+
+    return filterItems(allItems, query)
   }
 
-  const search = query.toLowerCase()
-  const filteredItems = filterItems(items, search)
-  return filteredItems
-}
+export const getSuggestionItems = createGetSuggestionItems()

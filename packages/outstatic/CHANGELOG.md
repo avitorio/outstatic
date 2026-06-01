@@ -1,5 +1,38 @@
 # outstatic
 
+## 2.1.11
+
+### Patch Changes
+
+- 36726c3: Fix dynamic Lucide icons so published admin bundles do not require resolving the lucide-react/dynamic subpath.
+
+## 2.1.10
+
+### Patch Changes
+
+- 5367c10: - Add a Block Library for defining reusable MDX blocks and inserting them from the editor slash command.
+  - Add a copy button to MDX block code previews in the editor.
+  - Avoid marking documents as changed when existing MDX is normalized into custom blocks.
+  - Split the block editor dialog into a 3-step wizard (basics / props / additional attributes) and add an Additional Attributes field that appends a fixed string of JSX attributes to every inserted instance of the block.
+  - Fix blocks configured with Additional Attributes reopening as raw MDX instead of the editable block UI.
+  - Add block library icon picking support and update block metadata handling for JSX block insertion.
+  - Fix block library String attributes being HTML-escaped on save (e.g. `&` written as `&amp;` in URLs like YouTube embed links).
+  - Avoid rescanning the full editor document for block metadata on selection-only transactions.
+  - Restrict block library configuration actions to users with collection management permission.
+- 5367c10: Make block library cards keyboard-accessible for editing.
+- c509b92: Show an Outstatic-branded favicon while on the dashboard, restoring the host site's favicon when you navigate away.
+- 54470f9: Add Fields only mode for collection and singleton edit pages.
+- 54470f9: Fix status selector being unavailable on mobile when fields-only mode is enabled.
+- 119db4c: Fix frontmatter serializer producing invalid YAML when documents contain array fields such as Tags.
+- 5367c10: Focus the first prop field after inserting a registered MDX block.
+- 634142f: Show the confirm (check) button in the editor link popover once the URL input is edited, so changes to an existing link can be saved instead of only removed.
+- 7759b83: Turn selected editor text into a link when pasting a URL over it.
+- 54470f9: Auto-generate slug from title in fields-only mode when creating new documents.
+- 119db4c: Add a rich text custom field that stores markdown in document frontmatter.
+- 84dccd4: Add drag-and-drop reordering for custom fields in the field management page and persist field order updates to schema commits.
+- 7759b83: Reject relative editor link paths that contain raw whitespace or control characters (they are not valid literal href values).
+- 119db4c: Use the `yaml` library to serialize document frontmatter, replacing the in-house stringifier. Date, multiline, array, and reserved-word string values now round-trip cleanly, and unquoted plain scalars produce smaller git diffs on save.
+
 ## 2.1.9
 
 ### Patch Changes

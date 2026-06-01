@@ -14,13 +14,40 @@ export type FieldSchemaTarget =
       isNew?: boolean
     }
 
+export type FieldSchemaSettings = {
+  fieldsOnlyMode?: boolean
+  /** @deprecated Use fieldsOnlyMode instead. */
+  disableBlockEditor?: boolean
+}
+
 export type FieldSchemaType = {
   title: string
   type: string
+  settings?: FieldSchemaSettings
   properties: CustomFieldsType
 } | null
 
-export type FieldSchemaCommitAction = 'add' | 'edit' | 'delete'
+export type FieldSchemaCommitAction =
+  | 'add'
+  | 'edit'
+  | 'delete'
+  | 'reorder'
+  | 'settings'
+
+export const isFieldsOnlyModeEnabled = (settings?: FieldSchemaSettings) =>
+  settings?.fieldsOnlyMode === true || settings?.disableBlockEditor === true
+
+export const normalizeFieldSchemaSettings = (
+  settings?: FieldSchemaSettings
+): FieldSchemaSettings | undefined => {
+  if (!settings) {
+    return undefined
+  }
+
+  const fieldsOnlyMode = settings.fieldsOnlyMode ?? settings.disableBlockEditor
+
+  return typeof fieldsOnlyMode === 'boolean' ? { fieldsOnlyMode } : {}
+}
 
 export const getFieldSchemaFilePath = (
   target: FieldSchemaTarget,
@@ -59,13 +86,20 @@ export const getFieldSchemaCommitMessage = (
     target.kind === 'collection' ? target.slug : `singleton/${target.slug}`
 
   const commitAction =
-    action === 'add' ? 'create' : action === 'edit' ? 'update' : 'delete'
+    action === 'add'
+      ? 'create'
+      : action === 'edit' || action === 'reorder' || action === 'settings'
+        ? 'update'
+        : 'delete'
+  const label = `${scopeLabel} ${
+    action === 'reorder' ? 'field order' : fieldName
+  }`
 
   return createOutstaticCommitMessage({
     scope: 'config',
     action: commitAction,
-    target: 'field',
-    label: `${scopeLabel} ${fieldName}`
+    target: action === 'settings' ? 'settings' : 'field',
+    label
   })
 }
 
@@ -74,14 +108,16 @@ const getFieldSchemaDocumentTitle = (target: FieldSchemaTarget) =>
 
 export const createFieldSchemaDocument = (
   target: FieldSchemaTarget,
-  customFields: CustomFieldsType
-) =>
-  JSON.stringify(
-    {
-      title: getFieldSchemaDocumentTitle(target),
-      type: 'object',
-      properties: { ...customFields }
-    },
-    null,
-    2
-  ) + '\n'
+  customFields: CustomFieldsType,
+  settings?: FieldSchemaSettings
+) => {
+  const schemaSettings = normalizeFieldSchemaSettings(settings)
+  const schema = {
+    title: getFieldSchemaDocumentTitle(target),
+    type: 'object',
+    ...(schemaSettings ? { settings: schemaSettings } : {}),
+    properties: { ...customFields }
+  }
+
+  return JSON.stringify(schema, null, 2) + '\n'
+}

@@ -4,6 +4,7 @@ import { AdminHeader } from '@/components/admin-header'
 import { Sidebar } from '@/components/sidebar'
 import { AdminLoading } from '@/components/admin-loading'
 import { useOutstatic, useLocalData } from '@/utils/hooks/use-outstatic'
+import { useDashboardFavicon } from '@/utils/hooks/use-dashboard-favicon'
 import { useEffect } from 'react'
 import { Router } from '../router'
 import Login from './login'
@@ -90,6 +91,8 @@ export const Main = ({ params }: { params: { ost: string[] } }) => {
 }
 
 export const OstClient = ({ ostData, params }: OstClientProps) => {
+  useDashboardFavicon()
+
   if (ostData.missingEnvVars) {
     return <Welcome variables={ostData.missingEnvVars} />
   }

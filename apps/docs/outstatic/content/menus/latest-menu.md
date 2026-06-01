@@ -25,9 +25,11 @@ publishedAt: "2026-03-13T03:00:00.000Z"
     - [Writing Content](/the-content-editor#writing-content)
     - [Menus](/the-content-editor#menus)
     - [MDX Block](/mdx-block)
+    - [Block Library](/block-library)
     - [Uploading Media](/the-content-editor#uploading-media)
     - [AI Completion](/the-content-editor#ai-completion)
   - [Custom Fields](/custom-fields)
+    - [Fields only mode](/custom-fields#fields-only-mode)
 
 - Access & Integration
 

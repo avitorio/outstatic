@@ -13,6 +13,8 @@ import { noCase } from 'change-case'
 import { EditorPageShell } from './_components/editor-page-shell'
 import { useEditorPageState } from './_components/use-editor-page-state'
 import { getFirstImageMediaSource } from '@/utils/media-config'
+import { AdminLoading } from '@/components/admin-loading'
+import { isFieldsOnlyModeEnabled } from '@/utils/hooks/field-schema'
 
 export default function EditDocument({ collection }: { collection: string }) {
   const pathname = usePathname()
@@ -35,7 +37,9 @@ export default function EditDocument({ collection }: { collection: string }) {
   const [mediaPathUpdated, setMediaPathUpdated] = useState(false)
   const pendingFormDataRef = useRef<Document | null>(null)
 
-  const { data: schema } = useGetCollectionSchema({ collection })
+  const { data: schema, isLoading: isSchemaLoading } = useGetCollectionSchema({
+    collection
+  })
   const { data: config } = useGetConfig()
   const files = useFileStore((state) => state.files)
   const {
@@ -137,6 +141,10 @@ export default function EditDocument({ collection }: { collection: string }) {
     }
   }
 
+  if (isSchemaLoading) {
+    return <AdminLoading />
+  }
+
   return (
     <EditorPageShell
       methods={methods}
@@ -187,6 +195,7 @@ export default function EditDocument({ collection }: { collection: string }) {
       setShowExtensionDialog={setShowExtensionDialog}
       extensionFileName={`${methods.getValues('slug') || 'document'}.${extension}`}
       onExtensionSave={handleExtensionDialogSave}
+      fieldsOnlyMode={isFieldsOnlyModeEnabled(schema?.settings)}
     />
   )
 }

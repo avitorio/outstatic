@@ -495,6 +495,29 @@ describe('<DocumentSettings />', () => {
     expect(screen.getByTestId('mobile-toggle-button')).toBeInTheDocument()
   })
 
+  it('should render title field in standalone mode', () => {
+    render(
+      <TestWrapper>
+        <DocumentSettings {...defaultProps} standalone />
+      </TestWrapper>
+    )
+
+    expect(screen.getByLabelText('Title')).toHaveValue('Example Document')
+    expect(screen.queryByTestId('mobile-toggle-button')).not.toBeInTheDocument()
+  })
+
+  it('should keep the status selector visible on mobile in standalone mode', () => {
+    render(
+      <TestWrapper>
+        <DocumentSettings {...defaultProps} standalone />
+      </TestWrapper>
+    )
+
+    const statusSelect = screen.getByTestId('status-select-desktop')
+    expect(statusSelect).toBeInTheDocument()
+    expect(statusSelect.closest('div.hidden')).toBeNull()
+  })
+
   it('should toggle mobile sidebar when toggle button is clicked', async () => {
     const user = userEvent.setup()
 

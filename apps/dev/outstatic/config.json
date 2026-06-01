@@ -1,4 +1,5 @@
 {
+  "mdExtension": "mdx",
   "publicMediaPath": "images/",
   "repoMediaPath": "apps/dev/public/images/"
 }

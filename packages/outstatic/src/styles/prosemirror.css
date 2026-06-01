@@ -141,7 +141,7 @@
 
 .ProseMirror .hljs {
   color: #adbac7;
-  background: #22272e;
+  @apply bg-foreground dark:bg-background;
 }
 
 .ProseMirror .hljs-doctag,
@@ -286,7 +286,13 @@
   height: 0;
 }
 
-ul[data-type='taskList'] li[data-checked='true']>div>p {
+.ProseMirror .outstatic-mdx-block-ui.is-empty::before,
+.ProseMirror .outstatic-mdx-block-ui.is-editor-empty::before {
+  content: none;
+  display: none;
+}
+
+ul[data-type='taskList'] li[data-checked='true'] > div > p {
   color: #9ca3af;
   text-decoration: line-through;
   text-decoration-thickness: 2px;

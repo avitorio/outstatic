@@ -1,0 +1,79 @@
+---
+title: "Using MDX"
+status: "published"
+author:
+  name: "Andre Vitorio"
+  picture: "https://avatars.githubusercontent.com/u/1417109?v=4"
+slug: "using-mdx"
+description: "Embed React components in your posts with the MDX block."
+coverImage: ""
+tags:
+  - value: "outstatic"
+    label: "Outstatic"
+  - value: "nextJs"
+    label: "NextJs"
+publishedAt: "2026-05-11T12:00:00.000Z"
+---
+
+The **MDX block** in the Outstatic editor lets you add raw MDX to a document
+without it being escaped. You can drop in JSX component tags, imports, or HTML
+and Outstatic saves the source exactly as written — the frontend then renders
+the markdown around them and your React components in place.
+
+This post uses three example components registered in `MDXComponentsMap`:
+`Callout`, `Counter`, and `ApiFetcher`. Open the post in the editor and the
+MDX block to see the raw source.
+
+<Callout title="Tip" type="info">
+  Type `/` in the editor and choose **MDX** to insert an MDX block. The block
+  behaves like a code block — what you type is exactly what gets saved.
+</Callout>
+
+## A simple counter
+
+The `Counter` is a small client component using `useState`. Click the buttons
+to increment or decrement the value:
+
+<Counter initialValue={0} step={1} />
+
+You can also pass props to change the starting value or the step size:
+
+<Counter initialValue={10} step={5} />
+
+## Fetching data on click
+
+The `ApiFetcher` is a client component that calls an API when you click the
+button. The default fetches the Outstatic repo from the GitHub API and shows
+its star count and description:
+
+<ApiFetcher />
+
+You can point it at any JSON endpoint with the `url` prop.
+
+## Reusable blocks from the Block Library
+
+For components you reach for often, the
+[Block Library](https://outstatic.com/docs/block-library) lets you register
+reusable MDX blocks that appear in the slash command menu. Each block defines a
+component name, the props editors fill in, and any imports it needs — so
+inserting a block becomes a single click instead of hand-writing JSX.
+
+This post uses a `Youtube` block defined in `outstatic/blocks.json`. Type `/`
+in the editor, pick **Youtube**, and fill in the video URL:
+
+<Youtube url="https://www.youtube.com/watch?v=xp14-T2WAvI" />
+
+## Rendering MDX on your site
+
+The MDX block only controls how content is edited and saved. Your frontend
+still needs an MDX pipeline to turn the source into rendered React. This demo
+uses [`mdx-bundler`](https://github.com/kentcdodds/mdx-bundler) — see
+`src/lib/mdx-server.ts` and `src/components/mdx/mdx-component.tsx` for the
+wiring.
+
+<Callout title="Heads up" type="warning">
+  If your frontend treats document content as plain Markdown, JSX tags like
+  `<Counter />` will be rendered as text rather than React components. Make
+  sure your renderer compiles MDX and that each component used in a post is
+  registered in the components map.
+</Callout>

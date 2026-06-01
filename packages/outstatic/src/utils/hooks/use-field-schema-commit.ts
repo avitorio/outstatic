@@ -8,22 +8,30 @@ import { toast } from 'sonner'
 import {
   createFieldSchemaDocument,
   FieldSchemaCommitAction,
+  FieldSchemaSettings,
+  FieldSchemaType,
   FieldSchemaTarget,
   getFieldSchemaCommitMessage,
   getFieldSchemaFilePath,
-  getFieldSchemaQueryKey
+  getFieldSchemaQueryKey,
+  getFieldSchemaRequestPath,
+  normalizeFieldSchemaSettings
 } from './field-schema'
 
 const actionLabels = {
   add: 'Adding',
   edit: 'Editing',
-  delete: 'Deleting'
+  delete: 'Deleting',
+  reorder: 'Reordering',
+  settings: 'Updating'
 } as const
 
 const actionPastTense = {
   add: 'added',
   edit: 'edited',
-  delete: 'deleted'
+  delete: 'deleted',
+  reorder: 'reordered',
+  settings: 'updated'
 } as const
 
 export const useFieldSchemaCommit = (target: FieldSchemaTarget) => {
@@ -35,10 +43,12 @@ export const useFieldSchemaCommit = (target: FieldSchemaTarget) => {
 
   return async ({
     customFields,
+    settings,
     action,
     fieldName
   }: {
     customFields: CustomFieldsType
+    settings?: FieldSchemaSettings
     action: FieldSchemaCommitAction
     fieldName: string
   }) => {
@@ -53,9 +63,15 @@ export const useFieldSchemaCommit = (target: FieldSchemaTarget) => {
         branch: repoBranch
       })
 
+      const queryKey = getFieldSchemaQueryKey(target, ostContent, repoBranch)
+      const existingSchema = queryClient.getQueryData<FieldSchemaType>(queryKey)
+      const schemaSettings = normalizeFieldSchemaSettings(
+        settings ?? existingSchema?.settings
+      )
+
       capi.replaceFile(
         getFieldSchemaFilePath(target, ostContent),
-        createFieldSchemaDocument(target, customFields)
+        createFieldSchemaDocument(target, customFields, schemaSettings)
       )
 
       const input = capi.createInput()
@@ -63,17 +79,56 @@ export const useFieldSchemaCommit = (target: FieldSchemaTarget) => {
       const commitPromise = createCommit
         .mutateAsync(input)
         .then(async (data) => {
+          const nextSchema = {
+            title:
+              existingSchema?.title ??
+              (target.kind === 'collection' ? target.slug : target.title),
+            type: existingSchema?.type ?? 'object',
+            settings: schemaSettings,
+            properties: customFields
+          }
+
+          queryClient.setQueryData<FieldSchemaType>(queryKey, (current) => ({
+            ...nextSchema,
+            title: current?.title ?? nextSchema.title,
+            type: current?.type ?? nextSchema.type
+          }))
+
           await queryClient.invalidateQueries({
-            queryKey: getFieldSchemaQueryKey(target, ostContent, repoBranch)
+            queryKey
+          })
+          await queryClient.invalidateQueries({
+            queryKey:
+              target.kind === 'collection'
+                ? [
+                    'collection-schema',
+                    {
+                      filePath: getFieldSchemaRequestPath(
+                        target,
+                        ostContent,
+                        repoBranch
+                      )
+                    }
+                  ]
+                : ['singleton-schema', { slug: target.slug }]
           })
 
           return data
         })
 
       await toast.promise(commitPromise, {
-        loading: `${actionLabels[action]} field...`,
-        success: `Field ${actionPastTense[action]} successfully`,
-        error: `Failed to ${action} field`
+        loading:
+          action === 'settings'
+            ? `${actionLabels[action]} settings...`
+            : `${actionLabels[action]} field...`,
+        success:
+          action === 'settings'
+            ? `Settings ${actionPastTense[action]} successfully`
+            : `Field ${actionPastTense[action]} successfully`,
+        error:
+          action === 'settings'
+            ? 'Failed to update settings'
+            : `Failed to ${action} field`
       })
 
       return true
