@@ -12,7 +12,7 @@ import { ReactNodeViewRenderer } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import { common, createLowlight } from 'lowlight'
 import { Markdown } from 'tiptap-markdown'
-import GlobalDragHandle from "tiptap-extension-global-drag-handle";
+import GlobalDragHandle from 'tiptap-extension-global-drag-handle'
 import CodeBlock from '@/components/editor/extensions/code-block'
 import { createSlashCommand } from '@/components/editor/extensions/slash-command'
 import type { UpgradeDialogHandler } from '@/components/ui/outstatic/upgrade-dialog-context'
