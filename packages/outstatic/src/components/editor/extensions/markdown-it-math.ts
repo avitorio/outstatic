@@ -83,13 +83,22 @@ const markdownItMath = (md: MarkdownIt) => {
     // Find the closing marker
     while (pos < end) {
       if (
-        state.src.slice(pos, pos + options.inlineClose.length) ===
-          options.inlineClose &&
-        canCloseInlineMath(state.src, pos)
+        state.src.slice(pos, pos + options.inlineClose.length) !==
+        options.inlineClose
       ) {
+        pos++
+        continue
+      }
+
+      if (canCloseInlineMath(state.src, pos)) {
         found = true
         break
       }
+
+      if (canOpenInlineMath(state.src, pos)) {
+        return false
+      }
+
       pos++
     }
 

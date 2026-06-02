@@ -41,4 +41,8 @@ describe('markdownItMath', () => {
     expect(getMathTokenContents(source)).toEqual([])
     expect(createMarkdownIt().renderInline(source)).toBe(source)
   })
+
+  it('does not let a dollar amount consume a later inline math expression', () => {
+    expect(getMathTokenContents('Costs $1 and $x$ today')).toEqual(['x'])
+  })
 })
