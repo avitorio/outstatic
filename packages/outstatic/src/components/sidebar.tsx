@@ -252,7 +252,7 @@ export const Sidebar = ({ additionalRoutes }: SidebarProps) => {
 
   return (
     <SidebarUI>
-      <SidebarHeader className={'h-16 hidden md:flex'} />
+      <SidebarHeader className={'lg:h-16 hidden md:flex'} />
       <SidebarContent>
         <SidebarNavigation config={config} />
       </SidebarContent>
