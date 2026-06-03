@@ -110,7 +110,7 @@ describe('SingletonsTable', () => {
       </TestWrapper>
     )
 
-    // Default sort is by title ascending
+    expect(screen.getByTestId('sort-icon-publishedAt')).toBeInTheDocument()
     expect(screen.getByTestId('sort-icon-title')).toBeInTheDocument()
   })
 
@@ -121,14 +121,13 @@ describe('SingletonsTable', () => {
       </TestWrapper>
     )
 
-    const titleHeader = screen.getByText('Title')
+    const publishedAtHeader = screen.getByText('Published At')
 
-    // Initially ascending
-    expect(screen.getByTestId('caret-up-icon')).toBeInTheDocument()
-
-    // Click to toggle to descending
-    fireEvent.click(titleHeader)
+    // Default sort is publishedAt descending
     expect(screen.getByTestId('caret-down-icon')).toBeInTheDocument()
+
+    fireEvent.click(publishedAtHeader)
+    expect(screen.getByTestId('caret-up-icon')).toBeInTheDocument()
   })
 
   it('renders an actions trigger for each singleton', () => {
