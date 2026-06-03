@@ -134,13 +134,17 @@ function RouteSubChildItem({
     'mx-auto w-full gap-0! [&>svg]:flex-1': !open
   })
 
-  const spanClassName = cn('w-auto transition-opacity duration-300', {
+  const spanClassName = cn('w-auto transition-opacity duration-300 pr-2.5', {
     'w-0 opacity-0': !open
   })
 
   return (
-    <SidebarMenuSubItem className="group/sub-menu-item">
-      <SidebarMenuSubButton isActive={isActive} asChild>
+    <SidebarMenuSubItem>
+      <SidebarMenuSubButton
+        isActive={isActive}
+        className="peer/sub-menu-button"
+        asChild
+      >
         <Link
           className={cn(linkClassName, {
             'pointer-events-none': isCurrentRoute
@@ -152,13 +156,18 @@ function RouteSubChildItem({
         </Link>
       </SidebarMenuSubButton>
       <If condition={child.renderAction}>
-        <SidebarMenuAction>{child.renderAction}</SidebarMenuAction>
+        <SidebarMenuAction className="opacity-0 hover:opacity-100 focus-visible:opacity-100 peer-hover/sub-menu-button:opacity-100 peer-focus-visible/sub-menu-button:opacity-100 data-[state=open]:opacity-100">
+          {child.renderAction}
+        </SidebarMenuAction>
       </If>
       {children.length > 0 ? (
         <SidebarMenuSub
-          className={cn({
-            'mx-0 px-1.5': !open
-          })}
+          className={cn(
+            {
+              'mx-0 px-1.5': !open
+            },
+            'mr-0 pr-0'
+          )}
         >
           {children.map((nestedChild, nestedChildIndex) => {
             if (isRouteGroup(nestedChild)) {
@@ -473,10 +482,7 @@ export function SidebarNavigation({
                             if ('collapsible' in child && child.collapsible) {
                               return (
                                 <CollapsibleTrigger asChild>
-                                  <SidebarMenuButton
-                                    tooltip={child.label}
-                                    className="group/sub-menu-item"
-                                  >
+                                  <SidebarMenuButton tooltip={child.label}>
                                     <div
                                       className={cn('flex items-center gap-2', {
                                         'mx-auto w-full gap-0 [&>svg]:flex-1 [&>svg]:shrink-0':
@@ -581,9 +587,12 @@ export function SidebarNavigation({
                                   <If condition={child.children}>
                                     {(children) => (
                                       <SidebarMenuSub
-                                        className={cn({
-                                          'mx-0 px-1.5': !open
-                                        })}
+                                        className={cn(
+                                          {
+                                            'mx-0 px-1.5': !open
+                                          },
+                                          'mr-0 pr-0'
+                                        )}
                                       >
                                         {children.map(
                                           (
