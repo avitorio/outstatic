@@ -85,7 +85,7 @@ describe('useDocumentUpdateEffect', () => {
           title: string
           slug: string
           path: string
-          children: []
+          parent: string | null
         }[]
       | undefined
 
@@ -107,7 +107,7 @@ describe('useDocumentUpdateEffect', () => {
         title: 'Posts',
         slug: 'posts',
         path: 'outstatic/content/posts',
-        children: []
+        parent: null
       }
     ]
 
@@ -127,7 +127,7 @@ describe('useDocumentUpdateEffect', () => {
           title: 'Posts',
           slug: 'posts',
           path: '',
-          children: []
+          parent: null
         }
       ]
     })
@@ -156,7 +156,7 @@ describe('useDocumentUpdateEffect', () => {
           title: 'Posts',
           slug: 'posts',
           path: 'outstatic/content/posts',
-          children: []
+          parent: null
         }
       ]
     })

@@ -12,15 +12,20 @@ const Divider = z.object({
 const RouteSubChild = z.object({
   label: z.string(),
   path: z.string(),
+  slug: z.string().optional(),
+  parent: z.string().nullable().optional(),
   Icon: z.custom<React.ReactNode>().optional(),
   action: z.custom<React.ReactNode>().optional(),
   end: RouteMatchingEnd,
-  renderAction: z.custom<React.ReactNode>().optional()
+  renderAction: z.custom<React.ReactNode>().optional(),
+  children: z.array(z.any()).default([]).optional()
 })
 
 const RouteChild = z.object({
   label: z.string(),
   path: z.string(),
+  slug: z.string().optional(),
+  parent: z.string().nullable().optional(),
   Icon: z.custom<React.ReactNode>().optional(),
   end: RouteMatchingEnd,
   action: z.custom<React.ReactNode>().optional(),

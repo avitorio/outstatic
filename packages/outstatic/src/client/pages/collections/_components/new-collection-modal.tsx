@@ -17,7 +17,7 @@ import { Label } from '@/components/ui/shadcn/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/shadcn/radio-group'
 import { createCommitApi } from '@/utils/create-commit-api'
 import { createOutstaticCommitMessage } from '@/utils/commit-message'
-import { useCollections } from '@/utils/hooks/use-collections'
+import { CollectionType, useCollections } from '@/utils/hooks/use-collections'
 import { useCreateCommit } from '@/utils/hooks/use-create-commit'
 import { useGetDocuments } from '@/utils/hooks/use-get-documents'
 import useOid from '@/utils/hooks/use-oid'
@@ -53,6 +53,31 @@ import {
   DialogTitle,
   DialogDescription
 } from '@/components/ui/shadcn/dialog'
+
+function normalizeCollectionPath(path: string) {
+  return path.replace(/^\/+|\/+$/g, '')
+}
+
+function findCollectionParent(
+  collections: CollectionType[],
+  collectionPath: string
+) {
+  const normalizedCollectionPath = normalizeCollectionPath(collectionPath)
+
+  return (
+    collections
+      .filter((collection) => {
+        const normalizedPath = normalizeCollectionPath(collection.path)
+
+        return (
+          normalizedPath !== '' &&
+          normalizedPath !== normalizedCollectionPath &&
+          normalizedCollectionPath.startsWith(`${normalizedPath}/`)
+        )
+      })
+      .sort((a, b) => b.path.length - a.path.length)[0]?.slug ?? null
+  )
+}
 
 export default function NewCollectionModal({
   open,
@@ -160,7 +185,7 @@ export default function NewCollectionModal({
         title: name,
         slug,
         path: collectionPath,
-        children: []
+        parent: findCollectionParent(collections, collectionPath)
       })
 
       const schemaJson = {

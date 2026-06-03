@@ -15,7 +15,12 @@ export type CollectionType = {
   title: string
   slug: string
   path: string
-  children: CollectionType[]
+  parent: string | null
+}
+
+type LegacyCollectionType = Omit<CollectionType, 'parent'> & {
+  parent?: string | null
+  children?: LegacyCollectionType[]
 }
 
 type CollectionsType = CollectionType[] | null
@@ -32,6 +37,28 @@ function filterSingletonsCollection(
   return collections.filter(
     (collection) => collection.slug !== SINGLETONS_COLLECTION_SLUG
   )
+}
+
+function normalizeCollections(
+  collections: LegacyCollectionType[] = [],
+  parent: string | null = null
+): CollectionType[] {
+  return collections.flatMap((collection) => {
+    const {
+      children = [],
+      parent: collectionParent,
+      ...collectionData
+    } = collection
+    const normalizedCollection = {
+      ...collectionData,
+      parent: collectionParent ?? parent
+    }
+
+    return [
+      normalizedCollection,
+      ...normalizeCollections(children, normalizedCollection.slug)
+    ]
+  })
 }
 
 export function useCollections(options?: UseCollectionsOptions) {
@@ -61,7 +88,9 @@ export function useCollections(options?: UseCollectionsOptions) {
         }
 
         if (collectionsObject?.text) {
-          collectionsData = JSON.parse(collectionsObject.text)
+          collectionsData = normalizeCollections(
+            JSON.parse(collectionsObject.text)
+          )
           const collections = filterSingletonsCollection(collectionsData ?? [])
 
           return collections
@@ -105,7 +134,7 @@ export function useCollections(options?: UseCollectionsOptions) {
               }),
               slug: entry.name,
               path: `${ostContent}/${entry.name}`,
-              children: []
+              parent: null
             })) as CollectionsType
 
           const oid = await fetchOid()
