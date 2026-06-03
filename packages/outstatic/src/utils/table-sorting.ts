@@ -1,16 +1,31 @@
 import type { OstDocument } from '@/types/public'
 import type { Row } from '@tanstack/react-table'
 
+export function publishedAtSortTime(value: unknown): number {
+  if (value == null || value === '' || value === 0) return 0
+  const time = new Date(String(value)).getTime()
+  return Number.isNaN(time) ? 0 : time
+}
+
+export const publishedAtAccessor = <
+  TRow extends { publishedAt?: string | null }
+>(
+  row: TRow
+): string | number => {
+  const value = row.publishedAt
+  if (value == null || value === '') return 0
+  return value
+}
+
 export function publishedAtSortingFn<TData extends Record<string, unknown>>(
   rowA: Row<TData>,
   rowB: Row<TData>,
   columnId: string
 ): number {
-  const a = rowA.getValue<string>(columnId)
-  const b = rowB.getValue<string>(columnId)
-  const dateA = a ? new Date(a).getTime() : 0
-  const dateB = b ? new Date(b).getTime() : 0
-  return dateA - dateB
+  return (
+    publishedAtSortTime(rowA.getValue(columnId)) -
+    publishedAtSortTime(rowB.getValue(columnId))
+  )
 }
 
 type StatusSortable = Pick<OstDocument, 'status' | 'title'>

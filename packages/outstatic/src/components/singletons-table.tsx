@@ -19,7 +19,11 @@ import {
 import { OstDocument } from '@/types/public'
 import { useOutstatic } from '@/utils/hooks/use-outstatic'
 import { useSingletons } from '@/utils/hooks/use-singletons'
-import { publishedAtSortingFn, statusSortingFn } from '@/utils/table-sorting'
+import {
+  publishedAtAccessor,
+  publishedAtSortingFn,
+  statusSortingFn
+} from '@/utils/table-sorting'
 import {
   CaretDownIcon,
   CaretSortIcon,
@@ -142,7 +146,7 @@ export const SingletonsTable = () => {
   }, [singletonsData])
 
   const [sorting, setSorting] = useState<SortingState>([
-    { id: 'title', desc: false }
+    { id: 'publishedAt', desc: true }
   ])
 
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
@@ -174,9 +178,13 @@ export const SingletonsTable = () => {
     () =>
       COLUMN_DEFINITIONS.map(({ id, label }) => ({
         id,
-        accessorKey: id,
+        ...(id === 'publishedAt'
+          ? {
+              accessorFn: publishedAtAccessor,
+              sortingFn: publishedAtSortingFn
+            }
+          : { accessorKey: id }),
         enableHiding: true,
-        ...(id === 'publishedAt' && { sortingFn: publishedAtSortingFn }),
         ...(id === 'status' && { sortingFn: statusSortingFn }),
         header: ({ column }) => {
           const sorted = column.getIsSorted()
@@ -208,8 +216,11 @@ export const SingletonsTable = () => {
             </Button>
           )
         },
-        cell: ({ getValue }) => {
-          const value = (getValue() as string) ?? null
+        cell: ({ getValue, row }) => {
+          const value =
+            id === 'publishedAt'
+              ? (row.original.publishedAt ?? null)
+              : ((getValue() as string) ?? null)
           if (id === 'title') {
             return value !== null ? (
               <span className="font-semibold">{value}</span>
