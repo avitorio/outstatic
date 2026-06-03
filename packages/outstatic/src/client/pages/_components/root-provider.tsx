@@ -50,6 +50,7 @@ function RootProviderInner({ ostData, children }: RootProviderProps) {
         defaultTheme="system"
         enableSystem
         disableTransitionOnChange
+        scriptProps={{ type: "application/json" }}
       >
         {showToaster ? <Toaster /> : null}
         <QueryClientProvider client={queryClient}>
