@@ -40,49 +40,62 @@ jest.mock('change-case', () => {
 const date1 = 'July 14, 2022'
 const date2 = 'August 15, 2023'
 
-jest.mock('@/utils/hooks/use-get-documents', () => ({
-  useGetDocuments: () => ({
-    data: {
-      documents: [
-        {
-          slug: 'doc1',
-          title: 'Document 1',
-          status: 'published',
-          publishedAt: date1,
-          author: { name: 'Andre' },
-          content: 'Test content',
-          collection: 'testCollection'
-        },
-        {
-          slug: 'doc2',
-          title: 'Document 2',
-          status: 'draft',
-          publishedAt: date2,
-          author: { name: 'Filipe' },
-          content: 'Test content',
-          collection: 'testCollection'
-        }
-      ],
-      metadata: new Map(
-        new Map([
-          ['title', 'string'],
-          ['publishedAt', 'string'],
-          ['status', 'string'],
-          ['author', 'string'],
-          ['slug', 'string'],
-          ['extension', 'string'],
-          ['description', 'string']
-        ])
-      )
+type MockGetDocumentsData = {
+  documents: Record<string, unknown>[]
+  metadata: Map<string, string>
+}
+
+const defaultDocumentsData: MockGetDocumentsData = {
+  documents: [
+    {
+      slug: 'doc1',
+      title: 'Document 1',
+      status: 'published',
+      publishedAt: date1,
+      author: { name: 'Andre' },
+      content: 'Test content',
+      collection: 'testCollection'
     },
+    {
+      slug: 'doc2',
+      title: 'Document 2',
+      status: 'draft',
+      publishedAt: date2,
+      author: { name: 'Filipe' },
+      content: 'Test content',
+      collection: 'testCollection'
+    }
+  ],
+  metadata: new Map([
+    ['title', 'string'],
+    ['publishedAt', 'string'],
+    ['status', 'string'],
+    ['author', 'string'],
+    ['slug', 'string'],
+    ['extension', 'string'],
+    ['description', 'string']
+  ])
+}
+
+const mockUseGetDocuments = jest.fn(
+  (): { data: MockGetDocumentsData; refetch: jest.Mock } => ({
+    data: defaultDocumentsData,
     refetch: jest.fn()
   })
+)
+
+jest.mock('@/utils/hooks/use-get-documents', () => ({
+  useGetDocuments: () => mockUseGetDocuments()
 }))
 
 describe('DocumentsTable', () => {
   beforeEach(() => {
     mockRouter.push.mockClear()
     ;(Cookies.set as jest.Mock).mockClear()
+    mockUseGetDocuments.mockImplementation(() => ({
+      data: defaultDocumentsData,
+      refetch: jest.fn()
+    }))
   })
 
   it('renders a table with provided documents', () => {
@@ -224,6 +237,53 @@ describe('DocumentsTable', () => {
     expect(mockRouter.push).not.toHaveBeenCalled()
 
     openSpy.mockRestore()
+  })
+
+  it('does not error when publishedAt is not in metadata (sorts by first column)', () => {
+    const consoleError = jest
+      .spyOn(console, 'error')
+      .mockImplementation(() => {})
+
+    mockUseGetDocuments.mockImplementation(() => ({
+      data: {
+        documents: [
+          {
+            slug: 'doc1',
+            title: 'Document 1',
+            status: 'published',
+            date: date1,
+            content: '',
+            collection: 'testCollection'
+          }
+        ],
+        metadata: new Map([
+          ['title', 'string'],
+          ['date', 'string'],
+          ['status', 'string'],
+          ['slug', 'string']
+        ])
+      },
+      refetch: jest.fn()
+    }))
+
+    render(
+      <TestWrapper>
+        <DocumentsTable />
+      </TestWrapper>
+    )
+
+    expect(screen.getByText('Document 1')).toBeInTheDocument()
+    expect(screen.getByTestId('sort-icon-title')).toBeInTheDocument()
+    expect(
+      screen.queryByTestId('sort-icon-publishedAt')
+    ).not.toBeInTheDocument()
+
+    const tableErrors = consoleError.mock.calls.filter((args) =>
+      String(args[0]).includes("Column with id 'publishedAt'")
+    )
+    expect(tableErrors).toHaveLength(0)
+
+    consoleError.mockRestore()
   })
 
   it('persists visible columns via js-cookie when toggling the Columns menu', async () => {
