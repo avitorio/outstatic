@@ -37,6 +37,41 @@ export function findCollectionParent(
   )
 }
 
+export function getInvalidParentCollectionSlugs(
+  collections: CollectionType[],
+  collectionSlug: string
+) {
+  const invalidSlugs = new Set<string>([collectionSlug])
+
+  getDescendantCollectionSlugs(collections, collectionSlug).forEach((slug) => {
+    invalidSlugs.add(slug)
+  })
+
+  return invalidSlugs
+}
+
+export function getValidParentCollectionOptions(
+  collections: CollectionType[],
+  collectionSlug: string
+) {
+  const invalidSlugs = getInvalidParentCollectionSlugs(
+    collections,
+    collectionSlug
+  )
+
+  return collections.filter((collection) => !invalidSlugs.has(collection.slug))
+}
+
+export function updateCollectionParent(
+  collections: CollectionType[],
+  collectionSlug: string,
+  parent: string | null
+) {
+  return collections.map((collection) =>
+    collection.slug === collectionSlug ? { ...collection, parent } : collection
+  )
+}
+
 export function getDescendantCollectionSlugs(
   collections: CollectionType[],
   parentSlug: string

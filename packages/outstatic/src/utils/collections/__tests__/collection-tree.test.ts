@@ -3,9 +3,12 @@ import {
   findCollectionParent,
   getCollectionsAfterDeletion,
   getDescendantCollectionSlugs,
+  getInvalidParentCollectionSlugs,
   getMetadataAfterCollectionDeletion,
+  getValidParentCollectionOptions,
   normalizeCollectionPath,
   normalizeCollections,
+  updateCollectionParent,
   type CollectionType
 } from '../collection-tree'
 
@@ -74,6 +77,52 @@ describe('findCollectionParent', () => {
     expect(
       findCollectionParent(collections, '/outstatic/content/posts/guides/')
     ).toBe('posts')
+  })
+})
+
+describe('getInvalidParentCollectionSlugs', () => {
+  const collections = [
+    collection('posts', 'outstatic/content/posts'),
+    collection('guides', 'outstatic/content/posts/guides', 'posts'),
+    collection('chapters', 'outstatic/content/posts/guides/chapters', 'guides'),
+    collection('projects', 'outstatic/content/projects')
+  ]
+
+  it('includes the collection and all descendants', () => {
+    expect(getInvalidParentCollectionSlugs(collections, 'posts')).toEqual(
+      new Set(['posts', 'guides', 'chapters'])
+    )
+  })
+})
+
+describe('getValidParentCollectionOptions', () => {
+  const collections = [
+    collection('posts', 'outstatic/content/posts'),
+    collection('guides', 'outstatic/content/posts/guides', 'posts'),
+    collection('chapters', 'outstatic/content/posts/guides/chapters', 'guides'),
+    collection('projects', 'outstatic/content/projects')
+  ]
+
+  it('excludes the collection and its descendants', () => {
+    expect(
+      getValidParentCollectionOptions(collections, 'guides').map(
+        (collectionInfo) => collectionInfo.slug
+      )
+    ).toEqual(['posts', 'projects'])
+  })
+})
+
+describe('updateCollectionParent', () => {
+  const collections = [
+    collection('posts', 'outstatic/content/posts'),
+    collection('guides', 'outstatic/content/posts/guides', 'posts')
+  ]
+
+  it('updates the parent slug for the target collection', () => {
+    expect(updateCollectionParent(collections, 'guides', null)).toEqual([
+      collection('posts', 'outstatic/content/posts'),
+      collection('guides', 'outstatic/content/posts/guides', null)
+    ])
   })
 })
 
