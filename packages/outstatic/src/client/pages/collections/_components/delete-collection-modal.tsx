@@ -21,32 +21,11 @@ import { useOutstatic } from '@/utils/hooks/use-outstatic'
 import { stringifyMetadata } from '@/utils/metadata/stringify'
 import { toast } from 'sonner'
 import { CollectionType, useCollections } from '@/utils/hooks/use-collections'
-
-function getDescendantCollectionSlugs(
-  collections: CollectionType[],
-  parentSlug: string
-) {
-  const descendantSlugs = new Set<string>()
-  let foundDescendant = true
-
-  while (foundDescendant) {
-    foundDescendant = false
-
-    collections.forEach((collection) => {
-      if (
-        collection.parent &&
-        (collection.parent === parentSlug ||
-          descendantSlugs.has(collection.parent)) &&
-        !descendantSlugs.has(collection.slug)
-      ) {
-        descendantSlugs.add(collection.slug)
-        foundDescendant = true
-      }
-    })
-  }
-
-  return descendantSlugs
-}
+import {
+  getCollectionsAfterDeletion,
+  getDescendantCollectionSlugs,
+  getMetadataAfterCollectionDeletion
+} from '@/utils/collections/collection-tree'
 
 type DeleteCollectionModalProps = {
   setShowDeleteModal: (value: boolean) => void
@@ -108,24 +87,11 @@ function DeleteCollectionModal({
       })
 
       if (collections) {
-        const descendantSlugs = getDescendantCollectionSlugs(
+        const newCollections = getCollectionsAfterDeletion(
           collections,
-          collection.slug
+          collection,
+          keepFiles
         )
-        // remove collection from collections.json
-        const newCollections = collections
-          .filter(
-            (collectionInfo) =>
-              collectionInfo.slug !== collection.slug &&
-              (keepFiles || !descendantSlugs.has(collectionInfo.slug))
-          )
-          .map((collectionInfo) => ({
-            ...collectionInfo,
-            parent:
-              collectionInfo.parent === collection.slug
-                ? collection.parent
-                : collectionInfo.parent
-          }))
         capi.replaceFile(
           `${ostContent}/collections.json`,
           JSON.stringify(newCollections, null, 2)
@@ -144,10 +110,11 @@ function DeleteCollectionModal({
         const m = metadata.metadata
         m.generated = new Date().toISOString()
         m.commit = hashFromUrl(metadata.commitUrl)
-        const newMeta = (m.metadata ?? []).filter(
-          (post) =>
-            post.collection !== collection.slug &&
-            (keepFiles || !descendantSlugs.has(post.collection))
+        const newMeta = getMetadataAfterCollectionDeletion(
+          m.metadata ?? [],
+          collection.slug,
+          descendantSlugs,
+          keepFiles
         )
         capi.replaceFile(
           `${ostContent}/metadata.json`,

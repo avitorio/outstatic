@@ -54,30 +54,7 @@ import {
   DialogDescription
 } from '@/components/ui/shadcn/dialog'
 
-function normalizeCollectionPath(path: string) {
-  return path.replace(/^\/+|\/+$/g, '')
-}
-
-function findCollectionParent(
-  collections: CollectionType[],
-  collectionPath: string
-) {
-  const normalizedCollectionPath = normalizeCollectionPath(collectionPath)
-
-  return (
-    collections
-      .filter((collection) => {
-        const normalizedPath = normalizeCollectionPath(collection.path)
-
-        return (
-          normalizedPath !== '' &&
-          normalizedPath !== normalizedCollectionPath &&
-          normalizedCollectionPath.startsWith(`${normalizedPath}/`)
-        )
-      })
-      .sort((a, b) => b.path.length - a.path.length)[0]?.slug ?? null
-  )
-}
+import { findCollectionParent } from '@/utils/collections/collection-tree'
 
 export default function NewCollectionModal({
   open,

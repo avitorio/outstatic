@@ -10,18 +10,12 @@ import { GET_FILE } from '@/graphql/queries/file'
 import { sentenceCase } from 'change-case'
 import { stringifyError } from '@/utils/errors/stringify-error'
 import { isGithubCredentialsError } from '@/utils/errors/is-github-credentials-error'
+import {
+  normalizeCollections,
+  type CollectionType
+} from '@/utils/collections/collection-tree'
 
-export type CollectionType = {
-  title: string
-  slug: string
-  path: string
-  parent: string | null
-}
-
-type LegacyCollectionType = Omit<CollectionType, 'parent'> & {
-  parent?: string | null
-  children?: LegacyCollectionType[]
-}
+export type { CollectionType }
 
 type CollectionsType = CollectionType[] | null
 
@@ -37,28 +31,6 @@ function filterSingletonsCollection(
   return collections.filter(
     (collection) => collection.slug !== SINGLETONS_COLLECTION_SLUG
   )
-}
-
-function normalizeCollections(
-  collections: LegacyCollectionType[] = [],
-  parent: string | null = null
-): CollectionType[] {
-  return collections.flatMap((collection) => {
-    const {
-      children = [],
-      parent: collectionParent,
-      ...collectionData
-    } = collection
-    const normalizedCollection = {
-      ...collectionData,
-      parent: collectionParent ?? parent
-    }
-
-    return [
-      normalizedCollection,
-      ...normalizeCollections(children, normalizedCollection.slug)
-    ]
-  })
 }
 
 export function useCollections(options?: UseCollectionsOptions) {

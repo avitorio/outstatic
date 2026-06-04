@@ -43,41 +43,7 @@ import { useCollapsibleState } from '@/utils/hooks/use-collapsible-state'
 
 export type SidebarConfig = z.infer<typeof NavigationConfigSchema>
 
-export function buildParentChildRoutes<
-  T extends {
-    slug?: string
-    parent?: string | null
-    children?: T[]
-  }
->(routes: T[]): T[] {
-  const clonedRoutes = routes.map((route) => ({
-    ...route,
-    children: route.children ? [...route.children] : []
-  })) as T[]
-  const routesBySlug = new Map<string, T>()
-  const rootRoutes: T[] = []
-
-  clonedRoutes.forEach((route) => {
-    if (route.slug) {
-      routesBySlug.set(route.slug, route)
-    }
-  })
-
-  clonedRoutes.forEach((route) => {
-    if (route.parent) {
-      const parentRoute = routesBySlug.get(route.parent)
-
-      if (parentRoute && parentRoute !== route) {
-        parentRoute.children = [...(parentRoute.children ?? []), route]
-        return
-      }
-    }
-
-    rootRoutes.push(route)
-  })
-
-  return rootRoutes
-}
+export { buildParentChildRoutes } from '@/utils/collections/collection-tree'
 
 function isExactRoute(path: string, currentPath: string) {
   const normalizedPath = (path.split('?')[0] || '').replace(/\/+$/, '') || '/'
