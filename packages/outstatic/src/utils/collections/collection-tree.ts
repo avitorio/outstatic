@@ -151,11 +151,16 @@ export function getMetadataAfterCollectionDeletion(
   descendantSlugs: Set<string>,
   keepFiles: boolean
 ): MetadataType {
-  return metadata.filter(
-    (post) =>
+  return metadata.filter((post) => {
+    const isDescendantCollection =
+      typeof post.collection === 'string' &&
+      descendantSlugs.has(post.collection)
+
+    return (
       post.collection !== collectionSlug &&
-      (keepFiles || !descendantSlugs.has(post.collection))
-  )
+      (keepFiles || !isDescendantCollection)
+    )
+  })
 }
 
 export function buildParentChildRoutes<

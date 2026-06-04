@@ -9,7 +9,19 @@ const Divider = z.object({
   divider: z.literal(true)
 })
 
-const RouteSubChild = z.object({
+type RouteSubChildSchema = {
+  label: string
+  path: string
+  slug?: string
+  parent?: string | null
+  Icon?: React.ReactNode
+  action?: React.ReactNode
+  end?: z.infer<typeof RouteMatchingEnd>
+  renderAction?: React.ReactNode
+  children?: RouteSubChildSchema[]
+}
+
+const RouteSubChild: z.ZodType<RouteSubChildSchema> = z.object({
   label: z.string(),
   path: z.string(),
   slug: z.string().optional(),
@@ -18,7 +30,10 @@ const RouteSubChild = z.object({
   action: z.custom<React.ReactNode>().optional(),
   end: RouteMatchingEnd,
   renderAction: z.custom<React.ReactNode>().optional(),
-  children: z.array(z.any()).default([]).optional()
+  children: z
+    .array(z.lazy(() => RouteSubChild))
+    .default([])
+    .optional()
 })
 
 const RouteChild = z.object({
