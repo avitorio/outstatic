@@ -7,6 +7,8 @@ const mockUseCollections = jest.fn()
 const mockUseOutstatic = jest.fn()
 const mockUseSingletons = jest.fn()
 const mockCommitFieldSchema = jest.fn()
+const mockFetchOid = jest.fn()
+const mockCreateCommitMutateAsync = jest.fn()
 let mockDragEndEvent: any = null
 
 jest.mock('@/utils/hooks/use-field-schema', () => ({
@@ -24,6 +26,17 @@ jest.mock('@/utils/hooks/use-singletons', () => ({
 
 jest.mock('@/utils/hooks/use-field-schema-commit', () => ({
   useFieldSchemaCommit: () => mockCommitFieldSchema
+}))
+
+jest.mock('@/utils/hooks/use-oid', () => ({
+  __esModule: true,
+  default: () => mockFetchOid
+}))
+
+jest.mock('@/utils/hooks/use-create-commit', () => ({
+  useCreateCommit: () => ({
+    mutateAsync: mockCreateCommitMutateAsync
+  })
 }))
 
 jest.mock('@dnd-kit/core', () => ({
@@ -149,6 +162,8 @@ describe('<FieldManagementPage />', () => {
     })
 
     mockCommitFieldSchema.mockResolvedValue(true)
+    mockFetchOid.mockResolvedValue('oid')
+    mockCreateCommitMutateAsync.mockResolvedValue({})
   })
 
   it('does not block singleton pages on a disabled collections query', () => {

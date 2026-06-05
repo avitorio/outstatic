@@ -6,6 +6,8 @@ const mockUseOutstatic = jest.fn()
 const mockUseCollections = jest.fn()
 const mockUseSingletons = jest.fn()
 const mockUsePermissions = jest.fn()
+const mockFetchOid = jest.fn()
+const mockCreateCommitMutateAsync = jest.fn()
 
 jest.mock('@/utils/hooks/use-field-schema', () => ({
   useFieldSchema: () => mockUseFieldSchema()
@@ -22,6 +24,15 @@ jest.mock('@/utils/hooks/use-permissions', () => ({
 }))
 jest.mock('@/utils/hooks/use-field-schema-commit', () => ({
   useFieldSchemaCommit: () => jest.fn()
+}))
+jest.mock('@/utils/hooks/use-oid', () => ({
+  __esModule: true,
+  default: () => mockFetchOid
+}))
+jest.mock('@/utils/hooks/use-create-commit', () => ({
+  useCreateCommit: () => ({
+    mutateAsync: mockCreateCommitMutateAsync
+  })
 }))
 jest.mock('next/navigation', () => ({
   useRouter: jest.fn(() => ({
@@ -67,6 +78,8 @@ describe('<CustomFields />', () => {
     mockUseOutstatic.mockReturnValue({
       dashboardRoute: '/outstatic'
     })
+    mockFetchOid.mockResolvedValue('oid')
+    mockCreateCommitMutateAsync.mockResolvedValue({})
   })
 
   it('renders the unauthorized state when collections.manage is missing', () => {
