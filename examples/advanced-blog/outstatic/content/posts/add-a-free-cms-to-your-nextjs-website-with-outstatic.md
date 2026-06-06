@@ -1,19 +1,23 @@
 ---
-title: 'Add a free CMS to your Next.js website with Outstatic'
-status: 'published'
+title: Add a free CMS to your Next.js website with Outstatic
+status: published
 author:
-  name: 'Andre Vitorio'
-  picture: 'https://avatars.githubusercontent.com/u/1417109?v=4'
-slug: 'add-a-free-cms-to-your-nextjs-website-with-outstatic'
-description: 'Learn how to seamlessly integrate Outstatic into your Next.js website.'
-coverImage: '/images/outstatic-landing-M3MT.png'
-tags: [{"value":"outstatic","label":"Outstatic"},{"value":"nextJs","label":"NextJs"}]
-publishedAt: '2024-01-11T20:59:36.724Z'
+  name: Andre Vitorio
+  picture: https://avatars.githubusercontent.com/u/1417109?v=4
+slug: add-a-free-cms-to-your-nextjs-website-with-outstatic
+description: Learn how to seamlessly integrate Outstatic into your Next.js website.
+coverImage: /images/outstatic-landing-M3MT.png
+tags:
+  - value: outstatic
+    label: Outstatic
+  - value: nextJs
+    label: NextJs
+publishedAt: 2026-01-07T03:00:00.000Z
 ---
 
 In this blog post, we will explore the step-by-step process of integrating Outstatic into a Next.js website, allowing for efficient content management and improved performance. The installation should take less than 10 minutes.
 
-Requirements: A Next.js 13+ website and a GitHub Account.
+Requirements: A Next.js 15+ website and a GitHub Account.
 
 ## Setting up a GitHub OAuth Application:
 
@@ -101,8 +105,6 @@ OST_REPO_BRANCH=YOUR_GITHUB_REPOSITORY_BRANCH
 Restart your service and reload the `/outstatic` page.
 
 If everything is setup correctly, then you'll see a login page and will be able to access your Dashboard.
-
-![](https://outstatic.com/images/outstatic-login-screen-I4Mz.png)
 
 Now that you have completed the installation and setup process of Outstatic, you can start creating content for your website.
 
