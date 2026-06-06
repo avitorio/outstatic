@@ -94,6 +94,9 @@ export function useCollections(options?: UseCollectionsOptions) {
             entries: { name: string; type: string }[]
           }
 
+          // Bootstrap only scans the top level of `ostContent`, so every
+          // discovered collection is a sibling at the root — `parent: null` is
+          // correct here. Users can reorganize via the parent picker afterward.
           collectionsData = entries
             .filter(
               (entry) =>
