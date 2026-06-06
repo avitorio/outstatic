@@ -7,6 +7,12 @@ const mockUseCollections = jest.fn()
 const mockUseOutstatic = jest.fn()
 const mockUseSingletons = jest.fn()
 const mockCommitFieldSchema = jest.fn()
+const mockFetchOid = jest.fn()
+const mockCreateCommitMutateAsync = jest.fn()
+const mockRefetchCollections = jest.fn()
+const mockToastPromise = jest.fn()
+const mockToastError = jest.fn()
+const mockToastMessage = jest.fn()
 let mockDragEndEvent: any = null
 
 jest.mock('@/utils/hooks/use-field-schema', () => ({
@@ -25,6 +31,83 @@ jest.mock('@/utils/hooks/use-singletons', () => ({
 jest.mock('@/utils/hooks/use-field-schema-commit', () => ({
   useFieldSchemaCommit: () => mockCommitFieldSchema
 }))
+
+jest.mock('@/utils/hooks/use-oid', () => ({
+  __esModule: true,
+  default: () => mockFetchOid
+}))
+
+jest.mock('@/utils/hooks/use-create-commit', () => ({
+  useCreateCommit: () => ({
+    mutateAsync: mockCreateCommitMutateAsync
+  })
+}))
+
+jest.mock('sonner', () => ({
+  toast: {
+    error: (...args: unknown[]) => mockToastError(...args),
+    message: (...args: unknown[]) => mockToastMessage(...args),
+    promise: (...args: unknown[]) => mockToastPromise(...args)
+  }
+}))
+
+jest.mock('@/components/ui/shadcn/select', () => {
+  const React = jest.requireActual<typeof import('react')>('react')
+  const SelectContext = React.createContext<{
+    onValueChange?: (value: string) => void
+  }>({})
+
+  const Select = ({
+    children,
+    onValueChange
+  }: {
+    children: any
+    onValueChange?: (value: string) => void
+    value?: string
+    disabled?: boolean
+  }) => (
+    <SelectContext.Provider value={{ onValueChange }}>
+      <div>{children}</div>
+    </SelectContext.Provider>
+  )
+
+  const SelectTrigger = ({ children, ...props }: { children: any }) => (
+    <button type="button" role="combobox" {...props}>
+      {children}
+    </button>
+  )
+
+  const SelectValue = ({ placeholder }: { placeholder?: string }) => (
+    <span>{placeholder ?? ''}</span>
+  )
+
+  const SelectContent = ({ children }: { children: any }) => (
+    <div>{children}</div>
+  )
+
+  const SelectItem = ({
+    children,
+    value
+  }: {
+    children: any
+    value: string
+  }) => {
+    const { onValueChange } = React.useContext(SelectContext)
+    return (
+      <button
+        type="button"
+        role="option"
+        aria-selected="false"
+        data-value={value}
+        onClick={() => onValueChange?.(value)}
+      >
+        {children}
+      </button>
+    )
+  }
+
+  return { Select, SelectTrigger, SelectValue, SelectContent, SelectItem }
+})
 
 jest.mock('@dnd-kit/core', () => ({
   DndContext: ({
@@ -134,9 +217,11 @@ describe('<FieldManagementPage />', () => {
       isLoading: false
     })
 
+    mockRefetchCollections.mockResolvedValue({ data: [] })
     mockUseCollections.mockReturnValue({
       data: [],
-      isPending: false
+      isPending: false,
+      refetch: mockRefetchCollections
     })
 
     mockUseSingletons.mockReturnValue({
@@ -145,10 +230,18 @@ describe('<FieldManagementPage />', () => {
     })
 
     mockUseOutstatic.mockReturnValue({
-      dashboardRoute: '/outstatic'
+      dashboardRoute: '/outstatic',
+      ostContent: 'outstatic/content',
+      repoOwner: 'acme',
+      repoSlug: 'site',
+      repoBranch: 'main',
+      session: { user: { login: 'acme' } }
     })
 
     mockCommitFieldSchema.mockResolvedValue(true)
+    mockFetchOid.mockResolvedValue('oid')
+    mockCreateCommitMutateAsync.mockResolvedValue({})
+    mockToastPromise.mockImplementation((promise: Promise<unknown>) => promise)
   })
 
   it('does not block singleton pages on a disabled collections query', () => {
@@ -437,5 +530,145 @@ describe('<FieldManagementPage />', () => {
     expect(
       screen.queryByText('Custom fields order modified.')
     ).not.toBeInTheDocument()
+  })
+
+  describe('parent collection save', () => {
+    const collections = [
+      {
+        slug: 'posts',
+        title: 'Posts',
+        path: 'outstatic/content/posts',
+        parent: null
+      },
+      {
+        slug: 'guides',
+        title: 'Guides',
+        path: 'outstatic/content/guides',
+        parent: null
+      }
+    ]
+
+    const renderPage = () => {
+      mockUseCollections.mockReturnValue({
+        data: collections,
+        isPending: false,
+        refetch: mockRefetchCollections
+      })
+      mockRefetchCollections.mockResolvedValue({ data: collections })
+
+      return render(
+        <FieldManagementPage
+          target={{ kind: 'collection', slug: 'posts', title: 'Posts' }}
+          emptyStateSubject="collection"
+        />
+      )
+    }
+
+    it('disables the Update button when no parent change is pending', () => {
+      renderPage()
+
+      const updateButtons = screen.getAllByRole('button', { name: 'Update' })
+      expect(updateButtons[0]).toBeDisabled()
+    })
+
+    it('commits the parent change and refetches collections on save', async () => {
+      renderPage()
+
+      fireEvent.click(screen.getByRole('option', { name: 'Guides' }))
+
+      const updateButtons = screen.getAllByRole('button', { name: 'Update' })
+      expect(updateButtons[0]).toBeEnabled()
+
+      fireEvent.click(updateButtons[0])
+
+      await waitFor(() => {
+        expect(mockCreateCommitMutateAsync).toHaveBeenCalledTimes(1)
+      })
+
+      const commitInput = mockCreateCommitMutateAsync.mock.calls[0][0]
+      expect(commitInput.branch).toEqual({
+        repositoryNameWithOwner: 'acme/site',
+        branchName: 'main'
+      })
+      expect(commitInput.expectedHeadOid).toBe('oid')
+
+      const collectionsAddition = commitInput.fileChanges.additions.find(
+        (addition: { path: string }) =>
+          addition.path === 'outstatic/content/collections.json'
+      )
+      expect(collectionsAddition).toBeDefined()
+
+      const decoded = JSON.parse(
+        Buffer.from(collectionsAddition.contents, 'base64').toString('utf-8')
+      )
+      expect(decoded).toEqual([
+        { ...collections[0], parent: 'guides' },
+        collections[1]
+      ])
+
+      expect(mockToastPromise).toHaveBeenCalled()
+      await waitFor(() => {
+        expect(mockRefetchCollections).toHaveBeenCalledTimes(2)
+      })
+    })
+
+    it('shows an error toast when the commit fails', async () => {
+      mockCreateCommitMutateAsync.mockRejectedValueOnce(new Error('boom'))
+      const consoleError = jest
+        .spyOn(console, 'error')
+        .mockImplementation(() => {})
+
+      renderPage()
+
+      fireEvent.click(screen.getByRole('option', { name: 'Guides' }))
+      const updateButtons = screen.getAllByRole('button', { name: 'Update' })
+      fireEvent.click(updateButtons[0])
+
+      await waitFor(() => {
+        expect(mockToastError).toHaveBeenCalledWith(
+          'Failed to update parent collection.',
+          expect.objectContaining({
+            action: expect.objectContaining({ label: 'Copy Logs' })
+          })
+        )
+      })
+
+      consoleError.mockRestore()
+    })
+
+    it('locks out parent save while custom field order has unsaved changes', async () => {
+      mockUseFieldSchema.mockReturnValue({
+        data: {
+          properties: {
+            title: { title: 'Title', fieldType: 'String', dataType: 'string' },
+            featured: {
+              title: 'Featured',
+              fieldType: 'Boolean',
+              dataType: 'boolean'
+            }
+          }
+        },
+        isLoading: false
+      })
+
+      mockDragEndEvent = { active: { id: 'featured' }, over: { id: 'title' } }
+
+      renderPage()
+
+      fireEvent.click(screen.getByRole('button', { name: 'Trigger drag end' }))
+
+      await waitFor(() => {
+        expect(
+          screen.getByText('Custom fields order modified.')
+        ).toBeInTheDocument()
+      })
+
+      fireEvent.click(screen.getByRole('option', { name: 'Guides' }))
+
+      const parentUpdateButton = screen.getAllByRole('button', {
+        name: 'Update'
+      })[0]
+      expect(parentUpdateButton).toBeDisabled()
+    })
   })
 })

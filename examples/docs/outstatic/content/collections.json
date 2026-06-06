@@ -3,18 +3,18 @@
     "title": "Docs",
     "slug": "docs",
     "path": "outstatic/content/docs",
-    "children": []
+    "parent": null
   },
   {
     "title": "Menus",
     "slug": "menus",
     "path": "outstatic/content/menus",
-    "children": []
+    "parent": null
   },
   {
     "title": "V1.4",
     "slug": "v1.4",
     "path": "outstatic/content/v1.4",
-    "children": []
+    "parent": null
   }
 ]

@@ -2,7 +2,7 @@ import { type DragEndEvent, DndContext } from '@dnd-kit/core'
 import { restrictToParentElement } from '@dnd-kit/modifiers'
 import { SortableContext, useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { GripVertical, Trash } from 'lucide-react'
 import { AdminLayout } from '@/components/admin-layout'
 import { AdminLoading } from '@/components/admin-loading'
@@ -34,6 +34,26 @@ import { useSingletons } from '@/utils/hooks/use-singletons'
 import { useRouter } from 'next/navigation'
 import { reorderCustomFields } from './field-reorder'
 import { Badge } from '@/components/ui/shadcn/badge'
+import { Label } from '@/components/ui/shadcn/label'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from '@/components/ui/shadcn/select'
+import { createCommitApi } from '@/utils/create-commit-api'
+import { createOutstaticCommitMessage } from '@/utils/commit-message'
+import { useCreateCommit } from '@/utils/hooks/use-create-commit'
+import useOid from '@/utils/hooks/use-oid'
+import { stringifyError } from '@/utils/errors/stringify-error'
+import {
+  getValidParentCollectionOptions,
+  updateCollectionParent
+} from '@/utils/collections/collection-tree'
+import { toast } from 'sonner'
+
+const NO_PARENT_COLLECTION_VALUE = '__none__'
 
 type SortableFieldCardProps = {
   name: string
@@ -133,11 +153,26 @@ export const FieldManagementPage = ({
   const [pendingSchemaSettings, setPendingSchemaSettings] =
     useState<FieldSchemaSettings>({})
   const [savingSettings, setSavingSettings] = useState(false)
+  const [pendingParent, setPendingParent] = useState<string | null>(null)
+  const [savingParent, setSavingParent] = useState(false)
   const router = useRouter()
-  const { dashboardRoute } = useOutstatic()
+  const {
+    dashboardRoute,
+    ostContent,
+    repoOwner,
+    repoSlug,
+    repoBranch,
+    session
+  } = useOutstatic()
+  const fetchOid = useOid()
+  const createCommit = useCreateCommit()
   const commitFieldSchema = useFieldSchemaCommit(target)
   const { data: schema, isLoading } = useFieldSchema({ target })
-  const { data: collections, isPending: collectionsPending } = useCollections({
+  const {
+    data: collections,
+    isPending: collectionsPending,
+    refetch: refetchCollections
+  } = useCollections({
     enabled: target.kind === 'collection'
   })
 
@@ -147,6 +182,26 @@ export const FieldManagementPage = ({
   const singleton = singletons?.find((s) => s.slug === target.slug)
   const extension = singleton?.path?.endsWith('.mdx') ? 'mdx' : 'md'
   const collection = collections?.find((c) => c.slug === target.slug)
+  const parentCollectionOptions = useMemo(() => {
+    if (!collections || target.kind !== 'collection') {
+      return []
+    }
+
+    return getValidParentCollectionOptions(collections, target.slug).sort(
+      (a, b) => a.title.localeCompare(b.title)
+    )
+  }, [collections, target.kind, target.slug])
+  const hasPendingParentChange =
+    target.kind === 'collection' &&
+    collection !== undefined &&
+    pendingParent !== collection.parent
+
+  useEffect(() => {
+    if (collection) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setPendingParent(collection.parent)
+    }
+  }, [collection?.slug, collection?.parent])
 
   useEffect(() => {
     if (schema) {
@@ -235,6 +290,77 @@ export const FieldManagementPage = ({
     }
 
     setSchemaSettings(pendingSchemaSettings)
+  }
+
+  const handleSaveParent = async () => {
+    if (savingParent || !collection || target.kind !== 'collection') {
+      return
+    }
+
+    setSavingParent(true)
+
+    try {
+      const [{ data: latestCollections }, oid] = await Promise.all([
+        refetchCollections(),
+        fetchOid()
+      ])
+
+      if (!latestCollections) {
+        throw new Error('Failed to fetch collections')
+      }
+
+      if (!oid) {
+        throw new Error('No oid found')
+      }
+
+      const owner = repoOwner || session?.user?.login || ''
+      const updatedCollections = updateCollectionParent(
+        latestCollections,
+        collection.slug,
+        pendingParent
+      )
+
+      const commitApi = createCommitApi({
+        message: createOutstaticCommitMessage({
+          scope: 'config',
+          action: 'update',
+          target: 'collection',
+          label: collection.slug
+        }),
+        owner,
+        oid,
+        name: repoSlug,
+        branch: repoBranch
+      })
+
+      commitApi.replaceFile(
+        `${ostContent}/collections.json`,
+        JSON.stringify(updatedCollections, null, 2) + '\n'
+      )
+
+      await toast.promise(createCommit.mutateAsync(commitApi.createInput()), {
+        loading: 'Updating parent collection...',
+        success: 'Parent collection updated',
+        error: 'Failed to update parent collection'
+      })
+
+      await refetchCollections()
+    } catch (error) {
+      console.error('Failed to update parent collection', error)
+      const errorToast = toast.error('Failed to update parent collection.', {
+        action: {
+          label: 'Copy Logs',
+          onClick: () => {
+            navigator.clipboard.writeText(`Error: ${stringifyError(error)}`)
+            toast.message('Logs copied to clipboard', {
+              id: errorToast
+            })
+          }
+        }
+      })
+    } finally {
+      setSavingParent(false)
+    }
   }
 
   const handleDragEnd = (event: DragEndEvent) => {
@@ -372,6 +498,73 @@ export const FieldManagementPage = ({
             </DndContext>
           )}
         </div>
+        {target.kind === 'collection' && collection ? (
+          <div className="flex flex-1 max-w-2xl flex-col space-y-6">
+            <div className="flex items-center">
+              <h2 className="text-xl">Collection</h2>
+            </div>
+            <Card>
+              <CardHeader>
+                <CardTitle>Parent collection</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="parent-collection">Parent collection</Label>
+                  <Select
+                    value={pendingParent ?? NO_PARENT_COLLECTION_VALUE}
+                    disabled={savingParent}
+                    onValueChange={(value) => {
+                      setPendingParent(
+                        value === NO_PARENT_COLLECTION_VALUE ? null : value
+                      )
+                    }}
+                  >
+                    <SelectTrigger id="parent-collection" className="w-full">
+                      <SelectValue placeholder="Select a parent collection" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value={NO_PARENT_COLLECTION_VALUE}>
+                        None
+                      </SelectItem>
+                      {parentCollectionOptions.map((parentOption) => (
+                        <SelectItem
+                          key={parentOption.slug}
+                          value={parentOption.slug}
+                        >
+                          {parentOption.title}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <p className="text-sm text-muted-foreground">
+                    Nest this collection under another in the sidebar. You
+                    cannot select the collection itself or its descendants.
+                  </p>
+                </div>
+              </CardContent>
+              <CardFooter className="justify-start">
+                <Button
+                  type="button"
+                  disabled={
+                    !hasPendingParentChange ||
+                    savingParent ||
+                    hasPendingOrderChange
+                  }
+                  onClick={handleSaveParent}
+                >
+                  {savingParent ? (
+                    <>
+                      <SpinnerIcon className="mr-2 text-background" />
+                      Updating
+                    </>
+                  ) : (
+                    'Update'
+                  )}
+                </Button>
+              </CardFooter>
+            </Card>
+          </div>
+        ) : null}
         <div className="flex flex-1 max-w-2xl flex-col space-y-6">
           <div className="flex items-center">
             <h2 className="text-xl">Editor</h2>

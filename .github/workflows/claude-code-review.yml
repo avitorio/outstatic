@@ -11,7 +11,7 @@ on:
 jobs:
   react-to-comment:
     if: >
-      github.repository_id == secrets.CLAUDE_REVIEW_REPOSITORY_ID &&
+      github.repository_id == vars.CLAUDE_REVIEW_REPOSITORY_ID &&
       (
         (github.event_name == 'issue_comment' &&
          github.event.issue.pull_request &&
@@ -35,7 +35,7 @@ jobs:
 
   claude-review:
     if: >
-      github.repository_id == secrets.CLAUDE_REVIEW_REPOSITORY_ID &&
+      github.repository_id == vars.CLAUDE_REVIEW_REPOSITORY_ID &&
       (
         (github.event_name == 'pull_request' && github.event.action == 'opened') ||
         (github.event_name == 'issue_comment' &&

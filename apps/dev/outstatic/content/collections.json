@@ -3,12 +3,12 @@
     "title": "Posts",
     "slug": "posts",
     "path": "apps/dev/outstatic/content/posts",
-    "children": []
+    "parent": null
   },
   {
     "title": "Projects",
     "slug": "projects",
     "path": "apps/dev/outstatic/content/projects",
-    "children": []
+    "parent": null
   }
 ]

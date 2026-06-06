@@ -1,0 +1,90 @@
+{
+  "commit": "",
+  "generated": "2026-06-01T18:49:45.223Z",
+  "media": [
+    {
+      "__outstatic": {
+        "commit": "",
+        "hash": "89881508",
+        "path": "public/images/bearbnb.png"
+      },
+      "alt": "",
+      "filename": "bearbnb.png",
+      "publishedAt": "2026-06-01T18:49:44.453Z",
+      "source": "images",
+      "type": "image"
+    },
+    {
+      "__outstatic": {
+        "commit": "",
+        "hash": "721419546",
+        "path": "public/images/couple-pizza.png"
+      },
+      "alt": "",
+      "filename": "couple-pizza.png",
+      "publishedAt": "2026-06-01T18:49:44.453Z",
+      "source": "images",
+      "type": "image"
+    },
+    {
+      "__outstatic": {
+        "commit": "",
+        "hash": "3248710460",
+        "path": "public/images/flycream-travel.png"
+      },
+      "alt": "",
+      "filename": "flycream-travel.png",
+      "publishedAt": "2026-06-01T18:49:44.453Z",
+      "source": "images",
+      "type": "image"
+    },
+    {
+      "__outstatic": {
+        "commit": "",
+        "hash": "2691425336",
+        "path": "public/images/industrial-pattern.png"
+      },
+      "alt": "",
+      "filename": "industrial-pattern.png",
+      "publishedAt": "2026-06-01T18:49:44.453Z",
+      "source": "images",
+      "type": "image"
+    },
+    {
+      "__outstatic": {
+        "commit": "",
+        "hash": "1342721826",
+        "path": "public/images/jupiter-spaceship.png"
+      },
+      "alt": "",
+      "filename": "jupiter-spaceship.png",
+      "publishedAt": "2026-06-01T18:49:44.453Z",
+      "source": "images",
+      "type": "image"
+    },
+    {
+      "__outstatic": {
+        "commit": "",
+        "hash": "4106799444",
+        "path": "public/images/og-image.png"
+      },
+      "alt": "",
+      "filename": "og-image.png",
+      "publishedAt": "2026-06-01T18:49:44.453Z",
+      "source": "images",
+      "type": "image"
+    },
+    {
+      "__outstatic": {
+        "commit": "",
+        "hash": "4180281951",
+        "path": "public/images/skyline.png"
+      },
+      "alt": "",
+      "filename": "skyline.png",
+      "publishedAt": "2026-06-01T18:49:44.453Z",
+      "source": "images",
+      "type": "image"
+    }
+  ]
+}
