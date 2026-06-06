@@ -219,9 +219,9 @@ describe('getCollectionsAfterDeletion', () => {
     collection('projects', 'outstatic/content/projects')
   ]
 
-  it('removes only the target collection when keepFiles is true', () => {
+  it('removes only the target collection when deleteChildren is false', () => {
     expect(
-      getCollectionsAfterDeletion(collections, collections[0], true)
+      getCollectionsAfterDeletion(collections, collections[0], false)
     ).toEqual([
       collection('guides', 'outstatic/content/posts/guides', null),
       collection(
@@ -233,9 +233,9 @@ describe('getCollectionsAfterDeletion', () => {
     ])
   })
 
-  it('removes the target and all descendants when keepFiles is false', () => {
+  it('removes the target and all descendants when deleteChildren is true', () => {
     expect(
-      getCollectionsAfterDeletion(collections, collections[0], false)
+      getCollectionsAfterDeletion(collections, collections[0], true)
     ).toEqual([collection('projects', 'outstatic/content/projects')])
   })
 
@@ -247,7 +247,11 @@ describe('getCollectionsAfterDeletion', () => {
     ]
 
     expect(
-      getCollectionsAfterDeletion(nestedCollections, nestedCollections[1], true)
+      getCollectionsAfterDeletion(
+        nestedCollections,
+        nestedCollections[1],
+        false
+      )
     ).toEqual([
       collection('blog', 'outstatic/content/blog'),
       collection('drafts', 'outstatic/content/blog/posts/drafts', 'blog')
@@ -269,13 +273,13 @@ describe('getMetadataAfterCollectionDeletion', () => {
     { collection: 'projects', slug: 'project-1' }
   ]
 
-  it('keeps descendant metadata when keepFiles is true', () => {
+  it('keeps descendant metadata when deleteChildren is false', () => {
     expect(
       getMetadataAfterCollectionDeletion(
         metadata,
         'posts',
         new Set(['guides', 'chapters']),
-        true
+        false
       )
     ).toEqual([
       { collection: 'guides', slug: 'guide-1' },
@@ -284,13 +288,13 @@ describe('getMetadataAfterCollectionDeletion', () => {
     ])
   })
 
-  it('removes descendant metadata when keepFiles is false', () => {
+  it('removes descendant metadata when deleteChildren is true', () => {
     expect(
       getMetadataAfterCollectionDeletion(
         metadata,
         'posts',
         new Set(['guides', 'chapters']),
-        false
+        true
       )
     ).toEqual([{ collection: 'projects', slug: 'project-1' }])
   })

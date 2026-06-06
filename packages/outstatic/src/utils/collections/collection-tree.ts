@@ -123,7 +123,7 @@ export function normalizeCollections(
 export function getCollectionsAfterDeletion(
   collections: CollectionType[],
   collection: CollectionType,
-  keepFiles: boolean
+  deleteChildren: boolean
 ): CollectionType[] {
   const descendantSlugs = getDescendantCollectionSlugs(
     collections,
@@ -134,7 +134,7 @@ export function getCollectionsAfterDeletion(
     .filter(
       (collectionInfo) =>
         collectionInfo.slug !== collection.slug &&
-        (keepFiles || !descendantSlugs.has(collectionInfo.slug))
+        (!deleteChildren || !descendantSlugs.has(collectionInfo.slug))
     )
     .map((collectionInfo) => ({
       ...collectionInfo,
@@ -149,7 +149,7 @@ export function getMetadataAfterCollectionDeletion(
   metadata: MetadataType,
   collectionSlug: string,
   descendantSlugs: Set<string>,
-  keepFiles: boolean
+  deleteChildren: boolean
 ): MetadataType {
   return metadata.filter((post) => {
     const isDescendantCollection =
@@ -158,7 +158,7 @@ export function getMetadataAfterCollectionDeletion(
 
     return (
       post.collection !== collectionSlug &&
-      (keepFiles || !isDescendantCollection)
+      (!deleteChildren || !isDescendantCollection)
     )
   })
 }

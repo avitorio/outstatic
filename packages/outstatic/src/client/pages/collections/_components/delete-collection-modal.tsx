@@ -9,7 +9,7 @@ import {
   DialogTitle
 } from '@/components/ui/shadcn/dialog'
 import { Label } from '@/components/ui/shadcn/label'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { createCommitApi } from '@/utils/create-commit-api'
 import { createOutstaticCommitMessage } from '@/utils/commit-message'
 import { hashFromUrl } from '@/utils/hash-from-url'
@@ -43,14 +43,22 @@ function DeleteCollectionModal({
   const { canManageCollections } = usePermissions()
   const [deleting, setDeleting] = useState(false)
   const [keepFiles, setKeepFiles] = useState(false)
+  const [deleteChildren, setDeleteChildren] = useState(false)
   const fetchOid = useOid()
 
   const { refetch: refetchMetadata } = useGetMetadata({ enabled: false })
-  const { refetch: refetchCollections } = useCollections({
-    enabled: false
-  })
+  const { data: collectionsData, refetch: refetchCollections } =
+    useCollections()
 
   const mutation = useCreateCommit()
+  const descendantSlugs = useMemo(() => {
+    if (!collectionsData) {
+      return new Set<string>()
+    }
+
+    return getDescendantCollectionSlugs(collectionsData, collection.slug)
+  }, [collection.slug, collectionsData])
+  const hasChildCollections = descendantSlugs.size > 0
 
   useEffect(() => {
     if (!canManageCollections) {
@@ -86,35 +94,58 @@ function DeleteCollectionModal({
         branch: repoBranch
       })
 
-      if (collections) {
-        const newCollections = getCollectionsAfterDeletion(
-          collections,
-          collection,
-          keepFiles
+      const latestCollection =
+        collections.find(
+          (collectionInfo) => collectionInfo.slug === collection.slug
+        ) ?? collection
+      const latestDescendantSlugs = getDescendantCollectionSlugs(
+        collections,
+        collection.slug
+      )
+      const shouldDeleteChildren =
+        deleteChildren && latestDescendantSlugs.size > 0
+      const deletedCollections = collections.filter(
+        (collectionInfo) =>
+          collectionInfo.slug === collection.slug ||
+          (shouldDeleteChildren &&
+            latestDescendantSlugs.has(collectionInfo.slug))
+      )
+
+      if (
+        !deletedCollections.some(
+          (deletedCollection) =>
+            deletedCollection.slug === latestCollection.slug
         )
-        capi.replaceFile(
-          `${ostContent}/collections.json`,
-          JSON.stringify(newCollections, null, 2)
-        )
+      ) {
+        deletedCollections.push(latestCollection)
       }
 
+      const newCollections = getCollectionsAfterDeletion(
+        collections,
+        latestCollection,
+        shouldDeleteChildren
+      )
+      capi.replaceFile(
+        `${ostContent}/collections.json`,
+        JSON.stringify(newCollections, null, 2)
+      )
+
       if (!keepFiles) {
-        capi.removeFile(collection.path)
+        deletedCollections.forEach((deletedCollection) => {
+          capi.removeFile(deletedCollection.path)
+        })
       }
 
       // remove collection from metadata.json
       if (metadata) {
-        const descendantSlugs = collections
-          ? getDescendantCollectionSlugs(collections, collection.slug)
-          : new Set<string>()
         const m = metadata.metadata
         m.generated = new Date().toISOString()
         m.commit = hashFromUrl(metadata.commitUrl)
         const newMeta = getMetadataAfterCollectionDeletion(
           m.metadata ?? [],
           collection.slug,
-          descendantSlugs,
-          keepFiles
+          latestDescendantSlugs,
+          shouldDeleteChildren
         )
         capi.replaceFile(
           `${ostContent}/metadata.json`,
@@ -159,6 +190,25 @@ function DeleteCollectionModal({
           </DialogDescription>
         </DialogHeader>
         <div className="space-y-6">
+          {hasChildCollections ? (
+            <div className="flex items-start space-x-2">
+              <Checkbox
+                id="delete-child-collections"
+                checked={deleteChildren}
+                onCheckedChange={() => setDeleteChildren(!deleteChildren)}
+                className="mt-0.5"
+              />
+              <Label
+                htmlFor="delete-child-collections"
+                className="leading-normal"
+              >
+                <div>
+                  Also delete child collections. When unchecked, child
+                  collections move up one level.
+                </div>
+              </Label>
+            </div>
+          ) : null}
           <div className="flex items-start space-x-2">
             <Checkbox
               id="detached-delete"
@@ -168,11 +218,9 @@ function DeleteCollectionModal({
             />
             <Label htmlFor="detached-delete" className="leading-normal ">
               <div>
-                Keep files in the repository. Only remove{' '}
-                <span className="inline-block font-bold first-letter:uppercase">
-                  {collection.title}
-                </span>{' '}
-                from the Outstatic&nbsp;Dashboard.
+                Keep files in the repository. Only remove the selected
+                collection{deleteChildren ? 's' : ''} from the
+                Outstatic&nbsp;Dashboard.
               </div>
             </Label>
           </div>
