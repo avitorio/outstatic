@@ -33,7 +33,11 @@ export function findCollectionParent(
           normalizedCollectionPath.startsWith(`${normalizedPath}/`)
         )
       })
-      .sort((a, b) => b.path.length - a.path.length)[0]?.slug ?? null
+      .sort(
+        (a, b) =>
+          normalizeCollectionPath(b.path).length -
+          normalizeCollectionPath(a.path).length
+      )[0]?.slug ?? null
   )
 }
 
@@ -76,23 +80,32 @@ export function getDescendantCollectionSlugs(
   collections: CollectionType[],
   parentSlug: string
 ) {
+  const childrenByParent = new Map<string, string[]>()
+
+  collections.forEach((collection) => {
+    if (!collection.parent) {
+      return
+    }
+    const siblings = childrenByParent.get(collection.parent) ?? []
+    siblings.push(collection.slug)
+    childrenByParent.set(collection.parent, siblings)
+  })
+
   const descendantSlugs = new Set<string>()
-  let foundDescendant = true
+  const queue = [...(childrenByParent.get(parentSlug) ?? [])]
 
-  while (foundDescendant) {
-    foundDescendant = false
+  while (queue.length > 0) {
+    const slug = queue.shift() as string
 
-    collections.forEach((collection) => {
-      if (
-        collection.parent &&
-        (collection.parent === parentSlug ||
-          descendantSlugs.has(collection.parent)) &&
-        !descendantSlugs.has(collection.slug)
-      ) {
-        descendantSlugs.add(collection.slug)
-        foundDescendant = true
-      }
-    })
+    if (descendantSlugs.has(slug)) {
+      continue
+    }
+
+    descendantSlugs.add(slug)
+    const children = childrenByParent.get(slug)
+    if (children) {
+      queue.push(...children)
+    }
   }
 
   return descendantSlugs
