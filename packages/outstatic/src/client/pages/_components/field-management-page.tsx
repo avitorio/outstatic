@@ -201,7 +201,7 @@ export const FieldManagementPage = ({
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setPendingParent(collection.parent)
     }
-  }, [collection])
+  }, [collection?.slug, collection?.parent])
 
   useEffect(() => {
     if (schema) {
