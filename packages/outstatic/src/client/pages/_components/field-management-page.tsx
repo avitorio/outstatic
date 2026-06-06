@@ -190,7 +190,7 @@ export const FieldManagementPage = ({
     return getValidParentCollectionOptions(collections, target.slug).sort(
       (a, b) => a.title.localeCompare(b.title)
     )
-  }, [collections, target])
+  }, [collections, target.kind, target.slug])
   const hasPendingParentChange =
     target.kind === 'collection' &&
     collection !== undefined &&
