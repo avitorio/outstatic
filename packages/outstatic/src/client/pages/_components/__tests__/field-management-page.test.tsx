@@ -81,7 +81,9 @@ jest.mock('@/components/ui/shadcn/select', () => {
     <span>{placeholder ?? ''}</span>
   )
 
-  const SelectContent = ({ children }: { children: any }) => <div>{children}</div>
+  const SelectContent = ({ children }: { children: any }) => (
+    <div>{children}</div>
+  )
 
   const SelectItem = ({
     children,
