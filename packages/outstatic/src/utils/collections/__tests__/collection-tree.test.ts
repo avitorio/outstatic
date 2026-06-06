@@ -358,4 +358,18 @@ describe('buildParentChildRoutes', () => {
     expect(input[0].children).toBeUndefined()
     expect(input).toHaveLength(2)
   })
+
+  it('falls back to root for routes caught in a parent cycle', () => {
+    const warn = jest.spyOn(console, 'warn').mockImplementation(() => {})
+
+    const result = buildParentChildRoutes([
+      { label: 'A', slug: 'a', parent: 'b' },
+      { label: 'B', slug: 'b', parent: 'a' }
+    ])
+
+    expect(result.map((route) => route.slug).sort()).toEqual(['a', 'b'])
+    expect(warn).toHaveBeenCalledTimes(2)
+
+    warn.mockRestore()
+  })
 })

@@ -183,13 +183,34 @@ export function buildParentChildRoutes<
     }
   })
 
+  const hasCycle = (route: T) => {
+    const visited = new Set<string>()
+    let current: T | undefined = route
+
+    while (current?.parent) {
+      if (visited.has(current.parent)) {
+        return true
+      }
+      visited.add(current.parent)
+      current = routesBySlug.get(current.parent)
+    }
+
+    return false
+  }
+
   clonedRoutes.forEach((route) => {
     if (route.parent) {
       const parentRoute = routesBySlug.get(route.parent)
 
-      if (parentRoute && parentRoute !== route) {
-        parentRoute.children = [...(parentRoute.children ?? []), route]
-        return
+      if (parentRoute) {
+        if (parentRoute !== route && !hasCycle(route)) {
+          parentRoute.children = [...(parentRoute.children ?? []), route]
+          return
+        }
+
+        console.warn(
+          `Collection "${route.slug}" has a circular parent reference and will be rendered at the root.`
+        )
       }
     }
 
