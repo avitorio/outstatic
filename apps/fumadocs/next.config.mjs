@@ -18,10 +18,11 @@ const config = {
   redirects: async () => {
     return [
       {
-        source: '/getting-started',
-        destination: '/',
+        source: '/',
+        destination: '/docs',
         permanent: true,
-      }
+        basePath: false
+      },
     ];
   },
   
