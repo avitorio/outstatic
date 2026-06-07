@@ -1,0 +1,15 @@
+{
+  "title": "Access & Integration",
+  "defaultOpen": true,
+  "collapsible": false,
+  "pages": [
+    "fetching-data",
+    "api-keys",
+    "roles",
+    "github-apps-authentication",
+    "setting-up-github-authentication",
+    "environment-variables",
+    "commit-messages",
+    "type-generation"
+  ]
+}

@@ -1,0 +1,26 @@
+[
+  {
+    "title": "Getting Started",
+    "slug": "getting-started",
+    "path": "content/docs/(latest)/(getting-started)",
+    "parent": "latest"
+  },
+  {
+    "title": "Access Integration",
+    "slug": "access-integration",
+    "path": "content/docs/(latest)/access-integration",
+    "parent": "latest"
+  },
+  {
+    "title": "1.4",
+    "slug": "1.4",
+    "path": "content/docs/v1.4",
+    "parent": null
+  },
+  {
+    "title": "Latest",
+    "slug": "latest",
+    "path": "content/docs/(latest)",
+    "parent": null
+  }
+]
