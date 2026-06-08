@@ -1,0 +1,12 @@
+{
+  "title": "Help",
+  "defaultOpen": true,
+  "collapsible": false,
+  "pages": [
+    "faqs",
+    "upgrading-to-v2.0",
+    "troubleshooting",
+    "license",
+    "credits"
+  ]
+}

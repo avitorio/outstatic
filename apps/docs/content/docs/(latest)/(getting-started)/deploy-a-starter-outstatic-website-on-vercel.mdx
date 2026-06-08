@@ -1,0 +1,35 @@
+---
+title: "Deploy a website on Vercel"
+description: ""
+---
+
+
+To deploy with Vercel, start by clicking the button below and follow the setup steps:
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/outstatic/advanced-blog&env=OUTSTATIC_API_KEY&project-name=outstatic-blog&repo-name=outstatic-basic-blog&demo-title=Outstatic%20Basic%20Blog%20Demo&demo-description=A%20statically%20generated%20blog%20example%20using%20Outstatic&demo-url=https://outstatic-dev-blog.vercel.app/&demo-image=https://outstatic.com/images/outstatic-demo.png&envDescription=API%20Keys%20needed%20for%20installation&envLink=https://outstatic.com/docs/deploy-a-starter-outstatic-website-on-vercel)
+
+1. Select **GitHub** as your Git service. Enter your repository name (for example, `outstatic-blog`) and click **Create**.
+2. After the repo is created, sign in to [Outstatic.com](https://outstatic.com/auth/sign-up?provider=github) and create a new project linked to that repository.
+3. In your Outstatic project, open **API Keys** and add this callback URL for now:\
+   `https://localhost:3000/outstatic`
+4. Generate an **API Key**. In Vercel, go to **Add Environment Variables** and paste the `ost_*****` portion to the **Value** field: \
+   \
+   ![](/docs/images/add-env-vars-vercel-QzOT.webp)
+5. Click deploy.
+
+When the deploy finishes, open your site. To access the dashboard, add `/outstatic` to your site URL:
+
+Example: `https://myblog.vercel.app/outstatic`
+
+You should see this page:
+
+![](/docs/images/login-screen-I1NT.webp)
+
+1. Now go back to **API Keys** in Outstatic and add your production callback URL: `https://myblog.vercel.app/outstatic`
+2. Return to `/outstatic`, and click **Sign in with GitHub** again.
+
+Congratulations! Now you have a website with a full-featured dashboard to edit your content.
+
+To develop your Vercel deployed website locally, please check the [Local Development](/local-development) page.
+
+We recommend you learn how [Outstatic manages content](/what-is-outstatic) and also how to [fetch content](/access-integration/fetching-data) from your front end.

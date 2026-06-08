@@ -1,0 +1,18 @@
+{
+  "title": "Version 1",
+  "description": "1.4.0",
+  "root": true,
+  "pages": [
+    "introduction",
+    "getting-started",
+    "local-development",
+    "migrating-to-v1",
+    "using-with-next-js-12",
+    "the-content-editor",
+    "fetching-data",
+    "custom-fields",
+    "github-apps-authentication",
+    "environment-variables",
+    "faqs"
+  ]
+}

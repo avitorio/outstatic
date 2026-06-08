@@ -1,15 +1,45 @@
-## Getting Started
+# .
 
-To add or edit the Outstatic documentation, please, fork the project and update
-the environment variables based on the `.env.local.example` file.
+This is a Next.js application generated with
+[Create Fumadocs](https://github.com/fuma-nama/fumadocs).
 
-On your `.env.local` file add your GitHub credentials and your `OST_REPO_BRANCH`,
-which should be the branch you are using to make modifications to the docs.
+Run development server:
 
-Note that the `/apps/docs` code uses `basePath` from Next.js. More info [here](https://nextjs.org/docs/app/api-reference/next-config-js/basePath).
+```bash
+npm run dev
+# or
+pnpm dev
+# or
+yarn dev
+```
 
-You can log in to Outstatic at `http://localhost:3000/docs/oustatic`.
+Open http://localhost:3000 with your browser to see the result.
 
-Once you are done modifying the docs, create a Pull Request.
+## Explore
 
-We'll review it as soon as possible. Thank you!
+In the project, you can see:
+
+- `lib/source.ts`: Code for content source adapter, [`loader()`](https://fumadocs.dev/docs/headless/source-api) provides the interface to access your content.
+- `lib/layout.shared.tsx`: Shared options for layouts, optional but preferred to keep.
+
+| Route                     | Description                                            |
+| ------------------------- | ------------------------------------------------------ |
+| `app/(home)`              | The route group for your landing page and other pages. |
+| `app/docs`                | The documentation layout and pages.                    |
+| `app/api/search/route.ts` | The Route Handler for search.                          |
+
+### Fumadocs MDX
+
+A `source.config.ts` config file has been included, you can customise different options like frontmatter schema.
+
+Read the [Introduction](https://fumadocs.dev/docs/mdx) for further details.
+
+## Learn More
+
+To learn more about Next.js and Fumadocs, take a look at the following
+resources:
+
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js
+  features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- [Fumadocs](https://fumadocs.dev) - learn about Fumadocs
