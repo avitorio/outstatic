@@ -4,6 +4,7 @@ const withMDX = createMDX();
 
 /** @type {import('next').NextConfig} */
 const config = {
+  transpilePackages: ['outstatic'],
   reactStrictMode: true,
   basePath: '/docs',
   images: {
