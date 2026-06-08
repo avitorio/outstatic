@@ -8,36 +8,15 @@ const LEGACY_DOCS_REDIRECTS = [
   ['commit-messages', 'access-integration/commit-messages'],
   ['credits', 'help/credits'],
   ['custom-fields', 'editing-modeling/custom-fields'],
-  [
-    'deploy-a-starter-outstatic-website-on-vercel',
-    'getting-started/deploy-a-starter-outstatic-website-on-vercel'
-  ],
-  [
-    'deploy-a-starter-outstatic-website-on-vercel-with-github-oauth',
-    'getting-started/deploy-a-starter-outstatic-website-on-vercel-with-github-oauth'
-  ],
-  [
-    'deploy-an-outstatic-project-on-vercel',
-    'getting-started/deploy-an-outstatic-project-on-vercel'
-  ],
   ['environment-variables', 'access-integration/environment-variables'],
   ['faqs', 'help/faqs'],
   ['fetching-data', 'access-integration/fetching-data'],
-  [
-    'generate-api-keys-for-vercel-projects',
-    'getting-started/generate-api-keys-for-vercel-projects'
-  ],
-  [
-    'getting-started-with-next-js',
-    'getting-started/getting-started-with-next-js'
-  ],
   [
     'github-apps-authentication',
     'access-integration/github-apps-authentication'
   ],
   ['introduction', 'what-is-outstatic'],
   ['license', 'help/license'],
-  ['local-development', 'getting-started/local-development'],
   ['mdx-block', 'editing-modeling/mdx-block'],
   ['roles', 'access-integration/roles'],
   [
@@ -47,10 +26,6 @@ const LEGACY_DOCS_REDIRECTS = [
   ['the-content-editor', 'editing-modeling/the-content-editor'],
   ['troubleshooting', 'help/troubleshooting'],
   ['type-generation', 'access-integration/type-generation'],
-  [
-    'using-outstatic-for-markdown-content',
-    'getting-started/using-outstatic-for-markdown-content'
-  ],
   ['upgrading-to-v2.0', 'help/upgrading-to-v2.0']
 ]
 
