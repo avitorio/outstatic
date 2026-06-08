@@ -1,5 +1,17 @@
 # outstatic
 
+## 2.1.12
+
+### Patch Changes
+
+- a8c50ae: Add global drag handle to the editor, allowing blocks to be reordered by dragging.
+- e13ae49: Fix documents table sort when `publishedAt` is missing from metadata; treat empty dates as oldest when sorting by `publishedAt`.
+- 645dd33: Prevent currency amounts from being parsed as inline math expressions.
+- c039ffc: Fix Next.js 16 / React 19 theme provider error
+- c568f86: - Store collection hierarchy with parent references and render nested collections in the sidebar.
+  - Preserve child collections when deleting a parent unless child deletion is selected.
+  - Validate nested navigation child routes recursively.
+
 ## 2.1.11
 
 ### Patch Changes
