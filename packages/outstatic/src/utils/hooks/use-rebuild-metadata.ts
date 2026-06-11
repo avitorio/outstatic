@@ -1,5 +1,4 @@
-import { useEffect, useState } from 'react'
-import { useCallback } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { toast } from 'sonner'
 import { useGetAllCollectionsFiles } from './use-get-all-collections-files'
 import useOid from './use-oid'
@@ -60,16 +59,21 @@ export const useRebuildMetadata = ({
   } = useOutstatic()
 
   const toastId = 'metadata-rebuild'
+  const externalToastIdRef = useRef<string | undefined>(undefined)
 
   useEffect(() => {
+    const activeToastId = externalToastIdRef.current ?? toastId
+
     if (total >= 1 && processed >= 1) {
       toast.loading(`Processing files: ${processed}/${total}`, {
-        id: toastId,
+        id: activeToastId,
         duration: Infinity
       })
     }
     if (processed === total && total > 0 && processed > 0) {
-      toast.dismiss(toastId)
+      if (!externalToastIdRef.current) {
+        toast.dismiss(toastId)
+      }
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setTotal(0)
       setProcessed(0)
@@ -134,7 +138,11 @@ export const useRebuildMetadata = ({
   )
 
   const processFiles = useCallback(
-    async (files: FileData[], onComplete?: () => void) => {
+    async (
+      files: FileData[],
+      onComplete?: () => void,
+      options?: { externalToastId?: string }
+    ) => {
       setTotal(Math.max(files.length, 1))
       const chunkSize = 5 // TODO move to constants
       const queue = chunk(files, chunkSize)
@@ -204,14 +212,22 @@ export const useRebuildMetadata = ({
         const payload = commitApi.createInput()
 
         try {
-          toast.promise(mutation.mutateAsync(payload), {
-            loading: 'Updating metadata...',
-            success: () => {
-              onComplete?.()
-              return 'Metadata updated successfully'
-            },
-            error: 'Failed to update metadata'
-          })
+          if (options?.externalToastId) {
+            toast.loading('Updating metadata...', {
+              id: options.externalToastId
+            })
+            await mutation.mutateAsync(payload)
+            onComplete?.()
+          } else {
+            await toast.promise(mutation.mutateAsync(payload), {
+              loading: 'Updating metadata...',
+              success: () => {
+                onComplete?.()
+                return 'Metadata updated successfully'
+              },
+              error: 'Failed to update metadata'
+            })
+          }
         } catch (error) {
           console.error(error)
           throw error
@@ -234,12 +250,44 @@ export const useRebuildMetadata = ({
 
   const rebuildMetadata = useCallback(
     async ({
-      onComplete
+      onComplete,
+      toastId: externalToastId
     }: {
       onComplete?: () => void
+      toastId?: string
     } = {}) => {
+      const refetch = collectionPath ? refetchFiles : refetchCollections
+
+      if (externalToastId) {
+        externalToastIdRef.current = externalToastId
+
+        try {
+          toast.loading('Fetching repository files...', { id: externalToastId })
+
+          const { data } = await refetch()
+
+          if (!data) {
+            throw new Error('No data found')
+          }
+
+          const files = extractFiles(data)
+
+          if (files.length === 0) {
+            throw new Error('No files found')
+          }
+
+          toast.loading('Processing files...', { id: externalToastId })
+          await processFiles(files, onComplete, {
+            externalToastId
+          })
+        } finally {
+          externalToastIdRef.current = undefined
+        }
+
+        return
+      }
+
       return new Promise((resolve, reject) => {
-        const refetch = collectionPath ? refetchFiles : refetchCollections
         toast.promise(
           refetch().then(({ data }) => {
             if (!data) {

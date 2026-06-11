@@ -56,6 +56,8 @@ import {
 
 import { findCollectionParent } from '@/utils/collections/collection-tree'
 
+const CREATE_COLLECTION_TOAST_ID = 'create-collection'
+
 export default function NewCollectionModal({
   open,
   onOpenChange
@@ -203,49 +205,59 @@ export default function NewCollectionModal({
 
       const input = commitApi.createInput()
 
-      toast.promise(mutation.mutateAsync(input), {
-        loading: 'Creating collection...',
-        success: async () => {
-          // check if the collection has md(x) files in it
+      const onComplete = async () => {
+        await refetchCollections()
+        setLoading(false)
+        setHasChanges(false)
+        onOpenChange(false)
+        setTimeout(() => {
+          router.push(`${dashboardRoute}/${slug}`)
+          router.refresh()
+        }, 100)
+      }
+
+      await toast.promise(
+        (async () => {
+          await mutation.mutateAsync(input)
+
           const { data } = await refetchDocuments({
             throwOnError: true
           })
 
-          const onComplete = async () => {
-            await refetchCollections()
+          if (data?.documents && data.documents.length > 0) {
+            toast.loading('Indexing existing content...', {
+              id: CREATE_COLLECTION_TOAST_ID
+            })
+            await rebuildMetadata({
+              onComplete,
+              toastId: CREATE_COLLECTION_TOAST_ID
+            })
+          } else {
+            await onComplete()
+          }
+        })(),
+        {
+          id: CREATE_COLLECTION_TOAST_ID,
+          loading: 'Creating collection...',
+          success: 'Collection created successfully',
+          error: () => {
             setLoading(false)
             setHasChanges(false)
-            onOpenChange(false)
-            setTimeout(() => {
-              router.push(`${dashboardRoute}/${slug}`)
-              router.refresh()
-            }, 100)
+            setError(true)
+            return 'Failed to create collection'
           }
-
-          if (data?.documents && data.documents.length > 0) {
-            await rebuildMetadata({ onComplete })
-          } else {
-            onComplete()
-          }
-
-          return 'Collection created successfully'
-        },
-        error: () => {
-          setLoading(false)
-          setHasChanges(false)
-          setError(true)
-          return 'Failed to create collection'
         }
-      })
+      )
     } catch (error) {
       console.error('Failed to create collection', error)
-      const errorToast = toast.error('Failed to create collection.', {
+      toast.error('Failed to create collection.', {
+        id: CREATE_COLLECTION_TOAST_ID,
         action: {
           label: 'Copy Logs',
           onClick: () => {
             navigator.clipboard.writeText(`Error: ${stringifyError(error)}`)
             toast.message('Logs copied to clipboard', {
-              id: errorToast
+              id: CREATE_COLLECTION_TOAST_ID
             })
           }
         }
