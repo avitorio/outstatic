@@ -1,4 +1,4 @@
-import { deepCloneTree } from '../use-get-repo-files'
+import { deepCloneTree, findFolderByPath } from '../use-get-repo-files'
 import { TreeDataItem } from '@/components/ui/outstatic/file-tree'
 
 describe('deepCloneTree', () => {
@@ -122,5 +122,44 @@ describe('deepCloneTree', () => {
     const originalDeepChild = items[0].children![0].children![0].children![0]
     expect(deepChild).not.toBe(originalDeepChild)
     expect(deepChild.id).toBe('level4')
+  })
+})
+
+describe('findFolderByPath', () => {
+  it('finds nested folders when a path contains repeated folder names', () => {
+    const items: TreeDataItem[] = [
+      {
+        id: 'apps',
+        name: 'apps',
+        children: [
+          {
+            id: 'apps/docs',
+            name: 'docs',
+            children: [
+              {
+                id: 'apps/docs/content',
+                name: 'content',
+                children: [
+                  {
+                    id: 'apps/docs/content/docs',
+                    name: 'docs',
+                    children: [
+                      {
+                        id: 'apps/docs/content/docs/(latest)',
+                        name: '(latest)'
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+
+    const result = findFolderByPath(['apps', 'docs', 'content', 'docs'], items)
+
+    expect(result?.id).toBe('apps/docs/content/docs')
   })
 })
