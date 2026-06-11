@@ -25,20 +25,20 @@ export function deepCloneTree(items: TreeDataItem[]): TreeDataItem[] {
   }))
 }
 
-function findFolderByPath(
+export function findFolderByPath(
   path: string[],
   folders: TreeDataItem[]
 ): TreeDataItem | undefined {
   let currentFolders: TreeDataItem[] = folders
 
-  for (const part of path) {
+  for (const [index, part] of path.entries()) {
     const foundFolder = currentFolders.find((folder) => {
       return folder.name === part
     })
     if (!foundFolder) {
       return undefined
     }
-    if (path[path.length - 1] === part) {
+    if (index === path.length - 1) {
       return foundFolder
     }
     currentFolders = foundFolder.children || []
