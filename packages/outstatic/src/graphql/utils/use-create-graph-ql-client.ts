@@ -5,6 +5,18 @@ import { useRef, useMemo, useEffect, useState } from 'react'
 
 type HeadersType = Record<string, string>
 
+function normalizeHeaders(newHeaders: HeadersInit): HeadersType {
+  if (newHeaders instanceof Headers) {
+    return Object.fromEntries(newHeaders.entries())
+  }
+
+  if (Array.isArray(newHeaders)) {
+    return Object.fromEntries(newHeaders)
+  }
+
+  return newHeaders
+}
+
 export function useCreateGraphQLClient(
   githubGql: string,
   headers: HeadersType
@@ -15,20 +27,6 @@ export function useCreateGraphQLClient(
   // Check if we're calling GitHub API directly
   const isGitHubAPI = githubGql.includes('api.github.com')
 
-  // Use ref to store mutable headers that can be updated by interceptor
-  const headersRef = useRef<HeadersType>({ ...headers })
-
-  // Refs to hold callback functions - updated via useEffect to avoid ref access during render
-  const callbacksRef = useRef<{
-    getCurrentHeaders: () => HeadersType
-    updateHeaders: (newHeaders: HeadersInit) => void
-    onSessionUpdate: (session: { access_token?: string } | null) => void
-  }>({
-    getCurrentHeaders: () => headers,
-    updateHeaders: () => {},
-    onSessionUpdate: () => {}
-  })
-
   // Compute current headers without reading from ref during render
   // GitHub API uses 'token' prefix, other APIs use 'Bearer'
   const currentHeaders = useMemo(() => {
@@ -37,45 +35,62 @@ export function useCreateGraphQLClient(
         ? headers.authorization.replace('Bearer ', 'token ')
         : headers.authorization
 
-    // GitHub GraphQL API requires specific headers
-    const githubHeaders: HeadersType = {
+    const computed: HeadersType = {
       ...headers,
       authorization: authHeader
     }
 
     if (isGitHubAPI) {
-      githubHeaders['Accept'] = 'application/vnd.github.v4+json'
-    } else {
-      // For parser API, add project ID header if available
-      if (initialData?.projectInfo?.projectId) {
-        githubHeaders['x-project-id'] = initialData.projectInfo.projectId
-      }
+      computed['Accept'] = 'application/vnd.github.v4+json'
+    } else if (initialData?.projectInfo?.projectId) {
+      computed['x-project-id'] = initialData.projectInfo.projectId
     }
 
-    return githubHeaders
+    return computed
   }, [headers, isGitHubAPI, initialData])
+
+  const headersRef = useRef<HeadersType>(currentHeaders)
+
+  const callbacksRef = useRef<{
+    getCurrentHeaders: () => HeadersType
+    updateHeaders: (newHeaders: HeadersInit) => void
+    onSessionUpdate: (session: { access_token?: string } | null) => void
+  }>({
+    getCurrentHeaders: () => headersRef.current,
+    updateHeaders: (newHeaders) => {
+      headersRef.current = {
+        ...headersRef.current,
+        ...normalizeHeaders(newHeaders)
+      }
+    },
+    onSessionUpdate: (session) => {
+      if (session?.access_token) {
+        const authHeader = isGitHubAPI
+          ? `token ${session.access_token}`
+          : `Bearer ${session.access_token}`
+
+        headersRef.current = {
+          ...headersRef.current,
+          authorization: authHeader
+        }
+      }
+    }
+  })
 
   // Update refs outside render phase so interceptor has latest headers
   useEffect(() => {
     headersRef.current = currentHeaders
 
-    // Update callback functions with current closure values
     callbacksRef.current = {
       getCurrentHeaders: () => headersRef.current,
       updateHeaders: (newHeaders) => {
-        // Convert HeadersInit to Record<string, string>
-        const newHeadersObj =
-          newHeaders instanceof Headers
-            ? Object.fromEntries(newHeaders.entries())
-            : Array.isArray(newHeaders)
-              ? Object.fromEntries(newHeaders)
-              : newHeaders
-
-        headersRef.current = { ...headersRef.current, ...newHeadersObj }
+        headersRef.current = {
+          ...headersRef.current,
+          ...normalizeHeaders(newHeaders)
+        }
       },
       onSessionUpdate: (session) => {
         if (session?.access_token) {
-          // GitHub API uses 'token' prefix, other APIs use 'Bearer'
           const authHeader = isGitHubAPI
             ? `token ${session.access_token}`
             : `Bearer ${session.access_token}`

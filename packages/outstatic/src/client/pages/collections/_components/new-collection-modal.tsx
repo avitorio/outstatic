@@ -95,6 +95,8 @@ export default function NewCollectionModal({
   const { refetch: refetchDocuments } = useGetDocuments({
     enabled: false,
     collection: collectionName
+      ? slugify(collectionName, { allowedChars: 'a-zA-Z0-9.' })
+      : undefined
   })
 
   const createCollectionSchema = z.object({
@@ -205,7 +207,9 @@ export default function NewCollectionModal({
         loading: 'Creating collection...',
         success: async () => {
           // check if the collection has md(x) files in it
-          const { data } = await refetchDocuments()
+          const { data } = await refetchDocuments({
+            throwOnError: true
+          })
 
           const onComplete = async () => {
             await refetchCollections()

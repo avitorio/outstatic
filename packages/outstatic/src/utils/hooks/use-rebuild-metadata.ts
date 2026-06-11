@@ -17,7 +17,6 @@ import {
 } from '../metadata/types'
 import { GET_DOCUMENT } from '@/graphql/queries/document'
 import { GetDocumentData } from './use-get-document'
-import request from 'graphql-request'
 import matter from 'gray-matter'
 import MurmurHash3 from 'imurmurhash'
 import { useGetFiles } from './use-get-files'
@@ -57,7 +56,7 @@ export const useRebuildMetadata = ({
     monorepoPath,
     session,
     ostContent,
-    githubGql
+    gqlClient
   } = useOutstatic()
 
   const toastId = 'metadata-rebuild'
@@ -99,17 +98,13 @@ export const useRebuildMetadata = ({
   const getMetaFromFile = useCallback(
     async (fileData: FileData) => {
       const filePath = fileData.path.replace(/\.mdx?$/, '')
-      const { repository } = await request<GetDocumentData>(
-        githubGql,
+      const { repository } = await gqlClient.request<GetDocumentData>(
         GET_DOCUMENT,
         {
           owner: repoOwner || session?.user?.login || '',
           name: repoSlug,
           mdPath: `${repoBranch}:${filePath}.md`,
           mdxPath: `${repoBranch}:${filePath}.mdx`
-        },
-        {
-          authorization: `Bearer ${session?.access_token}`
         }
       )
 
@@ -135,7 +130,7 @@ export const useRebuildMetadata = ({
 
       return undefined
     },
-    [githubGql, monorepoPath, repoBranch, repoOwner, repoSlug, session]
+    [gqlClient, monorepoPath, repoBranch, repoOwner, repoSlug, session]
   )
 
   const processFiles = useCallback(

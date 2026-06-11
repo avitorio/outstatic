@@ -15,6 +15,7 @@ import { deriveLegacyMediaPaths, resolveMediaSources } from '../media-config'
 type HeadersType = {
   authorization: string
   'X-CSRF-Token'?: string
+  'x-project-id'?: string
 }
 
 const cleanOutstaticData = (
@@ -51,11 +52,24 @@ export const useOutstatic = () => {
   const initialData = useInitialData()
   const { data: localData, isPending: localPending } = useLocalData()
 
-  const headers: HeadersType = {
-    authorization: `Bearer ${initialData?.session?.access_token}`
-  }
+  const githubGql = initialData.githubGql ?? ''
+  const projectId = initialData.projectInfo?.projectId
+  const usesParserApi =
+    githubGql.length > 0 && !githubGql.includes('api.github.com')
 
-  const graphQLClient = useCreateGraphQLClient(initialData.githubGql, headers)
+  const headers: HeadersType = useMemo(() => {
+    const result: HeadersType = {
+      authorization: `Bearer ${initialData?.session?.access_token}`
+    }
+
+    if (usesParserApi && projectId) {
+      result['x-project-id'] = projectId
+    }
+
+    return result
+  }, [initialData?.session?.access_token, projectId, usesParserApi])
+
+  const graphQLClient = useCreateGraphQLClient(githubGql, headers)
 
   const cleanInitialData = useMemo(
     () => cleanOutstaticData(initialData),
