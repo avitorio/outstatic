@@ -17,12 +17,13 @@ import Link from 'next/link'
 import { OUTSTATIC_APP_URL } from '@/utils/constants'
 import { Button } from '../shadcn/button'
 
-export type UpgradeFeature = 'team' | 'api-keys' | 'ai'
+export type UpgradeFeature = 'team' | 'api-keys' | 'ai' | 'save'
 
 const headline: Record<UpgradeFeature, string> = {
   team: 'Unlock Team Collaboration',
   'api-keys': 'Unlock API Keys',
-  ai: 'Write faster with AI'
+  ai: 'Write faster with AI',
+  save: 'Upgrade to save your content'
 }
 
 const getUpgradeUrl = (
@@ -30,6 +31,17 @@ const getUpgradeUrl = (
   dashboardRoute: string | undefined,
   feature: UpgradeFeature
 ) => {
+  if (feature === 'save') {
+    const destination = accountSlug
+      ? new URL(`${OUTSTATIC_APP_URL}/home/${accountSlug}/`)
+      : new URL(`${OUTSTATIC_APP_URL}/auth/sign-up?provider=github`)
+
+    destination.searchParams.set('feature', 'team')
+    destination.searchParams.set('auto_checkout', 'true')
+
+    return destination.toString()
+  }
+
   const baseRoute = dashboardRoute || '/outstatic'
 
   const destination = accountSlug
@@ -109,8 +121,9 @@ export function UpgradeDialog({
             {headline[feature]}
           </DialogTitle>
           <DialogDescription className="text-muted-foreground mx-auto max-w-sm text-base">
-            Upgrade to Pro and unlock powerful features to grow your team and
-            boost productivity.
+            {feature === 'save'
+              ? 'Outstatic.com projects require Pro to save changes. Self-hosted Outstatic remains free.'
+              : 'Upgrade to Pro and unlock powerful features to grow your team and boost productivity.'}
           </DialogDescription>
         </DialogHeader>
 
@@ -145,11 +158,16 @@ export function UpgradeDialog({
               rel="noopener noreferrer"
               href={getUpgradeUrl(accountSlug, dashboardRoute, feature)}
             >
-              Upgrade to Pro
+              Start your free trial
               <ArrowRight className="ml-2 h-4 w-4" />
             </Link>
           </Button>
         </div>
+        {feature === 'save'
+          ? <p className="text-muted-foreground text-sm text-center">
+            or learn about <a href="https://outstatic.com/docs" target="_blank" rel="noopener noreferrer" className="text-primary underline">self-hosting</a>
+          </p>
+          : null}
       </DialogContent>
     </Dialog>
   )

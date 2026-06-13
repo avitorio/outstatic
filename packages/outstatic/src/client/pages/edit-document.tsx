@@ -15,6 +15,7 @@ import { useEditorPageState } from './_components/use-editor-page-state'
 import { getFirstImageMediaSource } from '@/utils/media-config'
 import { AdminLoading } from '@/components/admin-loading'
 import { isFieldsOnlyModeEnabled } from '@/utils/hooks/field-schema'
+import { useUpgradeDialog } from '@/components/ui/outstatic/upgrade-dialog-context'
 
 export default function EditDocument({ collection }: { collection: string }) {
   const pathname = usePathname()
@@ -28,8 +29,11 @@ export default function EditDocument({ collection }: { collection: string }) {
     hasChanges,
     setHasChanges,
     dashboardRoute,
-    media
+    media,
+    isHosted,
+    isPro
   } = useOutstatic()
+  const { openUpgradeDialog } = useUpgradeDialog()
   const imageMediaSource = getFirstImageMediaSource(media ?? [])
   const [showDelete, setShowDelete] = useState(false)
   const [showMediaPathDialog, setShowMediaPathDialog] = useState(false)
@@ -109,6 +113,11 @@ export default function EditDocument({ collection }: { collection: string }) {
   const isNewDocument = slug === 'new'
 
   const handleSave = (data: Document) => {
+    if (isHosted && !isPro) {
+      openUpgradeDialog(undefined, undefined, 'save')
+      return
+    }
+
     if (!imageMediaSource && files.length > 0) {
       setShowMediaPathDialog(true)
       return

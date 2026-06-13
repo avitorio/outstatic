@@ -20,7 +20,7 @@ jest.mock('@/components/ui/outstatic/upgrade-dialog', () => ({
   }: {
     open?: boolean
     onOpenChange?: (open: boolean) => void
-    feature?: 'team' | 'api-keys' | 'ai'
+    feature?: 'team' | 'api-keys' | 'ai' | 'save'
     accountSlug?: string
     dashboardRoute?: string
   }) => (
