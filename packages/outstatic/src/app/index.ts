@@ -50,6 +50,7 @@ export type OutstaticData = {
   repoMediaPath: string
   media: MediaSourceConfig[]
   isPro: boolean
+  canSaveContent?: boolean
   isHosted: boolean
   ui?: OutstaticUIOptions
   projectInfo?: {
@@ -163,6 +164,7 @@ export async function Outstatic({
     repoMediaPath: process.env.OST_REPO_MEDIA_PATH || '',
     media: [],
     isPro: projectInfo?.isPro || false,
+    canSaveContent: projectInfo?.isPro || false,
     isHosted,
     ui: {
       showToaster: ui?.showToaster ?? true

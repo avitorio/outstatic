@@ -42,7 +42,8 @@ export default function EditSingleton({ slug: initialSlug }: { slug: string }) {
     repoSlug,
     repoBranch,
     isHosted,
-    isPro
+    isPro,
+    canSaveContent
   } = useOutstatic()
   const { openUpgradeDialog } = useUpgradeDialog()
   const imageMediaSource = getFirstImageMediaSource(media ?? [])
@@ -239,7 +240,7 @@ export default function EditSingleton({ slug: initialSlug }: { slug: string }) {
   }, [isNew])
 
   const handleSave = (data: Document) => {
-    if (isHosted && !isPro) {
+    if (isHosted && !isPro && !canSaveContent) {
       openUpgradeDialog(undefined, undefined, 'save')
       return
     }

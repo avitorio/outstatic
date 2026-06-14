@@ -42,6 +42,7 @@ const mockProviderProps = {
   repoMediaPath: 'anything',
   media: [],
   isPro: false,
+  canSaveContent: false,
   isHosted: false
 } as OutstaticData
 

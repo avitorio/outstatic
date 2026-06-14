@@ -31,7 +31,8 @@ export default function EditDocument({ collection }: { collection: string }) {
     dashboardRoute,
     media,
     isHosted,
-    isPro
+    isPro,
+    canSaveContent
   } = useOutstatic()
   const { openUpgradeDialog } = useUpgradeDialog()
   const imageMediaSource = getFirstImageMediaSource(media ?? [])
@@ -113,7 +114,7 @@ export default function EditDocument({ collection }: { collection: string }) {
   const isNewDocument = slug === 'new'
 
   const handleSave = (data: Document) => {
-    if (isHosted && !isPro) {
+    if (isHosted && !isPro && !canSaveContent) {
       openUpgradeDialog(undefined, undefined, 'save')
       return
     }
