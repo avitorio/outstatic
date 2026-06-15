@@ -57,6 +57,7 @@ import {
 import { findCollectionParent } from '@/utils/collections/collection-tree'
 
 const CREATE_COLLECTION_TOAST_ID = 'create-collection'
+const CREATE_COLLECTION_TOAST_DURATION = 4000
 
 export default function NewCollectionModal({
   open,
@@ -239,12 +240,18 @@ export default function NewCollectionModal({
         {
           id: CREATE_COLLECTION_TOAST_ID,
           loading: 'Creating collection...',
-          success: 'Collection created successfully',
+          success: {
+            message: 'Collection created successfully',
+            duration: CREATE_COLLECTION_TOAST_DURATION
+          },
           error: () => {
             setLoading(false)
             setHasChanges(false)
             setError(true)
-            return 'Failed to create collection'
+            return {
+              message: 'Failed to create collection',
+              duration: CREATE_COLLECTION_TOAST_DURATION
+            }
           }
         }
       )
