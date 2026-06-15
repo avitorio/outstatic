@@ -16,7 +16,8 @@ import { useOutstatic } from '@/utils/hooks/use-outstatic'
 
 export type UpgradeDialogHandler = (
   accountSlug?: string,
-  dashboardRoute?: string
+  dashboardRoute?: string,
+  feature?: UpgradeFeature
 ) => void
 
 type UpgradeDialogContextValue = {
@@ -51,16 +52,22 @@ export function UpgradeDialogProvider({
   const [overrides, setOverrides] = useState<{
     accountSlug?: string
     dashboardRoute?: string
+    feature?: UpgradeFeature
   } | null>(null)
 
   const contextValue = useMemo<UpgradeDialogContextValue>(
     () => ({
       isUpgradeDialogOpen,
-      openUpgradeDialog: (accountSlug, overrideDashboardRoute) => {
-        if (accountSlug || overrideDashboardRoute) {
+      openUpgradeDialog: (
+        accountSlug,
+        overrideDashboardRoute,
+        overrideFeature
+      ) => {
+        if (accountSlug || overrideDashboardRoute || overrideFeature) {
           setOverrides({
             accountSlug,
-            dashboardRoute: overrideDashboardRoute
+            dashboardRoute: overrideDashboardRoute,
+            feature: overrideFeature
           })
         } else {
           setOverrides(null)
@@ -79,12 +86,13 @@ export function UpgradeDialogProvider({
 
   const resolvedAccountSlug = overrides?.accountSlug ?? projectInfo?.accountSlug
   const resolvedDashboardRoute = overrides?.dashboardRoute ?? dashboardRoute
+  const resolvedFeature = overrides?.feature ?? feature
 
   return (
     <UpgradeDialogContext.Provider value={contextValue}>
       {children}
       <UpgradeDialog
-        feature={feature}
+        feature={resolvedFeature}
         open={isUpgradeDialogOpen}
         onOpenChange={contextValue.setUpgradeDialogOpen}
         accountSlug={resolvedAccountSlug}

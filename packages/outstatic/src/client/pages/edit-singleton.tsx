@@ -20,6 +20,7 @@ import { slugify } from 'transliteration'
 import { getFirstImageMediaSource } from '@/utils/media-config'
 import { AdminLoading } from '@/components/admin-loading'
 import { isFieldsOnlyModeEnabled } from '@/utils/hooks/field-schema'
+import { useUpgradeDialog } from '@/components/ui/outstatic/upgrade-dialog-context'
 
 export default function EditSingleton({ slug: initialSlug }: { slug: string }) {
   const [slug, setSlug] = useState(initialSlug)
@@ -39,8 +40,12 @@ export default function EditSingleton({ slug: initialSlug }: { slug: string }) {
     repoMediaPath,
     repoOwner,
     repoSlug,
-    repoBranch
+    repoBranch,
+    isHosted,
+    isPro,
+    canSaveContent
   } = useOutstatic()
+  const { openUpgradeDialog } = useUpgradeDialog()
   const imageMediaSource = getFirstImageMediaSource(media ?? [])
 
   const searchParams = useSearchParams()
@@ -235,6 +240,11 @@ export default function EditSingleton({ slug: initialSlug }: { slug: string }) {
   }, [isNew])
 
   const handleSave = (data: Document) => {
+    if (isHosted && !isPro && !canSaveContent) {
+      openUpgradeDialog(undefined, undefined, 'save')
+      return
+    }
+
     if (!imageMediaSource && files.length > 0) {
       setShowMediaPathDialog(true)
       return
