@@ -1,0 +1,4 @@
+"$schema" = "https://conductor.build/schemas/settings.repo.schema.json"
+
+[scripts]
+setup = "pnpm i\npnpm build --filter=outstatic"
