@@ -42,7 +42,7 @@ function DeleteCollectionModal({
     useOutstatic()
   const { canManageCollections } = usePermissions()
   const [deleting, setDeleting] = useState(false)
-  const [keepFiles, setKeepFiles] = useState(false)
+  const [keepFiles, setKeepFiles] = useState(true)
   const [deleteChildren, setDeleteChildren] = useState(false)
   const fetchOid = useOid()
 
