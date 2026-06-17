@@ -9,4 +9,5 @@ export const gitConfig = {
   user: 'avitorio',
   repo: 'outstatic',
   branch: 'canary',
+  monorepoPath: 'apps/docs',
 };
