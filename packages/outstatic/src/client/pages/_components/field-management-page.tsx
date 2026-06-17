@@ -198,14 +198,14 @@ export const FieldManagementPage = ({
 
   useEffect(() => {
     if (collection) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
+       
       setPendingParent(collection.parent)
     }
   }, [collection?.slug, collection?.parent])
 
   useEffect(() => {
     if (schema) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
+       
       setCustomFields(schema.properties)
       setSavedCustomFields(schema.properties)
       setSchemaSettings(schema.settings ?? {})

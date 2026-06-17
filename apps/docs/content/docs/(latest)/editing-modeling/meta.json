@@ -2,10 +2,5 @@
   "title": "Editing & Modeling",
   "defaultOpen": true,
   "collapsible": false,
-  "pages": [
-    "the-content-editor",
-    "mdx-block",
-    "block-library",
-    "custom-fields"
-  ]
+  "pages": ["the-content-editor", "mdx-block", "block-library", "custom-fields"]
 }

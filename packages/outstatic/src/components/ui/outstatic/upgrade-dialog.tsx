@@ -163,11 +163,19 @@ export function UpgradeDialog({
             </Link>
           </Button>
         </div>
-        {feature === 'save'
-          ? <p className="text-muted-foreground text-sm text-center">
-            or learn about <a href="https://outstatic.com/docs" target="_blank" rel="noopener noreferrer" className="text-primary underline">self-hosting</a>
+        {feature === 'save' ? (
+          <p className="text-muted-foreground text-sm text-center">
+            or learn about{' '}
+            <a
+              href="https://outstatic.com/docs"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary underline"
+            >
+              self-hosting
+            </a>
           </p>
-          : null}
+        ) : null}
       </DialogContent>
     </Dialog>
   )

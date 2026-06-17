@@ -74,7 +74,7 @@ export const useRebuildMetadata = ({
       if (!externalToastIdRef.current) {
         toast.dismiss(toastId)
       }
-      // eslint-disable-next-line react-hooks/set-state-in-effect
+       
       setTotal(0)
       setProcessed(0)
     }

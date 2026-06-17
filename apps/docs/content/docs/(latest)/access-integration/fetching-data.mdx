@@ -1,8 +1,7 @@
 ---
-title: "Fetching data"
-description: ""
+title: 'Fetching data'
+description: ''
 ---
-
 
 **Fetching data is only available for Next.js projects.**
 
@@ -137,11 +136,7 @@ export default async function HomePage() {
 }
 
 async function getData() {
-  const home = getSingletonBySlug('home', [
-    'title',
-    'content',
-    'description'
-  ])
+  const home = getSingletonBySlug('home', ['title', 'content', 'description'])
 
   return home
 }
@@ -164,11 +159,7 @@ export default function HomePage({ home }) {
 }
 
 export const getStaticProps = async () => {
-  const home = getSingletonBySlug('home', [
-    'title',
-    'content',
-    'description'
-  ])
+  const home = getSingletonBySlug('home', ['title', 'content', 'description'])
 
   return {
     props: { home }

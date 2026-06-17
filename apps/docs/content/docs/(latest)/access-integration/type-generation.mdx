@@ -83,29 +83,37 @@ export type Posts = {
 
 The generator converts schema field types to TypeScript:
 
-| Schema Field Type | TypeScript Type |
-| --- | --- |
-| `String` | `string` |
-| `Text` | `string` |
-| `Number` | `number` |
-| `Boolean` | `boolean` |
-| `Date` | `string` (ISO format) |
-| `Image` | `string` (URL) |
-| `Tags` | `Array<{ label: string; value: string }>` |
-| `Tags` with values | Union type of allowed values |
+| Schema Field Type  | TypeScript Type                           |
+| ------------------ | ----------------------------------------- |
+| `String`           | `string`                                  |
+| `Text`             | `string`                                  |
+| `Number`           | `number`                                  |
+| `Boolean`          | `boolean`                                 |
+| `Date`             | `string` (ISO format)                     |
+| `Image`            | `string` (URL)                            |
+| `Tags`             | `Array<{ label: string; value: string }>` |
+| `Tags` with values | Union type of allowed values              |
 
 ## Using Generated Types
 
 Once types are generated, you get full type safety when fetching content:
 
 ```typescript
-import { getDocuments, getDocumentBySlug, getSingletonBySlug } from 'outstatic/server'
+import {
+  getDocuments,
+  getDocumentBySlug,
+  getSingletonBySlug
+} from 'outstatic/server'
 
 // Types are automatically inferred
 const posts = getDocuments('posts', ['title', 'slug', 'category'])
 // posts is typed as Array<Pick<Posts, 'title' | 'slug' | 'category'>>
 
-const post = getDocumentBySlug('posts', 'my-post', ['title', 'content', 'author'])
+const post = getDocumentBySlug('posts', 'my-post', [
+  'title',
+  'content',
+  'author'
+])
 // post is typed as Pick<Posts, 'title' | 'content' | 'author'>
 
 const home = getSingletonBySlug('home', ['title', 'description'])

@@ -9,8 +9,8 @@ import { docsBaseRoute } from '@/lib/shared'
 export const metadata: Metadata = {
   icons: {
     icon: [{ url: `${docsBaseRoute}/favicon/favicon-96x96.png` }],
-    apple: [{ url: `${docsBaseRoute}/favicon/apple-touch-icon.png` }],
-  },
+    apple: [{ url: `${docsBaseRoute}/favicon/apple-touch-icon.png` }]
+  }
 }
 
 const inter = Inter({
@@ -31,8 +31,8 @@ export default function Layout({ children }: LayoutProps<'/'>) {
           search={{
             SearchDialog: VersionedSearchDialog,
             options: {
-              api: `${docsBaseRoute}/api/search`,
-            },
+              api: `${docsBaseRoute}/api/search`
+            }
           }}
         >
           {children}
