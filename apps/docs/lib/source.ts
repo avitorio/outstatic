@@ -10,6 +10,12 @@ export const source = loader({
   plugins: [lucideIconsPlugin()],
 });
 
+export const searchSource = loader({
+  baseUrl: docsBaseRoute,
+  source: docs.toFumadocsSource(),
+  plugins: [lucideIconsPlugin()],
+});
+
 export const llmsSource = loader({
   baseUrl: docsBaseRoute,
   source: docs.toFumadocsSource(),
