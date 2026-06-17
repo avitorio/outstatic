@@ -198,14 +198,12 @@ export const FieldManagementPage = ({
 
   useEffect(() => {
     if (collection) {
-       
       setPendingParent(collection.parent)
     }
   }, [collection?.slug, collection?.parent])
 
   useEffect(() => {
     if (schema) {
-       
       setCustomFields(schema.properties)
       setSavedCustomFields(schema.properties)
       setSchemaSettings(schema.settings ?? {})

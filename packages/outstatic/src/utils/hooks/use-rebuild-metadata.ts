@@ -74,7 +74,7 @@ export const useRebuildMetadata = ({
       if (!externalToastIdRef.current) {
         toast.dismiss(toastId)
       }
-       
+
       setTotal(0)
       setProcessed(0)
     }
