@@ -202,7 +202,7 @@ export default function Login({
         onOpenChange={setShowApiKeyDialog}
         basePath={basePath}
       />
-      <div data-outstatic>
+      <div id="outstatic">
         <LoadingBackground isLoading={isLoading}>
           <main className="relative z-10 flex h-screen items-center justify-center p-4">
             {error && loginErrors[error] ? (

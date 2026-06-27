@@ -45,7 +45,7 @@ Add these three files under `/app`. We recommend placing Outstatic in its own ro
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html suppressHydrationWarning>
-      <body>{children}</body>
+      <body id="outstatic">{children}</body>
     </html>
   )
 }
@@ -67,8 +67,6 @@ export default async function Page({
   return <OstClient ostData={ostData} params={params} />
 }
 ```
-
-`outstatic/outstatic.css` is compiled CSS and can be imported directly in Tailwind CSS v3 and v4 projects.
 
 `/app/api/outstatic/[[...ost]]/route.ts` (outside the route group)
 
