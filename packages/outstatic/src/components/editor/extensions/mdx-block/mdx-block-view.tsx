@@ -275,7 +275,7 @@ const OutstaticBlockView = ({
         ) : null}
 
         {block.props.length > 0 ? (
-          <div className="grid gap-4 p-4 md:grid-cols-2">
+          <div className="grid gap-4 p-4">
             {block.props.map((prop) => {
               const value = values[prop.name]
               const error = errors[prop.name]
