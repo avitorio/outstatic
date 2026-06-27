@@ -49,7 +49,7 @@ module.exports = {
     }
   },
   // https://tailwindcss.com/docs/configuration#selector-strategy
-  important: '#outstatic',
+  important: '[data-outstatic]',
   plugins: [
     require('tailwindcss-animate'),
     require('@tailwindcss/typography'),

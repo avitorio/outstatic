@@ -188,7 +188,7 @@ export const BaseCommandList = ({
   }, [selectedIndex])
 
   return items.length > 0 ? (
-    <div id="outstatic">
+    <div data-outstatic>
       <div
         id="slash-command"
         ref={commandListContainer}

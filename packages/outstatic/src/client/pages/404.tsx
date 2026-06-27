@@ -1,7 +1,7 @@
 export default function FourOhFour() {
   return (
     <>
-      <div id="outstatic">
+      <div data-outstatic>
         <div className="absolute bottom-10 w-full left-0 overflow-hidden z-0 md:-top-10 bg-background">
           <svg
             width="100%"
