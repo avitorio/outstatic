@@ -6,11 +6,12 @@ export default async function sitemap() {
   const docsUrls = source
     // Optional: leverage the noIndex property we previously added.
     // .filter(page => page.data.noIndex !== true)
-    .getPages().map(page => ({
+    .getPages()
+    .map((page) => ({
       url: `${baseUrl}${page.url}`,
       lastModified: new Date(),
       changeFrequency: 'weekly' as const,
-      priority: 0.7,
+      priority: 0.7
     }))
 
   return [...docsUrls]
