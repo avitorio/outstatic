@@ -1,6 +1,5 @@
 'use client'
 import { OutstaticData } from '@/app'
-import { V2BreakingCheck } from '@/components/v2-breaking-check'
 import {
   InitialDataContext,
   setSessionUpdateCallback
@@ -58,7 +57,6 @@ function RootProviderInner({ ostData, children }: RootProviderProps) {
             <ContentLockProvider>{children}</ContentLockProvider>
           </NavigationGuardProvider>
         </QueryClientProvider>
-        <V2BreakingCheck />
       </ThemeProvider>
     </InitialDataContext.Provider>
   )

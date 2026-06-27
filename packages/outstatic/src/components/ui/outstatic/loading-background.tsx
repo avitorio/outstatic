@@ -9,7 +9,7 @@ export default function LoadingBackground({
   isLoading?: boolean
 }) {
   return (
-    <div id="outstatic">
+    <div data-outstatic>
       <div className="absolute left-0 z-0 h-screen w-full overflow-hidden bg-background md:-top-10 animate-in fade-in duration-300">
         <svg
           width="100%"

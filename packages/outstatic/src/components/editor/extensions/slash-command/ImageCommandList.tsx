@@ -211,7 +211,7 @@ const ImageCommandList = ({
   }, [selectedIndex])
 
   return (
-    <div id="outstatic">
+    <div data-outstatic>
       {showLink ? (
         <div
           className={`flex justify-between z-50 w-96 rounded-md border bg-popover text-popover-foreground shadow-md outline-hidden p-1`}
