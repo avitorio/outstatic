@@ -45,7 +45,7 @@ Add these three files under `/app`. We recommend placing Outstatic in its own ro
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html suppressHydrationWarning>
-      <body>{children}</body>
+      <body id="outstatic">{children}</body>
     </html>
   )
 }

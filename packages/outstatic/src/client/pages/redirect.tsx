@@ -44,7 +44,7 @@ export default function RedirectingPage() {
 
   return (
     <>
-      <div data-outstatic>
+      <div id="outstatic">
         <LoadingBackground isLoading={true}>
           <main className="relative z-10 flex h-screen items-center justify-center p-4">
             <Card>
