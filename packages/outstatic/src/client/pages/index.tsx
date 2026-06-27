@@ -5,7 +5,7 @@ import { Sidebar } from '@/components/sidebar'
 import { AdminLoading } from '@/components/admin-loading'
 import { useOutstatic, useLocalData } from '@/utils/hooks/use-outstatic'
 import { useDashboardFavicon } from '@/utils/hooks/use-dashboard-favicon'
-import { useEffect, useLayoutEffect } from 'react'
+import { useEffect } from 'react'
 import { Router } from '../router'
 import Login from './login'
 import Welcome from './welcome'
@@ -91,21 +91,6 @@ export const Main = ({ params }: { params: { ost: string[] } }) => {
 }
 
 export const OstClient = ({ ostData, params }: OstClientProps) => {
-  useLayoutEffect(() => {
-    const body = document.body
-    const previousOutstaticAttribute = body.getAttribute('data-outstatic')
-
-    body.setAttribute('data-outstatic', '')
-
-    return () => {
-      if (previousOutstaticAttribute === null) {
-        body.removeAttribute('data-outstatic')
-      } else {
-        body.setAttribute('data-outstatic', previousOutstaticAttribute)
-      }
-    }
-  }, [])
-
   useDashboardFavicon()
 
   if (ostData.missingEnvVars) {
