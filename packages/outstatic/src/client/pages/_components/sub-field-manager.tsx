@@ -1,24 +1,12 @@
 import { camelCase } from 'change-case'
-import { Trash } from 'lucide-react'
-import { useFieldArray, useFormContext } from 'react-hook-form'
+import { ChevronDown, ChevronRight, Trash2 } from 'lucide-react'
+import { useMemo, useState } from 'react'
+import { useFormContext, useWatch } from 'react-hook-form'
 import { Button } from '@/components/ui/shadcn/button'
 import { Checkbox } from '@/components/ui/shadcn/checkbox'
-import {
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage
-} from '@/components/ui/shadcn/form'
 import { Input } from '@/components/ui/shadcn/input'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue
-} from '@/components/ui/shadcn/select'
+import { ArrayItemType } from '@/types'
+import { MAX_ARRAY_FIELD_DEPTH } from '@/utils/schemas/custom-field-schema'
 
 const SUB_FIELD_TYPES = [
   'String',
@@ -26,35 +14,207 @@ const SUB_FIELD_TYPES = [
   'Number',
   'Boolean',
   'Date',
-  'Image'
+  'Image',
+  'Object',
+  'Array'
 ] as const
 
-export const SubFieldManager = ({ disabled }: { disabled?: boolean }) => {
-  const { control, setValue, getValues } = useFormContext()
-  const { fields, append, remove } = useFieldArray({
-    control,
-    name: 'fields'
-  })
+type SubFieldType = (typeof SUB_FIELD_TYPES)[number]
 
-  const handleAdd = () => {
-    if (disabled) return
-    append({
-      name: '',
-      title: '',
-      fieldType: 'String',
-      required: false,
-      description: ''
+const ARRAY_SUB_FIELD_ITEM_TYPES = [
+  'String',
+  'Text',
+  'Number',
+  'Boolean',
+  'Date',
+  'Image',
+  'Object'
+] as const
+
+export type SubFieldFormEntry = {
+  name: string
+  title: string
+  fieldType: SubFieldType
+  itemType?: ArrayItemType
+  description?: string
+  required?: boolean
+  fields?: SubFieldFormEntry[]
+}
+
+const emptySubField = (): SubFieldFormEntry => ({
+  name: '',
+  title: '',
+  fieldType: 'String',
+  required: false,
+  description: ''
+})
+
+const normalizeForFieldType = (
+  field: SubFieldFormEntry,
+  fieldType: SubFieldType,
+  allowObjectItem = true
+): SubFieldFormEntry => {
+  const next: SubFieldFormEntry = {
+    ...field,
+    fieldType
+  }
+
+  if (fieldType === 'Object') {
+    delete next.itemType
+    next.fields = next.fields ?? []
+    return next
+  }
+
+  if (fieldType === 'Array') {
+    next.itemType = next.itemType ?? 'String'
+    if (!allowObjectItem && next.itemType === 'Object') {
+      next.itemType = 'String'
+    }
+    if (next.itemType === 'Object') {
+      next.fields = next.fields ?? []
+    } else {
+      delete next.fields
+    }
+    return next
+  }
+
+  delete next.itemType
+  delete next.fields
+  return next
+}
+
+const normalizeForItemType = (
+  field: SubFieldFormEntry,
+  itemType: ArrayItemType
+): SubFieldFormEntry => {
+  const next: SubFieldFormEntry = {
+    ...field,
+    itemType
+  }
+
+  if (itemType === 'Object') {
+    next.fields = next.fields ?? []
+  } else {
+    delete next.fields
+  }
+
+  return next
+}
+
+const isNestable = (field: SubFieldFormEntry) =>
+  field.fieldType === 'Object' ||
+  (field.fieldType === 'Array' && field.itemType === 'Object')
+
+const describeField = (field: SubFieldFormEntry) =>
+  field.fieldType === 'Array'
+    ? `Array<${field.itemType ?? 'String'}>`
+    : field.fieldType
+
+const fieldsPathForTrail = (path: number[]) =>
+  path.reduce((fieldPath, index) => `${fieldPath}.${index}.fields`, 'fields')
+
+const getFieldsAtPath = (
+  fields: SubFieldFormEntry[] | undefined,
+  path: number[]
+): SubFieldFormEntry[] => {
+  let current = fields ?? []
+
+  for (const index of path) {
+    const node = current[index]
+    if (!node || !isNestable(node)) {
+      return []
+    }
+    current = node.fields ?? []
+  }
+
+  return current
+}
+
+const getTrail = (
+  fields: SubFieldFormEntry[] | undefined,
+  path: number[]
+): SubFieldFormEntry[] => {
+  const trail: SubFieldFormEntry[] = []
+  let current = fields ?? []
+
+  for (const index of path) {
+    const node = current[index]
+    if (!node) break
+    trail.push(node)
+    current = node.fields ?? []
+  }
+
+  return trail
+}
+
+export const SubFieldManager = ({
+  disabled,
+  rootLabel = 'Items',
+  description = 'Each item in the array is an object with these sub-fields.',
+  framed = true
+}: {
+  disabled?: boolean
+  rootLabel?: string
+  description?: string
+  framed?: boolean
+}) => {
+  const { control, setValue } = useFormContext()
+  const [path, setPath] = useState<number[]>([])
+  const watchedFields = useWatch({ control, name: 'fields' }) as
+    | SubFieldFormEntry[]
+    | undefined
+
+  const currentFields = useMemo(
+    () => getFieldsAtPath(watchedFields, path),
+    [watchedFields, path]
+  )
+  const trail = useMemo(
+    () => getTrail(watchedFields, path),
+    [watchedFields, path]
+  )
+  const currentPath = fieldsPathForTrail(path)
+  const depth = path.length + 1
+  const atDepthLimit = depth >= MAX_ARRAY_FIELD_DEPTH
+  const availableArrayItemTypes = atDepthLimit
+    ? ARRAY_SUB_FIELD_ITEM_TYPES.filter((type) => type !== 'Object')
+    : ARRAY_SUB_FIELD_ITEM_TYPES
+
+  const updateCurrentFields = (nextFields: SubFieldFormEntry[]) => {
+    setValue(currentPath, nextFields, {
+      shouldDirty: true,
+      shouldValidate: true
     })
   }
 
+  const updateSubField = (index: number, nextField: SubFieldFormEntry) => {
+    const nextFields = [...currentFields]
+    nextFields[index] = nextField
+    updateCurrentFields(nextFields)
+  }
+
+  const handleAdd = () => {
+    if (disabled) return
+    updateCurrentFields([...currentFields, emptySubField()])
+  }
+
+  const handleRemove = (index: number) => {
+    updateCurrentFields(
+      currentFields.filter((_, currentIndex) => currentIndex !== index)
+    )
+  }
+
   return (
-    <div className="flex flex-col gap-3 rounded-md border border-border p-4">
-      <div className="flex items-center justify-between">
+    <div
+      className={
+        framed
+          ? 'flex min-h-0 flex-col gap-3 rounded-md border border-border p-4'
+          : 'flex min-h-0 flex-col gap-3'
+      }
+    >
+      <div className="flex items-start justify-between gap-3">
         <div>
           <p className="font-medium">Sub-fields</p>
-          <p className="text-sm text-muted-foreground">
-            Each item in the array is an object with these sub-fields.
-          </p>
+          <p className="text-sm text-muted-foreground">{description}</p>
         </div>
         <Button
           type="button"
@@ -67,117 +227,213 @@ export const SubFieldManager = ({ disabled }: { disabled?: boolean }) => {
         </Button>
       </div>
 
-      {fields.length === 0 ? (
-        <p className="text-sm text-muted-foreground italic">
+      <nav
+        aria-label="Sub-field path"
+        className="flex flex-wrap items-center gap-1 rounded-md bg-muted/40 px-2 py-1.5 text-sm"
+      >
+        <button
+          type="button"
+          onClick={() => setPath([])}
+          className="rounded-sm px-1.5 py-0.5 font-medium hover:bg-background"
+        >
+          {rootLabel}
+        </button>
+        {trail.map((node, index) => {
+          const isLast = index === trail.length - 1
+          return (
+            <span
+              key={`${node.name}-${index}`}
+              className="flex items-center gap-1"
+            >
+              <ChevronRight className="h-3.5 w-3.5 text-muted-foreground" />
+              <button
+                type="button"
+                onClick={() =>
+                  setPath((current) => current.slice(0, index + 1))
+                }
+                aria-current={isLast ? 'page' : undefined}
+                className="rounded-sm px-1.5 py-0.5 font-medium hover:bg-background"
+              >
+                {node.title || node.name || 'Untitled'}
+              </button>
+            </span>
+          )
+        })}
+      </nav>
+
+      <p className="text-xs text-muted-foreground">
+        Level {depth} / {MAX_ARRAY_FIELD_DEPTH}
+      </p>
+
+      {currentFields.length === 0 ? (
+        <p className="text-sm italic text-muted-foreground">
           No sub-fields yet. Click &quot;Add sub-field&quot; to start.
         </p>
       ) : null}
 
-      {fields.map((subField, index) => (
-        <div
-          key={subField.id}
-          className="grid grid-cols-[1fr_140px_auto_auto] items-end gap-2 rounded-md border border-border p-3"
-        >
-          <FormField
-            control={control}
-            name={`fields.${index}.title`}
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Name</FormLabel>
-                <FormControl>
-                  <Input
-                    {...field}
-                    value={field.value ?? ''}
-                    placeholder="Ex: Author name"
+      <div className="flex max-h-[45vh] min-h-0 flex-col gap-3 overflow-y-auto pr-1">
+        {currentFields.map((subField, index) => (
+          <div
+            key={`${currentPath}.${index}`}
+            className="rounded-lg border border-border bg-card p-3"
+          >
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-end">
+              <div className="flex-1">
+                <span className="mb-1.5 block text-sm font-semibold text-foreground">
+                  Name
+                </span>
+                <Input
+                  value={subField.title ?? ''}
+                  placeholder="Ex: Author name"
+                  disabled={disabled}
+                  aria-label="Sub-field name"
+                  className="h-9 rounded-lg border-border bg-background text-sm text-foreground shadow-none"
+                  onChange={(event) => {
+                    const title = event.target.value
+                    const previousAuto = camelCase(subField.title || '')
+                    const name =
+                      !subField.name || subField.name === previousAuto
+                        ? camelCase(title)
+                        : subField.name
+
+                    updateSubField(index, {
+                      ...subField,
+                      title,
+                      name
+                    })
+                  }}
+                />
+              </div>
+
+              <div className="w-full sm:w-36">
+                <span className="mb-1.5 block text-sm font-semibold text-foreground">
+                  Type
+                </span>
+                <div className="relative">
+                  <select
+                    value={subField.fieldType}
                     disabled={disabled}
-                    onChange={(e) => {
-                      field.onChange(e.target.value)
-                      const current = getValues(`fields.${index}.name`)
-                      const previousAuto = camelCase(
-                        getValues(`fields.${index}.title`) || ''
+                    aria-label="Sub-field type"
+                    className="h-9 w-full appearance-none rounded-lg border border-border bg-background px-3 pr-9 text-sm text-foreground outline-none transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50"
+                    onChange={(event) =>
+                      updateSubField(
+                        index,
+                        normalizeForFieldType(
+                          subField,
+                          event.target.value as SubFieldType,
+                          !atDepthLimit
+                        )
                       )
-                      if (!current || current === previousAuto) {
-                        setValue(
-                          `fields.${index}.name`,
-                          camelCase(e.target.value)
+                    }
+                  >
+                    {SUB_FIELD_TYPES.map((type) => (
+                      <option key={type} value={type}>
+                        {type}
+                      </option>
+                    ))}
+                  </select>
+                  <ChevronDown
+                    className="pointer-events-none absolute top-1/2 right-2.5 size-4 -translate-y-1/2 text-muted-foreground"
+                    aria-hidden="true"
+                  />
+                </div>
+              </div>
+
+              {subField.fieldType === 'Array' ? (
+                <div className="w-full sm:w-36">
+                  <span className="mb-1.5 block text-sm font-semibold text-foreground">
+                    Item type
+                  </span>
+                  <div className="relative">
+                    <select
+                      value={subField.itemType ?? 'String'}
+                      disabled={disabled}
+                      aria-label="Sub-field item type"
+                      className="h-9 w-full appearance-none rounded-lg border border-border bg-background px-3 pr-9 text-sm text-foreground outline-none transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50"
+                      onChange={(event) =>
+                        updateSubField(
+                          index,
+                          normalizeForItemType(
+                            subField,
+                            event.target.value as ArrayItemType
+                          )
                         )
                       }
-                    }}
-                  />
-                </FormControl>
-                <FormDescription>
-                  Key:{' '}
-                  <code className="bg-muted">
-                    {getValues(`fields.${index}.name`) || ''}
-                  </code>
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={control}
-            name={`fields.${index}.fieldType`}
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Type</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  value={field.value}
-                  disabled={disabled}
-                >
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Type" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    {SUB_FIELD_TYPES.map((t) => (
-                      <SelectItem key={t} value={t}>
-                        {t}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={control}
-            name={`fields.${index}.required`}
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Required</FormLabel>
-                <FormControl>
-                  <div className="flex h-9 items-center">
-                    <Checkbox
-                      checked={!!field.value}
-                      onCheckedChange={(checked) =>
-                        field.onChange(checked === true)
-                      }
-                      disabled={disabled}
+                    >
+                      {availableArrayItemTypes.map((type) => (
+                        <option key={type} value={type}>
+                          {type}
+                        </option>
+                      ))}
+                    </select>
+                    <ChevronDown
+                      className="pointer-events-none absolute top-1/2 right-2.5 size-4 -translate-y-1/2 text-muted-foreground"
+                      aria-hidden="true"
                     />
                   </div>
-                </FormControl>
-              </FormItem>
-            )}
-          />
+                </div>
+              ) : null}
 
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon"
-            onClick={() => remove(index)}
-            disabled={disabled}
-            aria-label="Remove sub-field"
-          >
-            <Trash className="h-4 w-4" />
-          </Button>
-        </div>
-      ))}
+              <div className="flex items-center gap-3 sm:pb-1.5">
+                <div className="flex flex-col items-center gap-1">
+                  <span className="mb-0 block text-sm font-semibold text-foreground">
+                    Req.
+                  </span>
+                  <Checkbox
+                    checked={!!subField.required}
+                    onCheckedChange={(checked) =>
+                      updateSubField(index, {
+                        ...subField,
+                        required: checked === true
+                      })
+                    }
+                    disabled={disabled}
+                    className="size-5 rounded-md border-border bg-background shadow-none hover:bg-muted"
+                  />
+                </div>
+
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => handleRemove(index)}
+                  disabled={disabled}
+                  aria-label="Delete sub-field"
+                  className="size-7 rounded-md text-muted-foreground hover:text-destructive"
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+
+            <div className="mt-2 flex items-center justify-between gap-2">
+              <p className="text-xs text-muted-foreground">
+                Key:{' '}
+                <span className="font-mono text-foreground">
+                  {subField.name || '—'}
+                </span>
+              </p>
+
+              {isNestable(subField) ? (
+                <Button
+                  type="button"
+                  variant="secondary"
+                  size="sm"
+                  onClick={() => setPath((current) => [...current, index])}
+                  disabled={disabled || atDepthLimit}
+                >
+                  {atDepthLimit
+                    ? 'Max depth'
+                    : `${describeField(subField)} · ${
+                        subField.fields?.length ?? 0
+                      }`}
+                  {!atDepthLimit ? <ChevronRight className="h-4 w-4" /> : null}
+                </Button>
+              ) : null}
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   )
 }

@@ -145,4 +145,151 @@ describe('convertSchemaToZod', () => {
       })
     ).not.toThrow()
   })
+
+  it('accepts recursive array object values', () => {
+    const schema = convertSchemaToZod({
+      properties: {
+        authors: {
+          title: 'Authors',
+          fieldType: 'Array',
+          dataType: 'array',
+          itemType: 'Object',
+          fields: {
+            author: {
+              title: 'Author',
+              fieldType: 'Object',
+              dataType: 'object',
+              required: true,
+              fields: {
+                name: {
+                  title: 'Name',
+                  fieldType: 'String',
+                  dataType: 'string',
+                  required: true
+                },
+                books: {
+                  title: 'Books',
+                  fieldType: 'Array',
+                  dataType: 'array',
+                  itemType: 'Object',
+                  fields: {
+                    title: {
+                      title: 'Title',
+                      fieldType: 'String',
+                      dataType: 'string',
+                      required: true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      } satisfies CustomFieldsType
+    })
+
+    expect(() =>
+      schema.parse({
+        status: 'draft',
+        slug: 'post-with-authors',
+        author: {},
+        authors: [
+          {
+            author: {
+              name: 'Ada Lovelace',
+              books: [{ title: 'Notes' }]
+            }
+          }
+        ]
+      })
+    ).not.toThrow()
+  })
+
+  it('accepts top-level object values', () => {
+    const schema = convertSchemaToZod({
+      properties: {
+        seo: {
+          title: 'SEO',
+          fieldType: 'Object',
+          dataType: 'object',
+          fields: {
+            title: {
+              title: 'Title',
+              fieldType: 'String',
+              dataType: 'string',
+              required: true
+            },
+            social: {
+              title: 'Social',
+              fieldType: 'Object',
+              dataType: 'object',
+              fields: {
+                image: {
+                  title: 'Image',
+                  fieldType: 'Image',
+                  dataType: 'image'
+                }
+              }
+            }
+          }
+        }
+      } satisfies CustomFieldsType
+    })
+
+    expect(() =>
+      schema.parse({
+        status: 'draft',
+        slug: 'post-with-seo',
+        author: {},
+        seo: {
+          title: 'A search title',
+          social: {
+            image: '/social.png'
+          }
+        }
+      })
+    ).not.toThrow()
+  })
+
+  it('rejects missing required nested fields', () => {
+    const schema = convertSchemaToZod({
+      properties: {
+        authors: {
+          title: 'Authors',
+          fieldType: 'Array',
+          dataType: 'array',
+          itemType: 'Object',
+          fields: {
+            author: {
+              title: 'Author',
+              fieldType: 'Object',
+              dataType: 'object',
+              required: true,
+              fields: {
+                name: {
+                  title: 'Name',
+                  fieldType: 'String',
+                  dataType: 'string',
+                  required: true
+                }
+              }
+            }
+          }
+        }
+      } satisfies CustomFieldsType
+    })
+
+    expect(() =>
+      schema.parse({
+        status: 'draft',
+        slug: 'post-with-invalid-authors',
+        author: {},
+        authors: [
+          {
+            author: {}
+          }
+        ]
+      })
+    ).toThrow('Name is a required field.')
+  })
 })

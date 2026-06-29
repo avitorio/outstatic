@@ -377,6 +377,184 @@ describe('<FieldDialog />', () => {
     })
   })
 
+  it('submits recursive object sub-fields for an array field', async () => {
+    const user = userEvent.setup()
+    const setCustomFields = jest.fn()
+
+    renderDialog({ setCustomFields })
+
+    await user.type(screen.getByPlaceholderText('Ex: Category'), 'Authors')
+    await user.click(screen.getByRole('option', { name: 'Array' }))
+    let objectOptions = screen.getAllByRole('option', { name: 'Object' })
+    await user.click(objectOptions[objectOptions.length - 1])
+
+    await user.click(screen.getByRole('button', { name: '+ Add sub-field' }))
+    await user.type(screen.getByPlaceholderText('Ex: Author name'), 'Author')
+    await user.selectOptions(screen.getByLabelText('Sub-field type'), 'Object')
+    await user.click(screen.getByRole('button', { name: 'Object · 0' }))
+
+    await user.click(screen.getByRole('button', { name: '+ Add sub-field' }))
+    await user.type(screen.getByPlaceholderText('Ex: Author name'), 'Name')
+
+    fireEvent.submit(document.querySelector('form') as HTMLFormElement)
+
+    await waitFor(() => expect(mockCommit).toHaveBeenCalledTimes(1))
+    expect(mockCommit).toHaveBeenCalledWith({
+      action: 'add',
+      customFields: {
+        authors: {
+          title: 'Authors',
+          fieldType: 'Array',
+          dataType: 'array',
+          description: '',
+          required: false,
+          itemType: 'Object',
+          fields: {
+            author: {
+              title: 'Author',
+              fieldType: 'Object',
+              dataType: 'object',
+              description: '',
+              required: false,
+              fields: {
+                name: {
+                  title: 'Name',
+                  fieldType: 'String',
+                  dataType: 'string',
+                  description: '',
+                  required: false
+                }
+              }
+            }
+          }
+        }
+      },
+      fieldName: 'authors'
+    })
+    expect(setCustomFields).toHaveBeenCalledWith({
+      authors: expect.objectContaining({
+        fieldType: 'Array',
+        itemType: 'Object',
+        fields: {
+          author: expect.objectContaining({
+            fieldType: 'Object',
+            fields: {
+              name: expect.objectContaining({
+                fieldType: 'String',
+                dataType: 'string'
+              })
+            }
+          })
+        }
+      })
+    })
+  })
+
+  it('submits recursive sub-fields for a top-level object field', async () => {
+    const user = userEvent.setup()
+    const setCustomFields = jest.fn()
+
+    renderDialog({ setCustomFields })
+
+    await user.type(screen.getByPlaceholderText('Ex: Category'), 'SEO')
+    await user.click(screen.getByRole('option', { name: 'Object' }))
+
+    expect(
+      screen.queryByRole('button', { name: '+ Add sub-field' })
+    ).not.toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Next' })).toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: 'Next' }))
+
+    expect(
+      screen.queryByText('Add Custom Field to Posts')
+    ).not.toBeInTheDocument()
+    expect(
+      screen.queryByText('Define the sub-fields that belong to this object.')
+    ).not.toBeInTheDocument()
+    expect(
+      screen.queryByRole('button', { name: 'Close' })
+    ).not.toBeInTheDocument()
+    expect(screen.getAllByText('Sub-fields')).toHaveLength(2)
+    expect(screen.getByRole('button', { name: 'SEO' })).toBeInTheDocument()
+    expect(
+      screen.queryByPlaceholderText('Ex: Category')
+    ).not.toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Back' })).toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: '+ Add sub-field' }))
+    await user.type(screen.getByPlaceholderText('Ex: Author name'), 'Title')
+
+    fireEvent.submit(document.querySelector('form') as HTMLFormElement)
+
+    await waitFor(() => expect(mockCommit).toHaveBeenCalledTimes(1))
+    expect(mockCommit).toHaveBeenCalledWith({
+      action: 'add',
+      customFields: {
+        seo: {
+          title: 'SEO',
+          fieldType: 'Object',
+          dataType: 'object',
+          description: '',
+          required: false,
+          fields: {
+            title: {
+              title: 'Title',
+              fieldType: 'String',
+              dataType: 'string',
+              description: '',
+              required: false
+            }
+          }
+        }
+      },
+      fieldName: 'seo'
+    })
+    expect(setCustomFields).toHaveBeenCalledWith({
+      seo: expect.objectContaining({
+        fieldType: 'Object',
+        fields: {
+          title: expect.objectContaining({
+            fieldType: 'String',
+            dataType: 'string'
+          })
+        }
+      })
+    })
+  })
+
+  it('hides object array item type at the maximum sub-field depth', async () => {
+    const user = userEvent.setup()
+
+    renderDialog()
+
+    await user.type(screen.getByPlaceholderText('Ex: Category'), 'SEO')
+    await user.click(screen.getByRole('option', { name: 'Object' }))
+    await user.click(screen.getByRole('button', { name: 'Next' }))
+
+    await user.click(screen.getByRole('button', { name: '+ Add sub-field' }))
+    await user.type(screen.getByLabelText('Sub-field name'), 'Section')
+    await user.selectOptions(screen.getByLabelText('Sub-field type'), 'Object')
+    await user.click(screen.getByRole('button', { name: 'Object · 0' }))
+
+    await user.click(screen.getByRole('button', { name: '+ Add sub-field' }))
+    await user.type(screen.getByLabelText('Sub-field name'), 'Content')
+    await user.selectOptions(screen.getByLabelText('Sub-field type'), 'Object')
+    await user.click(screen.getByRole('button', { name: 'Object · 0' }))
+
+    expect(screen.getByText('Level 3 / 3')).toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: '+ Add sub-field' }))
+    await user.type(screen.getByLabelText('Sub-field name'), 'Items')
+    await user.selectOptions(screen.getByLabelText('Sub-field type'), 'Array')
+
+    const itemTypeSelect = screen.getByLabelText('Sub-field item type')
+    const itemTypeOptions = Array.from(
+      itemTypeSelect.querySelectorAll('option')
+    ).map((option) => option.textContent)
+
+    expect(itemTypeOptions).not.toContain('Object')
+  })
+
   it('prevents enter inside the options input from submitting the dialog', async () => {
     const user = userEvent.setup()
     renderDialog()

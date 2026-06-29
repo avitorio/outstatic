@@ -47,6 +47,7 @@ export const customFieldTypes = [
   'Boolean',
   'Date',
   'Image',
+  'Object',
   'Array'
 ] as const
 
@@ -56,7 +57,8 @@ export const customFieldData = [
   'array',
   'boolean',
   'date',
-  'image'
+  'image',
+  'object'
 ] as const
 
 export const arrayItemTypes = [
@@ -70,18 +72,39 @@ export const arrayItemTypes = [
 ] as const
 
 export type ArrayItemType = (typeof arrayItemTypes)[number]
+export type PrimitiveArrayItemType = Exclude<ArrayItemType, 'Object'>
+export type ArraySubFieldType = PrimitiveArrayItemType | 'Object' | 'Array'
 
 export type CustomFieldArrayValue = {
   label: string
   value: string
 }
 
-export type ArraySubFieldDefinition = {
+type BaseArraySubFieldDefinition = {
   title: string
-  fieldType: Exclude<ArrayItemType, 'Object'>
   description?: string
   required?: boolean
 }
+
+export type PrimitiveArraySubFieldDefinition = BaseArraySubFieldDefinition & {
+  fieldType: PrimitiveArrayItemType
+}
+
+export type ObjectArraySubFieldDefinition = BaseArraySubFieldDefinition & {
+  fieldType: 'Object'
+  fields?: { [key: string]: ArraySubFieldDefinition }
+}
+
+export type NestedArraySubFieldDefinition = BaseArraySubFieldDefinition & {
+  fieldType: 'Array'
+  itemType: ArrayItemType
+  fields?: { [key: string]: ArraySubFieldDefinition }
+}
+
+export type ArraySubFieldDefinition =
+  | PrimitiveArraySubFieldDefinition
+  | ObjectArraySubFieldDefinition
+  | NestedArraySubFieldDefinition
 
 export type CustomFieldDefinitionInput = {
   title: string
@@ -124,13 +147,38 @@ export type DateCustomField = BaseCustomField<'Date', 'date'>
 
 export type ImageCustomField = BaseCustomField<'Image', 'image'>
 
-export type ArraySubField = {
+export type ObjectCustomField = BaseCustomField<'Object', 'object'> & {
+  fields?: { [key: string]: ArraySubField }
+}
+
+type BaseArraySubField = {
   title: string
-  fieldType: Exclude<ArrayItemType, 'Object'>
-  dataType: (typeof customFieldData)[number]
   description?: string
   required?: boolean
 }
+
+export type PrimitiveArraySubField = BaseArraySubField & {
+  fieldType: PrimitiveArrayItemType
+  dataType: Exclude<(typeof customFieldData)[number], 'array' | 'object'>
+}
+
+export type ObjectArraySubField = BaseArraySubField & {
+  fieldType: 'Object'
+  dataType: 'object'
+  fields?: { [key: string]: ArraySubField }
+}
+
+export type NestedArraySubField = BaseArraySubField & {
+  fieldType: 'Array'
+  dataType: 'array'
+  itemType: ArrayItemType
+  fields?: { [key: string]: ArraySubField }
+}
+
+export type ArraySubField =
+  | PrimitiveArraySubField
+  | ObjectArraySubField
+  | NestedArraySubField
 
 export type ArrayCustomField = BaseCustomField<'Array', 'array'> & {
   itemType: ArrayItemType
@@ -148,6 +196,7 @@ export type CustomFieldType =
   | BooleanCustomField
   | DateCustomField
   | ImageCustomField
+  | ObjectCustomField
   | ArrayCustomField
 
 export type CustomFieldsType = {
@@ -170,6 +219,10 @@ export function isRepeatableArrayCustomField(
   return obj && obj.fieldType === 'Array' && typeof obj.itemType === 'string'
 }
 
+export function isObjectCustomField(obj: any): obj is ObjectCustomField {
+  return obj && obj.fieldType === 'Object'
+}
+
 export function isFieldWithValues(
   obj: any
 ): obj is TagsCustomField | SelectCustomField {
@@ -185,8 +238,8 @@ export function isSelectCustomField(obj: any): obj is SelectCustomField {
 }
 
 const ARRAY_ITEM_DATA_TYPE: Record<
-  Exclude<ArrayItemType, 'Object'>,
-  (typeof customFieldData)[number]
+  PrimitiveArrayItemType,
+  Exclude<(typeof customFieldData)[number], 'array' | 'object'>
 > = {
   String: 'string',
   Text: 'string',
@@ -194,6 +247,58 @@ const ARRAY_ITEM_DATA_TYPE: Record<
   Boolean: 'boolean',
   Date: 'date',
   Image: 'image'
+}
+
+const createArraySubFieldDefinition = (
+  sub: ArraySubFieldDefinition
+): ArraySubField => {
+  const baseField = {
+    title: sub.title,
+    description: sub.description,
+    required: sub.required
+  }
+
+  if (sub.fieldType === 'Object') {
+    return {
+      ...baseField,
+      fieldType: 'Object',
+      dataType: 'object',
+      fields: createArraySubFieldDefinitions(sub.fields)
+    }
+  }
+
+  if (sub.fieldType === 'Array') {
+    const arrayField: NestedArraySubField = {
+      ...baseField,
+      fieldType: 'Array',
+      dataType: 'array',
+      itemType: sub.itemType ?? 'String'
+    }
+
+    if (arrayField.itemType === 'Object') {
+      arrayField.fields = createArraySubFieldDefinitions(sub.fields)
+    }
+
+    return arrayField
+  }
+
+  return {
+    ...baseField,
+    fieldType: sub.fieldType,
+    dataType: ARRAY_ITEM_DATA_TYPE[sub.fieldType]
+  }
+}
+
+const createArraySubFieldDefinitions = (fields?: {
+  [key: string]: ArraySubFieldDefinition
+}): { [key: string]: ArraySubField } => {
+  const resolvedFields: { [key: string]: ArraySubField } = {}
+
+  for (const [key, sub] of Object.entries(fields ?? {})) {
+    resolvedFields[key] = createArraySubFieldDefinition(sub)
+  }
+
+  return resolvedFields
 }
 
 export function createCustomFieldDefinition({
@@ -228,6 +333,13 @@ export function createCustomFieldDefinition({
       return { ...baseField, fieldType, dataType: 'date' }
     case 'Image':
       return { ...baseField, fieldType, dataType: 'image' }
+    case 'Object':
+      return {
+        ...baseField,
+        fieldType,
+        dataType: 'object',
+        fields: createArraySubFieldDefinitions(fields)
+      }
     case 'Array': {
       const resolvedItemType: ArrayItemType = itemType ?? 'String'
       const arrayField: ArrayCustomField = {
@@ -237,18 +349,7 @@ export function createCustomFieldDefinition({
         itemType: resolvedItemType
       }
       if (resolvedItemType === 'Object') {
-        const sourceFields = fields ?? {}
-        const resolvedFields: { [key: string]: ArraySubField } = {}
-        for (const [key, sub] of Object.entries(sourceFields)) {
-          resolvedFields[key] = {
-            title: sub.title,
-            fieldType: sub.fieldType,
-            dataType: ARRAY_ITEM_DATA_TYPE[sub.fieldType],
-            description: sub.description,
-            required: sub.required
-          }
-        }
-        arrayField.fields = resolvedFields
+        arrayField.fields = createArraySubFieldDefinitions(fields)
       }
       return arrayField
     }

@@ -156,6 +156,7 @@ function RendererHarness({
   return (
     <FormProvider {...methods}>
       <div data-testid="current-value">{String(currentValue ?? '')}</div>
+      <div data-testid="current-json">{JSON.stringify(currentValue)}</div>
       <CustomFieldRenderer
         name={name}
         field={field}
@@ -220,5 +221,102 @@ describe('CustomFieldRenderer', () => {
     await screen.findByText('Birthday is a required field.')
 
     expect(screen.getAllByText('Birthday is a required field.')).toHaveLength(1)
+  })
+
+  it('renders recursive array object inputs and updates form values', async () => {
+    const user = userEvent.setup()
+    const field: CustomFieldsType[string] = {
+      title: 'Authors',
+      fieldType: 'Array',
+      dataType: 'array',
+      itemType: 'Object',
+      fields: {
+        author: {
+          title: 'Author',
+          fieldType: 'Object',
+          dataType: 'object',
+          fields: {
+            name: {
+              title: 'Name',
+              fieldType: 'String',
+              dataType: 'string'
+            },
+            books: {
+              title: 'Books',
+              fieldType: 'Array',
+              dataType: 'array',
+              itemType: 'Object',
+              fields: {
+                title: {
+                  title: 'Title',
+                  fieldType: 'String',
+                  dataType: 'string'
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    render(<RendererHarness name="authors" field={field} />)
+
+    await user.click(screen.getByRole('button', { name: '+ Add item' }))
+    await user.type(screen.getByRole('textbox'), 'Ada Lovelace')
+    await user.click(screen.getAllByRole('button', { name: '+ Add item' })[0])
+    await user.type(screen.getAllByRole('textbox')[1], 'Notes')
+
+    expect(screen.getByTestId('current-json')).toHaveTextContent(
+      JSON.stringify([
+        {
+          author: {
+            name: 'Ada Lovelace',
+            books: [{ title: 'Notes' }]
+          }
+        }
+      ])
+    )
+  })
+
+  it('renders top-level object inputs and updates form values', async () => {
+    const user = userEvent.setup()
+    const field: CustomFieldsType[string] = {
+      title: 'SEO',
+      fieldType: 'Object',
+      dataType: 'object',
+      fields: {
+        title: {
+          title: 'Title',
+          fieldType: 'String',
+          dataType: 'string'
+        },
+        social: {
+          title: 'Social',
+          fieldType: 'Object',
+          dataType: 'object',
+          fields: {
+            image: {
+              title: 'Image',
+              fieldType: 'String',
+              dataType: 'string'
+            }
+          }
+        }
+      }
+    }
+
+    render(<RendererHarness name="seo" field={field} />)
+
+    await user.type(screen.getAllByRole('textbox')[0], 'Search title')
+    await user.type(screen.getAllByRole('textbox')[1], '/social.png')
+
+    expect(screen.getByTestId('current-json')).toHaveTextContent(
+      JSON.stringify({
+        title: 'Search title',
+        social: {
+          image: '/social.png'
+        }
+      })
+    )
   })
 })

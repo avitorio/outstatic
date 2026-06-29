@@ -20,7 +20,13 @@ import { CSS } from '@dnd-kit/utilities'
 import { GripVertical, Trash } from 'lucide-react'
 import { useId } from 'react'
 import { useFieldArray, useFormContext } from 'react-hook-form'
-import { ArrayCustomField, ArraySubField } from '@/types'
+import {
+  ArrayCustomField,
+  ArrayItemType,
+  ArraySubField,
+  ObjectCustomField,
+  PrimitiveArrayItemType
+} from '@/types'
 import { DocumentSettingsImageSelection } from '@/components/document-settings-image-selection'
 import { Button } from '@/components/ui/shadcn/button'
 import { Card, CardContent } from '@/components/ui/shadcn/card'
@@ -43,11 +49,19 @@ type ArrayFieldInputProps = {
   field: ArrayCustomField
 }
 
-const buildEmptyItem = (field: ArrayCustomField): any => {
+type ArrayFieldLike = {
+  title: string
+  itemType: ArrayItemType
+  fields?: { [key: string]: ArraySubField }
+  minItems?: number
+  maxItems?: number
+}
+
+const buildEmptyItem = (field: ArrayFieldLike): any => {
   if (field.itemType === 'Object' && field.fields) {
     const item: Record<string, any> = {}
     for (const [key, sub] of Object.entries(field.fields)) {
-      item[key] = defaultForItemType(sub.fieldType)
+      item[key] = defaultForSubField(sub)
     }
     return item
   }
@@ -55,7 +69,7 @@ const buildEmptyItem = (field: ArrayCustomField): any => {
 }
 
 const defaultForItemType = (
-  itemType: ArrayCustomField['itemType'] | ArraySubField['fieldType']
+  itemType: ArrayItemType | PrimitiveArrayItemType
 ): any => {
   switch (itemType) {
     case 'Number':
@@ -73,8 +87,24 @@ const defaultForItemType = (
   }
 }
 
+const defaultForSubField = (field: ArraySubField): any => {
+  if (field.fieldType === 'Object') {
+    const item: Record<string, any> = {}
+    for (const [key, sub] of Object.entries(field.fields ?? {})) {
+      item[key] = defaultForSubField(sub)
+    }
+    return item
+  }
+
+  if (field.fieldType === 'Array') {
+    return []
+  }
+
+  return defaultForItemType(field.fieldType)
+}
+
 const itemHeader = (
-  field: ArrayCustomField,
+  field: ArrayFieldLike,
   value: any,
   index: number
 ): string => {
@@ -99,7 +129,7 @@ const PrimitiveInput = ({
   itemType
 }: {
   name: string
-  itemType: ArrayCustomField['itemType'] | ArraySubField['fieldType']
+  itemType: PrimitiveArrayItemType
 }) => {
   const { control } = useFormContext()
 
@@ -191,10 +221,7 @@ const ObjectItemFields = ({
             {sub.title}
             {sub.required ? '*' : ''}
           </FormLabel>
-          <PrimitiveInput
-            name={`${baseName}.${subName}`}
-            itemType={sub.fieldType}
-          />
+          <SubFieldInput name={`${baseName}.${subName}`} field={sub} />
           {sub.description ? (
             <FormDescription>{sub.description}</FormDescription>
           ) : null}
@@ -207,7 +234,7 @@ const ObjectItemFields = ({
 type SortableItemProps = {
   id: string
   index: number
-  field: ArrayCustomField
+  field: ArrayFieldLike
   name: string
   onRemove: () => void
   value: any
@@ -273,8 +300,8 @@ const SortableItem = ({
           </Button>
         </div>
         <div className="pl-2">
-          {field.itemType === 'Object' && field.fields ? (
-            <ObjectItemFields baseName={itemName} fields={field.fields} />
+          {field.itemType === 'Object' ? (
+            <ObjectItemFields baseName={itemName} fields={field.fields ?? {}} />
           ) : (
             <PrimitiveInput name={itemName} itemType={field.itemType} />
           )}
@@ -285,6 +312,53 @@ const SortableItem = ({
 }
 
 export const ArrayFieldInput = ({ name, field }: ArrayFieldInputProps) => {
+  return <ArrayItems name={name} field={field} />
+}
+
+export const ObjectFieldInput = ({
+  name,
+  field
+}: {
+  name: string
+  field: ObjectCustomField
+}) => {
+  return <ObjectItemFields baseName={name} fields={field.fields ?? {}} />
+}
+
+const SubFieldInput = ({
+  name,
+  field
+}: {
+  name: string
+  field: ArraySubField
+}) => {
+  if (field.fieldType === 'Object') {
+    return <ObjectItemFields baseName={name} fields={field.fields ?? {}} />
+  }
+
+  if (field.fieldType === 'Array') {
+    return (
+      <ArrayItems
+        name={name}
+        field={{
+          title: field.title,
+          itemType: field.itemType,
+          fields: field.fields
+        }}
+      />
+    )
+  }
+
+  return <PrimitiveInput name={name} itemType={field.fieldType} />
+}
+
+const ArrayItems = ({
+  name,
+  field
+}: {
+  name: string
+  field: ArrayFieldLike
+}) => {
   const baseId = useId()
   const { control, watch } = useFormContext()
   const { fields, append, remove, move } = useFieldArray({
@@ -360,7 +434,7 @@ export const ArrayFieldInput = ({ name, field }: ArrayFieldInputProps) => {
   )
 }
 
-const arrayConstraintHint = (field: ArrayCustomField): React.ReactNode => {
+const arrayConstraintHint = (field: ArrayFieldLike): React.ReactNode => {
   const hints: string[] = []
   if (typeof field.minItems === 'number') {
     hints.push(`min ${field.minItems}`)

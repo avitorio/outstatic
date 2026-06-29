@@ -1,6 +1,9 @@
 import {
+  ArrayItemType,
   ArraySubField,
   CustomFieldsType,
+  PrimitiveArrayItemType,
+  isObjectCustomField,
   isRepeatableArrayCustomField,
   isSelectCustomField
 } from '@/types'
@@ -73,15 +76,89 @@ const applyRequiredForSubField = (
   }
 
   if (sub.required) {
-    return schema.refine(
-      (val) => val !== '' && val !== undefined && val !== null,
-      {
-        message: `${sub.title} is a required field.`
+    return z.any().superRefine((val, ctx) => {
+      const isMissing = Array.isArray(val)
+        ? val.length === 0
+        : val === '' || val === undefined || val === null
+
+      if (isMissing) {
+        ctx.addIssue({
+          code: 'custom',
+          message: `${sub.title} is a required field.`
+        })
+        return
       }
-    )
+
+      const result = schema.safeParse(val)
+      if (!result.success) {
+        result.error.issues.forEach((issue) => ctx.addIssue(issue))
+      }
+    })
   }
 
   return schema.optional()
+}
+
+const itemTypeToDataType = (
+  itemType: ArrayItemType | undefined
+): Exclude<ArraySubField['dataType'], 'array' | 'object'> => {
+  switch (itemType) {
+    case 'Number':
+      return 'number'
+    case 'Boolean':
+      return 'boolean'
+    case 'Date':
+      return 'date'
+    case 'Image':
+      return 'image'
+    default:
+      return 'string'
+  }
+}
+
+const buildObjectSchema = (
+  fields: { [key: string]: ArraySubField } | undefined
+): z.ZodTypeAny => {
+  const objectShape: Record<string, z.ZodTypeAny> = {}
+
+  for (const [subName, sub] of Object.entries(fields ?? {})) {
+    objectShape[subName] = applyRequiredForSubField(
+      buildSubFieldSchema(sub),
+      sub
+    )
+  }
+
+  return z.object(objectShape)
+}
+
+const buildArrayItemSchema = (
+  title: string,
+  itemType: ArrayItemType | undefined,
+  fields: { [key: string]: ArraySubField } | undefined
+): z.ZodTypeAny => {
+  if (itemType === 'Object') {
+    return buildObjectSchema(fields)
+  }
+
+  const primitiveSub: ArraySubField = {
+    title,
+    fieldType: (itemType ?? 'String') as PrimitiveArrayItemType,
+    dataType: itemTypeToDataType(itemType)
+  }
+
+  return buildPrimitiveItemSchema(primitiveSub)
+}
+
+const buildSubFieldSchema = (sub: ArraySubField): z.ZodTypeAny => {
+  if (sub.fieldType === 'Object') {
+    return buildObjectSchema(sub.fields)
+  }
+
+  if (sub.fieldType === 'Array') {
+    return z.array(buildArrayItemSchema(sub.title, sub.itemType, sub.fields))
+  }
+
+  return buildPrimitiveItemSchema(sub)
 }
 
 export const convertSchemaToZod = (customFields: {
@@ -96,37 +173,9 @@ export const convertSchemaToZod = (customFields: {
       : null
 
     if (isRepeatableArrayCustomField(field)) {
-      let itemSchema: z.ZodTypeAny
-
-      if (field.itemType === 'Object' && field.fields) {
-        const objectShape: Record<string, z.ZodTypeAny> = {}
-        for (const [subName, sub] of Object.entries(field.fields)) {
-          objectShape[subName] = applyRequiredForSubField(
-            buildPrimitiveItemSchema(sub),
-            sub
-          )
-        }
-        itemSchema = z.object(objectShape)
-      } else {
-        const primitiveSub: ArraySubField = {
-          title: field.title,
-          fieldType: (field.itemType ?? 'String') as ArraySubField['fieldType'],
-          dataType:
-            field.itemType === 'Number'
-              ? 'number'
-              : field.itemType === 'Boolean'
-                ? 'boolean'
-                : field.itemType === 'Date'
-                  ? 'date'
-                  : field.itemType === 'Image'
-                    ? 'image'
-                    : 'string',
-          required: true
-        }
-        itemSchema = buildPrimitiveItemSchema(primitiveSub)
-      }
-
-      fieldSchema = z.array(itemSchema)
+      fieldSchema = z.array(
+        buildArrayItemSchema(field.title, field.itemType, field.fields)
+      )
 
       if (typeof field.minItems === 'number') {
         fieldSchema = (fieldSchema as z.ZodArray<any>).min(field.minItems, {
@@ -146,6 +195,32 @@ export const convertSchemaToZod = (customFields: {
             message: `${field.title} is a required field.`
           }
         )
+      } else {
+        fieldSchema = fieldSchema.optional()
+      }
+
+      shape[name] = fieldSchema
+      continue
+    }
+
+    if (isObjectCustomField(field)) {
+      fieldSchema = buildObjectSchema(field.fields)
+
+      if (field.required) {
+        fieldSchema = z.any().superRefine((val, ctx) => {
+          if (val === undefined || val === null) {
+            ctx.addIssue({
+              code: 'custom',
+              message: `${field.title} is a required field.`
+            })
+            return
+          }
+
+          const result = buildObjectSchema(field.fields).safeParse(val)
+          if (!result.success) {
+            result.error.issues.forEach((issue) => ctx.addIssue(issue))
+          }
+        })
       } else {
         fieldSchema = fieldSchema.optional()
       }
