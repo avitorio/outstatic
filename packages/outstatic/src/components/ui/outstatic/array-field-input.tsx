@@ -18,7 +18,7 @@ import {
 } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { GripVertical, Trash } from 'lucide-react'
-import { useId } from 'react'
+import { useEffect, useId, useRef, useState } from 'react'
 import { useFieldArray, useFormContext } from 'react-hook-form'
 import {
   ArrayCustomField,
@@ -101,6 +101,13 @@ const defaultForSubField = (field: ArraySubField): any => {
   }
 
   return defaultForItemType(field.fieldType)
+}
+
+const moveItem = <T,>(items: T[], from: number, to: number): T[] => {
+  const next = [...items]
+  const [item] = next.splice(from, 1)
+  next.splice(to, 0, item)
+  return next
 }
 
 const itemHeader = (
@@ -359,6 +366,20 @@ const ArrayItems = ({
   name: string
   field: ArrayFieldLike
 }) => {
+  return field.itemType === 'Object' ? (
+    <ObjectArrayItems name={name} field={field} />
+  ) : (
+    <PrimitiveArrayItems name={name} field={field} />
+  )
+}
+
+const ObjectArrayItems = ({
+  name,
+  field
+}: {
+  name: string
+  field: ArrayFieldLike
+}) => {
   const baseId = useId()
   const { control, watch } = useFormContext()
   const { fields, append, remove, move } = useFieldArray({
@@ -425,6 +446,126 @@ const ArrayItems = ({
           size="sm"
           onClick={() => append(buildEmptyItem(field))}
         >
+          + Add item
+        </Button>
+      </div>
+
+      {arrayConstraintHint(field)}
+    </div>
+  )
+}
+
+const PrimitiveArrayItems = ({
+  name,
+  field
+}: {
+  name: string
+  field: ArrayFieldLike
+}) => {
+  const baseId = useId()
+  const nextId = useRef(0)
+  const { setValue, watch } = useFormContext()
+  const watchedValue = watch(name)
+  const values = Array.isArray(watchedValue) ? watchedValue : []
+  const [itemIds, setItemIds] = useState<string[]>(() =>
+    values.map((_, index) => `${baseId}-${index}`)
+  )
+
+  useEffect(() => {
+    nextId.current = Math.max(nextId.current, itemIds.length)
+  }, [itemIds.length])
+
+  useEffect(() => {
+    setItemIds((currentIds) => {
+      if (currentIds.length === values.length) return currentIds
+
+      if (currentIds.length > values.length) {
+        return currentIds.slice(0, values.length)
+      }
+
+      return [
+        ...currentIds,
+        ...Array.from(
+          { length: values.length - currentIds.length },
+          () => `${baseId}-${nextId.current++}`
+        )
+      ]
+    })
+  }, [baseId, values.length])
+
+  const updateValues = (nextValues: any[]) => {
+    setValue(name, nextValues, {
+      shouldDirty: true,
+      shouldTouch: true,
+      shouldValidate: true
+    })
+  }
+
+  const handleRemove = (index: number) => {
+    updateValues(values.filter((_, valueIndex) => valueIndex !== index))
+    setItemIds((currentIds) =>
+      currentIds.filter((_, idIndex) => idIndex !== index)
+    )
+  }
+
+  const handleAdd = () => {
+    updateValues([...values, buildEmptyItem(field)])
+    setItemIds((currentIds) => [...currentIds, `${baseId}-${nextId.current++}`])
+  }
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event
+    if (!over || active.id === over.id) return
+
+    const oldIndex = itemIds.findIndex((id) => id === active.id)
+    const newIndex = itemIds.findIndex((id) => id === over.id)
+    if (oldIndex === -1 || newIndex === -1) return
+
+    updateValues(moveItem(values, oldIndex, newIndex))
+    setItemIds((currentIds) => moveItem(currentIds, oldIndex, newIndex))
+  }
+
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates
+    })
+  )
+
+  return (
+    <div className="flex flex-col gap-3">
+      {values.length === 0 ? (
+        <p className="text-sm italic text-muted-foreground">No items yet.</p>
+      ) : (
+        <DndContext
+          sensors={sensors}
+          collisionDetection={closestCenter}
+          modifiers={[restrictToParentElement]}
+          onDragEnd={handleDragEnd}
+        >
+          <SortableContext
+            items={itemIds}
+            strategy={verticalListSortingStrategy}
+          >
+            <div className="flex flex-col gap-2">
+              {values.map((value, index) => (
+                <SortableItem
+                  key={itemIds[index] ?? `${baseId}-${index}`}
+                  id={itemIds[index] ?? `${baseId}-${index}`}
+                  index={index}
+                  field={field}
+                  name={name}
+                  onRemove={() => handleRemove(index)}
+                  value={value}
+                />
+              ))}
+            </div>
+          </SortableContext>
+        </DndContext>
+      )}
+
+      <div>
+        <Button type="button" variant="outline" size="sm" onClick={handleAdd}>
           + Add item
         </Button>
       </div>

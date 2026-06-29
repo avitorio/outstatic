@@ -278,6 +278,44 @@ describe('CustomFieldRenderer', () => {
     )
   })
 
+  it('keeps primitive array form values flat while editing items', async () => {
+    const user = userEvent.setup()
+    const field: CustomFieldsType[string] = {
+      title: 'Links',
+      fieldType: 'Array',
+      dataType: 'array',
+      itemType: 'String'
+    }
+
+    render(
+      <RendererHarness
+        name="links"
+        field={field}
+        defaultValues={{ links: ['first', 'second'] }}
+      />
+    )
+
+    await user.clear(screen.getAllByRole('textbox')[0])
+    await user.type(screen.getAllByRole('textbox')[0], 'updated')
+
+    expect(screen.getByTestId('current-json')).toHaveTextContent(
+      JSON.stringify(['updated', 'second'])
+    )
+
+    await user.click(screen.getByRole('button', { name: 'Remove item 1' }))
+
+    expect(screen.getByTestId('current-json')).toHaveTextContent(
+      JSON.stringify(['second'])
+    )
+
+    await user.click(screen.getByRole('button', { name: '+ Add item' }))
+    await user.type(screen.getAllByRole('textbox')[1], 'third')
+
+    expect(screen.getByTestId('current-json')).toHaveTextContent(
+      JSON.stringify(['second', 'third'])
+    )
+  })
+
   it('renders top-level object inputs and updates form values', async () => {
     const user = userEvent.setup()
     const field: CustomFieldsType[string] = {
