@@ -12,6 +12,7 @@ import { ReactNodeViewRenderer } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import { common, createLowlight } from 'lowlight'
 import { Markdown } from 'tiptap-markdown'
+import GlobalDragHandle from 'tiptap-extension-global-drag-handle'
 import CodeBlock from '@/components/editor/extensions/code-block'
 import { createSlashCommand } from '@/components/editor/extensions/slash-command'
 import type { UpgradeDialogHandler } from '@/components/ui/outstatic/upgrade-dialog-context'
@@ -21,12 +22,15 @@ import LinkParser from '@/components/editor/extensions/link-parser'
 import { AIHighlight } from '@/components/editor/extensions/ai-higlight'
 import {
   MdxBlock,
+  OutstaticMdxBlock,
   createMdxLowlight
 } from '@/components/editor/extensions/mdx-block'
 import { cn } from '@/utils/ui'
+import { Block } from '@/utils/metadata/types'
 
 export type TiptapExtensionsOptions = {
   onShowUpgradeDialog: UpgradeDialogHandler
+  getBlocks?: () => Block[]
 }
 
 export const getTiptapExtensions = (options: TiptapExtensionsOptions) =>
@@ -101,7 +105,8 @@ export const getTiptapExtensions = (options: TiptapExtensionsOptions) =>
       }
     }),
     createSlashCommand({
-      onShowUpgradeDialog: options.onShowUpgradeDialog
+      onShowUpgradeDialog: options.onShowUpgradeDialog,
+      getBlocks: options.getBlocks
     }),
     TiptapUnderline,
     Highlight.configure({
@@ -117,6 +122,9 @@ export const getTiptapExtensions = (options: TiptapExtensionsOptions) =>
       katexOptions: {
         throwOnError: false
       }
+    }),
+    OutstaticMdxBlock.configure({
+      lowlight: createMdxLowlight(createLowlight(common))
     }),
     MdxBlock.configure({
       lowlight: createMdxLowlight(createLowlight(common))
@@ -151,5 +159,6 @@ export const getTiptapExtensions = (options: TiptapExtensionsOptions) =>
     }),
     TableRow,
     TableHeader,
-    TableCell
+    TableCell,
+    GlobalDragHandle
   ] as AnyExtension[] // TODO: fix this type

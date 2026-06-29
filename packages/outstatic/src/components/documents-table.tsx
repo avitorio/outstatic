@@ -19,7 +19,11 @@ import { MDExtensions } from '@/types'
 import { OstDocument } from '@/types/public'
 import { useGetDocuments } from '@/utils/hooks/use-get-documents'
 import { useOutstatic } from '@/utils/hooks/use-outstatic'
-import { publishedAtSortingFn, statusSortingFn } from '@/utils/table-sorting'
+import {
+  publishedAtAccessor,
+  publishedAtSortingFn,
+  statusSortingFn
+} from '@/utils/table-sorting'
 import {
   CaretDownIcon,
   CaretSortIcon,
@@ -50,6 +54,9 @@ const DOCUMENT_COLUMN_LABELS: Record<string, string> = {
   slug: 'Slug',
   publishedAt: 'Published At'
 }
+
+const getDefaultSortColumnId = (columnIds: string[]): string | undefined =>
+  columnIds.includes('publishedAt') ? 'publishedAt' : columnIds[0]
 
 const documentColumnLabel = (id: string): string =>
   DOCUMENT_COLUMN_LABELS[id] ?? sentenceCase(id)
@@ -109,9 +116,7 @@ export const DocumentsTable = () => {
 
   const cookieKey = `ost_${params.ost[0]}_fields`
 
-  const [sorting, setSorting] = useState<SortingState>([
-    { id: 'publishedAt', desc: true }
-  ])
+  const [sorting, setSorting] = useState<SortingState>([])
 
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
 
@@ -121,9 +126,16 @@ export const DocumentsTable = () => {
     () => {
       if (allColumnIds.length === 0) {
         setColumnVisibility({})
+        setSorting([])
         return
       }
       setColumnVisibility(readInitialVisibility(allColumnIds, cookieKey))
+      setSorting((prev) => {
+        const valid = prev.filter((s) => allColumnIds.includes(s.id))
+        if (valid.length > 0) return valid
+        const defaultId = getDefaultSortColumnId(allColumnIds)
+        return defaultId ? [{ id: defaultId, desc: true }] : []
+      })
       // `columnIdsKey` is content-based so metadata Map identity (e.g. new refs per render) does not retrigger.
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps -- columnIdsKey tracks column order; allColumnIds is a new array when metadata is a new Map reference each render
@@ -134,9 +146,13 @@ export const DocumentsTable = () => {
     () =>
       allColumnIds.map((id) => ({
         id,
-        accessorKey: id,
+        ...(id === 'publishedAt'
+          ? {
+              accessorFn: publishedAtAccessor,
+              sortingFn: publishedAtSortingFn
+            }
+          : { accessorKey: id }),
         enableHiding: true,
-        ...(id === 'publishedAt' && { sortingFn: publishedAtSortingFn }),
         ...(id === 'status' && { sortingFn: statusSortingFn }),
         header: ({ column }) => {
           const sorted = column.getIsSorted()
@@ -168,8 +184,9 @@ export const DocumentsTable = () => {
             </Button>
           )
         },
-        cell: ({ getValue }) => {
-          const value = getValue()
+        cell: ({ getValue, row }) => {
+          const value =
+            id === 'publishedAt' ? row.original.publishedAt : getValue()
           if (id === 'status') {
             return <span data-testid="status-cell">{value as ReactNode}</span>
           }

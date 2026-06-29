@@ -17,7 +17,7 @@ import { Label } from '@/components/ui/shadcn/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/shadcn/radio-group'
 import { createCommitApi } from '@/utils/create-commit-api'
 import { createOutstaticCommitMessage } from '@/utils/commit-message'
-import { useCollections } from '@/utils/hooks/use-collections'
+import { CollectionType, useCollections } from '@/utils/hooks/use-collections'
 import { useCreateCommit } from '@/utils/hooks/use-create-commit'
 import { useGetDocuments } from '@/utils/hooks/use-get-documents'
 import useOid from '@/utils/hooks/use-oid'
@@ -53,6 +53,11 @@ import {
   DialogTitle,
   DialogDescription
 } from '@/components/ui/shadcn/dialog'
+
+import { findCollectionParent } from '@/utils/collections/collection-tree'
+
+const CREATE_COLLECTION_TOAST_ID = 'create-collection'
+const CREATE_COLLECTION_TOAST_DURATION = 4000
 
 export default function NewCollectionModal({
   open,
@@ -93,6 +98,8 @@ export default function NewCollectionModal({
   const { refetch: refetchDocuments } = useGetDocuments({
     enabled: false,
     collection: collectionName
+      ? slugify(collectionName, { allowedChars: 'a-zA-Z0-9.' })
+      : undefined
   })
 
   const createCollectionSchema = z.object({
@@ -160,7 +167,7 @@ export default function NewCollectionModal({
         title: name,
         slug,
         path: collectionPath,
-        children: []
+        parent: findCollectionParent(collections, collectionPath)
       })
 
       const schemaJson = {
@@ -199,47 +206,65 @@ export default function NewCollectionModal({
 
       const input = commitApi.createInput()
 
-      toast.promise(mutation.mutateAsync(input), {
-        loading: 'Creating collection...',
-        success: async () => {
-          // check if the collection has md(x) files in it
-          const { data } = await refetchDocuments()
+      const onComplete = async () => {
+        await refetchCollections()
+        setLoading(false)
+        setHasChanges(false)
+        onOpenChange(false)
+        setTimeout(() => {
+          router.push(`${dashboardRoute}/${slug}`)
+          router.refresh()
+        }, 100)
+      }
 
-          const onComplete = async () => {
-            await refetchCollections()
-            setLoading(false)
-            setHasChanges(false)
-            onOpenChange(false)
-            setTimeout(() => {
-              router.push(`${dashboardRoute}/${slug}`)
-              router.refresh()
-            }, 100)
-          }
+      await toast.promise(
+        (async () => {
+          await mutation.mutateAsync(input)
+
+          const { data } = await refetchDocuments({
+            throwOnError: true
+          })
 
           if (data?.documents && data.documents.length > 0) {
-            await rebuildMetadata({ onComplete })
+            toast.loading('Indexing existing content...', {
+              id: CREATE_COLLECTION_TOAST_ID
+            })
+            await rebuildMetadata({
+              onComplete,
+              toastId: CREATE_COLLECTION_TOAST_ID
+            })
           } else {
-            onComplete()
+            await onComplete()
           }
-
-          return 'Collection created successfully'
-        },
-        error: () => {
-          setLoading(false)
-          setHasChanges(false)
-          setError(true)
-          return 'Failed to create collection'
+        })(),
+        {
+          id: CREATE_COLLECTION_TOAST_ID,
+          loading: 'Creating collection...',
+          success: {
+            message: 'Collection created successfully',
+            duration: CREATE_COLLECTION_TOAST_DURATION
+          },
+          error: () => {
+            setLoading(false)
+            setHasChanges(false)
+            setError(true)
+            return {
+              message: 'Failed to create collection',
+              duration: CREATE_COLLECTION_TOAST_DURATION
+            }
+          }
         }
-      })
+      )
     } catch (error) {
       console.error('Failed to create collection', error)
-      const errorToast = toast.error('Failed to create collection.', {
+      toast.error('Failed to create collection.', {
+        id: CREATE_COLLECTION_TOAST_ID,
         action: {
           label: 'Copy Logs',
           onClick: () => {
             navigator.clipboard.writeText(`Error: ${stringifyError(error)}`)
             toast.message('Logs copied to clipboard', {
-              id: errorToast
+              id: CREATE_COLLECTION_TOAST_ID
             })
           }
         }

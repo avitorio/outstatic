@@ -10,13 +10,12 @@ import { GET_FILE } from '@/graphql/queries/file'
 import { sentenceCase } from 'change-case'
 import { stringifyError } from '@/utils/errors/stringify-error'
 import { isGithubCredentialsError } from '@/utils/errors/is-github-credentials-error'
+import {
+  normalizeCollections,
+  type CollectionType
+} from '@/utils/collections/collection-tree'
 
-export type CollectionType = {
-  title: string
-  slug: string
-  path: string
-  children: CollectionType[]
-}
+export type { CollectionType }
 
 type CollectionsType = CollectionType[] | null
 
@@ -61,7 +60,9 @@ export function useCollections(options?: UseCollectionsOptions) {
         }
 
         if (collectionsObject?.text) {
-          collectionsData = JSON.parse(collectionsObject.text)
+          collectionsData = normalizeCollections(
+            JSON.parse(collectionsObject.text)
+          )
           const collections = filterSingletonsCollection(collectionsData ?? [])
 
           return collections
@@ -93,6 +94,9 @@ export function useCollections(options?: UseCollectionsOptions) {
             entries: { name: string; type: string }[]
           }
 
+          // Bootstrap only scans the top level of `ostContent`, so every
+          // discovered collection is a sibling at the root — `parent: null` is
+          // correct here. Users can reorganize via the parent picker afterward.
           collectionsData = entries
             .filter(
               (entry) =>
@@ -105,7 +109,7 @@ export function useCollections(options?: UseCollectionsOptions) {
               }),
               slug: entry.name,
               path: `${ostContent}/${entry.name}`,
-              children: []
+              parent: null
             })) as CollectionsType
 
           const oid = await fetchOid()

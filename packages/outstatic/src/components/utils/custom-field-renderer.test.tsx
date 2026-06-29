@@ -5,9 +5,60 @@ import type { ReactNode } from 'react'
 import { useEffect } from 'react'
 import { CustomFieldRenderer } from './custom-field-renderer'
 import type { CustomFieldsType, SelectCustomField } from '@/types'
+import { useEditor } from '@tiptap/react'
+import { parseContent } from '@/utils/parse-content'
+import { useOutstatic } from '@/utils/hooks/use-outstatic'
 
 jest.mock('@/components/document-settings-image-selection', () => ({
   DocumentSettingsImageSelection: () => <div />
+}))
+
+jest.mock('@/components/editor/extensions', () => ({
+  getTiptapExtensions: () => []
+}))
+
+jest.mock('@/components/editor/menu/editor-menu', () => ({
+  __esModule: true,
+  default: () => <div data-testid="editor-menu" />
+}))
+
+jest.mock('@/components/editor/menu/image-menu', () => ({
+  __esModule: true,
+  default: () => <div data-testid="image-menu" />
+}))
+
+jest.mock('@/components/editor/menu/table-menu', () => ({
+  TableMenu: () => <div data-testid="table-menu" />
+}))
+
+jest.mock('@/components/editor/props', () => ({
+  TiptapEditorProps: {
+    attributes: {
+      class: ''
+    }
+  }
+}))
+
+jest.mock('@tiptap/extension-placeholder', () => ({
+  __esModule: true,
+  default: {
+    configure: () => ({})
+  }
+}))
+
+jest.mock('@tiptap/react', () => ({
+  EditorContent: ({ 'aria-label': ariaLabel }: { 'aria-label': string }) => (
+    <div aria-label={ariaLabel} role="textbox" />
+  ),
+  useEditor: jest.fn(() => null)
+}))
+
+jest.mock('@/utils/hooks/use-outstatic', () => ({
+  useOutstatic: jest.fn()
+}))
+
+jest.mock('@/utils/parse-content', () => ({
+  parseContent: jest.fn(({ content }) => `parsed:${content}`)
 }))
 
 jest.mock('@/components/ui/outstatic/date-time-picker-form', () => ({
@@ -130,6 +181,10 @@ const selectField: SelectCustomField = {
   ]
 }
 
+const mockUseEditor = useEditor as jest.Mock
+const mockParseContent = parseContent as jest.Mock
+const mockUseOutstatic = useOutstatic as jest.Mock
+
 function RendererHarness({
   field = selectField,
   name = 'category',
@@ -168,6 +223,22 @@ function RendererHarness({
 }
 
 describe('CustomFieldRenderer', () => {
+  beforeEach(() => {
+    jest.clearAllMocks()
+
+    mockUseEditor.mockReturnValue(null)
+    mockParseContent.mockImplementation(({ content }) => `parsed:${content}`)
+    mockUseOutstatic.mockReturnValue({
+      basePath: '',
+      repoOwner: 'owner',
+      repoSlug: 'repo',
+      repoBranch: 'main',
+      media: undefined,
+      publicMediaPath: 'images/',
+      repoMediaPath: 'public/images/'
+    })
+  })
+
   it('stores the raw option value for a select field', async () => {
     const user = userEvent.setup()
 
@@ -354,6 +425,91 @@ describe('CustomFieldRenderer', () => {
         social: {
           image: '/social.png'
         }
+      })
+    )
+  })
+
+  it('renders a rich text field as a sheet trigger with a plain-text preview', () => {
+    const richTextField: CustomFieldsType[string] = {
+      title: 'Summary',
+      fieldType: 'RichText',
+      dataType: 'string'
+    }
+
+    render(
+      <RendererHarness
+        name="summary"
+        field={richTextField}
+        defaultValues={{ summary: '## Intro\n\nRich copy' }}
+      />
+    )
+
+    const trigger = screen.getByRole('button', { name: /Intro/ })
+
+    expect(trigger).toHaveTextContent('Intro Rich copy')
+    expect(trigger).not.toHaveTextContent('## Intro')
+  })
+
+  it('renders a rich text field description only inside the editor sheet', async () => {
+    const user = userEvent.setup()
+    const richTextField: CustomFieldsType[string] = {
+      title: 'Summary',
+      fieldType: 'RichText',
+      dataType: 'string',
+      description: 'Write a polished summary.'
+    }
+
+    render(
+      <RendererHarness
+        name="summary"
+        field={richTextField}
+        defaultValues={{ summary: 'Body copy' }}
+      />
+    )
+
+    expect(
+      screen.queryByText('Write a polished summary.')
+    ).not.toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: /Body copy/ }))
+
+    expect(screen.getAllByText('Write a polished summary.')).toHaveLength(1)
+  })
+
+  it('parses rich text field content before initializing the editor', async () => {
+    const user = userEvent.setup()
+    const richTextField: CustomFieldsType[string] = {
+      title: 'Summary',
+      fieldType: 'RichText',
+      dataType: 'string'
+    }
+
+    render(
+      <RendererHarness
+        name="summary"
+        field={richTextField}
+        defaultValues={{
+          summary: '![Hero](/images/hero.png)'
+        }}
+      />
+    )
+
+    await user.click(screen.getByRole('button', { name: /Hero/ }))
+
+    expect(mockParseContent).toHaveBeenCalledWith(
+      expect.objectContaining({
+        content: '![Hero](/images/hero.png)',
+        basePath: '',
+        repoOwner: 'owner',
+        repoSlug: 'repo',
+        repoBranch: 'main',
+        publicMediaPath: 'images/',
+        repoMediaPath: 'public/images/'
+      })
+    )
+    expect(mockUseEditor).toHaveBeenCalledWith(
+      expect.objectContaining({
+        content: 'parsed:![Hero](/images/hero.png)'
       })
     )
   })

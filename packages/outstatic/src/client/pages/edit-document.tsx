@@ -13,6 +13,9 @@ import { noCase } from 'change-case'
 import { EditorPageShell } from './_components/editor-page-shell'
 import { useEditorPageState } from './_components/use-editor-page-state'
 import { getFirstImageMediaSource } from '@/utils/media-config'
+import { AdminLoading } from '@/components/admin-loading'
+import { isFieldsOnlyModeEnabled } from '@/utils/hooks/field-schema'
+import { useUpgradeDialog } from '@/components/ui/outstatic/upgrade-dialog-context'
 
 export default function EditDocument({ collection }: { collection: string }) {
   const pathname = usePathname()
@@ -26,8 +29,12 @@ export default function EditDocument({ collection }: { collection: string }) {
     hasChanges,
     setHasChanges,
     dashboardRoute,
-    media
+    media,
+    isHosted,
+    isPro,
+    canSaveContent
   } = useOutstatic()
+  const { openUpgradeDialog } = useUpgradeDialog()
   const imageMediaSource = getFirstImageMediaSource(media ?? [])
   const [showDelete, setShowDelete] = useState(false)
   const [showMediaPathDialog, setShowMediaPathDialog] = useState(false)
@@ -35,7 +42,9 @@ export default function EditDocument({ collection }: { collection: string }) {
   const [mediaPathUpdated, setMediaPathUpdated] = useState(false)
   const pendingFormDataRef = useRef<Document | null>(null)
 
-  const { data: schema } = useGetCollectionSchema({ collection })
+  const { data: schema, isLoading: isSchemaLoading } = useGetCollectionSchema({
+    collection
+  })
   const { data: config } = useGetConfig()
   const files = useFileStore((state) => state.files)
   const {
@@ -105,6 +114,11 @@ export default function EditDocument({ collection }: { collection: string }) {
   const isNewDocument = slug === 'new'
 
   const handleSave = (data: Document) => {
+    if (isHosted && !isPro && !canSaveContent) {
+      openUpgradeDialog(undefined, undefined, 'save')
+      return
+    }
+
     if (!imageMediaSource && files.length > 0) {
       setShowMediaPathDialog(true)
       return
@@ -135,6 +149,10 @@ export default function EditDocument({ collection }: { collection: string }) {
       })
       pendingFormDataRef.current = null
     }
+  }
+
+  if (isSchemaLoading) {
+    return <AdminLoading />
   }
 
   return (
@@ -187,6 +205,7 @@ export default function EditDocument({ collection }: { collection: string }) {
       setShowExtensionDialog={setShowExtensionDialog}
       extensionFileName={`${methods.getValues('slug') || 'document'}.${extension}`}
       onExtensionSave={handleExtensionDialogSave}
+      fieldsOnlyMode={isFieldsOnlyModeEnabled(schema?.settings)}
     />
   )
 }

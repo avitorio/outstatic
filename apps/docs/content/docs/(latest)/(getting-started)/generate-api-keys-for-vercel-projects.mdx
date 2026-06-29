@@ -1,0 +1,46 @@
+---
+title: 'Generate API keys for Vercel projects'
+description: ''
+---
+
+To set up your project on Vercel, follow the steps bellow:
+
+1. On the Deploy on Vercel page, name your repository and click on **Create**:\
+   ![](/docs/images/cleanshot-2026-04-14-at-18.06.03-2x-U2Nj.png)
+
+2. [Create an account](https://outstatic.com/auth/sign-up) or [Sign in](https://outstatic.com/auth/sign-in) to Outstatic with your GitHub account.
+3. Create a new project by connecting it to the repository Vercel created on step 1.
+
+![](/docs/images/cleanshot-2026-04-15-at-10.37.14-2x-gyMj.png)
+
+4. In your project page, find **API Keys** on the sidebar and click on it.
+5. Copy and paste the link below as your **Callback Origin** (we will change this later).
+
+```bash
+https://localhost:3000/outstatic
+```
+
+6. Click **Add Origin**.
+7. Click on **Generate API Key** and copy it. (Don't close this browser tab, we will return to it).
+8. Return to the **Deploy on Vercel** page. Paste the api key in the **Add Environment Variables** section and lick on Deploy.
+
+![](/docs/images/cleanshot-2026-04-15-at-10.44.02-2x-cxNj.png)
+
+9. Click on Deploy
+
+When the deploy finishes, open your site. To access the dashboard, add `/outstatic` to your site URL:
+
+Example: `https://myblog.vercel.app/outstatic`
+
+You should see this page:
+
+![](/docs/images/login-screen-I1NT.webp)
+
+10. Now go back to **API Keys** in Outstatic and add the final production callback URL, ex: `https://myblog.vercel.app/outstatic`
+11. Return to `/outstatic`, and click **Sign in with GitHub** again.
+
+Congratulations! Now you have a website with a full-featured dashboard to edit your content.
+
+To develop your Vercel deployed website locally, please check the [**Local Development**](/local-development) page.
+
+We recommend you learn how [**Outstatic manages content**](/what-is-outstatic) and also how to [**fetch content**](/access-integration/fetching-data) from your front end.

@@ -11,8 +11,8 @@
     "@tailwindcss/postcss": "^4.1.10",
     "next": "16.1.1",
     "outstatic": "latest",
-    "react": "19.1.2",
-    "react-dom": "19.1.2",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
     "tailwindcss": "4.1.10"
   },
   "devDependencies": {

@@ -1,4 +1,4 @@
-import { convert } from '@catalystic/json-to-yaml'
+import { stringify as stringifyYaml } from 'yaml'
 import replaceImagePath from './replace-image-path'
 import {
   buildMediaApiPrefix,
@@ -19,7 +19,8 @@ export const mergeMdMeta = ({
   repoBranch,
   media,
   publicMediaPath,
-  repoMediaPath
+  repoMediaPath,
+  imports
 }: {
   data: Record<string, any> & { content: string }
   basePath: string
@@ -29,14 +30,15 @@ export const mergeMdMeta = ({
   media?: MediaSourceConfig[]
   publicMediaPath?: string
   repoMediaPath?: string
+  imports?: string
 }): string => {
   const sources = media?.length
     ? media
     : resolveMediaSources({ publicMediaPath, repoMediaPath })
 
-  const processValue = (value: any): any => {
+  const processValue = (value: unknown): unknown => {
     if (value instanceof Date) {
-      return value.toISOString()
+      return value
     }
     if (typeof value === 'object' && value !== null) {
       if (Array.isArray(value)) {
@@ -84,13 +86,22 @@ export const mergeMdMeta = ({
     metaData[key] = processValue(metaData[key])
   }
 
-  const converted = convert(metaData)
+  const converted = stringifyYaml(metaData, {
+    lineWidth: 0,
+    defaultStringType: 'PLAIN',
+    defaultKeyType: 'PLAIN',
+    blockQuote: 'literal'
+  })
 
   let merged = '---\n'
 
   merged += converted
 
   merged += '---\n\n'
+
+  if (imports && imports.trim().length > 0) {
+    merged += `${imports.trim()}\n\n`
+  }
 
   // replace /api/outstatic/images/ references
   const newContent = replaceImagePath({

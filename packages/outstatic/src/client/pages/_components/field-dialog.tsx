@@ -12,6 +12,7 @@ import {
   Document,
   arrayItemTypes,
   createCustomFieldDefinition,
+  customFieldTypeLabels,
   customFieldTypes,
   isFieldWithValues,
   isObjectCustomField,
@@ -546,7 +547,7 @@ export const FieldDialog = ({
                             <SelectContent>
                               {customFieldTypes.map((type) => (
                                 <SelectItem key={type} value={type}>
-                                  {type}
+                                  {customFieldTypeLabels[type]}
                                 </SelectItem>
                               ))}
                             </SelectContent>

@@ -11,7 +11,13 @@ const DEFAULT_OST_PATH = 'outstatic'
 const DEFAULT_CONTENT_PATH = 'outstatic/content'
 const DEFAULT_DASHBOARD_ROUTE = '/outstatic'
 const GITHUB_GRAPHQL_URL = 'https://api.github.com/graphql'
-const DEFAULT_PAGES = ['collections', 'settings', 'media-library', 'singletons']
+const DEFAULT_PAGES = [
+  'collections',
+  'settings',
+  'media-library',
+  'block-library',
+  'singletons'
+]
 
 export type OutstaticUIOptions = {
   showToaster?: boolean
@@ -22,6 +28,7 @@ export type OutstaticOptions = {
   repoSlug?: string
   repoBranch?: string
   ui?: OutstaticUIOptions
+  isHosted?: boolean
 }
 
 export type OutstaticData = {
@@ -43,6 +50,8 @@ export type OutstaticData = {
   repoMediaPath: string
   media: MediaSourceConfig[]
   isPro: boolean
+  canSaveContent?: boolean
+  isHosted: boolean
   ui?: OutstaticUIOptions
   projectInfo?: {
     projectId: string
@@ -112,7 +121,8 @@ export async function Outstatic({
   repoOwner = '',
   repoSlug = '',
   repoBranch = '',
-  ui
+  ui,
+  isHosted = false
 }: OutstaticOptions = {}): Promise<OutstaticData> {
   // Handshake and session are independent, so resolve them together.
   const [session, projectInfo] = await Promise.all([
@@ -154,6 +164,8 @@ export async function Outstatic({
     repoMediaPath: process.env.OST_REPO_MEDIA_PATH || '',
     media: [],
     isPro: projectInfo?.isPro || false,
+    canSaveContent: projectInfo?.isPro || false,
+    isHosted,
     ui: {
       showToaster: ui?.showToaster ?? true
     },

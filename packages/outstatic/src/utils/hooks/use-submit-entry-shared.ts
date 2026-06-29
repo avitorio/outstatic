@@ -1,6 +1,11 @@
 import { CommitAPI } from '@/utils/create-commit-api'
 import { hashFromUrl } from '@/utils/hash-from-url'
 import { mergeMdMeta } from '@/utils/merge-md-meta'
+import {
+  collectBlockImports,
+  dedupeImportStatements,
+  splitLeadingImportStatements
+} from '@/components/editor/extensions/mdx-block/mdx-block-serialization'
 import { stringifyMedia } from '@/utils/metadata/stringify'
 import {
   CustomFieldArrayValue,
@@ -53,16 +58,23 @@ export function buildMergedContent({
   publicMediaPath
 }: BuildMergedContentArgs) {
   const mdContent = editor.storage.markdown.getMarkdown()
+  const { content, imports: leadingImports } =
+    splitLeadingImportStatements(mdContent)
+  const imports = dedupeImportStatements([
+    ...leadingImports,
+    ...collectBlockImports(editor)
+  ]).join('\n')
 
   return mergeMdMeta({
-    data: { ...documentMetadata, ...data, content: mdContent },
+    data: { ...documentMetadata, ...data, content },
     basePath,
     repoOwner,
     repoSlug,
     repoBranch,
     media,
     repoMediaPath,
-    publicMediaPath
+    publicMediaPath,
+    imports
   })
 }
 

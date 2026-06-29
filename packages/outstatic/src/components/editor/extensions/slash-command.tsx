@@ -6,8 +6,9 @@ import { ReactNode, useState } from 'react'
 import tippy, { type Instance as TippyInstance } from 'tippy.js'
 import { BaseCommandList } from '@/components/editor/extensions/slash-command/BaseCommandList'
 import ImageCommandList from '@/components/editor/extensions/slash-command/ImageCommandList'
-import { getSuggestionItems } from '@/components/editor/extensions/slash-command/get-suggestion-items'
+import { createGetSuggestionItems } from '@/components/editor/extensions/slash-command/get-suggestion-items'
 import type { UpgradeDialogHandler } from '@/components/ui/outstatic/upgrade-dialog-context'
+import { Block } from '@/utils/metadata/types'
 
 export type CommandItemProps = {
   title: string
@@ -16,6 +17,7 @@ export type CommandItemProps = {
   command?: ({ editor, range }: CommandProps) => void
   searchTerms: string[]
   subItems?: CommandItemProps[]
+  block?: Block
 }
 
 export type CommandProps = {
@@ -26,6 +28,15 @@ export type CommandProps = {
 type CommandListRef = {
   onKeyDown: (props: { event: KeyboardEvent }) => boolean
 }
+
+const slashCommandBlocks = new WeakMap<Editor, Block[]>()
+
+export const setSlashCommandBlocks = (editor: Editor, blocks: Block[]) => {
+  slashCommandBlocks.set(editor, blocks)
+}
+
+const getSlashCommandBlocks = (editor: Editor) =>
+  slashCommandBlocks.get(editor) ?? []
 
 export const isSlashCommandAllowed = ({
   state,
@@ -200,13 +211,18 @@ const renderItems = (onShowUpgradeDialog: UpgradeDialogHandler) => {
 }
 
 export const createSlashCommand = ({
-  onShowUpgradeDialog
+  onShowUpgradeDialog,
+  getBlocks
 }: {
   onShowUpgradeDialog: UpgradeDialogHandler
+  getBlocks?: () => Block[]
 }) =>
   Command.configure({
     suggestion: {
-      items: getSuggestionItems,
+      items: (props: { editor: Editor; query: string }) =>
+        createGetSuggestionItems(
+          getBlocks ?? (() => getSlashCommandBlocks(props.editor))
+        )({ query: props.query }),
       render: () => renderItems(onShowUpgradeDialog)
     }
   })

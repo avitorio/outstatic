@@ -1,5 +1,6 @@
 import {
   createCustomFieldDefinition,
+  customFieldTypeLabels,
   customFieldTypes,
   isObjectCustomField,
   isRepeatableArrayCustomField,
@@ -13,6 +14,11 @@ describe('custom field definitions', () => {
 
   it('includes Object in the supported custom field types', () => {
     expect(customFieldTypes).toContain('Object')
+  })
+
+  it('uses a URL-safe rich text key with a display label', () => {
+    expect(customFieldTypes).toContain('RichText')
+    expect(customFieldTypeLabels.RichText).toBe('Rich Text')
   })
 
   it('creates a strict select field definition with string storage', () => {

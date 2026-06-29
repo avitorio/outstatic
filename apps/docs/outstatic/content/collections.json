@@ -1,20 +1,26 @@
 [
   {
-    "title": "Docs",
-    "slug": "docs",
-    "path": "apps/docs/outstatic/content/docs",
-    "children": []
+    "title": "Getting Started",
+    "slug": "getting-started",
+    "path": "content/docs/(latest)/(getting-started)",
+    "parent": "latest"
   },
   {
-    "title": "Menus",
-    "slug": "menus",
-    "path": "apps/docs/outstatic/content/menus",
-    "children": []
+    "title": "Access Integration",
+    "slug": "access-integration",
+    "path": "content/docs/(latest)/access-integration",
+    "parent": "latest"
   },
   {
-    "title": "V1.4",
-    "slug": "v1.4",
-    "path": "apps/docs/outstatic/content/v1.4",
-    "children": []
+    "title": "1.4",
+    "slug": "1.4",
+    "path": "content/docs/v1.4",
+    "parent": null
+  },
+  {
+    "title": "Latest",
+    "slug": "latest",
+    "path": "content/docs/(latest)",
+    "parent": null
   }
 ]

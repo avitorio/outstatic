@@ -20,7 +20,7 @@ The fastest way to see how Outstatic works is to use the hosted dashboard.
 
 Prefer to self-host?
 
-[Follow the getting started guide](https://outstatic.com/docs/getting-started?utm_source=github&utm_medium=readme&utm_campaign=self_hosting) to add Outstatic to your own Next.js project.
+[Follow the getting started guide](https://outstatic.com/docs/?utm_source=github&utm_medium=readme&utm_campaign=self_hosting) to add Outstatic to your own Next.js project.
 
 ## Key features
 
@@ -54,7 +54,7 @@ Use the self-hosted setup if you want to:
 - Avoid managing a separate CMS database
 - Let editors publish content without manually editing Markdown files
 
-[Read the getting started guide](https://outstatic.com/docs/getting-started?utm_source=github&utm_medium=readme&utm_campaign=self_hosting_section)
+[Read the getting started guide](https://outstatic.com/docs/?utm_source=github&utm_medium=readme&utm_campaign=self_hosting_section)
 
 ## Documentation
 

@@ -1,0 +1,14 @@
+{
+  "title": "Latest Version",
+  "description": "2.1.12",
+  "root": true,
+  "pages": [
+    "---Introduction---",
+    "index",
+    "(getting-started)",
+    "what-is-outstatic",
+    "editing-modeling",
+    "access-integration",
+    "help"
+  ]
+}

@@ -50,6 +50,19 @@ its star count and description:
 
 You can point it at any JSON endpoint with the `url` prop.
 
+## Reusable blocks from the Block Library
+
+For components you reach for often, the
+[Block Library](https://outstatic.com/docs/block-library) lets you register
+reusable MDX blocks that appear in the slash command menu. Each block defines a
+component name, the props editors fill in, and any imports it needs — so
+inserting a block becomes a single click instead of hand-writing JSX.
+
+This post uses a `Youtube` block defined in `outstatic/blocks.json`. Type `/`
+in the editor, pick **Youtube**, and fill in the video URL:
+
+<Youtube url="https://www.youtube.com/watch?v=xp14-T2WAvI" />
+
 ## Rendering MDX on your site
 
 The MDX block only controls how content is edited and saved. Your frontend

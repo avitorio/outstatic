@@ -66,6 +66,20 @@ describe('Collections', () => {
     { slug: 'blog', title: 'Blog' },
     { slug: 'projects', title: 'Projects' }
   ]
+  const mockNestedCollections = [
+    {
+      slug: 'blog',
+      title: 'Blog',
+      path: 'outstatic/content/blog',
+      parent: null
+    },
+    {
+      slug: 'guides',
+      title: 'Guides',
+      path: 'outstatic/content/guides',
+      parent: 'blog'
+    }
+  ]
 
   beforeEach(() => {
     // Mock useOutstatic hook with session containing permissions
@@ -200,6 +214,28 @@ describe('Collections', () => {
     expect(screen.getByRole('dialog')).toBeInTheDocument()
     expect(
       screen.getByText(/are you sure you want to delete/i)
+    ).toBeInTheDocument()
+  })
+
+  it('shows the child collection deletion option for parent collections', () => {
+    ;(useCollections as jest.Mock).mockReturnValue({
+      isPending: false,
+      data: mockNestedCollections
+    })
+
+    render(
+      <TestWrapper>
+        <Collections />
+      </TestWrapper>
+    )
+
+    const deleteButtons = screen.getAllByRole('button', {
+      name: /delete content/i
+    })
+    fireEvent.click(deleteButtons[0])
+
+    expect(
+      screen.getByText(/also delete child collections/i)
     ).toBeInTheDocument()
   })
 

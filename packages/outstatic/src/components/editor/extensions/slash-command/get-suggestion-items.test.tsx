@@ -2,7 +2,10 @@ import { Editor } from '@tiptap/core'
 import StarterKit from '@tiptap/starter-kit'
 import { Markdown } from 'tiptap-markdown'
 import { MdxBlock } from '../mdx-block'
-import { getSuggestionItems } from './get-suggestion-items'
+import {
+  createGetSuggestionItems,
+  getSuggestionItems
+} from './get-suggestion-items'
 
 const testLowlight = {
   listLanguages: () => ['jsx'],
@@ -77,5 +80,27 @@ describe('getSuggestionItems', () => {
 
     expect(editor.state.doc.firstChild?.type.name).toBe('mdxBlock')
     expect(editor.state.doc.firstChild?.textContent).toBe('')
+  })
+
+  it('adds configured blocks and filters by keyword', () => {
+    const getItems = createGetSuggestionItems(() => [
+      {
+        name: 'Callout',
+        description: 'Highlight content',
+        keywords: ['notice', 'alert'],
+        props: []
+      }
+    ])
+
+    const items = getItems({ query: 'notice' })
+
+    expect(items).toHaveLength(1)
+    expect(items[0]).toMatchObject({
+      title: 'Callout',
+      description: 'Highlight content',
+      block: {
+        name: 'Callout'
+      }
+    })
   })
 })

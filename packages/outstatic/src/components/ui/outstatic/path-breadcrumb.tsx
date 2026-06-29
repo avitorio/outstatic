@@ -1,5 +1,6 @@
 import {
   Breadcrumb,
+  BreadcrumbEllipsis,
   BreadcrumbItem,
   BreadcrumbList,
   BreadcrumbPage,
@@ -10,26 +11,41 @@ import { Fragment } from 'react/jsx-runtime'
 
 function PathBreadcrumbs({ path }: { path: string }) {
   const pathArray = path.split('/')
+  const shouldCollapse = pathArray.length > 4
+  const visiblePathArray = shouldCollapse ? pathArray.slice(-3) : pathArray
+
   return (
-    <div className="flex items-center p-2 bg-muted rounded-md h-10">
+    <div className="flex items-center p-2 bg-muted rounded-md h-10 overflow-hidden">
       <Breadcrumb>
-        <BreadcrumbList>
-          {path
-            ? pathArray.map((folder, index) => (
+        <BreadcrumbList className="text-nowrap flex-nowrap">
+          {path ? (
+            <>
+              {shouldCollapse ? (
+                <>
+                  <BreadcrumbItem>
+                    <BreadcrumbEllipsis />
+                  </BreadcrumbItem>
+                  <BreadcrumbSeparator>
+                    <Slash />
+                  </BreadcrumbSeparator>
+                </>
+              ) : null}
+              {visiblePathArray.map((folder, index) => (
                 <Fragment key={index}>
                   {index > 0 ? (
                     <BreadcrumbSeparator>
                       <Slash />
                     </BreadcrumbSeparator>
                   ) : null}
-                  {index !== pathArray.length - 1 ? (
+                  {index !== visiblePathArray.length - 1 ? (
                     <BreadcrumbItem>{folder}</BreadcrumbItem>
                   ) : (
                     <BreadcrumbPage>{folder}</BreadcrumbPage>
                   )}
                 </Fragment>
-              ))
-            : null}
+              ))}
+            </>
+          ) : null}
         </BreadcrumbList>
       </Breadcrumb>
     </div>

@@ -4,6 +4,7 @@ pnpm-lock.yaml
 dist
 apps/dev/outstatic/
 apps/docs/outstatic/
+apps/docs/.source
 examples/basic-blog/outstatic/
 examples/advanced-blog/outstatic/
 examples/docs/outstatic/

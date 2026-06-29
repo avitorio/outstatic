@@ -49,20 +49,20 @@ export const useGetDocuments = ({
   const { refetch } = useCollections({ enabled: false })
 
   const collectionName = collection || params?.ost?.[0]
+  const collectionSlug = collectionName
+    ? slugify(collectionName, { allowedChars: 'a-zA-Z0-9.' })
+    : ''
 
   return useQuery({
     queryKey: [
-      `documents-${collectionName}`,
+      `documents-${collectionSlug}`,
       { repoOwner, repoSlug, repoBranch }
     ],
     queryFn: async () => {
       const { data: collections } = await refetch()
-      const path = collections?.find(
-        (col) =>
-          col.slug === slugify(collectionName, { allowedChars: 'a-zA-Z0-9.' })
-      )?.path
+      const path = collections?.find((col) => col.slug === collectionSlug)?.path
 
-      let contentPath = `${repoBranch}:${ostContent}/${collectionName}`
+      let contentPath = `${repoBranch}:${ostContent}/${collectionSlug}`
 
       if (path !== undefined) {
         if (path !== '') {
@@ -143,7 +143,7 @@ export const useGetDocuments = ({
       return { documents, metadata }
     },
     meta: {
-      errorMessage: `Failed to fetch collection: ${collectionName}`
+      errorMessage: `Failed to fetch collection: ${collectionSlug || collectionName}`
     },
     enabled
   })

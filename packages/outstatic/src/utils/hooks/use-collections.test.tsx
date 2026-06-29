@@ -109,7 +109,14 @@ describe('useCollections', () => {
               title: 'Posts',
               slug: 'posts',
               path: 'outstatic/content/posts',
-              children: []
+              children: [
+                {
+                  title: 'Guides',
+                  slug: 'guides',
+                  path: 'outstatic/content/posts/guides',
+                  children: []
+                }
+              ]
             }
           ])
         }
@@ -129,7 +136,13 @@ describe('useCollections', () => {
         title: 'Posts',
         slug: 'posts',
         path: 'outstatic/content/posts',
-        children: []
+        parent: null
+      },
+      {
+        title: 'Guides',
+        slug: 'guides',
+        path: 'outstatic/content/posts/guides',
+        parent: 'posts'
       }
     ])
     expect(mutateAsyncMock).not.toHaveBeenCalled()
@@ -171,7 +184,7 @@ describe('useCollections', () => {
         title: 'Posts',
         slug: 'posts',
         path: 'outstatic/content/posts',
-        children: []
+        parent: null
       }
     ]
 
@@ -196,7 +209,7 @@ describe('useCollections', () => {
         title: 'Posts',
         slug: 'posts',
         path: 'outstatic/content/posts',
-        children: []
+        parent: null
       }
     ]
 

@@ -12,11 +12,15 @@ import {
   LayoutDashboard,
   Plus,
   Images,
+  Blocks,
   File,
   Key,
   Users
 } from 'lucide-react'
-import { SidebarNavigation } from '@/components/ui/outstatic/sidebar'
+import {
+  buildParentChildRoutes,
+  SidebarNavigation
+} from '@/components/ui/outstatic/sidebar'
 
 import { useCollections } from '@/utils/hooks/use-collections'
 import { useSingletons } from '@/utils/hooks/use-singletons'
@@ -104,34 +108,37 @@ export const Sidebar = ({ additionalRoutes }: SidebarProps) => {
                     {
                       label: 'Collections',
                       collapsible: true,
-                      children: collections.map((collection) => ({
-                        label: collection.title,
-                        path: `${dashboardRoute}/${collection.slug}`,
-                        Icon: <Folder className={'w-4'} />,
-                        renderAction: (
-                          <TooltipProvider>
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <Link
-                                  href={`${dashboardRoute}/${collection.slug}/new`}
-                                  className="invisible group-hover/sub-menu-item:visible"
-                                  aria-label={`Create new item in collection ${collection.title}`}
-                                >
-                                  <Plus className="w-3 h-3 pointer-events-none" />
-                                </Link>
-                              </TooltipTrigger>
-                              <TooltipContent className="pointer-events-none">
-                                <p>
-                                  Create new{' '}
-                                  <span className="inline-block">
-                                    {singular(collection.title)}
-                                  </span>
-                                </p>
-                              </TooltipContent>
-                            </Tooltip>
-                          </TooltipProvider>
-                        )
-                      }))
+                      children: buildParentChildRoutes(
+                        collections.map((collection) => ({
+                          label: collection.title,
+                          path: `${dashboardRoute}/${collection.slug}`,
+                          slug: collection.slug,
+                          parent: collection.parent,
+                          Icon: <Folder className={'w-4'} />,
+                          renderAction: (
+                            <TooltipProvider>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <Link
+                                    href={`${dashboardRoute}/${collection.slug}/new`}
+                                    aria-label={`Create new item in collection ${collection.title}`}
+                                  >
+                                    <Plus className="w-3 h-3 pointer-events-none" />
+                                  </Link>
+                                </TooltipTrigger>
+                                <TooltipContent className="pointer-events-none">
+                                  <p>
+                                    Create new{' '}
+                                    <span className="inline-block">
+                                      {singular(collection.title)}
+                                    </span>
+                                  </p>
+                                </TooltipContent>
+                              </Tooltip>
+                            </TooltipProvider>
+                          )
+                        }))
+                      )
                     }
                   ]
                 : []),
@@ -180,6 +187,11 @@ export const Sidebar = ({ additionalRoutes }: SidebarProps) => {
           label: 'Media Library',
           path: `${dashboardRoute}/media-library`,
           Icon: <Images className={'w-4'} />
+        },
+        {
+          label: 'Block Library',
+          path: `${dashboardRoute}/block-library`,
+          Icon: <Blocks className={'w-4'} />
         }
       ]
     },
@@ -246,7 +258,7 @@ export const Sidebar = ({ additionalRoutes }: SidebarProps) => {
 
   return (
     <SidebarUI>
-      <SidebarHeader className={'h-16 hidden md:flex'} />
+      <SidebarHeader className={'lg:h-16 hidden md:flex'} />
       <SidebarContent>
         <SidebarNavigation config={config} />
       </SidebarContent>

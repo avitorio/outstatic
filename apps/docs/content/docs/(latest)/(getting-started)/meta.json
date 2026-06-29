@@ -1,0 +1,10 @@
+{
+  "title": "Getting started",
+  "description": "Get started with Outstatic",
+  "pages": [
+    "getting-started-with-next-js",
+    "using-outstatic-for-markdown-content",
+    "deploy-a-starter-outstatic-website-on-vercel"
+  ],
+  "collapsible": true
+}
