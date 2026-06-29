@@ -269,7 +269,7 @@ const SortableItem = ({
       ref={setNodeRef}
       style={style}
       className={cn(
-        'transition-[border-color,box-shadow] duration-150',
+        'transition-[border-color,box-shadow] duration-150 py-0 rounded-sm',
         isDragging && 'z-10 border-gray-500 shadow-md'
       )}
     >
@@ -299,7 +299,7 @@ const SortableItem = ({
             <Trash className="h-4 w-4" />
           </Button>
         </div>
-        <div className="pl-2">
+        <div className="pl-0">
           {field.itemType === 'Object' ? (
             <ObjectItemFields baseName={itemName} fields={field.fields ?? {}} />
           ) : (
