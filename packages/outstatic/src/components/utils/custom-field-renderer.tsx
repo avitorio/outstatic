@@ -1,5 +1,9 @@
 import { DocumentSettingsImageSelection } from '@/components/document-settings-image-selection'
 import {
+  ArrayFieldInput,
+  ObjectFieldInput
+} from '@/components/ui/outstatic/array-field-input'
+import {
   EditorProvider,
   useEditor as useEditorContext
 } from '@/components/editor/editor-context'
@@ -24,6 +28,8 @@ import {
   CustomFieldArrayValue,
   CustomFieldsType,
   isArrayCustomField,
+  isObjectCustomField,
+  isRepeatableArrayCustomField,
   isSelectCustomField
 } from '@/types'
 import { RegisterOptions } from 'react-hook-form'
@@ -453,6 +459,34 @@ export const CustomFieldRenderer = ({
         <AccordionContent className="p-4 border-top">
           {isDateField ? (
             <DateTimePickerForm id={name} description={field.description} />
+          ) : isObjectCustomField(field) ? (
+            <div className="flex flex-col gap-2">
+              <ObjectFieldInput name={name} field={field} />
+              {field.description ? (
+                <p className="text-sm text-muted-foreground">
+                  {field.description}
+                </p>
+              ) : null}
+              {errors[name]?.message ? (
+                <p className="text-sm text-destructive">
+                  {String(errors[name].message)}
+                </p>
+              ) : null}
+            </div>
+          ) : isRepeatableArrayCustomField(field) ? (
+            <div className="flex flex-col gap-2">
+              <ArrayFieldInput name={name} field={field} />
+              {field.description ? (
+                <p className="text-sm text-muted-foreground">
+                  {field.description}
+                </p>
+              ) : null}
+              {errors[name]?.message ? (
+                <p className="text-sm text-destructive">
+                  {String(errors[name].message)}
+                </p>
+              ) : null}
+            </div>
           ) : (
             <FormField
               control={control}

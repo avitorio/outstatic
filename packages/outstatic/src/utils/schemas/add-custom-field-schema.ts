@@ -1,28 +1,8 @@
-import { z } from 'zod/v4'
-import { customFieldTypes } from '@/types'
+import {
+  customFieldSchemaBase,
+  refineCustomFieldSchema
+} from './custom-field-schema'
 
-export const addCustomFieldSchema = z
-  .object({
-    title: z
-      .string()
-      .regex(/^[aA-zZ\s]+$/, 'Only alphabets are allowed for this field.')
-      .min(1, 'Custom field name is required.'),
-    fieldType: z.enum(customFieldTypes),
-    description: z.string().optional(),
-    required: z.boolean().optional(),
-    values: z
-      .array(z.object({ label: z.string(), value: z.string() }))
-      .optional()
-  })
-  .superRefine((data, ctx) => {
-    if (
-      data.fieldType === 'Select' &&
-      (!data.values || data.values.length === 0)
-    ) {
-      ctx.addIssue({
-        code: 'custom',
-        path: ['values'],
-        message: 'Add at least one option for a Select field.'
-      })
-    }
-  })
+export const addCustomFieldSchema = customFieldSchemaBase.superRefine(
+  refineCustomFieldSchema
+)

@@ -158,28 +158,34 @@ export function syncCustomFieldTags({
     const customField = nextCustomFields[key]
     const dataKey = (data as Record<string, any>)[key]
 
-    if (isArrayCustomField(field) && isArrayCustomField(customField)) {
-      if (!Array.isArray(dataKey)) {
-        matterData[key] = []
-        return
-      }
-
-      dataKey.forEach((selectedTag: CustomFieldArrayValue) => {
-        const exists = field.values.some(
-          (savedTag: CustomFieldArrayValue) =>
-            savedTag.value === selectedTag.value
-        )
-
-        if (!exists) {
-          customField.values.push({
-            value: selectedTag.value,
-            label: selectedTag.label
-          })
-          nextCustomFields[key] = customField
-          hasNewTag = true
-        }
-      })
+    if (
+      field.fieldType !== 'Tags' ||
+      !isArrayCustomField(field) ||
+      !isArrayCustomField(customField)
+    ) {
+      return
     }
+
+    if (!Array.isArray(dataKey)) {
+      matterData[key] = []
+      return
+    }
+
+    dataKey.forEach((selectedTag: CustomFieldArrayValue) => {
+      const exists = field.values.some(
+        (savedTag: CustomFieldArrayValue) =>
+          savedTag.value === selectedTag.value
+      )
+
+      if (!exists) {
+        customField.values.push({
+          value: selectedTag.value,
+          label: selectedTag.label
+        })
+        nextCustomFields[key] = customField
+        hasNewTag = true
+      }
+    })
   })
 
   if (hasNewTag) {

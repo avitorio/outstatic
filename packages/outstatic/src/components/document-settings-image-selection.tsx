@@ -204,16 +204,23 @@ export const DocumentSettingsImageSelection = ({
   // Render image selection options
   const renderImageOptions = () => (
     <div className="w-full flex justify-between mt-2 gap-2">
-      <Button onClick={() => setShowImageLibrary(true)} type="button">
+      <Button
+        className="text-xs"
+        size="sm"
+        onClick={() => setShowImageLibrary(true)}
+        type="button"
+      >
         From library
       </Button>
       <Button
+        size="sm"
         onClick={() => {
           setImageState('url')
           setLoadingError(false)
           setImageUrl('')
         }}
         type="button"
+        className="text-xs"
       >
         From URL
       </Button>

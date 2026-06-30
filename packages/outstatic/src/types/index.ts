@@ -47,7 +47,9 @@ export const customFieldTypes = [
   'Tags',
   'Boolean',
   'Date',
-  'Image'
+  'Image',
+  'Object',
+  'Array'
 ] as const
 
 export const customFieldTypeLabels = {
@@ -59,7 +61,9 @@ export const customFieldTypeLabels = {
   Tags: 'Tags',
   Boolean: 'Boolean',
   Date: 'Date',
-  Image: 'Image'
+  Image: 'Image',
+  Object: 'Object',
+  Array: 'Array'
 } satisfies Record<(typeof customFieldTypes)[number], string>
 
 export const customFieldData = [
@@ -68,13 +72,54 @@ export const customFieldData = [
   'array',
   'boolean',
   'date',
-  'image'
+  'image',
+  'object'
 ] as const
+
+export const arrayItemTypes = [
+  'String',
+  'Text',
+  'Number',
+  'Boolean',
+  'Date',
+  'Image',
+  'Object'
+] as const
+
+export type ArrayItemType = (typeof arrayItemTypes)[number]
+export type PrimitiveArrayItemType = Exclude<ArrayItemType, 'Object'>
+export type ArraySubFieldType = PrimitiveArrayItemType | 'Object' | 'Array'
 
 export type CustomFieldArrayValue = {
   label: string
   value: string
 }
+
+type BaseArraySubFieldDefinition = {
+  title: string
+  description?: string
+  required?: boolean
+}
+
+export type PrimitiveArraySubFieldDefinition = BaseArraySubFieldDefinition & {
+  fieldType: PrimitiveArrayItemType
+}
+
+export type ObjectArraySubFieldDefinition = BaseArraySubFieldDefinition & {
+  fieldType: 'Object'
+  fields?: { [key: string]: ArraySubFieldDefinition }
+}
+
+export type NestedArraySubFieldDefinition = BaseArraySubFieldDefinition & {
+  fieldType: 'Array'
+  itemType: ArrayItemType
+  fields?: { [key: string]: ArraySubFieldDefinition }
+}
+
+export type ArraySubFieldDefinition =
+  | PrimitiveArraySubFieldDefinition
+  | ObjectArraySubFieldDefinition
+  | NestedArraySubFieldDefinition
 
 export type CustomFieldDefinitionInput = {
   title: string
@@ -82,6 +127,10 @@ export type CustomFieldDefinitionInput = {
   description?: string
   required?: boolean
   values?: CustomFieldArrayValue[]
+  itemType?: ArrayItemType
+  minItems?: number
+  maxItems?: number
+  fields?: { [key: string]: ArraySubFieldDefinition }
 }
 
 type BaseCustomField<
@@ -117,6 +166,46 @@ export type DateCustomField = BaseCustomField<'Date', 'date'>
 
 export type ImageCustomField = BaseCustomField<'Image', 'image'>
 
+export type ObjectCustomField = BaseCustomField<'Object', 'object'> & {
+  fields?: { [key: string]: ArraySubField }
+}
+
+type BaseArraySubField = {
+  title: string
+  description?: string
+  required?: boolean
+}
+
+export type PrimitiveArraySubField = BaseArraySubField & {
+  fieldType: PrimitiveArrayItemType
+  dataType: Exclude<(typeof customFieldData)[number], 'array' | 'object'>
+}
+
+export type ObjectArraySubField = BaseArraySubField & {
+  fieldType: 'Object'
+  dataType: 'object'
+  fields?: { [key: string]: ArraySubField }
+}
+
+export type NestedArraySubField = BaseArraySubField & {
+  fieldType: 'Array'
+  dataType: 'array'
+  itemType: ArrayItemType
+  fields?: { [key: string]: ArraySubField }
+}
+
+export type ArraySubField =
+  | PrimitiveArraySubField
+  | ObjectArraySubField
+  | NestedArraySubField
+
+export type ArrayCustomField = BaseCustomField<'Array', 'array'> & {
+  itemType: ArrayItemType
+  fields?: { [key: string]: ArraySubField }
+  minItems?: number
+  maxItems?: number
+}
+
 export type CustomFieldType =
   | StringCustomField
   | TextCustomField
@@ -127,6 +216,8 @@ export type CustomFieldType =
   | BooleanCustomField
   | DateCustomField
   | ImageCustomField
+  | ObjectCustomField
+  | ArrayCustomField
 
 export type CustomFieldsType = {
   [key: string]: CustomFieldType
@@ -140,6 +231,16 @@ export type DocumentSchemaShape =
 
 export function isArrayCustomField(obj: any): obj is TagsCustomField {
   return obj && obj.fieldType === 'Tags' && Array.isArray(obj.values)
+}
+
+export function isRepeatableArrayCustomField(
+  obj: any
+): obj is ArrayCustomField {
+  return obj && obj.fieldType === 'Array' && typeof obj.itemType === 'string'
+}
+
+export function isObjectCustomField(obj: any): obj is ObjectCustomField {
+  return obj && obj.fieldType === 'Object'
 }
 
 export function isFieldWithValues(
@@ -156,12 +257,80 @@ export function isSelectCustomField(obj: any): obj is SelectCustomField {
   return obj && obj.fieldType === 'Select' && Array.isArray(obj.values)
 }
 
+const ARRAY_ITEM_DATA_TYPE: Record<
+  PrimitiveArrayItemType,
+  Exclude<(typeof customFieldData)[number], 'array' | 'object'>
+> = {
+  String: 'string',
+  Text: 'string',
+  Number: 'number',
+  Boolean: 'boolean',
+  Date: 'date',
+  Image: 'image'
+}
+
+const createArraySubFieldDefinition = (
+  sub: ArraySubFieldDefinition
+): ArraySubField => {
+  const baseField = {
+    title: sub.title,
+    description: sub.description,
+    required: sub.required
+  }
+
+  if (sub.fieldType === 'Object') {
+    return {
+      ...baseField,
+      fieldType: 'Object',
+      dataType: 'object',
+      fields: createArraySubFieldDefinitions(sub.fields)
+    }
+  }
+
+  if (sub.fieldType === 'Array') {
+    const arrayField: NestedArraySubField = {
+      ...baseField,
+      fieldType: 'Array',
+      dataType: 'array',
+      itemType: sub.itemType ?? 'String'
+    }
+
+    if (arrayField.itemType === 'Object') {
+      arrayField.fields = createArraySubFieldDefinitions(sub.fields)
+    }
+
+    return arrayField
+  }
+
+  return {
+    ...baseField,
+    fieldType: sub.fieldType,
+    dataType: ARRAY_ITEM_DATA_TYPE[sub.fieldType]
+  }
+}
+
+const createArraySubFieldDefinitions = (fields?: {
+  [key: string]: ArraySubFieldDefinition
+}): { [key: string]: ArraySubField } => {
+  const resolvedFields: { [key: string]: ArraySubField } = {}
+
+  for (const [key, sub] of Object.entries(fields ?? {})) {
+    resolvedFields[key] = createArraySubFieldDefinition(sub)
+  }
+
+  return resolvedFields
+}
+
 export function createCustomFieldDefinition({
   title,
   fieldType,
   description,
   required,
-  values = []
+  values = [],
+  itemType,
+  minItems,
+  maxItems,
+  fields
 }: CustomFieldDefinitionInput): CustomFieldType {
   const baseField = {
     title,
@@ -188,6 +357,32 @@ export function createCustomFieldDefinition({
       return { ...baseField, fieldType, dataType: 'date' }
     case 'Image':
       return { ...baseField, fieldType, dataType: 'image' }
+    case 'Object':
+      return {
+        ...baseField,
+        fieldType,
+        dataType: 'object',
+        fields: createArraySubFieldDefinitions(fields)
+      }
+    case 'Array': {
+      const resolvedItemType: ArrayItemType = itemType ?? 'String'
+      const arrayField: ArrayCustomField = {
+        ...baseField,
+        fieldType,
+        dataType: 'array',
+        itemType: resolvedItemType
+      }
+      if (typeof minItems === 'number') {
+        arrayField.minItems = minItems
+      }
+      if (typeof maxItems === 'number') {
+        arrayField.maxItems = maxItems
+      }
+      if (resolvedItemType === 'Object') {
+        arrayField.fields = createArraySubFieldDefinitions(fields)
+      }
+      return arrayField
+    }
   }
 }
 

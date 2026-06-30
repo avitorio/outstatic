@@ -1,4 +1,12 @@
-import { CustomFieldsType, isSelectCustomField } from '@/types'
+import {
+  ArrayItemType,
+  ArraySubField,
+  CustomFieldsType,
+  PrimitiveArrayItemType,
+  isObjectCustomField,
+  isRepeatableArrayCustomField,
+  isSelectCustomField
+} from '@/types'
 import { z } from 'zod/v4'
 import { documentShape } from './schemas/edit-document-schema'
 
@@ -40,6 +48,119 @@ const buildDateSchema = ({
   )
 }
 
+const buildPrimitiveItemSchema = (sub: ArraySubField): z.ZodTypeAny => {
+  switch (sub.dataType) {
+    case 'string':
+      return z.string()
+    case 'number':
+      return z.coerce.number().refine((val) => !isNaN(val), {
+        message: `${sub.title} must be a valid number.`
+      })
+    case 'boolean':
+      return z.boolean()
+    case 'date':
+      return buildDateSchema({ title: sub.title, required: sub.required })
+    case 'image':
+      return z.string()
+    default:
+      return z.any()
+  }
+}
+
+const applyRequiredForSubField = (
+  schema: z.ZodTypeAny,
+  sub: ArraySubField
+): z.ZodTypeAny => {
+  if (sub.dataType === 'date') {
+    return schema
+  }
+
+  if (sub.required) {
+    return z.any().superRefine((val, ctx) => {
+      const isMissing = Array.isArray(val)
+        ? val.length === 0
+        : val === '' || val === undefined || val === null
+
+      if (isMissing) {
+        ctx.addIssue({
+          code: 'custom',
+          message: `${sub.title} is a required field.`
+        })
+        return
+      }
+
+      const result = schema.safeParse(val)
+      if (!result.success) {
+        result.error.issues.forEach((issue) => ctx.addIssue(issue))
+      }
+    })
+  }
+
+  return schema.optional()
+}
+
+const itemTypeToDataType = (
+  itemType: ArrayItemType | undefined
+): Exclude<ArraySubField['dataType'], 'array' | 'object'> => {
+  switch (itemType) {
+    case 'Number':
+      return 'number'
+    case 'Boolean':
+      return 'boolean'
+    case 'Date':
+      return 'date'
+    case 'Image':
+      return 'image'
+    default:
+      return 'string'
+  }
+}
+
+const buildObjectSchema = (
+  fields: { [key: string]: ArraySubField } | undefined
+): z.ZodTypeAny => {
+  const objectShape: Record<string, z.ZodTypeAny> = {}
+
+  for (const [subName, sub] of Object.entries(fields ?? {})) {
+    objectShape[subName] = applyRequiredForSubField(
+      buildSubFieldSchema(sub),
+      sub
+    )
+  }
+
+  return z.object(objectShape)
+}
+
+const buildArrayItemSchema = (
+  title: string,
+  itemType: ArrayItemType | undefined,
+  fields: { [key: string]: ArraySubField } | undefined
+): z.ZodTypeAny => {
+  if (itemType === 'Object') {
+    return buildObjectSchema(fields)
+  }
+
+  const primitiveSub: ArraySubField = {
+    title,
+    fieldType: (itemType ?? 'String') as PrimitiveArrayItemType,
+    dataType: itemTypeToDataType(itemType)
+  }
+
+  return buildPrimitiveItemSchema(primitiveSub)
+}
+
+const buildSubFieldSchema = (sub: ArraySubField): z.ZodTypeAny => {
+  if (sub.fieldType === 'Object') {
+    return buildObjectSchema(sub.fields)
+  }
+
+  if (sub.fieldType === 'Array') {
+    return z.array(buildArrayItemSchema(sub.title, sub.itemType, sub.fields))
+  }
+
+  return buildPrimitiveItemSchema(sub)
+}
+
 export const convertSchemaToZod = (customFields: {
   properties: CustomFieldsType
 }): z.ZodObject<any> => {
@@ -50,6 +171,63 @@ export const convertSchemaToZod = (customFields: {
     const selectValues = isSelectCustomField(field)
       ? field.values.map(({ value }) => value)
       : null
+
+    if (isRepeatableArrayCustomField(field)) {
+      fieldSchema = z.array(
+        buildArrayItemSchema(field.title, field.itemType, field.fields)
+      )
+
+      if (typeof field.minItems === 'number') {
+        fieldSchema = (fieldSchema as z.ZodArray<any>).min(field.minItems, {
+          message: `${field.title} requires at least ${field.minItems} item${field.minItems === 1 ? '' : 's'}.`
+        })
+      }
+      if (typeof field.maxItems === 'number') {
+        fieldSchema = (fieldSchema as z.ZodArray<any>).max(field.maxItems, {
+          message: `${field.title} accepts at most ${field.maxItems} item${field.maxItems === 1 ? '' : 's'}.`
+        })
+      }
+
+      if (field.required) {
+        fieldSchema = fieldSchema.refine(
+          (val) => Array.isArray(val) && val.length > 0,
+          {
+            message: `${field.title} is a required field.`
+          }
+        )
+      } else {
+        fieldSchema = fieldSchema.optional()
+      }
+
+      shape[name] = fieldSchema
+      continue
+    }
+
+    if (isObjectCustomField(field)) {
+      fieldSchema = buildObjectSchema(field.fields)
+
+      if (field.required) {
+        fieldSchema = z.any().superRefine((val, ctx) => {
+          if (val === undefined || val === null) {
+            ctx.addIssue({
+              code: 'custom',
+              message: `${field.title} is a required field.`
+            })
+            return
+          }
+
+          const result = buildObjectSchema(field.fields).safeParse(val)
+          if (!result.success) {
+            result.error.issues.forEach((issue) => ctx.addIssue(issue))
+          }
+        })
+      } else {
+        fieldSchema = fieldSchema.optional()
+      }
+
+      shape[name] = fieldSchema
+      continue
+    }
 
     switch (field.dataType) {
       case 'string':

@@ -102,6 +102,80 @@ describe('schema-to-ts', () => {
 
       expect(dataTypeToTS(field)).toBe("'news' | 'guides'")
     })
+
+    it('converts array object fields with nested objects and arrays', () => {
+      const field: SchemaField = {
+        title: 'Authors',
+        fieldType: 'Array',
+        dataType: 'array',
+        itemType: 'Object',
+        fields: {
+          author: {
+            title: 'Author',
+            fieldType: 'Object',
+            dataType: 'object',
+            required: true,
+            fields: {
+              name: {
+                title: 'Name',
+                fieldType: 'String',
+                dataType: 'string',
+                required: true
+              },
+              books: {
+                title: 'Books',
+                fieldType: 'Array',
+                dataType: 'array',
+                itemType: 'Object',
+                fields: {
+                  title: {
+                    title: 'Title',
+                    fieldType: 'String',
+                    dataType: 'string'
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+
+      expect(dataTypeToTS(field)).toBe(
+        'Array<{ author: { name: string; books?: Array<{ title?: string }> } }>'
+      )
+    })
+
+    it('converts top-level object fields', () => {
+      const field: SchemaField = {
+        title: 'SEO',
+        fieldType: 'Object',
+        dataType: 'object',
+        fields: {
+          title: {
+            title: 'Title',
+            fieldType: 'String',
+            dataType: 'string',
+            required: true
+          },
+          social: {
+            title: 'Social',
+            fieldType: 'Object',
+            dataType: 'object',
+            fields: {
+              image: {
+                title: 'Image',
+                fieldType: 'Image',
+                dataType: 'image'
+              }
+            }
+          }
+        }
+      }
+
+      expect(dataTypeToTS(field)).toBe(
+        '{ title: string; social?: { image?: string } }'
+      )
+    })
   })
 
   describe('sanitizeFieldName', () => {

@@ -7,6 +7,30 @@ description: ''
 
 If you're looking to add some extra data to your content in a more structured way, then you're in the right place! Outstatic has an awesome feature called custom fields that makes it super easy to do just that.
 
+## Field types
+
+| Field type | Use it for                                        | Saved value                                 |
+| ---------- | ------------------------------------------------- | ------------------------------------------- |
+| String     | Short, single-line text.                          | `string`                                    |
+| Text       | Longer plain text.                                | `string`                                    |
+| Rich Text  | Formatted text edited with the rich text editor.  | `string`                                    |
+| Number     | Numeric values.                                   | `number`                                    |
+| Select     | One value from a list of configured options.      | The selected option's `value` as a `string` |
+| Tags       | Multiple labels or options.                       | An array of `{ label, value }` objects      |
+| Boolean    | True or false values.                             | `boolean`                                   |
+| Date       | Date and time values.                             | Date value stored in frontmatter            |
+| Image      | A selected media item.                            | Image path as a `string`                    |
+| Object     | A group of named sub-fields saved together.       | Object keyed by sub-field ids               |
+| Array      | A repeatable list of primitive values or objects. | Array of the selected item type             |
+
+### Object and Array fields
+
+Use an **Object** field when related values should be edited and saved together, such as SEO metadata, author details, or social sharing settings.
+
+Use an **Array** field when editors need a repeatable list, such as authors, testimonials, links, FAQs, or gallery images. When you choose **Array**, pick an item type. Arrays can contain `String`, `Text`, `Number`, `Boolean`, `Date`, `Image`, or `Object` items.
+
+Object fields and arrays with `Object` items let you define sub-fields. Sub-fields can be `String`, `Text`, `Number`, `Boolean`, `Date`, `Image`, `Object`, or `Array`. Sub-field names must be unique within the same parent object, and nested object-style fields can go up to three levels deep.
+
 ## Steps to add custom fields:
 
 ### Step 1: Access the Add Custom Fields Page
@@ -24,6 +48,10 @@ Once you've selected your Collection, click the Add Custom Field button. This wi
 **Field name:** Enter the name of your custom field in the "Field name" section. This will be the name of the field that appears on your Document.
 
 **Field type:** Choose the data type that you would like the custom field to be in the "Field Type" section. For example, you might choose "string".
+
+For an **Array** field, choose the item type for each entry in the list. If the item type is **Object**, define the sub-fields that each array item should contain.
+
+For an **Object** field, define the sub-fields that belong inside the object.
 
 **Description:** You can add a brief description of the field in the "Description" field. This is a good place to provide context for the field and explain how it should be used.
 
@@ -164,9 +192,77 @@ Example `schema.json` file:
       "fieldType": "Text",
       "dataType": "string",
       "title": "website summary"
+    },
+    "seo": {
+      "required": false,
+      "description": "Search and sharing metadata",
+      "fieldType": "Object",
+      "dataType": "object",
+      "title": "SEO",
+      "fields": {
+        "metaTitle": {
+          "required": true,
+          "fieldType": "String",
+          "dataType": "string",
+          "title": "Meta Title"
+        },
+        "social": {
+          "fieldType": "Object",
+          "dataType": "object",
+          "title": "Social",
+          "fields": {
+            "image": {
+              "fieldType": "Image",
+              "dataType": "image",
+              "title": "Image"
+            }
+          }
+        }
+      }
+    },
+    "authors": {
+      "required": false,
+      "description": "People credited on this project",
+      "fieldType": "Array",
+      "dataType": "array",
+      "title": "Authors",
+      "itemType": "Object",
+      "fields": {
+        "name": {
+          "required": true,
+          "fieldType": "String",
+          "dataType": "string",
+          "title": "Name"
+        },
+        "role": {
+          "fieldType": "String",
+          "dataType": "string",
+          "title": "Role"
+        }
+      }
     }
   }
 }
+```
+
+Object and Array fields are saved in Markdown frontmatter using the same field keys:
+
+```yaml
+seo:
+  metaTitle: Outstatic project
+  social:
+    image: /images/social.png
+authors:
+  - name: Ada Lovelace
+    role: Writer
+  - name: Grace Hopper
+    role: Editor
+```
+
+Select fields are saved as the selected raw value:
+
+```yaml
+category: news
 ```
 
 ## Conclusion

@@ -9,6 +9,26 @@ export type DataType =
   | 'boolean'
   | 'date'
   | 'image'
+  | 'object'
+
+export type ArrayItemType =
+  | 'String'
+  | 'Text'
+  | 'Number'
+  | 'Boolean'
+  | 'Date'
+  | 'Image'
+  | 'Object'
+
+export interface SchemaSubField {
+  title: string
+  fieldType: Exclude<ArrayItemType, 'Object'> | 'Object' | 'Array'
+  dataType: DataType
+  description?: string
+  required?: boolean
+  itemType?: ArrayItemType
+  fields?: Record<string, SchemaSubField>
+}
 
 export interface SchemaField {
   title: string
@@ -17,12 +37,67 @@ export interface SchemaField {
   description?: string
   required?: boolean
   values?: Array<{ label: string; value: string }>
+  itemType?: ArrayItemType
+  fields?: Record<string, SchemaSubField>
 }
 
 export interface Schema {
   title: string
   type: 'object'
   properties: Record<string, SchemaField>
+}
+
+const PRIMITIVE_ITEM_TS: Record<Exclude<ArrayItemType, 'Object'>, string> = {
+  String: 'string',
+  Text: 'string',
+  Number: 'number',
+  Boolean: 'boolean',
+  Date: 'string',
+  Image: 'string'
+}
+
+const objectFieldsToTS = (
+  fields: Record<string, SchemaSubField> | undefined
+): string => {
+  if (!fields || Object.keys(fields).length === 0) {
+    return 'Record<string, unknown>'
+  }
+
+  const props = Object.entries(fields)
+    .map(([key, sub]) => {
+      const optional = sub.required ? '' : '?'
+      const safeName = sanitizeFieldName(key)
+      return `${safeName}${optional}: ${subFieldToTS(sub)}`
+    })
+    .join('; ')
+
+  return `{ ${props} }`
+}
+
+const arrayItemToTS = (
+  itemType: ArrayItemType | undefined,
+  fields: Record<string, SchemaSubField> | undefined
+): string => {
+  const resolvedItemType = itemType ?? 'String'
+
+  if (resolvedItemType === 'Object') {
+    return `Array<${objectFieldsToTS(fields)}>`
+  }
+
+  const itemTS = PRIMITIVE_ITEM_TS[resolvedItemType] ?? 'unknown'
+  return `${itemTS}[]`
+}
+
+const subFieldToTS = (field: SchemaSubField): string => {
+  if (field.fieldType === 'Object') {
+    return objectFieldsToTS(field.fields)
+  }
+
+  if (field.fieldType === 'Array') {
+    return arrayItemToTS(field.itemType, field.fields)
+  }
+
+  return PRIMITIVE_ITEM_TS[field.fieldType] ?? 'unknown'
 }
 
 /**
@@ -35,6 +110,10 @@ export function dataTypeToTS(field: SchemaField): string {
     }
 
     return 'string'
+  }
+
+  if (field.fieldType === 'Array') {
+    return arrayItemToTS(field.itemType, field.fields)
   }
 
   switch (field.dataType) {
@@ -50,6 +129,8 @@ export function dataTypeToTS(field: SchemaField): string {
     case 'image':
       // Images are stored as path strings
       return 'string'
+    case 'object':
+      return objectFieldsToTS(field.fields)
     case 'array':
       // Arrays can have predefined values (tags) or be generic
       if (field.values && field.values.length > 0) {
