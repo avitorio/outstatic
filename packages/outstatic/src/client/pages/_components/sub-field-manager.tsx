@@ -1,10 +1,15 @@
 import { camelCase } from 'change-case'
 import { ChevronDown, ChevronRight, Trash2 } from 'lucide-react'
-import { useMemo, useState } from 'react'
+import { forwardRef, useImperativeHandle, useMemo, useState } from 'react'
 import { useFormContext, useWatch } from 'react-hook-form'
 import { Button } from '@/components/ui/shadcn/button'
 import { Checkbox } from '@/components/ui/shadcn/checkbox'
 import { Input } from '@/components/ui/shadcn/input'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger
+} from '@/components/ui/shadcn/tooltip'
 import { ArrayItemType } from '@/types'
 import { MAX_ARRAY_FIELD_DEPTH } from '@/utils/schemas/custom-field-schema'
 
@@ -18,6 +23,9 @@ const SUB_FIELD_TYPES = [
   'Object',
   'Array'
 ] as const
+
+const EMPTY_SUB_FIELD_ERROR_MESSAGE = 'Add at least one sub-field.'
+const EMPTY_SUB_FIELD_TOOLTIP = 'Add at least one sub-field'
 
 type SubFieldType = (typeof SUB_FIELD_TYPES)[number]
 
@@ -39,6 +47,10 @@ export type SubFieldFormEntry = {
   description?: string
   required?: boolean
   fields?: SubFieldFormEntry[]
+}
+
+export type SubFieldManagerHandle = {
+  goBack: () => boolean
 }
 
 const emptySubField = (): SubFieldFormEntry => ({
@@ -104,11 +116,6 @@ const normalizeForItemType = (
 const isNestable = (field: SubFieldFormEntry) =>
   field.fieldType === 'Object' ||
   (field.fieldType === 'Array' && field.itemType === 'Object')
-
-const describeField = (field: SubFieldFormEntry) =>
-  field.fieldType === 'Array'
-    ? `Array<${field.itemType ?? 'String'}>`
-    : field.fieldType
 
 const fieldsPathForTrail = (path: number[]) =>
   path.reduce((fieldPath, index) => `${fieldPath}.${index}.fields`, 'fields')
@@ -190,18 +197,24 @@ const getTrail = (
   return trail
 }
 
-export const SubFieldManager = ({
-  disabled,
-  rootLabel = 'Items',
-  description = 'Each item in the array is an object with these sub-fields.',
-  framed = true
-}: {
-  disabled?: boolean
-  rootLabel?: string
-  description?: string
-  framed?: boolean
-}) => {
-  const { control, formState, setValue } = useFormContext()
+export const SubFieldManager = forwardRef<
+  SubFieldManagerHandle,
+  {
+    disabled?: boolean
+    rootLabel?: string
+    description?: string
+    framed?: boolean
+  }
+>(function SubFieldManager(
+  {
+    disabled,
+    rootLabel = 'Items',
+    description = 'Each item in the array is an object with these sub-fields.',
+    framed = true
+  },
+  ref
+) {
+  const { clearErrors, control, formState, setValue } = useFormContext()
   const [path, setPath] = useState<number[]>([])
   const watchedFields = useWatch({ control, name: 'fields' }) as
     | SubFieldFormEntry[]
@@ -211,7 +224,14 @@ export const SubFieldManager = ({
     [watchedFields, path]
   )
   const fieldErrorMessages = useMemo(
-    () => Array.from(new Set(collectErrorMessages(formState.errors.fields))),
+    () =>
+      Array.from(
+        new Set(
+          collectErrorMessages(formState.errors.fields).filter(
+            (message) => message !== EMPTY_SUB_FIELD_ERROR_MESSAGE
+          )
+        )
+      ),
     [formState.errors.fields]
   )
 
@@ -230,14 +250,32 @@ export const SubFieldManager = ({
     ? ARRAY_SUB_FIELD_ITEM_TYPES.filter((type) => type !== 'Object')
     : ARRAY_SUB_FIELD_ITEM_TYPES
 
-  const updateCurrentFields = (nextFields: SubFieldFormEntry[]) => {
+  useImperativeHandle(
+    ref,
+    () => ({
+      goBack: () => {
+        if (validPath.length === 0) {
+          return false
+        }
+
+        setPath(validPath.slice(0, -1))
+        return true
+      }
+    }),
+    [validPath]
+  )
+
+  const updateCurrentFields = (
+    nextFields: SubFieldFormEntry[],
+    shouldValidate = true
+  ) => {
     if (!isSamePath(validPath, path)) {
       setPath(validPath)
     }
 
     setValue(currentPath, nextFields, {
       shouldDirty: true,
-      shouldValidate: true
+      shouldValidate
     })
   }
 
@@ -249,7 +287,8 @@ export const SubFieldManager = ({
 
   const handleAdd = () => {
     if (disabled) return
-    updateCurrentFields([...currentFields, emptySubField()])
+    clearErrors(currentPath)
+    updateCurrentFields([...currentFields, emptySubField()], false)
   }
 
   const handleRemove = (index: number) => {
@@ -266,20 +305,11 @@ export const SubFieldManager = ({
           : 'flex min-h-0 flex-col gap-3'
       }
     >
-      <div className="flex items-start justify-between gap-3">
+      <div>
         <div>
           <p className="font-medium">Sub-fields</p>
           <p className="text-sm text-muted-foreground">{description}</p>
         </div>
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
-          onClick={handleAdd}
-          disabled={disabled}
-        >
-          + Add sub-field
-        </Button>
       </div>
 
       {fieldErrorMessages.length > 0 ? (
@@ -341,95 +371,79 @@ export const SubFieldManager = ({
       ) : null}
 
       <div className="flex max-h-[45vh] min-h-0 flex-col gap-3 overflow-y-auto pr-1">
-        {currentFields.map((subField, index) => (
-          <div
-            key={`${currentPath}.${index}`}
-            className="rounded-lg border border-border bg-card p-3"
-          >
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-end">
-              <div className="flex-1">
-                <span className="mb-1.5 block text-sm font-semibold text-foreground">
-                  Name
-                </span>
-                <Input
-                  value={subField.title ?? ''}
-                  placeholder="Ex: Author name"
-                  disabled={disabled}
-                  aria-label="Sub-field name"
-                  className="h-9 rounded-lg border-border bg-background text-sm text-foreground shadow-none"
-                  onChange={(event) => {
-                    const title = event.target.value
-                    const previousAuto = camelCase(subField.title || '')
-                    const name =
-                      !subField.name || subField.name === previousAuto
-                        ? camelCase(title)
-                        : subField.name
+        {currentFields.map((subField, index) => {
+          const missingSubFields =
+            isNestable(subField) && (subField.fields?.length ?? 0) === 0
 
-                    updateSubField(index, {
-                      ...subField,
-                      title,
-                      name
-                    })
-                  }}
-                />
-              </div>
+          const nestedButton = (
+            <Button
+              type="button"
+              variant={missingSubFields ? 'destructive' : 'secondary'}
+              size="sm"
+              onClick={() => setPath([...validPath, index])}
+              disabled={disabled || atDepthLimit}
+              aria-invalid={missingSubFields}
+            >
+              {atDepthLimit ? 'Max depth' : 'Sub-fields'}
+              {!atDepthLimit ? <ChevronRight className="h-4 w-4" /> : null}
+            </Button>
+          )
 
-              <div className="w-full sm:w-36">
-                <span className="mb-1.5 block text-sm font-semibold text-foreground">
-                  Type
-                </span>
-                <div className="relative">
-                  <select
-                    value={subField.fieldType}
+          return (
+            <div
+              key={`${currentPath}.${index}`}
+              className="rounded-lg border border-border bg-card p-3"
+            >
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-end">
+                <div className="flex-1">
+                  <span className="mb-1.5 block text-sm font-semibold text-foreground">
+                    Name
+                  </span>
+                  <Input
+                    value={subField.title ?? ''}
+                    placeholder="Ex: Author name"
                     disabled={disabled}
-                    aria-label="Sub-field type"
-                    className="h-9 w-full appearance-none rounded-lg border border-border bg-background px-3 pr-9 text-sm text-foreground outline-none transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50"
-                    onChange={(event) =>
-                      updateSubField(
-                        index,
-                        normalizeForFieldType(
-                          subField,
-                          event.target.value as SubFieldType,
-                          !atDepthLimit
-                        )
-                      )
-                    }
-                  >
-                    {SUB_FIELD_TYPES.map((type) => (
-                      <option key={type} value={type}>
-                        {type}
-                      </option>
-                    ))}
-                  </select>
-                  <ChevronDown
-                    className="pointer-events-none absolute top-1/2 right-2.5 size-4 -translate-y-1/2 text-muted-foreground"
-                    aria-hidden="true"
+                    aria-label="Sub-field name"
+                    className="h-9 rounded-lg border-border bg-background text-sm text-foreground shadow-none"
+                    onChange={(event) => {
+                      const title = event.target.value
+                      const previousAuto = camelCase(subField.title || '')
+                      const name =
+                        !subField.name || subField.name === previousAuto
+                          ? camelCase(title)
+                          : subField.name
+
+                      updateSubField(index, {
+                        ...subField,
+                        title,
+                        name
+                      })
+                    }}
                   />
                 </div>
-              </div>
 
-              {subField.fieldType === 'Array' ? (
                 <div className="w-full sm:w-36">
                   <span className="mb-1.5 block text-sm font-semibold text-foreground">
-                    Item type
+                    Type
                   </span>
                   <div className="relative">
                     <select
-                      value={subField.itemType ?? 'String'}
+                      value={subField.fieldType}
                       disabled={disabled}
-                      aria-label="Sub-field item type"
+                      aria-label="Sub-field type"
                       className="h-9 w-full appearance-none rounded-lg border border-border bg-background px-3 pr-9 text-sm text-foreground outline-none transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50"
                       onChange={(event) =>
                         updateSubField(
                           index,
-                          normalizeForItemType(
+                          normalizeForFieldType(
                             subField,
-                            event.target.value as ArrayItemType
+                            event.target.value as SubFieldType,
+                            !atDepthLimit
                           )
                         )
                       }
                     >
-                      {availableArrayItemTypes.map((type) => (
+                      {SUB_FIELD_TYPES.map((type) => (
                         <option key={type} value={type}>
                           {type}
                         </option>
@@ -441,68 +455,110 @@ export const SubFieldManager = ({
                     />
                   </div>
                 </div>
-              ) : null}
 
-              <div className="flex items-center gap-3 sm:pb-1.5">
-                <div className="flex flex-col items-center gap-1">
-                  <span className="mb-0 block text-sm font-semibold text-foreground">
-                    Req.
-                  </span>
-                  <Checkbox
-                    checked={!!subField.required}
-                    onCheckedChange={(checked) =>
-                      updateSubField(index, {
-                        ...subField,
-                        required: checked === true
-                      })
-                    }
+                {subField.fieldType === 'Array' ? (
+                  <div className="w-full sm:w-36">
+                    <span className="mb-1.5 block text-sm font-semibold text-foreground">
+                      Item type
+                    </span>
+                    <div className="relative">
+                      <select
+                        value={subField.itemType ?? 'String'}
+                        disabled={disabled}
+                        aria-label="Sub-field item type"
+                        className="h-9 w-full appearance-none rounded-lg border border-border bg-background px-3 pr-9 text-sm text-foreground outline-none transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50"
+                        onChange={(event) =>
+                          updateSubField(
+                            index,
+                            normalizeForItemType(
+                              subField,
+                              event.target.value as ArrayItemType
+                            )
+                          )
+                        }
+                      >
+                        {availableArrayItemTypes.map((type) => (
+                          <option key={type} value={type}>
+                            {type}
+                          </option>
+                        ))}
+                      </select>
+                      <ChevronDown
+                        className="pointer-events-none absolute top-1/2 right-2.5 size-4 -translate-y-1/2 text-muted-foreground"
+                        aria-hidden="true"
+                      />
+                    </div>
+                  </div>
+                ) : null}
+
+                <div className="flex items-center gap-3 sm:pb-1.5">
+                  <div className="flex flex-col items-center gap-1">
+                    <span className="mb-0 block text-sm font-semibold text-foreground">
+                      Req.
+                    </span>
+                    <Checkbox
+                      checked={!!subField.required}
+                      onCheckedChange={(checked) =>
+                        updateSubField(index, {
+                          ...subField,
+                          required: checked === true
+                        })
+                      }
+                      disabled={disabled}
+                      className="size-5 rounded-md border-border bg-background shadow-none hover:bg-muted"
+                    />
+                  </div>
+
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => handleRemove(index)}
                     disabled={disabled}
-                    className="size-5 rounded-md border-border bg-background shadow-none hover:bg-muted"
-                  />
+                    aria-label="Delete sub-field"
+                    className="size-7 rounded-md text-muted-foreground hover:text-destructive"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
                 </div>
+              </div>
 
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => handleRemove(index)}
-                  disabled={disabled}
-                  aria-label="Delete sub-field"
-                  className="size-7 rounded-md text-muted-foreground hover:text-destructive"
-                >
-                  <Trash2 className="h-4 w-4" />
-                </Button>
+              <div className="mt-2 flex items-center justify-between gap-2">
+                <p className="text-xs text-muted-foreground">
+                  Key:{' '}
+                  <span className="font-mono text-foreground">
+                    {subField.name || '—'}
+                  </span>
+                </p>
+
+                {isNestable(subField) ? (
+                  missingSubFields ? (
+                    <Tooltip>
+                      <TooltipTrigger asChild>{nestedButton}</TooltipTrigger>
+                      <TooltipContent>
+                        <p>{EMPTY_SUB_FIELD_TOOLTIP}</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  ) : (
+                    nestedButton
+                  )
+                ) : null}
               </div>
             </div>
-
-            <div className="mt-2 flex items-center justify-between gap-2">
-              <p className="text-xs text-muted-foreground">
-                Key:{' '}
-                <span className="font-mono text-foreground">
-                  {subField.name || '—'}
-                </span>
-              </p>
-
-              {isNestable(subField) ? (
-                <Button
-                  type="button"
-                  variant="secondary"
-                  size="sm"
-                  onClick={() => setPath([...validPath, index])}
-                  disabled={disabled || atDepthLimit}
-                >
-                  {atDepthLimit
-                    ? 'Max depth'
-                    : `${describeField(subField)} · ${
-                        subField.fields?.length ?? 0
-                      }`}
-                  {!atDepthLimit ? <ChevronRight className="h-4 w-4" /> : null}
-                </Button>
-              ) : null}
-            </div>
-          </div>
-        ))}
+          )
+        })}
       </div>
+
+      <Button
+        type="button"
+        variant="outline"
+        size="sm"
+        onClick={handleAdd}
+        disabled={disabled}
+        className="self-start"
+      >
+        + Add sub-field
+      </Button>
     </div>
   )
-}
+})

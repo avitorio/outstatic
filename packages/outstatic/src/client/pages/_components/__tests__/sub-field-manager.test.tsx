@@ -64,13 +64,13 @@ const renderManager = () => {
         <button
           type="button"
           onClick={() =>
-            methods.setError('fields.0.fields' as any, {
-              type: 'custom',
-              message: 'Add at least one sub-field.'
+            methods.setValue('fields.0.fields', [], {
+              shouldDirty: true,
+              shouldValidate: true
             })
           }
         >
-          Set nested error
+          Clear nested fields
         </button>
         <SubFieldManager />
         <FieldsSnapshot />
@@ -87,7 +87,7 @@ describe('<SubFieldManager />', () => {
 
     renderManager()
 
-    await user.click(screen.getByRole('button', { name: 'Object · 1' }))
+    await user.click(screen.getByRole('button', { name: 'Sub-fields' }))
     expect(screen.getByText('Level 2 / 3')).toBeInTheDocument()
 
     await user.click(screen.getByRole('button', { name: 'Clear root fields' }))
@@ -101,15 +101,72 @@ describe('<SubFieldManager />', () => {
     expect(screen.getByTestId('fields-json')).toHaveTextContent('[]')
   })
 
-  it('surfaces nested sub-field validation errors', async () => {
+  it('shows missing sub-field errors on the object row tooltip', async () => {
     const user = userEvent.setup()
 
     renderManager()
 
-    await user.click(screen.getByRole('button', { name: 'Set nested error' }))
+    await user.click(
+      screen.getByRole('button', { name: 'Clear nested fields' })
+    )
+
+    expect(screen.queryByRole('alert')).not.toBeInTheDocument()
+
+    const objectButton = screen.getByRole('button', { name: 'Sub-fields' })
+    expect(objectButton).toHaveAttribute('aria-invalid', 'true')
+    expect(objectButton).toHaveClass('bg-destructive')
+    expect(objectButton.closest('.border-destructive')).not.toBeInTheDocument()
+
+    await user.hover(objectButton)
+
+    expect(
+      await screen.findAllByText('Add at least one sub-field')
+    ).not.toHaveLength(0)
+    expect(
+      screen.queryByText('Add at least one sub-field.')
+    ).not.toBeInTheDocument()
+  })
+
+  it('keeps non-empty sub-field validation errors in the alert', async () => {
+    const user = userEvent.setup()
+
+    const Harness = () => {
+      const methods = useForm<{ fields: SubFieldFormEntry[] }>({
+        defaultValues: {
+          fields: [
+            {
+              name: '',
+              title: '',
+              fieldType: 'String'
+            }
+          ]
+        }
+      })
+
+      return (
+        <FormProvider {...methods}>
+          <button
+            type="button"
+            onClick={() =>
+              methods.setError('fields.0.name' as any, {
+                type: 'custom',
+                message: 'Sub-field name is required.'
+              })
+            }
+          >
+            Set name error
+          </button>
+          <SubFieldManager />
+        </FormProvider>
+      )
+    }
+
+    render(<Harness />)
+
+    await user.click(screen.getByRole('button', { name: 'Set name error' }))
 
     expect(screen.getByRole('alert')).toHaveTextContent(
-      'Add at least one sub-field.'
+      'Sub-field name is required.'
     )
   })
 })

@@ -1,7 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { InfoCircledIcon } from '@radix-ui/react-icons'
 import { camelCase } from 'change-case'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { FormProvider, SubmitHandler, useForm, useWatch } from 'react-hook-form'
 import {
   ArrayItemType,
@@ -56,7 +56,11 @@ import { useFieldSchemaCommit } from '@/utils/hooks/use-field-schema-commit'
 import { editCustomFieldSchema } from '@/utils/schemas/edit-custom-field-schema'
 import { addCustomFieldSchema } from '@/utils/schemas/add-custom-field-schema'
 import { useOutstatic } from '@/utils/hooks/use-outstatic'
-import { SubFieldFormEntry, SubFieldManager } from './sub-field-manager'
+import {
+  SubFieldFormEntry,
+  SubFieldManager,
+  SubFieldManagerHandle
+} from './sub-field-manager'
 
 type CustomFieldForm = {
   title: string
@@ -161,6 +165,62 @@ const formEntriesToSchemaFields = (
   return record
 }
 
+const collectErrorMessages = (error: unknown): string[] => {
+  if (!error || typeof error !== 'object') {
+    return []
+  }
+
+  const maybeMessage = (error as { message?: unknown }).message
+  const messages =
+    typeof maybeMessage === 'string' && maybeMessage.length > 0
+      ? [maybeMessage]
+      : []
+
+  for (const value of Object.values(error)) {
+    if (value && typeof value === 'object') {
+      messages.push(...collectErrorMessages(value))
+    }
+  }
+
+  return messages
+}
+
+const hasEmptyObjectSubFields = (
+  fields: SubFieldFormEntry[] | undefined
+): boolean => {
+  if (!fields) {
+    return false
+  }
+
+  return fields.some((field) => {
+    const hasObjectSubFields =
+      field.fieldType === 'Object' ||
+      (field.fieldType === 'Array' && field.itemType === 'Object')
+
+    if (hasObjectSubFields && (!field.fields || field.fields.length === 0)) {
+      return true
+    }
+
+    return hasEmptyObjectSubFields(field.fields)
+  })
+}
+
+const hasEmptySubFieldNames = (
+  fields: SubFieldFormEntry[] | undefined
+): boolean => {
+  if (!fields) {
+    return false
+  }
+
+  return fields.some((field) => {
+    if (!field.title?.trim() || !field.name?.trim()) {
+      return true
+    }
+
+    return hasEmptySubFieldNames(field.fields)
+  })
+}
+
 const SaveFirstModal = ({
   open,
   onOpenChange
@@ -242,6 +302,7 @@ export const FieldDialog = ({
   const [objectStep, setObjectStep] = useState<'details' | 'sub-fields'>(
     'details'
   )
+  const subFieldManagerRef = useRef<SubFieldManagerHandle>(null)
   const commitFieldSchema = useFieldSchemaCommit(target)
   const selectedFieldDefinition =
     mode === 'edit' ? customFields[selectedField] : undefined
@@ -347,6 +408,14 @@ export const FieldDialog = ({
     if (!validateAddFieldDetails()) return
 
     setObjectStep('sub-fields')
+  }
+
+  const handleSubFieldBack = () => {
+    if (subFieldManagerRef.current?.goBack()) {
+      return
+    }
+
+    setObjectStep('details')
   }
 
   const onSubmit: SubmitHandler<CustomFieldForm> = async (data) => {
@@ -462,8 +531,18 @@ export const FieldDialog = ({
   const showValuesInput =
     activeFieldType === 'Select' || activeFieldType === 'Tags'
   const hasSubFields = Array.isArray(watchedFields) && watchedFields.length > 0
+  const hasMissingSubFieldError = collectErrorMessages(
+    methods.formState.errors.fields
+  ).includes('Add at least one sub-field.')
+  const hasMissingObjectSubFields = hasEmptyObjectSubFields(watchedFields)
+  const hasMissingSubFieldNames = hasEmptySubFieldNames(watchedFields)
   const isSubmitDisabled =
-    submitting || (isAddingObjectSubFieldsStep && !hasSubFields)
+    submitting ||
+    (isAddingObjectSubFieldsStep &&
+      (!hasSubFields ||
+        hasMissingSubFieldError ||
+        hasMissingObjectSubFields ||
+        hasMissingSubFieldNames))
 
   const valuesLabel = isTagsField ? 'Your tags' : 'Options'
 
@@ -750,6 +829,7 @@ export const FieldDialog = ({
             isAddingObjectSubFieldsStep ? (
               <div className="flex flex-col gap-4 mb-4">
                 <SubFieldManager
+                  ref={subFieldManagerRef}
                   rootLabel={
                     isAddingObjectSubFieldsStep ? objectRootLabel : 'Object'
                   }
@@ -769,7 +849,7 @@ export const FieldDialog = ({
               <div className="flex gap-2">
                 <Button
                   type="button"
-                  variant="outline"
+                  variant="ghost"
                   onClick={() => handleDialogChange(false)}
                 >
                   Cancel
@@ -779,7 +859,7 @@ export const FieldDialog = ({
                     key="back"
                     type="button"
                     variant="outline"
-                    onClick={() => setObjectStep('details')}
+                    onClick={handleSubFieldBack}
                     disabled={submitting}
                   >
                     Back

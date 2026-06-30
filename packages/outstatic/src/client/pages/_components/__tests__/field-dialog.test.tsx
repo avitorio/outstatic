@@ -406,13 +406,19 @@ describe('<FieldDialog />', () => {
     expect(screen.getByRole('button', { name: 'Add' })).toBeDisabled()
 
     await user.click(screen.getByRole('button', { name: '+ Add sub-field' }))
-    expect(screen.getByRole('button', { name: 'Add' })).toBeEnabled()
+    expect(screen.getByRole('button', { name: 'Add' })).toBeDisabled()
     await user.type(screen.getByPlaceholderText('Ex: Author name'), 'Author')
+    expect(screen.getByRole('button', { name: 'Add' })).toBeEnabled()
     await user.selectOptions(screen.getByLabelText('Sub-field type'), 'Object')
-    await user.click(screen.getByRole('button', { name: 'Object · 0' }))
+    expect(screen.getByRole('button', { name: 'Add' })).toBeDisabled()
+    expect(mockCommit).not.toHaveBeenCalled()
+
+    await user.click(screen.getByRole('button', { name: 'Sub-fields' }))
 
     await user.click(screen.getByRole('button', { name: '+ Add sub-field' }))
+    expect(screen.getByRole('button', { name: 'Add' })).toBeDisabled()
     await user.type(screen.getByPlaceholderText('Ex: Author name'), 'Name')
+    expect(screen.getByRole('button', { name: 'Add' })).toBeEnabled()
 
     fireEvent.submit(document.querySelector('form') as HTMLFormElement)
 
@@ -543,8 +549,12 @@ describe('<FieldDialog />', () => {
     expect(screen.getByRole('button', { name: 'Back' })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Add' })).toBeDisabled()
     await user.click(screen.getByRole('button', { name: '+ Add sub-field' }))
-    expect(screen.getByRole('button', { name: 'Add' })).toBeEnabled()
+    expect(screen.getByRole('button', { name: 'Add' })).toBeDisabled()
+    expect(
+      screen.queryByText('Add at least one sub-field.')
+    ).not.toBeInTheDocument()
     await user.type(screen.getByPlaceholderText('Ex: Author name'), 'Title')
+    expect(screen.getByRole('button', { name: 'Add' })).toBeEnabled()
 
     await user.click(screen.getByRole('button', { name: 'Back' }))
     expect(screen.getByText('Add Custom Field to Posts')).toBeInTheDocument()
@@ -591,6 +601,34 @@ describe('<FieldDialog />', () => {
     })
   })
 
+  it('goes back one sub-field level before returning to field details', async () => {
+    const user = userEvent.setup()
+
+    renderDialog()
+
+    await user.type(screen.getByPlaceholderText('Ex: Category'), 'SEO')
+    await user.click(screen.getByRole('option', { name: 'Object' }))
+    await user.click(screen.getByRole('button', { name: 'Next' }))
+
+    await user.click(screen.getByRole('button', { name: '+ Add sub-field' }))
+    await user.type(screen.getByLabelText('Sub-field name'), 'Section')
+    await user.selectOptions(screen.getByLabelText('Sub-field type'), 'Object')
+    await user.click(screen.getByRole('button', { name: 'Sub-fields' }))
+
+    expect(screen.getByText('Level 2 / 3')).toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: 'Back' }))
+
+    expect(screen.getByText('Level 1 / 3')).toBeInTheDocument()
+    expect(
+      screen.queryByText('Add Custom Field to Posts')
+    ).not.toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: 'Back' }))
+
+    expect(screen.getByText('Add Custom Field to Posts')).toBeInTheDocument()
+  })
+
   it('hides object array item type at the maximum sub-field depth', async () => {
     const user = userEvent.setup()
 
@@ -603,12 +641,12 @@ describe('<FieldDialog />', () => {
     await user.click(screen.getByRole('button', { name: '+ Add sub-field' }))
     await user.type(screen.getByLabelText('Sub-field name'), 'Section')
     await user.selectOptions(screen.getByLabelText('Sub-field type'), 'Object')
-    await user.click(screen.getByRole('button', { name: 'Object · 0' }))
+    await user.click(screen.getByRole('button', { name: 'Sub-fields' }))
 
     await user.click(screen.getByRole('button', { name: '+ Add sub-field' }))
     await user.type(screen.getByLabelText('Sub-field name'), 'Content')
     await user.selectOptions(screen.getByLabelText('Sub-field type'), 'Object')
-    await user.click(screen.getByRole('button', { name: 'Object · 0' }))
+    await user.click(screen.getByRole('button', { name: 'Sub-fields' }))
 
     expect(screen.getByText('Level 3 / 3')).toBeInTheDocument()
 
