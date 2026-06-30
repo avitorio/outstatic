@@ -61,6 +61,17 @@ const renderManager = () => {
         >
           Clear root fields
         </button>
+        <button
+          type="button"
+          onClick={() =>
+            methods.setError('fields.0.fields' as any, {
+              type: 'custom',
+              message: 'Add at least one sub-field.'
+            })
+          }
+        >
+          Set nested error
+        </button>
         <SubFieldManager />
         <FieldsSnapshot />
       </FormProvider>
@@ -88,5 +99,17 @@ describe('<SubFieldManager />', () => {
       screen.queryByRole('button', { name: 'Section' })
     ).not.toBeInTheDocument()
     expect(screen.getByTestId('fields-json')).toHaveTextContent('[]')
+  })
+
+  it('surfaces nested sub-field validation errors', async () => {
+    const user = userEvent.setup()
+
+    renderManager()
+
+    await user.click(screen.getByRole('button', { name: 'Set nested error' }))
+
+    expect(screen.getByRole('alert')).toHaveTextContent(
+      'Add at least one sub-field.'
+    )
   })
 })

@@ -153,6 +153,26 @@ const isSamePath = (left: number[], right: number[]) =>
   left.length === right.length &&
   left.every((value, index) => value === right[index])
 
+const collectErrorMessages = (error: unknown): string[] => {
+  if (!error || typeof error !== 'object') {
+    return []
+  }
+
+  const maybeMessage = (error as { message?: unknown }).message
+  const messages =
+    typeof maybeMessage === 'string' && maybeMessage.length > 0
+      ? [maybeMessage]
+      : []
+
+  for (const value of Object.values(error)) {
+    if (value && typeof value === 'object') {
+      messages.push(...collectErrorMessages(value))
+    }
+  }
+
+  return messages
+}
+
 const getTrail = (
   fields: SubFieldFormEntry[] | undefined,
   path: number[]
@@ -181,7 +201,7 @@ export const SubFieldManager = ({
   description?: string
   framed?: boolean
 }) => {
-  const { control, setValue } = useFormContext()
+  const { control, formState, setValue } = useFormContext()
   const [path, setPath] = useState<number[]>([])
   const watchedFields = useWatch({ control, name: 'fields' }) as
     | SubFieldFormEntry[]
@@ -189,6 +209,10 @@ export const SubFieldManager = ({
   const validPath = useMemo(
     () => getValidPath(watchedFields, path),
     [watchedFields, path]
+  )
+  const fieldErrorMessages = useMemo(
+    () => Array.from(new Set(collectErrorMessages(formState.errors.fields))),
+    [formState.errors.fields]
   )
 
   const currentFields = useMemo(
@@ -257,6 +281,20 @@ export const SubFieldManager = ({
           + Add sub-field
         </Button>
       </div>
+
+      {fieldErrorMessages.length > 0 ? (
+        <div
+          role="alert"
+          className="rounded-md border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive"
+        >
+          <p className="font-medium">Fix sub-field errors</p>
+          <ul className="mt-1 list-disc space-y-1 pl-4">
+            {fieldErrorMessages.map((message) => (
+              <li key={message}>{message}</li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
 
       <nav
         aria-label="Sub-field path"
