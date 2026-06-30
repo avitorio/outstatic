@@ -114,6 +114,52 @@ describe('DocumentsTable', () => {
     expect(screen.getByText(date2)).toBeInTheDocument()
   })
 
+  it('renders array field values without duplicate key warnings', () => {
+    const consoleError = jest
+      .spyOn(console, 'error')
+      .mockImplementation(() => {})
+
+    mockUseGetDocuments.mockImplementation(() => ({
+      data: {
+        documents: [
+          {
+            slug: 'doc1',
+            title: 'Document 1',
+            tags: [
+              { label: 'News', value: 'news' },
+              { label: 'News', value: 'news' }
+            ],
+            content: '',
+            collection: 'testCollection'
+          }
+        ],
+        metadata: new Map([
+          ['title', 'string'],
+          ['tags', 'array'],
+          ['slug', 'string']
+        ])
+      },
+      refetch: jest.fn()
+    }))
+
+    render(
+      <TestWrapper>
+        <DocumentsTable />
+      </TestWrapper>
+    )
+
+    expect(screen.getAllByText('News')).toHaveLength(2)
+    expect(
+      consoleError.mock.calls.some((args) =>
+        String(args[0]).includes(
+          'Each child in a list should have a unique "key" prop'
+        )
+      )
+    ).toBe(false)
+
+    consoleError.mockRestore()
+  })
+
   it('renders table headers for the default visible columns', () => {
     render(
       <TestWrapper>
