@@ -130,6 +130,29 @@ const getFieldsAtPath = (
   return current
 }
 
+const getValidPath = (
+  fields: SubFieldFormEntry[] | undefined,
+  path: number[]
+): number[] => {
+  const validPath: number[] = []
+  let current = fields ?? []
+
+  for (const index of path) {
+    const node = current[index]
+    if (!node || !isNestable(node)) {
+      break
+    }
+    validPath.push(index)
+    current = node.fields ?? []
+  }
+
+  return validPath
+}
+
+const isSamePath = (left: number[], right: number[]) =>
+  left.length === right.length &&
+  left.every((value, index) => value === right[index])
+
 const getTrail = (
   fields: SubFieldFormEntry[] | undefined,
   path: number[]
@@ -163,23 +186,31 @@ export const SubFieldManager = ({
   const watchedFields = useWatch({ control, name: 'fields' }) as
     | SubFieldFormEntry[]
     | undefined
+  const validPath = useMemo(
+    () => getValidPath(watchedFields, path),
+    [watchedFields, path]
+  )
 
   const currentFields = useMemo(
-    () => getFieldsAtPath(watchedFields, path),
-    [watchedFields, path]
+    () => getFieldsAtPath(watchedFields, validPath),
+    [watchedFields, validPath]
   )
   const trail = useMemo(
-    () => getTrail(watchedFields, path),
-    [watchedFields, path]
+    () => getTrail(watchedFields, validPath),
+    [watchedFields, validPath]
   )
-  const currentPath = fieldsPathForTrail(path)
-  const depth = path.length + 1
+  const currentPath = fieldsPathForTrail(validPath)
+  const depth = validPath.length + 1
   const atDepthLimit = depth >= MAX_ARRAY_FIELD_DEPTH
   const availableArrayItemTypes = atDepthLimit
     ? ARRAY_SUB_FIELD_ITEM_TYPES.filter((type) => type !== 'Object')
     : ARRAY_SUB_FIELD_ITEM_TYPES
 
   const updateCurrentFields = (nextFields: SubFieldFormEntry[]) => {
+    if (!isSamePath(validPath, path)) {
+      setPath(validPath)
+    }
+
     setValue(currentPath, nextFields, {
       shouldDirty: true,
       shouldValidate: true
@@ -419,7 +450,7 @@ export const SubFieldManager = ({
                   type="button"
                   variant="secondary"
                   size="sm"
-                  onClick={() => setPath((current) => [...current, index])}
+                  onClick={() => setPath([...validPath, index])}
                   disabled={disabled || atDepthLimit}
                 >
                   {atDepthLimit
