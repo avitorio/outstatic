@@ -261,6 +261,10 @@ export const FieldDialog = ({
     control: methods.control,
     name: 'title'
   })
+  const watchedFields = useWatch({
+    control: methods.control,
+    name: 'fields'
+  })
 
   useEffect(() => {
     methods.reset(
@@ -440,12 +444,16 @@ export const FieldDialog = ({
   const isArrayField = activeFieldType === 'Array'
   const isObjectField = activeFieldType === 'Object'
   const isObjectArray = isArrayField && activeItemType === 'Object'
+  const isSubFieldObject = isObjectField || isObjectArray
   const isAddingObjectDetailsStep =
-    mode === 'add' && isObjectField && objectStep === 'details'
+    mode === 'add' && isSubFieldObject && objectStep === 'details'
   const isAddingObjectSubFieldsStep =
-    mode === 'add' && isObjectField && objectStep === 'sub-fields'
+    mode === 'add' && isSubFieldObject && objectStep === 'sub-fields'
   const showValuesInput =
     activeFieldType === 'Select' || activeFieldType === 'Tags'
+  const hasSubFields = Array.isArray(watchedFields) && watchedFields.length > 0
+  const isSubmitDisabled =
+    submitting || (isAddingObjectSubFieldsStep && !hasSubFields)
 
   const valuesLabel = isTagsField ? 'Your tags' : 'Options'
 
@@ -629,7 +637,7 @@ export const FieldDialog = ({
               </div>
             ) : null}
 
-            {isArrayField ? (
+            {isArrayField && !isAddingObjectSubFieldsStep ? (
               <div className="flex flex-col gap-4 mb-4">
                 <FormField
                   control={methods.control}
@@ -664,12 +672,12 @@ export const FieldDialog = ({
                   )}
                 />
 
-                {isObjectArray ? <SubFieldManager /> : null}
+                {isObjectArray && mode === 'edit' ? <SubFieldManager /> : null}
               </div>
             ) : null}
 
-            {isObjectField &&
-            (mode === 'edit' || isAddingObjectSubFieldsStep) ? (
+            {(isObjectField && mode === 'edit') ||
+            isAddingObjectSubFieldsStep ? (
               <div className="flex flex-col gap-4 mb-4">
                 <SubFieldManager
                   rootLabel={
@@ -698,6 +706,7 @@ export const FieldDialog = ({
                 </Button>
                 {isAddingObjectSubFieldsStep ? (
                   <Button
+                    key="back"
                     type="button"
                     variant="outline"
                     onClick={() => setObjectStep('details')}
@@ -706,26 +715,33 @@ export const FieldDialog = ({
                     Back
                   </Button>
                 ) : null}
-                <Button
-                  type={isAddingObjectDetailsStep ? 'button' : 'submit'}
-                  onClick={
-                    isAddingObjectDetailsStep ? handleObjectNext : undefined
-                  }
-                  disabled={submitting}
-                >
-                  {submitting ? (
-                    <>
-                      <SpinnerIcon className="text-background mr-2" />
-                      {mode === 'add' ? 'Adding' : 'Editing'}
-                    </>
-                  ) : isAddingObjectDetailsStep ? (
-                    'Next'
-                  ) : mode === 'add' ? (
-                    'Add'
-                  ) : (
-                    'Save Changes'
-                  )}
-                </Button>
+                {isAddingObjectDetailsStep ? (
+                  <Button
+                    key="next"
+                    type="button"
+                    onClick={handleObjectNext}
+                    disabled={submitting}
+                  >
+                    Next
+                  </Button>
+                ) : (
+                  <Button
+                    key="submit"
+                    type="submit"
+                    disabled={isSubmitDisabled}
+                  >
+                    {submitting ? (
+                      <>
+                        <SpinnerIcon className="text-background mr-2" />
+                        {mode === 'add' ? 'Adding' : 'Editing'}
+                      </>
+                    ) : mode === 'add' ? (
+                      'Add'
+                    ) : (
+                      'Save Changes'
+                    )}
+                  </Button>
+                )}
               </div>
             </DialogFooter>
           </form>

@@ -388,7 +388,25 @@ describe('<FieldDialog />', () => {
     let objectOptions = screen.getAllByRole('option', { name: 'Object' })
     await user.click(objectOptions[objectOptions.length - 1])
 
+    expect(
+      screen.queryByRole('button', { name: '+ Add sub-field' })
+    ).not.toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Next' })).toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: 'Next' }))
+
+    expect(
+      screen.queryByText('Add Custom Field to Posts')
+    ).not.toBeInTheDocument()
+    expect(screen.getAllByText('Sub-fields')).toHaveLength(2)
+    expect(screen.getByRole('button', { name: 'Authors' })).toBeInTheDocument()
+    expect(
+      screen.queryByPlaceholderText('Ex: Category')
+    ).not.toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Add' })).toBeDisabled()
+
     await user.click(screen.getByRole('button', { name: '+ Add sub-field' }))
+    expect(screen.getByRole('button', { name: 'Add' })).toBeEnabled()
     await user.type(screen.getByPlaceholderText('Ex: Author name'), 'Author')
     await user.selectOptions(screen.getByLabelText('Sub-field type'), 'Object')
     await user.click(screen.getByRole('button', { name: 'Object · 0' }))
@@ -481,8 +499,17 @@ describe('<FieldDialog />', () => {
       screen.queryByPlaceholderText('Ex: Category')
     ).not.toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Back' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Add' })).toBeDisabled()
     await user.click(screen.getByRole('button', { name: '+ Add sub-field' }))
+    expect(screen.getByRole('button', { name: 'Add' })).toBeEnabled()
     await user.type(screen.getByPlaceholderText('Ex: Author name'), 'Title')
+
+    await user.click(screen.getByRole('button', { name: 'Back' }))
+    expect(screen.getByText('Add Custom Field to Posts')).toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: 'Next' }))
+    expect(mockCommit).not.toHaveBeenCalled()
+    expect(screen.getByRole('button', { name: 'Add' })).toBeEnabled()
 
     fireEvent.submit(document.querySelector('form') as HTMLFormElement)
 
