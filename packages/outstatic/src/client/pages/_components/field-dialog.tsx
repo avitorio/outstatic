@@ -65,6 +65,8 @@ type CustomFieldForm = {
   required?: boolean
   values?: CustomFieldArrayValue[]
   itemType?: ArrayItemType
+  minItems?: number
+  maxItems?: number
   fields?: SubFieldFormEntry[]
 }
 
@@ -197,6 +199,12 @@ const getDefaultValues = ({
       required: selectedFieldDefinition.required ?? false,
       values: isFieldWithValues(selectedFieldDefinition)
         ? selectedFieldDefinition.values
+        : undefined,
+      minItems: isRepeatableArrayCustomField(selectedFieldDefinition)
+        ? selectedFieldDefinition.minItems
+        : undefined,
+      maxItems: isRepeatableArrayCustomField(selectedFieldDefinition)
+        ? selectedFieldDefinition.maxItems
         : undefined
     }
 
@@ -358,6 +366,8 @@ export const FieldDialog = ({
       required: data.required,
       values: data.values,
       itemType: fieldType === 'Array' ? data.itemType : undefined,
+      minItems: fieldType === 'Array' ? data.minItems : undefined,
+      maxItems: fieldType === 'Array' ? data.maxItems : undefined,
       fields: fieldsRecord
     }
 
@@ -673,6 +683,66 @@ export const FieldDialog = ({
                 />
 
                 {isObjectArray && mode === 'edit' ? <SubFieldManager /> : null}
+
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <FormField
+                    control={methods.control}
+                    name="minItems"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Minimum items</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="number"
+                            min={0}
+                            step={1}
+                            placeholder="No minimum"
+                            value={field.value ?? ''}
+                            onChange={(event) => {
+                              const value = event.target.value
+                              field.onChange(
+                                value === '' ? undefined : Number(value)
+                              )
+                            }}
+                          />
+                        </FormControl>
+                        <FormDescription>
+                          Leave blank to allow any number of items.
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={methods.control}
+                    name="maxItems"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Maximum items</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="number"
+                            min={0}
+                            step={1}
+                            placeholder="No maximum"
+                            value={field.value ?? ''}
+                            onChange={(event) => {
+                              const value = event.target.value
+                              field.onChange(
+                                value === '' ? undefined : Number(value)
+                              )
+                            }}
+                          />
+                        </FormControl>
+                        <FormDescription>
+                          Leave blank to allow any number of items.
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
               </div>
             ) : null}
 

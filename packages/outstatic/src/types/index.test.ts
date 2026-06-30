@@ -115,6 +115,25 @@ describe('custom field definitions', () => {
     })
   })
 
+  it('preserves array item constraints on field definitions', () => {
+    const field = createCustomFieldDefinition({
+      title: 'Related posts',
+      fieldType: 'Array',
+      itemType: 'String',
+      minItems: 1,
+      maxItems: 3
+    })
+
+    expect(field).toMatchObject({
+      title: 'Related posts',
+      fieldType: 'Array',
+      dataType: 'array',
+      itemType: 'String',
+      minItems: 1,
+      maxItems: 3
+    })
+  })
+
   it('creates top-level object field definitions', () => {
     const field = createCustomFieldDefinition({
       title: 'SEO',

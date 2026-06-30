@@ -66,6 +66,27 @@ describe('custom field schema validation', () => {
     expect(result.success).toBe(true)
   })
 
+  it('rejects array constraints where max is below min', () => {
+    const result = addCustomFieldSchema.safeParse({
+      title: 'Related Posts',
+      fieldType: 'Array',
+      itemType: 'String',
+      minItems: 3,
+      maxItems: 1
+    })
+
+    expect(result.success).toBe(false)
+    expect(result.error?.issues).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          message:
+            'Maximum items must be greater than or equal to minimum items.',
+          path: ['maxItems']
+        })
+      ])
+    )
+  })
+
   it('rejects duplicate sibling sub-field names at nested levels', () => {
     const result = addCustomFieldSchema.safeParse({
       title: 'Authors',

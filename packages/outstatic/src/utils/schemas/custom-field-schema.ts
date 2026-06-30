@@ -44,6 +44,16 @@ export const customFieldSchemaBase = z.object({
     .array(z.object({ label: z.string(), value: z.string() }))
     .optional(),
   itemType: z.enum(arrayItemTypes).optional(),
+  minItems: z
+    .number()
+    .int('Minimum items must be a whole number.')
+    .min(0, 'Minimum items must be 0 or greater.')
+    .optional(),
+  maxItems: z
+    .number()
+    .int('Maximum items must be a whole number.')
+    .min(0, 'Maximum items must be 0 or greater.')
+    .optional(),
   fields: z.array(arraySubFieldSchema).optional()
 })
 
@@ -153,6 +163,18 @@ export const refineCustomFieldSchema = (
 
   if (data.fieldType !== 'Array') {
     return
+  }
+
+  if (
+    typeof data.minItems === 'number' &&
+    typeof data.maxItems === 'number' &&
+    data.minItems > data.maxItems
+  ) {
+    addIssue(
+      ctx,
+      ['maxItems'],
+      'Maximum items must be greater than or equal to minimum items.'
+    )
   }
 
   if (!data.itemType) {

@@ -468,6 +468,48 @@ describe('<FieldDialog />', () => {
     })
   })
 
+  it('submits item constraints for an array field', async () => {
+    const user = userEvent.setup()
+    const setCustomFields = jest.fn()
+
+    renderDialog({ setCustomFields })
+
+    await user.type(screen.getByPlaceholderText('Ex: Category'), 'Related')
+    await user.click(screen.getByRole('option', { name: 'Array' }))
+    const stringOptions = screen.getAllByRole('option', { name: 'String' })
+    await user.click(stringOptions[stringOptions.length - 1])
+
+    await user.type(screen.getByPlaceholderText('No minimum'), '1')
+    await user.type(screen.getByPlaceholderText('No maximum'), '3')
+
+    fireEvent.submit(document.querySelector('form') as HTMLFormElement)
+
+    await waitFor(() => expect(mockCommit).toHaveBeenCalledTimes(1))
+    expect(mockCommit).toHaveBeenCalledWith({
+      action: 'add',
+      customFields: {
+        related: {
+          title: 'Related',
+          fieldType: 'Array',
+          dataType: 'array',
+          description: '',
+          required: false,
+          itemType: 'String',
+          minItems: 1,
+          maxItems: 3
+        }
+      },
+      fieldName: 'related'
+    })
+    expect(setCustomFields).toHaveBeenCalledWith({
+      related: expect.objectContaining({
+        fieldType: 'Array',
+        minItems: 1,
+        maxItems: 3
+      })
+    })
+  })
+
   it('submits recursive sub-fields for a top-level object field', async () => {
     const user = userEvent.setup()
     const setCustomFields = jest.fn()

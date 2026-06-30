@@ -128,6 +128,8 @@ export type CustomFieldDefinitionInput = {
   required?: boolean
   values?: CustomFieldArrayValue[]
   itemType?: ArrayItemType
+  minItems?: number
+  maxItems?: number
   fields?: { [key: string]: ArraySubFieldDefinition }
 }
 
@@ -326,6 +328,8 @@ export function createCustomFieldDefinition({
   required,
   values = [],
   itemType,
+  minItems,
+  maxItems,
   fields
 }: CustomFieldDefinitionInput): CustomFieldType {
   const baseField = {
@@ -367,6 +371,12 @@ export function createCustomFieldDefinition({
         fieldType,
         dataType: 'array',
         itemType: resolvedItemType
+      }
+      if (typeof minItems === 'number') {
+        arrayField.minItems = minItems
+      }
+      if (typeof maxItems === 'number') {
+        arrayField.maxItems = maxItems
       }
       if (resolvedItemType === 'Object') {
         arrayField.fields = createArraySubFieldDefinitions(fields)
