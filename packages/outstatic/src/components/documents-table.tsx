@@ -63,9 +63,9 @@ const documentColumnLabel = (id: string): string =>
 
 const renderCellValue = (value: unknown): ReactNode => {
   if (Array.isArray(value)) {
-    return value.map((item: { label: string }) => (
+    return value.map((item: { label: string; value?: unknown }, index) => (
       <span
-        key={item.label}
+        key={`${item.value ?? item.label}-${index}`}
         className="bg-muted text-muted-foreground me-2 rounded px-2.5 py-0.5 text-xs font-medium"
       >
         {item.label}
