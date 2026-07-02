@@ -56,9 +56,11 @@ export type OutstaticData = {
   projectInfo?: {
     projectId: string
     projectSlug: string
+    projectName?: string
     accountSlug: string
     repoOwner: string
     repoSlug: string
+    monorepoPath?: string
   }
 }
 
@@ -98,6 +100,7 @@ async function fetchProjectFromHandshake(
       accountSlug: data.account_slug,
       repoOwner: data.repo_owner,
       repoSlug: data.repo_slug,
+      monorepoPath: data.monorepo_path,
       isPro: data.is_pro
     }
   } catch (error) {
@@ -148,7 +151,8 @@ export async function Outstatic({
     repoBranch: resolvedRepoBranch,
     ostPath: process.env.OST_OUTSTATIC_PATH || DEFAULT_OST_PATH,
     contentPath: process.env.OST_CONTENT_PATH || DEFAULT_CONTENT_PATH,
-    monorepoPath: process.env.OST_MONOREPO_PATH || '',
+    monorepoPath:
+      projectInfo?.monorepoPath || process.env.OST_MONOREPO_PATH || '',
     session: session || null,
     missingEnvVars: false,
     hasAIProviderKey:
@@ -175,7 +179,8 @@ export async function Outstatic({
           projectSlug: projectInfo.projectSlug,
           accountSlug: projectInfo.accountSlug,
           repoOwner: projectInfo.repoOwner,
-          repoSlug: projectInfo.repoSlug
+          repoSlug: projectInfo.repoSlug,
+          monorepoPath: projectInfo.monorepoPath
         }
       : undefined
   }

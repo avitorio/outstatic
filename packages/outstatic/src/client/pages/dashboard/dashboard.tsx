@@ -27,7 +27,7 @@ import NewCollectionModal from '../collections/_components/new-collection-modal'
 export default function Dashboard() {
   const { data: collections, isPending: collectionsPending } = useCollections()
   const { data: singletons, isPending: singletonsPending } = useSingletons()
-  const { dashboardRoute, basePath } = useOutstatic()
+  const { dashboardRoute, basePath, projectInfo } = useOutstatic()
   const { canManageCollections } = usePermissions()
   const router = useRouter()
   const [showOpenFileModal, setShowOpenFileModal] = useState(false)
@@ -36,11 +36,27 @@ export default function Dashboard() {
   const hasCollections = collections && collections.length > 0
   const hasSingletons = singletons && singletons.length > 0
   const hasContent = hasCollections || hasSingletons
+  const projectName = projectInfo?.projectName?.trim()
+  const projectRepository = [projectInfo?.repoOwner, projectInfo?.repoSlug]
+    .filter(Boolean)
+    .join('/')
+  const projectLocation = [projectRepository, projectInfo?.monorepoPath]
+    .filter(Boolean)
+    .join(' / ')
 
   if (isPending) return <AdminLoading />
 
   return (
-    <AdminLayout title="Dashboard">
+    <AdminLayout title={projectName ? `${projectName} Dashboard` : 'Dashboard'}>
+      {projectName ? (
+        <div className="mb-8">
+          <h1 className="text-2xl text-foreground">{projectName}</h1>
+          {projectLocation ? (
+            <p className="text-sm text-muted-foreground">{projectLocation}</p>
+          ) : null}
+        </div>
+      ) : null}
+
       {!hasContent ? (
         <LineBackground>
           <ContentOnboarding />

@@ -23,6 +23,7 @@ export type ProjectInfo = {
   accountSlug: string
   repoOwner: string
   repoSlug: string
+  monorepoPath?: string
   isPro: boolean
 }
 
