@@ -1,6 +1,23 @@
 # outstatic
 
-## 2.1.12
+## 2.2.0
+
+### Minor Changes
+
+- e001f88: Add `Array` and `Object` custom field types. Arrays can hold configurable primitive items, object items with nested sub-objects, or nested object arrays; object fields can define the same recursive sub-field shapes. Array items can be reordered via drag-and-drop, and generated TypeScript types reflect the recursive field shape.
+
+### Patch Changes
+
+- e001f88: Use a second step when adding array-of-object custom fields.
+- 2e88586: Fix collection creation toasts staying visible after metadata indexing.
+- 92471e5: Fix repository folder navigation when nested paths contain repeated folder names.
+- e001f88: - Prevent sub-field empty-list validation from appearing immediately after adding a sub-field row.
+  - Move the sub-field add control below the sub-field list and show missing nested sub-fields on the sub-field button with destructive styling and a tooltip.
+  - Make sub-field Back navigation step up one level before returning to field details.
+  - Use a ghost style for the custom field dialog Cancel button.
+  - Keep the Add button disabled until every sub-field has a name.
+
+## 2.2.0
 
 ### Patch Changes
 
