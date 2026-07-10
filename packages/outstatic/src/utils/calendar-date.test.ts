@@ -38,4 +38,12 @@ describe('toCalendarDate', () => {
   it('identifies invalid date values so form callers can leave them unset', () => {
     expect(isValidCalendarDate(toCalendarDate('not-a-date'))).toBe(false)
   })
+
+  it('leaves data unchanged when raw frontmatter is unavailable', () => {
+    const timestamp = new Date('2024-04-07T00:00:00.000Z')
+
+    expect(normalizeDateOnlyFrontmatter({ eventDate: timestamp })).toEqual({
+      eventDate: timestamp
+    })
+  })
 })

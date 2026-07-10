@@ -4,12 +4,12 @@ export function isValidCalendarDate(date: Date): boolean {
   return !Number.isNaN(date.getTime())
 }
 
-export function getDateOnlyFrontmatterKeys(frontmatter: string): Set<string> {
+export function getDateOnlyFrontmatterKeys(frontmatter?: string): Set<string> {
   const keys = new Set<string>()
   const dateField =
     /^([A-Za-z_][A-Za-z0-9_.-]*):\s*['"]?(\d{4}-\d{2}-\d{2})['"]?(?:\s+#.*)?\s*$/
 
-  for (const line of frontmatter.split('\n')) {
+  for (const line of (frontmatter ?? '').split('\n')) {
     const match = line.match(dateField)
     if (match) keys.add(match[1])
   }
@@ -53,7 +53,7 @@ export function toCalendarDate(
 
 export function normalizeDateOnlyFrontmatter<T extends Record<string, unknown>>(
   data: T,
-  frontmatter: string
+  frontmatter?: string
 ): T {
   const dateOnlyKeys = getDateOnlyFrontmatterKeys(frontmatter)
   if (dateOnlyKeys.size === 0) return data
