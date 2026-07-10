@@ -19,6 +19,7 @@ import {
   FormMessage
 } from '@/components/ui/shadcn/form'
 import { useFormContext } from 'react-hook-form'
+import { toCalendarDate } from '@/utils/calendar-date'
 
 export function DateTimePickerForm({
   id,
@@ -52,10 +53,7 @@ export function DateTimePickerForm({
                     )}
                   >
                     {field.value ? (
-                      format(
-                        field.value ? new Date(field.value) : new Date(),
-                        'MMMM d, yyyy'
-                      )
+                      format(toCalendarDate(field.value), 'MMMM d, yyyy')
                     ) : (
                       <span>Pick a date</span>
                     )}
@@ -68,9 +66,11 @@ export function DateTimePickerForm({
                   fromYear={new Date().getFullYear() - 100}
                   toYear={new Date().getFullYear() + 10}
                   mode="single"
-                  selected={field.value ? new Date(field.value) : new Date()}
+                  selected={
+                    field.value ? toCalendarDate(field.value) : new Date()
+                  }
                   defaultMonth={
-                    field.value ? new Date(field.value) : new Date()
+                    field.value ? toCalendarDate(field.value) : new Date()
                   }
                   onSelect={field.onChange}
                   initialFocus
@@ -78,7 +78,9 @@ export function DateTimePickerForm({
                 <div className="p-3 border-t border-border">
                   <TimePicker
                     setDate={field.onChange}
-                    date={field.value ? new Date(field.value) : new Date()}
+                    date={
+                      field.value ? toCalendarDate(field.value) : new Date()
+                    }
                   />
                 </div>
               </PopoverContent>

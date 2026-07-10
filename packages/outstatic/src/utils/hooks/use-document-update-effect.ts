@@ -8,6 +8,7 @@ import { UseFormReturn } from 'react-hook-form'
 import { useGetDocument } from './use-get-document'
 import { useOutstatic } from './use-outstatic'
 import { useCollections } from './use-collections'
+import { normalizeDateOnlyFrontmatter, toCalendarDate } from '@/utils/calendar-date'
 
 interface UseDocumentUpdateEffectProps {
   collection: string
@@ -75,7 +76,8 @@ export const useDocumentUpdateEffect = ({
 
     if (document && editor) {
       const { mdDocument } = document
-      const { data, content } = matter(mdDocument)
+      const { data, content, matter: frontmatter } = matter(mdDocument)
+      const normalizedData = normalizeDateOnlyFrontmatter(data, frontmatter)
       setMetadata(data)
       const parsedContent = parseContent({
         content,
@@ -88,12 +90,12 @@ export const useDocumentUpdateEffect = ({
         repoMediaPath
       })
 
-      const newDate = data.publishedAt
-        ? new Date(data.publishedAt)
+      const newDate = normalizedData.publishedAt
+        ? toCalendarDate(normalizedData.publishedAt)
         : getLocalDate()
 
       const newDocument = {
-        ...data,
+        ...normalizedData,
         publishedAt: newDate,
         content: parsedContent,
         slug
