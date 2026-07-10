@@ -233,6 +233,9 @@ export const SingletonsTable = () => {
     []
   )
 
+  // TanStack Table exposes functions that React Compiler deliberately does not
+  // memoize. This table is not passed through a memoized boundary.
+  // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
     data: documents,
     columns,
