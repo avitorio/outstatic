@@ -17,6 +17,7 @@ import { useContentScan } from '@/utils/hooks/use-content-scan'
 import { ContentScanReview } from './content-scan-review'
 import { useOutstatic } from '@/utils/hooks/use-outstatic'
 import { usePermissions } from '@/utils/hooks/use-permissions'
+import { Loader2 } from 'lucide-react'
 
 function ManualContentOnboarding() {
   return (
@@ -50,7 +51,14 @@ function ContentDiscovery() {
     return <ManualContentOnboarding />
   }
   if (scan.isPending) {
-    return <p className="text-muted-foreground">Scanning your repository for Markdown content…</p>
+    return (
+      <Card className="animate-fade-in">
+        <CardContent className="flex items-center gap-3 py-6 text-muted-foreground">
+          <Loader2 className="h-5 w-5 animate-spin" aria-hidden="true" />
+          <p>Scanning your repository for Markdown content…</p>
+        </CardContent>
+      </Card>
+    )
   }
   if (
     scan.isError ||
