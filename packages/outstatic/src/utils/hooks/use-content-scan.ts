@@ -9,7 +9,7 @@ export function useContentScan() {
   const projectId = projectInfo?.projectId
 
   return useQuery({
-    queryKey: ['content-scan-v5', { projectId, repoBranch }],
+    queryKey: ['content-scan-v6', { projectId, repoBranch }],
     queryFn: async (): Promise<ContentScanResult> => {
       if (!contentScanUrl || !projectId || !repoBranch) {
         throw new Error('Repository discovery is not available.')
