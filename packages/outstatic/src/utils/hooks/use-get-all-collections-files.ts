@@ -2,6 +2,7 @@ import { generateGetFileInformationQuery } from '@/graphql/queries/metadata'
 import { useOutstatic } from '@/utils/hooks/use-outstatic'
 import { useQuery } from '@tanstack/react-query'
 import { useCollections } from './use-collections'
+import { useSingletons } from './use-singletons'
 
 type TreeEntry = {
   object: {
@@ -40,21 +41,33 @@ export const useGetAllCollectionsFiles = ({
   const { refetch: refetchCollections } = useCollections({
     enabled: false
   })
+  const { refetch: refetchSingletons } = useSingletons({ enabled: false })
 
   return useQuery({
     queryKey: ['file-info', { filePath: `${repoBranch}:${ostContent}` }],
     queryFn: async () => {
-      const { data: collectionsData } = await refetchCollections()
+      const [{ data: collectionsData }, { data: singletonsData }] =
+        await Promise.all([refetchCollections(), refetchSingletons()])
+      const collections = collectionsData ?? []
+      const singletons = singletonsData ?? []
 
-      if (!collectionsData || collectionsData.length === 0) {
+      if (collections.length === 0 && singletons.length === 0) {
         throw new Error('No collections data found')
       }
 
-      const fullData = collectionsData ?? []
+      const fullData = collections
+      const singletonDirectories = Array.from(
+        new Set(singletons.map((singleton) => singleton.directory))
+      )
 
       // Fetch external files
       const externalFilesData =
-        fullData.length > 0 ? await fetchExternalFiles(fullData) : null
+        fullData.length + singletonDirectories.length > 0
+          ? await fetchExternalFiles([
+              ...fullData,
+              ...singletonDirectories.map((path) => ({ path }))
+            ])
+          : null
 
       // Combine all entries
       const finalEntries = combineEntries(externalFilesData?.repository ?? {})
@@ -65,7 +78,12 @@ export const useGetAllCollectionsFiles = ({
         }
       }
 
-      return { repository: finalRepository, collections: fullData }
+      return {
+        repository: finalRepository,
+        collections: fullData,
+        singletonPaths: singletons.map((singleton) => singleton.path),
+        singletonDirectories
+      }
     },
     meta: {
       errorMessage: `Failed to fetch metadata.`

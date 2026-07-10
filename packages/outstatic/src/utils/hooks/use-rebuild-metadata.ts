@@ -25,6 +25,7 @@ interface FileData {
   path: string
   oid: string
   commit: string
+  collection?: string
 }
 
 const isIndexable = (fileName: string) => {
@@ -83,16 +84,34 @@ export const useRebuildMetadata = ({
   const extractFiles = (data: any): FileData[] => {
     const object = data?.repository?.object
     const output: FileData[] = []
+    const singletonPaths = new Set<string>(data?.singletonPaths ?? [])
+    const singletonDirectories = data?.singletonDirectories ?? []
     const queue = object?.entries ? [...object.entries] : []
     while (queue.length > 0) {
       const nextEntry = queue.pop()
       if (nextEntry?.type === 'tree') {
         queue.push(...(nextEntry.object.entries ?? []))
       } else if (nextEntry?.type === 'blob' && isIndexable(nextEntry.path)) {
+        const belongsToSingletonDirectory = singletonDirectories.some(
+          (directory: string) =>
+            directory === ''
+              ? !nextEntry.path.includes('/')
+              : nextEntry.path === directory ||
+                nextEntry.path.startsWith(`${directory}/`)
+        )
+        if (
+          belongsToSingletonDirectory &&
+          !singletonPaths.has(nextEntry.path)
+        ) {
+          continue
+        }
         output.push({
           path: nextEntry.path,
           oid: `${nextEntry.object.oid}`,
-          commit: hashFromUrl(`${nextEntry.object.commitUrl}`)
+          commit: hashFromUrl(`${nextEntry.object.commitUrl}`),
+          collection: singletonPaths.has(nextEntry.path)
+            ? '_singletons'
+            : undefined
         })
       }
     }
@@ -157,7 +176,9 @@ export const useRebuildMetadata = ({
             const meta = await getMetaFromFile(fileData)
             docs.push({
               ...meta,
-              collection: fileData.path.split('/').slice(-2, -1)[0]
+              collection:
+                fileData.collection ??
+                fileData.path.split('/').slice(-2, -1)[0]
             })
             setProcessed((prev) => prev + 1)
           })

@@ -13,6 +13,54 @@ import { CreateBranchDialog } from '@/components/ui/outstatic/create-branch-dial
 import { useInitialData } from '@/utils/hooks/use-initial-data'
 import CollectionOnboarding from '../collections/_components/collection-onboarding'
 import SingletonOnboarding from '../singletons/_components/singleton-onboarding'
+import { useContentScan } from '@/utils/hooks/use-content-scan'
+import { ContentScanReview } from './content-scan-review'
+import { useOutstatic } from '@/utils/hooks/use-outstatic'
+import { usePermissions } from '@/utils/hooks/use-permissions'
+
+function ManualContentOnboarding() {
+  return (
+    <div className="space-y-6">
+      <div className="mb-8 flex h-12 flex-col items-start gap-2">
+        <h1 className="mr-4 text-2xl">Start your site</h1>
+        <p>Most sites start with a Collection like Blog or Projects.</p>
+      </div>
+      <CollectionOnboarding />
+      <div className="relative">
+        <div className="absolute inset-0 flex items-center">
+          <div className="w-full border-t border-border" />
+        </div>
+        <div className="relative flex justify-center">
+          <span className="bg-background mb-1 px-3 text-xs text-muted-foreground">
+            or start with a standalone page
+          </span>
+        </div>
+      </div>
+      <SingletonOnboarding />
+    </div>
+  )
+}
+
+function ContentDiscovery() {
+  const { contentScanUrl } = useOutstatic()
+  const { canManageCollections } = usePermissions()
+  const scan = useContentScan()
+  const [manual, setManual] = useState(false)
+  if (!contentScanUrl || !canManageCollections || manual) {
+    return <ManualContentOnboarding />
+  }
+  if (scan.isPending) {
+    return <p className="text-muted-foreground">Scanning your repository for Markdown content…</p>
+  }
+  if (
+    scan.isError ||
+    !scan.data ||
+    (!scan.data.suggestions.length && !scan.data.singletons.length)
+  ) {
+    return <ManualContentOnboarding />
+  }
+  return <ContentScanReview scan={scan.data} onManual={() => setManual(true)} />
+}
 
 export default function ContentOnboarding() {
   const { repoBranch: initialRepoBranch } = useInitialData()
@@ -30,28 +78,7 @@ export default function ContentOnboarding() {
     <>
       <div className="max-w-2xl">
         {confirmBranch ? (
-          <div className="space-y-6">
-            <div className="mb-8 flex flex-col gap-2 h-12 items-start">
-              <h1 className="mr-4 text-2xl">Start your site</h1>
-              <p>Most sites start with a Collection like Blog or Projects.</p>
-            </div>
-
-            <CollectionOnboarding />
-
-            {/* Divider */}
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-border" />
-              </div>
-              <div className="relative flex justify-center">
-                <span className="bg-background px-3 text-xs text-muted-foreground mb-1">
-                  or start with a standalone page
-                </span>
-              </div>
-            </div>
-
-            <SingletonOnboarding />
-          </div>
+          <ContentDiscovery />
         ) : (
           <Card className="animate-fade-in">
             <CardHeader>

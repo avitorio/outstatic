@@ -1,5 +1,9 @@
 import { getLoginSession, type LoginSession } from '@/utils/auth/auth'
-import { OUTSTATIC_API_KEY, OUTSTATIC_API_URL } from '@/utils/constants'
+import {
+  OUTSTATIC_API_KEY,
+  OUTSTATIC_API_PATH,
+  OUTSTATIC_API_URL
+} from '@/utils/constants'
 import type { EnvVarsType } from '@/utils/env-vars-check'
 import type { MediaSourceConfig } from '@/utils/metadata/types'
 import {
@@ -46,6 +50,8 @@ export type OutstaticData = {
   ostContent?: string
   dashboardRoute: string
   githubGql: string
+  /** Optional repository discovery endpoint supplied by hosted Outstatic. */
+  contentScanUrl?: string
   publicMediaPath: string
   repoMediaPath: string
   media: MediaSourceConfig[]
@@ -164,6 +170,9 @@ export async function Outstatic({
       session?.provider === 'github'
         ? GITHUB_GRAPHQL_URL
         : `${OUTSTATIC_API_URL}/github/parser`,
+    contentScanUrl: OUTSTATIC_API_KEY
+      ? `${process.env.OST_BASE_PATH || ''}${OUTSTATIC_API_PATH}/scan`
+      : undefined,
     publicMediaPath: process.env.OST_PUBLIC_MEDIA_PATH || '',
     repoMediaPath: process.env.OST_REPO_MEDIA_PATH || '',
     media: [],

@@ -10,6 +10,7 @@ import {
 } from '@/app/api/auth/google-login'
 import refresh from '@/app/api/auth/refresh'
 import generate from '@/app/api/generate'
+import scan from '@/app/api/scan'
 import media from '@/app/api/media'
 import { GET as githubGet, POST as githubPost } from '@/app/api/github'
 import { NextRequest } from 'next/server'
@@ -44,6 +45,7 @@ const getPaths: Record<string, RouteHandler> = {
 
 const postPaths: Record<string, RouteHandler> = {
   generate,
+  scan,
   github: githubPost,
   'magic-link': magicLink,
   'google-login': googleLoginPost,
