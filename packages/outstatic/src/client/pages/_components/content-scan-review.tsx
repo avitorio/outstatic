@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/shadcn/input'
 import type { ContentScanResult, ContentSuggestion } from '@/types/content-scan'
 import { useImportContent } from '@/utils/hooks/use-import-content'
 import { useOutstatic } from '@/utils/hooks/use-outstatic'
+import { UpgradeDialog } from '@/components/ui/outstatic/upgrade-dialog'
 import { AlertTriangle, Loader2 } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { toast } from 'sonner'
@@ -66,7 +67,8 @@ export function ContentScanReview({
   scan: ContentScanResult
   onManual: () => void
 }) {
-  const { canSaveContent, isHosted, isPro } = useOutstatic()
+  const { canSaveContent, isHosted, isPro, projectInfo, dashboardRoute } =
+    useOutstatic()
   const importContent = useImportContent()
   const [collections, setCollections] = useState<EditableSuggestion[]>(() =>
     scan.suggestions.map((suggestion) => ({ ...suggestion, selected: suggestion.preselected }))
@@ -75,6 +77,7 @@ export function ContentScanReview({
     scan.singletons.map((suggestion) => ({ ...suggestion, selected: true }))
   )
   const [applying, setApplying] = useState(false)
+  const [showUpgradeDialog, setShowUpgradeDialog] = useState(false)
   const canImport = isHosted ? Boolean(canSaveContent) : isPro
   const selectedCollections = useMemo(() => collections.filter((item) => item.selected), [collections])
   const selectedSingletons = useMemo(() => singletons.filter((item) => item.selected), [singletons])
@@ -83,7 +86,11 @@ export function ContentScanReview({
     setItems(items.map((item) => item.id === next.id ? next : item))
 
   const apply = async () => {
-    if (!canImport || applying) return
+    if (applying) return
+    if (!canImport) {
+      setShowUpgradeDialog(true)
+      return
+    }
     setApplying(true)
     try {
       const result = await importContent(selectedCollections, selectedSingletons)
@@ -131,14 +138,20 @@ export function ContentScanReview({
           </section>
         ) : null}
         <div className="flex flex-wrap items-center gap-3 pt-2">
-          <Button onClick={apply} disabled={!canImport || applying || selectedCount === 0}>
+          <Button onClick={apply} disabled={applying || selectedCount === 0}>
             {applying ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
             Set up dashboard{selectedCount ? ` (${selectedCount})` : ''}
-          </Button>
-          {!canImport ? <span className="text-sm text-muted-foreground">Upgrade to import this content.</span> : null}
+          </Button>         
           <Button variant="ghost" onClick={onManual}>Set up manually</Button>
         </div>
       </CardContent>
+      <UpgradeDialog
+        open={showUpgradeDialog}
+        onOpenChange={setShowUpgradeDialog}
+        feature="content-setup"
+        accountSlug={projectInfo?.accountSlug}
+        dashboardRoute={dashboardRoute}
+      />
     </Card>
   )
 }

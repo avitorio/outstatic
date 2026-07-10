@@ -17,13 +17,19 @@ import Link from 'next/link'
 import { OUTSTATIC_APP_URL } from '@/utils/constants'
 import { Button } from '../shadcn/button'
 
-export type UpgradeFeature = 'team' | 'api-keys' | 'ai' | 'save'
+export type UpgradeFeature =
+  | 'team'
+  | 'api-keys'
+  | 'ai'
+  | 'save'
+  | 'content-setup'
 
 const headline: Record<UpgradeFeature, string> = {
   team: 'Unlock Team Collaboration',
   'api-keys': 'Unlock API Keys',
   ai: 'Write faster with AI',
-  save: 'Upgrade to save your content'
+  save: 'Upgrade to save your content',
+  'content-setup': 'Set up your dashboard automatically'
 }
 
 const getUpgradeUrl = (
@@ -31,6 +37,12 @@ const getUpgradeUrl = (
   dashboardRoute: string | undefined,
   feature: UpgradeFeature
 ) => {
+  if (feature === 'content-setup') {
+    return accountSlug
+      ? `${OUTSTATIC_APP_URL}/home/${accountSlug}/upgrade-set-up`
+      : `${OUTSTATIC_APP_URL}/auth/sign-up?provider=github`
+  }
+
   if (feature === 'save') {
     const destination = accountSlug
       ? new URL(`${OUTSTATIC_APP_URL}/home/${accountSlug}/`)
@@ -73,6 +85,27 @@ const features = [
   }
 ]
 
+const contentSetupFeatures = [
+  {
+    icon: <Sparkles className="h-5 w-5" />,
+    title: 'Automatic content setup',
+    description:
+      'Turn the Markdown folders we found into a ready-to-use dashboard in one step.'
+  },
+  {
+    icon: <CheckCircle className="h-5 w-5" />,
+    title: 'Safe field matching',
+    description:
+      'Import only frontmatter fields that match supported Outstatic field types.'
+  },
+  {
+    icon: <Users className="h-5 w-5" />,
+    title: 'Everything in Git',
+    description:
+      'Keep your repository as the source of truth while giving your team a dashboard.'
+  }
+]
+
 export function UpgradeDialog({
   open = false,
   onOpenChange,
@@ -89,6 +122,14 @@ export function UpgradeDialog({
 }>) {
   const [isOpen, setIsOpen] = useState(open)
   const [hasMounted, setHasMounted] = useState(false)
+  const dialogFeatures =
+    feature === 'content-setup' ? contentSetupFeatures : features
+  const description =
+    feature === 'content-setup'
+      ? 'Upgrade to Pro to import the content we found and configure your dashboard automatically.'
+      : feature === 'save'
+        ? 'Outstatic.com projects require Pro to save changes. Self-hosted Outstatic remains free.'
+        : 'Upgrade to Pro and unlock powerful features to grow your team and boost productivity.'
 
   useEffect(() => {
     setIsOpen(open)
@@ -121,15 +162,13 @@ export function UpgradeDialog({
             {headline[feature]}
           </DialogTitle>
           <DialogDescription className="text-muted-foreground mx-auto max-w-sm text-base">
-            {feature === 'save'
-              ? 'Outstatic.com projects require Pro to save changes. Self-hosted Outstatic remains free.'
-              : 'Upgrade to Pro and unlock powerful features to grow your team and boost productivity.'}
+            {description}
           </DialogDescription>
         </DialogHeader>
 
         <div>
           <FeatureGrid className="flex flex-col gap-4">
-            {features.map((feature) => (
+            {dialogFeatures.map((feature) => (
               <div
                 key={feature.title}
                 className="bg-card hover:bg-accent/50 flex items-start gap-3 rounded-lg border p-4 transition-colors"
@@ -158,7 +197,9 @@ export function UpgradeDialog({
               rel="noopener noreferrer"
               href={getUpgradeUrl(accountSlug, dashboardRoute, feature)}
             >
-              Start your free trial
+              {feature === 'content-setup'
+                ? 'Upgrade to set up your dashboard'
+                : 'Start your free trial'}
               <ArrowRight className="ml-2 h-4 w-4" />
             </Link>
           </Button>
