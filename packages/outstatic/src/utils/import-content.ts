@@ -8,14 +8,14 @@ export type ImportFile = { path: string; content: string }
 
 export function fieldsToSchemaProperties(fields: InferredField[]) {
   return Object.fromEntries(
-    fields.map(({ name, title, fieldType, dataType, required, values }) => [
+    fields.map(({ name, title, fieldType, dataType, required, itemType }) => [
       name,
       {
         title,
         fieldType,
         dataType,
         required,
-        ...(values?.length ? { values } : {})
+        ...(itemType ? { itemType } : {})
       }
     ])
   )

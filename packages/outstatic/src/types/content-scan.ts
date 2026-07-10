@@ -1,11 +1,10 @@
 export type InferredField = {
   name: string
   title: string
-  fieldType: 'String' | 'Text' | 'Number' | 'Boolean' | 'Date' | 'Image' | 'Tags'
+  fieldType: 'String' | 'Text' | 'Number' | 'Boolean' | 'Date' | 'Image' | 'Array'
   dataType: 'string' | 'number' | 'boolean' | 'date' | 'image' | 'array'
   required: false
-  values?: Array<{ label: string; value: string }>
-  warnings?: string[]
+  itemType?: 'String'
 }
 
 export type ContentSuggestion = {
