@@ -72,7 +72,7 @@ export function ContentScanReview({
     scan.suggestions.map((suggestion) => ({ ...suggestion, selected: suggestion.preselected }))
   )
   const [singletons, setSingletons] = useState<EditableSuggestion[]>(() =>
-    scan.singletons.map((suggestion) => ({ ...suggestion, selected: false }))
+    scan.singletons.map((suggestion) => ({ ...suggestion, selected: true }))
   )
   const [applying, setApplying] = useState(false)
   const canImport = isHosted ? Boolean(canSaveContent) : isPro
