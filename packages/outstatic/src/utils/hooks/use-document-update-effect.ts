@@ -8,7 +8,11 @@ import { UseFormReturn } from 'react-hook-form'
 import { useGetDocument } from './use-get-document'
 import { useOutstatic } from './use-outstatic'
 import { useCollections } from './use-collections'
-import { normalizeDateOnlyFrontmatter, toCalendarDate } from '@/utils/calendar-date'
+import {
+  isValidCalendarDate,
+  normalizeDateOnlyFrontmatter,
+  toCalendarDate
+} from '@/utils/calendar-date'
 
 interface UseDocumentUpdateEffectProps {
   collection: string
@@ -90,9 +94,13 @@ export const useDocumentUpdateEffect = ({
         repoMediaPath
       })
 
-      const newDate = normalizedData.publishedAt
+      const parsedDate = normalizedData.publishedAt
         ? toCalendarDate(normalizedData.publishedAt)
-        : getLocalDate()
+        : undefined
+      const newDate =
+        parsedDate && isValidCalendarDate(parsedDate)
+          ? parsedDate
+          : getLocalDate()
 
       const newDocument = {
         ...normalizedData,

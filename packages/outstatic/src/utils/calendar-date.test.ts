@@ -1,4 +1,5 @@
 import {
+  isValidCalendarDate,
   normalizeDateOnlyFrontmatter,
   toCalendarDate
 } from './calendar-date'
@@ -32,5 +33,9 @@ describe('toCalendarDate', () => {
     ).eventDate
 
     expect(date).toBe(timestamp)
+  })
+
+  it('identifies invalid date values so form callers can leave them unset', () => {
+    expect(isValidCalendarDate(toCalendarDate('not-a-date'))).toBe(false)
   })
 })

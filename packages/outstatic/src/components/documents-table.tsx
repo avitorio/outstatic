@@ -46,7 +46,7 @@ import { ChevronDown } from 'lucide-react'
 import { useParams, useRouter } from 'next/navigation'
 import { ReactNode, useLayoutEffect, useMemo, useState } from 'react'
 import { format } from 'date-fns'
-import { toCalendarDate } from '@/utils/calendar-date'
+import { isValidCalendarDate, toCalendarDate } from '@/utils/calendar-date'
 
 type DocumentRow = OstDocument & { extension?: MDExtensions }
 
@@ -65,7 +65,8 @@ const documentColumnLabel = (id: string): string =>
 
 const renderCellValue = (value: unknown): ReactNode => {
   if (value instanceof Date) {
-    return format(toCalendarDate(value), 'MMMM d, yyyy')
+    const date = toCalendarDate(value)
+    return isValidCalendarDate(date) ? format(date, 'MMMM d, yyyy') : null
   }
   if (Array.isArray(value)) {
     return value.map((item: { label: string }) => (

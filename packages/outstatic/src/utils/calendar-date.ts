@@ -1,5 +1,9 @@
 const DATE_ONLY = /^(\d{4})-(\d{2})-(\d{2})$/
 
+export function isValidCalendarDate(date: Date): boolean {
+  return !Number.isNaN(date.getTime())
+}
+
 export function getDateOnlyFrontmatterKeys(frontmatter: string): Set<string> {
   const keys = new Set<string>()
   const dateField =
@@ -25,11 +29,7 @@ export function toCalendarDate(
   if (typeof value === 'string') {
     const match = value.match(DATE_ONLY)
     if (match) {
-      return new Date(
-        Number(match[1]),
-        Number(match[2]) - 1,
-        Number(match[3])
-      )
+      return new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]))
     }
   }
 

@@ -7,7 +7,7 @@ import { convertSchemaToZod } from '@/utils/zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { toCalendarDate } from '@/utils/calendar-date'
+import { isValidCalendarDate, toCalendarDate } from '@/utils/calendar-date'
 
 type SchemaWithProperties = {
   properties: CustomFieldsType
@@ -72,7 +72,8 @@ export function useEditorPageState({
       dateFields.forEach((field) => {
         const value = currentValues[field as keyof Document]
         if (value instanceof Date || typeof value === 'string') {
-          updates[field] = toCalendarDate(value)
+          const date = toCalendarDate(value)
+          if (isValidCalendarDate(date)) updates[field] = date
         }
       })
 

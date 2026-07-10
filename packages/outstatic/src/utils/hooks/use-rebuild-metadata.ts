@@ -20,6 +20,7 @@ import matter from 'gray-matter'
 import MurmurHash3 from 'imurmurhash'
 import { useGetFiles } from './use-get-files'
 import { useGetMetadata } from './use-get-metadata'
+import { isInSingletonDirectory } from '../metadata/singleton-paths'
 
 interface FileData {
   path: string
@@ -86,22 +87,24 @@ export const useRebuildMetadata = ({
     const output: FileData[] = []
     const singletonPaths = new Set<string>(data?.singletonPaths ?? [])
     const singletonDirectories = data?.singletonDirectories ?? []
+    const rootCollectionSlug = data?.collections?.find(
+      (collection: { path?: string; slug?: string }) => collection.path === ''
+    )?.slug
     const queue = object?.entries ? [...object.entries] : []
     while (queue.length > 0) {
       const nextEntry = queue.pop()
       if (nextEntry?.type === 'tree') {
         queue.push(...(nextEntry.object.entries ?? []))
       } else if (nextEntry?.type === 'blob' && isIndexable(nextEntry.path)) {
-        const belongsToSingletonDirectory = singletonDirectories.some(
-          (directory: string) =>
-            directory === ''
-              ? !nextEntry.path.includes('/')
-              : nextEntry.path === directory ||
-                nextEntry.path.startsWith(`${directory}/`)
+        const belongsToSingletonDirectory = isInSingletonDirectory(
+          nextEntry.path,
+          singletonDirectories
         )
+        const isRootFile = !nextEntry.path.includes('/')
         if (
           belongsToSingletonDirectory &&
-          !singletonPaths.has(nextEntry.path)
+          !singletonPaths.has(nextEntry.path) &&
+          !(isRootFile && rootCollectionSlug)
         ) {
           continue
         }
@@ -111,7 +114,9 @@ export const useRebuildMetadata = ({
           commit: hashFromUrl(`${nextEntry.object.commitUrl}`),
           collection: singletonPaths.has(nextEntry.path)
             ? '_singletons'
-            : undefined
+            : isRootFile
+              ? rootCollectionSlug
+              : undefined
         })
       }
     }
@@ -177,8 +182,7 @@ export const useRebuildMetadata = ({
             docs.push({
               ...meta,
               collection:
-                fileData.collection ??
-                fileData.path.split('/').slice(-2, -1)[0]
+                fileData.collection ?? fileData.path.split('/').slice(-2, -1)[0]
             })
             setProcessed((prev) => prev + 1)
           })

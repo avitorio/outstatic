@@ -8,7 +8,11 @@ import { UseFormReturn } from 'react-hook-form'
 import { useGetSingleton } from './use-get-singleton'
 import { useOutstatic } from './use-outstatic'
 import { useSingletons } from './use-singletons'
-import { normalizeDateOnlyFrontmatter, toCalendarDate } from '@/utils/calendar-date'
+import {
+  isValidCalendarDate,
+  normalizeDateOnlyFrontmatter,
+  toCalendarDate
+} from '@/utils/calendar-date'
 
 interface UseSingletonUpdateEffectProps {
   slug: string
@@ -91,9 +95,13 @@ export const useSingletonUpdateEffect = ({
         repoMediaPath
       })
 
-      const newDate = normalizedData.publishedAt
+      const parsedDate = normalizedData.publishedAt
         ? toCalendarDate(normalizedData.publishedAt)
-        : getLocalDate()
+        : undefined
+      const newDate =
+        parsedDate && isValidCalendarDate(parsedDate)
+          ? parsedDate
+          : getLocalDate()
 
       const newDocument = {
         ...normalizedData,

@@ -9,7 +9,11 @@ import useSubmitSingleton from '@/utils/hooks/use-submit-singleton'
 import { useSingletons } from '@/utils/hooks/use-singletons'
 import { parseContent } from '@/utils/parse-content'
 import { getLocalDate } from '@/utils/get-local-date'
-import { normalizeDateOnlyFrontmatter, toCalendarDate } from '@/utils/calendar-date'
+import {
+  isValidCalendarDate,
+  normalizeDateOnlyFrontmatter,
+  toCalendarDate
+} from '@/utils/calendar-date'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import NewSingletonModal from './_components/new-singleton-modal'
@@ -148,10 +152,15 @@ export default function EditSingleton({ slug: initialSlug }: { slug: string }) {
     const filename = openFilePath.substring(openFilePath.lastIndexOf('/') + 1)
     const titleFromFilename = filename.replace(/\.mdx?$/, '')
     const title = normalizedData.title || titleFromFilename
-    const nextSlug = normalizedData.slug || slugify(title, { allowedChars: 'a-zA-Z0-9.' })
-    const newDate = normalizedData.publishedAt
+    const nextSlug =
+      normalizedData.slug || slugify(title, { allowedChars: 'a-zA-Z0-9.' })
+    const parsedDate = normalizedData.publishedAt
       ? toCalendarDate(normalizedData.publishedAt)
-      : getLocalDate()
+      : undefined
+    const newDate =
+      parsedDate && isValidCalendarDate(parsedDate)
+        ? parsedDate
+        : getLocalDate()
 
     const newDocument = {
       ...normalizedData,
