@@ -40,7 +40,13 @@ export function composeImportFiles({
   const skipped: string[] = []
 
   for (const suggestion of selections) {
-    if (collections.some((collection) => collection.slug === suggestion.slug || collection.path === suggestion.path)) {
+    if (
+      collections.some(
+        (collection) =>
+          collection.slug === suggestion.slug ||
+          collection.path === suggestion.path
+      )
+    ) {
       skipped.push(suggestion.path)
       continue
     }
@@ -61,7 +67,13 @@ export function composeImportFiles({
   }
 
   for (const suggestion of singletons) {
-    if (singletonEntries.some((singleton) => singleton.slug === suggestion.slug || singleton.path === suggestion.sampleFiles[0])) {
+    if (
+      singletonEntries.some(
+        (singleton) =>
+          singleton.slug === suggestion.slug ||
+          singleton.path === suggestion.sampleFiles[0]
+      )
+    ) {
       skipped.push(suggestion.path)
       continue
     }
@@ -87,7 +99,13 @@ export function composeImportFiles({
     })
   }
 
-  files.push({ path: `${ostContent}/collections.json`, content: JSON.stringify(collections, null, 2) + '\n' })
-  files.push({ path: `${ostContent}/singletons.json`, content: JSON.stringify(singletonEntries, null, 2) + '\n' })
+  files.push({
+    path: `${ostContent}/collections.json`,
+    content: JSON.stringify(collections, null, 2) + '\n'
+  })
+  files.push({
+    path: `${ostContent}/singletons.json`,
+    content: JSON.stringify(singletonEntries, null, 2) + '\n'
+  })
   return { files, skipped }
 }

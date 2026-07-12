@@ -1,7 +1,14 @@
 export type InferredField = {
   name: string
   title: string
-  fieldType: 'String' | 'Text' | 'Number' | 'Boolean' | 'Date' | 'Image' | 'Array'
+  fieldType:
+    | 'String'
+    | 'Text'
+    | 'Number'
+    | 'Boolean'
+    | 'Date'
+    | 'Image'
+    | 'Array'
   dataType: 'string' | 'number' | 'boolean' | 'date' | 'image' | 'array'
   required: false
   itemType?: 'String'

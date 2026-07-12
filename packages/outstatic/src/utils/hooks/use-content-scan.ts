@@ -21,10 +21,13 @@ export function useContentScan() {
         body: JSON.stringify({ projectId, branch: repoBranch })
       })
       const data = await response.json().catch(() => null)
-      if (!response.ok) throw new Error(data?.message || 'Repository scan failed.')
+      if (!response.ok)
+        throw new Error(data?.message || 'Repository scan failed.')
       return data as ContentScanResult
     },
-    enabled: Boolean(contentScanUrl && projectId && repoBranch && canManageCollections),
+    enabled: Boolean(
+      contentScanUrl && projectId && repoBranch && canManageCollections
+    ),
     staleTime: 1000 * 60 * 60
   })
 }
