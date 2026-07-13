@@ -5,6 +5,11 @@ import { findCollectionParent } from '@/utils/collections/collection-tree'
 import { createFieldSchemaDocument } from '@/utils/hooks/field-schema'
 
 export type ImportFile = { path: string; content: string }
+export type ImportComposition = {
+  files: ImportFile[]
+  skipped: string[]
+  hasSchemaChanges: boolean
+}
 
 export function fieldsToSchemaProperties(fields: InferredField[]) {
   return Object.fromEntries(
@@ -33,7 +38,7 @@ export function composeImportFiles({
   existingCollections: CollectionType[]
   existingSingletons: SingletonType[]
   ostContent: string
-}): { files: ImportFile[]; skipped: string[] } {
+}): ImportComposition {
   const collections = [...existingCollections]
   const singletonEntries = [...existingSingletons]
   const files: ImportFile[] = []
@@ -107,5 +112,12 @@ export function composeImportFiles({
     path: `${ostContent}/singletons.json`,
     content: JSON.stringify(singletonEntries, null, 2) + '\n'
   })
-  return { files, skipped }
+  return {
+    files,
+    skipped,
+    hasSchemaChanges: files.some(
+      (file) =>
+        file.path.endsWith('.schema.json') || file.path.endsWith('/schema.json')
+    )
+  }
 }

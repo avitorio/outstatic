@@ -37,7 +37,9 @@ export function useImportContent() {
         existingSingletons: singletonsResult.data ?? [],
         ostContent
       })
-      if (composed.files.length <= 2) return { ...composed, committed: false }
+      if (!composed.hasSchemaChanges) {
+        return { ...composed, committed: false }
+      }
 
       const commit = createCommitApi({
         message: createOutstaticCommitMessage({
