@@ -182,6 +182,7 @@ export const FieldManagementPage = ({
   const singleton = singletons?.find((s) => s.slug === target.slug)
   const extension = singleton?.path?.endsWith('.mdx') ? 'mdx' : 'md'
   const collection = collections?.find((c) => c.slug === target.slug)
+  const collectionParent = collection?.parent
   const parentCollectionOptions = useMemo(() => {
     if (!collections || target.kind !== 'collection') {
       return []
@@ -197,10 +198,10 @@ export const FieldManagementPage = ({
     pendingParent !== collection.parent
 
   useEffect(() => {
-    if (collection) {
-      setPendingParent(collection.parent)
+    if (collectionParent !== undefined) {
+      setPendingParent(collectionParent)
     }
-  }, [collection])
+  }, [collectionParent])
 
   useEffect(() => {
     if (schema) {
