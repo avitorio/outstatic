@@ -52,7 +52,7 @@ export const useGetAllCollectionsFiles = ({
       const singletons = singletonsData ?? []
 
       if (collections.length === 0 && singletons.length === 0) {
-        throw new Error('No collections data found')
+        throw new Error('No collections or singletons data found')
       }
 
       const fullData = collections

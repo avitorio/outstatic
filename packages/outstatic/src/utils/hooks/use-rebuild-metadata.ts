@@ -101,6 +101,8 @@ export const useRebuildMetadata = ({
           singletonDirectories
         )
         const isRootFile = !nextEntry.path.includes('/')
+        // Fetching a root singleton reads the repository root. Keep only its
+        // declared singleton files unless a root collection owns the file.
         if (
           belongsToSingletonDirectory &&
           !singletonPaths.has(nextEntry.path) &&
