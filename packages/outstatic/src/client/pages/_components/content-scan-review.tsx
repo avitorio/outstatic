@@ -21,6 +21,7 @@ import { useImportContent } from '@/utils/hooks/use-import-content'
 import { useOutstatic } from '@/utils/hooks/use-outstatic'
 import { UpgradeDialog } from '@/components/ui/outstatic/upgrade-dialog'
 import { AlertTriangle, Loader2 } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 import { type Dispatch, type SetStateAction, useMemo, useState } from 'react'
 import { toast } from 'sonner'
 
@@ -52,7 +53,9 @@ function SuggestionRow({
             }
             aria-label={`Name for ${suggestion.path}`}
           />
-          <Badge variant="secondary">{suggestion.docCount} files</Badge>
+          <Badge variant="secondary">
+            {suggestion.docCount} file{suggestion.docCount === 1 ? '' : 's'}
+          </Badge>
           <span className="font-mono text-xs text-muted-foreground">
             {suggestion.path}
           </span>
@@ -90,8 +93,15 @@ export function ContentScanReview({
   scan: ContentScanResult
   onManual: () => void
 }) {
-  const { canSaveContent, isHosted, isPro, projectInfo, dashboardRoute } =
-    useOutstatic()
+  const {
+    canSaveContent,
+    isHosted,
+    isPro,
+    projectInfo,
+    dashboardRoute,
+    basePath
+  } = useOutstatic()
+  const router = useRouter()
   const importContent = useImportContent()
   const [collections, setCollections] = useState<EditableSuggestion[]>(() =>
     scan.suggestions.map((suggestion) => ({
@@ -142,6 +152,7 @@ export function ContentScanReview({
             ? 'Content imported; existing entries were skipped.'
             : 'Dashboard content imported.'
         )
+        router.push(`${basePath}${dashboardRoute}`)
       }
     } catch (error) {
       toast.error(
