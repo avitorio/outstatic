@@ -82,4 +82,45 @@ describe('/api/outstatic/scan', () => {
     expect(response.headers.get('set-cookie')).toBeNull()
     expect(response.headers.get('x-upstream')).toBeNull()
   })
+
+  it('returns 502 when the upstream scan service is unavailable', async () => {
+    mockGetLoginSession.mockResolvedValue({ user: { id: 'user-1' } })
+    ;(global.fetch as jest.Mock).mockRejectedValue(
+      new TypeError('fetch failed')
+    )
+    const POST = await loadRoute()
+    const request = new Request('https://self-host.test/api/outstatic/scan', {
+      method: 'POST',
+      body: JSON.stringify({ projectId: 'project-1' })
+    })
+
+    const response = await POST(request)
+
+    expect(response.status).toBe(502)
+    expect(await response.json()).toEqual({
+      message: 'Repository scan service is unavailable.'
+    })
+  })
+
+  it.each(['AbortError', 'TimeoutError'])(
+    'returns 504 when the upstream scan fails with %s',
+    async (errorName) => {
+      mockGetLoginSession.mockResolvedValue({ user: { id: 'user-1' } })
+      const timeoutError = new Error('timed out')
+      timeoutError.name = errorName
+      ;(global.fetch as jest.Mock).mockRejectedValue(timeoutError)
+      const POST = await loadRoute()
+      const request = new Request('https://self-host.test/api/outstatic/scan', {
+        method: 'POST',
+        body: JSON.stringify({ projectId: 'project-1' })
+      })
+
+      const response = await POST(request)
+
+      expect(response.status).toBe(504)
+      expect(await response.json()).toEqual({
+        message: 'Repository scan timed out.'
+      })
+    }
+  )
 })

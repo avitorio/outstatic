@@ -18,16 +18,33 @@ export default async function POST(request: Request): Promise<Response> {
     typeof AbortSignal.timeout === 'function'
       ? AbortSignal.timeout(30_000)
       : undefined
-  const response = await fetch(`${OUTSTATIC_API_URL}/outstatic/scan`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${OUTSTATIC_API_KEY}`
-    },
-    body: request.body,
-    duplex: 'half',
-    signal: timeout
-  } as RequestInit)
+  let response: Response
+
+  try {
+    response = await fetch(`${OUTSTATIC_API_URL}/outstatic/scan`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${OUTSTATIC_API_KEY}`
+      },
+      body: request.body,
+      duplex: 'half',
+      signal: timeout
+    } as RequestInit)
+  } catch (error) {
+    const isTimeout =
+      error instanceof Error &&
+      (error.name === 'AbortError' || error.name === 'TimeoutError')
+    const status = isTimeout ? 504 : 502
+    const message = isTimeout
+      ? 'Repository scan timed out.'
+      : 'Repository scan service is unavailable.'
+
+    return new Response(JSON.stringify({ message }), {
+      status,
+      headers: { 'Content-Type': 'application/json' }
+    })
+  }
 
   const headers = new Headers()
   const contentType = response.headers.get('content-type')
