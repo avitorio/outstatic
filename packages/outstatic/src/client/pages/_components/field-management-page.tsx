@@ -201,7 +201,7 @@ export const FieldManagementPage = ({
     if (collectionParent !== undefined) {
       setPendingParent(collectionParent)
     }
-  }, [collectionParent])
+  }, [collection?.slug, collectionParent])
 
   useEffect(() => {
     if (schema) {
