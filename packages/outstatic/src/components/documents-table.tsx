@@ -45,6 +45,8 @@ import cookies from 'js-cookie'
 import { ChevronDown } from 'lucide-react'
 import { useParams, useRouter } from 'next/navigation'
 import { ReactNode, useLayoutEffect, useMemo, useState } from 'react'
+import { format } from 'date-fns'
+import { isValidCalendarDate, toCalendarDate } from '@/utils/calendar-date'
 
 type DocumentRow = OstDocument & { extension?: MDExtensions }
 
@@ -62,6 +64,10 @@ const documentColumnLabel = (id: string): string =>
   DOCUMENT_COLUMN_LABELS[id] ?? sentenceCase(id)
 
 const renderCellValue = (value: unknown): ReactNode => {
+  if (value instanceof Date) {
+    const date = toCalendarDate(value)
+    return isValidCalendarDate(date) ? format(date, 'MMMM d, yyyy') : null
+  }
   if (Array.isArray(value)) {
     return value.map((item: { label: string }) => (
       <span

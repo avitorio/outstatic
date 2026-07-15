@@ -2,6 +2,7 @@ import { generateGetFileInformationQuery } from '@/graphql/queries/metadata'
 import { useOutstatic } from '@/utils/hooks/use-outstatic'
 import { useQuery } from '@tanstack/react-query'
 import { useCollections } from './use-collections'
+import { useSingletons } from './use-singletons'
 
 type TreeEntry = {
   object: {
@@ -18,7 +19,9 @@ type TreeEntry = {
 type FileInformationDataType = {
   repository: {
     [key: string]: {
-      entries: TreeEntry[]
+      entries?: TreeEntry[]
+      oid?: string
+      commitUrl?: string
     }
   }
 }
@@ -40,24 +43,39 @@ export const useGetAllCollectionsFiles = ({
   const { refetch: refetchCollections } = useCollections({
     enabled: false
   })
+  const { refetch: refetchSingletons } = useSingletons({ enabled: false })
 
   return useQuery({
     queryKey: ['file-info', { filePath: `${repoBranch}:${ostContent}` }],
     queryFn: async () => {
-      const { data: collectionsData } = await refetchCollections()
+      const [{ data: collectionsData }, { data: singletonsData }] =
+        await Promise.all([refetchCollections(), refetchSingletons()])
+      const collections = collectionsData ?? []
+      const singletons = singletonsData ?? []
 
-      if (!collectionsData || collectionsData.length === 0) {
-        throw new Error('No collections data found')
+      if (collections.length === 0 && singletons.length === 0) {
+        throw new Error('No collections or singletons data found')
       }
 
-      const fullData = collectionsData ?? []
+      const fullData = collections
+      const singletonDirectories = Array.from(
+        new Set(singletons.map((singleton) => singleton.directory))
+      )
 
       // Fetch external files
       const externalFilesData =
-        fullData.length > 0 ? await fetchExternalFiles(fullData) : null
+        fullData.length + singletons.length > 0
+          ? await fetchExternalFiles(
+              fullData,
+              singletons.map((singleton) => singleton.path)
+            )
+          : null
 
       // Combine all entries
-      const finalEntries = combineEntries(externalFilesData?.repository ?? {})
+      const finalEntries = combineEntries(
+        externalFilesData?.repository ?? {},
+        singletons.map((singleton) => singleton.path)
+      )
 
       const finalRepository = {
         object: {
@@ -65,7 +83,12 @@ export const useGetAllCollectionsFiles = ({
         }
       }
 
-      return { repository: finalRepository, collections: fullData }
+      return {
+        repository: finalRepository,
+        collections: fullData,
+        singletonPaths: singletons.map((singleton) => singleton.path),
+        singletonDirectories
+      }
     },
     meta: {
       errorMessage: `Failed to fetch metadata.`
@@ -73,21 +96,45 @@ export const useGetAllCollectionsFiles = ({
     enabled
   })
 
-  function combineEntries(obj: FileInformationDataType['repository']) {
+  function combineEntries(
+    obj: FileInformationDataType['repository'],
+    singletonPaths: string[]
+  ) {
     let allEntries: TreeEntry[] = []
 
     for (const key in obj) {
-      if (key.startsWith('folder') && obj[key].entries) {
-        allEntries = allEntries.concat(obj[key].entries)
+      const entry = obj[key]
+      if (key.startsWith('folder') && entry.entries) {
+        allEntries = allEntries.concat(entry.entries)
+      }
+      if (key.startsWith('singleton') && entry.oid && entry.commitUrl) {
+        const index = Number(key.replace('singleton', ''))
+        const path = singletonPaths[index]
+        if (path) {
+          allEntries.push({
+            path,
+            type: 'blob',
+            object: {
+              oid: entry.oid,
+              commitUrl: entry.commitUrl,
+              text: '',
+              entries: []
+            }
+          })
+        }
       }
     }
 
     return allEntries
   }
 
-  async function fetchExternalFiles(externalPaths: any[]) {
+  async function fetchExternalFiles(
+    externalPaths: any[],
+    singletonPaths: string[]
+  ) {
     const GET_EXTERNAL_FILES = generateGetFileInformationQuery({
       paths: externalPaths.map((path) => path.path),
+      singletonPaths,
       branch: repoBranch
     })
 
@@ -95,7 +142,13 @@ export const useGetAllCollectionsFiles = ({
       GET_EXTERNAL_FILES,
       {
         owner: repoOwner || session?.user?.login || '',
-        name: repoSlug
+        name: repoSlug,
+        ...Object.fromEntries(
+          singletonPaths.map((path, index) => [
+            `singleton${index}`,
+            `${repoBranch}:${path}`
+          ])
+        )
       }
     )
   }

@@ -7,6 +7,10 @@ import { useParams } from 'next/navigation'
 import { useOutstatic } from './use-outstatic'
 import { useCollections } from './use-collections'
 import { slugify } from 'transliteration'
+import {
+  normalizeDateOnlyFrontmatter,
+  toCalendarDate
+} from '@/utils/calendar-date'
 
 const dateFormatOptions = {
   year: 'numeric' as const,
@@ -89,10 +93,14 @@ export const useGetDocuments = ({
         entries.forEach(({ object, name }) => {
           if (/\.(md|mdx)$/.test(name)) {
             try {
-              const { data } = matter(object.text)
+              const { data, matter: frontmatter } = matter(object.text)
+              const normalizedData = normalizeDateOnlyFrontmatter(
+                data,
+                frontmatter
+              )
 
               // Remove 'coverImage' from data
-              const { coverImage, ...listData } = data
+              const { coverImage, ...listData } = normalizedData
 
               // Format document details
               const formattedData: FormattedData = {
@@ -106,7 +114,7 @@ export const useGetDocuments = ({
               if (listData.publishedAt || listData.date) {
                 const dateKey = listData.publishedAt ? 'publishedAt' : 'date'
                 const dateValue = listData[dateKey]
-                const parsedDate = new Date(dateValue)
+                const parsedDate = toCalendarDate(dateValue)
                 if (!isNaN(parsedDate.getTime())) {
                   // It's a valid date
                   formattedData[dateKey] = parsedDate.toLocaleDateString(
