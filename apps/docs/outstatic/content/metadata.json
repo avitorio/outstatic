@@ -1,6 +1,6 @@
 {
-  "commit": "8d076e2abcdbd5a6f7270a55147adec8730a3851",
-  "generated": "2026-06-06T18:56:06.268Z",
+  "commit": "1b4815ef44575aeed986189a0cc2a0324f5b776a",
+  "generated": "2026-07-15T13:29:29.895Z",
   "metadata": [
     {
       "__outstatic": {
@@ -350,6 +350,62 @@
       "slug": "type-generation",
       "status": "published",
       "title": "Type Generation"
+    },
+    {
+      "__outstatic": {
+        "commit": "",
+        "hash": "301433500",
+        "path": "/content/docs/(latest)/editing-modeling/the-content-editor.mdx"
+      },
+      "collection": "editing-modeling",
+      "description": "Learn how the Outstatic Content Editor works.",
+      "slug": "the-content-editorx",
+      "title": "The content editor"
+    },
+    {
+      "__outstatic": {
+        "commit": "",
+        "hash": "3571663100",
+        "path": "/content/docs/(latest)/editing-modeling/custom-fields.mdx"
+      },
+      "collection": "editing-modeling",
+      "description": "",
+      "slug": "custom-fieldsx",
+      "title": "Custom Fields"
+    },
+    {
+      "__outstatic": {
+        "commit": "",
+        "hash": "984143224",
+        "path": "/content/docs/(latest)/editing-modeling/block-library.mdx"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "editing-modeling",
+      "description": "Define reusable MDX blocks and insert them from the editor's slash command menu.",
+      "publishedAt": "2026-06-03T18:09:37.848Z",
+      "slug": "block-library",
+      "status": "published",
+      "title": "Block Library"
+    },
+    {
+      "__outstatic": {
+        "commit": "1b4815ef44575aeed986189a0cc2a0324f5b776a",
+        "hash": "846586135",
+        "path": "/content/docs/(latest)/editing-modeling/mdx-block.mdx"
+      },
+      "author": {
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
+      },
+      "collection": "editing-modeling",
+      "description": "Use the MDX block to preserve raw MDX, JSX, imports, exports, and HTML in the content editor.",
+      "publishedAt": "2026-06-03T18:07:57.509Z",
+      "slug": "mdx-block",
+      "status": "published",
+      "title": "MDX block"
     }
   ]
 }

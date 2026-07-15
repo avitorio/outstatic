@@ -45,6 +45,7 @@ import { ChevronDown, MoreHorizontal } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useMemo, useState } from 'react'
+import { toCalendarDate } from '@/utils/calendar-date'
 
 type SingletonRow = Pick<
   OstDocument,
@@ -62,7 +63,7 @@ const COLUMN_DEFINITIONS: { id: keyof SingletonRow; label: string }[] = [
 
 const formatDate = (dateString: string): string => {
   if (!dateString) return ''
-  const date = new Date(dateString)
+  const date = toCalendarDate(dateString)
   if (isNaN(date.getTime())) return dateString
   return date.toLocaleDateString('en-US', {
     year: 'numeric',
@@ -232,6 +233,9 @@ export const SingletonsTable = () => {
     []
   )
 
+  // TanStack Table exposes functions that React Compiler deliberately does not
+  // memoize. This table is not passed through a memoized boundary.
+  // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
     data: documents,
     columns,

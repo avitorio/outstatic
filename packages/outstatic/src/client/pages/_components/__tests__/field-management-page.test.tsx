@@ -72,7 +72,13 @@ jest.mock('@/components/ui/shadcn/select', () => {
   )
 
   const SelectTrigger = ({ children, ...props }: { children: any }) => (
-    <button type="button" role="combobox" {...props}>
+    <button
+      type="button"
+      role="combobox"
+      aria-controls="select-content"
+      aria-expanded={false}
+      {...props}
+    >
       {children}
     </button>
   )

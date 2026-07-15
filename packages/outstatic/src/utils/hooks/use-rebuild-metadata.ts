@@ -20,11 +20,13 @@ import matter from 'gray-matter'
 import MurmurHash3 from 'imurmurhash'
 import { useGetFiles } from './use-get-files'
 import { useGetMetadata } from './use-get-metadata'
+import { classifyMetadataFile } from '../metadata/metadata-file-classification'
 
 interface FileData {
   path: string
   oid: string
   commit: string
+  collection?: string
 }
 
 const isIndexable = (fileName: string) => {
@@ -83,16 +85,31 @@ export const useRebuildMetadata = ({
   const extractFiles = (data: any): FileData[] => {
     const object = data?.repository?.object
     const output: FileData[] = []
+    const singletonPaths = new Set<string>(data?.singletonPaths ?? [])
+    const singletonDirectories = data?.singletonDirectories ?? []
+    const rootCollectionSlug = data?.collections?.find(
+      (collection: { path?: string; slug?: string }) => collection.path === ''
+    )?.slug
     const queue = object?.entries ? [...object.entries] : []
     while (queue.length > 0) {
       const nextEntry = queue.pop()
       if (nextEntry?.type === 'tree') {
         queue.push(...(nextEntry.object.entries ?? []))
       } else if (nextEntry?.type === 'blob' && isIndexable(nextEntry.path)) {
+        const classification = classifyMetadataFile({
+          path: nextEntry.path,
+          singletonPaths,
+          singletonDirectories,
+          rootCollectionSlug
+        })
+        if (!classification.include) {
+          continue
+        }
         output.push({
           path: nextEntry.path,
           oid: `${nextEntry.object.oid}`,
-          commit: hashFromUrl(`${nextEntry.object.commitUrl}`)
+          commit: hashFromUrl(`${nextEntry.object.commitUrl}`),
+          collection: classification.collection
         })
       }
     }
@@ -157,7 +174,8 @@ export const useRebuildMetadata = ({
             const meta = await getMetaFromFile(fileData)
             docs.push({
               ...meta,
-              collection: fileData.path.split('/').slice(-2, -1)[0]
+              collection:
+                fileData.collection ?? fileData.path.split('/').slice(-2, -1)[0]
             })
             setProcessed((prev) => prev + 1)
           })
