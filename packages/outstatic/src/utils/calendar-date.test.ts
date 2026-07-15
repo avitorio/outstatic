@@ -46,4 +46,14 @@ describe('toCalendarDate', () => {
       eventDate: timestamp
     })
   })
+
+  it('does not treat nested YAML dates as top-level date-only fields', () => {
+    const timestamp = new Date('2024-04-07T00:00:00.000Z')
+    const data = normalizeDateOnlyFrontmatter(
+      { metadata: { eventDate: timestamp } },
+      'metadata:\n  eventDate: 2024-04-07\n'
+    )
+
+    expect(data.metadata.eventDate).toBe(timestamp)
+  })
 })
