@@ -2,7 +2,7 @@
 title: MDX block
 description: Use the MDX block to preserve raw MDX, JSX, imports, exports, and HTML in the content editor.
 publishedAt: 2026-06-03T18:07:57.509Z
-status: draft
+status: published
 author:
   name: Andre Vitorio
   picture: https://avatars.githubusercontent.com/u/1417109?v=4
@@ -71,6 +71,6 @@ Outstatic does not compile or render the MDX in the editor, so it does not valid
 
 The MDX block only controls how content is edited and saved in Outstatic. Your website still needs an MDX pipeline to render the saved content.
 
-For a Next.js site, that usually means rendering the document content with your preferred MDX tooling, such as `mdx-bundler`, `next-mdx-remote`, or `@mdx-js/mdx`.
+For a Next.js site, that usually means rendering the document content with your preferred MDX tooling, such as `@next/mdx` , `next-mdx-remote-client`, `mdx-bundler`, `next-mdx-remote`, or `@mdx-js/mdx`.
 
 If your frontend treats document content as plain Markdown or HTML, raw MDX components will not render as React components automatically.
