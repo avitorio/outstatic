@@ -22,5 +22,11 @@
     "slug": "latest",
     "path": "content/docs/(latest)",
     "parent": null
+  },
+  {
+    "title": "Editing Modeling",
+    "slug": "editing-modeling",
+    "path": "apps/docs/content/docs/(latest)/editing-modeling",
+    "parent": null
   }
 ]

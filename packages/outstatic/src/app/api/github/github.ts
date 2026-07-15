@@ -16,6 +16,51 @@ const GitHubRestRequestSchema = z.object({
 
 type GitHubRestRequest = z.infer<typeof GitHubRestRequestSchema>
 
+const GITHUB_API_ORIGIN = 'https://api.github.com'
+const FORWARDED_GITHUB_HEADERS = new Set([
+  'accept',
+  'content-type',
+  'x-github-api-version'
+])
+
+const CANONICAL_FORWARDED_GITHUB_HEADERS: Record<string, string> = {
+  accept: 'Accept',
+  'content-type': 'Content-Type',
+  'x-github-api-version': 'X-GitHub-Api-Version'
+}
+
+function getForwardedHeaders(headers?: Record<string, string>) {
+  if (!headers) return {}
+
+  const result: Record<string, string> = {}
+
+  for (const [header, value] of Object.entries(headers)) {
+    const lowerHeader = header.toLowerCase()
+
+    if (FORWARDED_GITHUB_HEADERS.has(lowerHeader)) {
+      result[CANONICAL_FORWARDED_GITHUB_HEADERS[lowerHeader]] = value
+    }
+  }
+
+  return result
+}
+
+function buildGitHubUrl(endpoint: string, queryParams?: URLSearchParams) {
+  if (!endpoint.startsWith('/')) return null
+
+  const url = new URL(endpoint, GITHUB_API_ORIGIN)
+
+  if (url.origin !== GITHUB_API_ORIGIN) return null
+
+  if (queryParams) {
+    for (const [key, value] of queryParams.entries()) {
+      url.searchParams.append(key, value)
+    }
+  }
+
+  return url.toString()
+}
+
 async function handleGitHubRequest(
   request: NextRequest & { remainingPath?: string[] }
 ) {
@@ -61,6 +106,26 @@ async function handleGitHubRequest(
       )
     }
 
+    const queryParams = new URLSearchParams()
+    if (request.method === 'GET') {
+      const url = new URL(request.url)
+
+      // Add all non-header query parameters to the GitHub request
+      for (const [key, value] of url.searchParams.entries()) {
+        if (!key.startsWith('header-')) {
+          queryParams.append(key, value)
+        }
+      }
+    }
+
+    const githubUrl = buildGitHubUrl(githubEndpoint, queryParams)
+    if (!githubUrl) {
+      return NextResponse.json(
+        { error: 'GitHub endpoint must be a path under api.github.com' },
+        { status: 400 }
+      )
+    }
+
     // Get the current session
     const session = await getLoginSession()
     if (!session) {
@@ -90,30 +155,8 @@ async function handleGitHubRequest(
     const headers: Record<string, string> = {
       Authorization: `token ${currentSession.access_token}`,
       'User-Agent': 'Outstatic-GitHub-API',
-      Accept: 'application/vnd.github.v3+json'
-    }
-
-    // Merge any additional headers from the request
-    if (validatedRequest.headers) {
-      Object.assign(headers, validatedRequest.headers)
-    }
-
-    // Build GitHub URL with query parameters for GET requests
-    let githubUrl = `https://api.github.com${githubEndpoint}`
-    if (request.method === 'GET') {
-      const url = new URL(request.url)
-      const queryParams = new URLSearchParams()
-
-      // Add all non-header query parameters to the GitHub request
-      for (const [key, value] of url.searchParams.entries()) {
-        if (!key.startsWith('header-')) {
-          queryParams.append(key, value)
-        }
-      }
-
-      if (queryParams.toString()) {
-        githubUrl += '?' + queryParams.toString()
-      }
+      Accept: 'application/vnd.github.v3+json',
+      ...getForwardedHeaders(validatedRequest.headers)
     }
 
     const requestOptions: RequestInit = {
