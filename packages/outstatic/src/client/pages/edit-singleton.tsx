@@ -9,6 +9,11 @@ import useSubmitSingleton from '@/utils/hooks/use-submit-singleton'
 import { useSingletons } from '@/utils/hooks/use-singletons'
 import { parseContent } from '@/utils/parse-content'
 import { getLocalDate } from '@/utils/get-local-date'
+import {
+  isValidCalendarDate,
+  normalizeDateOnlyFrontmatter,
+  toCalendarDate
+} from '@/utils/calendar-date'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import NewSingletonModal from './_components/new-singleton-modal'
@@ -129,7 +134,8 @@ export default function EditSingleton({ slug: initialSlug }: { slug: string }) {
     if (!openedFileData || !editor || openFileLoaded || !openFilePath) return
 
     const { content: fileContent, extension: fileExtension } = openedFileData
-    const { data, content } = matter(fileContent)
+    const { data, content, matter: frontmatter } = matter(fileContent)
+    const normalizedData = normalizeDateOnlyFrontmatter(data, frontmatter)
 
     setMetadata(data)
     const parsedContent = parseContent({
@@ -145,22 +151,27 @@ export default function EditSingleton({ slug: initialSlug }: { slug: string }) {
 
     const filename = openFilePath.substring(openFilePath.lastIndexOf('/') + 1)
     const titleFromFilename = filename.replace(/\.mdx?$/, '')
-    const title = data.title || titleFromFilename
-    const nextSlug = data.slug || slugify(title, { allowedChars: 'a-zA-Z0-9.' })
-    const newDate = data.publishedAt
-      ? new Date(data.publishedAt)
-      : getLocalDate()
+    const title = normalizedData.title || titleFromFilename
+    const nextSlug =
+      normalizedData.slug || slugify(title, { allowedChars: 'a-zA-Z0-9.' })
+    const parsedDate = normalizedData.publishedAt
+      ? toCalendarDate(normalizedData.publishedAt)
+      : undefined
+    const newDate =
+      parsedDate && isValidCalendarDate(parsedDate)
+        ? parsedDate
+        : getLocalDate()
 
     const newDocument = {
-      ...data,
+      ...normalizedData,
       title,
       slug: nextSlug,
-      status: data.status || 'draft',
+      status: normalizedData.status || 'draft',
       publishedAt: newDate,
       content: parsedContent,
       author: {
-        name: data.author?.name ?? session?.user?.name ?? '',
-        picture: data.author?.picture ?? session?.user?.image ?? ''
+        name: normalizedData.author?.name ?? session?.user?.name ?? '',
+        picture: normalizedData.author?.picture ?? session?.user?.image ?? ''
       }
     }
 

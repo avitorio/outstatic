@@ -19,6 +19,7 @@ import {
   FormMessage
 } from '@/components/ui/shadcn/form'
 import { useFormContext } from 'react-hook-form'
+import { isValidCalendarDate, toCalendarDate } from '@/utils/calendar-date'
 
 export function DateTimePickerForm({
   id,
@@ -36,6 +37,10 @@ export function DateTimePickerForm({
       control={control}
       name={id}
       render={({ field }) => {
+        const parsedDate = field.value ? toCalendarDate(field.value) : undefined
+        const selectedDate =
+          parsedDate && isValidCalendarDate(parsedDate) ? parsedDate : undefined
+
         return (
           <FormItem className="flex flex-col">
             {label ? (
@@ -48,14 +53,11 @@ export function DateTimePickerForm({
                     variant="outline"
                     className={cn(
                       'justify-start text-left font-normal w-full',
-                      !field.value && 'text-muted-foreground'
+                      !selectedDate && 'text-muted-foreground'
                     )}
                   >
-                    {field.value ? (
-                      format(
-                        field.value ? new Date(field.value) : new Date(),
-                        'MMMM d, yyyy'
-                      )
+                    {selectedDate ? (
+                      format(selectedDate, 'MMMM d, yyyy')
                     ) : (
                       <span>Pick a date</span>
                     )}
@@ -68,17 +70,15 @@ export function DateTimePickerForm({
                   fromYear={new Date().getFullYear() - 100}
                   toYear={new Date().getFullYear() + 10}
                   mode="single"
-                  selected={field.value ? new Date(field.value) : new Date()}
-                  defaultMonth={
-                    field.value ? new Date(field.value) : new Date()
-                  }
+                  selected={selectedDate}
+                  defaultMonth={selectedDate ?? new Date()}
                   onSelect={field.onChange}
                   initialFocus
                 />
                 <div className="p-3 border-t border-border">
                   <TimePicker
                     setDate={field.onChange}
-                    date={field.value ? new Date(field.value) : new Date()}
+                    date={selectedDate ?? new Date()}
                   />
                 </div>
               </PopoverContent>

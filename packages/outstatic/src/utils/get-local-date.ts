@@ -1,4 +1,2 @@
-export const getLocalDate = () => {
-  const offDate = new Date().valueOf() - new Date().getTimezoneOffset() * 6000
-  return new Date(offDate)
-}
+/** Returns the current local Date for form defaults. */
+export const getLocalDate = () => new Date()

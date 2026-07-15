@@ -1,5 +1,19 @@
 # outstatic
 
+## 2.2.2
+
+### Patch Changes
+
+- 88994e6: Add repository content discovery and one-click dashboard setup for hosted projects.
+
+- 88994e6: Improve dashboard content discovery reliability and metadata import handling.
+
+## 2.2.1
+
+### Patch Changes
+
+- 65df36b: Prevent the GitHub REST proxy from sending authenticated requests outside the GitHub API origin.
+
 ## 2.2.0
 
 ### Minor Changes
