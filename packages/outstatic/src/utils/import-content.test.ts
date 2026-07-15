@@ -97,4 +97,29 @@ describe('composeImportFiles', () => {
       }
     ])
   })
+
+  it('assigns nested parents independently of suggestion order', () => {
+    const result = composeImportFiles({
+      ...options,
+      selections: [
+        suggestion({ slug: 'guides', path: 'content/docs/guides' }),
+        suggestion({ slug: 'docs', path: 'content/docs' })
+      ],
+      singletons: []
+    })
+    const collections = JSON.parse(
+      result.files.find((file) => file.path.endsWith('collections.json'))!
+        .content
+    )
+
+    expect(collections).toEqual([
+      {
+        title: 'Posts',
+        slug: 'guides',
+        path: 'content/docs/guides',
+        parent: 'docs'
+      },
+      { title: 'Posts', slug: 'docs', path: 'content/docs', parent: null }
+    ])
+  })
 })

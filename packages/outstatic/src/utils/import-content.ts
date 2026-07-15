@@ -43,6 +43,7 @@ export function composeImportFiles({
   const singletonEntries = [...existingSingletons]
   const files: ImportFile[] = []
   const skipped: string[] = []
+  const newCollections: CollectionType[] = []
 
   for (const suggestion of selections) {
     if (
@@ -55,13 +56,14 @@ export function composeImportFiles({
       skipped.push(suggestion.path)
       continue
     }
-    const collection = {
+    const collection: CollectionType = {
       title: suggestion.title,
       slug: suggestion.slug,
       path: suggestion.path,
-      parent: findCollectionParent(collections, suggestion.path)
+      parent: null
     }
     collections.push(collection)
+    newCollections.push(collection)
     files.push({
       path: `${ostContent}/${suggestion.slug}/schema.json`,
       content: createFieldSchemaDocument(
@@ -69,6 +71,10 @@ export function composeImportFiles({
         fieldsToSchemaProperties(suggestion.fields) as any
       )
     })
+  }
+
+  for (const collection of newCollections) {
+    collection.parent = findCollectionParent(collections, collection.path)
   }
 
   for (const suggestion of singletons) {
