@@ -19,7 +19,9 @@ type TreeEntry = {
 type FileInformationDataType = {
   repository: {
     [key: string]: {
-      entries: TreeEntry[]
+      entries?: TreeEntry[]
+      oid?: string
+      commitUrl?: string
     }
   }
 }
@@ -62,15 +64,18 @@ export const useGetAllCollectionsFiles = ({
 
       // Fetch external files
       const externalFilesData =
-        fullData.length + singletonDirectories.length > 0
-          ? await fetchExternalFiles([
-              ...fullData,
-              ...singletonDirectories.map((path) => ({ path }))
-            ])
+        fullData.length + singletons.length > 0
+          ? await fetchExternalFiles(
+              fullData,
+              singletons.map((singleton) => singleton.path)
+            )
           : null
 
       // Combine all entries
-      const finalEntries = combineEntries(externalFilesData?.repository ?? {})
+      const finalEntries = combineEntries(
+        externalFilesData?.repository ?? {},
+        singletons.map((singleton) => singleton.path)
+      )
 
       const finalRepository = {
         object: {
@@ -91,21 +96,45 @@ export const useGetAllCollectionsFiles = ({
     enabled
   })
 
-  function combineEntries(obj: FileInformationDataType['repository']) {
+  function combineEntries(
+    obj: FileInformationDataType['repository'],
+    singletonPaths: string[]
+  ) {
     let allEntries: TreeEntry[] = []
 
     for (const key in obj) {
-      if (key.startsWith('folder') && obj[key].entries) {
-        allEntries = allEntries.concat(obj[key].entries)
+      const entry = obj[key]
+      if (key.startsWith('folder') && entry.entries) {
+        allEntries = allEntries.concat(entry.entries)
+      }
+      if (key.startsWith('singleton') && entry.oid && entry.commitUrl) {
+        const index = Number(key.replace('singleton', ''))
+        const path = singletonPaths[index]
+        if (path) {
+          allEntries.push({
+            path,
+            type: 'blob',
+            object: {
+              oid: entry.oid,
+              commitUrl: entry.commitUrl,
+              text: '',
+              entries: []
+            }
+          })
+        }
       }
     }
 
     return allEntries
   }
 
-  async function fetchExternalFiles(externalPaths: any[]) {
+  async function fetchExternalFiles(
+    externalPaths: any[],
+    singletonPaths: string[]
+  ) {
     const GET_EXTERNAL_FILES = generateGetFileInformationQuery({
       paths: externalPaths.map((path) => path.path),
+      singletonPaths,
       branch: repoBranch
     })
 
@@ -113,7 +142,13 @@ export const useGetAllCollectionsFiles = ({
       GET_EXTERNAL_FILES,
       {
         owner: repoOwner || session?.user?.login || '',
-        name: repoSlug
+        name: repoSlug,
+        ...Object.fromEntries(
+          singletonPaths.map((path, index) => [
+            `singleton${index}`,
+            `${repoBranch}:${path}`
+          ])
+        )
       }
     )
   }

@@ -20,7 +20,7 @@ import matter from 'gray-matter'
 import MurmurHash3 from 'imurmurhash'
 import { useGetFiles } from './use-get-files'
 import { useGetMetadata } from './use-get-metadata'
-import { isInSingletonDirectory } from '../metadata/singleton-paths'
+import { classifyMetadataFile } from '../metadata/metadata-file-classification'
 
 interface FileData {
   path: string
@@ -96,29 +96,20 @@ export const useRebuildMetadata = ({
       if (nextEntry?.type === 'tree') {
         queue.push(...(nextEntry.object.entries ?? []))
       } else if (nextEntry?.type === 'blob' && isIndexable(nextEntry.path)) {
-        const belongsToSingletonDirectory = isInSingletonDirectory(
-          nextEntry.path,
-          singletonDirectories
-        )
-        const isRootFile = !nextEntry.path.includes('/')
-        // Fetching a root singleton reads the repository root. Keep only its
-        // declared singleton files unless a root collection owns the file.
-        if (
-          belongsToSingletonDirectory &&
-          !singletonPaths.has(nextEntry.path) &&
-          !(isRootFile && rootCollectionSlug)
-        ) {
+        const classification = classifyMetadataFile({
+          path: nextEntry.path,
+          singletonPaths,
+          singletonDirectories,
+          rootCollectionSlug
+        })
+        if (!classification.include) {
           continue
         }
         output.push({
           path: nextEntry.path,
           oid: `${nextEntry.object.oid}`,
           commit: hashFromUrl(`${nextEntry.object.commitUrl}`),
-          collection: singletonPaths.has(nextEntry.path)
-            ? '_singletons'
-            : isRootFile
-              ? rootCollectionSlug
-              : undefined
+          collection: classification.collection
         })
       }
     }

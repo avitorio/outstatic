@@ -41,14 +41,24 @@ export function useImportContent() {
         return { ...composed, committed: false }
       }
 
+      const owner = repoOwner || session?.user.login
+      if (!owner || !repoSlug || !repoBranch) {
+        throw new Error('Repository details are unavailable.')
+      }
+      const importedCount = composed.files.filter(
+        (file) =>
+          file.path.endsWith('.schema.json') ||
+          file.path.endsWith('/schema.json')
+      ).length
+
       const commit = createCommitApi({
         message: createOutstaticCommitMessage({
           scope: 'config',
           action: 'create',
           target: 'collections',
-          label: `import ${selections.length + singletons.length} content groups`
+          label: `import ${importedCount} content group${importedCount === 1 ? '' : 's'}`
         }),
-        owner: repoOwner || session?.user.login || '',
+        owner,
         name: repoSlug,
         branch: repoBranch,
         oid
@@ -57,9 +67,7 @@ export function useImportContent() {
         commit.replaceFile(file.path, file.content)
       )
       await mutation.mutateAsync(commit.createInput())
-      if (selections.length > 0 || singletons.length > 0) {
-        await rebuildMetadata()
-      }
+      await rebuildMetadata()
       return { ...composed, committed: true }
     } catch (error) {
       throw new Error(stringifyError(error))

@@ -1,6 +1,19 @@
 import { getLoginSession } from '@/utils/auth/auth'
 import { OUTSTATIC_API_KEY, OUTSTATIC_API_URL } from '@/utils/constants'
 
+function createTimeoutSignal(timeoutMs: number) {
+  if (typeof AbortSignal.timeout === 'function') {
+    return { signal: AbortSignal.timeout(timeoutMs), cancel: () => undefined }
+  }
+
+  const controller = new AbortController()
+  const timeoutId = setTimeout(() => controller.abort(), timeoutMs)
+  return {
+    signal: controller.signal,
+    cancel: () => clearTimeout(timeoutId)
+  }
+}
+
 /**
  * Relays self-hosted scans without exposing a project API key to the browser.
  * The upstream scan service verifies that this project API key is bound to the
@@ -14,10 +27,7 @@ export default async function POST(request: Request): Promise<Response> {
     return new Response('Repository discovery is not configured.', {
       status: 404
     })
-  const timeout =
-    typeof AbortSignal.timeout === 'function'
-      ? AbortSignal.timeout(30_000)
-      : undefined
+  const timeout = createTimeoutSignal(30_000)
   let response: Response
 
   try {
@@ -29,7 +39,7 @@ export default async function POST(request: Request): Promise<Response> {
       },
       body: request.body,
       duplex: 'half',
-      signal: timeout
+      signal: timeout.signal
     } as RequestInit)
   } catch (error) {
     const isTimeout =
@@ -44,6 +54,8 @@ export default async function POST(request: Request): Promise<Response> {
       status,
       headers: { 'Content-Type': 'application/json' }
     })
+  } finally {
+    timeout.cancel()
   }
 
   const headers = new Headers()
