@@ -1,5 +1,13 @@
 # outstatic
 
+## 2.2.2
+
+### Patch Changes
+
+- 88994e6: Add repository content discovery and one-click dashboard setup for hosted projects.
+
+- 88994e6: Improve dashboard content discovery reliability and metadata import handling.
+
 ## 2.2.1
 
 ### Patch Changes
