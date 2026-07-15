@@ -1,6 +1,13 @@
 {
-  "title": "Editing Modeling",
-  "slug": "editing-modeling",
+  "title": "editing-modeling",
   "type": "object",
-  "properties": {}
+  "properties": {
+    "description": {
+      "title": "Description",
+      "description": "",
+      "required": false,
+      "fieldType": "Text",
+      "dataType": "string"
+    }
+  }
 }
