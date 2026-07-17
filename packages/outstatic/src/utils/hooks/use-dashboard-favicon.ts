@@ -26,31 +26,54 @@ const ICON_SELECTOR =
 
 /**
  * While the Outstatic dashboard is mounted, override the host site's favicon
- * with the Outstatic logomark, then restore the host's icons on unmount.
+ * with the Outstatic logomark.
+ *
+ * The host site's icon links must NOT be detached: in the Next.js App Router
+ * they are React-managed nodes, and removing them from the DOM makes React
+ * crash with "Cannot read properties of null (reading 'removeChild')" when it
+ * reconciles the head on client-side navigations. Instead, we append our own
+ * link as the last icon in <head> (browsers prefer the last matching icon
+ * link) and keep it last if the host re-inserts icons during navigation.
  */
 export function useDashboardFavicon() {
   useEffect(() => {
     if (typeof document === 'undefined') return
-    // StrictMode / re-mount safety: never inject twice.
-    if (document.getElementById(OUTSTATIC_FAVICON_LINK_ID)) return
 
     const head = document.head
-    const stashed: Element[] = []
-    head.querySelectorAll(ICON_SELECTOR).forEach((el) => {
-      stashed.push(el)
-      el.remove()
-    })
 
-    const link = document.createElement('link')
+    const link =
+      (document.getElementById(
+        OUTSTATIC_FAVICON_LINK_ID
+      ) as HTMLLinkElement | null) ?? document.createElement('link')
     link.id = OUTSTATIC_FAVICON_LINK_ID
     link.rel = 'icon'
     link.type = 'image/svg+xml'
     link.href = OUTSTATIC_FAVICON_DATA_URI
-    head.appendChild(link)
+
+    const keepLast = () => {
+      if (head.lastElementChild !== link) {
+        head.appendChild(link)
+      }
+    }
+    keepLast()
+
+    const observer = new MutationObserver((mutations) => {
+      const iconAdded = mutations.some((mutation) =>
+        Array.from(mutation.addedNodes).some(
+          (node) =>
+            node !== link &&
+            node instanceof Element &&
+            node.matches(ICON_SELECTOR)
+        )
+      )
+      if (iconAdded) keepLast()
+    })
+    observer.observe(head, { childList: true })
 
     return () => {
-      document.getElementById(OUTSTATIC_FAVICON_LINK_ID)?.remove()
-      stashed.forEach((el) => head.appendChild(el))
+      observer.disconnect()
+      // Only remove the node we created ourselves; React never manages it.
+      link.remove()
     }
   }, [])
 }
