@@ -1,0 +1,41 @@
+---
+title: 'Projects'
+description: 'Learn how hosted Outstatic projects connect content, users, and self-hosted instances.'
+---
+
+## What is a Project?
+
+Projects are part of the [hosted Outstatic dashboard](https://outstatic.com). A project connects Outstatic to a GitHub repository, branch, and, when needed, a folder within a monorepo.
+
+Each project provides one place to:
+
+- Manage the content stored in the connected repository from hosted Outstatic.
+- Manage the users who can access that content and assign their roles.
+- Generate an API key that connects a self-hosted Outstatic instance to hosted Outstatic services.
+
+A project is an access and integration boundary, not a content type. The content inside it is still organized into collections, documents, and singletons.
+
+## Hosted and Self-Hosted Outstatic
+
+Projects live on hosted Outstatic, even when your content editor runs in a self-hosted application.
+
+You can use a project directly on outstatic.com to manage its content and users. For a self-hosted Outstatic instance, create the project on outstatic.com and generate its API key. Adding that key to the self-hosted instance connects it to the project's hosted services, including authentication and project member management.
+
+The Markdown content remains in your GitHub repository. Creating a project does not move that content into an Outstatic database.
+
+## Create a Project
+
+1. Sign in to [outstatic.com](https://outstatic.com) and select a workspace.
+2. Click **New Project**.
+3. Choose **Connect a repository** or **Start from a template**.
+4. To connect an existing site, select its GitHub account and repository. The project initially uses the repository's default branch.
+5. If the site is in a monorepo, enable the monorepo option and select its repository folder.
+6. Create the project, then open it to manage content, members, and project settings.
+
+To connect a self-hosted instance, continue with [API Keys](/access-integration/api-keys).
+
+## Project Access
+
+Project members can be given different roles so they only have the permissions they need. A workspace can contain multiple projects, and its members do not need access to every project.
+
+See [Roles & Permissions](/access-integration/roles) for the available roles and their capabilities.

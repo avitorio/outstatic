@@ -3,9 +3,10 @@
   "defaultOpen": true,
   "collapsible": false,
   "pages": [
-    "fetching-data",
+    "projects",
     "api-keys",
     "roles",
+    "fetching-data",
     "github-apps-authentication",
     "setting-up-github-authentication",
     "environment-variables",
