@@ -11,7 +11,7 @@ Each project provides one place to:
 
 - Manage the content stored in the connected repository from hosted Outstatic.
 - Manage the users who can access that content and assign their roles.
-- Generate an API key that connects a self-hosted Outstatic instance to hosted Outstatic services.
+- On Pro, connect a self-hosted instance to AI Completions, Member Management, Google and Email Login, and Automatic Content Setup with one API key.
 
 A project is an access and integration boundary, not a content type. The content inside it is still organized into collections, documents, and singletons.
 
@@ -19,7 +19,9 @@ A project is an access and integration boundary, not a content type. The content
 
 Projects live on hosted Outstatic, even when your content editor runs in a self-hosted application.
 
-You can use a project directly on outstatic.com to manage its content and users. For a self-hosted Outstatic instance, create the project on outstatic.com and generate its API key. Adding that key to the self-hosted instance connects it to the project's hosted services, including authentication and project member management.
+You can use a project directly on outstatic.com to manage its content and users. With Pro, one project API key brings AI Completions, Member Management, Google Social Login and Email Sign-In, Automatic Content Setup, and managed relay authentication to your self-hosted instance. Creating or regenerating this key requires an active or trialing Pro subscription.
+
+For free self-hosting, connect the instance directly to GitHub with your own OAuth app by setting `OST_GITHUB_ID` and `OST_GITHUB_SECRET`. This setup does not require an Outstatic API key.
 
 The Markdown content remains in your GitHub repository. Creating a project does not move that content into an Outstatic database.
 

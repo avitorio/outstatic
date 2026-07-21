@@ -89,11 +89,22 @@ You should see the Outstatic sign-in screen.
 
 ## Sign in options
 
-There are two ways you can access your dashboard. With GitHub via Outstatic (recommended), or using [Github OAuth](/access-integration/setting-up-github-authentication).
+Choose the authentication mode that matches your setup:
 
-### Accessing with GitHub via Outstatic (Recommended)
+### Free self-hosting with your own GitHub OAuth app
 
-Click on **Sign in with Github** and follow the steps to create a free Outstatic account and generate an API key for your project.
+Create a GitHub OAuth app and add its credentials to your `.env` file:
+
+```bash
+OST_GITHUB_ID=YOUR_GITHUB_OAUTH_APP_ID
+OST_GITHUB_SECRET=YOUR_GITHUB_OAUTH_APP_SECRET
+```
+
+Follow [Setting up GitHub authentication](/access-integration/setting-up-github-authentication) for the callback URL and complete setup. This mode does not require an Outstatic subscription or `OUTSTATIC_API_KEY`.
+
+### Outstatic-managed authentication with Pro
+
+Outstatic Pro gives your self-hosted CMS AI Completions, Member Management, Google Social Login and Email Sign-In, and Automatic Content Setup through one project API key. With an active or trialing subscription, click **Sign in with GitHub** and follow the flow to create a project and generate your key.
 
 Copy the `OUTSTATIC_API_KEY` and update your `.env` file.
 
@@ -101,9 +112,9 @@ Copy the `OUTSTATIC_API_KEY` and update your `.env` file.
 OUTSTATIC_API_KEY=ost_******************************
 ```
 
-Now go back to the `/outstatic` page, reload it and click on **Sign in with Github** again.
+Now go back to the `/outstatic` page, reload it, and click **Sign in with GitHub** again.
 
-If everything is setup correctly you'll be able to access your Dashboard.
+If everything is set up correctly, you'll be able to access your dashboard.
 
 Congratulations! Your Outstatic installation is ready and you can now start creating and editing content.
 
@@ -111,8 +122,10 @@ We recommend you learn how Outstatic [manages content](/what-is-outstatic).
 
 ### Accessing the Outstatic dashboard from your live site
 
-If you want to access your Outstatic dashboard from a deployed site, open your Outstatic dashboard, go to **API Keys** in the sidebar, and add your site’s URL as a **Callback Origin**.
+If you use `OUTSTATIC_API_KEY` on a deployed site, open your Outstatic project, go to **API Keys** in the sidebar, and add your site’s URL as a **Callback Origin**.
 
 Then add the API key to the `.env` file in the environment where your site is deployed.
+
+If you use your own GitHub OAuth app, configure its production callback URL and add `OST_GITHUB_ID` and `OST_GITHUB_SECRET` to the deployed environment instead.
 
 To learn more about all the available environment variables, see the [Environment Variables ](/access-integration/environment-variables)section of the docs.

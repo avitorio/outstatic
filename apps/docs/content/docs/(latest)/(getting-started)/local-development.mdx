@@ -19,11 +19,11 @@ npm install
 
 ### Using your OUTSTATIC_API_KEY
 
-If you have created a project on Outstatic.com, you can just add your local install url (example: `http://localhost:3000/outstatic`) to the **API Keys** page for your project.
+`OUTSTATIC_API_KEY` is available with Outstatic Pro. If your project already has a key, add your local install URL (for example, `http://localhost:3000/outstatic`) as a Callback Origin on the project's **API Keys** page and use the same key locally. Creating or regenerating a key requires an active or trialing Pro subscription.
 
 ### Using GitHub OAuth
 
-Since a Github OAuth app cannot have multiple callback URLs, you need to create another [Github OAuth app](https://github.com/settings/developers) for local development.
+Free self-hosted installations use their own GitHub OAuth app. Since a GitHub OAuth app cannot have multiple callback URLs, you need to create another [GitHub OAuth app](https://github.com/settings/developers) for local development.
 
 The only difference is that you need to set the homepage URL to `http://localhost:3000` and set the callback URL to `http://localhost:3000/api/outstatic/callback`.
 

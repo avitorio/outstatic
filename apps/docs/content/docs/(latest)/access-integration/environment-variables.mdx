@@ -9,11 +9,11 @@ Here's a list of all the environment variables needed to run your Outstatic inst
 # REQUIRED Environment variables
 
 # Authentication mode (choose one of the two options below):
-# Option A - Local GitHub OAuth credentials
+# Option A - Free self-hosting with your own GitHub OAuth app
 OST_GITHUB_ID=YOUR_GITHUB_OAUTH_OR_APPS_ID
 OST_GITHUB_SECRET=YOUR_GITHUB_OAUTH_OR_APPS_SECRET
 
-# Option B - Outstatic relay auth (no local GitHub OAuth app needed)
+# Option B - Outstatic Pro relay auth (no local GitHub OAuth app needed)
 OUTSTATIC_API_KEY=your_api_key_here
 
 # OST_REPO_SLUG (Ex: for avitorio/outstatic, OST_REPO_SLUG=outstatic)
@@ -49,8 +49,8 @@ OST_TOKEN_SECRET=A_32CHAR_RANDOM_STRING_FOR_YOUR_TOKEN_SECRET
 
 **Good to know**: To get your repository slug we first try fetching the `OST_REPO_SLUG` environment variable. If that is empty, we try `VERCEL_GIT_REPO_SLUG`, which is one of Vercel's default environment variables. If both are empty, you'll get a warning saying you need to add `OST_REPO_SLUG` to your environment variables.\
 \
-**Authentication mode**: You can authenticate with local GitHub OAuth (`OST_GITHUB_ID` + `OST_GITHUB_SECRET`) or with Outstatic relay auth (`OUTSTATIC_API_KEY`).
-If you use relay auth, configure your Project URL in outstatic.com so login callbacks return to your self-hosted `/api/outstatic/callback` route.
+**Authentication mode**: Free self-hosted installations use their own GitHub OAuth app with `OST_GITHUB_ID` and `OST_GITHUB_SECRET`. Outstatic Pro workspaces can instead use one `OUTSTATIC_API_KEY` to unlock AI Completions, Member Management, Google Social Login and Email Sign-In, Automatic Content Setup, and managed relay authentication. Creating or regenerating an Outstatic API key requires an active or trialing Pro subscription.
+If you use relay auth, configure your Callback Origins on the project's API Keys page so login callbacks return to your self-hosted `/api/outstatic/callback` route.
 \
 \
 **Important:** Don't forget to redeploy your website or restart your server after updating environment variables.

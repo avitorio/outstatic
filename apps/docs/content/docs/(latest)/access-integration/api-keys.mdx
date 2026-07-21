@@ -1,11 +1,15 @@
 ---
 title: 'API Keys'
-description: 'Learn how API keys work and unlock PRO features for your self-hosted Outstatic instance.'
+description: 'Connect your self-hosted instance to Outstatic Pro for AI Completions, Member Management, Google and Email Login, and Automatic Content Setup.'
 ---
 
 ## What are API Keys?
 
-API keys are part of the **Outstatic Pro plan**. They unlock advanced features for your self-hosted Outstatic instance. Each project can have one active API key at a time.
+Outstatic Pro turns your self-hosted CMS into a complete managed workflow. One project API key gives your team AI Completions, Member Management, Google Social Login and Email Sign-In, and Automatic Content Setup—without maintaining the supporting services yourself.
+
+Creating or regenerating a key requires an active or trialing Pro subscription. Each project can have one active API key at a time.
+
+You do not need an Outstatic API key to self-host Outstatic for free. Free self-hosted installations can connect directly to GitHub with their own OAuth app by setting `OST_GITHUB_ID` and `OST_GITHUB_SECRET`.
 
 ## How API Keys Work
 
@@ -15,28 +19,33 @@ When you generate an API key from your project's API Key settings in the Outstat
 OUTSTATIC_API_KEY=your_api_key_here
 ```
 
-Once configured, your self-hosted Outstatic instance can access PRO features. The key is validated on each request to ensure only authorized projects can use these capabilities.
+Once configured, your self-hosted Outstatic instance can connect to Outstatic's hosted services. The key is validated on each request to ensure only authorized projects can use these capabilities.
 
-**Important:** Save your API key securely when it's first generated. You won't be able to see the full key again—only a prefix for identification. If you lose it, you'll need to regenerate a new key (which will revoke the old one).
+**Important:** Treat the key as a secret. Newly generated keys can be revealed and copied from the API Keys page. Some older keys only show their prefix; replacing one requires regeneration. Regenerating a key revokes the previous key and requires an active or trialing Pro subscription.
 
-## PRO Features Unlocked
+If a Pro subscription ends, an existing key is not automatically revoked. It remains valid and can be revoked, but creating or regenerating a key requires subscribing to Pro again. Access to hosted Pro features still follows the workspace's current subscription status.
 
-With a valid API key, your self-hosted Outstatic instance gains access to:
+## Hosted Services and Pro Features
 
-- **AI Completions** — AI-powered writing suggestions in the content editor (requires `OPENAI_API_KEY` as well)
-- **Email and social login** — Invite team members who can sign in with email or social providers (GitHub, Google, etc.)
-- **GitHub relay login** — Let users sign in with GitHub without creating local `OST_GITHUB_ID` / `OST_GITHUB_SECRET` credentials
-- **Advanced authentication** — Configure callback origins so members are redirected only to approved self-hosted domains
-- **Project members management** — Manage your project's members and their roles
+A valid API key authenticates your self-hosted instance with Outstatic's hosted relay services. The workspace's subscription status separately determines which Pro capabilities are enabled.
+
+With an active or trialing Pro subscription and a valid API key, your self-hosted instance gains access to:
+
+- **AI Completions** — Give writers intelligent suggestions without configuring your own AI provider key.
+- **Member Management** — Invite collaborators and control who can access each project.
+- **Google Social Login and Email Sign-In** — Give your team simple, flexible ways to access the CMS.
+- **Automatic Content Setup** — Detect and configure existing content so your project is ready faster.
+- **Managed GitHub Relay** — Sign in with GitHub without maintaining local OAuth app credentials.
 
 ## Getting an API Key
 
-1. Sign in to [outstatic.com](https://outstatic.com) and open your project.
-2. Go to the **API Key** tab in your project settings.
-3. In **Step 1**, add at least one Callback Origin base URL ending in `/outstatic`.
-4. As soon as the first Callback Origin is added, the UI moves to **Step 2** automatically. You can still go back to Step 1 anytime.
-5. In **Step 2**, click **Generate API Key**.
-6. Copy the key immediately and add it to your `.env` file—you won't see it again.
+1. Start or trial an Outstatic Pro subscription for the project's workspace.
+2. Sign in to [outstatic.com](https://outstatic.com) and open your project.
+3. Go to the **API Key** tab in your project settings.
+4. In **Step 1**, add at least one Callback Origin base URL ending in `/outstatic`.
+5. As soon as the first Callback Origin is added, the UI moves to **Step 2** automatically. You can still go back to Step 1 anytime.
+6. In **Step 2**, click **Generate API Key**.
+7. Copy the key and add it to your `.env` file.
 
 ## Callback Origin Configuration
 

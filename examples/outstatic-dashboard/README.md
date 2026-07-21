@@ -8,6 +8,8 @@ Your content stays in GitHub. Outstatic gives you the editing experience.
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/outstatic/outstatic-dashboard&env=OUTSTATIC_API_KEY&project-name=outstatic-dashboard&repo-name=outstatic-dashboard&demo-title=Outstatic%20Dashboard&demo-description=Standalone%20CMS%20dashboard%20for%20Markdown%20and%20MDX%20content&demo-url=https://outstatic.com&demo-image=https://outstatic.com/images/outstatic-demo.png&envDescription=Outstatic%20API%20key%20needed%20for%20dashboard%20access&envLink=https://outstatic.com/docs/environment-variables)
 
+The deploy button launches the complete Outstatic Pro workflow: AI Completions, Member Management, Google Social Login and Email Sign-In, and Automatic Content Setup through one `OUTSTATIC_API_KEY`. Creating the key requires an active or trialing Pro subscription. For free self-hosting, clone the project and configure your own GitHub OAuth app with `OST_GITHUB_ID` and `OST_GITHUB_SECRET`.
+
 ## Why use this?
 
 Most static websites already have a great build system. What they usually do not have is a simple editorial interface.
@@ -87,13 +89,26 @@ http://localhost:3000/outstatic
 
 You should see the Outstatic dashboard login screen.
 
-### 3. Sign in with GitHub through Outstatic
+### 3. Choose an authentication mode
 
-The recommended setup is to sign in with GitHub through Outstatic.
+#### Free self-hosting with your own GitHub OAuth app
+
+Create a GitHub OAuth app and add its credentials to `.env.local`:
+
+```bash
+OST_GITHUB_ID=YOUR_GITHUB_OAUTH_APP_ID
+OST_GITHUB_SECRET=YOUR_GITHUB_OAUTH_APP_SECRET
+```
+
+See [Setting up GitHub authentication](https://outstatic.com/docs/access-integration/setting-up-github-authentication) for the required callback URL.
+
+#### Outstatic-managed authentication with Pro
+
+Outstatic Pro gives your dashboard AI Completions, Member Management, Google Social Login and Email Sign-In, and Automatic Content Setup through one project API key. With an active or trialing subscription:
 
 1. Open `/outstatic`.
 2. Click **Sign in with GitHub**.
-3. Follow the flow to create a free Outstatic account.
+3. Follow the flow to create an Outstatic account and project.
 4. Generate an API key for your project.
 5. Add the API key to your environment variables:
 
@@ -109,7 +124,7 @@ If everything is configured correctly, you will land in your dashboard and can s
 
 You can deploy this dashboard to Vercel or any platform that supports Next.js.
 
-After deploying:
+After deploying with `OUTSTATIC_API_KEY`:
 
 1. Open the Outstatic dashboard.
 2. Go to **API Keys**.
@@ -119,22 +134,28 @@ After deploying:
 
 Your deployed dashboard can now manage content for your GitHub repository.
 
+If you use your own GitHub OAuth app, configure its production callback URL and add `OST_GITHUB_ID` and `OST_GITHUB_SECRET` to the deployment instead.
+
 ## Environment variables
 
-### Recommended
+Choose one authentication mode.
 
-| Variable            | Required | Description                                                                                                 |
-| ------------------- | -------- | ----------------------------------------------------------------------------------------------------------- |
-| `OUTSTATIC_API_KEY` | Yes      | API key generated from Outstatic. Used to authenticate your dashboard with Outstatic-managed GitHub access. |
+### Outstatic-managed authentication (Pro)
 
-### Advanced GitHub OAuth setup
+| Variable            | Required | Description                                                                                                |
+| ------------------- | -------- | ---------------------------------------------------------------------------------------------------------- |
+| `OUTSTATIC_API_KEY` | Yes      | Pro API key generated from Outstatic. Used to authenticate your dashboard with Outstatic-managed services. |
 
-You can also configure direct GitHub OAuth access manually.
+Creating or regenerating this key requires an active or trialing Outstatic Pro subscription.
+
+### Free self-hosting with GitHub OAuth
+
+Configure direct GitHub OAuth access with your own app.
 
 | Variable            | Required | Description                                                     |
 | ------------------- | -------- | --------------------------------------------------------------- |
-| `OST_GITHUB_ID`     | Optional | GitHub OAuth app client ID                                      |
-| `OST_GITHUB_SECRET` | Optional | GitHub OAuth app client secret                                  |
+| `OST_GITHUB_ID`     | Yes      | GitHub OAuth app client ID                                      |
+| `OST_GITHUB_SECRET` | Yes      | GitHub OAuth app client secret                                  |
 | `OST_REPO_SLUG`     | Optional | Repository name where content is stored                         |
 | `OST_REPO_BRANCH`   | Optional | Branch where content is saved. Defaults to `main`               |
 | `OST_REPO_OWNER`    | Optional | GitHub owner or organization. Defaults to the logged-in user    |
