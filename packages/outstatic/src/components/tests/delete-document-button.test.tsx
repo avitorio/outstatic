@@ -4,6 +4,10 @@ import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
 
 const mutateAsyncMock = jest.fn()
 
+jest.mock('@/components/ui/outstatic/upgrade-dialog-context', () => ({
+  useUpgradeDialog: () => ({ openUpgradeDialog: jest.fn() })
+}))
+
 // Mock the useOstSession hook
 jest.mock('@/utils/auth/hooks', () => ({
   useOstSession: () => ({

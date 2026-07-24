@@ -11,6 +11,7 @@ import { useCreateCommit } from './use-create-commit'
 import useOid from './use-oid'
 import { useGetMediaFiles } from './use-get-media-files'
 import { buildRepoMediaPath, getMediaTypeForFilename } from '../media-config'
+import { useUpgradeDialog } from '@/components/ui/outstatic/upgrade-dialog-context'
 
 const createMediaFilename = (filename: string) => {
   const randString = window.btoa(Math.random().toString()).substring(6, 10)
@@ -23,8 +24,9 @@ const createMediaFilename = (filename: string) => {
 
 function useSubmitMedia() {
   const createCommit = useCreateCommit()
-  const { repoOwner, repoSlug, repoBranch, session, mediaJsonPath } =
+  const { repoOwner, repoSlug, repoBranch, session, mediaJsonPath, isDemo } =
     useOutstatic()
+  const { openUpgradeDialog } = useUpgradeDialog()
   const fetchOid = useOid()
 
   const { refetch: refetchMedia } = useGetMediaFiles({
@@ -40,6 +42,11 @@ function useSubmitMedia() {
       source?: MediaSourceConfig
     }) => {
       if (files.length === 0 || !source) {
+        return
+      }
+
+      if (isDemo) {
+        openUpgradeDialog(undefined, undefined, 'demo')
         return
       }
 
@@ -122,7 +129,9 @@ function useSubmitMedia() {
       repoSlug,
       repoBranch,
       mediaJsonPath,
-      refetchMedia
+      refetchMedia,
+      isDemo,
+      openUpgradeDialog
     ]
   )
 

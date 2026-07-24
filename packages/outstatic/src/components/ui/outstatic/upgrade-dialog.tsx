@@ -22,6 +22,7 @@ export type UpgradeFeature =
   | 'api-keys'
   | 'ai'
   | 'save'
+  | 'demo'
   | 'content-setup'
 
 const headline: Record<UpgradeFeature, string> = {
@@ -29,6 +30,7 @@ const headline: Record<UpgradeFeature, string> = {
   'api-keys': 'Unlock API Keys',
   ai: 'Write faster with AI',
   save: 'Upgrade to save your content',
+  demo: 'This is a demo project',
   'content-setup': 'Set up your dashboard automatically'
 }
 
@@ -37,6 +39,17 @@ const getUpgradeUrl = (
   dashboardRoute: string | undefined,
   feature: UpgradeFeature
 ) => {
+  if (feature === 'demo') {
+    if (!accountSlug) {
+      return `${OUTSTATIC_APP_URL}/auth/sign-up?provider=github`
+    }
+
+    const destination = new URL(`${OUTSTATIC_APP_URL}/home/${accountSlug}/`)
+    destination.searchParams.set('new_project', 'true')
+
+    return destination.toString()
+  }
+
   if (feature === 'content-setup') {
     return accountSlug
       ? `${OUTSTATIC_APP_URL}/home/${accountSlug}/upgrade-set-up`
@@ -123,13 +136,19 @@ export function UpgradeDialog({
   const [isOpen, setIsOpen] = useState(open)
   const [hasMounted, setHasMounted] = useState(false)
   const dialogFeatures =
-    feature === 'content-setup' ? contentSetupFeatures : features
+    feature === 'content-setup'
+      ? contentSetupFeatures
+      : feature === 'demo'
+        ? []
+        : features
   const description =
     feature === 'content-setup'
       ? 'Upgrade to Pro to import the content we found and configure your dashboard automatically.'
-      : feature === 'save'
-        ? 'Outstatic.com projects require Pro to save changes. Self-hosted Outstatic remains free.'
-        : 'Upgrade to Pro and unlock powerful features to grow your team and boost productivity.'
+      : feature === 'demo'
+        ? 'This project is read-only. Create your own editable copy to save content, manage collections, and upload media.'
+        : feature === 'save'
+          ? 'Outstatic.com projects require Pro to save changes. Self-hosted Outstatic remains free.'
+          : 'Upgrade to Pro and unlock powerful features to grow your team and boost productivity.'
 
   useEffect(() => {
     setIsOpen(open)
@@ -166,40 +185,44 @@ export function UpgradeDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <div>
-          <FeatureGrid className="flex flex-col gap-4">
-            {dialogFeatures.map((feature) => (
-              <div
-                key={feature.title}
-                className="bg-card hover:bg-accent/50 flex items-start gap-3 rounded-lg border p-4 transition-colors"
-              >
-                <div className="bg-primary/10 text-primary flex h-8 w-8 items-center justify-center rounded-md">
-                  {feature.icon}
+        {dialogFeatures.length > 0 ? (
+          <div>
+            <FeatureGrid className="flex flex-col gap-4">
+              {dialogFeatures.map((feature) => (
+                <div
+                  key={feature.title}
+                  className="bg-card hover:bg-accent/50 flex items-start gap-3 rounded-lg border p-4 transition-colors"
+                >
+                  <div className="bg-primary/10 text-primary flex h-8 w-8 items-center justify-center rounded-md">
+                    {feature.icon}
+                  </div>
+                  <div className="flex-1">
+                    <h4 className="text-foreground font-medium">
+                      {feature.title}
+                    </h4>
+                    <p className="text-muted-foreground text-sm">
+                      {feature.description}
+                    </p>
+                  </div>
+                  <CheckCircle className="h-4 w-4 text-green-500" />
                 </div>
-                <div className="flex-1">
-                  <h4 className="text-foreground font-medium">
-                    {feature.title}
-                  </h4>
-                  <p className="text-muted-foreground text-sm">
-                    {feature.description}
-                  </p>
-                </div>
-                <CheckCircle className="h-4 w-4 text-green-500" />
-              </div>
-            ))}
-          </FeatureGrid>
-        </div>
+              ))}
+            </FeatureGrid>
+          </div>
+        ) : null}
 
         <div className="space-y-4">
           <Button variant="default" size="lg" className="w-full" asChild>
             <Link
-              target="_blank"
+              target={feature === 'demo' ? '_self' : '_blank'}
               rel="noopener noreferrer"
               href={getUpgradeUrl(accountSlug, dashboardRoute, feature)}
             >
-              {feature === 'content-setup'
-                ? 'Upgrade to set up your dashboard'
-                : 'Start your free trial'}
+              {feature === 'demo'
+                ? 'Create your own'
+                : feature === 'content-setup'
+                  ? 'Upgrade to set up your dashboard'
+                  : 'Start your free trial'}
               <ArrowRight className="ml-2 h-4 w-4" />
             </Link>
           </Button>

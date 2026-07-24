@@ -21,6 +21,7 @@ import {
 } from '@/components/ui/shadcn/alert-dialog'
 import { SpinnerIcon } from '@/components/ui/outstatic/spinner-icon'
 import { toast } from 'sonner'
+import { useUpgradeDialog } from '@/components/ui/outstatic/upgrade-dialog-context'
 
 type DeleteDocumentButtonProps = {
   disabled?: boolean
@@ -41,8 +42,9 @@ export const DeleteMediaButton = ({
 }: DeleteDocumentButtonProps) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [deleting, setDeleting] = useState(false)
-  const { repoOwner, repoSlug, repoBranch, session, mediaJsonPath } =
+  const { repoOwner, repoSlug, repoBranch, session, mediaJsonPath, isDemo } =
     useOutstatic()
+  const { openUpgradeDialog } = useUpgradeDialog()
   const fetchOid = useOid()
 
   const mutation = useCreateCommit()
@@ -50,6 +52,11 @@ export const DeleteMediaButton = ({
   const { refetch: refetchMedia } = useGetMediaFiles({ enabled: false })
 
   const deleteMedia = async () => {
+    if (isDemo) {
+      openUpgradeDialog(undefined, undefined, 'demo')
+      return
+    }
+
     setDeleting(true)
     try {
       const [{ data }, oid] = await Promise.all([refetchMedia(), fetchOid()])

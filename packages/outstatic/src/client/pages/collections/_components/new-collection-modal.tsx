@@ -53,6 +53,7 @@ import {
   DialogTitle,
   DialogDescription
 } from '@/components/ui/shadcn/dialog'
+import { useUpgradeDialog } from '@/components/ui/outstatic/upgrade-dialog-context'
 
 import { findCollectionParent } from '@/utils/collections/collection-tree'
 
@@ -76,8 +77,10 @@ export default function NewCollectionModal({
     repoSlug,
     repoBranch,
     repoOwner,
-    dashboardRoute
+    dashboardRoute,
+    isDemo
   } = useOutstatic()
+  const { openUpgradeDialog } = useUpgradeDialog()
   const { canManageCollections } = usePermissions()
 
   const router = useRouter()
@@ -128,6 +131,11 @@ export default function NewCollectionModal({
   })
 
   const onSubmit = async ({ name }: z.infer<typeof createCollectionSchema>) => {
+    if (isDemo) {
+      openUpgradeDialog(undefined, undefined, 'demo')
+      return
+    }
+
     setLoading(true)
     setHasChanges(false)
 

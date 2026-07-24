@@ -22,6 +22,12 @@ const wrapper = ({ children }: { children: ReactNode }) => (
   </NavigationGuardProvider>
 )
 
+const disabledWrapper = ({ children }: { children: ReactNode }) => (
+  <NavigationGuardProvider>
+    <ContentLockProvider disabled>{children}</ContentLockProvider>
+  </NavigationGuardProvider>
+)
+
 describe('useContentLock', () => {
   beforeEach(() => {
     jest.clearAllMocks()
@@ -98,5 +104,38 @@ describe('useContentLock', () => {
       'You have unsaved changes. Are you sure you want to leave?'
     )
     expect(clickEvent.defaultPrevented).toBe(true)
+  })
+
+  it('tracks changes without blocking navigation when disabled', () => {
+    const confirmSpy = jest.spyOn(window, 'confirm')
+    const { result } = renderHook(() => useContentLock(), {
+      wrapper: disabledWrapper
+    })
+
+    act(() => {
+      result.current.setHasChanges(true)
+    })
+
+    expect(result.current.hasChanges).toBe(true)
+    expect(mockUseNavigationGuard).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        enabled: false,
+        confirm: expect.any(Function)
+      })
+    )
+
+    const link = document.createElement('a')
+    link.href = '/outstatic/collections'
+    document.body.appendChild(link)
+
+    const clickEvent = new MouseEvent('click', {
+      bubbles: true,
+      cancelable: true,
+      button: 0
+    })
+    link.dispatchEvent(clickEvent)
+
+    expect(confirmSpy).not.toHaveBeenCalled()
+    expect(clickEvent.defaultPrevented).toBe(false)
   })
 })

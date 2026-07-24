@@ -26,6 +26,7 @@ import {
   getDescendantCollectionSlugs,
   getMetadataAfterCollectionDeletion
 } from '@/utils/collections/collection-tree'
+import { useUpgradeDialog } from '@/components/ui/outstatic/upgrade-dialog-context'
 
 type DeleteCollectionModalProps = {
   setShowDeleteModal: (value: boolean) => void
@@ -38,8 +39,9 @@ function DeleteCollectionModal({
   setSelectedCollection,
   collection
 }: DeleteCollectionModalProps) {
-  const { repoOwner, session, repoSlug, repoBranch, ostContent } =
+  const { repoOwner, session, repoSlug, repoBranch, ostContent, isDemo } =
     useOutstatic()
+  const { openUpgradeDialog } = useUpgradeDialog()
   const { canManageCollections } = usePermissions()
   const [deleting, setDeleting] = useState(false)
   const [keepFiles, setKeepFiles] = useState(true)
@@ -68,6 +70,11 @@ function DeleteCollectionModal({
   }, [canManageCollections, setSelectedCollection, setShowDeleteModal])
 
   const deleteCollection = async (collection: CollectionType) => {
+    if (isDemo) {
+      openUpgradeDialog(undefined, undefined, 'demo')
+      return
+    }
+
     const [
       { data: metadata, isError: metadataError },
       { data: collections, isError: collectionsError }

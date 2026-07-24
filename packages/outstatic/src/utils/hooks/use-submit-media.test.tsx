@@ -8,6 +8,7 @@ import useOid from './use-oid'
 import { useOutstatic } from './use-outstatic'
 import { useCreateCommit } from './use-create-commit'
 import useSubmitMedia from './use-submit-media'
+import { useUpgradeDialog } from '@/components/ui/outstatic/upgrade-dialog-context'
 
 jest.mock('@/utils/create-commit-api', () => ({
   createCommitApi: jest.fn()
@@ -35,6 +36,10 @@ jest.mock('./use-outstatic', () => ({
   useOutstatic: jest.fn()
 }))
 
+jest.mock('@/components/ui/outstatic/upgrade-dialog-context', () => ({
+  useUpgradeDialog: jest.fn()
+}))
+
 const mockCreateCommitApi = createCommitApi as jest.Mock
 const mockHashFromUrl = hashFromUrl as jest.Mock
 const mockStringifyMedia = stringifyMedia as jest.Mock
@@ -42,6 +47,7 @@ const mockUseCreateCommit = useCreateCommit as jest.Mock
 const mockUseGetMediaFiles = useGetMediaFiles as jest.Mock
 const mockUseOid = useOid as jest.Mock
 const mockUseOutstatic = useOutstatic as jest.Mock
+const mockUseUpgradeDialog = useUpgradeDialog as jest.Mock
 
 describe('useSubmitMedia', () => {
   const source = {
@@ -56,6 +62,7 @@ describe('useSubmitMedia', () => {
   const fetchOid = jest.fn()
   const replaceFile = jest.fn()
   const createInput = jest.fn()
+  const openUpgradeDialog = jest.fn()
 
   beforeEach(() => {
     jest.clearAllMocks()
@@ -63,6 +70,7 @@ describe('useSubmitMedia', () => {
     mockUseCreateCommit.mockReturnValue({ mutateAsync })
     mockUseGetMediaFiles.mockReturnValue({ refetch: refetchMedia })
     mockUseOid.mockReturnValue(fetchOid)
+    mockUseUpgradeDialog.mockReturnValue({ openUpgradeDialog })
     mockUseOutstatic.mockReturnValue({
       repoOwner: 'owner',
       repoSlug: 'repo',
@@ -197,5 +205,29 @@ describe('useSubmitMedia', () => {
     )
     expect(createInput).toHaveBeenCalledTimes(1)
     expect(mutateAsync).toHaveBeenCalledWith({ input: 'payload' })
+  })
+
+  it('opens the demo prompt without creating a commit', async () => {
+    mockUseOutstatic.mockReturnValue({
+      repoOwner: 'owner',
+      repoSlug: 'repo',
+      repoBranch: 'main',
+      session: null,
+      mediaJsonPath: 'outstatic/media/media.json',
+      isDemo: true
+    })
+
+    const { result } = renderHook(() => useSubmitMedia())
+
+    await act(async () => {
+      await result.current({
+        files: [{ filename: 'Photo.png', type: 'image', content: 'image-one' }],
+        source
+      })
+    })
+
+    expect(openUpgradeDialog).toHaveBeenCalledWith(undefined, undefined, 'demo')
+    expect(fetchOid).not.toHaveBeenCalled()
+    expect(mutateAsync).not.toHaveBeenCalled()
   })
 })

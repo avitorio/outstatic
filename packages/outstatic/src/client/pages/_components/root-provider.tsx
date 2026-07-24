@@ -14,6 +14,7 @@ import { ReactNode, useEffect, useMemo, useCallback } from 'react'
 import { Toaster } from 'sonner'
 import 'katex/dist/katex.min.css'
 import { ContentLockProvider } from '@/utils/hooks/use-content-lock'
+import { UpgradeDialogProvider } from '@/components/ui/outstatic/upgrade-dialog-context'
 
 type RootProviderProps = {
   ostData: OutstaticData
@@ -54,9 +55,13 @@ function RootProviderInner({ ostData, children }: RootProviderProps) {
       >
         {showToaster ? <Toaster /> : null}
         <QueryClientProvider client={queryClient}>
-          <NavigationGuardProvider>
-            <ContentLockProvider>{children}</ContentLockProvider>
-          </NavigationGuardProvider>
+          <UpgradeDialogProvider feature="ai">
+            <NavigationGuardProvider>
+              <ContentLockProvider disabled={ostData.isDemo}>
+                {children}
+              </ContentLockProvider>
+            </NavigationGuardProvider>
+          </UpgradeDialogProvider>
         </QueryClientProvider>
         <V2BreakingCheck />
       </ThemeProvider>

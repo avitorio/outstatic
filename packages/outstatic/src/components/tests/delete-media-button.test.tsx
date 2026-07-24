@@ -23,6 +23,10 @@ const mockToastPromise = jest.fn(
   }
 )
 
+jest.mock('@/components/ui/outstatic/upgrade-dialog-context', () => ({
+  useUpgradeDialog: () => ({ openUpgradeDialog: jest.fn() })
+}))
+
 // Mock the useOutstatic hook
 jest.mock('@/utils/hooks/use-outstatic', () => ({
   __esModule: true,
