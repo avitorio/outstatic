@@ -1,0 +1,93 @@
+---
+title: 'Choose a CMS without giving up your content'
+status: 'published'
+description: 'A practical way to evaluate content tools when Markdown, Git history, and developer control matter.'
+coverImage: '/images/skyline.png'
+publishedAt: '2026-04-09T14:30:00.000Z'
+tags:
+  [
+    { 'label': 'GitHub', value: 'gitHub' },
+    { 'label': 'Outstatic', value: 'outstatic' }
+  ]
+category: 'product-tour'
+featured: false
+seo:
+  title: 'Choose a CMS without giving up your content'
+  description: 'See how Outstatic combines visual editing with portable Markdown files and GitHub workflows.'
+author:
+  name: 'Andre Vitorio'
+  picture: 'https://avatars.githubusercontent.com/u/1417109?v=4'
+---
+
+Choosing a CMS is often framed as a checklist of editor features. That matters,
+but the more durable question is simpler: **what happens to your content after
+the tool is gone?**
+
+Outstatic starts from the answer. Documents are Markdown or MDX files in your
+GitHub repository. The dashboard makes those files approachable for writers,
+but it does not replace them with records in a private database.
+
+## Keep the source of truth visible
+
+Open an Outstatic document in the dashboard and an editor sees headings, links,
+images, lists, and custom fields. Open the same document in GitHub and a
+developer sees readable frontmatter and Markdown.
+
+That shared source of truth removes a common boundary between content and code:
+
+- changes have commit history
+- branches can isolate work
+- repository backups include the content
+- scripts can inspect or transform every document
+- a different renderer can consume the same files later
+
+Portability is not an export feature you hope to use someday. It is the normal
+state of the project.
+
+## Give editors structure without hiding the files
+
+Plain Markdown is flexible, but asking every writer to memorize frontmatter is
+not a good editorial workflow. Outstatic collections solve that problem with a
+schema.
+
+A team can define a Select field for categories, Tags for topics, an Image
+field for cover art, a Boolean for featured placement, and an Object for SEO
+metadata. The editor validates those choices and saves them back to
+frontmatter.
+
+This creates a useful balance: developers define the shape the frontend can
+rely on, and writers fill it in through clear controls.
+
+## Fit the CMS into the existing delivery pipeline
+
+Outstatic does not need to own the public website. A Next.js application can
+query the metadata, compile Markdown or MDX, and render the result with its own
+components. Saving content produces a Git commit, which can trigger the same
+preview or production deployment already used for code.
+
+That means the team can keep decisions such as these in the application:
+
+- URL structure and redirects
+- image optimization
+- caching and revalidation
+- design system components
+- analytics and SEO rendering
+- preview and release strategy
+
+The CMS manages the editing workflow; the site keeps control of the reader
+experience.
+
+## Evaluate the real tradeoff
+
+A Git-backed CMS is a strong fit when content belongs close to the application,
+the team values version history, and Markdown is a useful long-term format. It
+may not be the right model for a catalog with millions of rapidly changing
+records or for content that must never enter a source repository.
+
+For product sites, documentation, portfolios, and editorial blogs, the model is
+often refreshingly direct. Outstatic adds the interface non-developers need
+while preserving the files developers want.
+
+Explore the editor in this demo, then
+[read the documentation](https://outstatic.com/docs) to connect Outstatic to
+your own repository.

@@ -5,12 +5,12 @@
     {
       "__outstatic": {
         "commit": "2e47122b5b6d49d6d1ddb15bcd33edc4a0c1256e",
-        "hash": "217348983",
-        "path": "/outstatic/content/pages/home.md"
+        "hash": "4228030232",
+        "path": "/outstatic/content/pages/home.mdx"
       },
       "author": {
         "name": "Andre Vitorio",
-        "picture": ""
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
       },
       "collection": "pages",
       "coverImage": "",
@@ -23,19 +23,26 @@
     {
       "__outstatic": {
         "commit": "bf4993b965319da4cb9de4a3810fb4af12bdebd6",
-        "hash": "2596208214",
-        "path": "/outstatic/content/posts/how-to-create-an-outstatic-blog.md"
+        "hash": "1954334801",
+        "path": "/outstatic/content/posts/how-to-create-an-outstatic-blog.mdx"
       },
       "author": {
-        "name": "Andre Vitorio"
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
       },
+      "category": "tutorial",
       "collection": "posts",
       "coverImage": "/images/jupiter-spaceship.png",
-      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.",
-      "publishedAt": "2022-07-14T02:34:02.322Z",
+      "description": "Build a Git-backed publishing workflow with Next.js, Markdown, and the Outstatic editor.",
+      "featured": false,
+      "publishedAt": "2026-03-12T10:00:00.000Z",
+      "seo": {
+        "title": "How to create a Next.js blog with Outstatic",
+        "description": "Add a visual Markdown editor to Next.js while keeping every post in your GitHub repository."
+      },
       "slug": "how-to-create-an-outstatic-blog",
       "status": "published",
-      "title": "Learn how to create your blog with Outstatic",
+      "title": "How to create a Next.js blog with Outstatic",
       "tags": [
         { "label": "NextJs", "value": "nextJs" },
         { "label": "GitHub", "value": "gitHub" },
@@ -45,53 +52,82 @@
     {
       "__outstatic": {
         "commit": "998b7f74af83e46bbdb4ab5302c8e4c39963278f",
-        "hash": "3707858083",
-        "path": "/outstatic/content/posts/the-wrong-decision.md"
+        "hash": "688361648",
+        "path": "/outstatic/content/posts/choose-a-cms-without-giving-up-your-content.mdx"
       },
       "author": {
-        "name": "Naval Ravikant"
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
       },
+      "category": "product-tour",
       "collection": "posts",
       "coverImage": "/images/skyline.png",
-      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.",
-      "publishedAt": "2022-03-26T05:35:07.322Z",
-      "slug": "the-wrong-decision",
+      "description": "A practical way to evaluate content tools when Markdown, Git history, and developer control matter.",
+      "featured": false,
+      "publishedAt": "2026-04-09T14:30:00.000Z",
+      "seo": {
+        "title": "Choose a CMS without giving up your content",
+        "description": "See how Outstatic combines visual editing with portable Markdown files and GitHub workflows."
+      },
+      "slug": "choose-a-cms-without-giving-up-your-content",
       "status": "published",
-      "title": "If you want to make the wrong decision, ask everyone"
+      "title": "Choose a CMS without giving up your content",
+      "tags": [
+        { "label": "GitHub", "value": "gitHub" },
+        { "label": "Outstatic", "value": "outstatic" }
+      ]
     },
     {
       "__outstatic": {
         "commit": "d2f316fd04def3347c906f5227da5daf79971f61",
-        "hash": "4086614036",
-        "path": "/outstatic/content/posts/nothing-wrong.md"
+        "hash": "1438541755",
+        "path": "/outstatic/content/posts/a-calmer-editorial-workflow-with-outstatic.mdx"
       },
       "author": {
-        "name": "Andre Vitorio"
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
       },
+      "category": "product-tour",
       "collection": "posts",
       "coverImage": "/images/industrial-pattern.png",
-      "description": "One more day, one more joy. I feel blessed.",
-      "publishedAt": "2022-09-14T17:55:40.452Z",
-      "slug": "nothing-wrong",
+      "description": "How collections, custom fields, and Git-backed publishing help teams move from draft to deployment with confidence.",
+      "featured": false,
+      "publishedAt": "2026-02-18T09:15:00.000Z",
+      "seo": {
+        "title": "A calmer editorial workflow with Outstatic",
+        "description": "Organize content, guide editors with custom fields, and publish Markdown through a familiar Git workflow."
+      },
+      "slug": "a-calmer-editorial-workflow-with-outstatic",
       "status": "published",
-      "title": "Nothing is wrong. Everything is perfect"
+      "title": "A calmer editorial workflow with Outstatic",
+      "tags": [
+        { "label": "GitHub", "value": "gitHub" },
+        { "label": "Outstatic", "value": "outstatic" }
+      ]
     },
     {
       "__outstatic": {
         "commit": "0000000000000000000000000000000000000000",
-        "hash": "0",
+        "hash": "3854864171",
         "path": "/outstatic/content/posts/using-mdx.mdx"
       },
       "author": {
-        "name": "Andre Vitorio"
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
       },
+      "category": "tutorial",
       "collection": "posts",
       "coverImage": "/images/jupiter-spaceship.png",
-      "description": "Embed React components in your posts with the MDX block.",
+      "description": "Use Outstatic’s MDX block to embed React components in Git-backed posts.",
+      "featured": false,
       "publishedAt": "2026-05-11T12:00:00.000Z",
+      "seo": {
+        "title": "Using MDX with Outstatic",
+        "description": "Add interactive React components and reusable blocks to Git-backed Outstatic documents."
+      },
       "slug": "using-mdx",
       "status": "published",
-      "title": "Using MDX",
+      "title": "Using MDX with Outstatic",
       "tags": [
         { "label": "Outstatic", "value": "outstatic" },
         { "label": "NextJs", "value": "nextJs" }
@@ -100,11 +136,12 @@
     {
       "__outstatic": {
         "commit": "0000000000000000000000000000000000000000",
-        "hash": "1452139872",
+        "hash": "1202882360",
         "path": "/outstatic/content/posts/explore-outstatic.mdx"
       },
       "author": {
-        "name": "Outstatic"
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
       },
       "category": "product-tour",
       "collection": "posts",
@@ -127,11 +164,12 @@
     {
       "__outstatic": {
         "commit": "aa1f387e5c66347e675bed0862b070d8946c95f4",
-        "hash": "1055690014",
-        "path": "/outstatic/content/projects/couple-pizza.md"
+        "hash": "3915607961",
+        "path": "/outstatic/content/projects/couple-pizza.mdx"
       },
       "author": {
-        "name": "Bob Marley"
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
       },
       "collection": "projects",
       "coverImage": "/images/couple-pizza.png",
@@ -144,11 +182,12 @@
     {
       "__outstatic": {
         "commit": "caeb954ea1579e04b6b74c80ddf718e56c60a67d",
-        "hash": "1076515129",
-        "path": "/outstatic/content/projects/bearbnb.md"
+        "hash": "198083792",
+        "path": "/outstatic/content/projects/bearbnb.mdx"
       },
       "author": {
-        "name": "Andre Vitorio"
+        "name": "Andre Vitorio",
+        "picture": "https://avatars.githubusercontent.com/u/1417109?v=4"
       },
       "collection": "projects",
       "coverImage": "/images/bearbnb.png",
@@ -162,7 +201,7 @@
       "__outstatic": {
         "commit": "b22b0f4f3d38a659cbab9b89ac2b7394f2446de4",
         "hash": "425893791",
-        "path": "/outstatic/content/projects/flycream-travel.md"
+        "path": "/outstatic/content/projects/flycream-travel.mdx"
       },
       "author": {
         "name": "Andre Vitorio",
