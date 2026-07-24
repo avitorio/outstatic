@@ -1,6 +1,6 @@
 {
   "commit": "4b8ca15309d4a1e235ba3f30a95acb6fe267baa6",
-  "generated": "Mon, 06 Feb 2023 00:55:33 GMT",
+  "generated": "2026-07-24T12:00:00.000Z",
   "metadata": [
     {
       "__outstatic": {
@@ -95,6 +95,33 @@
       "tags": [
         { "label": "Outstatic", "value": "outstatic" },
         { "label": "NextJs", "value": "nextJs" }
+      ]
+    },
+    {
+      "__outstatic": {
+        "commit": "0000000000000000000000000000000000000000",
+        "hash": "1452139872",
+        "path": "/outstatic/content/posts/explore-outstatic.mdx"
+      },
+      "author": {
+        "name": "Outstatic"
+      },
+      "category": "product-tour",
+      "collection": "posts",
+      "coverImage": "/images/jupiter-spaceship.png",
+      "description": "A hands-on tour of Git-backed content editing with Outstatic.",
+      "featured": true,
+      "publishedAt": "2026-07-24T12:00:00.000Z",
+      "seo": {
+        "title": "Explore Outstatic: a hands-on product tour",
+        "description": "Try Outstatic’s visual editor, custom fields, media, and reusable MDX blocks in a safe demo project."
+      },
+      "slug": "explore-outstatic",
+      "status": "published",
+      "title": "Explore Outstatic",
+      "tags": [
+        { "label": "Outstatic", "value": "outstatic" },
+        { "label": "GitHub", "value": "gitHub" }
       ]
     },
     {
