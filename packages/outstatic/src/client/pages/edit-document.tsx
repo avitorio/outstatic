@@ -16,6 +16,7 @@ import { getFirstImageMediaSource } from '@/utils/media-config'
 import { AdminLoading } from '@/components/admin-loading'
 import { isFieldsOnlyModeEnabled } from '@/utils/hooks/field-schema'
 import { useUpgradeDialog } from '@/components/ui/outstatic/upgrade-dialog-context'
+import { useDemoWriteGuard } from '@/utils/hooks/use-demo-write-guard'
 
 export default function EditDocument({ collection }: { collection: string }) {
   const pathname = usePathname()
@@ -32,10 +33,10 @@ export default function EditDocument({ collection }: { collection: string }) {
     media,
     isHosted,
     isPro,
-    canSaveContent,
-    isDemo
+    canSaveContent
   } = useOutstatic()
   const { openUpgradeDialog } = useUpgradeDialog()
+  const blockDemoWrite = useDemoWriteGuard()
   const imageMediaSource = getFirstImageMediaSource(media ?? [])
   const [showDelete, setShowDelete] = useState(false)
   const [showMediaPathDialog, setShowMediaPathDialog] = useState(false)
@@ -115,8 +116,7 @@ export default function EditDocument({ collection }: { collection: string }) {
   const isNewDocument = slug === 'new'
 
   const handleSave = (data: Document) => {
-    if (isDemo) {
-      openUpgradeDialog(undefined, undefined, 'demo')
+    if (blockDemoWrite()) {
       return
     }
 

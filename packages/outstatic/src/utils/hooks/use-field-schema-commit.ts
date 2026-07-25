@@ -17,6 +17,7 @@ import {
   getFieldSchemaRequestPath,
   normalizeFieldSchemaSettings
 } from './field-schema'
+import { useDemoWriteGuard } from './use-demo-write-guard'
 
 const actionLabels = {
   add: 'Adding',
@@ -40,6 +41,7 @@ export const useFieldSchemaCommit = (target: FieldSchemaTarget) => {
   const createCommit = useCreateCommit()
   const fetchOid = useOid()
   const queryClient = useQueryClient()
+  const blockDemoWrite = useDemoWriteGuard()
 
   return async ({
     customFields,
@@ -52,6 +54,10 @@ export const useFieldSchemaCommit = (target: FieldSchemaTarget) => {
     action: FieldSchemaCommitAction
     fieldName: string
   }) => {
+    if (blockDemoWrite()) {
+      return false
+    }
+
     try {
       const oid = await fetchOid()
 

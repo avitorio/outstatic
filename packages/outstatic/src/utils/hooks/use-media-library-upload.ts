@@ -10,6 +10,7 @@ import {
   isFilenameAllowedForSource,
   isImageOnlyMediaSource
 } from '../media-config'
+import { useDemoWriteGuard } from './use-demo-write-guard'
 
 const MAX_MEDIA_UPLOAD_BATCH_FILES = 10
 const MAX_MEDIA_FILE_SIZE_BYTES = 20 * 1024 * 1024
@@ -106,6 +107,7 @@ export function useMediaLibraryUpload({
 } = {}) {
   const [isUploading, setIsUploading] = useState(false)
   const submitMedia = useSubmitMedia()
+  const blockDemoWrite = useDemoWriteGuard()
 
   const handleFileUpload = useCallback(
     async (files: FileList | File[] | null) => {
@@ -119,6 +121,10 @@ export function useMediaLibraryUpload({
       const uploadCopy = getUploadCopy(source)
 
       if (nextFiles.length === 0) {
+        return
+      }
+
+      if (blockDemoWrite()) {
         return
       }
 
@@ -255,7 +261,7 @@ export function useMediaLibraryUpload({
         setIsUploading(false)
       }
     },
-    [source, sources, submitMedia]
+    [blockDemoWrite, source, sources, submitMedia]
   )
 
   return {

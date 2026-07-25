@@ -3,6 +3,11 @@ import { TestWrapper } from '@/utils/tests/test-wrapper'
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
 
 const mutateAsyncMock = jest.fn()
+const mockBlockDemoWrite = jest.fn(() => false)
+
+jest.mock('@/utils/hooks/use-demo-write-guard', () => ({
+  useDemoWriteGuard: () => mockBlockDemoWrite
+}))
 
 jest.mock('@/components/ui/outstatic/upgrade-dialog-context', () => ({
   useUpgradeDialog: () => ({ openUpgradeDialog: jest.fn() })
@@ -72,6 +77,7 @@ jest.mock('@/utils/create-commit-api', () => ({
 }))
 
 test('DeleteDocumentButton renders and operates correctly', async () => {
+  mockBlockDemoWrite.mockImplementation(() => false)
   const onComplete = jest.fn()
   let resolveMutation!: (value: boolean) => void
 
@@ -128,4 +134,26 @@ test('DeleteDocumentButton renders and operates correctly', async () => {
   await waitFor(() =>
     expect(screen.queryByText('Delete Document')).not.toBeInTheDocument()
   )
+})
+
+test('DeleteDocumentButton closes its confirmation when demo writes are blocked', async () => {
+  mutateAsyncMock.mockClear()
+  mockBlockDemoWrite.mockImplementation((onBlocked?: () => void) => {
+    onBlocked?.()
+    return true
+  })
+
+  render(
+    <TestWrapper>
+      <DeleteDocumentButton slug="a-post" extension="md" collection="posts" />
+    </TestWrapper>
+  )
+
+  fireEvent.click(screen.getByTitle('Delete document'))
+  fireEvent.click(screen.getByText('Delete'))
+
+  await waitFor(() =>
+    expect(screen.queryByRole('alertdialog')).not.toBeInTheDocument()
+  )
+  expect(mutateAsyncMock).not.toHaveBeenCalled()
 })

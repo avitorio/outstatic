@@ -8,6 +8,7 @@ const mockReplaceFile = jest.fn()
 const mockCreateInput = jest.fn()
 const mockRefetchMedia = jest.fn()
 const mockToastError = jest.fn()
+const mockBlockDemoWrite = jest.fn(() => false)
 const mockToastPromise = jest.fn(
   async (
     promise: Promise<unknown>,
@@ -25,6 +26,10 @@ const mockToastPromise = jest.fn(
 
 jest.mock('@/components/ui/outstatic/upgrade-dialog-context', () => ({
   useUpgradeDialog: () => ({ openUpgradeDialog: jest.fn() })
+}))
+
+jest.mock('@/utils/hooks/use-demo-write-guard', () => ({
+  useDemoWriteGuard: () => mockBlockDemoWrite
 }))
 
 // Mock the useOutstatic hook
@@ -80,6 +85,7 @@ jest.mock('@/utils/metadata/stringify', () => ({
 
 beforeEach(() => {
   jest.clearAllMocks()
+  mockBlockDemoWrite.mockImplementation(() => false)
   mockRefetchMedia.mockResolvedValue({
     data: {
       media: {
@@ -189,4 +195,28 @@ test('DeleteMediaButton shows a toast when media lookup fails before registering
   expect(mockCreateInput).not.toHaveBeenCalled()
 
   consoleErrorSpy.mockRestore()
+})
+
+test('DeleteMediaButton closes its confirmation when demo writes are blocked', async () => {
+  mockBlockDemoWrite.mockImplementation((onBlocked?: () => void) => {
+    onBlocked?.()
+    return true
+  })
+
+  render(
+    <TestWrapper>
+      <DeleteMediaButton
+        path="/media/test-image.jpg"
+        filename="test-image.jpg"
+      />
+    </TestWrapper>
+  )
+
+  fireEvent.click(screen.getByTitle('Delete media file'))
+  fireEvent.click(screen.getByText('Delete'))
+
+  await waitFor(() =>
+    expect(screen.queryByRole('alertdialog')).not.toBeInTheDocument()
+  )
+  expect(mockCreateInput).not.toHaveBeenCalled()
 })

@@ -26,6 +26,7 @@ import { getFirstImageMediaSource } from '@/utils/media-config'
 import { AdminLoading } from '@/components/admin-loading'
 import { isFieldsOnlyModeEnabled } from '@/utils/hooks/field-schema'
 import { useUpgradeDialog } from '@/components/ui/outstatic/upgrade-dialog-context'
+import { useDemoWriteGuard } from '@/utils/hooks/use-demo-write-guard'
 
 export default function EditSingleton({ slug: initialSlug }: { slug: string }) {
   const [slug, setSlug] = useState(initialSlug)
@@ -48,10 +49,10 @@ export default function EditSingleton({ slug: initialSlug }: { slug: string }) {
     repoBranch,
     isHosted,
     isPro,
-    canSaveContent,
-    isDemo
+    canSaveContent
   } = useOutstatic()
   const { openUpgradeDialog } = useUpgradeDialog()
+  const blockDemoWrite = useDemoWriteGuard()
   const imageMediaSource = getFirstImageMediaSource(media ?? [])
 
   const searchParams = useSearchParams()
@@ -252,8 +253,7 @@ export default function EditSingleton({ slug: initialSlug }: { slug: string }) {
   }, [isNew])
 
   const handleSave = (data: Document) => {
-    if (isDemo) {
-      openUpgradeDialog(undefined, undefined, 'demo')
+    if (blockDemoWrite()) {
       return
     }
 

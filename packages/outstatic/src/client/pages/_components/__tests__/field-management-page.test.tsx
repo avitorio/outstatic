@@ -19,6 +19,10 @@ jest.mock('@/utils/hooks/use-field-schema', () => ({
   useFieldSchema: () => mockUseFieldSchema()
 }))
 
+jest.mock('@/utils/hooks/use-demo-write-guard', () => ({
+  useDemoWriteGuard: () => () => false
+}))
+
 jest.mock('@/utils/hooks', () => ({
   useCollections: () => mockUseCollections(),
   useOutstatic: () => mockUseOutstatic()

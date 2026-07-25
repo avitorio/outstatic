@@ -53,7 +53,7 @@ import {
   DialogTitle,
   DialogDescription
 } from '@/components/ui/shadcn/dialog'
-import { useUpgradeDialog } from '@/components/ui/outstatic/upgrade-dialog-context'
+import { useDemoWriteGuard } from '@/utils/hooks/use-demo-write-guard'
 
 import { findCollectionParent } from '@/utils/collections/collection-tree'
 
@@ -77,10 +77,9 @@ export default function NewCollectionModal({
     repoSlug,
     repoBranch,
     repoOwner,
-    dashboardRoute,
-    isDemo
+    dashboardRoute
   } = useOutstatic()
-  const { openUpgradeDialog } = useUpgradeDialog()
+  const blockDemoWrite = useDemoWriteGuard()
   const { canManageCollections } = usePermissions()
 
   const router = useRouter()
@@ -131,8 +130,7 @@ export default function NewCollectionModal({
   })
 
   const onSubmit = async ({ name }: z.infer<typeof createCollectionSchema>) => {
-    if (isDemo) {
-      openUpgradeDialog(undefined, undefined, 'demo')
+    if (blockDemoWrite()) {
       return
     }
 

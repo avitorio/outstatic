@@ -11,7 +11,10 @@ import { useCreateCommit } from './use-create-commit'
 import useOid from './use-oid'
 import { useGetMediaFiles } from './use-get-media-files'
 import { buildRepoMediaPath, getMediaTypeForFilename } from '../media-config'
-import { useUpgradeDialog } from '@/components/ui/outstatic/upgrade-dialog-context'
+import {
+  DemoWriteBlockedError,
+  useDemoWriteGuard
+} from './use-demo-write-guard'
 
 const createMediaFilename = (filename: string) => {
   const randString = window.btoa(Math.random().toString()).substring(6, 10)
@@ -24,9 +27,9 @@ const createMediaFilename = (filename: string) => {
 
 function useSubmitMedia() {
   const createCommit = useCreateCommit()
-  const { repoOwner, repoSlug, repoBranch, session, mediaJsonPath, isDemo } =
+  const { repoOwner, repoSlug, repoBranch, session, mediaJsonPath } =
     useOutstatic()
-  const { openUpgradeDialog } = useUpgradeDialog()
+  const blockDemoWrite = useDemoWriteGuard()
   const fetchOid = useOid()
 
   const { refetch: refetchMedia } = useGetMediaFiles({
@@ -45,9 +48,8 @@ function useSubmitMedia() {
         return
       }
 
-      if (isDemo) {
-        openUpgradeDialog(undefined, undefined, 'demo')
-        return
+      if (blockDemoWrite()) {
+        throw new DemoWriteBlockedError()
       }
 
       try {
@@ -130,8 +132,7 @@ function useSubmitMedia() {
       repoBranch,
       mediaJsonPath,
       refetchMedia,
-      isDemo,
-      openUpgradeDialog
+      blockDemoWrite
     ]
   )
 

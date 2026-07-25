@@ -14,6 +14,9 @@ jest.mock('@/utils/create-commit-api', () => ({ createCommitApi: jest.fn() }))
 jest.mock('@/utils/import-content', () => ({ composeImportFiles: jest.fn() }))
 jest.mock('./use-collections', () => ({ useCollections: jest.fn() }))
 jest.mock('./use-create-commit', () => ({ useCreateCommit: jest.fn() }))
+jest.mock('./use-demo-write-guard', () => ({
+  useDemoWriteGuard: () => () => false
+}))
 jest.mock('./use-oid', () => ({ __esModule: true, default: jest.fn() }))
 jest.mock('./use-outstatic', () => ({ useOutstatic: jest.fn() }))
 jest.mock('./use-rebuild-metadata', () => ({ useRebuildMetadata: jest.fn() }))

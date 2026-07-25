@@ -219,12 +219,16 @@ describe('useSubmitMedia', () => {
 
     const { result } = renderHook(() => useSubmitMedia())
 
-    await act(async () => {
-      await result.current({
-        files: [{ filename: 'Photo.png', type: 'image', content: 'image-one' }],
-        source
+    await expect(
+      act(async () => {
+        await result.current({
+          files: [
+            { filename: 'Photo.png', type: 'image', content: 'image-one' }
+          ],
+          source
+        })
       })
-    })
+    ).rejects.toThrow('Demo projects are read-only')
 
     expect(openUpgradeDialog).toHaveBeenCalledWith(undefined, undefined, 'demo')
     expect(fetchOid).not.toHaveBeenCalled()

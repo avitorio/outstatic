@@ -16,6 +16,10 @@ jest.mock('@/utils/hooks/use-rebuild-metadata', () => ({
   useRebuildMetadata: () => mockUseRebuildMetadata()
 }))
 
+jest.mock('@/utils/hooks/use-demo-write-guard', () => ({
+  useDemoWriteGuard: () => () => false
+}))
+
 jest.mock('@/utils/hooks/use-get-config', () => ({
   useGetConfig: () => mockUseGetConfig()
 }))

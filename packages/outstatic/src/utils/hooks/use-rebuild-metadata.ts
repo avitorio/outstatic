@@ -4,6 +4,7 @@ import { useGetAllCollectionsFiles } from './use-get-all-collections-files'
 import useOid from './use-oid'
 import { useOutstatic } from './use-outstatic'
 import { useCreateCommit } from './use-create-commit'
+import { useDemoWriteGuard } from './use-demo-write-guard'
 import { createCommitApi } from '../create-commit-api'
 import { createOutstaticCommitMessage } from '../commit-message'
 import { hashFromUrl } from '../hash-from-url'
@@ -42,6 +43,7 @@ export const useRebuildMetadata = ({
   const [processed, setProcessed] = useState(0)
   const fetchOid = useOid()
   const mutation = useCreateCommit()
+  const blockDemoWrite = useDemoWriteGuard()
   const { refetch: refetchCollections, data } = useGetAllCollectionsFiles({
     enabled: false
   })
@@ -274,6 +276,11 @@ export const useRebuildMetadata = ({
       onComplete?: () => void
       toastId?: string
     } = {}) => {
+      if (blockDemoWrite()) {
+        onComplete?.()
+        return
+      }
+
       const refetch = collectionPath ? refetchFiles : refetchCollections
 
       if (externalToastId) {
@@ -343,7 +350,13 @@ export const useRebuildMetadata = ({
         )
       })
     },
-    [collectionPath, processFiles, refetchCollections, refetchFiles]
+    [
+      blockDemoWrite,
+      collectionPath,
+      processFiles,
+      refetchCollections,
+      refetchFiles
+    ]
   )
 
   return rebuildMetadata

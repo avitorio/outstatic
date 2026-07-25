@@ -24,7 +24,7 @@ import {
   AlertDialogTitle
 } from '@/components/ui/shadcn/alert-dialog'
 import { useSingletons } from '@/utils/hooks/use-singletons'
-import { useUpgradeDialog } from '@/components/ui/outstatic/upgrade-dialog-context'
+import { useDemoWriteGuard } from '@/utils/hooks/use-demo-write-guard'
 
 type DeleteDocumentButtonProps = {
   slug: string
@@ -63,9 +63,9 @@ export const DeleteDocumentButton = ({
     onOpenChange?.(next)
   }
   const [deleting, setDeleting] = useState(false)
-  const { repoOwner, repoSlug, repoBranch, ostContent, session, isDemo } =
+  const { repoOwner, repoSlug, repoBranch, ostContent, session } =
     useOutstatic()
-  const { openUpgradeDialog } = useUpgradeDialog()
+  const blockDemoWrite = useDemoWriteGuard()
   const fetchOid = useOid()
 
   const mutation = useCreateCommit()
@@ -77,8 +77,7 @@ export const DeleteDocumentButton = ({
   const isSingleton = collection === '_singletons'
 
   const deleteDocument = async (slug: string) => {
-    if (isDemo) {
-      openUpgradeDialog(undefined, undefined, 'demo')
+    if (blockDemoWrite(() => setShowDeleteModal(false))) {
       return
     }
 

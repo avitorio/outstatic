@@ -23,6 +23,10 @@ jest.mock('./use-create-commit', () => ({
   useCreateCommit: jest.fn()
 }))
 
+jest.mock('./use-demo-write-guard', () => ({
+  useDemoWriteGuard: () => () => false
+}))
+
 jest.mock('./use-get-config', () => ({
   useGetConfig: jest.fn()
 }))

@@ -2,10 +2,15 @@ import { act, renderHook } from '@testing-library/react'
 import { toast } from 'sonner'
 import useSubmitMedia from './use-submit-media'
 import { useMediaLibraryUpload } from './use-media-library-upload'
+import { useDemoWriteGuard } from './use-demo-write-guard'
 
 jest.mock('./use-submit-media', () => ({
   __esModule: true,
   default: jest.fn()
+}))
+
+jest.mock('./use-demo-write-guard', () => ({
+  useDemoWriteGuard: jest.fn()
 }))
 
 jest.mock('sonner', () => ({
@@ -16,6 +21,7 @@ jest.mock('sonner', () => ({
 }))
 
 const mockUseSubmitMedia = useSubmitMedia as jest.Mock
+const mockUseDemoWriteGuard = useDemoWriteGuard as jest.Mock
 const mockToastError = toast.error as jest.Mock
 const mockToastPromise = toast.promise as jest.Mock
 const submitMediaMock = jest.fn()
@@ -63,6 +69,7 @@ describe('useMediaLibraryUpload', () => {
     jest.clearAllMocks()
     jest.spyOn(console, 'error').mockImplementation(() => {})
     mockUseSubmitMedia.mockReturnValue(submitMediaMock)
+    mockUseDemoWriteGuard.mockReturnValue(() => false)
     mockToastPromise.mockImplementation((promise: Promise<unknown>) => promise)
 
     Object.defineProperty(window, 'FileReader', {
@@ -108,6 +115,24 @@ describe('useMediaLibraryUpload', () => {
         error: 'Failed to upload 1 image.'
       })
     )
+    expect(result.current.isUploading).toBe(false)
+  })
+
+  it('opens the demo prompt without starting an upload toast', async () => {
+    const blockDemoWrite = jest.fn(() => true)
+    mockUseDemoWriteGuard.mockReturnValue(blockDemoWrite)
+    const file = new File(['image'], 'photo.png', { type: 'image/png' })
+    const { result } = renderHook(() =>
+      useMediaLibraryUpload({ source: imageSource })
+    )
+
+    await act(async () => {
+      await result.current.handleFileUpload(createFileList([file]))
+    })
+
+    expect(blockDemoWrite).toHaveBeenCalledTimes(1)
+    expect(submitMediaMock).not.toHaveBeenCalled()
+    expect(mockToastPromise).not.toHaveBeenCalled()
     expect(result.current.isUploading).toBe(false)
   })
 

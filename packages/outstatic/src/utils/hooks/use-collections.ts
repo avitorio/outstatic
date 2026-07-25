@@ -6,6 +6,7 @@ import { createOutstaticCommitMessage } from '../commit-message'
 import useOid from './use-oid'
 import { toast } from 'sonner'
 import { useCreateCommit } from './use-create-commit'
+import { useDemoWriteGuard } from './use-demo-write-guard'
 import { GET_FILE } from '@/graphql/queries/file'
 import { sentenceCase } from 'change-case'
 import { stringifyError } from '@/utils/errors/stringify-error'
@@ -39,6 +40,7 @@ export function useCollections(options?: UseCollectionsOptions) {
     useOutstatic()
   const fetchOid = useOid()
   const mutation = useCreateCommit()
+  const blockDemoWrite = useDemoWriteGuard()
 
   return useQuery({
     queryKey: ['collections', { repoOwner, repoSlug, repoBranch, ostContent }],
@@ -136,6 +138,10 @@ export function useCollections(options?: UseCollectionsOptions) {
           )
 
           const payload = commitApi.createInput()
+
+          if (blockDemoWrite()) {
+            return collectionsData
+          }
 
           toast.promise(mutation.mutateAsync(payload), {
             loading: 'Updating collections',

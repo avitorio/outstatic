@@ -52,6 +52,7 @@ import {
   updateCollectionParent
 } from '@/utils/collections/collection-tree'
 import { toast } from 'sonner'
+import { useDemoWriteGuard } from '@/utils/hooks/use-demo-write-guard'
 
 const NO_PARENT_COLLECTION_VALUE = '__none__'
 
@@ -166,6 +167,7 @@ export const FieldManagementPage = ({
   } = useOutstatic()
   const fetchOid = useOid()
   const createCommit = useCreateCommit()
+  const blockDemoWrite = useDemoWriteGuard()
   const commitFieldSchema = useFieldSchemaCommit(target)
   const { data: schema, isLoading } = useFieldSchema({ target })
   const {
@@ -293,6 +295,10 @@ export const FieldManagementPage = ({
 
   const handleSaveParent = async () => {
     if (savingParent || !collection || target.kind !== 'collection') {
+      return
+    }
+
+    if (blockDemoWrite()) {
       return
     }
 

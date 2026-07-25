@@ -44,6 +44,7 @@ import { useGetMediaFiles } from '@/utils/hooks/use-get-media-files'
 import { useMediaLibraryUpload } from '@/utils/hooks/use-media-library-upload'
 import useOid from '@/utils/hooks/use-oid'
 import { useOutstatic } from '@/utils/hooks/use-outstatic'
+import { useDemoWriteGuard } from '@/utils/hooks/use-demo-write-guard'
 import {
   buildPublicMediaPath,
   getMediaSourceForItem
@@ -154,6 +155,7 @@ function MediaItemActions({
 }) {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
   const [deleting, setDeleting] = useState(false)
+  const blockDemoWrite = useDemoWriteGuard()
 
   const source = getMediaSourceForItem(file, media)
   const githubUrl = `https://github.com/${repoOwner}/${repoSlug}/blob/${repoBranch}/${file.__outstatic.path}`
@@ -171,6 +173,10 @@ function MediaItemActions({
   }
 
   const deleteMedia = async () => {
+    if (blockDemoWrite(() => setShowDeleteDialog(false))) {
+      return
+    }
+
     setDeleting(true)
     try {
       const didDelete = await onDeleteMedia(file, notFound)
@@ -291,6 +297,7 @@ export default function MediaLibrary() {
   const { data, isLoading, refetch: refetchMedia } = useGetMediaFiles()
   const fetchOid = useOid()
   const { mutateAsync: createCommit } = useCreateCommit()
+  const blockDemoWrite = useDemoWriteGuard()
 
   const selectedSource =
     selectedSourceName === ALL_MEDIA_SOURCE_VALUE
@@ -576,6 +583,10 @@ export default function MediaLibrary() {
     const selectedPaths = Array.from(selectedMediaPaths)
 
     if (selectedPaths.length === 0) {
+      return
+    }
+
+    if (blockDemoWrite(() => setShowBulkDeleteDialog(false))) {
       return
     }
 
