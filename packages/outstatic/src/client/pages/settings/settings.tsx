@@ -16,6 +16,7 @@ import {
 } from '@/components/ui/shadcn/card'
 import { ExternalLink } from 'lucide-react'
 import Link from 'next/link'
+import { useDemoWriteGuard } from '@/utils/hooks/use-demo-write-guard'
 
 export default function Settings() {
   const [rebuild, setRebuilding] = useState(false)
@@ -25,6 +26,7 @@ export default function Settings() {
     repoOwner && repoSlug ? `https://github.com/${repoOwner}/${repoSlug}` : ''
 
   const rebuildMetadata = useRebuildMetadata()
+  const blockDemoWrite = useDemoWriteGuard()
 
   return (
     <AdminLayout title="Settings">
@@ -113,6 +115,10 @@ export default function Settings() {
                 <Button
                   disabled={rebuild}
                   onClick={() => {
+                    if (blockDemoWrite()) {
+                      return
+                    }
+
                     setRebuilding(true)
                     rebuildMetadata({
                       onComplete: () => setRebuilding(false)

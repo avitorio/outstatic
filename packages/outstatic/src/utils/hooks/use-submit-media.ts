@@ -11,6 +11,10 @@ import { useCreateCommit } from './use-create-commit'
 import useOid from './use-oid'
 import { useGetMediaFiles } from './use-get-media-files'
 import { buildRepoMediaPath, getMediaTypeForFilename } from '../media-config'
+import {
+  DemoWriteBlockedError,
+  useDemoWriteGuard
+} from './use-demo-write-guard'
 
 const createMediaFilename = (filename: string) => {
   const randString = window.btoa(Math.random().toString()).substring(6, 10)
@@ -25,6 +29,7 @@ function useSubmitMedia() {
   const createCommit = useCreateCommit()
   const { repoOwner, repoSlug, repoBranch, session, mediaJsonPath } =
     useOutstatic()
+  const blockDemoWrite = useDemoWriteGuard()
   const fetchOid = useOid()
 
   const { refetch: refetchMedia } = useGetMediaFiles({
@@ -41,6 +46,10 @@ function useSubmitMedia() {
     }) => {
       if (files.length === 0 || !source) {
         return
+      }
+
+      if (blockDemoWrite()) {
+        throw new DemoWriteBlockedError()
       }
 
       try {
@@ -122,7 +131,8 @@ function useSubmitMedia() {
       repoSlug,
       repoBranch,
       mediaJsonPath,
-      refetchMedia
+      refetchMedia,
+      blockDemoWrite
     ]
   )
 

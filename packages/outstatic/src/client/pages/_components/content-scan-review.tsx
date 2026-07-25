@@ -24,6 +24,7 @@ import { AlertTriangle, Loader2 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { type Dispatch, type SetStateAction, useMemo, useState } from 'react'
 import { toast } from 'sonner'
+import { useDemoWriteGuard } from '@/utils/hooks/use-demo-write-guard'
 
 type EditableSuggestion = ContentSuggestion & { selected: boolean }
 
@@ -103,6 +104,7 @@ export function ContentScanReview({
   } = useOutstatic()
   const router = useRouter()
   const importContent = useImportContent()
+  const blockDemoWrite = useDemoWriteGuard()
   const [collections, setCollections] = useState<EditableSuggestion[]>(() =>
     scan.suggestions.map((suggestion) => ({
       ...suggestion,
@@ -134,6 +136,7 @@ export function ContentScanReview({
 
   const apply = async () => {
     if (applying) return
+    if (blockDemoWrite()) return
     if (!canImport) {
       setShowUpgradeDialog(true)
       return

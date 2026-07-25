@@ -2,6 +2,20 @@
   "title": "posts",
   "type": "object",
   "properties": {
+    "description": {
+      "required": false,
+      "description": "Short summary used in post cards and search previews",
+      "fieldType": "Text",
+      "dataType": "string",
+      "title": "Description"
+    },
+    "coverImage": {
+      "required": false,
+      "description": "Image displayed on the post card and article page",
+      "fieldType": "Image",
+      "dataType": "image",
+      "title": "Cover Image"
+    },
     "tags": {
       "required": false,
       "description": "Add tags to the post",
@@ -22,6 +36,57 @@
           "label": "Outstatic"
         }
       ]
+    },
+    "category": {
+      "required": false,
+      "description": "Choose the primary topic for this post",
+      "fieldType": "Select",
+      "dataType": "string",
+      "title": "Category",
+      "values": [
+        {
+          "value": "product-tour",
+          "label": "Product Tour"
+        },
+        {
+          "value": "tutorial",
+          "label": "Tutorial"
+        },
+        {
+          "value": "news",
+          "label": "News"
+        }
+      ]
+    },
+    "featured": {
+      "required": false,
+      "description": "Highlight this post in featured placements",
+      "fieldType": "Boolean",
+      "dataType": "boolean",
+      "title": "Featured"
+    },
+    "seo": {
+      "required": false,
+      "description": "Search and social sharing metadata",
+      "fieldType": "Object",
+      "dataType": "object",
+      "title": "SEO",
+      "fields": {
+        "title": {
+          "required": false,
+          "description": "Title used in search results",
+          "fieldType": "String",
+          "dataType": "string",
+          "title": "SEO Title"
+        },
+        "description": {
+          "required": false,
+          "description": "Description used in search and social previews",
+          "fieldType": "Text",
+          "dataType": "string",
+          "title": "SEO Description"
+        }
+      }
     }
   }
 }

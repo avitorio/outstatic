@@ -19,6 +19,10 @@ jest.mock('next/navigation', () => ({
   useRouter: jest.fn(() => mockRouter)
 }))
 
+jest.mock('@/utils/hooks/use-demo-write-guard', () => ({
+  useDemoWriteGuard: () => () => false
+}))
+
 jest.mock(
   'next/link',
   () =>

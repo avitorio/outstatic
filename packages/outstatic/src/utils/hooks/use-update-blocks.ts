@@ -9,6 +9,10 @@ import { Block, BlocksSchema } from '@/utils/metadata/types'
 import { useCreateCommit } from './use-create-commit'
 import { useGetBlocks } from './use-get-blocks'
 import useOid from './use-oid'
+import {
+  DemoWriteBlockedError,
+  useDemoWriteGuard
+} from './use-demo-write-guard'
 
 type BlockCommitAction = 'create' | 'update' | 'delete'
 
@@ -24,6 +28,7 @@ export function useUpdateBlocks() {
   const { repoOwner, repoSlug, repoBranch, session, blocksJsonPath } =
     useOutstatic()
   const fetchOid = useOid()
+  const blockDemoWrite = useDemoWriteGuard()
   const { refetch } = useGetBlocks({
     enabled: false
   })
@@ -97,6 +102,10 @@ export function useUpdateBlocks() {
 
   const addBlock = useCallback(
     async (block: Block) => {
+      if (blockDemoWrite()) {
+        throw new DemoWriteBlockedError()
+      }
+
       const current = await getCurrentBlocks()
       await persistBlocks({
         blocks: [...current.blocks, block],
@@ -105,11 +114,15 @@ export function useUpdateBlocks() {
         label: block.name
       })
     },
-    [getCurrentBlocks, persistBlocks]
+    [blockDemoWrite, getCurrentBlocks, persistBlocks]
   )
 
   const updateBlock = useCallback(
     async (previousName: string, block: Block) => {
+      if (blockDemoWrite()) {
+        throw new DemoWriteBlockedError()
+      }
+
       const current = await getCurrentBlocks()
       await persistBlocks({
         blocks: current.blocks.map((item) =>
@@ -119,11 +132,15 @@ export function useUpdateBlocks() {
         label: block.name
       })
     },
-    [getCurrentBlocks, persistBlocks]
+    [blockDemoWrite, getCurrentBlocks, persistBlocks]
   )
 
   const deleteBlock = useCallback(
     async (blockName: string) => {
+      if (blockDemoWrite()) {
+        throw new DemoWriteBlockedError()
+      }
+
       const current = await getCurrentBlocks()
       await persistBlocks({
         blocks: current.blocks.filter((item) => item.name !== blockName),
@@ -131,7 +148,7 @@ export function useUpdateBlocks() {
         label: blockName
       })
     },
-    [getCurrentBlocks, persistBlocks]
+    [blockDemoWrite, getCurrentBlocks, persistBlocks]
   )
 
   return {

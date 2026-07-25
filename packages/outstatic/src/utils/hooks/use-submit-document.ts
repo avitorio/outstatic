@@ -30,6 +30,7 @@ import {
   syncCustomFieldTags
 } from './use-submit-entry-shared'
 import { getFirstImageMediaSource } from '../media-config'
+import { useDemoWriteGuard } from './use-demo-write-guard'
 
 type SubmitDocumentProps = {
   session: LoginSession | null
@@ -67,6 +68,7 @@ function useSubmitDocument({
   documentMetadata
 }: SubmitDocumentProps) {
   const createCommit = useCreateCommit()
+  const blockDemoWrite = useDemoWriteGuard()
   const {
     repoOwner,
     repoSlug,
@@ -92,6 +94,10 @@ function useSubmitDocument({
 
   const onSubmit = useCallback(
     async (data: Document, options?: OnSubmitOptions) => {
+      if (blockDemoWrite()) {
+        return
+      }
+
       const { configUpdate } = options ?? {}
       setLoading(true)
 
@@ -308,7 +314,8 @@ function useSubmitDocument({
       imageMediaSource,
       media,
       publicMediaPath,
-      repoMediaPath
+      repoMediaPath,
+      blockDemoWrite
     ]
   )
 

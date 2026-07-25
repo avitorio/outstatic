@@ -22,7 +22,7 @@ const ContentLockContext = createContext<ContentLockState | null>(null)
 const LEAVE_CONFIRMATION_MESSAGE =
   'You have unsaved changes. Are you sure you want to leave?'
 
-const useContentLockState = (): ContentLockState => {
+const useContentLockState = (disabled = false): ContentLockState => {
   const [hasChanges, setHasChanges] = useState(false)
   const skipNextGuardRef = useRef(false)
 
@@ -31,7 +31,7 @@ const useContentLockState = (): ContentLockState => {
   }, [])
 
   useNavigationGuard({
-    enabled: hasChanges,
+    enabled: hasChanges && !disabled,
     confirm: () => {
       if (skipNextGuardRef.current) {
         skipNextGuardRef.current = false
@@ -50,13 +50,13 @@ const useContentLockState = (): ContentLockState => {
 
   // hack to prevent navigation guard leaving the page on back/forward
   useEffect(() => {
-    if (!hasChanges) return
+    if (disabled || !hasChanges) return
 
     window.history.pushState(null, '', window.location.href)
-  }, [hasChanges])
+  }, [disabled, hasChanges])
 
   useEffect(() => {
-    if (!hasChanges) return
+    if (disabled || !hasChanges) return
 
     const handleDocumentClick = (event: MouseEvent) => {
       if (event.defaultPrevented) return
@@ -118,13 +118,19 @@ const useContentLockState = (): ContentLockState => {
     return () => {
       document.removeEventListener('click', handleDocumentClick, true)
     }
-  }, [hasChanges, confirmNavigation])
+  }, [disabled, hasChanges, confirmNavigation])
 
   return { hasChanges, setHasChanges }
 }
 
-export const ContentLockProvider = ({ children }: { children: ReactNode }) => {
-  const contentLock = useContentLockState()
+export const ContentLockProvider = ({
+  children,
+  disabled = false
+}: {
+  children: ReactNode
+  disabled?: boolean
+}) => {
+  const contentLock = useContentLockState(disabled)
 
   const value = useMemo(
     () => ({

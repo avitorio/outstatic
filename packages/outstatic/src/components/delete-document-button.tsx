@@ -24,6 +24,7 @@ import {
   AlertDialogTitle
 } from '@/components/ui/shadcn/alert-dialog'
 import { useSingletons } from '@/utils/hooks/use-singletons'
+import { useDemoWriteGuard } from '@/utils/hooks/use-demo-write-guard'
 
 type DeleteDocumentButtonProps = {
   slug: string
@@ -64,6 +65,7 @@ export const DeleteDocumentButton = ({
   const [deleting, setDeleting] = useState(false)
   const { repoOwner, repoSlug, repoBranch, ostContent, session } =
     useOutstatic()
+  const blockDemoWrite = useDemoWriteGuard()
   const fetchOid = useOid()
 
   const mutation = useCreateCommit()
@@ -75,6 +77,10 @@ export const DeleteDocumentButton = ({
   const isSingleton = collection === '_singletons'
 
   const deleteDocument = async (slug: string) => {
+    if (blockDemoWrite(() => setShowDeleteModal(false))) {
+      return
+    }
+
     setDeleting(true)
     try {
       const [{ data }, oid, { data: documents }] = await Promise.all([

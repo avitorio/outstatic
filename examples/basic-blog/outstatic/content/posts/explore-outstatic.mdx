@@ -1,0 +1,128 @@
+---
+title: 'Explore Outstatic'
+status: 'published'
+description: 'A hands-on tour of Git-backed content editing with Outstatic.'
+coverImage: '/images/jupiter-spaceship.png'
+publishedAt: '2026-07-24T12:00:00.000Z'
+tags:
+  [
+    { 'label': 'Outstatic', value: 'outstatic' },
+    { 'label': 'GitHub', value: 'gitHub' }
+  ]
+category: 'product-tour'
+featured: true
+seo:
+  title: 'Explore Outstatic: a hands-on product tour'
+  description: 'Try Outstatic’s visual editor, custom fields, media, and reusable MDX blocks in a safe demo project.'
+author:
+  name: 'Andre Vitorio'
+  picture: 'https://avatars.githubusercontent.com/u/1417109?v=4'
+---
+
+Welcome to Outstatic.
+
+Outstatic gives you a visual way to create and manage **Markdown and MDX content stored in GitHub**. Your content stays portable and versioned, while you get a focused dashboard for editing, organising, and publishing it.
+
+This is a safe demo project. Change the title, rewrite a paragraph, explore the fields, and try the available blocks. Nothing you do here can affect a live site, and your changes will not be saved.
+
+When you are ready, copy and paste the link below in your browser to create your first project:
+
+```bash
+https://outstatic.com/home?post_auth=1&new_project=true
+```
+
+
+## Try the editor
+
+Start with any of these small experiments:
+
+1. Change the title at the top of the page.
+2. Rewrite this sentence, then select a few words and make them **bold**, *italic*, or [a link](https://outstatic.com/docs).
+3. Type `/` on an empty line and add a heading, quote, table, code block, or image.
+4. Use the drag handle to move a block somewhere new.
+5. Open **Document Settings** and change the Category, Featured, Tags, or SEO fields.
+
+Feel free to experiment. Any changes you make in this demo are temporary.
+
+## Markdown without the raw-file friction
+
+You can use familiar Markdown shortcuts or the formatting menu. Outstatic writes the result as readable Markdown or MDX, including:
+
+* headings and paragraphs
+* ordered and unordered lists
+* links and inline `code`
+* quotes and tables
+* images and fenced code blocks
+
+> Good content tools should provide a comfortable editing experience without hiding the source of truth.
+
+```md
+---
+title: 'A field guide to the night sky'
+status: 'published'
+---
+
+Write here, then let your site render the file in its own way.
+```
+
+## Compose with media and blocks
+
+In an editable project, images can be uploaded, linked from a URL, or selected from the Media Library.
+
+This read-only demo cannot upload files, but you can still type `/image` and experiment with an existing image or external URL.
+
+![A futuristic skyline under a cloudy sky](/images/skyline.png)
+
+MDX lets a document go beyond prose. The video below is a reusable React component registered in this project’s **Block Library**.
+
+Type `/youtube` to insert another instance and edit its URL through a simple form.
+
+<Youtube url="https://www.youtube.com/watch?v=xp14-T2WAvI" />
+
+The Block Library stores component definitions alongside your content. Repeatable patterns such as videos, notices, product cards, and embeds can become editor-friendly blocks while the saved document remains MDX.
+
+## Add structure with custom fields
+
+The body is only one part of a document.
+
+Open **Document Settings** to inspect the fields behind this post:
+
+* **Category** is a Select field.
+* **Featured** is a Boolean field.
+* **Tags** accepts multiple configured values.
+* **SEO** groups a title and description in an Object field.
+* **Cover Image** uses the Media Library.
+
+Fields are defined for each collection and saved in frontmatter, so your application can use them without extracting information from the article body.
+
+Outstatic also includes built-in fields for status, publication date, author, and URL slug.
+
+## How Outstatic fits your site
+
+The workflow is deliberately simple:
+
+1. Connect an Outstatic project to a GitHub repository, branch, and optional monorepo folder.
+2. Organise content into **Collections**, **Documents**, and **Singletons**.
+3. Create and edit content from the dashboard.
+4. Save changes back to the repository as Markdown, MDX, schema, or media files.
+5. Let your site read those files using its existing framework and deployment workflow.
+
+Your content does not live in a separate CMS database. The Markdown and MDX files in Git remain the source of truth.
+
+## Choose the setup that fits
+
+You can self-host Outstatic for free inside your Next.js project.
+
+Your content stays in GitHub, and you get the core workflows for editing documents, managing collections, configuring fields, working with media, and creating reusable blocks.
+
+Outstatic Pro adds a managed layer for teams and production projects. Work from the hosted dashboard, invite project members, control access with roles and permissions, and connect supported Pro services to a self-hosted instance using a project API key.
+
+Pro also includes managed authentication and additional tools for reducing the manual work involved in setting up and managing content.
+
+## Make it yours
+
+Ready to turn the experiment into real content?
+
+**[Connect your repository](https://outstatic.com/home?post_auth=1&new_project=true)**
+
+Or [read the documentation](https://outstatic.com/docs/getting-started-with-next-js) to set up Outstatic inside an existing Next.js site.

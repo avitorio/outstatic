@@ -1,7 +1,7 @@
 ---
-title: 'Using MDX'
+title: 'Using MDX with Outstatic'
 status: 'published'
-description: 'Embed React components in your posts with the MDX block.'
+description: 'Use Outstatic’s MDX block to embed React components in Git-backed posts.'
 coverImage: '/images/jupiter-spaceship.png'
 publishedAt: '2026-05-11T12:00:00.000Z'
 tags:
@@ -9,8 +9,14 @@ tags:
     { 'label': 'Outstatic', value: 'outstatic' },
     { 'label': 'NextJs', value: 'nextJs' }
   ]
+category: 'tutorial'
+featured: false
+seo:
+  title: 'Using MDX with Outstatic'
+  description: 'Add interactive React components and reusable blocks to Git-backed Outstatic documents.'
 author:
-  name: Andre Vitorio
+  name: 'Andre Vitorio'
+  picture: 'https://avatars.githubusercontent.com/u/1417109?v=4'
 ---
 
 The **MDX block** in the Outstatic editor lets you add raw MDX to a document
@@ -70,8 +76,8 @@ uses [`mdx-bundler`](https://github.com/kentcdodds/mdx-bundler) — see
 wiring.
 
 <Callout title="Heads up" type="warning">
-  If your frontend treats document content as plain Markdown, JSX tags like
-  `<Counter />` will be rendered as text rather than React components. Make
-  sure your renderer compiles MDX and that each component used in a post is
-  registered in the components map.
+  If your frontend treats document content as plain Markdown, JSX component tags
+  will be rendered as text rather than React components. Make sure your renderer
+  compiles MDX and that each component used in a post is registered in the
+  components map.
 </Callout>

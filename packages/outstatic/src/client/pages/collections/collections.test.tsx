@@ -5,10 +5,15 @@ import { useCollections } from '@/utils/hooks/use-collections'
 import { useOutstatic, useLocalData } from '@/utils/hooks/use-outstatic'
 import { TestWrapper } from '@/utils/tests/test-wrapper'
 
+const mockBlockDemoWrite = jest.fn(() => false)
+
 // Mock the hooks
 jest.mock('@/utils/hooks/use-collections')
 jest.mock('@/utils/hooks/use-outstatic')
 jest.mock('@/utils/hooks/use-initial-data')
+jest.mock('@/utils/hooks/use-demo-write-guard', () => ({
+  useDemoWriteGuard: () => mockBlockDemoWrite
+}))
 jest.mock('@/utils/auth/hooks', () => ({
   useOstSession: () => ({ status: 'authenticated' })
 }))
@@ -82,6 +87,8 @@ describe('Collections', () => {
   ]
 
   beforeEach(() => {
+    mockBlockDemoWrite.mockImplementation(() => false)
+
     // Mock useOutstatic hook with session containing permissions
     ;(useOutstatic as jest.Mock).mockReturnValue({
       dashboardRoute: '/outstatic',
@@ -215,6 +222,30 @@ describe('Collections', () => {
     expect(
       screen.getByText(/are you sure you want to delete/i)
     ).toBeInTheDocument()
+  })
+
+  it('closes the delete modal when demo writes are blocked', () => {
+    mockBlockDemoWrite.mockImplementation((onBlocked?: () => void) => {
+      onBlocked?.()
+      return true
+    })
+    ;(useCollections as jest.Mock).mockReturnValue({
+      isPending: false,
+      data: mockCollections
+    })
+
+    render(
+      <TestWrapper>
+        <Collections />
+      </TestWrapper>
+    )
+
+    fireEvent.click(
+      screen.getAllByRole('button', { name: /delete content/i })[0]
+    )
+    fireEvent.click(screen.getByRole('button', { name: 'Delete' }))
+
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
   })
 
   it('shows the child collection deletion option for parent collections', () => {

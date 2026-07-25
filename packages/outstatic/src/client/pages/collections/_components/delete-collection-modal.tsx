@@ -26,6 +26,7 @@ import {
   getDescendantCollectionSlugs,
   getMetadataAfterCollectionDeletion
 } from '@/utils/collections/collection-tree'
+import { useDemoWriteGuard } from '@/utils/hooks/use-demo-write-guard'
 
 type DeleteCollectionModalProps = {
   setShowDeleteModal: (value: boolean) => void
@@ -40,6 +41,7 @@ function DeleteCollectionModal({
 }: DeleteCollectionModalProps) {
   const { repoOwner, session, repoSlug, repoBranch, ostContent } =
     useOutstatic()
+  const blockDemoWrite = useDemoWriteGuard()
   const { canManageCollections } = usePermissions()
   const [deleting, setDeleting] = useState(false)
   const [keepFiles, setKeepFiles] = useState(true)
@@ -68,16 +70,27 @@ function DeleteCollectionModal({
   }, [canManageCollections, setSelectedCollection, setShowDeleteModal])
 
   const deleteCollection = async (collection: CollectionType) => {
-    const [
-      { data: metadata, isError: metadataError },
-      { data: collections, isError: collectionsError }
-    ] = await Promise.all([refetchMetadata(), refetchCollections()])
-
-    if (metadataError || !collections || collectionsError) {
-      throw new Error('Failed to fetch data')
+    if (
+      blockDemoWrite(() => {
+        setShowDeleteModal(false)
+        setSelectedCollection?.(null)
+      })
+    ) {
+      return
     }
 
+    setDeleting(true)
+
     try {
+      const [
+        { data: metadata, isError: metadataError },
+        { data: collections, isError: collectionsError }
+      ] = await Promise.all([refetchMetadata(), refetchCollections()])
+
+      if (metadataError || !collections || collectionsError) {
+        throw new Error('Failed to fetch data')
+      }
+
       const oid = await fetchOid()
       const owner = repoOwner || session?.user?.login || ''
 
@@ -155,17 +168,20 @@ function DeleteCollectionModal({
 
       const input = capi.createInput()
 
-      toast.promise(mutation.mutateAsync(input), {
+      await toast.promise(mutation.mutateAsync(input), {
         loading: 'Deleting collection...',
         success: async () => {
           await refetchCollections()
-          setDeleting(false)
           setShowDeleteModal(false)
           return 'Collection deleted successfully'
         },
         error: 'Failed to delete collection'
       })
-    } catch (error) {}
+    } catch (error) {
+      console.error('Failed to delete collection:', error)
+    } finally {
+      setDeleting(false)
+    }
   }
 
   if (!canManageCollections) {
@@ -238,8 +254,7 @@ function DeleteCollectionModal({
           <Button
             variant="destructive"
             onClick={() => {
-              setDeleting(true)
-              deleteCollection(collection)
+              void deleteCollection(collection)
             }}
           >
             {deleting ? (

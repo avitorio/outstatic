@@ -57,6 +57,7 @@ export type OutstaticData = {
   media: MediaSourceConfig[]
   isPro: boolean
   canSaveContent?: boolean
+  isDemo?: boolean
   isHosted: boolean
   ui?: OutstaticUIOptions
   projectInfo?: {

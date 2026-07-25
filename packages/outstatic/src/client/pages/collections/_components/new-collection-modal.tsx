@@ -53,6 +53,7 @@ import {
   DialogTitle,
   DialogDescription
 } from '@/components/ui/shadcn/dialog'
+import { useDemoWriteGuard } from '@/utils/hooks/use-demo-write-guard'
 
 import { findCollectionParent } from '@/utils/collections/collection-tree'
 
@@ -78,6 +79,7 @@ export default function NewCollectionModal({
     repoOwner,
     dashboardRoute
   } = useOutstatic()
+  const blockDemoWrite = useDemoWriteGuard()
   const { canManageCollections } = usePermissions()
 
   const router = useRouter()
@@ -128,6 +130,10 @@ export default function NewCollectionModal({
   })
 
   const onSubmit = async ({ name }: z.infer<typeof createCollectionSchema>) => {
+    if (blockDemoWrite()) {
+      return
+    }
+
     setLoading(true)
     setHasChanges(false)
 

@@ -8,6 +8,9 @@ import { ContentScanReview } from '../content-scan-review'
 jest.mock('@/utils/hooks/use-import-content', () => ({
   useImportContent: jest.fn()
 }))
+jest.mock('@/utils/hooks/use-demo-write-guard', () => ({
+  useDemoWriteGuard: () => () => false
+}))
 jest.mock('@/utils/hooks/use-outstatic', () => ({ useOutstatic: jest.fn() }))
 jest.mock('next/navigation', () => ({
   useRouter: jest.fn(() => ({ push: jest.fn() }))

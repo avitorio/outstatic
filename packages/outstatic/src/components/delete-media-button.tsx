@@ -21,6 +21,7 @@ import {
 } from '@/components/ui/shadcn/alert-dialog'
 import { SpinnerIcon } from '@/components/ui/outstatic/spinner-icon'
 import { toast } from 'sonner'
+import { useDemoWriteGuard } from '@/utils/hooks/use-demo-write-guard'
 
 type DeleteDocumentButtonProps = {
   disabled?: boolean
@@ -43,6 +44,7 @@ export const DeleteMediaButton = ({
   const [deleting, setDeleting] = useState(false)
   const { repoOwner, repoSlug, repoBranch, session, mediaJsonPath } =
     useOutstatic()
+  const blockDemoWrite = useDemoWriteGuard()
   const fetchOid = useOid()
 
   const mutation = useCreateCommit()
@@ -50,6 +52,10 @@ export const DeleteMediaButton = ({
   const { refetch: refetchMedia } = useGetMediaFiles({ enabled: false })
 
   const deleteMedia = async () => {
+    if (blockDemoWrite(() => setShowDeleteModal(false))) {
+      return
+    }
+
     setDeleting(true)
     try {
       const [{ data }, oid] = await Promise.all([refetchMedia(), fetchOid()])

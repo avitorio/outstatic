@@ -20,7 +20,7 @@ jest.mock('@/components/ui/outstatic/upgrade-dialog', () => ({
   }: {
     open?: boolean
     onOpenChange?: (open: boolean) => void
-    feature?: 'team' | 'api-keys' | 'ai' | 'save'
+    feature?: 'team' | 'api-keys' | 'ai' | 'save' | 'demo'
     accountSlug?: string
     dashboardRoute?: string
   }) => (
@@ -54,6 +54,12 @@ function TestConsumer() {
         onClick={() => openUpgradeDialog('override-team', '/custom-dashboard')}
       >
         Open Override
+      </button>
+      <button
+        type="button"
+        onClick={() => openUpgradeDialog(undefined, undefined, 'demo')}
+      >
+        Open Demo
       </button>
       <button type="button" onClick={() => setUpgradeDialogOpen(true)}>
         Open With Setter
@@ -135,7 +141,7 @@ describe('UpgradeDialog context', () => {
     )
   })
 
-  it('supports overriding values and resets overrides when closed', () => {
+  it('supports overriding values and resets overrides on the next open', () => {
     render(
       <UpgradeDialogProvider>
         <TestConsumer />
@@ -163,6 +169,36 @@ describe('UpgradeDialog context', () => {
     expect(screen.getByTestId('upgrade-dialog')).toHaveAttribute(
       'data-dashboard-route',
       '/outstatic'
+    )
+  })
+
+  it('keeps demo content stable while the dialog closes', () => {
+    render(
+      <UpgradeDialogProvider feature="ai">
+        <TestConsumer />
+      </UpgradeDialogProvider>
+    )
+
+    fireEvent.click(screen.getByRole('button', { name: 'Open Demo' }))
+    expect(screen.getByTestId('upgrade-dialog')).toHaveAttribute(
+      'data-feature',
+      'demo'
+    )
+
+    fireEvent.click(screen.getByRole('button', { name: 'Close Dialog' }))
+    expect(screen.getByTestId('upgrade-dialog')).toHaveAttribute(
+      'data-open',
+      'false'
+    )
+    expect(screen.getByTestId('upgrade-dialog')).toHaveAttribute(
+      'data-feature',
+      'demo'
+    )
+
+    fireEvent.click(screen.getByRole('button', { name: 'Open With Setter' }))
+    expect(screen.getByTestId('upgrade-dialog')).toHaveAttribute(
+      'data-feature',
+      'ai'
     )
   })
 

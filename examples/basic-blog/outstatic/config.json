@@ -10,7 +10,5 @@
       "name": "images",
       "output": "/images"
     }
-  ],
-  "publicMediaPath": "images/",
-  "repoMediaPath": "public/images/"
+  ]
 }

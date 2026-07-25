@@ -75,10 +75,10 @@ export function UpgradeDialogProvider({
         setIsUpgradeDialogOpen(true)
       },
       setUpgradeDialogOpen: (open: boolean) => {
-        setIsUpgradeDialogOpen(open)
-        if (!open) {
+        if (open) {
           setOverrides(null)
         }
+        setIsUpgradeDialogOpen(open)
       }
     }),
     [isUpgradeDialogOpen]

@@ -14,7 +14,6 @@ import Settings from './pages/settings'
 import MediaLibrary from './pages/media-library'
 import BlockLibrary from './pages/block-library'
 import { EditorProvider } from '@/components/editor/editor-context'
-import { UpgradeDialogProvider } from '@/components/ui/outstatic/upgrade-dialog-context'
 import Dashboard from './pages/dashboard'
 
 const DEFAULT_PAGES: { [key: string]: ReactElement | undefined } = {
@@ -74,9 +73,7 @@ const renderContentRoute = (slug: string, slug2: string, title: string) => {
   if (slug2) {
     return (
       <EditorProvider>
-        <UpgradeDialogProvider feature="ai">
-          <EditDocument collection={slug} />
-        </UpgradeDialogProvider>
+        <EditDocument collection={slug} />
       </EditorProvider>
     )
   }
@@ -131,9 +128,7 @@ const renderRoute = ({
   if (isSingletonRoute(slug, slug2, singletons)) {
     return (
       <EditorProvider key={`singleton-editor-${slug2}`}>
-        <UpgradeDialogProvider feature="ai">
-          <EditSingleton slug={slug2} />
-        </UpgradeDialogProvider>
+        <EditSingleton slug={slug2} />
       </EditorProvider>
     )
   }

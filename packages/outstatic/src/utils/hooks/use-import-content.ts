@@ -9,12 +9,17 @@ import { useOutstatic } from '@/utils/hooks/use-outstatic'
 import { useRebuildMetadata } from '@/utils/hooks/use-rebuild-metadata'
 import { useSingletons } from '@/utils/hooks/use-singletons'
 import { composeImportFiles } from '@/utils/import-content'
+import {
+  DemoWriteBlockedError,
+  useDemoWriteGuard
+} from '@/utils/hooks/use-demo-write-guard'
 
 export function useImportContent() {
   const { repoOwner, repoSlug, repoBranch, session, ostContent } =
     useOutstatic()
   const fetchOid = useOid()
   const mutation = useCreateCommit()
+  const blockDemoWrite = useDemoWriteGuard()
   const rebuildMetadata = useRebuildMetadata()
   const { refetch: refetchCollections } = useCollections({ enabled: false })
   const { refetch: refetchSingletons } = useSingletons({ enabled: false })
@@ -23,6 +28,10 @@ export function useImportContent() {
     selections: ContentSuggestion[],
     singletons: ContentSuggestion[]
   ) => {
+    if (blockDemoWrite()) {
+      throw new DemoWriteBlockedError()
+    }
+
     try {
       const [oid, collectionsResult, singletonsResult] = await Promise.all([
         fetchOid(),

@@ -10,6 +10,7 @@ import stringify from 'json-stable-stringify'
 import { toast } from 'sonner'
 import { useRebuildMediaJson } from './use-rebuild-media-json'
 import { resolveMediaSources, syncLegacyMediaFields } from '../media-config'
+import { useDemoWriteGuard } from './use-demo-write-guard'
 
 type SubmitDocumentProps = {
   setLoading: (loading: boolean) => void
@@ -36,6 +37,7 @@ export function useUpdateConfig({ setLoading }: SubmitDocumentProps) {
   const { repoOwner, repoSlug, repoBranch, session, configJsonPath } =
     useOutstatic()
   const fetchOid = useOid()
+  const blockDemoWrite = useDemoWriteGuard()
 
   const { refetch } = useGetConfig({
     enabled: false
@@ -74,6 +76,10 @@ export function useUpdateConfig({ setLoading }: SubmitDocumentProps) {
 
   const onSubmit = useCallback(
     async ({ configFields, callbackFunction }: OnSubmitProps) => {
+      if (blockDemoWrite()) {
+        return
+      }
+
       setLoading(true)
       try {
         const oid = await fetchOid()
@@ -163,7 +169,8 @@ export function useUpdateConfig({ setLoading }: SubmitDocumentProps) {
       repoBranch,
       configJsonPath,
       fetchOid,
-      setData
+      setData,
+      blockDemoWrite
     ]
   )
 

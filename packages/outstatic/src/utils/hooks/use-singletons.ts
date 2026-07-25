@@ -5,6 +5,7 @@ import { createOutstaticCommitMessage } from '../commit-message'
 import useOid from './use-oid'
 import { toast } from 'sonner'
 import { useCreateCommit } from './use-create-commit'
+import { useDemoWriteGuard } from './use-demo-write-guard'
 import { GET_FILE } from '@/graphql/queries/file'
 import { useGetDocuments } from './use-get-documents'
 import { SingletonsType } from '@/types/singleton'
@@ -22,6 +23,7 @@ export function useSingletons(options?: UseGetSingletonsOptions) {
     useOutstatic()
   const fetchOid = useOid()
   const mutation = useCreateCommit()
+  const blockDemoWrite = useDemoWriteGuard()
   const { refetch: refetchDocuments } = useGetDocuments({
     enabled: false,
     collection: '_singletons'
@@ -100,6 +102,10 @@ export function useSingletons(options?: UseGetSingletonsOptions) {
           )
 
           const payload = commitApi.createInput()
+
+          if (blockDemoWrite()) {
+            return singletons
+          }
 
           toast.promise(mutation.mutateAsync(payload), {
             loading: 'Updating singletons',

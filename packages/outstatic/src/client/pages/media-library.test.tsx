@@ -22,6 +22,9 @@ const mockToastPromise = jest.fn(
 jest.mock('@/utils/hooks/use-outstatic')
 jest.mock('@/utils/hooks/use-get-media-files')
 jest.mock('@/utils/hooks/use-media-library-upload')
+jest.mock('@/utils/hooks/use-demo-write-guard', () => ({
+  useDemoWriteGuard: () => () => false
+}))
 jest.mock('@/utils/hooks/use-create-commit', () => ({
   useCreateCommit: () => ({
     mutateAsync: mockMutateAsync

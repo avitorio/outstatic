@@ -1,0 +1,157 @@
+---
+title: 'How to create a Next.js blog with Outstatic'
+status: 'published'
+description: 'Build a Git-backed publishing workflow with Next.js, Markdown, and the Outstatic editor.'
+coverImage: '/images/jupiter-spaceship.png'
+publishedAt: '2026-03-12T10:00:00.000Z'
+tags:
+  [
+    { 'label': 'NextJs', value: 'nextJs' },
+    { 'label': 'GitHub', value: 'gitHub' },
+    { 'label': 'Outstatic', value: 'outstatic' }
+  ]
+category: 'tutorial'
+featured: false
+seo:
+  title: 'How to create a Next.js blog with Outstatic'
+  description: 'Add a visual Markdown editor to Next.js while keeping every post in your GitHub repository.'
+author:
+  name: 'Andre Vitorio'
+  picture: 'https://avatars.githubusercontent.com/u/1417109?v=4'
+---
+
+A useful blog needs two good experiences: readers need a fast website, and
+writers need a comfortable place to publish. Outstatic connects those two
+without introducing a separate content database. Editors work in a visual
+dashboard, while every post remains a Markdown or MDX file in GitHub.
+
+This guide explains the shape of that setup and the decisions that make it
+pleasant to maintain.
+
+## Start with a Next.js application
+
+Outstatic works inside a Next.js App Router project. Install the package with
+your preferred package manager:
+
+```bash
+pnpm install outstatic
+```
+
+The integration has two parts:
+
+1. A catch-all page renders the Outstatic dashboard.
+2. A catch-all API route handles authentication, content operations, media, and
+   optional AI features.
+
+Your dashboard page can live at `/outstatic`:
+
+```tsx
+import 'outstatic/outstatic.css'
+import { Outstatic } from 'outstatic'
+import { OstClient } from 'outstatic/client'
+
+export default async function Page(props: {
+  params: Promise<{ ost: string[] }>
+}) {
+  const params = await props.params
+  const ostData = await Outstatic()
+
+  return <OstClient ostData={ostData} params={params} />
+}
+```
+
+The API route forwards `GET` and `POST` requests to Outstatic:
+
+```ts
+import { OutstaticApi } from 'outstatic'
+
+export const GET = OutstaticApi.GET
+export const POST = OutstaticApi.POST
+```
+
+Once authentication is configured, opening `/outstatic` gives your team a
+focused editor without changing how the public site is rendered.
+
+## Model the content your site actually needs
+
+Create a **Posts** collection and define fields that match the frontend:
+
+- a short description for cards and search results
+- a cover image
+- tags and a category for navigation
+- a featured flag for the home page
+- an SEO object with a title and description
+
+Outstatic saves those values as frontmatter. The article body stays readable
+Markdown, so a post is still understandable in a code review or a local text
+editor.
+
+```md
+---
+title: 'Introducing our new release'
+status: 'published'
+category: 'news'
+featured: true
+---
+
+The post begins here.
+```
+
+Fields are a contract between the editor and the website. Defining them before
+building the post grid keeps templates simple and prevents authors from having
+to remember hidden formatting rules.
+
+## Query published posts
+
+For larger collections, Outstatic maintains `outstatic/content/metadata.json`.
+The server utilities can query that metadata and then return the matching
+documents:
+
+```ts
+import { load } from 'outstatic/server'
+
+const db = await load()
+
+const posts = await db
+  .find({ collection: 'posts', status: 'published' }, [
+    'title',
+    'slug',
+    'publishedAt',
+    'description',
+    'coverImage'
+  ])
+  .sort({ publishedAt: -1 })
+  .toArray()
+```
+
+Render that result with ordinary Next.js components. Outstatic does not impose
+a theme or presentation layer; your application decides how URLs, cards,
+article layouts, previews, and caching should work.
+
+## Publish through Git
+
+When an editor clicks Save, Outstatic updates the document and its metadata in
+the connected repository. That gives the team a useful audit trail:
+
+- pull requests and commit history remain available
+- deployments can use the same Git trigger as the rest of the site
+- developers can edit or migrate content with normal file tools
+- the content is not trapped behind a proprietary export
+
+For a small blog, publishing directly to the production branch may be enough.
+Larger teams can use a dedicated content branch and adapt the deployment
+workflow to their review process.
+
+## Grow the model gradually
+
+Start with Posts, then add structure only when the site needs it. A Pages
+collection can hold landing pages. Singletons work well for global content such
+as navigation or site settings. MDX and the Block Library can introduce
+reusable videos, callouts, product cards, and other interactive elements.
+
+The important part is that the architecture stays familiar: Outstatic improves
+the editing experience, GitHub keeps the history, and Next.js remains in charge
+of the website.
+
+Continue with the [Outstatic documentation](https://outstatic.com/docs) for the
+full authentication and deployment setup.

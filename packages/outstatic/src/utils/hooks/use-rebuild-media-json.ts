@@ -4,6 +4,7 @@ import { toast } from 'sonner'
 import useOid from './use-oid'
 import { useOutstatic } from './use-outstatic'
 import { useCreateCommit } from './use-create-commit'
+import { useDemoWriteGuard } from './use-demo-write-guard'
 import { createCommitApi } from '../create-commit-api'
 import { createOutstaticCommitMessage } from '../commit-message'
 import { hashFromUrl } from '../hash-from-url'
@@ -167,6 +168,7 @@ export const useRebuildMediaJson = () => {
   const [processed, setProcessed] = useState(0)
   const fetchOid = useOid()
   const mutation = useCreateCommit()
+  const blockDemoWrite = useDemoWriteGuard()
   const {
     gqlClient,
     repoOwner,
@@ -307,6 +309,11 @@ export const useRebuildMediaJson = () => {
 
   const rebuildMediaJson = useCallback(
     async ({ onComplete, sources }: RebuildMediaJsonOptions = {}) => {
+      if (blockDemoWrite()) {
+        onComplete?.()
+        return
+      }
+
       const configuredSources = sources ?? media ?? []
 
       if (configuredSources.length === 0) {
@@ -410,7 +417,13 @@ export const useRebuildMediaJson = () => {
         }
       )
     },
-    [fetchExistingMediaItems, fetchSourceFiles, media, processFiles]
+    [
+      blockDemoWrite,
+      fetchExistingMediaItems,
+      fetchSourceFiles,
+      media,
+      processFiles
+    ]
   )
 
   return rebuildMediaJson
