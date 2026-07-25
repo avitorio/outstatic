@@ -72,7 +72,7 @@ export default async function Post(props: { params: Params }) {
           {Array.isArray(post?.tags)
             ? post.tags.map(({ label }) => (
                 <span
-                  key="label"
+                  key={label}
                   className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2"
                 >
                   {label}
