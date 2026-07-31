@@ -5,6 +5,10 @@ import {
   ORIGINAL_ENV,
   resetEnv
 } from '../test-helpers'
+import {
+  GITHUB_OAUTH_STATE_COOKIE_NAME,
+  GITHUB_OAUTH_STATE_MAX_AGE
+} from '@/utils/constants'
 
 describe('/api/outstatic/login', () => {
   beforeEach(() => {
@@ -39,9 +43,18 @@ describe('/api/outstatic/login', () => {
     expect(authUrl.searchParams.get('client_id')).toBe('local-client-id')
     expect(authUrl.searchParams.get('scope')).toBe('read:user,user:email,repo')
     expect(authUrl.searchParams.get('response_type')).toBe('code')
+    const state = authUrl.searchParams.get('state')
+    expect(state).toMatch(/^[0-9a-f-]{36}$/)
     expect(authUrl.searchParams.get('redirect_uri')).toBe(
       'https://self-host.dev/api/outstatic/callback'
     )
+    expect(response.headers.get('set-cookie')).toContain(
+      `${GITHUB_OAUTH_STATE_COOKIE_NAME}=${state}`
+    )
+    expect(response.headers.get('set-cookie')).toContain(
+      `Max-Age=${GITHUB_OAUTH_STATE_MAX_AGE}`
+    )
+    expect(response.headers.get('set-cookie')).toContain('HttpOnly')
     expect(global.fetch).not.toHaveBeenCalled()
   })
 

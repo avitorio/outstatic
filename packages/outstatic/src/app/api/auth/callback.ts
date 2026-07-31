@@ -10,12 +10,27 @@ import {
   checkCollaborator,
   checkCollaboratorWithRepo
 } from '@/utils/auth/github'
-import { OUTSTATIC_API_KEY, OUTSTATIC_API_URL } from '@/utils/constants'
+import {
+  COOKIE_SETTINGS,
+  GITHUB_OAUTH_STATE_COOKIE_NAME,
+  OUTSTATIC_API_KEY,
+  OUTSTATIC_API_URL
+} from '@/utils/constants'
 import { NextRequest, NextResponse } from 'next/server'
 
 type ProjectInfo = {
   repoOwner: string
   repoSlug: string
+}
+
+function redirectAndClearGithubOAuthState(destination: string | URL) {
+  const response = NextResponse.redirect(destination)
+  response.cookies.set(GITHUB_OAUTH_STATE_COOKIE_NAME, '', {
+    ...COOKIE_SETTINGS,
+    expires: new Date(0),
+    maxAge: 0
+  })
+  return response
 }
 
 async function fetchProjectInfo(): Promise<ProjectInfo | null> {
@@ -154,6 +169,15 @@ export default async function GET(request: NextRequest) {
     return NextResponse.redirect(`${dashboardUrl}?error=missing-code`)
   }
 
+  const state = url.searchParams.get('state')
+  const cookieState = request.cookies.get(GITHUB_OAUTH_STATE_COOKIE_NAME)?.value
+
+  if (!state || !cookieState || state !== cookieState) {
+    return redirectAndClearGithubOAuthState(
+      `${dashboardUrl}?error=invalid-state`
+    )
+  }
+
   try {
     const {
       access_token,
@@ -163,7 +187,9 @@ export default async function GET(request: NextRequest) {
     } = await getAccessToken({ code })
 
     if (!access_token) {
-      return NextResponse.redirect(`${dashboardUrl}?error=no-access-token`)
+      return redirectAndClearGithubOAuthState(
+        `${dashboardUrl}?error=no-access-token`
+      )
     }
 
     let userData = await fetchGitHubUser(access_token)
@@ -243,13 +269,13 @@ export default async function GET(request: NextRequest) {
             : undefined
         }
         await setLoginSession(sessionData)
-        return NextResponse.redirect(dashboardUrl)
+        return redirectAndClearGithubOAuthState(dashboardUrl)
       }
 
       // Not a collaborator - validate against SaaS to check project membership
       if (!OUTSTATIC_API_KEY) {
         const redirectUrl = `${origin}${basePath}/outstatic?error=not-collaborator`
-        return NextResponse.redirect(redirectUrl)
+        return redirectAndClearGithubOAuthState(redirectUrl)
       }
 
       const apiBase = OUTSTATIC_API_URL?.endsWith('/')
@@ -277,14 +303,14 @@ export default async function GET(request: NextRequest) {
 
         if (!validateResponse.ok) {
           const redirectUrl = `${dashboardUrl}?error=not-collaborator`
-          return NextResponse.redirect(redirectUrl)
+          return redirectAndClearGithubOAuthState(redirectUrl)
         }
 
         const validation = await validateResponse.json()
 
         if (!validation.valid || !validation.exchange_token) {
           const redirectUrl = `${dashboardUrl}?error=not-collaborator`
-          return NextResponse.redirect(redirectUrl)
+          return redirectAndClearGithubOAuthState(redirectUrl)
         }
 
         // Exchange the token for a Supabase session
@@ -298,7 +324,7 @@ export default async function GET(request: NextRequest) {
             'Failed to exchange relay token after GitHub user validation'
           )
           const redirectUrl = `${dashboardUrl}?error=session-error`
-          return NextResponse.redirect(redirectUrl)
+          return redirectAndClearGithubOAuthState(redirectUrl)
         }
 
         // Create session with magic-link provider to use parser endpoint
@@ -323,16 +349,18 @@ export default async function GET(request: NextRequest) {
         }
 
         await setLoginSession(sessionData)
-        return NextResponse.redirect(dashboardUrl)
+        return redirectAndClearGithubOAuthState(dashboardUrl)
       } catch {
         const redirectUrl = `${dashboardUrl}?error=not-collaborator`
-        return NextResponse.redirect(redirectUrl)
+        return redirectAndClearGithubOAuthState(redirectUrl)
       }
     } else {
       const redirectUrl = `${dashboardUrl}?error=missing-user-data`
-      return NextResponse.redirect(redirectUrl)
+      return redirectAndClearGithubOAuthState(redirectUrl)
     }
   } catch {
-    return NextResponse.redirect(`${dashboardUrl}?error=auth-callback-failed`)
+    return redirectAndClearGithubOAuthState(
+      `${dashboardUrl}?error=auth-callback-failed`
+    )
   }
 }

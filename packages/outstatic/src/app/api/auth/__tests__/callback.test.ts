@@ -6,6 +6,20 @@ import {
   ORIGINAL_ENV,
   resetEnv
 } from '../test-helpers'
+import { GITHUB_OAUTH_STATE_COOKIE_NAME } from '@/utils/constants'
+
+const GITHUB_OAUTH_STATE = 'github-oauth-state'
+
+function createGithubCallbackRequest(url: string) {
+  const callbackUrl = new URL(url)
+  callbackUrl.searchParams.set('state', GITHUB_OAUTH_STATE)
+
+  return createNextRequest(callbackUrl.toString(), {
+    headers: {
+      cookie: `${GITHUB_OAUTH_STATE_COOKIE_NAME}=${GITHUB_OAUTH_STATE}`
+    }
+  })
+}
 
 type CallbackRouteSetup = {
   callbackRoute: (request: Request) => Promise<Response>
@@ -210,6 +224,53 @@ describe('/api/outstatic/callback', () => {
     expect(setLoginSessionMock).not.toHaveBeenCalled()
   })
 
+  it('rejects a GitHub callback without OAuth state', async () => {
+    const { callbackRoute, getAccessTokenMock, setLoginSessionMock } =
+      await setupCallbackRoute({
+        OUTSTATIC_API_KEY: undefined
+      })
+
+    const response = await callbackRoute(
+      createNextRequest('https://self-host.dev/api/outstatic/callback?code=abc')
+    )
+
+    expect(response.status).toBe(307)
+    expect(getLocationHeader(response)).toBe(
+      'https://self-host.dev/outstatic?error=invalid-state'
+    )
+    expect(response.headers.get('set-cookie')).toContain(
+      `${GITHUB_OAUTH_STATE_COOKIE_NAME}=`
+    )
+    expect(response.headers.get('set-cookie')).toContain('Max-Age=0')
+    expect(getAccessTokenMock).not.toHaveBeenCalled()
+    expect(setLoginSessionMock).not.toHaveBeenCalled()
+  })
+
+  it('rejects a GitHub callback with mismatched OAuth state', async () => {
+    const { callbackRoute, getAccessTokenMock, setLoginSessionMock } =
+      await setupCallbackRoute({
+        OUTSTATIC_API_KEY: undefined
+      })
+
+    const response = await callbackRoute(
+      createNextRequest(
+        'https://self-host.dev/api/outstatic/callback?code=abc&state=attacker-state',
+        {
+          headers: {
+            cookie: `${GITHUB_OAUTH_STATE_COOKIE_NAME}=${GITHUB_OAUTH_STATE}`
+          }
+        }
+      )
+    )
+
+    expect(response.status).toBe(307)
+    expect(getLocationHeader(response)).toBe(
+      'https://self-host.dev/outstatic?error=invalid-state'
+    )
+    expect(getAccessTokenMock).not.toHaveBeenCalled()
+    expect(setLoginSessionMock).not.toHaveBeenCalled()
+  })
+
   it('keeps collaborator flow on provider github', async () => {
     const {
       callbackRoute,
@@ -236,10 +297,16 @@ describe('/api/outstatic/callback', () => {
     checkCollaboratorMock.mockResolvedValue(true)
 
     const response = await callbackRoute(
-      createNextRequest('https://self-host.dev/api/outstatic/callback?code=abc')
+      createGithubCallbackRequest(
+        'https://self-host.dev/api/outstatic/callback?code=abc'
+      )
     )
 
     expect(response.status).toBe(307)
+    expect(response.headers.get('set-cookie')).toContain(
+      `${GITHUB_OAUTH_STATE_COOKIE_NAME}=`
+    )
+    expect(response.headers.get('set-cookie')).toContain('Max-Age=0')
     expect(getLocationHeader(response)).toBe('https://self-host.dev/outstatic')
     expect(setLoginSessionMock).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -277,7 +344,9 @@ describe('/api/outstatic/callback', () => {
     checkCollaboratorMock.mockResolvedValue(false)
 
     const response = await callbackRoute(
-      createNextRequest('https://self-host.dev/api/outstatic/callback?code=abc')
+      createGithubCallbackRequest(
+        'https://self-host.dev/api/outstatic/callback?code=abc'
+      )
     )
 
     expect(response.status).toBe(307)
@@ -360,7 +429,9 @@ describe('/api/outstatic/callback', () => {
     checkCollaboratorWithRepoMock.mockResolvedValue(false)
 
     const response = await callbackRoute(
-      createNextRequest('https://self-host.dev/api/outstatic/callback?code=abc')
+      createGithubCallbackRequest(
+        'https://self-host.dev/api/outstatic/callback?code=abc'
+      )
     )
 
     expect(response.status).toBe(307)
@@ -442,7 +513,9 @@ describe('/api/outstatic/callback', () => {
     checkCollaboratorWithRepoMock.mockResolvedValue(false)
 
     const response = await callbackRoute(
-      createNextRequest('https://self-host.dev/api/outstatic/callback?code=abc')
+      createGithubCallbackRequest(
+        'https://self-host.dev/api/outstatic/callback?code=abc'
+      )
     )
 
     expect(response.status).toBe(307)
@@ -513,7 +586,9 @@ describe('/api/outstatic/callback', () => {
     checkCollaboratorWithRepoMock.mockResolvedValue(false)
 
     const response = await callbackRoute(
-      createNextRequest('https://self-host.dev/api/outstatic/callback?code=abc')
+      createGithubCallbackRequest(
+        'https://self-host.dev/api/outstatic/callback?code=abc'
+      )
     )
 
     expect(response.status).toBe(307)

@@ -78,10 +78,30 @@ export function createNextRequest(
 ): NextRequest {
   ensureWebApiGlobals()
 
+  const headers = new Headers(init?.headers ?? {})
+  const cookieValues = new Map(
+    (headers.get('cookie') ?? '')
+      .split(';')
+      .map((cookie) => cookie.trim())
+      .filter(Boolean)
+      .map((cookie) => {
+        const separator = cookie.indexOf('=')
+        const name = separator === -1 ? cookie : cookie.slice(0, separator)
+        const value = separator === -1 ? '' : cookie.slice(separator + 1)
+        return [name, decodeURIComponent(value)]
+      })
+  )
+
   return {
     url,
     method: init?.method ?? 'GET',
-    headers: new Headers(init?.headers ?? {})
+    headers,
+    cookies: {
+      get(name: string) {
+        const value = cookieValues.get(name)
+        return value === undefined ? undefined : { name, value }
+      }
+    }
   } as unknown as NextRequest
 }
 

@@ -1,4 +1,11 @@
-import { OUTSTATIC_API_KEY, OUTSTATIC_API_URL } from '@/utils/constants'
+import {
+  COOKIE_SETTINGS,
+  GITHUB_OAUTH_STATE_COOKIE_NAME,
+  GITHUB_OAUTH_STATE_MAX_AGE,
+  OUTSTATIC_API_KEY,
+  OUTSTATIC_API_URL
+} from '@/utils/constants'
+import { serialize } from 'cookie'
 import { NextRequest } from 'next/server'
 
 type LoginErrorCode =
@@ -34,12 +41,14 @@ export default async function GET(request: NextRequest): Promise<Response> {
 
   if (hasLocalGithubOAuth) {
     const scopes = ['read:user', 'user:email', 'repo']
+    const state = crypto.randomUUID()
 
     const url = new URL('https://github.com/login/oauth/authorize')
 
     url.searchParams.append('client_id', process.env.OST_GITHUB_ID ?? '')
     url.searchParams.append('scope', scopes.join(','))
     url.searchParams.append('response_type', 'code')
+    url.searchParams.append('state', state)
     if (process.env?.OST_GITHUB_CALLBACK_URL) {
       url.searchParams.append(
         'redirect_uri',
@@ -47,7 +56,16 @@ export default async function GET(request: NextRequest): Promise<Response> {
       )
     }
 
-    return Response.json({ url: url.toString() })
+    const response = Response.json({ url: url.toString() })
+    response.headers.append(
+      'Set-Cookie',
+      serialize(GITHUB_OAUTH_STATE_COOKIE_NAME, state, {
+        ...COOKIE_SETTINGS,
+        maxAge: GITHUB_OAUTH_STATE_MAX_AGE
+      })
+    )
+
+    return response
   }
 
   if (!OUTSTATIC_API_KEY) {

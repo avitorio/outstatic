@@ -103,6 +103,8 @@ const loginErrors = {
   ),
   'missing-code':
     'Login failed: no authorization code was received from GitHub. Please try again.',
+  'invalid-state':
+    'Login failed because the authorization request could not be verified. Please try again.',
   'no-access-token':
     'Login failed: could not obtain an access token from GitHub. Please check your OAuth app credentials and try again.',
   'auth-callback-failed': 'Something went wrong during login. Please try again.'

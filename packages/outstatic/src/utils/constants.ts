@@ -19,6 +19,8 @@ export const GITHUB_GQL_API_URL = `${OUTSTATIC_API_PATH}/github-graphql`
 // Authentication
 export const TOKEN_NAME = process.env.NEXT_PUBLIC_OST_TOKEN_NAME || 'ost_token'
 export const MAX_AGE = 60 * 60 * 24 * 30 // 30 days
+export const GITHUB_OAUTH_STATE_COOKIE_NAME = `${TOKEN_NAME}_github_oauth_state`
+export const GITHUB_OAUTH_STATE_MAX_AGE = 60 * 10 // 10 minutes
 export const TOKEN_SECRET =
   process.env.OST_TOKEN_SECRET || 'l1f3154n4dv3ntur3st4yS7r0n9s3cr3t'
 
