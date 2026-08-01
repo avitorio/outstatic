@@ -16,7 +16,12 @@ test.describe('Outstatic login', () => {
     })
 
     if ((await githubLoginLink.count()) === 0) {
-      await page.goto('/api/outstatic/signout')
+      await page.evaluate(async () => {
+        const response = await fetch('/api/outstatic/signout', {
+          method: 'POST'
+        })
+        if (!response.ok) throw new Error('Failed to sign out')
+      })
       await page.goto('/outstatic')
     }
 

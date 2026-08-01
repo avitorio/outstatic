@@ -40,6 +40,11 @@ type AuthProviderProps = {
   basePath: string
 }
 
+async function clearAuthenticatedQueryCache() {
+  await queryClient.cancelQueries()
+  queryClient.clear()
+}
+
 export function AuthProvider({
   children,
   initialSession,
@@ -144,10 +149,10 @@ export function AuthProvider({
         }
 
         case 'SIGN_OUT': {
-          // Another tab signed out - clear session and redirect
+          // Another tab signed out - stop authenticated requests and clear data
+          await clearAuthenticatedQueryCache()
           setSession(null)
           setIsInitializing(false)
-          queryClient.invalidateQueries()
 
           // Redirect to login page if not already there
           // Use setTimeout to defer navigation outside of render phase
@@ -180,8 +185,22 @@ export function AuthProvider({
     }
   }, [])
 
-  const signOut = useCallback(() => {
-    // Clear session immediately
+  const signOut = useCallback(async () => {
+    try {
+      const response = await fetch(`${basePath}${OUTSTATIC_API_PATH}/signout`, {
+        method: 'POST'
+      })
+
+      if (!response.ok) {
+        throw new Error(`Signout request failed with status ${response.status}`)
+      }
+    } catch (error) {
+      console.error('Failed to sign out:', error)
+      toast.error('Failed to sign out. Please try again.')
+      return
+    }
+
+    await clearAuthenticatedQueryCache()
     setSession(null)
     setIsInitializing(false)
 
@@ -193,11 +212,7 @@ export function AuthProvider({
       } as BroadcastMessage)
     }
 
-    // Invalidate queries
-    queryClient.invalidateQueries()
-
-    // Redirect to signout endpoint (which clears the cookie)
-    router.push(`${basePath}${OUTSTATIC_API_PATH}/signout`)
+    router.push(basePath || '/')
   }, [basePath, router])
 
   const contextValue: AuthContextType = {

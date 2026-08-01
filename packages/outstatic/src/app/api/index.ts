@@ -35,7 +35,6 @@ type RouteHandler = (req: Request) => Promise<Response>
 const getPaths: Record<string, RouteHandler> = {
   callback,
   login,
-  signout,
   user,
   media,
   github: githubGet,
@@ -44,6 +43,7 @@ const getPaths: Record<string, RouteHandler> = {
 } as any
 
 const postPaths: Record<string, RouteHandler> = {
+  signout,
   generate,
   scan,
   github: githubPost,

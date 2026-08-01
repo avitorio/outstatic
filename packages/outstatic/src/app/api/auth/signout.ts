@@ -1,9 +1,22 @@
 import { clearLoginSession } from '@/utils/auth/auth'
-import { NextRequest, NextResponse } from 'next/server'
+import { NextRequest } from 'next/server'
 
-export default async function GET(req: NextRequest) {
+function isSameOriginRequest(req: NextRequest) {
+  const origin = req.headers.get('origin')
+  if (!origin) return false
+
+  try {
+    return new URL(origin).origin === new URL(req.url).origin
+  } catch {
+    return false
+  }
+}
+
+export default async function POST(req: NextRequest) {
+  if (!isSameOriginRequest(req)) {
+    return Response.json({ error: 'invalid-origin' }, { status: 403 })
+  }
+
   await clearLoginSession()
-
-  const homeUrl = new URL(process.env.OST_BASE_PATH || '/', req.url)
-  return NextResponse.redirect(homeUrl)
+  return new Response(null, { status: 204 })
 }

@@ -20,7 +20,9 @@ jest.mock('@/utils/auth/auth-provider', () =>
 
 jest.mock('@/utils/react-query/query-client', () => ({
   queryClient: {
-    invalidateQueries: jest.fn()
+    invalidateQueries: jest.fn(),
+    cancelQueries: jest.fn().mockResolvedValue(undefined),
+    clear: jest.fn()
   }
 }))
 
@@ -31,6 +33,8 @@ jest.mock('sonner', () => ({
 }))
 
 const mockInvalidateQueries = queryClient.invalidateQueries as jest.Mock
+const mockCancelQueries = queryClient.cancelQueries as jest.Mock
+const mockClear = queryClient.clear as jest.Mock
 const mockToastError = toast.error as jest.Mock
 
 class MockBroadcastChannel {
@@ -253,7 +257,7 @@ describe('AuthProvider', () => {
     expect(getChannel().postMessage).not.toHaveBeenCalled()
   })
 
-  it('signOut clears session, invalidates queries, broadcasts, and redirects', async () => {
+  it('signOut posts before clearing session, broadcasting, and redirecting', async () => {
     renderAuthProvider(initialSession)
 
     await waitFor(() =>
@@ -264,19 +268,55 @@ describe('AuthProvider', () => {
     fireEvent.click(screen.getByRole('button', { name: 'sign-out' }))
 
     await waitFor(() =>
+      expect(global.fetch).toHaveBeenCalledWith(
+        `${basePath}${OUTSTATIC_API_PATH}/signout`,
+        { method: 'POST' }
+      )
+    )
+    await waitFor(() =>
       expect(screen.getByTestId('status')).toHaveTextContent('unauthenticated')
     )
 
-    expect(mockInvalidateQueries).toHaveBeenCalled()
+    expect(mockCancelQueries).toHaveBeenCalled()
+    expect(mockClear).toHaveBeenCalled()
+    expect(mockInvalidateQueries).not.toHaveBeenCalled()
     expect(getChannel().postMessage).toHaveBeenCalledWith(
       expect.objectContaining({
         type: 'SIGN_OUT',
         timestamp: expect.any(Number)
       })
     )
-    expect(mockPush).toHaveBeenCalledWith(
-      `${basePath}${OUTSTATIC_API_PATH}/signout`
+    expect(mockPush).toHaveBeenCalledWith(basePath)
+  })
+
+  it('keeps the session when the signout request fails', async () => {
+    const consoleErrorSpy = jest
+      .spyOn(console, 'error')
+      .mockImplementation(() => undefined)
+    ;(global.fetch as jest.Mock).mockResolvedValueOnce({
+      ok: false,
+      status: 403
+    })
+
+    renderAuthProvider(initialSession)
+
+    await waitFor(() =>
+      expect(screen.getByTestId('status')).toHaveTextContent('authenticated')
     )
+    fireEvent.click(screen.getByRole('button', { name: 'sign-out' }))
+
+    await waitFor(() =>
+      expect(mockToastError).toHaveBeenCalledWith(
+        'Failed to sign out. Please try again.'
+      )
+    )
+    expect(screen.getByTestId('status')).toHaveTextContent('authenticated')
+    expect(mockCancelQueries).not.toHaveBeenCalled()
+    expect(mockClear).not.toHaveBeenCalled()
+    expect(mockInvalidateQueries).not.toHaveBeenCalled()
+    expect(mockPush).not.toHaveBeenCalled()
+
+    consoleErrorSpy.mockRestore()
   })
 
   it('handles SESSION_UPDATE message from another tab', async () => {
@@ -368,7 +408,9 @@ describe('AuthProvider', () => {
     await waitFor(() =>
       expect(screen.getByTestId('status')).toHaveTextContent('unauthenticated')
     )
-    expect(mockInvalidateQueries).toHaveBeenCalled()
+    expect(mockCancelQueries).toHaveBeenCalled()
+    expect(mockClear).toHaveBeenCalled()
+    expect(mockInvalidateQueries).not.toHaveBeenCalled()
 
     act(() => {
       jest.runOnlyPendingTimers()
