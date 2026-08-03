@@ -32,6 +32,7 @@ const mockUseSingletons = useSingletons as jest.Mock
 const createMethods = () =>
   ({
     reset: jest.fn(),
+    setFocus: jest.fn(),
     getValues: jest.fn(() => ({})),
     watch: jest.fn(() => ({
       unsubscribe: jest.fn()
@@ -157,6 +158,7 @@ describe('useSingletonUpdateEffect', () => {
     })
     expect(setSingletonContentPath).toHaveBeenCalledWith('content/_singletons')
     expect(editor.commands.setContent).toHaveBeenCalledWith('parsed:First body')
+    expect(methods.setFocus).toHaveBeenCalledWith('title')
     expect(setShowDelete).toHaveBeenCalledWith(true)
     expect(setExtension).toHaveBeenCalledWith('md')
     expect(setHasChanges).toHaveBeenCalledWith(false)
@@ -184,6 +186,7 @@ describe('useSingletonUpdateEffect', () => {
     expect(editor.commands.setContent).toHaveBeenLastCalledWith(
       'parsed:Second body'
     )
+    expect(methods.setFocus).toHaveBeenCalledTimes(2)
     expect(setExtension).toHaveBeenLastCalledWith('mdx')
     expect(setShowDelete).toHaveBeenCalledTimes(2)
     expect(setHasChanges).toHaveBeenCalledTimes(2)

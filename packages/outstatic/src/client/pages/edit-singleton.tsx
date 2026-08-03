@@ -183,7 +183,7 @@ export default function EditSingleton({ slug: initialSlug }: { slug: string }) {
     Promise.resolve().then(() => {
       methods.reset(newDocument)
       editor.commands.setContent(parsedContent)
-      editor.commands.focus('start')
+      methods.setFocus('title')
     })
 
     setHasChanges(true)

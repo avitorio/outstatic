@@ -34,6 +34,7 @@ const mockParseContent = parseContent as jest.Mock
 const createMethods = () =>
   ({
     reset: jest.fn(),
+    setFocus: jest.fn(),
     getValues: jest.fn(() => ({})),
     watch: jest.fn(() => ({
       unsubscribe: jest.fn()
@@ -208,6 +209,7 @@ describe('useDocumentUpdateEffect', () => {
       1,
       'parsed:first-doc-content'
     )
+    expect(methods.setFocus).toHaveBeenNthCalledWith(1, 'title')
 
     rerender({
       currentProps: {
@@ -234,5 +236,6 @@ describe('useDocumentUpdateEffect', () => {
       2,
       'parsed:second-doc-content'
     )
+    expect(methods.setFocus).toHaveBeenNthCalledWith(2, 'title')
   })
 })

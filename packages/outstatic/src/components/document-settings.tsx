@@ -249,6 +249,7 @@ export const DocumentSettings = ({
                   <FormControl>
                     <Input
                       {...field}
+                      autoFocus
                       value={field.value ?? ''}
                       onChange={(e) => {
                         field.onChange(e)

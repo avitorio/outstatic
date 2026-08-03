@@ -112,7 +112,7 @@ export const useDocumentUpdateEffect = ({
       Promise.resolve().then(() => {
         methods.reset(newDocument)
         editor.commands.setContent(parsedContent)
-        editor.commands.focus('start')
+        methods.setFocus('title')
       })
 
       setShowDelete(slug !== 'new')

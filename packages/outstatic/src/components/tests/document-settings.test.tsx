@@ -503,6 +503,7 @@ describe('<DocumentSettings />', () => {
     )
 
     expect(screen.getByLabelText('Title')).toHaveValue('Example Document')
+    expect(screen.getByLabelText('Title')).toHaveFocus()
     expect(screen.queryByTestId('mobile-toggle-button')).not.toBeInTheDocument()
   })
 
