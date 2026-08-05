@@ -1,5 +1,6 @@
 import { LoginSession } from '@/utils/auth/auth'
-import { SignJWT } from 'jose'
+import { getSessionKey } from '@/utils/auth/session-key'
+import { EncryptJWT } from 'jose'
 import hm from 'node-mocks-http'
 
 export const createMockRequest = async (
@@ -22,15 +23,11 @@ export const createMockRequest = async (
     ...session
   }
 
-  // see auth.ts
-  const secret = new TextEncoder().encode(
-    process.env.OST_TOKEN_SECRET || 'l1f3154n4dv3ntur3st4yS7r0n9s3cr3t'
-  )
-  const token = await new SignJWT({ ...sesh })
-    .setProtectedHeader({ alg: 'HS256' })
+  const token = await new EncryptJWT({ ...sesh })
+    .setProtectedHeader({ alg: 'dir', enc: 'A256GCM' })
     .setIssuedAt()
     .setExpirationTime(sesh.refresh_token_expires ?? sesh.expires)
-    .sign(secret)
+    .encrypt(await getSessionKey())
 
   // create mock next.js objects for SSP
   const req = hm.createRequest({

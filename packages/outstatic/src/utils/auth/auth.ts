@@ -1,7 +1,6 @@
-import { SignJWT, jwtVerify } from 'jose'
+import { EncryptJWT, jwtDecrypt } from 'jose'
 import { cookies } from 'next/headers'
 import {
-  TOKEN_SECRET,
   TOKEN_NAME,
   COOKIE_SETTINGS,
   SESSION_ERROR_MESSAGES,
@@ -9,6 +8,7 @@ import {
   MAX_AGE
 } from '@/utils/constants'
 import { getAccessToken } from './github'
+import { getSessionKey } from './session-key'
 
 export type AppPermissions =
   | 'roles.manage'
@@ -325,13 +325,12 @@ export async function setLoginSession(session: LoginSession): Promise<boolean> {
     throw new Error(SESSION_ERROR_MESSAGES.INVALID_SESSION)
   }
 
-  // Create a JWT token with the session data
-  const secret = new TextEncoder().encode(TOKEN_SECRET)
-  const token = await new SignJWT({ ...session })
-    .setProtectedHeader({ alg: 'HS256' })
+  // Encrypt and authenticate the session data before storing it in a cookie.
+  const token = await new EncryptJWT({ ...session })
+    .setProtectedHeader({ alg: 'dir', enc: 'A256GCM' })
     .setIssuedAt()
     .setExpirationTime(session.refresh_token_expires ?? session.expires)
-    .sign(secret)
+    .encrypt(await getSessionKey())
 
   const cookieStore = await cookies()
 
@@ -367,21 +366,22 @@ export async function getLoginSession(): Promise<LoginSession | null> {
   }
 
   try {
-    const secret = new TextEncoder().encode(TOKEN_SECRET)
-    const { payload } = await jwtVerify(token, secret)
+    const { payload } = await jwtDecrypt(token, await getSessionKey(), {
+      keyManagementAlgorithms: ['dir'],
+      contentEncryptionAlgorithms: ['A256GCM']
+    })
 
     // Normalize dates (convert strings back to Date objects)
     const session = normalizeDates(payload)
 
     // Validate the session structure
     if (!validateSession(session)) {
-      console.warn(SESSION_ERROR_MESSAGES.INVALID_STRUCTURE, session)
+      console.warn(SESSION_ERROR_MESSAGES.INVALID_STRUCTURE)
       return null
     }
 
     return session
-  } catch (error) {
-    console.error('Session validation error:', error)
+  } catch {
     return null
   }
 }

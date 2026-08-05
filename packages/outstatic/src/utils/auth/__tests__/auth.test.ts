@@ -1,4 +1,4 @@
-import { SignJWT, jwtVerify } from 'jose'
+import { EncryptJWT, jwtDecrypt } from 'jose'
 import { cookies } from 'next/headers'
 import {
   setLoginSession,
@@ -23,10 +23,14 @@ jest.mock('../github', () => ({
   getAccessToken: jest.fn()
 }))
 
+jest.mock('../session-key', () => ({
+  getSessionKey: jest.fn().mockResolvedValue(new Uint8Array(32))
+}))
+
 // Mock jose
 jest.mock('jose', () => ({
-  SignJWT: jest.fn(),
-  jwtVerify: jest.fn()
+  EncryptJWT: jest.fn(),
+  jwtDecrypt: jest.fn()
 }))
 
 // Mock console methods to avoid noise in tests
@@ -62,18 +66,18 @@ describe('Auth Utils', () => {
     refresh_token_expires: new Date(Date.now() + 86400000) // 24 hours from now
   }
 
-  const mockSignJWT = {
+  const mockEncryptJWT = {
     setProtectedHeader: jest.fn().mockReturnThis(),
     setIssuedAt: jest.fn().mockReturnThis(),
     setExpirationTime: jest.fn().mockReturnThis(),
-    sign: jest.fn().mockResolvedValue('mock-jwt-token')
+    encrypt: jest.fn().mockResolvedValue('mock-jwt-token')
   }
 
   beforeEach(() => {
     jest.clearAllMocks()
     ;(cookies as jest.Mock).mockResolvedValue(mockCookieStore)
-    ;(SignJWT as jest.Mock).mockImplementation(() => mockSignJWT)
-    ;(jwtVerify as jest.Mock).mockResolvedValue({ payload: mockSession })
+    ;(EncryptJWT as jest.Mock).mockImplementation(() => mockEncryptJWT)
+    ;(jwtDecrypt as jest.Mock).mockResolvedValue({ payload: mockSession })
   })
 
   describe('setLoginSession', () => {
@@ -81,15 +85,16 @@ describe('Auth Utils', () => {
       const result = await setLoginSession(mockSession)
 
       expect(result).toBe(true)
-      expect(SignJWT).toHaveBeenCalledWith({ ...mockSession })
-      expect(mockSignJWT.setProtectedHeader).toHaveBeenCalledWith({
-        alg: 'HS256'
+      expect(EncryptJWT).toHaveBeenCalledWith({ ...mockSession })
+      expect(mockEncryptJWT.setProtectedHeader).toHaveBeenCalledWith({
+        alg: 'dir',
+        enc: 'A256GCM'
       })
-      expect(mockSignJWT.setIssuedAt).toHaveBeenCalled()
-      expect(mockSignJWT.setExpirationTime).toHaveBeenCalledWith(
+      expect(mockEncryptJWT.setIssuedAt).toHaveBeenCalled()
+      expect(mockEncryptJWT.setExpirationTime).toHaveBeenCalledWith(
         mockSession.refresh_token_expires
       )
-      expect(mockSignJWT.sign).toHaveBeenCalled()
+      expect(mockEncryptJWT.encrypt).toHaveBeenCalled()
 
       expect(mockCookieStore.set).toHaveBeenCalledWith(
         TOKEN_NAME,
@@ -113,7 +118,7 @@ describe('Auth Utils', () => {
 
       await setLoginSession(sessionWithoutRefreshExpires)
 
-      expect(mockSignJWT.setExpirationTime).toHaveBeenCalledWith(
+      expect(mockEncryptJWT.setExpirationTime).toHaveBeenCalledWith(
         sessionWithoutRefreshExpires.expires
       )
       expect(mockCookieStore.set).toHaveBeenCalledWith(
@@ -182,7 +187,10 @@ describe('Auth Utils', () => {
       const result = await getLoginSession()
 
       expect(result).toEqual(mockSession)
-      expect(jwtVerify).toHaveBeenCalledWith(mockToken, expect.anything())
+      expect(jwtDecrypt).toHaveBeenCalledWith(mockToken, expect.anything(), {
+        keyManagementAlgorithms: ['dir'],
+        contentEncryptionAlgorithms: ['A256GCM']
+      })
     })
 
     it('should normalize date strings back to Date objects', async () => {
@@ -193,7 +201,7 @@ describe('Auth Utils', () => {
       }
       const mockToken = 'mock-jwt-token'
       mockCookieStore.get.mockReturnValue({ value: mockToken })
-      ;(jwtVerify as jest.Mock).mockResolvedValueOnce({
+      ;(jwtDecrypt as jest.Mock).mockResolvedValueOnce({
         payload: sessionWithStringDates
       })
 
@@ -217,7 +225,7 @@ describe('Auth Utils', () => {
       }
       const mockToken = 'mock-jwt-token'
       mockCookieStore.get.mockReturnValue({ value: mockToken })
-      ;(jwtVerify as jest.Mock).mockResolvedValueOnce({
+      ;(jwtDecrypt as jest.Mock).mockResolvedValueOnce({
         payload: invalidSession
       })
 
@@ -225,8 +233,7 @@ describe('Auth Utils', () => {
 
       expect(result).toBeNull()
       expect(console.warn).toHaveBeenCalledWith(
-        SESSION_ERROR_MESSAGES.INVALID_STRUCTURE,
-        invalidSession
+        SESSION_ERROR_MESSAGES.INVALID_STRUCTURE
       )
     })
 
@@ -237,7 +244,7 @@ describe('Auth Utils', () => {
       }
       const mockToken = 'mock-jwt-token'
       mockCookieStore.get.mockReturnValue({ value: mockToken })
-      ;(jwtVerify as jest.Mock).mockResolvedValueOnce({
+      ;(jwtDecrypt as jest.Mock).mockResolvedValueOnce({
         payload: expiredSession
       })
 
@@ -255,7 +262,7 @@ describe('Auth Utils', () => {
       }
       const mockToken = 'mock-jwt-token'
       mockCookieStore.get.mockReturnValue({ value: mockToken })
-      ;(jwtVerify as jest.Mock).mockResolvedValueOnce({
+      ;(jwtDecrypt as jest.Mock).mockResolvedValueOnce({
         payload: expiredSession
       })
 
@@ -274,7 +281,7 @@ describe('Auth Utils', () => {
       }
       const mockToken = 'mock-jwt-token'
       mockCookieStore.get.mockReturnValue({ value: mockToken })
-      ;(jwtVerify as jest.Mock).mockResolvedValueOnce({
+      ;(jwtDecrypt as jest.Mock).mockResolvedValueOnce({
         payload: expiredSession
       })
 
@@ -287,17 +294,14 @@ describe('Auth Utils', () => {
     it('should return null when token verification fails', async () => {
       const mockToken = 'invalid-token'
       mockCookieStore.get.mockReturnValue({ value: mockToken })
-      ;(jwtVerify as jest.Mock).mockRejectedValueOnce(
+      ;(jwtDecrypt as jest.Mock).mockRejectedValueOnce(
         new Error('Invalid token')
       )
 
       const result = await getLoginSession()
 
       expect(result).toBeNull()
-      expect(console.error).toHaveBeenCalledWith(
-        'Session validation error:',
-        expect.any(Error)
-      )
+      expect(console.error).not.toHaveBeenCalled()
     })
 
     it('should return session even if token refresh would fail', async () => {
@@ -307,7 +311,7 @@ describe('Auth Utils', () => {
       }
       const mockToken = 'mock-jwt-token'
       mockCookieStore.get.mockReturnValue({ value: mockToken })
-      ;(jwtVerify as jest.Mock).mockResolvedValueOnce({
+      ;(jwtDecrypt as jest.Mock).mockResolvedValueOnce({
         payload: expiredSession
       })
 
@@ -324,7 +328,7 @@ describe('Auth Utils', () => {
       }
       const mockToken = 'mock-jwt-token'
       mockCookieStore.get.mockReturnValue({ value: mockToken })
-      ;(jwtVerify as jest.Mock).mockResolvedValueOnce({
+      ;(jwtDecrypt as jest.Mock).mockResolvedValueOnce({
         payload: expiredSession
       })
 
@@ -358,7 +362,7 @@ describe('Auth Utils', () => {
       const invalidSession = null
       const mockToken = 'mock-jwt-token'
       mockCookieStore.get.mockReturnValue({ value: mockToken })
-      ;(jwtVerify as jest.Mock).mockResolvedValueOnce({
+      ;(jwtDecrypt as jest.Mock).mockResolvedValueOnce({
         payload: invalidSession
       })
 
@@ -375,7 +379,7 @@ describe('Auth Utils', () => {
       }
       const mockToken = 'mock-jwt-token'
       mockCookieStore.get.mockReturnValue({ value: mockToken })
-      ;(jwtVerify as jest.Mock).mockResolvedValueOnce({
+      ;(jwtDecrypt as jest.Mock).mockResolvedValueOnce({
         payload: invalidSession
       })
 
@@ -397,7 +401,7 @@ describe('Auth Utils', () => {
       }
       const mockToken = 'mock-jwt-token'
       mockCookieStore.get.mockReturnValue({ value: mockToken })
-      ;(jwtVerify as jest.Mock).mockResolvedValueOnce({
+      ;(jwtDecrypt as jest.Mock).mockResolvedValueOnce({
         payload: invalidSession
       })
 
@@ -419,7 +423,7 @@ describe('Auth Utils', () => {
       }
       const mockToken = 'mock-jwt-token'
       mockCookieStore.get.mockReturnValue({ value: mockToken })
-      ;(jwtVerify as jest.Mock).mockResolvedValueOnce({
+      ;(jwtDecrypt as jest.Mock).mockResolvedValueOnce({
         payload: invalidSession
       })
 
@@ -436,7 +440,7 @@ describe('Auth Utils', () => {
       }
       const mockToken = 'mock-jwt-token'
       mockCookieStore.get.mockReturnValue({ value: mockToken })
-      ;(jwtVerify as jest.Mock).mockResolvedValueOnce({
+      ;(jwtDecrypt as jest.Mock).mockResolvedValueOnce({
         payload: sessionWithExpiredRefreshToken
       })
 
@@ -454,7 +458,7 @@ describe('Auth Utils', () => {
       }
       const mockToken = 'mock-jwt-token'
       mockCookieStore.get.mockReturnValue({ value: mockToken })
-      ;(jwtVerify as jest.Mock).mockResolvedValueOnce({
+      ;(jwtDecrypt as jest.Mock).mockResolvedValueOnce({
         payload: expiredSession
       })
 
@@ -472,7 +476,7 @@ describe('Auth Utils', () => {
       }
       const mockToken = 'mock-jwt-token'
       mockCookieStore.get.mockReturnValue({ value: mockToken })
-      ;(jwtVerify as jest.Mock).mockResolvedValueOnce({
+      ;(jwtDecrypt as jest.Mock).mockResolvedValueOnce({
         payload: expiredSession
       })
 

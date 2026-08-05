@@ -59,58 +59,60 @@ jest.mock('@/utils/auth/auth-provider', () => ({
   })
 }))
 
-// Mock matchMedia for tests
-Object.defineProperty(window, 'matchMedia', {
-  writable: true,
-  value: jest.fn().mockImplementation((query) => ({
-    matches: false,
-    media: query,
-    onchange: null,
-    addListener: jest.fn(), // deprecated
-    removeListener: jest.fn(), // deprecated
-    addEventListener: jest.fn(),
-    removeEventListener: jest.fn(),
-    dispatchEvent: jest.fn()
-  }))
-})
+if (typeof window !== 'undefined') {
+  // Mock matchMedia for tests
+  Object.defineProperty(window, 'matchMedia', {
+    writable: true,
+    value: jest.fn().mockImplementation((query) => ({
+      matches: false,
+      media: query,
+      onchange: null,
+      addListener: jest.fn(), // deprecated
+      removeListener: jest.fn(), // deprecated
+      addEventListener: jest.fn(),
+      removeEventListener: jest.fn(),
+      dispatchEvent: jest.fn()
+    }))
+  })
 
-// Polyfill ResizeObserver for Radix components in tests
-if (typeof window.ResizeObserver === 'undefined') {
-  class ResizeObserver {
-    observe() {}
-    unobserve() {}
-    disconnect() {}
+  // Polyfill ResizeObserver for Radix components in tests
+  if (typeof window.ResizeObserver === 'undefined') {
+    class ResizeObserver {
+      observe() {}
+      unobserve() {}
+      disconnect() {}
+    }
+
+    // @ts-ignore
+    window.ResizeObserver = ResizeObserver
   }
 
-  // @ts-ignore
-  window.ResizeObserver = ResizeObserver
-}
+  // beforeEach(() => {
+  //   jest.spyOn(console, 'error')
+  //   // @ts-ignore jest.spyOn adds this functionallity
+  //   console.error.mockImplementation(() => null)
+  // })
 
-// beforeEach(() => {
-//   jest.spyOn(console, 'error')
-//   // @ts-ignore jest.spyOn adds this functionallity
-//   console.error.mockImplementation(() => null)
-// })
+  // afterEach(() => {
+  //   // @ts-ignore jest.spyOn adds this functionallity
+  //   console.error.mockRestore()
+  // })
 
-// afterEach(() => {
-//   // @ts-ignore jest.spyOn adds this functionallity
-//   console.error.mockRestore()
-// })
+  class MockPointerEvent extends Event {
+    button: number
+    ctrlKey: boolean
+    pointerType: string
 
-class MockPointerEvent extends Event {
-  button: number
-  ctrlKey: boolean
-  pointerType: string
-
-  constructor(type: string, props: PointerEventInit) {
-    super(type, props)
-    this.button = props.button || 0
-    this.ctrlKey = props.ctrlKey || false
-    this.pointerType = props.pointerType || 'mouse'
+    constructor(type: string, props: PointerEventInit) {
+      super(type, props)
+      this.button = props.button || 0
+      this.ctrlKey = props.ctrlKey || false
+      this.pointerType = props.pointerType || 'mouse'
+    }
   }
-}
 
-window.PointerEvent = MockPointerEvent as any
-window.HTMLElement.prototype.scrollIntoView = jest.fn()
-window.HTMLElement.prototype.releasePointerCapture = jest.fn()
-window.HTMLElement.prototype.hasPointerCapture = jest.fn()
+  window.PointerEvent = MockPointerEvent as any
+  window.HTMLElement.prototype.scrollIntoView = jest.fn()
+  window.HTMLElement.prototype.releasePointerCapture = jest.fn()
+  window.HTMLElement.prototype.hasPointerCapture = jest.fn()
+}
