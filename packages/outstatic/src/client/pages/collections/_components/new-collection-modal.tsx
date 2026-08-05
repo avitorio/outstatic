@@ -136,6 +136,7 @@ export default function NewCollectionModal({
 
     setLoading(true)
     setHasChanges(false)
+    setError(false)
 
     try {
       const [collectionsJson, oid] = await Promise.all([
@@ -213,7 +214,12 @@ export default function NewCollectionModal({
       const input = commitApi.createInput()
 
       const onComplete = async () => {
-        await refetchCollections()
+        try {
+          await refetchCollections()
+        } catch (error) {
+          console.error('Failed to refresh collections after creation', error)
+        }
+
         setLoading(false)
         setHasChanges(false)
         onOpenChange(false)
@@ -223,44 +229,44 @@ export default function NewCollectionModal({
         }, 100)
       }
 
-      await toast.promise(
-        (async () => {
-          await mutation.mutateAsync(input)
+      toast.loading('Creating collection...', {
+        id: CREATE_COLLECTION_TOAST_ID
+      })
+      await mutation.mutateAsync(input)
 
-          const { data } = await refetchDocuments({
-            throwOnError: true
+      try {
+        const { data } = await refetchDocuments({
+          throwOnError: true
+        })
+
+        if (data?.documents && data.documents.length > 0) {
+          toast.loading('Indexing existing content...', {
+            id: CREATE_COLLECTION_TOAST_ID
           })
-
-          if (data?.documents && data.documents.length > 0) {
-            toast.loading('Indexing existing content...', {
-              id: CREATE_COLLECTION_TOAST_ID
-            })
-            await rebuildMetadata({
-              onComplete,
-              toastId: CREATE_COLLECTION_TOAST_ID
-            })
-          } else {
-            await onComplete()
-          }
-        })(),
-        {
-          id: CREATE_COLLECTION_TOAST_ID,
-          loading: 'Creating collection...',
-          success: {
-            message: 'Collection created successfully',
-            duration: CREATE_COLLECTION_TOAST_DURATION
-          },
-          error: () => {
-            setLoading(false)
-            setHasChanges(false)
-            setError(true)
-            return {
-              message: 'Failed to create collection',
-              duration: CREATE_COLLECTION_TOAST_DURATION
-            }
-          }
+          await rebuildMetadata({
+            toastId: CREATE_COLLECTION_TOAST_ID
+          })
         }
-      )
+
+        toast.success('Collection created successfully', {
+          id: CREATE_COLLECTION_TOAST_ID,
+          duration: CREATE_COLLECTION_TOAST_DURATION
+        })
+      } catch (error) {
+        console.error(
+          'Collection created, but existing content could not be indexed',
+          error
+        )
+        toast.warning(
+          'Collection created, but existing content could not be indexed.',
+          {
+            id: CREATE_COLLECTION_TOAST_ID,
+            duration: CREATE_COLLECTION_TOAST_DURATION
+          }
+        )
+      }
+
+      await onComplete()
     } catch (error) {
       console.error('Failed to create collection', error)
       toast.error('Failed to create collection.', {
