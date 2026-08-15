@@ -11,6 +11,15 @@ import { ClientError } from 'graphql-request'
 import { stringifyError } from '@/utils/errors/stringify-error'
 import { isGithubCredentialsError } from '@/utils/errors/is-github-credentials-error'
 
+// Whether this instance is running as part of the hosted Outstatic product
+// (set by RootProvider from OutstaticData.isHosted). Self-hosted instances
+// default to showing debugging affordances like "Copy Logs".
+let isHostedInstance = false
+
+export const setIsHosted = (value: boolean) => {
+  isHostedInstance = value
+}
+
 // Create a client
 export const queryClient = new QueryClient({
   queryCache: new QueryCache({
@@ -40,22 +49,27 @@ export const queryClient = new QueryClient({
             (query?.meta?.errorMessage as string) ||
             `Something went wrong: ${error.message}`
           console.error('Query error', { error, queryKey: query.queryKey })
+          // The "Copy Logs" action is a debugging affordance meant for
+          // self-hosted instances; hide it on the hosted product where
+          // end users shouldn't be exposed to raw error internals.
           const errorToast = toast.error(errorMessage, {
-            action: {
-              label: 'Copy Logs',
-              onClick: () => {
-                navigator.clipboard.writeText(
-                  `Query Key: ${JSON.stringify(
-                    query.queryKey,
-                    null,
-                    '  '
-                  )}\n\nError: ${stringifyError(error)}`
-                )
-                toast.message('Logs copied to clipboard', {
-                  id: errorToast
-                })
-              }
-            }
+            action: isHostedInstance
+              ? undefined
+              : {
+                  label: 'Copy Logs',
+                  onClick: () => {
+                    navigator.clipboard.writeText(
+                      `Query Key: ${JSON.stringify(
+                        query.queryKey,
+                        null,
+                        '  '
+                      )}\n\nError: ${stringifyError(error)}`
+                    )
+                    toast.message('Logs copied to clipboard', {
+                      id: errorToast
+                    })
+                  }
+                }
           })
         }
       }

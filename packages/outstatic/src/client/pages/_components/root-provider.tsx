@@ -6,7 +6,7 @@ import {
   setSessionUpdateCallback
 } from '@/utils/hooks/use-initial-data'
 import { AuthProvider, useAuth } from '@/utils/auth/auth-provider'
-import { queryClient } from '@/utils/react-query/query-client'
+import { queryClient, setIsHosted } from '@/utils/react-query/query-client'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { NavigationGuardProvider } from 'next-navigation-guard'
 import { ThemeProvider } from 'next-themes'
@@ -43,6 +43,10 @@ function RootProviderInner({ ostData, children }: RootProviderProps) {
   useEffect(() => {
     setSessionUpdateCallback(handleSessionUpdate)
   }, [handleSessionUpdate])
+
+  useEffect(() => {
+    setIsHosted(ostData.isHosted)
+  }, [ostData.isHosted])
 
   return (
     <InitialDataContext.Provider value={currentOstData}>
