@@ -7,7 +7,6 @@ import {
 } from '@/components/ui/shadcn/sidebar'
 import {
   Settings,
-  Bug,
   Folder,
   LayoutDashboard,
   Plus,
@@ -238,12 +237,6 @@ export const Sidebar = ({ additionalRoutes }: SidebarProps) => {
                   label: 'Settings',
                   path: `${dashboardRoute}/settings`,
                   Icon: <Settings className={'w-4'} />
-                },
-                {
-                  label: 'Bugs & Ideas',
-                  path: 'https://outstatic.featurebase.app/',
-                  newTab: true,
-                  Icon: <Bug className={'w-4'} />
                 }
               ].filter((route) => !!route)
             }
