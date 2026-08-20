@@ -6,7 +6,7 @@ import {
   CardTitle,
   CardContent
 } from '@/components/ui/shadcn/card'
-import { AdminLoading } from '@/components/admin-loading'
+import { ListPageSkeleton } from '@/components/skeletons/list-page-skeleton'
 import { Button } from '@/components/ui/shadcn/button'
 import { useGetDocuments } from '@/utils/hooks/use-get-documents'
 import Link from 'next/link'
@@ -32,7 +32,9 @@ export default function List({ slug, title }: ListProps) {
   const { canManageCollections } = usePermissions()
 
   // Don't show loading screen if we have an error (auth errors will be handled by session refresh)
-  if ((isPending || data?.documents === null) && !error) return <AdminLoading />
+  if ((isPending || data?.documents === null) && !error) {
+    return <ListPageSkeleton title={title} />
+  }
 
   return (
     <AdminLayout title={title}>

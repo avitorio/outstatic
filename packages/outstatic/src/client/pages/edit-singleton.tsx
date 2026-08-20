@@ -23,7 +23,7 @@ import { useSearchParams } from 'next/navigation'
 import matter from 'gray-matter'
 import { slugify } from 'transliteration'
 import { getFirstImageMediaSource } from '@/utils/media-config'
-import { AdminLoading } from '@/components/admin-loading'
+import { EditorPageSkeleton } from '@/components/skeletons/editor-page-skeleton'
 import { isFieldsOnlyModeEnabled } from '@/utils/hooks/field-schema'
 import { useUpgradeDialog } from '@/components/ui/outstatic/upgrade-dialog-context'
 import { useDemoWriteGuard } from '@/utils/hooks/use-demo-write-guard'
@@ -304,7 +304,7 @@ export default function EditSingleton({ slug: initialSlug }: { slug: string }) {
   }
 
   if (!isNew && isSchemaLoading) {
-    return <AdminLoading />
+    return <EditorPageSkeleton title={singletonTitle} />
   }
 
   return (

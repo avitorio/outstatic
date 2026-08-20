@@ -18,14 +18,6 @@ jest.mock('@/utils/hooks/use-outstatic', () => ({
   useOutstatic: () => mockUseOutstatic()
 }))
 
-jest.mock('@/components/admin-loading', () => {
-  const React = require('react')
-
-  return {
-    AdminLoading: () => React.createElement('div', null, 'Loading')
-  }
-})
-
 jest.mock('@/components/editor/editor-context', () => {
   const React = require('react')
 

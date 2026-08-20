@@ -4,7 +4,7 @@ import { useMemo, useState } from 'react'
 import { Blocks, Pencil, Plus, Search, Trash } from 'lucide-react'
 import { DynamicIcon, type IconName } from '@/components/ui/dynamic-icon'
 import { AdminLayout } from '@/components/admin-layout'
-import { AdminLoading } from '@/components/admin-loading'
+import { CardGridPageSkeleton } from '@/components/skeletons/card-grid-page-skeleton'
 import { Button } from '@/components/ui/shadcn/button'
 import {
   Card,
@@ -51,7 +51,9 @@ export default function BlockLibrary() {
   }, [blocks, searchTerm])
 
   if (isLoading) {
-    return <AdminLoading />
+    return (
+      <CardGridPageSkeleton title="Block Library" cards={6} cardActions={0} />
+    )
   }
 
   return (

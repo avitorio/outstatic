@@ -191,8 +191,8 @@ jest.mock('@/components/admin-layout', () => ({
   )
 }))
 
-jest.mock('@/components/admin-loading', () => ({
-  AdminLoading: () => <div>Loading</div>
+jest.mock('@/components/skeletons/fields-page-skeleton', () => ({
+  FieldsPageSkeleton: () => <div>Loading</div>
 }))
 
 jest.mock('@/components/ui/outstatic/line-background', () => ({

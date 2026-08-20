@@ -2,11 +2,10 @@
 import { OutstaticData } from '@/app'
 import { AdminHeader } from '@/components/admin-header'
 import { Sidebar } from '@/components/sidebar'
-import { AdminLoading } from '@/components/admin-loading'
 import { useOutstatic, useLocalData } from '@/utils/hooks/use-outstatic'
 import { useDashboardFavicon } from '@/utils/hooks/use-dashboard-favicon'
 import { useEffect } from 'react'
-import { Router } from '../router'
+import { Router, RouteSkeleton } from '../router'
 import Login from './login'
 import Welcome from './welcome'
 import { useGetRepository } from '@/utils/hooks/use-get-repository'
@@ -80,7 +79,7 @@ export const Main = ({ params }: { params: { ost: string[] } }) => {
   return (
     <>
       {isPending || localPending ? (
-        <AdminLoading />
+        <RouteSkeleton params={params} />
       ) : !repoSlug || !repoOwner ? (
         <Onboarding />
       ) : (

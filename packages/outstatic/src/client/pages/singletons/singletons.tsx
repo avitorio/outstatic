@@ -1,5 +1,5 @@
 import { AdminLayout } from '@/components/admin-layout'
-import { AdminLoading } from '@/components/admin-loading'
+import { ListPageSkeleton } from '@/components/skeletons/list-page-skeleton'
 import { Button } from '@/components/ui/shadcn/button'
 import { useGetMetadata } from '@/utils/hooks/use-get-metadata'
 import Link from 'next/link'
@@ -30,7 +30,7 @@ export default function Singletons() {
     )
   }, [metadataData])
 
-  if (isPending) return <AdminLoading />
+  if (isPending) return <ListPageSkeleton title="Singletons" />
 
   return (
     <AdminLayout title="Singletons">

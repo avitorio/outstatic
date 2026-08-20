@@ -1,5 +1,5 @@
 import { AdminLayout } from '@/components/admin-layout'
-import { AdminLoading } from '@/components/admin-loading'
+import { CardGridPageSkeleton } from '@/components/skeletons/card-grid-page-skeleton'
 import { Button } from '@/components/ui/shadcn/button'
 import { CollectionType, useCollections } from '@/utils/hooks/use-collections'
 import { Card, CardContent } from '@/components/ui/shadcn/card'
@@ -23,7 +23,7 @@ export default function Collections() {
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [showNewCollectionModal, setShowNewCollectionModal] = useState(false)
 
-  if (isPending) return <AdminLoading />
+  if (isPending) return <CardGridPageSkeleton title="Collections" />
 
   return (
     <AdminLayout title="Collections">

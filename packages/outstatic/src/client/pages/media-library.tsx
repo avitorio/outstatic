@@ -34,6 +34,7 @@ import {
 } from '@/components/ui/outstatic/media-library-header'
 import { MediaSettingsDialog } from '@/components/ui/outstatic/media-settings-dialog'
 import { SpinnerIcon } from '@/components/ui/outstatic/spinner-icon'
+import { MediaGridSkeleton } from '@/components/skeletons/media-grid-skeleton'
 import { Card, CardContent } from '@/components/ui/shadcn/card'
 import { API_MEDIA_PATH } from '@/utils/constants'
 import { createCommitApi } from '@/utils/create-commit-api'
@@ -787,9 +788,7 @@ export default function MediaLibrary() {
           onFileDrop={handleFileUpload}
         >
           {isLoading && !data ? (
-            <div className="flex min-h-[50vh] items-center justify-center">
-              <SpinnerIcon size="2xl" />
-            </div>
+            <MediaGridSkeleton />
           ) : filteredFiles.length === 0 ? (
             <div className="flex min-h-[50vh] flex-col items-center justify-center text-gray-500">
               <FileQuestion className="mb-4 h-16 w-16" />

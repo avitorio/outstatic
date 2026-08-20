@@ -59,8 +59,8 @@ jest.mock('@/components/admin-layout', () => ({
     </div>
   )
 }))
-jest.mock('@/components/admin-loading', () => ({
-  AdminLoading: () => <div>Loading</div>
+jest.mock('@/components/skeletons/fields-page-skeleton', () => ({
+  FieldsPageSkeleton: () => <div>Loading</div>
 }))
 
 describe('<CustomFields />', () => {

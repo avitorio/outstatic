@@ -1,5 +1,5 @@
 import { AdminLayout } from '@/components/admin-layout'
-import { AdminLoading } from '@/components/admin-loading'
+import { DashboardSkeleton } from '@/components/skeletons/dashboard-skeleton'
 import { Button } from '@/components/ui/shadcn/button'
 import { useCollections } from '@/utils/hooks/use-collections'
 import { useSingletons } from '@/utils/hooks/use-singletons'
@@ -37,7 +37,7 @@ export default function Dashboard() {
   const hasSingletons = singletons && singletons.length > 0
   const hasContent = hasCollections || hasSingletons
 
-  if (isPending) return <AdminLoading />
+  if (isPending) return <DashboardSkeleton />
 
   return (
     <AdminLayout title={'Dashboard'}>

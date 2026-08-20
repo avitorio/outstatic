@@ -5,7 +5,7 @@ import { CSS } from '@dnd-kit/utilities'
 import { useEffect, useMemo, useState } from 'react'
 import { GripVertical, Trash } from 'lucide-react'
 import { AdminLayout } from '@/components/admin-layout'
-import { AdminLoading } from '@/components/admin-loading'
+import { FieldsPageSkeleton } from '@/components/skeletons/fields-page-skeleton'
 import { Button } from '@/components/ui/shadcn/button'
 import {
   Card,
@@ -392,7 +392,7 @@ export const FieldManagementPage = ({
   }
 
   if (isLoading || (target.kind === 'collection' && collectionsPending)) {
-    return <AdminLoading />
+    return <FieldsPageSkeleton title="Add Custom Fields" />
   }
 
   return (

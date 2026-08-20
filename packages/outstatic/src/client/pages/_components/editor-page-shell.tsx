@@ -1,4 +1,5 @@
 import { AdminLayout } from '@/components/admin-layout'
+import { EditorPageSkeleton } from '@/components/skeletons/editor-page-skeleton'
 import { DocumentSettings } from '@/components/document-settings'
 import { DocumentTitleInput } from '@/components/document-title-input'
 import { MDEditor } from '@/components/editor/editor'
@@ -82,6 +83,10 @@ export function EditorPageShell({
       standalone={fieldsOnlyMode}
     />
   )
+
+  if (!editor) {
+    return <EditorPageSkeleton title={title} fieldsOnlyMode={fieldsOnlyMode} />
+  }
 
   return (
     <>

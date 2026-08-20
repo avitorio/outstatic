@@ -60,6 +60,25 @@ describe('List', () => {
     ).toHaveAttribute('href', '/outstatic/collections/blog')
   })
 
+  it('renders a table skeleton with the collection title while loading', () => {
+    ;(useGetDocuments as jest.Mock).mockReturnValue({
+      data: undefined,
+      isPending: true,
+      error: null
+    })
+
+    render(
+      <TestWrapper>
+        <List slug="blog" title="Blog" />
+      </TestWrapper>
+    )
+
+    expect(screen.getByTestId('admin-loading')).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Blog' })).toBeInTheDocument()
+    expect(screen.getByRole('table')).toBeInTheDocument()
+    expect(screen.queryByText('Documents table')).not.toBeInTheDocument()
+  })
+
   it('hides the collection settings link for users without collections.manage', () => {
     ;(useOutstatic as jest.Mock).mockReturnValue({
       dashboardRoute: '/outstatic',

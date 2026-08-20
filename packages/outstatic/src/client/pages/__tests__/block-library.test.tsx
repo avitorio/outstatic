@@ -22,8 +22,8 @@ jest.mock('@/components/admin-layout', () => ({
     </div>
   )
 }))
-jest.mock('@/components/admin-loading', () => ({
-  AdminLoading: () => <div data-testid="admin-loading">Loading</div>
+jest.mock('@/components/skeletons/card-grid-page-skeleton', () => ({
+  CardGridPageSkeleton: () => <div data-testid="admin-loading">Loading</div>
 }))
 jest.mock('../_components/block-dialog', () => ({
   BlockDialog: ({ open, mode }: { open: boolean; mode: 'add' | 'edit' }) =>

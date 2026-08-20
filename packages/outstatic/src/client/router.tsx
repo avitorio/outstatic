@@ -1,4 +1,10 @@
-import { AdminLoading } from '@/components/admin-loading'
+import { CardGridPageSkeleton } from '@/components/skeletons/card-grid-page-skeleton'
+import { DashboardSkeleton } from '@/components/skeletons/dashboard-skeleton'
+import { EditorPageSkeleton } from '@/components/skeletons/editor-page-skeleton'
+import { FieldsPageSkeleton } from '@/components/skeletons/fields-page-skeleton'
+import { ListPageSkeleton } from '@/components/skeletons/list-page-skeleton'
+import { MediaLibraryPageSkeleton } from '@/components/skeletons/media-library-page-skeleton'
+import { SettingsPageSkeleton } from '@/components/skeletons/settings-page-skeleton'
 import { useCollections } from '@/utils/hooks/use-collections'
 import { useSingletons } from '@/utils/hooks/use-singletons'
 import { useOutstatic } from '@/utils/hooks/use-outstatic'
@@ -149,6 +155,56 @@ const renderRoute = ({
   return DEFAULT_PAGES[slug]
 }
 
+// Route-aware loading state, based only on the URL segments so the skeleton
+// matches the page that is about to render.
+const renderRouteSkeleton = ({
+  slug,
+  slug2,
+  slug3
+}: Pick<RouteParams, 'slug' | 'slug2' | 'slug3'>): ReactElement => {
+  if (!slug) {
+    return <DashboardSkeleton />
+  }
+
+  if (slug === 'collections') {
+    return slug2 ? (
+      <FieldsPageSkeleton title="Add Custom Fields" />
+    ) : (
+      <CardGridPageSkeleton title="Collections" />
+    )
+  }
+
+  if (slug === 'singletons') {
+    if (slug3 === 'fields') {
+      return <FieldsPageSkeleton title="Add Custom Fields" />
+    }
+    return slug2 ? (
+      <EditorPageSkeleton />
+    ) : (
+      <ListPageSkeleton title="Singletons" />
+    )
+  }
+
+  if (slug === 'block-library') {
+    return (
+      <CardGridPageSkeleton title="Block Library" cards={6} cardActions={0} />
+    )
+  }
+
+  if (slug === 'settings') {
+    return <SettingsPageSkeleton />
+  }
+
+  if (slug === 'media-library') {
+    return <MediaLibraryPageSkeleton />
+  }
+
+  return slug2 ? <EditorPageSkeleton /> : <ListPageSkeleton />
+}
+
+export const RouteSkeleton = ({ params }: RouterProps) =>
+  renderRouteSkeleton(getRouteParams(params))
+
 export const Router = ({ params }: RouterProps) => {
   const {
     data: collections,
@@ -166,11 +222,12 @@ export const Router = ({ params }: RouterProps) => {
   const isIdle =
     collectionsFetchStatus === 'idle' && singletonsFetchStatus === 'idle'
 
+  const routeParams = getRouteParams(params)
+
   if (isPending && !isIdle) {
-    return <AdminLoading />
+    return renderRouteSkeleton(routeParams)
   }
 
-  const routeParams = getRouteParams(params)
   routeParams.collections = collections || []
   routeParams.singletons = singletons || []
   routeParams.pages = pages || []

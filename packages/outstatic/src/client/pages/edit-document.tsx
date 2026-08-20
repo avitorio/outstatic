@@ -13,7 +13,7 @@ import { noCase } from 'change-case'
 import { EditorPageShell } from './_components/editor-page-shell'
 import { useEditorPageState } from './_components/use-editor-page-state'
 import { getFirstImageMediaSource } from '@/utils/media-config'
-import { AdminLoading } from '@/components/admin-loading'
+import { EditorPageSkeleton } from '@/components/skeletons/editor-page-skeleton'
 import { isFieldsOnlyModeEnabled } from '@/utils/hooks/field-schema'
 import { useUpgradeDialog } from '@/components/ui/outstatic/upgrade-dialog-context'
 import { useDemoWriteGuard } from '@/utils/hooks/use-demo-write-guard'
@@ -158,7 +158,7 @@ export default function EditDocument({ collection }: { collection: string }) {
   }
 
   if (isSchemaLoading) {
-    return <AdminLoading />
+    return <EditorPageSkeleton />
   }
 
   return (
