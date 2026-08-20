@@ -1,5 +1,23 @@
 # outstatic
 
+## 2.2.4
+
+### Patch Changes
+
+- 89a79a1: Focus the title when opening document and singleton editors.
+- c987e8a: Add read-only demo project support with prompts that guide users to create an editable project.
+- 5c0a97b: Encrypt session cookies and derive a unique session key from existing server credentials when no dedicated token secret is configured.
+
+  Existing sessions are signed out once on upgrade because previously signed cookies are no longer accepted.
+
+- 9c8a5f5: Prevent successful collection creation from being reported as failed when follow-up content indexing fails.
+- 87800e3: Hide the "Copy Logs" debugging action on error toasts when running the hosted Outstatic product, keeping it available for self-hosted instances.
+- 4c50b9f: Protect signout requests against cross-site request forgery.
+- e810bec: Prevent the editor bubble menu from appearing inside MDX and code blocks.
+- 5f975b0: Remove the "Bugs & Ideas" item from the sidebar.
+- b264733: Protect local GitHub OAuth logins against login CSRF with state validation.
+- c7c05fd: Loading states now mirror the page they precede: document lists and singletons show a table skeleton, the editor shows a title, body and sidebar skeleton, collections and the block library show card grids, custom fields show field cards, and the media library shows a media grid instead of a spinner.
+
 ## 2.2.3
 
 ### Patch Changes
