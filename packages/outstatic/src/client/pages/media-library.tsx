@@ -784,8 +784,9 @@ export default function MediaLibrary() {
           className="min-h-[50vh] h-[calc(100vh-240px)]"
           disabled={isUploading}
           dropLabel="Drop media to upload"
-          dropDescription="Outstatic will upload up to 10 files you drop here."
+          dropDescription="Outstatic will upload up to 10 files you drop or paste here."
           onFileDrop={handleFileUpload}
+          onFilePaste={handleFileUpload}
         >
           {isLoading && !data ? (
             <MediaGridSkeleton />
@@ -794,7 +795,7 @@ export default function MediaLibrary() {
               <FileQuestion className="mb-4 h-16 w-16" />
               <p>
                 No media files available for this source. Upload some files or
-                drop media here to get started.
+                drop or paste media here to get started.
               </p>
             </div>
           ) : (

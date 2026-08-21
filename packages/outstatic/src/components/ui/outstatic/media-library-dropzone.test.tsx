@@ -69,4 +69,105 @@ describe('<MediaLibraryDropzone />', () => {
     expect(dropEvent.defaultPrevented).toBe(true)
     expect(dataTransfer.dropEffect).toBe('none')
   })
+
+  it('forwards pasted files', () => {
+    const onFileDrop = jest.fn()
+    const onFilePaste = jest.fn()
+    const file = new File(['image'], 'photo.png', { type: 'image/png' })
+
+    render(
+      <MediaLibraryDropzone onFileDrop={onFileDrop} onFilePaste={onFilePaste}>
+        <div>Media content</div>
+      </MediaLibraryDropzone>
+    )
+
+    fireEvent.paste(document.body, {
+      clipboardData: { files: createFileList([file]), items: [] }
+    })
+
+    expect(onFilePaste).toHaveBeenCalledWith([file])
+  })
+
+  it('names pasted files that arrive without a filename', () => {
+    const onFileDrop = jest.fn()
+    const onFilePaste = jest.fn()
+    const file = new File(['image'], '', { type: 'image/png' })
+
+    render(
+      <MediaLibraryDropzone onFileDrop={onFileDrop} onFilePaste={onFilePaste}>
+        <div>Media content</div>
+      </MediaLibraryDropzone>
+    )
+
+    fireEvent.paste(document.body, {
+      clipboardData: { files: createFileList([file]), items: [] }
+    })
+
+    const [pastedFiles] = onFilePaste.mock.calls[0]
+
+    expect(pastedFiles).toHaveLength(1)
+    expect(pastedFiles[0].name).toMatch(/^pasted-\d+-0\.png$/)
+  })
+
+  it('ignores pastes without files', () => {
+    const onFileDrop = jest.fn()
+    const onFilePaste = jest.fn()
+
+    render(
+      <MediaLibraryDropzone onFileDrop={onFileDrop} onFilePaste={onFilePaste}>
+        <div>Media content</div>
+      </MediaLibraryDropzone>
+    )
+
+    fireEvent.paste(document.body, {
+      clipboardData: { files: createFileList([]), items: [] }
+    })
+
+    expect(onFilePaste).not.toHaveBeenCalled()
+  })
+
+  it('ignores pasted files when disabled', () => {
+    const onFileDrop = jest.fn()
+    const onFilePaste = jest.fn()
+    const file = new File(['image'], 'photo.png', { type: 'image/png' })
+
+    render(
+      <MediaLibraryDropzone
+        disabled
+        onFileDrop={onFileDrop}
+        onFilePaste={onFilePaste}
+      >
+        <div>Media content</div>
+      </MediaLibraryDropzone>
+    )
+
+    fireEvent.paste(document.body, {
+      clipboardData: { files: createFileList([file]), items: [] }
+    })
+
+    expect(onFilePaste).not.toHaveBeenCalled()
+  })
+
+  it('ignores pastes coming from an unrelated dialog', () => {
+    const onFileDrop = jest.fn()
+    const onFilePaste = jest.fn()
+    const file = new File(['image'], 'photo.png', { type: 'image/png' })
+
+    render(
+      <>
+        <MediaLibraryDropzone onFileDrop={onFileDrop} onFilePaste={onFilePaste}>
+          <div>Media content</div>
+        </MediaLibraryDropzone>
+        <div role="dialog">
+          <input aria-label="Settings" />
+        </div>
+      </>
+    )
+
+    fireEvent.paste(screen.getByLabelText('Settings'), {
+      clipboardData: { files: createFileList([file]), items: [] }
+    })
+
+    expect(onFilePaste).not.toHaveBeenCalled()
+  })
 })

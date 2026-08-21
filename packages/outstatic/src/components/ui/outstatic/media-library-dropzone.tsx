@@ -6,6 +6,7 @@ import {
   type DragEvent,
   type ReactNode,
   useCallback,
+  useEffect,
   useRef,
   useState
 } from 'react'
@@ -17,10 +18,48 @@ type MediaLibraryDropzoneProps = {
   dropLabel?: string
   dropDescription?: string
   onFileDrop: (files: FileList | null) => void
+  onFilePaste?: (files: File[]) => void
 }
 
 const isFileDragEvent = (event: DragEvent<HTMLDivElement>) =>
   Array.from(event.dataTransfer?.types ?? []).includes('Files')
+
+const getExtensionFromType = (type: string) => {
+  const subtype = type.split('/')[1]?.split(';')[0]?.split('+').pop()
+
+  return subtype ? `.${subtype}` : ''
+}
+
+// Pasted screenshots often arrive without a usable filename, which would make
+// them fail the media source extension check.
+const withPasteFilename = (file: File, index: number) => {
+  if (file.name.includes('.')) {
+    return file
+  }
+
+  const extension = getExtensionFromType(file.type)
+
+  if (!extension) {
+    return null
+  }
+
+  return new File([file], `pasted-${Date.now()}-${index}${extension}`, {
+    type: file.type
+  })
+}
+
+const getPastedFiles = (clipboardData: DataTransfer | null) => {
+  const files = clipboardData?.files?.length
+    ? Array.from(clipboardData.files)
+    : Array.from(clipboardData?.items ?? [])
+        .filter((item) => item.kind === 'file')
+        .map((item) => item.getAsFile())
+        .filter((file): file is File => Boolean(file))
+
+  return files
+    .map(withPasteFilename)
+    .filter((file): file is File => Boolean(file))
+}
 
 export function MediaLibraryDropzone({
   children,
@@ -28,9 +67,11 @@ export function MediaLibraryDropzone({
   disabled = false,
   dropLabel = 'Drop media to upload',
   dropDescription = 'Outstatic will upload up to 10 files you drop here.',
-  onFileDrop
+  onFileDrop,
+  onFilePaste
 }: MediaLibraryDropzoneProps) {
   const dragDepth = useRef(0)
+  const containerRef = useRef<HTMLDivElement>(null)
   const [isDragging, setIsDragging] = useState(false)
 
   const handleDragEnter = useCallback(
@@ -111,8 +152,48 @@ export function MediaLibraryDropzone({
     [disabled, onFileDrop]
   )
 
+  // Pasting is a document-level gesture, so it can only be observed by
+  // listening on the document rather than on the dropzone itself.
+  useEffect(() => {
+    if (!onFilePaste || disabled) {
+      return
+    }
+
+    const isPasteFromOtherDialog = (target: EventTarget | null) => {
+      if (!(target instanceof Element)) {
+        return false
+      }
+
+      const dialog = target.closest('[role="dialog"]')
+
+      return Boolean(dialog) && !dialog?.contains(containerRef.current)
+    }
+
+    const handlePaste = (event: ClipboardEvent) => {
+      if (isPasteFromOtherDialog(event.target)) {
+        return
+      }
+
+      const files = getPastedFiles(event.clipboardData)
+
+      if (files.length === 0) {
+        return
+      }
+
+      event.preventDefault()
+      onFilePaste(files)
+    }
+
+    document.addEventListener('paste', handlePaste)
+
+    return () => {
+      document.removeEventListener('paste', handlePaste)
+    }
+  }, [disabled, onFilePaste])
+
   return (
     <div
+      ref={containerRef}
       data-testid="media-library-dropzone"
       className={cn(
         'relative rounded-xl transition-colors',
