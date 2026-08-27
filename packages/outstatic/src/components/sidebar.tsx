@@ -227,12 +227,16 @@ export const Sidebar = ({ additionalRoutes }: SidebarProps) => {
                     </UpgradeDialog>
                   )
                 },
-                {
-                  label: 'API Keys',
-                  path: `${dashboardRoute}/redirect?redirectTo=${encodeURIComponent(apiKeysRedirectPath)}`,
-                  newTab: true,
-                  Icon: <Key className={'w-4'} />
-                },
+                ...(isPro
+                  ? [
+                      {
+                        label: 'API Keys',
+                        path: `${dashboardRoute}/redirect?redirectTo=${encodeURIComponent(apiKeysRedirectPath)}`,
+                        newTab: true,
+                        Icon: <Key className={'w-4'} />
+                      }
+                    ]
+                  : []),
                 {
                   label: 'Settings',
                   path: `${dashboardRoute}/settings`,

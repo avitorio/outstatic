@@ -64,11 +64,13 @@ describe('<Sidebar />', () => {
     mockUseSingletons.mockReturnValue({ data: [] })
   })
 
-  const renderSidebar = async () => {
+  const renderSidebar = async (
+    initialData: typeof mockProviderProps = mockProviderProps
+  ) => {
     await act(async () => {
       render(
         <TestWrapper>
-          <InitialDataContext.Provider value={mockProviderProps}>
+          <InitialDataContext.Provider value={initialData}>
             <Sidebar />
           </InitialDataContext.Provider>
         </TestWrapper>
@@ -217,6 +219,18 @@ describe('<Sidebar />', () => {
       await renderSidebar()
 
       expect(screen.getAllByText('Settings')).toHaveLength(2)
+    })
+
+    it('does not render API Keys for non-Pro users', async () => {
+      await renderSidebar()
+
+      expect(screen.queryByText('API Keys')).not.toBeInTheDocument()
+    })
+
+    it('renders API Keys for Pro users', async () => {
+      await renderSidebar({ ...mockProviderProps, isPro: true })
+
+      expect(screen.getByText('API Keys')).toBeInTheDocument()
     })
   })
 
