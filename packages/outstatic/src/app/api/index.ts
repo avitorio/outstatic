@@ -12,6 +12,7 @@ import refresh from '@/app/api/auth/refresh'
 import generate from '@/app/api/generate'
 import scan from '@/app/api/scan'
 import media from '@/app/api/media'
+import version from '@/app/api/version'
 import { GET as githubGet, POST as githubPost } from '@/app/api/github'
 import { NextRequest } from 'next/server'
 
@@ -37,6 +38,7 @@ const getPaths: Record<string, RouteHandler> = {
   login,
   user,
   media,
+  version,
   github: githubGet,
   'magic-link-callback': magicLinkCallback,
   'google-login': googleLoginGet

@@ -4,6 +4,7 @@ import { TestWrapper } from '@/utils/tests/test-wrapper'
 import { render, screen, fireEvent } from '@testing-library/react'
 import { act } from 'react'
 import { Sidebar } from '@/components/sidebar'
+import { OUTSTATIC_VERSION } from '@/utils/constants'
 
 jest.mock('next/navigation', () => ({
   useRouter() {
@@ -231,6 +232,37 @@ describe('<Sidebar />', () => {
       await renderSidebar({ ...mockProviderProps, isPro: true })
 
       expect(screen.getByText('API Keys')).toBeInTheDocument()
+    })
+
+    it('renders the installed version on self-hosted instances', async () => {
+      await renderSidebar()
+
+      expect(screen.getByText(`v${OUTSTATIC_VERSION}`)).toBeInTheDocument()
+    })
+
+    it('shows a badge when a newer version is available', async () => {
+      fetchMock.mockResolvedValueOnce({
+        ok: true,
+        json: () =>
+          Promise.resolve({
+            currentVersion: OUTSTATIC_VERSION,
+            latestVersion: '9.0.0',
+            updateAvailable: true
+          })
+      } as Response)
+
+      await renderSidebar()
+
+      expect(await screen.findByText('New version')).toBeInTheDocument()
+    })
+
+    it('does not check or render a version on hosted instances', async () => {
+      await renderSidebar({ ...mockProviderProps, isHosted: true })
+
+      expect(
+        screen.queryByText(`v${OUTSTATIC_VERSION}`)
+      ).not.toBeInTheDocument()
+      expect(fetchMock).not.toHaveBeenCalled()
     })
   })
 

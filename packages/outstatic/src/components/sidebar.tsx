@@ -3,7 +3,12 @@ import { z } from 'zod/v4'
 import {
   Sidebar as SidebarUI,
   SidebarContent,
-  SidebarHeader
+  SidebarFooter,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  useSidebar
 } from '@/components/ui/shadcn/sidebar'
 import {
   Settings,
@@ -30,7 +35,7 @@ import { TooltipProvider } from '@/components/ui/shadcn/tooltip'
 import { Tooltip } from '@/components/ui/shadcn/tooltip'
 import { singular } from 'pluralize'
 import { Badge } from './ui/shadcn/badge'
-import { OUTSTATIC_APP_URL } from '@/utils/constants'
+import { OUTSTATIC_APP_URL, OUTSTATIC_VERSION } from '@/utils/constants'
 import { UpgradeDialog } from './ui/outstatic/upgrade-dialog'
 import { cn } from '@/utils/ui'
 import { useCallback, useMemo } from 'react'
@@ -40,6 +45,9 @@ import {
   buildOutstaticCallbackOrigin
 } from '@/utils/build-api-key-signup-url'
 import { useClientOrigin } from '@/utils/hooks/use-client-origin'
+import { useOutstaticVersion } from '@/utils/hooks/use-outstatic-version'
+
+const OUTSTATIC_NPM_URL = 'https://www.npmjs.com/package/outstatic'
 
 type SidebarProps = {
   /** Additional routes to append or replace default settings routes */
@@ -48,12 +56,22 @@ type SidebarProps = {
 }
 
 export const Sidebar = ({ additionalRoutes }: SidebarProps) => {
-  const { dashboardRoute, isPro, projectInfo, session, basePath } =
+  const { dashboardRoute, isPro, projectInfo, session, basePath, isHosted } =
     useOutstatic()
   const { data: collections } = useCollections()
   const { data: singletons } = useSingletons()
   const userPermissions = session?.user?.permissions
   const clientOrigin = useClientOrigin()
+  const { isMobile, open } = useSidebar()
+  const showVersionDetails = open || isMobile
+  const { data: versionCheck } = useOutstaticVersion({
+    basePath,
+    enabled: !isHosted
+  })
+  const updateAvailable = versionCheck?.updateAvailable === true
+  const versionTooltip = updateAvailable
+    ? `Outstatic v${OUTSTATIC_VERSION}. Version ${versionCheck.latestVersion} is available.`
+    : `Outstatic v${OUTSTATIC_VERSION}`
 
   const hasPermission = useCallback(
     (permission: AppPermissions) => {
@@ -259,6 +277,41 @@ export const Sidebar = ({ additionalRoutes }: SidebarProps) => {
       <SidebarContent>
         <SidebarNavigation config={config} />
       </SidebarContent>
+      {!isHosted ? (
+        <SidebarFooter className="border-sidebar-border border-t">
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <SidebarMenuButton asChild tooltip={versionTooltip}>
+                <a
+                  href={OUTSTATIC_NPM_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={versionTooltip}
+                >
+                  <span
+                    className={cn('text-xs', {
+                      'sr-only': !showVersionDetails
+                    })}
+                  >
+                    v{OUTSTATIC_VERSION}
+                  </span>
+                  {updateAvailable ? (
+                    <Badge
+                      variant="secondary"
+                      className={cn(
+                        'ml-auto h-5 px-1.5 text-[10px] leading-none',
+                        { hidden: !showVersionDetails }
+                      )}
+                    >
+                      New version
+                    </Badge>
+                  ) : null}
+                </a>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          </SidebarMenu>
+        </SidebarFooter>
+      ) : null}
     </SidebarUI>
   )
 }
