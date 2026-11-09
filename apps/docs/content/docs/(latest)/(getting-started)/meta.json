@@ -4,7 +4,10 @@
   "pages": [
     "getting-started-with-next-js",
     "using-outstatic-for-markdown-content",
-    "deploy-a-starter-outstatic-website-on-vercel"
+    "deploy-a-starter-outstatic-website-on-vercel",
+    "deploy-a-starter-outstatic-website-on-vercel-api-key",
+    "deploy-an-outstatic-project-on-vercel",
+    "generate-api-keys-for-vercel-projects"
   ],
   "collapsible": true
 }
