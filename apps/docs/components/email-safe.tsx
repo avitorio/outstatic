@@ -7,7 +7,7 @@ export function EmailSafe({ children }: { children: ReactNode }) {
     <>
       <span dangerouslySetInnerHTML={{ __html: '<!--email_off-->' }} />
       {children}
-      <span dangerouslySetInnerHTML={{ __html: '<!--email_on-->' }} />
+      <span dangerouslySetInnerHTML={{ __html: '<!--/email_off-->' }} />
     </>
   )
 }

@@ -15,12 +15,7 @@ export function canonicalDocsUrl(pageUrl: string): string {
   if (pageUrl === '/' || pageUrl === '') return DOCS_CANONICAL_BASE
 
   const path = pageUrl.startsWith('/') ? pageUrl : `/${pageUrl}`
-  const absolute =
-    path === '/docs' || path.startsWith('/docs/')
-      ? `${DOCS_ORIGIN}${path}`
-      : `${DOCS_CANONICAL_BASE}${path}`
-
-  return absolute.replace(/\/+$/, '')
+  return `${DOCS_CANONICAL_BASE}${path}`.replace(/\/+$/, '')
 }
 
 export async function buildDocsStructuredData(page: DocsPage) {
@@ -100,7 +95,7 @@ function cleanAnswer(value: string) {
     .replace(/\[([^\]]+)]\([^)]*\)/g, '$1')
     .replace(/\s*\[#[^\]]*]/g, ' ')
     .replace(/<[^>]+>/g, ' ')
-    .replace(/[#>*_`|]/g, ' ')
+    .replace(/[#>*`|]/g, ' ')
     .replace(/\s+/g, ' ')
     .trim()
 

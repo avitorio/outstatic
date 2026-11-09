@@ -1,3 +1,6 @@
+'use client'
+
+import { useEffect, useRef } from 'react'
 import { docsBaseRoute } from '@/lib/shared'
 
 // Media files live in public/docs/images. The docs app basePath is /docs, so
@@ -24,9 +27,23 @@ export function LoopVideo({
   height: number
   label: string
 }) {
+  const videoRef = useRef<HTMLVideoElement>(null)
+
+  // Autoplay from here rather than the autoPlay attribute, so visitors who
+  // prefer reduced motion get a paused video they can start themselves.
+  useEffect(() => {
+    const video = videoRef.current
+    if (!video) return
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+
+    video.muted = true
+    video.play().catch(() => {})
+  }, [])
+
   return (
     <video
-      autoPlay
+      ref={videoRef}
+      controls
       loop
       muted
       playsInline
