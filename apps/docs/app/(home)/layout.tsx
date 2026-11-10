@@ -6,6 +6,7 @@ import type { Metadata } from 'next'
 import { docsBaseRoute } from '@/lib/shared'
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://outstatic.com'),
   icons: {
     icon: [{ url: `${docsBaseRoute}/favicon/favicon-96x96.png` }],
     apple: [{ url: `${docsBaseRoute}/favicon/apple-touch-icon.png` }]

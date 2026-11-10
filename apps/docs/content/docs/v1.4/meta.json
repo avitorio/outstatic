@@ -3,6 +3,7 @@
   "description": "1.4.0",
   "root": true,
   "pages": [
+    "index",
     "introduction",
     "getting-started",
     "local-development",
