@@ -1,10 +1,10 @@
 import { createSyncStoragePersister } from '@tanstack/query-sync-storage-persister'
+import type { PersistQueryClientOptions } from '@tanstack/react-query-persist-client'
 import {
   QueryCache,
   QueryClient,
   keepPreviousData
 } from '@tanstack/react-query'
-import { persistQueryClient } from '@tanstack/react-query-persist-client'
 import { compress, decompress } from 'lz-string'
 import { toast } from 'sonner'
 import { ClientError } from 'graphql-request'
@@ -24,6 +24,10 @@ export const setIsHosted = (value: boolean) => {
 export const queryClient = new QueryClient({
   queryCache: new QueryCache({
     onError: (error, query) => {
+      if (query.meta?.suppressErrorToast) {
+        return
+      }
+
       if (query.state.error !== undefined) {
         // Check for 401/403 authentication errors
         // Note: GraphQL 401/403 errors are handled by the GraphQL interceptor
@@ -105,18 +109,18 @@ export const queryClient = new QueryClient({
   }
 })
 
-persistQueryClient({
-  queryClient,
+export const queryPersistOptions = {
   persister: createSyncStoragePersister({
     storage: !(typeof window === 'undefined') ? window.localStorage : undefined,
+    throttleTime: 0,
     serialize: (data) => compress(JSON.stringify(data)),
     deserialize: (data) => JSON.parse(decompress(data))
   }),
   maxAge: Infinity,
   dehydrateOptions: {
-    // persist only offlineFirst queries
+    // Persist only successful queries that explicitly opt in.
     shouldDehydrateQuery: (query) => {
-      return !!query?.meta?.persist || false
+      return query.state.status === 'success' && query.meta?.persist === true
     }
   }
-})
+} satisfies Omit<PersistQueryClientOptions, 'queryClient'>

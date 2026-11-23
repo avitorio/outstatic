@@ -6,8 +6,12 @@ import {
   setSessionUpdateCallback
 } from '@/utils/hooks/use-initial-data'
 import { AuthProvider, useAuth } from '@/utils/auth/auth-provider'
-import { queryClient, setIsHosted } from '@/utils/react-query/query-client'
-import { QueryClientProvider } from '@tanstack/react-query'
+import {
+  queryClient,
+  queryPersistOptions,
+  setIsHosted
+} from '@/utils/react-query/query-client'
+import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client'
 import { NavigationGuardProvider } from 'next-navigation-guard'
 import { ThemeProvider } from 'next-themes'
 import { ReactNode, useEffect, useMemo, useCallback } from 'react'
@@ -58,7 +62,10 @@ function RootProviderInner({ ostData, children }: RootProviderProps) {
         scriptProps={{ type: 'application/json' }}
       >
         {showToaster ? <Toaster /> : null}
-        <QueryClientProvider client={queryClient}>
+        <PersistQueryClientProvider
+          client={queryClient}
+          persistOptions={queryPersistOptions}
+        >
           <UpgradeDialogProvider feature="ai">
             <NavigationGuardProvider>
               <ContentLockProvider disabled={ostData.isDemo}>
@@ -66,7 +73,7 @@ function RootProviderInner({ ostData, children }: RootProviderProps) {
               </ContentLockProvider>
             </NavigationGuardProvider>
           </UpgradeDialogProvider>
-        </QueryClientProvider>
+        </PersistQueryClientProvider>
         <V2BreakingCheck />
       </ThemeProvider>
     </InitialDataContext.Provider>

@@ -43,13 +43,38 @@ function parseRelayError(payload: unknown): GoogleRelayErrorCode {
   return 'google-relay-failed'
 }
 
+function resolveSameOriginReturnUrl(
+  requestUrl: URL,
+  defaultReturnUrl: string,
+  returnUrl?: string
+): string {
+  if (!returnUrl) {
+    return defaultReturnUrl
+  }
+
+  try {
+    const parsed = new URL(returnUrl, requestUrl.origin)
+    if (parsed.origin === requestUrl.origin) {
+      return parsed.toString()
+    }
+  } catch {
+    // Malformed URLs fall back to the dashboard
+  }
+
+  return defaultReturnUrl
+}
+
 function buildUrls(request: NextRequest, returnUrl?: string) {
   const url = new URL(request.url)
   const baseUrl = `${url.protocol}//${url.host}`
   const basePath = (process.env.OST_BASE_PATH || '').replace(/\/+$/, '')
   const callbackUrl = `${baseUrl}${basePath}/api/outstatic/callback`
   const defaultReturnUrl = `${baseUrl}${basePath}/outstatic`
-  const effectiveReturnUrl = returnUrl ?? defaultReturnUrl
+  const effectiveReturnUrl = resolveSameOriginReturnUrl(
+    url,
+    defaultReturnUrl,
+    returnUrl
+  )
 
   return {
     callbackUrl,

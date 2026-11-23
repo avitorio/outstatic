@@ -4,6 +4,7 @@ import { TestWrapper } from '@/utils/tests/test-wrapper'
 import { render, screen, fireEvent } from '@testing-library/react'
 import { act } from 'react'
 import { Sidebar } from '@/components/sidebar'
+import { OUTSTATIC_VERSION } from '@/utils/constants'
 
 jest.mock('next/navigation', () => ({
   useRouter() {
@@ -64,11 +65,13 @@ describe('<Sidebar />', () => {
     mockUseSingletons.mockReturnValue({ data: [] })
   })
 
-  const renderSidebar = async () => {
+  const renderSidebar = async (
+    initialData: typeof mockProviderProps = mockProviderProps
+  ) => {
     await act(async () => {
       render(
         <TestWrapper>
-          <InitialDataContext.Provider value={mockProviderProps}>
+          <InitialDataContext.Provider value={initialData}>
             <Sidebar />
           </InitialDataContext.Provider>
         </TestWrapper>
@@ -217,6 +220,49 @@ describe('<Sidebar />', () => {
       await renderSidebar()
 
       expect(screen.getAllByText('Settings')).toHaveLength(2)
+    })
+
+    it('does not render API Keys for non-Pro users', async () => {
+      await renderSidebar()
+
+      expect(screen.queryByText('API Keys')).not.toBeInTheDocument()
+    })
+
+    it('renders API Keys for Pro users', async () => {
+      await renderSidebar({ ...mockProviderProps, isPro: true })
+
+      expect(screen.getByText('API Keys')).toBeInTheDocument()
+    })
+
+    it('renders the installed version on self-hosted instances', async () => {
+      await renderSidebar()
+
+      expect(screen.getByText(`v${OUTSTATIC_VERSION}`)).toBeInTheDocument()
+    })
+
+    it('shows a badge when a newer version is available', async () => {
+      fetchMock.mockResolvedValueOnce({
+        ok: true,
+        json: () =>
+          Promise.resolve({
+            currentVersion: OUTSTATIC_VERSION,
+            latestVersion: '9.0.0',
+            updateAvailable: true
+          })
+      } as Response)
+
+      await renderSidebar()
+
+      expect(await screen.findByText('New version')).toBeInTheDocument()
+    })
+
+    it('does not check or render a version on hosted instances', async () => {
+      await renderSidebar({ ...mockProviderProps, isHosted: true })
+
+      expect(
+        screen.queryByText(`v${OUTSTATIC_VERSION}`)
+      ).not.toBeInTheDocument()
+      expect(fetchMock).not.toHaveBeenCalled()
     })
   })
 
