@@ -286,4 +286,80 @@ describe('/api/outstatic/google-login', () => {
       'https://self-host.dev/outstatic?foo=bar&error=invalid-api-key'
     )
   })
+
+  it.each([
+    ['cross-origin', 'https://evil.example/phish'],
+    ['userinfo-spoofed', 'https://self-host.dev@evil.example/phish'],
+    ['protocol-relative', '//evil.example/phish'],
+    ['different scheme on same host', 'http://self-host.dev/outstatic']
+  ])(
+    'ignores %s returnUrl on GET error redirect',
+    async (_label, returnUrl) => {
+      ;(global.fetch as jest.Mock).mockResolvedValueOnce(
+        jsonResponse({ error: 'invalid-callback-target' }, { status: 400 })
+      )
+
+      resetEnv({
+        OUTSTATIC_API_KEY: 'pro-key',
+        OUTSTATIC_API_URL: 'https://outstatic.com/api'
+      })
+
+      const { GET: googleLoginGetRoute } = await import('../google-login')
+      const response = await googleLoginGetRoute(
+        createGetRequest(
+          `https://self-host.dev/api/outstatic/google-login?returnUrl=${encodeURIComponent(returnUrl)}`
+        )
+      )
+
+      expect(response.status).toBe(302)
+      expect(getLocationHeader(response)).toBe(
+        'https://self-host.dev/outstatic?error=invalid-callback-target'
+      )
+    }
+  )
+
+  it('ignores cross-origin returnUrl when auth is not configured', async () => {
+    resetEnv({
+      OUTSTATIC_API_KEY: undefined
+    })
+
+    const { GET: googleLoginGetRoute } = await import('../google-login')
+    const response = await googleLoginGetRoute(
+      createGetRequest(
+        'https://self-host.dev/api/outstatic/google-login?returnUrl=https%3A%2F%2Fevil.example%2Fphish'
+      )
+    )
+
+    expect(response.status).toBe(302)
+    expect(getLocationHeader(response)).toBe(
+      'https://self-host.dev/outstatic?error=auth-not-configured'
+    )
+    expect(global.fetch).not.toHaveBeenCalled()
+  })
+
+  it('does not forward cross-origin returnUrl to the relay on POST', async () => {
+    ;(global.fetch as jest.Mock).mockResolvedValueOnce(
+      jsonResponse({
+        url: 'https://outstatic.com/api/outstatic/auth/google-exchange?token=abc123'
+      })
+    )
+
+    resetEnv({
+      OUTSTATIC_API_KEY: 'pro-key',
+      OUTSTATIC_API_URL: 'https://outstatic.com/api'
+    })
+
+    const { default: googleLoginRoute } = await import('../google-login')
+    const response = await googleLoginRoute(
+      createPostRequest('https://self-host.dev/api/outstatic/google-login', {
+        returnUrl: 'https://evil.example/phish'
+      })
+    )
+
+    expect(response.status).toBe(200)
+    const fetchBody = (global.fetch as jest.Mock).mock.calls[0]?.[1]?.body
+    expect(JSON.parse(fetchBody).returnUrl).toBe(
+      'https://self-host.dev/outstatic'
+    )
+  })
 })
