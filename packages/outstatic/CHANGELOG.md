@@ -1,5 +1,17 @@
 # outstatic
 
+## 2.2.5
+
+### Patch Changes
+
+- 681633c: - Guide users through configuring GitHub OAuth when dashboard login is not yet set up.
+  - Add copy shortcuts for OAuth settings and loading feedback for sign-in actions.
+  - Clarify Pro-only authentication options and retain GitHub sign-in as an alternative.
+- 2525170: Only show the API Keys sidebar item to Pro users.
+- d8d5091: Upload media by pasting images or files directly into the Media Library.
+- 42bcdbb: Prevent the Google login endpoint from redirecting to external sites by only accepting a `returnUrl` on the dashboard's own origin.
+- 7bd7c79: Show self-hosted users when a newer Outstatic version is available.
+
 ## 2.2.4
 
 ### Patch Changes
