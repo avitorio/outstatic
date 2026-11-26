@@ -145,6 +145,11 @@ export const load = async <TSchema extends {} = {}>() => {
                 m.content = content
               }
 
+              // no projection: return the full document
+              if (finalProjection.length === 0) {
+                return m as TProjection
+              }
+
               // start as any, cast to projection
               const result: any = {}
               for (const p of finalProjection) {
